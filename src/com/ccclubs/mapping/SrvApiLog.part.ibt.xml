@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvApiLog_part">	
+	<!-- API日志条件sql片段  -->
+	<sql id="srv_api_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="salId" prepend="and">
+			    $salIdNot$ srv_api_log$suffix$.sal_id = #salId#
+			</isNotEmpty>
+			<isNotNull property="salIdNot" prepend="and">
+				<isEmpty property="salId">
+				$salIdNot$ srv_api_log$suffix$.sal_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="salClient" prepend="and">
+			    $salClientNot$ srv_api_log$suffix$.sal_client = #salClient#
+			</isNotEmpty>
+			<isNotNull property="salClientNot" prepend="and">
+				<isEmpty property="salClient">
+				$salClientNot$ srv_api_log$suffix$.sal_client is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="salApi" prepend="and">
+			    $salApiNot$ srv_api_log$suffix$.sal_api = #salApi#
+			</isNotEmpty>
+			<isNotNull property="salApiNot" prepend="and">
+				<isEmpty property="salApi">
+				$salApiNot$ srv_api_log$suffix$.sal_api is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="salParams" prepend="and">			    
+			    (<isNotNull property="salParamsNot">
+			    srv_api_log$suffix$.sal_params is null or length(srv_api_log$suffix$.sal_params) &lt; 1 or
+			    </isNotNull>$salParamsNot$ srv_api_log$suffix$.sal_params like #salParams#)
+			</isNotEmpty>
+			<isNotNull property="salParamsNot" prepend="and">
+				<isEmpty property="salParams">
+				$salParamsNot$ (srv_api_log$suffix$.sal_params is null or length(srv_api_log$suffix$.sal_params) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="salReturn" prepend="and">			    
+			    (<isNotNull property="salReturnNot">
+			    srv_api_log$suffix$.sal_return is null or length(srv_api_log$suffix$.sal_return) &lt; 1 or
+			    </isNotNull>$salReturnNot$ srv_api_log$suffix$.sal_return like #salReturn#)
+			</isNotEmpty>
+			<isNotNull property="salReturnNot" prepend="and">
+				<isEmpty property="salReturn">
+				$salReturnNot$ (srv_api_log$suffix$.sal_return is null or length(srv_api_log$suffix$.sal_return) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="salInvokeTimeStart" prepend="and">
+			    $salInvokeTimeNot$   (srv_api_log$suffix$.sal_invoke_time &gt;= #salInvokeTimeStart#
+			   <isEmpty property="salInvokeTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="salInvokeTimeEnd" prepend="and">
+				<isEmpty property="salInvokeTimeStart">$salInvokeTimeNot$   (</isEmpty>
+			    srv_api_log$suffix$.sal_invoke_time &lt;= #salInvokeTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="salInvokeTime" prepend="and">
+			    $salInvokeTimeNot$ srv_api_log$suffix$.sal_invoke_time = #salInvokeTime#
+			</isNotEmpty>
+			<isNotNull property="salInvokeTimeNot" prepend="and">
+				<isEmpty property="salInvokeTimeStart"><isEmpty property="salInvokeTimeEnd"><isEmpty property="salInvokeTime">
+				$salInvokeTimeNot$ srv_api_log$suffix$.sal_invoke_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="salStatus" prepend="and">
+			    $salStatusNot$ srv_api_log$suffix$.sal_status = #salStatus#
+			</isNotEmpty>
+			<isNotNull property="salStatusNot" prepend="and">
+				<isEmpty property="salStatus">
+				$salStatusNot$ srv_api_log$suffix$.sal_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- API日志left join 条件sql片段 -->
+	<sql id="srv_api_log_join">
+		<dynamic>
+			<isNotEmpty property="SrvApiLog.salId" prepend="and">
+			    $SrvApiLog.salIdNot$ srv_api_log$SrvApiLog.suffix$.sal_id = #SrvApiLog.salId#
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salIdNot" prepend="and">
+				<isEmpty property="SrvApiLog.salId">
+				$salIdNot$ srv_api_log$SrvApiLog.suffix$.sal_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiLog.salClient" prepend="and">
+			    $SrvApiLog.salClientNot$ srv_api_log$SrvApiLog.suffix$.sal_client = #SrvApiLog.salClient#
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salClientNot" prepend="and">
+				<isEmpty property="SrvApiLog.salClient">
+				$salClientNot$ srv_api_log$SrvApiLog.suffix$.sal_client is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiLog.salApi" prepend="and">
+			    $SrvApiLog.salApiNot$ srv_api_log$SrvApiLog.suffix$.sal_api = #SrvApiLog.salApi#
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salApiNot" prepend="and">
+				<isEmpty property="SrvApiLog.salApi">
+				$salApiNot$ srv_api_log$SrvApiLog.suffix$.sal_api is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiLog.salParams" prepend="and">
+				(<isNotNull property="SrvApiLog.salParamsNot">
+			    srv_api_log$SrvApiLog.suffix$.sal_params is null or length(srv_api_log$SrvApiLog.suffix$.sal_params) &lt; 1 or
+			    </isNotNull>$SrvApiLog.salParamsNot$ srv_api_log$SrvApiLog.suffix$.sal_params like #SrvApiLog.salParams#)
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salParamsNot" prepend="and">
+				<isEmpty property="SrvApiLog.salParams">
+				$salParamsNot$ (srv_api_log$SrvApiLog.suffix$.sal_params is null or length(srv_api_log$SrvApiLog.suffix$.sal_params) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiLog.salReturn" prepend="and">
+				(<isNotNull property="SrvApiLog.salReturnNot">
+			    srv_api_log$SrvApiLog.suffix$.sal_return is null or length(srv_api_log$SrvApiLog.suffix$.sal_return) &lt; 1 or
+			    </isNotNull>$SrvApiLog.salReturnNot$ srv_api_log$SrvApiLog.suffix$.sal_return like #SrvApiLog.salReturn#)
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salReturnNot" prepend="and">
+				<isEmpty property="SrvApiLog.salReturn">
+				$salReturnNot$ (srv_api_log$SrvApiLog.suffix$.sal_return is null or length(srv_api_log$SrvApiLog.suffix$.sal_return) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiLog.salInvokeTimeStart" prepend="and">
+			    $SrvApiLog.salInvokeTimeNot$   (srv_api_log$SrvApiLog.suffix$.sal_invoke_time &gt;= #SrvApiLog.salInvokeTimeStart#
+			   <isEmpty property="SrvApiLog.salInvokeTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvApiLog.salInvokeTimeEnd" prepend="and">
+				<isEmpty property="SrvApiLog.salInvokeTimeStart">$SrvApiLog.salInvokeTimeNot$   (</isEmpty>
+			    srv_api_log$SrvApiLog.suffix$.sal_invoke_time &lt;= #SrvApiLog.salInvokeTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvApiLog.salInvokeTime" prepend="and">
+			    $SrvApiLog.salInvokeTimeNot$ srv_api_log$SrvApiLog.suffix$.sal_invoke_time = #SrvApiLog.salInvokeTime#
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salInvokeTimeNot" prepend="and">
+				<isEmpty property="SrvApiLog.salInvokeTimeStart"><isEmpty property="SrvApiLog.salInvokeTimeEnd"><isEmpty property="SrvApiLog.salInvokeTime">
+				$salInvokeTimeNot$ srv_api_log$SrvApiLog.suffix$.sal_invoke_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiLog.salStatus" prepend="and">
+			    $SrvApiLog.salStatusNot$ srv_api_log$SrvApiLog.suffix$.sal_status = #SrvApiLog.salStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvApiLog.salStatusNot" prepend="and">
+				<isEmpty property="SrvApiLog.salStatus">
+				$salStatusNot$ srv_api_log$SrvApiLog.suffix$.sal_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,45 @@
+<s:if test="#session.ccclubs_web_login==null">
+	<div class="ccc-welcome">
+		<div class="ccc-info">
+			<div class="ccc-welcome-text">
+				欢迎来到 车纷享。
+			</div>
+			<div id="ccc-login-tips">
+				<i></i><span></span>
+			</div>
+			<div class="ccc-qic-login">
+				<input type="text" value="${cookie.username.value}" id="username" tabindex="1" placeholder="手机号 / 邮箱" />
+				<input type="password" id="password" tabindex="2" placeholder="密码" />
+				<a href="javascript:;" tabindex="3" class="ccc-btn-login" id="btn_login">登录</a>
+				<p>
+					没有车纷享账号？
+					<a href="/register.html" target="_blank">免费注册</a><a href="/help.html" title="帮助信息" style="margin-left: 10px;">帮助信息</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</s:if>
+<s:else>
+	<div class="ccc-member">
+		<div class="ccc-icon">
+			<a href="/my/account_setheader.html"><img src="${cc:isNullOrEmpty(ccclubs_web_login.csmHeader)?'/images/member-thumb.png':ccclubs_web_login.csmHeader}" /> </a>
+		</div>
+		<div class="ccc-info">
+			<div class="ccc-welcome-text">
+				${cc:getTimeDisplay()}，${ccclubs_web_login.csmName==null ? cc:mobile2Star(ccclubs_web_login.csmMobile) : ccclubs_web_login.csmName}
+				<s:if test="#session.ccclubs_web_login.csmRebate<1"><a href="javascript:void(0);" class="ccc-together" title="风雨同舟，一路有你，专享租金${lz:digit(ccclubs_web_login.csmRebate*10,1)}折优惠"></a>
+				</s:if>
+				<em></em>
+			</div>
+			<div class="ccc-status">
+				<div class="ccc-operation">
+					<a href="/my/point.html" target="_blank" title="查看积分明细" class="ccc-points ccc-opacity-8">当前积分：${cc:toInt(member.csmIntegral)}</a>
+					<a href="/my/index.html" title="进入个人中心" class="ccc-opacity-8">[个人中心]</a>
+					<a href="/login_logout.html" title="退出登录" class="ccc-opacity-8">[退出]</a>
+					<a href="/help.html" title="帮助信息" class="ccc-opacity-8">[帮助信息]</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</s:else>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsWxContent_part">	
+	<!-- 微信素材条件sql片段  -->
+	<sql id="cs_wx_content_dynamic">
+		<dynamic>
+			<isNotEmpty property="cswcId" prepend="and">
+			    $cswcIdNot$ cs_wx_content$suffix$.cswc_id = #cswcId#
+			</isNotEmpty>
+			<isNotNull property="cswcIdNot" prepend="and">
+				<isEmpty property="cswcId">
+				$cswcIdNot$ cs_wx_content$suffix$.cswc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcTitle" prepend="and">			    
+			    (<isNotNull property="cswcTitleNot">
+			    cs_wx_content$suffix$.cswc_title is null or length(cs_wx_content$suffix$.cswc_title) &lt; 1 or
+			    </isNotNull>$cswcTitleNot$ cs_wx_content$suffix$.cswc_title like #cswcTitle#)
+			</isNotEmpty>
+			<isNotNull property="cswcTitleNot" prepend="and">
+				<isEmpty property="cswcTitle">
+				$cswcTitleNot$ (cs_wx_content$suffix$.cswc_title is null or length(cs_wx_content$suffix$.cswc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcContnet" prepend="and">			    
+			    (<isNotNull property="cswcContnetNot">
+			    cs_wx_content$suffix$.cswc_contnet is null or length(cs_wx_content$suffix$.cswc_contnet) &lt; 1 or
+			    </isNotNull>$cswcContnetNot$ cs_wx_content$suffix$.cswc_contnet like #cswcContnet#)
+			</isNotEmpty>
+			<isNotNull property="cswcContnetNot" prepend="and">
+				<isEmpty property="cswcContnet">
+				$cswcContnetNot$ (cs_wx_content$suffix$.cswc_contnet is null or length(cs_wx_content$suffix$.cswc_contnet) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcThumb" prepend="and">
+			    $cswcThumbNot$ cs_wx_content$suffix$.cswc_thumb = #cswcThumb#
+			</isNotEmpty>
+			<isNotNull property="cswcThumbNot" prepend="and">
+				<isEmpty property="cswcThumb">
+				$cswcThumbNot$ cs_wx_content$suffix$.cswc_thumb is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcImage" prepend="and">
+			    $cswcImageNot$ cs_wx_content$suffix$.cswc_image = #cswcImage#
+			</isNotEmpty>
+			<isNotNull property="cswcImageNot" prepend="and">
+				<isEmpty property="cswcImage">
+				$cswcImageNot$ cs_wx_content$suffix$.cswc_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcLink" prepend="and">			    
+			    (<isNotNull property="cswcLinkNot">
+			    cs_wx_content$suffix$.cswc_link is null or length(cs_wx_content$suffix$.cswc_link) &lt; 1 or
+			    </isNotNull>$cswcLinkNot$ cs_wx_content$suffix$.cswc_link = #cswcLink#)
+			</isNotEmpty>
+			<isNotNull property="cswcLinkNot" prepend="and">
+				<isEmpty property="cswcLink">
+				$cswcLinkNot$ (cs_wx_content$suffix$.cswc_link is null or length(cs_wx_content$suffix$.cswc_link) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcOrder" prepend="and">
+			    $cswcOrderNot$ cs_wx_content$suffix$.cswc_order = #cswcOrder#
+			</isNotEmpty>
+			<isNotNull property="cswcOrderNot" prepend="and">
+				<isEmpty property="cswcOrder">
+				$cswcOrderNot$ cs_wx_content$suffix$.cswc_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswcAddTimeStart" prepend="and">
+			    $cswcAddTimeNot$   (cs_wx_content$suffix$.cswc_add_time &gt;= #cswcAddTimeStart#
+			   <isEmpty property="cswcAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswcAddTimeEnd" prepend="and">
+				<isEmpty property="cswcAddTimeStart">$cswcAddTimeNot$   (</isEmpty>
+			    cs_wx_content$suffix$.cswc_add_time &lt;= #cswcAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cswcAddTime" prepend="and">
+			    $cswcAddTimeNot$ cs_wx_content$suffix$.cswc_add_time = #cswcAddTime#
+			</isNotEmpty>
+			<isNotNull property="cswcAddTimeNot" prepend="and">
+				<isEmpty property="cswcAddTimeStart"><isEmpty property="cswcAddTimeEnd"><isEmpty property="cswcAddTime">
+				$cswcAddTimeNot$ cs_wx_content$suffix$.cswc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 微信素材left join 条件sql片段 -->
+	<sql id="cs_wx_content_join">
+		<dynamic>
+			<isNotEmpty property="CsWxContent.cswcId" prepend="and">
+			    $CsWxContent.cswcIdNot$ cs_wx_content$CsWxContent.suffix$.cswc_id = #CsWxContent.cswcId#
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcIdNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcId">
+				$cswcIdNot$ cs_wx_content$CsWxContent.suffix$.cswc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcTitle" prepend="and">
+				(<isNotNull property="CsWxContent.cswcTitleNot">
+			    cs_wx_content$CsWxContent.suffix$.cswc_title is null or length(cs_wx_content$CsWxContent.suffix$.cswc_title) &lt; 1 or
+			    </isNotNull>$CsWxContent.cswcTitleNot$ cs_wx_content$CsWxContent.suffix$.cswc_title like #CsWxContent.cswcTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcTitleNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcTitle">
+				$cswcTitleNot$ (cs_wx_content$CsWxContent.suffix$.cswc_title is null or length(cs_wx_content$CsWxContent.suffix$.cswc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcContnet" prepend="and">
+				(<isNotNull property="CsWxContent.cswcContnetNot">
+			    cs_wx_content$CsWxContent.suffix$.cswc_contnet is null or length(cs_wx_content$CsWxContent.suffix$.cswc_contnet) &lt; 1 or
+			    </isNotNull>$CsWxContent.cswcContnetNot$ cs_wx_content$CsWxContent.suffix$.cswc_contnet like #CsWxContent.cswcContnet#)
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcContnetNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcContnet">
+				$cswcContnetNot$ (cs_wx_content$CsWxContent.suffix$.cswc_contnet is null or length(cs_wx_content$CsWxContent.suffix$.cswc_contnet) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcThumb" prepend="and">
+			    $CsWxContent.cswcThumbNot$ cs_wx_content$CsWxContent.suffix$.cswc_thumb = #CsWxContent.cswcThumb#
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcThumbNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcThumb">
+				$cswcThumbNot$ cs_wx_content$CsWxContent.suffix$.cswc_thumb is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcImage" prepend="and">
+			    $CsWxContent.cswcImageNot$ cs_wx_content$CsWxContent.suffix$.cswc_image = #CsWxContent.cswcImage#
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcImageNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcImage">
+				$cswcImageNot$ cs_wx_content$CsWxContent.suffix$.cswc_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcLink" prepend="and">
+				(<isNotNull property="CsWxContent.cswcLinkNot">
+			    cs_wx_content$CsWxContent.suffix$.cswc_link is null or length(cs_wx_content$CsWxContent.suffix$.cswc_link) &lt; 1 or
+			    </isNotNull>$CsWxContent.cswcLinkNot$ cs_wx_content$CsWxContent.suffix$.cswc_link = #CsWxContent.cswcLink#)
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcLinkNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcLink">
+				$cswcLinkNot$ (cs_wx_content$CsWxContent.suffix$.cswc_link is null or length(cs_wx_content$CsWxContent.suffix$.cswc_link) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcOrder" prepend="and">
+			    $CsWxContent.cswcOrderNot$ cs_wx_content$CsWxContent.suffix$.cswc_order = #CsWxContent.cswcOrder#
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcOrderNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcOrder">
+				$cswcOrderNot$ cs_wx_content$CsWxContent.suffix$.cswc_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxContent.cswcAddTimeStart" prepend="and">
+			    $CsWxContent.cswcAddTimeNot$   (cs_wx_content$CsWxContent.suffix$.cswc_add_time &gt;= #CsWxContent.cswcAddTimeStart#
+			   <isEmpty property="CsWxContent.cswcAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWxContent.cswcAddTimeEnd" prepend="and">
+				<isEmpty property="CsWxContent.cswcAddTimeStart">$CsWxContent.cswcAddTimeNot$   (</isEmpty>
+			    cs_wx_content$CsWxContent.suffix$.cswc_add_time &lt;= #CsWxContent.cswcAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsWxContent.cswcAddTime" prepend="and">
+			    $CsWxContent.cswcAddTimeNot$ cs_wx_content$CsWxContent.suffix$.cswc_add_time = #CsWxContent.cswcAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsWxContent.cswcAddTimeNot" prepend="and">
+				<isEmpty property="CsWxContent.cswcAddTimeStart"><isEmpty property="CsWxContent.cswcAddTimeEnd"><isEmpty property="CsWxContent.cswcAddTime">
+				$cswcAddTimeNot$ cs_wx_content$CsWxContent.suffix$.cswc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

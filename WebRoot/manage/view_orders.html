@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>查看订单</title>
+</head>
+
+<body class="view-bg gradient" >
+<div class="vehicle-body">
+	<s:if test="#request.orders.size()>0">
+	<s:iterator value="#request.orders" id="item" status="i">
+	<div class="vehicle_list">
+		<s:if test="#item.csoStatus==0">
+			<div class="list_title"><span>已预定</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==1">
+			<div class="list_title title_void"><span>使用中</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==2">
+			<div class="list_title"><span>已换车</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==3">
+			<div class="list_title title_unpaid"><span>已取消</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==4">
+			<div class="list_title"><span>已完成</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==5">
+			<div class="list_title title_unpaid"><span>待处理</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==6">
+			<div class="list_title title_unpaid"><span>已退款</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==7">
+			<div class="list_title title_void"><span>已作废</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<s:if test="#item.csoStatus==8">
+			<div class="list_title title_unpaid"><span>未知状态</span><p><a>订单号:${item.csoId}</a></p></div>
+		</s:if>
+		<div class="vehicle_head"><span>${lz:date(item.csoStartTime,"yyyy-MM-dd HH:mm")}</span><p>订单时间</p></div>
+		<div class="vehicle_line_bg"><div class="vehicle_line"></div></div>
+		<div class="vehicle_head"><span>${lz:date(item.csoFinishTime,"yyyy-MM-dd HH:mm")}</span><p>至</p></div>
+		<div class="vehicle_line_bg"><div class="vehicle_line"></div></div>
+		<div class="vehicle_head"><span><a href="tel:${item.csoMobile}">${item.csoMobile}</a></span><p>会员名</p></div>
+	</div>
+	
+	</s:iterator>
+	</s:if>
+<div id="toast">
+	正在加载...
+</div>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+</body>
+</html>

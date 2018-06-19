@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享-订单结算</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="reserve.html?csoHost=${csoCar.cscHost}&csoDate=${csoDate}&csoArea=${csoCar.$cscOutlets.csoArea}&csoOutlets=${csoCar.cscOutlets}">返回</a>
+					</div>
+					<div class="showtitle">
+						${csoCar.cscCarNo}
+					</div>
+				</div>
+			</div>
+			<div class="buybanner">
+				<img src="/images/cars/${csoCar.cscModel}_wide.jpg">
+				<div class="buybannertitle">
+					<b>${csoCar.$cscModel.cscmName}</b>${csoCar.cscIsAd ? '
+					<span>宣</span>' : ''}
+
+				</div>
+			</div>
+			<!--  <div class="menunavgotop">
+				<ul>
+					<s:iterator value="#request.dates" id="item" status="i">
+					${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+					<li class="${date==nowdate?'on':''}">
+							${lz:set("value",lz:date(item,"EEE"))}
+							<a href="javascript:;" onclick="setDate('${lz:date(item,'yyyy-MM-dd')}');" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+						</li>
+					</s:iterator>
+				</ul>
+			</div>-->
+			<div class="menunavgotop">
+				<ul>
+					<li class="prev">
+						<a href="#" class="${index<=1?'off':''}">&nbsp;</a>
+					</li>
+					<s:if test="#request.index==0">
+						<s:iterator value="#request.dates" id="item" status="i">
+							<s:if test="#i.index<=3">
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} show" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+									${lz:set("value",lz:date(item,"EEE"))}
+									<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+								</li>
+							</s:if>
+							<s:else>
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} hide" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+									${lz:set("value",lz:date(item,"EEE"))}
+									<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+								</li>
+							</s:else>
+						</s:iterator>
+					</s:if>
+					<s:elseif test="#request.index==6||#request.index==5">
+						<s:iterator value="#request.dates" id="item" status="i">
+							<s:if test="#i.index>=3">
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} show" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+									${lz:set("value",lz:date(item,"EEE"))}
+									<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+								</li>
+							</s:if>
+							<s:else>
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} hide" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+									${lz:set("value",lz:date(item,"EEE"))}
+									<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+								</li>
+							</s:else>
+						</s:iterator>
+					</s:elseif>
+					<s:else>
+						<s:iterator value="#request.dates" id="item" status="i">
+							<s:if test="#i.index==#request.index||#i.index==#request.index-1||#i.index==#request.index+1||#i.index==#request.index+2">
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} show" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+									${lz:set("value",lz:date(item,"EEE"))}
+									<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+								</li>
+							</s:if>
+							<s:else>
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} hide" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+									${lz:set("value",lz:date(item,"EEE"))}
+									<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+								</li>
+							</s:else>
+						</s:iterator>
+					</s:else>
+					<li class="next">
+						<a href="#" class="${index>=4?'off':''}">&nbsp;</a>
+					</li>
+				</ul>
+			</div>
+			<s:if test="#request.xianxing==1">
+				<div style="text-align: center;">
+					该车辆<span style="color: red;">今日限行</span>，<br>查看
+					<s:if test="#session.ccclubs_web_host.shId==1">
+						<a href="http://zjnews.zjol.com.cn/system/2014/05/04/020003783.shtml" style="color: blue;">错峰限行时间</a>和
+					</s:if>
+					<s:else>
+						<a href="http://www.bjjtgl.gov.cn/zhuanti/10weihao/index.html" style="color: blue;">错峰限行时间</a>和
+					</s:else>
+					<s:if test="#session.ccclubs_web_host.shId==1">
+						<a href="http://zjnews.zjol.com.cn/system/2014/05/04/020003783.shtml" style="color: blue;">区域</a>（仅供参考）
+					</s:if>
+					<s:else>
+						<a href="http://www.bjjtgl.gov.cn/zhuanti/10weihao/index.html" style="color: blue;">区域</a>（仅供参考）
+					</s:else>
+				</div>
+			</s:if>
+			<div class="buybgfff">
+				<div class="cartime">
+					<table width="100%" class="timetext" border="0" cellspacing="0" cellpadding="0">
+						<tbody>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td class="ttext">
+									6:00
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td class="ttext">
+									12:00
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td class="ttext">
+									18:00
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="cartime24">
+						<table width="100%" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td class="first">
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<s:action name="reserve_timeline" executeResult="true" namespace="/weixin">
+						<s:param name="car">${csoCar.cscId}</s:param>
+						<s:param name="date">${date}</s:param>
+					</s:action>
+				</div>
+				${lz:set("prices",(cc:prices(session.ccclubs_web_host.shId,csoCar.$cscModel.cscmId,csoCar.cscOutlets)))}
+				<s:if test="#request.csoCar.$cscModel.cscmType==0">
+				<dl>
+					<dt>
+						<img src="images/buy_icon1.png">
+						白天档
+						<strong>
+							${prices["租金.工作日白天小时|租金.白天小时|租金.每小时"]}
+						</strong> 元/时
+					</dt>
+					<dd>
+						<img src="images/buy_icon2.png">
+						夜间档
+						<strong>
+							${prices["租金.工作日晚上小时|租金.晚上小时|租金.每小时"]}
+						</strong> 元/时
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<img src="images/buy_icon3.png">
+						全天
+						<strong>
+							${prices["租金.工作日一天|租金.每天"]}
+						</strong> 元/天
+					</dt>
+					<dd>
+						<img src="images/buy_icon4.png">
+						夜间包段
+						<strong>
+							${prices["租金.工作日晚上包段|租金.晚上包段"]}
+						</strong> 元/夜
+					</dd>
+				</dl>
+				</s:if>
+				<s:if test="#request.csoCar.$cscModel.cscmType==1">
+					<s:if test="#session.ccclubs_web_host.shId==1">
+					<dl>
+						<dt>
+							<img src="images/buy_icon1.png">
+							白天档
+							<strong>
+								${prices["租金.工作日白天小时|租金.白天小时|租金.每小时"]}
+							</strong> 元/时
+						</dt>
+						<dd>
+							<img src="images/buy_icon2.png">
+							夜间档
+							<strong>
+								${prices["租金.工作日晚上小时|租金.晚上小时|租金.每小时"]}
+							</strong> 元/时
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/buy_icon3.png">
+							全天
+							<strong>
+								${prices["租金.工作日一天|租金.每天"]}
+							</strong> 元/天
+						</dt>
+						<dd>
+							<img src="images/buy_icon4.png">
+							夜间包段
+							<strong>
+								${prices["租金.工作日晚上包段|租金.晚上包段"]}
+							</strong> 元/夜
+						</dd>
+					</dl>
+					</s:if>
+					<s:else>
+					<dl>
+						<dt>
+							<img src="images/buy_icon1.png">
+							一小时
+							<strong>
+								${prices["租金.工作日白天小时|租金.白天小时|租金.每小时"]}
+							</strong> 元/时
+						</dt>
+						<dd>
+							<img src="images/buy_icon2.png">
+							晚上包段
+							<strong>
+								${prices["租金.工作日晚上包段|租金.晚上包段"]}
+							</strong> 元/夜
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/buy_icon3.png">
+							包全天
+							<strong>
+								${prices["租金.工作日一天|租金.每天"]}
+							</strong> 元/天
+						</dt>
+						<!-- <dd>
+							<img src="images/buy_icon4.png">
+							一周
+							<strong>
+								${prices["租金.每周"]}
+							</strong> 元/周
+						</dd> -->
+					</dl>
+					</s:else>
+				</s:if>
+			</div>
+			<a href="parkinglot_map.html?outlet=${csoCar.cscOutlets}&car=${csoCar.cscId}">
+				<div class="netboxdist">
+					<div class="boxdist">
+						<div class="car-item-detail">
+							<p>
+								${csoCar.$cscOutlets.csoAddress} - ${csoCar.$cscOutlets.csoSpace}
+							</p>
+						</div>
+					</div>
+				</div> </a>
+			<div class="cardatanum">
+				<ol>
+					<li>
+						${cc:convertColor(csoCar.cscColor)}
+					</li>
+					<li>
+						${csoCar.$cscModel.cscmFile==0?'自动档':'手动档'}
+					</li>
+					<li>
+						${csoCar.$cscModel.cscmType==0?'汽油车':'电动车'}
+					</li>
+					<li>
+						${csoCar.$cscModel.cscmVolume}
+					</li>
+					<li>
+						${csoCar.$cscModel.cscmSeatS}座
+					</li>
+					<li>
+						USB车载电源
+					</li>
+				</ol>
+			</div>
+			<s:if test="#request.csoCar.$cscModel.cscmType==0">
+				<div class="cardatamiles">
+					<ol>
+						<li>
+							里程数
+						</li>
+						<li>
+							里程费
+						</li>
+						<li>
+							0-99公里
+						</li>
+						<li>
+							${lz:digit(oilPrice.cspPrice,2)}元/公里
+						</li>
+						<li>
+							100-299公里
+						</li>
+						<li>
+							${lz:digit(oilPrice.cspPrice*0.9,2)}元/公里
+						</li>
+						<li>
+							300-499公里
+						</li>
+						<li>
+							${lz:digit(oilPrice.cspPrice*0.85,2)}元/公里
+						</li>
+						<li>
+							500-999公里
+						</li>
+						<li>
+							${lz:digit(oilPrice.cspPrice*0.8,2)}元/公里
+						</li>
+						<li>
+							1000公里以上
+						</li>
+						<li>
+							${lz:digit(oilPrice.cspPrice*0.75,2)}元/公里
+						</li>
+					</ol>
+					<div class="clear"></div>
+				</div>
+			</s:if>
+			<s:else>
+				<div class="cardatamiles">
+					<ol>
+						<li>
+							里程数
+						</li>
+						<li>
+							里程费
+						</li>
+						<li>
+							不限公里
+						</li>
+						<li>
+							${lz:digit(elecPrice.cspPrice+0,2)}&nbsp;元/公里
+						</li>
+					</ol>
+					<div class="clear"></div>
+				</div>
+			</s:else>
+
+			<div class="okbuytime">
+				<ul>
+					<li>
+						<span class="icon-date">取车时间</span>
+						<div style="display: inline-block; float: right; width: 64%; overflow: hidden;">
+							<div style="width: 55%; float: left; overflow: hidden;">
+								<select class="select" id="txtDateMin_1" style="width: 100%; line-height: 34px; height: 34px; overflow: hidden;">
+									<s:iterator value="#request.dates" id="item" status="i">
+										<option value="${lz:date(item,"yyyy-MM-dd")}">
+											${lz:date(item,"MM月dd日")}
+										</option>
+									</s:iterator>
+								</select>
+							</div>
+							<div style="width: 45%; float: left; overflow: hidden;">
+								<select class="select" id="txtHourMin_1" style="width: 100%; line-height: 34px; height: 34px; overflow: hidden;">
+									<option Value="07:00">
+										07点整
+									</option>
+									<option Value="07:20">
+										07点20分
+									</option>
+									<option Value="07:40">
+										07点40分
+									</option>
+									<option Value="08:00">
+										08点整
+									</option>
+									<option Value="08:20">
+										08点20分
+									</option>
+									<option Value="08:40">
+										08点40分
+									</option>
+									<option Value="09:00">
+										09点整
+									</option>
+									<option Value="09:20">
+										09点20分
+									</option>
+									<option Value="09:40">
+										09点40分
+									</option>
+									<option Value="10:00">
+										10点整
+									</option>
+									<option Value="10:20">
+										10点20分
+									</option>
+									<option Value="10:40">
+										10点40分
+									</option>
+									<option Value="11:00">
+										11点整
+									</option>
+									<option Value="11:20">
+										11点20分
+									</option>
+									<option Value="11:40">
+										11点40分
+									</option>
+									<option Value="12:00">
+										12点整
+									</option>
+									<option Value="12:20">
+										12点20分
+									</option>
+									<option Value="12:40">
+										12点40分
+									</option>
+									<option Value="13:00">
+										13点整
+									</option>
+									<option Value="13:20">
+										13点20分
+									</option>
+									<option Value="13:40">
+										13点40分
+									</option>
+									<option Value="14:00">
+										14点整
+									</option>
+									<option Value="14:20">
+										14点20分
+									</option>
+									<option Value="14:40">
+										14点40分
+									</option>
+									<option Value="15:00">
+										15点整
+									</option>
+									<option Value="15:20">
+										15点20分
+									</option>
+									<option Value="15:40">
+										15点40分
+									</option>
+									<option Value="16:00">
+										16点整
+									</option>
+									<option Value="16:20">
+										16点20分
+									</option>
+									<option Value="16:40">
+										16点40分
+									</option>
+									<option Value="17:00">
+										17点整
+									</option>
+									<option Value="17:20">
+										17点20分
+									</option>
+									<option Value="17:40">
+										17点40分
+									</option>
+									<option Value="18:00">
+										18点整
+									</option>
+									<option Value="18:20">
+										18点20分
+									</option>
+									<option Value="18:40">
+										18点40分
+									</option>
+									<option Value="19:00">
+										19点整
+									</option>
+									<option Value="19:20">
+										19点20分
+									</option>
+									<option Value="19:40">
+										19点40分
+									</option>
+									<option Value="20:00">
+										20点整
+									</option>
+									<option Value="20:20">
+										20点20分
+									</option>
+									<option Value="20:40">
+										20点40分
+									</option>
+									<option Value="21:00">
+										21点整
+									</option>
+									<option Value="21:20">
+										21点20分
+									</option>
+									<option Value="21:40">
+										21点40分
+									</option>
+									<option Value="22:00">
+										22点整
+									</option>
+									<option Value="22:20">
+										22点20分
+									</option>
+									<option Value="22:40">
+										22点40分
+									</option>
+									<option Value="23:00">
+										23点整
+									</option>
+									<option Value="23:20">
+										23点20分
+									</option>
+									<option Value="23:40">
+										23点40分
+									</option>
+									<option Value="00:00">
+										00点整
+									</option>
+									<option Value="00:20">
+										00点20分
+									</option>
+									<option Value="00:40">
+										00点40分
+									</option>
+									<option Value="01:00">
+										01点整
+									</option>
+									<option Value="01:20">
+										01点20分
+									</option>
+									<option Value="01:40">
+										01点40分
+									</option>
+									<option Value="02:00">
+										02点整
+									</option>
+									<option Value="02:20">
+										02点20分
+									</option>
+									<option Value="02:40">
+										02点40分
+									</option>
+									<option Value="03:00">
+										03点整
+									</option>
+									<option Value="03:20">
+										03点20分
+									</option>
+									<option Value="03:40">
+										03点40分
+									</option>
+									<option Value="04:00">
+										04点整
+									</option>
+									<option Value="04:20">
+										04点20分
+									</option>
+									<option Value="04:40">
+										04点40分
+									</option>
+									<option Value="05:00">
+										05点整
+									</option>
+									<option Value="05:20">
+										05点20分
+									</option>
+									<option Value="05:40">
+										05点40分
+									</option>
+									<option Value="06:00">
+										06点整
+									</option>
+									<option Value="06:20">
+										06点20分
+									</option>
+									<option Value="06:40">
+										06点40分
+									</option>
+								</select>
+							</div>
+							<div style="clear: both;"></div>
+						</div>
+					</li>
+					<li>
+						<span class="icon-date">还车时间</span>
+						<div style="display: inline-block; float: right; width: 64%; overflow: hidden;">
+							<div style="width: 55%; float: left; overflow: hidden;">
+								<select class="select" id="txtDateMax_1" style="width: 100%; line-height: 34px; height: 34px; overflow: hidden;">
+									<s:iterator value="#request.dates" id="item" status="i">
+										<option value="${lz:date(item,"yyyy-MM-dd")}">
+											${lz:date(item,"MM月dd日")}
+										</option>
+									</s:iterator>
+								</select>
+							</div>
+							<div style="width: 45%; float: left; overflow: hidden;">
+								<select class="select" id="txtHourMax_1" style="width: 100%; line-height: 34px; height: 34px; overflow: hidden;">
+									<option Value="07:00">
+										07点整
+									</option>
+									<option Value="07:20">
+										07点20分
+									</option>
+									<option Value="07:40">
+										07点40分
+									</option>
+									<option Value="08:00">
+										08点整
+									</option>
+									<option Value="08:20">
+										08点20分
+									</option>
+									<option Value="08:40">
+										08点40分
+									</option>
+									<option Value="09:00">
+										09点整
+									</option>
+									<option Value="09:20">
+										09点20分
+									</option>
+									<option Value="09:40">
+										09点40分
+									</option>
+									<option Value="10:00">
+										10点整
+									</option>
+									<option Value="10:20">
+										10点20分
+									</option>
+									<option Value="10:40">
+										10点40分
+									</option>
+									<option Value="11:00">
+										11点整
+									</option>
+									<option Value="11:20">
+										11点20分
+									</option>
+									<option Value="11:40">
+										11点40分
+									</option>
+									<option Value="12:00">
+										12点整
+									</option>
+									<option Value="12:20">
+										12点20分
+									</option>
+									<option Value="12:40">
+										12点40分
+									</option>
+									<option Value="13:00">
+										13点整
+									</option>
+									<option Value="13:20">
+										13点20分
+									</option>
+									<option Value="13:40">
+										13点40分
+									</option>
+									<option Value="14:00">
+										14点整
+									</option>
+									<option Value="14:20">
+										14点20分
+									</option>
+									<option Value="14:40">
+										14点40分
+									</option>
+									<option Value="15:00">
+										15点整
+									</option>
+									<option Value="15:20">
+										15点20分
+									</option>
+									<option Value="15:40">
+										15点40分
+									</option>
+									<option Value="16:00">
+										16点整
+									</option>
+									<option Value="16:20">
+										16点20分
+									</option>
+									<option Value="16:40">
+										16点40分
+									</option>
+									<option Value="17:00">
+										17点整
+									</option>
+									<option Value="17:20">
+										17点20分
+									</option>
+									<option Value="17:40">
+										17点40分
+									</option>
+									<option Value="18:00">
+										18点整
+									</option>
+									<option Value="18:20">
+										18点20分
+									</option>
+									<option Value="18:40">
+										18点40分
+									</option>
+									<option Value="19:00">
+										19点整
+									</option>
+									<option Value="19:20">
+										19点20分
+									</option>
+									<option Value="19:40">
+										19点40分
+									</option>
+									<option Value="20:00">
+										20点整
+									</option>
+									<option Value="20:20">
+										20点20分
+									</option>
+									<option Value="20:40">
+										20点40分
+									</option>
+									<option Value="21:00">
+										21点整
+									</option>
+									<option Value="21:20">
+										21点20分
+									</option>
+									<option Value="21:40">
+										21点40分
+									</option>
+									<option Value="22:00">
+										22点整
+									</option>
+									<option Value="22:20">
+										22点20分
+									</option>
+									<option Value="22:40">
+										22点40分
+									</option>
+									<option Value="23:00">
+										23点整
+									</option>
+									<option Value="23:20">
+										23点20分
+									</option>
+									<option Value="23:40">
+										23点40分
+									</option>
+									<option Value="00:00">
+										00点整
+									</option>
+									<option Value="00:20">
+										00点20分
+									</option>
+									<option Value="00:40">
+										00点40分
+									</option>
+									<option Value="01:00">
+										01点整
+									</option>
+									<option Value="01:20">
+										01点20分
+									</option>
+									<option Value="01:40">
+										01点40分
+									</option>
+									<option Value="02:00">
+										02点整
+									</option>
+									<option Value="02:20">
+										02点20分
+									</option>
+									<option Value="02:40">
+										02点40分
+									</option>
+									<option Value="03:00">
+										03点整
+									</option>
+									<option Value="03:20">
+										03点20分
+									</option>
+									<option Value="03:40">
+										03点40分
+									</option>
+									<option Value="04:00">
+										04点整
+									</option>
+									<option Value="04:20">
+										04点20分
+									</option>
+									<option Value="04:40">
+										04点40分
+									</option>
+									<option Value="05:00">
+										05点整
+									</option>
+									<option Value="05:20">
+										05点20分
+									</option>
+									<option Value="05:40">
+										05点40分
+									</option>
+									<option Value="06:00">
+										06点整
+									</option>
+									<option Value="06:20">
+										06点20分
+									</option>
+									<option Value="06:40">
+										06点40分
+									</option>
+								</select>
+							</div>
+							<div style="clear: both;"></div>
+						</div>
+					</li>
+					<s:if test="#session.ccclubs_web_host.shId==2">
+					<li>
+						<span class="icon-avoid">还车网点</span>
+						<select id="yidi_wd" style="line-height: 34px; height: 34px; overflow: hidden; float: right;"<s:if test="#request.aret==A">disabled</s:if>>
+							<option value="-1">${currentOutlet}</option>
+							<s:iterator value="#request.huanche_outlets" id="item" status="i">
+							<option value="${item.csoId}">${item.csoName}</option>
+							</s:iterator>
+						</select>
+					</li>
+					</s:if>
+					<s:if test="#request.csoCar.$cscModel.cscmType==0">
+						<li>
+							<span class="icon-avoid">千元免赔</span><a href="javascript:;" id="insureMile" class="isbuy ${insureType==csProductMile.cspId?'on':''}">按公里购买</a><a href="javascript:;" id="insureHour" class="isbuy ${insureType==csProductHour.cspId?'on':''}" style="margin-right: 10px;">按小时购买</a>
+						</li>
+					</s:if>
+					<li>
+						<span class="icon-hour">免费小时</span>
+						<div style="float: right; height: 25px; line-height: 25px;">
+							使用
+							<input type="text" maxlength="2" name="textfield" id="fhAmount" class="fhAmount">
+							小时
+						</div>
+						</a>
+					</li>
+					<s:if test="#request.limit>0">
+						<span style="color:black;" id="mianya"><input type="checkbox" id="credit_use" name="credit_use">
+						我的芝麻信用良好，享用免押金服务<a href="account_creditInfo.html">[?]</a></span>
+					</s:if>
+				</ul>
+			</div>
+			<div class="okbuybtn">
+				<a href="javascript:;" onclick="submit();" id="save-btn">立即预订</a>
+			</div>
+		</div>
+		<!-- 弹出层 -->
+		<div class="black"></div>
+		<div class="popbox">
+			<p>
+				提示信息：操作提示内容，如改时间段 已被预订请修改时间，续订成功等
+			</p>
+			<div class="popselect">
+				<a href="javascript:;">确定</a>
+			</div>
+		</div>
+
+		<div class="black-confirm"></div>
+		<div class="popbox-confirm">
+			<p style="border-bottom: none;height: 87%;">
+				提示信息：操作提示内容，如改时间段 已被预订请修改时间，续订成功等
+			</p>
+			<div class="popselect" style="border-top:1px solid #b1b1b1;margin-top:5px;" id="popbox-submit">
+				<a href="javascript:;" style="float:left;width:50%;text-align:right;padding-right:10%;" onclick="submit1()" id="submitOrderBtn">确定</a>
+				<a href="javascript:;" style="float:left;width:50%;text-align:left;padding-left:10%;" onclick="closeConfirm()">取消</a>
+			</div>
+		</div>
+
+		<input id="insureType" type="hidden" value="${insureType}" />
+		<input id="index" type="hidden" value="${index}" />
+		<input id="host" type="hidden" value="${session.ccclubs_web_host.shId}" />
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#txtDateMin_1").val("${lz:date(baseOrderInfo.csoStart,'yyyy-MM-dd')}");
+				$("#txtHourMin_1").val("${lz:date(baseOrderInfo.csoStart,'HH:mm')}");
+				
+				$("#txtDateMax_1").val("${lz:date(baseOrderInfo.csoFinish,'yyyy-MM-dd')}");
+				$("#txtHourMax_1").val("${lz:date(baseOrderInfo.csoFinish,'HH:mm')}");
+				
+				if(is_weixin()){
+					$('#mianya').css("display", "none");
+				} else {
+					$('#mianya').css("display", "block");
+					$('#credit_use').attr("checked",true);
+				}
+			});
+			$(document).on('click','#insureMile',function(){
+				var tag = $(this);
+				if(tag.hasClass('on')){
+					tag.removeClass('on');
+					$('#insureType').val(0);
+				}else{
+					tag.addClass('on').siblings().removeClass('on');
+					$('#insureType').val(${csProductMile.cspId});
+				}
+			});
+			
+			$(document).on('click','#insureHour',function(){
+				var tag = $(this);
+				if(tag.hasClass('on')){
+					tag.removeClass('on');
+					$('#insureType').val(0);
+				}else{
+					tag.addClass('on').siblings().removeClass('on');
+					$('#insureType').val(${csProductHour.cspId});
+				}
+			});
+			
+			$(document).on('click','.popselect a',function(){
+				$('.black').css("display", "none");
+				$('.popbox').css("display", "none");
+			});
+			
+			function open(){
+				$('.black').css("display", "block");
+				$('.popbox').css("display", "block");
+			};
+			function openConfirm(){
+				$('.black-confirm').css("display", "block");
+				$('.popbox-confirm').css("display", "block");
+			};
+			function closeConfirm(){
+				$('.black-confirm').css("display", "none");
+				$('.popbox-confirm').css("display", "none");
+			};
+			
+			function setDate(date){
+				location.href = 'reserve_checkout.html?car=${csoCar.cscId}&index='+$('#index').val()+'&csoDate='+date+'&insureType='+$('#insureType').val();
+			}
+			
+			function submit(){
+					var reg = new RegExp(/^\d*\.?\d{0,2}$/);
+					var _val =$('#fhAmount').val().replace(/[^0-9.]/g, "");
+		            if (!reg.test(_val)) {
+		            	$('.popbox p').html('免费小时输入格式不正确。请重新输入。');
+						open();
+		                return;
+		            }
+		            if(${freehour}<parseFloat(_val)){
+		            	$('.popbox p').html('您的免费小时数不够，请获得免费小时后再使用。');
+						open();
+		                return;
+		            }
+		            //异地还车网点
+	            	var yidiwd_value = $("#yidi_wd option:selected").val();
+	            	var yidiwd_text = $("#yidi_wd option:selected").text();
+	            	if (typeof(yidiwd_value) == "undefined") {
+						yidiwd_value = -1;
+					}
+	            	
+		            var insureType =  $('#insureType').val();
+		            var start =  $("#txtDateMin_1").val() + " " + $("#txtHourMin_1").val()+':00';
+					var finish = $("#txtDateMax_1").val() + " " + $("#txtHourMax_1").val()+':00';
+					var credit = $("#credit_use").attr("checked");//芝麻信用
+					var urlConfirm = "reserve_confirm.html?t="+new Date().getTime()+"&freeHours="+_val+"&csoStart="+start+"&csoFinish="+finish+"&csoAvoid="+
+							insureType+"&csoCar=${csoCar.cscId}"+"&credit="+credit+"&yidiwd_value="+yidiwd_value+"&yidiwd_text="+encodeURIComponent(encodeURIComponent(yidiwd_text));
+					
+					// 需要禁用按钮 
+            		var btn = $('#save-btn');
+					$.ajax({
+							url: urlConfirm,
+							type: "GET",
+							async: false,
+							beforeSend: function(XMLHttpRequest){
+									btn.attr("onclick", "return false");
+						            btn.addClass('off');
+						            btn.text("正在提交。。。");
+							},
+							success: function(data) {
+								switch (data) {
+									case "201":
+									location.href = 'login.html';
+									break;
+								case "209":
+									location.href = '403.html';
+									break;
+								case "202":
+									location.href = 'reserve.html';
+									break;
+								case "203":
+									$('.popbox p').html('你还没有上传驾驶证照片，你可以去 账户 里上传。');
+									open();
+									break;
+							    case "205":
+							    	$('.popbox p').html('你的驾驶证正在审核中...');
+									open();
+									break;
+								case "101":
+									$('.popbox p').html('请设置取车时间。');
+									open();
+									break;
+								case "102":
+									$('.popbox p').html('请设置还车时间。');
+									open();
+									break;
+								case "103":
+									$('.popbox p').html('取车时间不能早于当前时间两小时。');
+									open();
+									break;
+								case "104":
+									$('.popbox p').html('取车时间不能晚于还车时间。');
+									open();
+									break;
+								case "105":
+									$('.popbox p').html('最低1个小时起租。');
+									open();
+									break;
+								case "106":
+									$('.popbox p').html('取、还车时间应该是20分钟的倍数。');
+									open();
+									break;
+								case "107":
+									$('.popbox p').html('网站提只提供7天以内的车辆预订。');
+									open();
+									break;
+								case "108":
+									$('.popbox p').html('网站只提供最长15天的订单。');
+									open();
+									break;
+								case "109":
+									$('.popbox p').html('请先选择一辆车，再预订。');
+									open();
+									break;
+								case "111":
+									$('.popbox p').html('亲，下手不够快哟～，你选择的时间已经被人预订啦。换个时间吧。');
+									open();
+									break;
+								case "444":
+									$('.popbox p').html('亲，您的信用余额已不够下单。');
+									open();
+									break;
+								case "445":
+									$('.popbox p').html('免押金订单最多只能下一天哦');
+									open();
+									break;
+								case "404":
+									$('.popbox p').html('亲，电动汽车最多支持提前2小时预订。');
+									open();
+									break;
+								case "false":
+									//跳转错误页面
+									location.href = '403.html';
+									break;
+								default:
+									{
+										$('.popbox-confirm p').html(data);
+										openConfirm();
+										/* if(confirm(data)){
+											submit1();
+										} */
+										break;
+									}
+								}
+						 },
+						 complete: function(XMLHttpRequest, textStatus){
+								btn.text("立即预订");
+								btn.removeClass('off');
+					            btn.attr("onclick", "submit()");
+						}
+					});
+					//location.href = '/checkout_submit.html';
+					return false;
+				};
+			
+			function submit1(){
+				// 需要禁用按钮 
+        		var btn = $('#popbox-submit');
+				btn.hide();
+				var reg = new RegExp(/^\d*\.?\d{0,2}$/);
+				var _val =$('#fhAmount').val().replace(/[^0-9.]/g, "");
+	            if (!reg.test(_val)) {
+	            	$('.popbox p').html('免费小时输入格式不正确。请重新输入。');
+					open();
+	                return;
+	            }
+	            if(${freehour}<parseFloat(_val)){
+	            	$('.popbox p').html('您的免费小时数不够，请获得免费小时后再使用。');
+					open();
+	                return;
+	            }
+	            var insureType =  $('#insureType').val();
+	            var start =  $("#txtDateMin_1").val() + " " + $("#txtHourMin_1").val()+':00';
+				var finish = $("#txtDateMax_1").val() + " " + $("#txtHourMax_1").val()+':00';
+				var credit = $("#credit_use").attr("checked");//芝麻信用
+				var yidiwd_value = $("#yidi_wd option:selected").val();
+				if (typeof(yidiwd_value) == "undefined") {
+					yidiwd_value = -1;
+				}
+				var url = "reserve_submit.html?t="+new Date().getTime()+"&freeHours="+_val+"&csoStart="+start+"&csoFinish="+finish+"&csoAvoid="+insureType+
+						"&csoCar=${csoCar.cscId}"+"&credit="+credit+"&yidiwd_value="+yidiwd_value;
+				var urlConfirm = "reserve_confirm.html?t="+new Date().getTime()+"&freeHours="+_val+"&csoStart="+start+"&csoFinish="+finish+"&csoAvoid="+insureType+"&csoCar=${csoCar.cscId}"+"&credit="+credit;
+				
+				$.ajax({
+						url: url,
+						type: "GET",
+						async: false,
+						beforeSend: function(XMLHttpRequest){
+							//btn.attr("onclick", "return false");
+				            //btn.text("正在提交。。。");
+						},
+						success: function(data) {
+							switch (data) {
+								case "201":
+								location.href = 'login.html';
+								break;
+							case "209":
+								location.href = '403.html';
+								break;
+							case "202":
+								location.href = 'reserve.html';
+								break;
+							case "203":
+								alert('你还没有上传驾驶证照片，你可以去 账户 里上传。');closeConfirm();
+								//$('.popbox p').html('你还没有上传驾驶证照片，你可以去 账户 里上传。');
+								//open();
+								break;
+						    case "205":
+						    	alert('你的驾驶证正在审核中...');closeConfirm();
+								break;
+						    case "204":
+						    	alert('账户余额不足。');closeConfirm();
+								break;
+							case "206":
+								alert('你的退款还在处理中，暂时不能下订单。');closeConfirm();
+								break;
+							case "207":
+								alert('资料信息都完善啦？驾驶证也上传啦？联系客服加快审核 >>。');closeConfirm();
+								break;								
+							case "208":
+								alert('亲，下手不够快哟～，你选择的时间已经被人预订啦。换个时间吧。');closeConfirm();
+								break;
+							case "222":
+								alert('信用余额不足。');closeConfirm();
+								break;
+							case "101":
+								alert('请设置取车时间。');closeConfirm();
+								break;
+							case "102":
+								alert('请设置还车时间。');closeConfirm();
+								break;
+							case "103":
+								alert('取车时间不能早于当前时间两小时。');closeConfirm();
+								break;
+							case "104":
+								alert('取车时间不能晚于还车时间。');closeConfirm();
+								break;
+							case "105":
+								alert('最低1个小时起租。');closeConfirm();
+								break;
+							case "106":
+								alert('取、还车时间应该是20分钟的倍数。');closeConfirm();
+								break;
+							case "107":
+								alert('网站提只提供7天以内的车辆预订。');closeConfirm();
+								break;
+							case "108":
+								alert('网站提只提供最长15天的订单。');closeConfirm();
+								break;
+							case "109":
+								alert('请先选择一辆车，再预订。');closeConfirm();
+								break;
+							case "111":
+								alert('亲，下手不够快哟～，你选择的时间已经被人预订啦。换个时间吧。');closeConfirm();
+								break;
+							case "301":
+								alert('账户有问题，请稍后再试。');closeConfirm();
+								break;
+							case "false":
+								//跳转错误页面
+								location.href = '403.html';
+								break;
+							default:
+								{
+									var order = /^\d*$/;
+									if(order.test(data)){
+										$('submitOrderBtn').removeAttr("disabled");
+										location.href = 'account_order.html';
+									}else{
+										alert(data);
+										location.href = 'account_order.html';
+									}
+									return;
+								}
+							}
+					 },
+					 complete: function(XMLHttpRequest, textStatus){
+							//btn.text("确定");
+				            //btn.attr("onclick", "submit1()");
+				            btn.show();
+					}
+				});
+				//location.href = '/checkout_submit.html';
+				return false;
+			};
+		//document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+		//	WeixinJSBridge.call('hideToolbar');
+		//});
+		var maxLength = $('.menunavgotop li.A').length;
+		var index = ${index};
+		$('.menunavgotop li.A').click(function(){
+			$('#index').val($(this).attr('data-i'));
+			//$('#csoDate').val($(this).attr('data'));
+			setDate($(this).attr('data'));
+		});
+		$('.next').click(function(){
+			if(index>maxLength-4) return;
+			var lis = $('.menunavgotop li.A');
+			$('#index').val(lis.eq(index+1).attr('data-i'));
+			//$('#csoDate').val(lis.eq(index+1).attr('data'));
+			setDate(lis.eq(index+1).attr('data'));
+		});
+		$('.prev').click(function(){
+			if(index == 0) return;
+			var lis = $('.menunavgotop li.A');
+			$('#index').val(lis.eq(index-1).attr('data-i'));
+			//$('#csoDate').val(lis.eq(index-1).attr('data'));
+			setDate(lis.eq(index-1).attr('data'));
+		});
+		
+		function is_weixin(){  
+		    var ua = navigator.userAgent.toLowerCase();
+		    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		        return true;
+		    } else {  
+		        return false;
+		    }
+		}
+		
+		//暂时废弃
+		function getOrderId(){
+			var orderUrl = "reserve_getOrderId.html";
+			$.ajax({
+				url: orderUrl,
+				type: "GET",
+				async: false,
+				success: function(data) {
+					switch (data) {
+						case "201":
+							location.href = 'login.html';
+							break;
+						case "209":
+							location.href = '403.html';
+							break;
+						case "false":
+							//跳转错误页面
+							location.href = '403.html';
+							break;
+						default:{
+							return data;
+						}
+					}
+				}
+			});
+		}
+		</script>
+	</body>
+</html>

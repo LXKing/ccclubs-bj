@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvProperty_part">	
+	<!-- 系统属性条件sql片段  -->
+	<sql id="srv_property_dynamic">
+		<dynamic>
+			<isNotEmpty property="spId" prepend="and">
+			    $spIdNot$ srv_property$suffix$.sp_id = #spId#
+			</isNotEmpty>
+			<isNotNull property="spIdNot" prepend="and">
+				<isEmpty property="spId">
+				$spIdNot$ srv_property$suffix$.sp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="spName" prepend="and">			    
+			    (<isNotNull property="spNameNot">
+			    srv_property$suffix$.sp_name is null or length(srv_property$suffix$.sp_name) &lt; 1 or
+			    </isNotNull>$spNameNot$ srv_property$suffix$.sp_name = #spName#)
+			</isNotEmpty>
+			<isNotNull property="spNameNot" prepend="and">
+				<isEmpty property="spName">
+				$spNameNot$ (srv_property$suffix$.sp_name is null or length(srv_property$suffix$.sp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="spParent" prepend="and">
+			    $spParentNot$ srv_property$suffix$.sp_parent = #spParent#
+			</isNotEmpty>
+			<isNotNull property="spParentNot" prepend="and">
+				<isEmpty property="spParent">
+				$spParentNot$ srv_property$suffix$.sp_parent is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="spFlag" prepend="and">			    
+			    (<isNotNull property="spFlagNot">
+			    srv_property$suffix$.sp_flag is null or length(srv_property$suffix$.sp_flag) &lt; 1 or
+			    </isNotNull>$spFlagNot$ srv_property$suffix$.sp_flag = #spFlag#)
+			</isNotEmpty>
+			<isNotNull property="spFlagNot" prepend="and">
+				<isEmpty property="spFlag">
+				$spFlagNot$ (srv_property$suffix$.sp_flag is null or length(srv_property$suffix$.sp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="spNumberMin" prepend="and">
+			    $spNumberNot$  ( srv_property$suffix$.sp_number &gt;= #spNumberMin#
+			    <isEmpty property="spNumberMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="spNumberMax" prepend="and">
+				<isEmpty property="spNumberMin">$spNumberNot$   (</isEmpty>
+			    srv_property$suffix$.sp_number &lt;= #spNumberMax# )
+			</isNotEmpty>
+			<isNotEmpty property="spNumber" prepend="and">
+			    $spNumberNot$ srv_property$suffix$.sp_number = #spNumber#
+			</isNotEmpty>
+			<isNotNull property="spNumberNot" prepend="and">
+				<isEmpty property="spNumberMax"><isEmpty property="spNumberMin"><isEmpty property="spNumber">
+				$spNumberNot$ srv_property$suffix$.sp_number is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="spValue" prepend="and">			    
+			    (<isNotNull property="spValueNot">
+			    srv_property$suffix$.sp_value is null or length(srv_property$suffix$.sp_value) &lt; 1 or
+			    </isNotNull>$spValueNot$ srv_property$suffix$.sp_value = #spValue#)
+			</isNotEmpty>
+			<isNotNull property="spValueNot" prepend="and">
+				<isEmpty property="spValue">
+				$spValueNot$ (srv_property$suffix$.sp_value is null or length(srv_property$suffix$.sp_value) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="spText" prepend="and">			    
+			    (<isNotNull property="spTextNot">
+			    srv_property$suffix$.sp_text is null or length(srv_property$suffix$.sp_text) &lt; 1 or
+			    </isNotNull>$spTextNot$ srv_property$suffix$.sp_text like #spText#)
+			</isNotEmpty>
+			<isNotNull property="spTextNot" prepend="and">
+				<isEmpty property="spText">
+				$spTextNot$ (srv_property$suffix$.sp_text is null or length(srv_property$suffix$.sp_text) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="spStatus" prepend="and">
+			    $spStatusNot$ srv_property$suffix$.sp_status = #spStatus#
+			</isNotEmpty>
+			<isNotNull property="spStatusNot" prepend="and">
+				<isEmpty property="spStatus">
+				$spStatusNot$ srv_property$suffix$.sp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统属性left join 条件sql片段 -->
+	<sql id="srv_property_join">
+		<dynamic>
+			<isNotEmpty property="SrvProperty.spId" prepend="and">
+			    $SrvProperty.spIdNot$ srv_property$SrvProperty.suffix$.sp_id = #SrvProperty.spId#
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spIdNot" prepend="and">
+				<isEmpty property="SrvProperty.spId">
+				$spIdNot$ srv_property$SrvProperty.suffix$.sp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spName" prepend="and">
+				(<isNotNull property="SrvProperty.spNameNot">
+			    srv_property$SrvProperty.suffix$.sp_name is null or length(srv_property$SrvProperty.suffix$.sp_name) &lt; 1 or
+			    </isNotNull>$SrvProperty.spNameNot$ srv_property$SrvProperty.suffix$.sp_name = #SrvProperty.spName#)
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spNameNot" prepend="and">
+				<isEmpty property="SrvProperty.spName">
+				$spNameNot$ (srv_property$SrvProperty.suffix$.sp_name is null or length(srv_property$SrvProperty.suffix$.sp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spParent" prepend="and">
+			    $SrvProperty.spParentNot$ srv_property$SrvProperty.suffix$.sp_parent = #SrvProperty.spParent#
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spParentNot" prepend="and">
+				<isEmpty property="SrvProperty.spParent">
+				$spParentNot$ srv_property$SrvProperty.suffix$.sp_parent is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spFlag" prepend="and">
+				(<isNotNull property="SrvProperty.spFlagNot">
+			    srv_property$SrvProperty.suffix$.sp_flag is null or length(srv_property$SrvProperty.suffix$.sp_flag) &lt; 1 or
+			    </isNotNull>$SrvProperty.spFlagNot$ srv_property$SrvProperty.suffix$.sp_flag = #SrvProperty.spFlag#)
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spFlagNot" prepend="and">
+				<isEmpty property="SrvProperty.spFlag">
+				$spFlagNot$ (srv_property$SrvProperty.suffix$.sp_flag is null or length(srv_property$SrvProperty.suffix$.sp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spNumberMin" prepend="and">
+			    $SrvProperty.spNumberNot$  ( srv_property$SrvProperty.suffix$.sp_number &gt;= #SrvProperty.spNumberMin#
+			    <isEmpty property="SrvProperty.spNumberMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvProperty.spNumberMax" prepend="and">
+				<isEmpty property="SrvProperty.spNumberMin">$SrvProperty.spNumberNot$   (</isEmpty>
+			    srv_property$SrvProperty.suffix$.sp_number &lt;= #SrvProperty.spNumberMax# )
+			</isNotEmpty>
+			<isNotEmpty property="SrvProperty.spNumber" prepend="and">
+			    $SrvProperty.spNumberNot$ srv_property$SrvProperty.suffix$.sp_number = #SrvProperty.spNumber#
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spNumberNot" prepend="and">
+				<isEmpty property="SrvProperty.spNumberMax"><isEmpty property="SrvProperty.spNumberMin"><isEmpty property="SrvProperty.spNumber">
+				$spNumberNot$ srv_property$SrvProperty.suffix$.sp_number is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spValue" prepend="and">
+				(<isNotNull property="SrvProperty.spValueNot">
+			    srv_property$SrvProperty.suffix$.sp_value is null or length(srv_property$SrvProperty.suffix$.sp_value) &lt; 1 or
+			    </isNotNull>$SrvProperty.spValueNot$ srv_property$SrvProperty.suffix$.sp_value = #SrvProperty.spValue#)
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spValueNot" prepend="and">
+				<isEmpty property="SrvProperty.spValue">
+				$spValueNot$ (srv_property$SrvProperty.suffix$.sp_value is null or length(srv_property$SrvProperty.suffix$.sp_value) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spText" prepend="and">
+				(<isNotNull property="SrvProperty.spTextNot">
+			    srv_property$SrvProperty.suffix$.sp_text is null or length(srv_property$SrvProperty.suffix$.sp_text) &lt; 1 or
+			    </isNotNull>$SrvProperty.spTextNot$ srv_property$SrvProperty.suffix$.sp_text like #SrvProperty.spText#)
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spTextNot" prepend="and">
+				<isEmpty property="SrvProperty.spText">
+				$spTextNot$ (srv_property$SrvProperty.suffix$.sp_text is null or length(srv_property$SrvProperty.suffix$.sp_text) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvProperty.spStatus" prepend="and">
+			    $SrvProperty.spStatusNot$ srv_property$SrvProperty.suffix$.sp_status = #SrvProperty.spStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvProperty.spStatusNot" prepend="and">
+				<isEmpty property="SrvProperty.spStatus">
+				$spStatusNot$ srv_property$SrvProperty.suffix$.sp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

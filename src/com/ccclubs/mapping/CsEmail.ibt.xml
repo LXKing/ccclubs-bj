@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 邮件内容之SQL映射 -->
+	<resultMap id="CsEmail" class="com.ccclubs.model.CsEmail">
+		<result property="cseId" column="cse_id"/>
+		<result property="cseTo" column="cse_to"/>
+		<result property="cseContent" column="cse_content"/>
+		<result property="cseFrom" column="cse_from"/>
+		<result property="cseSendTime" column="cse_send_time"/>
+		<result property="cseAddTime" column="cse_add_time"/>
+		<result property="cseStatus" column="cse_status"/>
+	</resultMap>
+		
+	<!-- 获取所有邮件内容 -->
+	<select id="getCsEmailList" resultMap="CsEmail">
+		select cs_email$suffix$.* from cs_email$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_email$suffix$.cse_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEmail_part.cs_email_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cse_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取邮件内容分页 -->
+	<select id="getCsEmailPage" parameterClass="java.util.HashMap" resultMap="CsEmail">
+		select cs_email$suffix$.* from cs_email$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_email$suffix$.cse_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEmail_part.cs_email_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cse_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取邮件内容总数 -->
+	<select id="getCsEmailEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_email$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_email$suffix$.cse_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEmail_part.cs_email_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取邮件内容 -->
+	<select id="getCsEmailById" parameterClass="java.util.HashMap" resultMap="CsEmail">
+		select cs_email$suffix$.* from cs_email$suffix$
+		where cse_id=#id#
+	</select>
+	
+		
+	<!-- 保存邮件内容 -->
+	<insert id="saveCsEmail"  parameterClass="com.ccclubs.model.CsEmail">
+		insert into cs_email$suffix$
+		(
+			cs_email$suffix$.cse_to
+			,cs_email$suffix$.cse_content
+			,cs_email$suffix$.cse_from
+			,cs_email$suffix$.cse_send_time
+			,cs_email$suffix$.cse_add_time
+			,cs_email$suffix$.cse_status
+		)
+		values(
+			<isNotNull property="cseTo" prepend="">
+				#cseTo#
+			</isNotNull>
+			<isNull property="cseTo" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cseContent" prepend=",">
+				#cseContent#
+			</isNotNull>
+			<isNull property="cseContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseFrom" prepend=",">
+				#cseFrom#
+			</isNotNull>
+			<isNull property="cseFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseSendTime" prepend=",">
+				#cseSendTime#
+			</isNotNull>
+			<isNull property="cseSendTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseAddTime" prepend=",">
+				#cseAddTime#
+			</isNotNull>
+			<isNull property="cseAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseStatus" prepend=",">
+				#cseStatus#
+			</isNotNull>
+			<isNull property="cseStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新邮件内容 -->
+	<update id="updateCsEmail"  parameterClass="com.ccclubs.model.CsEmail">
+		update cs_email$suffix$ set
+			<isNotNull property="cseTo" prepend="">
+				cs_email$suffix$.cse_to = #cseTo#
+			</isNotNull>
+			<isNull property="cseTo" prepend="">
+				cs_email$suffix$.cse_to = null
+			</isNull>				
+			<isNotNull property="cseContent" prepend=",">
+				cs_email$suffix$.cse_content = #cseContent#
+			</isNotNull>
+			<isNull property="cseContent" prepend=",">
+				cs_email$suffix$.cse_content = null
+			</isNull>				
+			<isNotNull property="cseFrom" prepend=",">
+				cs_email$suffix$.cse_from = #cseFrom#
+			</isNotNull>
+			<isNull property="cseFrom" prepend=",">
+				cs_email$suffix$.cse_from = null
+			</isNull>				
+			<isNotNull property="cseSendTime" prepend=",">
+				cs_email$suffix$.cse_send_time = #cseSendTime#
+			</isNotNull>
+			<isNull property="cseSendTime" prepend=",">
+				cs_email$suffix$.cse_send_time = null
+			</isNull>				
+			<isNotNull property="cseAddTime" prepend=",">
+				cs_email$suffix$.cse_add_time = #cseAddTime#
+			</isNotNull>
+			<isNull property="cseAddTime" prepend=",">
+				cs_email$suffix$.cse_add_time = null
+			</isNull>				
+			<isNotNull property="cseStatus" prepend=",">
+				cs_email$suffix$.cse_status = #cseStatus#
+			</isNotNull>
+			<isNull property="cseStatus" prepend=",">
+				cs_email$suffix$.cse_status = null
+			</isNull>				
+		where
+			cse_id=#cseId#
+	</update>
+	
+	<!-- 更新邮件内容非空字段 -->
+	<update id="updateCsEmail$NotNull"  parameterClass="com.ccclubs.model.CsEmail">
+		update cs_email$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cseTo" prepend=",">
+				cs_email$suffix$.cse_to = #cseTo#
+			</isNotNull>		
+			<isNotNull property="cseContent" prepend=",">
+				cs_email$suffix$.cse_content = #cseContent#
+			</isNotNull>		
+			<isNotNull property="cseFrom" prepend=",">
+				cs_email$suffix$.cse_from = #cseFrom#
+			</isNotNull>		
+			<isNotNull property="cseSendTime" prepend=",">
+				cs_email$suffix$.cse_send_time = #cseSendTime#
+			</isNotNull>		
+			<isNotNull property="cseAddTime" prepend=",">
+				cs_email$suffix$.cse_add_time = #cseAddTime#
+			</isNotNull>		
+			<isNotNull property="cseStatus" prepend=",">
+				cs_email$suffix$.cse_status = #cseStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cse_id=#cseId#
+	</update>
+	
+
+	<!-- 根据ID删除一个邮件内容 -->
+	<delete id="deleteCsEmailById" parameterClass="java.util.HashMap">
+		delete from cs_email$suffix$ where cse_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个邮件内容 -->
+	<update id="removeCsEmailById" parameterClass="java.util.HashMap">
+		update cs_email$suffix$ set  cs_email$suffix$.cse_status=-1  where cse_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新邮件内容 -->
+	<update id="updateCsEmailBy"  parameterClass="java.util.HashMap">
+		update cs_email$suffix$ set		
+			cse_id=cse_id
+			<isNotNull property="V_cseId" prepend=",">
+				cs_email$suffix$.cse_id = #V_cseId#
+			</isNotNull>		
+			<isNotNull property="V_cseTo" prepend=",">
+				cs_email$suffix$.cse_to = #V_cseTo#
+			</isNotNull>		
+			<isNotNull property="V_cseContent" prepend=",">
+				cs_email$suffix$.cse_content = #V_cseContent#
+			</isNotNull>		
+			<isNotNull property="V_cseFrom" prepend=",">
+				cs_email$suffix$.cse_from = #V_cseFrom#
+			</isNotNull>		
+			<isNotNull property="V_cseSendTime" prepend=",">
+				cs_email$suffix$.cse_send_time = #V_cseSendTime#
+			</isNotNull>		
+			<isNotNull property="V_cseAddTime" prepend=",">
+				cs_email$suffix$.cse_add_time = #V_cseAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cseStatus" prepend=",">
+				cs_email$suffix$.cse_status = #V_cseStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_email$suffix$.cse_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsEmail_part.cs_email_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除邮件内容 -->
+	<update id="deleteCsEmailBy"  parameterClass="java.util.HashMap">
+		delete from cs_email$suffix$ where 
+		cs_email$suffix$.cse_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsEmail_part.cs_email_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

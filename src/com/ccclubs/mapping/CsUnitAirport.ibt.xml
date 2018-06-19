@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 机场服务之SQL映射 -->
+	<resultMap id="CsUnitAirport" class="com.ccclubs.model.CsUnitAirport">
+		<result property="csuaId" column="csua_id"/>
+		<result property="csuaHost" column="csua_host"/>
+		<result property="csuaUnitInfo" column="csua_unit_info"/>
+		<result property="csuaType" column="csua_type"/>
+		<result property="csuaFlight" column="csua_flight"/>
+		<result property="csuaTime" column="csua_time"/>
+		<result property="csuaContact" column="csua_contact"/>
+		<result property="csuaMobile" column="csua_mobile"/>
+		<result property="csuaCount" column="csua_count"/>
+		<result property="csuaStatement" column="csua_statement"/>
+		<result property="csuaUpdateTime" column="csua_update_time"/>
+		<result property="csuaAddTime" column="csua_add_time"/>
+		<result property="csuaRemark" column="csua_remark"/>
+		<result property="csuaStatus" column="csua_status"/>
+	</resultMap>
+		
+	<!-- 获取所有机场服务 -->
+	<select id="getCsUnitAirportList" resultMap="CsUnitAirport">
+		select cs_unit_airport$suffix$.* from cs_unit_airport$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.csua_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询-->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.csua_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_airport$suffix$.csua_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitAirport_part.cs_unit_airport_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csua_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取机场服务分页 -->
+	<select id="getCsUnitAirportPage" parameterClass="java.util.HashMap" resultMap="CsUnitAirport">
+		select cs_unit_airport$suffix$.* from cs_unit_airport$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询 -->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.csua_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询 -->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.csua_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_airport$suffix$.csua_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitAirport_part.cs_unit_airport_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csua_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取机场服务总数 -->
+	<select id="getCsUnitAirportEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_airport$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.csua_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.csua_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_airport$suffix$.csua_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitAirport_part.cs_unit_airport_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取机场服务 -->
+	<select id="getCsUnitAirportById" parameterClass="java.util.HashMap" resultMap="CsUnitAirport">
+		select cs_unit_airport$suffix$.* from cs_unit_airport$suffix$
+		where csua_id=#id#
+	</select>
+	
+		
+	<!-- 保存机场服务 -->
+	<insert id="saveCsUnitAirport"  parameterClass="com.ccclubs.model.CsUnitAirport">
+		insert into cs_unit_airport$suffix$
+		(
+			cs_unit_airport$suffix$.csua_host
+			,cs_unit_airport$suffix$.csua_unit_info
+			,cs_unit_airport$suffix$.csua_type
+			,cs_unit_airport$suffix$.csua_flight
+			,cs_unit_airport$suffix$.csua_time
+			,cs_unit_airport$suffix$.csua_contact
+			,cs_unit_airport$suffix$.csua_mobile
+			,cs_unit_airport$suffix$.csua_count
+			,cs_unit_airport$suffix$.csua_statement
+			,cs_unit_airport$suffix$.csua_update_time
+			,cs_unit_airport$suffix$.csua_add_time
+			,cs_unit_airport$suffix$.csua_remark
+			,cs_unit_airport$suffix$.csua_status
+		)
+		values(
+			<isNotNull property="csuaHost" prepend="">
+				#csuaHost#
+			</isNotNull>
+			<isNull property="csuaHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csuaUnitInfo" prepend=",">
+				#csuaUnitInfo#
+			</isNotNull>
+			<isNull property="csuaUnitInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaType" prepend=",">
+				#csuaType#
+			</isNotNull>
+			<isNull property="csuaType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaFlight" prepend=",">
+				#csuaFlight#
+			</isNotNull>
+			<isNull property="csuaFlight" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaTime" prepend=",">
+				#csuaTime#
+			</isNotNull>
+			<isNull property="csuaTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaContact" prepend=",">
+				#csuaContact#
+			</isNotNull>
+			<isNull property="csuaContact" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaMobile" prepend=",">
+				#csuaMobile#
+			</isNotNull>
+			<isNull property="csuaMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaCount" prepend=",">
+				#csuaCount#
+			</isNotNull>
+			<isNull property="csuaCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaStatement" prepend=",">
+				#csuaStatement#
+			</isNotNull>
+			<isNull property="csuaStatement" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaUpdateTime" prepend=",">
+				#csuaUpdateTime#
+			</isNotNull>
+			<isNull property="csuaUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaAddTime" prepend=",">
+				#csuaAddTime#
+			</isNotNull>
+			<isNull property="csuaAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaRemark" prepend=",">
+				#csuaRemark#
+			</isNotNull>
+			<isNull property="csuaRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuaStatus" prepend=",">
+				#csuaStatus#
+			</isNotNull>
+			<isNull property="csuaStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新机场服务 -->
+	<update id="updateCsUnitAirport"  parameterClass="com.ccclubs.model.CsUnitAirport">
+		update cs_unit_airport$suffix$ set
+			<isNotNull property="csuaHost" prepend="">
+				cs_unit_airport$suffix$.csua_host = #csuaHost#
+			</isNotNull>
+			<isNull property="csuaHost" prepend="">
+				cs_unit_airport$suffix$.csua_host = null
+			</isNull>				
+			<isNotNull property="csuaUnitInfo" prepend=",">
+				cs_unit_airport$suffix$.csua_unit_info = #csuaUnitInfo#
+			</isNotNull>
+			<isNull property="csuaUnitInfo" prepend=",">
+				cs_unit_airport$suffix$.csua_unit_info = null
+			</isNull>				
+			<isNotNull property="csuaType" prepend=",">
+				cs_unit_airport$suffix$.csua_type = #csuaType#
+			</isNotNull>
+			<isNull property="csuaType" prepend=",">
+				cs_unit_airport$suffix$.csua_type = null
+			</isNull>				
+			<isNotNull property="csuaFlight" prepend=",">
+				cs_unit_airport$suffix$.csua_flight = #csuaFlight#
+			</isNotNull>
+			<isNull property="csuaFlight" prepend=",">
+				cs_unit_airport$suffix$.csua_flight = null
+			</isNull>				
+			<isNotNull property="csuaTime" prepend=",">
+				cs_unit_airport$suffix$.csua_time = #csuaTime#
+			</isNotNull>
+			<isNull property="csuaTime" prepend=",">
+				cs_unit_airport$suffix$.csua_time = null
+			</isNull>				
+			<isNotNull property="csuaContact" prepend=",">
+				cs_unit_airport$suffix$.csua_contact = #csuaContact#
+			</isNotNull>
+			<isNull property="csuaContact" prepend=",">
+				cs_unit_airport$suffix$.csua_contact = null
+			</isNull>				
+			<isNotNull property="csuaMobile" prepend=",">
+				cs_unit_airport$suffix$.csua_mobile = #csuaMobile#
+			</isNotNull>
+			<isNull property="csuaMobile" prepend=",">
+				cs_unit_airport$suffix$.csua_mobile = null
+			</isNull>				
+			<isNotNull property="csuaCount" prepend=",">
+				cs_unit_airport$suffix$.csua_count = #csuaCount#
+			</isNotNull>
+			<isNull property="csuaCount" prepend=",">
+				cs_unit_airport$suffix$.csua_count = null
+			</isNull>				
+			<isNotNull property="csuaStatement" prepend=",">
+				cs_unit_airport$suffix$.csua_statement = #csuaStatement#
+			</isNotNull>
+			<isNull property="csuaStatement" prepend=",">
+				cs_unit_airport$suffix$.csua_statement = null
+			</isNull>				
+			<isNotNull property="csuaUpdateTime" prepend=",">
+				cs_unit_airport$suffix$.csua_update_time = #csuaUpdateTime#
+			</isNotNull>
+			<isNull property="csuaUpdateTime" prepend=",">
+				cs_unit_airport$suffix$.csua_update_time = null
+			</isNull>				
+			<isNotNull property="csuaAddTime" prepend=",">
+				cs_unit_airport$suffix$.csua_add_time = #csuaAddTime#
+			</isNotNull>
+			<isNull property="csuaAddTime" prepend=",">
+				cs_unit_airport$suffix$.csua_add_time = null
+			</isNull>				
+			<isNotNull property="csuaRemark" prepend=",">
+				cs_unit_airport$suffix$.csua_remark = #csuaRemark#
+			</isNotNull>
+			<isNull property="csuaRemark" prepend=",">
+				cs_unit_airport$suffix$.csua_remark = null
+			</isNull>				
+			<isNotNull property="csuaStatus" prepend=",">
+				cs_unit_airport$suffix$.csua_status = #csuaStatus#
+			</isNotNull>
+			<isNull property="csuaStatus" prepend=",">
+				cs_unit_airport$suffix$.csua_status = null
+			</isNull>				
+		where
+			csua_id=#csuaId#
+	</update>
+	
+	<!-- 更新机场服务非空字段 -->
+	<update id="updateCsUnitAirport$NotNull"  parameterClass="com.ccclubs.model.CsUnitAirport">
+		update cs_unit_airport$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csuaHost" prepend=",">
+				cs_unit_airport$suffix$.csua_host = #csuaHost#
+			</isNotNull>		
+			<isNotNull property="csuaUnitInfo" prepend=",">
+				cs_unit_airport$suffix$.csua_unit_info = #csuaUnitInfo#
+			</isNotNull>		
+			<isNotNull property="csuaType" prepend=",">
+				cs_unit_airport$suffix$.csua_type = #csuaType#
+			</isNotNull>		
+			<isNotNull property="csuaFlight" prepend=",">
+				cs_unit_airport$suffix$.csua_flight = #csuaFlight#
+			</isNotNull>		
+			<isNotNull property="csuaTime" prepend=",">
+				cs_unit_airport$suffix$.csua_time = #csuaTime#
+			</isNotNull>		
+			<isNotNull property="csuaContact" prepend=",">
+				cs_unit_airport$suffix$.csua_contact = #csuaContact#
+			</isNotNull>		
+			<isNotNull property="csuaMobile" prepend=",">
+				cs_unit_airport$suffix$.csua_mobile = #csuaMobile#
+			</isNotNull>		
+			<isNotNull property="csuaCount" prepend=",">
+				cs_unit_airport$suffix$.csua_count = #csuaCount#
+			</isNotNull>		
+			<isNotNull property="csuaStatement" prepend=",">
+				cs_unit_airport$suffix$.csua_statement = #csuaStatement#
+			</isNotNull>		
+			<isNotNull property="csuaUpdateTime" prepend=",">
+				cs_unit_airport$suffix$.csua_update_time = #csuaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csuaAddTime" prepend=",">
+				cs_unit_airport$suffix$.csua_add_time = #csuaAddTime#
+			</isNotNull>		
+			<isNotNull property="csuaRemark" prepend=",">
+				cs_unit_airport$suffix$.csua_remark = #csuaRemark#
+			</isNotNull>		
+			<isNotNull property="csuaStatus" prepend=",">
+				cs_unit_airport$suffix$.csua_status = #csuaStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csua_id=#csuaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个机场服务 -->
+	<delete id="deleteCsUnitAirportById" parameterClass="java.util.HashMap">
+		delete from cs_unit_airport$suffix$ where csua_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个机场服务 -->
+	<update id="removeCsUnitAirportById" parameterClass="java.util.HashMap">
+		update cs_unit_airport$suffix$ set  cs_unit_airport$suffix$.csua_status=-1  where csua_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新机场服务 -->
+	<update id="updateCsUnitAirportBy"  parameterClass="java.util.HashMap">
+		update cs_unit_airport$suffix$ set		
+			csua_id=csua_id
+			<isNotNull property="V_csuaId" prepend=",">
+				cs_unit_airport$suffix$.csua_id = #V_csuaId#
+			</isNotNull>		
+			<isNotNull property="V_csuaHost" prepend=",">
+				cs_unit_airport$suffix$.csua_host = #V_csuaHost#
+			</isNotNull>		
+			<isNotNull property="V_csuaUnitInfo" prepend=",">
+				cs_unit_airport$suffix$.csua_unit_info = #V_csuaUnitInfo#
+			</isNotNull>		
+			<isNotNull property="V_csuaType" prepend=",">
+				cs_unit_airport$suffix$.csua_type = #V_csuaType#
+			</isNotNull>		
+			<isNotNull property="V_csuaFlight" prepend=",">
+				cs_unit_airport$suffix$.csua_flight = #V_csuaFlight#
+			</isNotNull>		
+			<isNotNull property="V_csuaTime" prepend=",">
+				cs_unit_airport$suffix$.csua_time = #V_csuaTime#
+			</isNotNull>		
+			<isNotNull property="V_csuaContact" prepend=",">
+				cs_unit_airport$suffix$.csua_contact = #V_csuaContact#
+			</isNotNull>		
+			<isNotNull property="V_csuaMobile" prepend=",">
+				cs_unit_airport$suffix$.csua_mobile = #V_csuaMobile#
+			</isNotNull>		
+			<isNotNull property="V_csuaCount" prepend=",">
+				cs_unit_airport$suffix$.csua_count = #V_csuaCount#
+			</isNotNull>		
+			<isNotNull property="V_csuaStatement" prepend=",">
+				cs_unit_airport$suffix$.csua_statement = #V_csuaStatement#
+			</isNotNull>		
+			<isNotNull property="V_csuaUpdateTime" prepend=",">
+				cs_unit_airport$suffix$.csua_update_time = #V_csuaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csuaAddTime" prepend=",">
+				cs_unit_airport$suffix$.csua_add_time = #V_csuaAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csuaRemark" prepend=",">
+				cs_unit_airport$suffix$.csua_remark = #V_csuaRemark#
+			</isNotNull>		
+			<isNotNull property="V_csuaStatus" prepend=",">
+				cs_unit_airport$suffix$.csua_status = #V_csuaStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.csua_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_airport$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询-->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.csua_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_airport$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_unit_airport$suffix$.csua_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuaUnitInfo"><!-- 调用一下CsuaUnitInfo，把CsUnitInfo指向CsuaUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuaStatement"><!-- 调用一下CsuaStatement，把CsUnitBill指向CsuaStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitAirport_part.cs_unit_airport_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除机场服务 -->
+	<update id="deleteCsUnitAirportBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_airport$suffix$ where 
+		cs_unit_airport$suffix$.csua_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitAirport_part.cs_unit_airport_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

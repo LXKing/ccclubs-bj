@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 礼品赠品之SQL映射 -->
+	<resultMap id="CsPresent" class="com.ccclubs.model.CsPresent">
+		<result property="cspId" column="csp_id"/>
+		<result property="cspHost" column="csp_host"/>
+		<result property="cspName" column="csp_name"/>
+		<result property="cspType" column="csp_type"/>
+		<result property="cspImage" column="csp_image"/>
+		<result property="cspImages" column="csp_images"/>
+		<result property="cspProfile" column="csp_profile"/>
+		<result property="cspCount" column="csp_count"/>
+		<result property="cspUpdateTime" column="csp_update_time"/>
+		<result property="cspAddTime" column="csp_add_time"/>
+		<result property="cspStatus" column="csp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有礼品赠品 -->
+	<select id="getCsPresentList" resultMap="CsPresent">
+		select cs_present$suffix$.* from cs_present$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_present$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPresent_part.cs_present_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取礼品赠品分页 -->
+	<select id="getCsPresentPage" parameterClass="java.util.HashMap" resultMap="CsPresent">
+		select cs_present$suffix$.* from cs_present$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_present$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPresent_part.cs_present_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取礼品赠品总数 -->
+	<select id="getCsPresentEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_present$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_present$suffix$.csp_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPresent_part.cs_present_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取礼品赠品 -->
+	<select id="getCsPresentById" parameterClass="java.util.HashMap" resultMap="CsPresent">
+		select cs_present$suffix$.* from cs_present$suffix$
+		where csp_id=#id#
+	</select>
+	
+		
+	<!-- 保存礼品赠品 -->
+	<insert id="saveCsPresent"  parameterClass="com.ccclubs.model.CsPresent">
+		insert into cs_present$suffix$
+		(
+			cs_present$suffix$.csp_host
+			,cs_present$suffix$.csp_name
+			,cs_present$suffix$.csp_type
+			,cs_present$suffix$.csp_image
+			,cs_present$suffix$.csp_images
+			,cs_present$suffix$.csp_profile
+			,cs_present$suffix$.csp_count
+			,cs_present$suffix$.csp_update_time
+			,cs_present$suffix$.csp_add_time
+			,cs_present$suffix$.csp_status
+		)
+		values(
+			<isNotNull property="cspHost" prepend="">
+				#cspHost#
+			</isNotNull>
+			<isNull property="cspHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspName" prepend=",">
+				#cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspType" prepend=",">
+				#cspType#
+			</isNotNull>
+			<isNull property="cspType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspImage" prepend=",">
+				#cspImage#
+			</isNotNull>
+			<isNull property="cspImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspImages" prepend=",">
+				#cspImages#
+			</isNotNull>
+			<isNull property="cspImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspProfile" prepend=",">
+				#cspProfile#
+			</isNotNull>
+			<isNull property="cspProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspCount" prepend=",">
+				#cspCount#
+			</isNotNull>
+			<isNull property="cspCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspUpdateTime" prepend=",">
+				#cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspAddTime" prepend=",">
+				#cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspStatus" prepend=",">
+				#cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新礼品赠品 -->
+	<update id="updateCsPresent"  parameterClass="com.ccclubs.model.CsPresent">
+		update cs_present$suffix$ set
+			<isNotNull property="cspHost" prepend="">
+				cs_present$suffix$.csp_host = #cspHost#
+			</isNotNull>
+			<isNull property="cspHost" prepend="">
+				cs_present$suffix$.csp_host = null
+			</isNull>				
+			<isNotNull property="cspName" prepend=",">
+				cs_present$suffix$.csp_name = #cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend=",">
+				cs_present$suffix$.csp_name = null
+			</isNull>				
+			<isNotNull property="cspType" prepend=",">
+				cs_present$suffix$.csp_type = #cspType#
+			</isNotNull>
+			<isNull property="cspType" prepend=",">
+				cs_present$suffix$.csp_type = null
+			</isNull>				
+			<isNotNull property="cspImage" prepend=",">
+				cs_present$suffix$.csp_image = #cspImage#
+			</isNotNull>
+			<isNull property="cspImage" prepend=",">
+				cs_present$suffix$.csp_image = null
+			</isNull>				
+			<isNotNull property="cspImages" prepend=",">
+				cs_present$suffix$.csp_images = #cspImages#
+			</isNotNull>
+			<isNull property="cspImages" prepend=",">
+				cs_present$suffix$.csp_images = null
+			</isNull>				
+			<isNotNull property="cspProfile" prepend=",">
+				cs_present$suffix$.csp_profile = #cspProfile#
+			</isNotNull>
+			<isNull property="cspProfile" prepend=",">
+				cs_present$suffix$.csp_profile = null
+			</isNull>				
+			<isNotNull property="cspCount" prepend=",">
+				cs_present$suffix$.csp_count = #cspCount#
+			</isNotNull>
+			<isNull property="cspCount" prepend=",">
+				cs_present$suffix$.csp_count = null
+			</isNull>				
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_present$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				cs_present$suffix$.csp_update_time = null
+			</isNull>				
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_present$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				cs_present$suffix$.csp_add_time = null
+			</isNull>				
+			<isNotNull property="cspStatus" prepend=",">
+				cs_present$suffix$.csp_status = #cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				cs_present$suffix$.csp_status = null
+			</isNull>				
+		where
+			csp_id=#cspId#
+	</update>
+	
+	<!-- 更新礼品赠品非空字段 -->
+	<update id="updateCsPresent$NotNull"  parameterClass="com.ccclubs.model.CsPresent">
+		update cs_present$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspHost" prepend=",">
+				cs_present$suffix$.csp_host = #cspHost#
+			</isNotNull>		
+			<isNotNull property="cspName" prepend=",">
+				cs_present$suffix$.csp_name = #cspName#
+			</isNotNull>		
+			<isNotNull property="cspType" prepend=",">
+				cs_present$suffix$.csp_type = #cspType#
+			</isNotNull>		
+			<isNotNull property="cspImage" prepend=",">
+				cs_present$suffix$.csp_image = #cspImage#
+			</isNotNull>		
+			<isNotNull property="cspImages" prepend=",">
+				cs_present$suffix$.csp_images = #cspImages#
+			</isNotNull>		
+			<isNotNull property="cspProfile" prepend=",">
+				cs_present$suffix$.csp_profile = #cspProfile#
+			</isNotNull>		
+			<isNotNull property="cspCount" prepend=",">
+				cs_present$suffix$.csp_count = #cspCount#
+			</isNotNull>		
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_present$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_present$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>		
+			<isNotNull property="cspStatus" prepend=",">
+				cs_present$suffix$.csp_status = #cspStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csp_id=#cspId#
+	</update>
+	
+
+	<!-- 根据ID删除一个礼品赠品 -->
+	<delete id="deleteCsPresentById" parameterClass="java.util.HashMap">
+		delete from cs_present$suffix$ where csp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个礼品赠品 -->
+	<update id="removeCsPresentById" parameterClass="java.util.HashMap">
+		update cs_present$suffix$ set  cs_present$suffix$.csp_status=-1  where csp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新礼品赠品 -->
+	<update id="updateCsPresentBy"  parameterClass="java.util.HashMap">
+		update cs_present$suffix$ set		
+			csp_id=csp_id
+			<isNotNull property="V_cspId" prepend=",">
+				cs_present$suffix$.csp_id = #V_cspId#
+			</isNotNull>		
+			<isNotNull property="V_cspHost" prepend=",">
+				cs_present$suffix$.csp_host = #V_cspHost#
+			</isNotNull>		
+			<isNotNull property="V_cspName" prepend=",">
+				cs_present$suffix$.csp_name = #V_cspName#
+			</isNotNull>		
+			<isNotNull property="V_cspType" prepend=",">
+				cs_present$suffix$.csp_type = #V_cspType#
+			</isNotNull>		
+			<isNotNull property="V_cspImage" prepend=",">
+				cs_present$suffix$.csp_image = #V_cspImage#
+			</isNotNull>		
+			<isNotNull property="V_cspImages" prepend=",">
+				cs_present$suffix$.csp_images = #V_cspImages#
+			</isNotNull>		
+			<isNotNull property="V_cspProfile" prepend=",">
+				cs_present$suffix$.csp_profile = #V_cspProfile#
+			</isNotNull>		
+			<isNotNull property="V_cspCount" prepend=",">
+				cs_present$suffix$.csp_count = #V_cspCount#
+			</isNotNull>		
+			<isNotNull property="V_cspUpdateTime" prepend=",">
+				cs_present$suffix$.csp_update_time = #V_cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cspAddTime" prepend=",">
+				cs_present$suffix$.csp_add_time = #V_cspAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cspStatus" prepend=",">
+				cs_present$suffix$.csp_status = #V_cspStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_present$suffix$.csp_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsPresent_part.cs_present_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除礼品赠品 -->
+	<update id="deleteCsPresentBy"  parameterClass="java.util.HashMap">
+		delete from cs_present$suffix$ where 
+		cs_present$suffix$.csp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsPresent_part.cs_present_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

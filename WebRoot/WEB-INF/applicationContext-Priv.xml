@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢spring框架 -->
+
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	  	<property name="location">
+	  		<value>classpath:config.properties</value>
+	  	</property>
+	</bean>
+	<!-- ###################### 配置数据源[ccclubs_system]连接池、事务管理、以及相关配置 ###################### -->
+	<!-- C3p0连接池 -->
+	<bean id="ccclubs_systemDataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${ccclubs_system.driver}" />
+		<property name="jdbcUrl" value="${ccclubs_system.url}" />
+		<property name="user" value="${ccclubs_system.username}" />
+		<property name="password" value="${ccclubs_system.password}" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="${ccclubs_system.max}"  />
+		<property name="maxIdleTime" value="300" />
+		<property name="idleConnectionTestPeriod" value="1800" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="initialPoolSize" value="5" />
+		<property name="acquireRetryAttempts" value="30" />
+		<property name="breakAfterAcquireFailure" value="true" />
+		<property name="testConnectionOnCheckout" value="false" />
+	</bean>
+	<bean id="ccclubs_systemSqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="ccclubs_systemDataSource"/>
+		<property name="configLocations">
+			<list>
+			  	<value>/WEB-INF/configs/sqlmapConfig-CcclubsSystem.xml</value>
+		  	</list>
+	  	</property>
+	</bean>
+	<!-- 事务管理 -->
+	<bean id="ccclubs_systemTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="ccclubs_systemDataSource"/>
+    </bean>
+    <!-- 事务拦截 org.springframework.transaction.interceptor.TransactionInterceptor -->
+	<bean id="ccclubs_systemTransactionInterceptor"
+		class="com.ccclubs.interceptor.CcclubsTransactionInterceptor">
+		<property name="transactionManager" ref="ccclubs_systemTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_REQUIRED</prop>
+				<prop key="persist*">PROPAGATION_REQUIRED</prop>
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="send*">PROPAGATION_REQUIRED</prop>
+				<prop key="find*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_NESTED</prop>
+				<prop key="save*">PROPAGATION_NESTED</prop>
+				<prop key="delete*">PROPAGATION_NESTED</prop>
+				<prop key="remove*">PROPAGATION_NESTED</prop>
+				<prop key="del*">PROPAGATION_NESTED</prop>
+				<prop key="execute*">PROPAGATION_NESTED</prop>
+			</props>
+		</property>
+	</bean>	
+	
+	
+	
+	<!-- ###################### 配置数据源[ccclubs_system_history]连接池、事务管理、以及相关配置 ###################### -->
+	<!-- C3p0连接池 -->
+	<bean id="ccclubs_system_historyDataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${ccclubs_system_history.driver}" />
+		<property name="jdbcUrl" value="${ccclubs_system_history.url}" />
+		<property name="user" value="${ccclubs_system_history.username}" />
+		<property name="password" value="${ccclubs_system_history.password}" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="${ccclubs_system_history.max}"  />
+		<property name="maxIdleTime" value="300" />
+		<property name="idleConnectionTestPeriod" value="1800" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="initialPoolSize" value="5" />
+		<property name="acquireRetryAttempts" value="30" />
+		<property name="breakAfterAcquireFailure" value="true" />
+		<property name="testConnectionOnCheckout" value="false" />
+	</bean>
+	<bean id="ccclubs_system_historySqlMapClient"
+		   class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		  <property name="configLocation" value="/WEB-INF/configs/sqlmapConfig-CcclubsSystemHistory.xml" />
+		  <property name="dataSource" ref="ccclubs_system_historyDataSource"/>
+	</bean>
+	<!-- 事务管理 -->
+	<bean id="ccclubs_system_historyTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="ccclubs_system_historyDataSource"/>
+    </bean>
+    <!-- 事务拦截 -->
+	<bean id="ccclubs_system_historyTransactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="ccclubs_system_historyTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS</prop>
+				<prop key="persist*">PROPAGATION_SUPPORTS</prop>
+				<prop key="remove*">PROPAGATION_SUPPORTS</prop>
+				<prop key="add*">PROPAGATION_SUPPORTS</prop>
+				<prop key="send*">PROPAGATION_SUPPORTS</prop>
+				<prop key="find*">PROPAGATION_SUPPORTS</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="execute*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- ###################### 配置数据源[ccclubs_system_history]连接池、事务管理、以及相关配置 ###################### -->
+	<!-- C3p0连接池 -->
+	<bean id="ccclubs_elec_historyDataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${ccclubs_elec_history.driver}" />
+		<property name="jdbcUrl" value="${ccclubs_elec_history.url}" />
+		<property name="user" value="${ccclubs_elec_history.username}" />
+		<property name="password" value="${ccclubs_elec_history.password}" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="${ccclubs_elec_history.max}"  />
+		<property name="maxIdleTime" value="300" />
+		<property name="idleConnectionTestPeriod" value="1800" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="initialPoolSize" value="5" />
+		<property name="acquireRetryAttempts" value="30" />
+		<property name="breakAfterAcquireFailure" value="true" />
+		<property name="testConnectionOnCheckout" value="false" />
+	</bean>
+	<bean id="ccclubs_elec_historySqlMapClient"
+		   class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		  <property name="configLocation" value="/WEB-INF/configs/sqlmapConfig-CcclubsElecHistory.xml" />
+		  <property name="dataSource" ref="ccclubs_elec_historyDataSource"/>
+	</bean>
+	<!-- 事务管理 -->
+	<bean id="ccclubs_elec_historyTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="ccclubs_elec_historyDataSource"/>
+    </bean>
+    <!-- 事务拦截 -->
+	<bean id="ccclubs_elec_historyTransactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="ccclubs_elec_historyTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS</prop>
+				<prop key="persist*">PROPAGATION_SUPPORTS</prop>
+				<prop key="remove*">PROPAGATION_SUPPORTS</prop>
+				<prop key="add*">PROPAGATION_SUPPORTS</prop>
+				<prop key="send*">PROPAGATION_SUPPORTS</prop>
+				<prop key="find*">PROPAGATION_SUPPORTS</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="execute*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	
+	
+	
+	
+	<!-- ###################### 配置数据源[ccclubs_system_history]连接池、事务管理、以及相关配置 ###################### -->
+	<!-- C3p0连接池 -->
+	<bean id="ccclubs_dataDataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${ccclubs_data.driver}" />
+		<property name="jdbcUrl" value="${ccclubs_data.url}" />
+		<property name="user" value="${ccclubs_data.username}" />
+		<property name="password" value="${ccclubs_data.password}" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="${ccclubs_data.max}"  />
+		<property name="maxIdleTime" value="300" />
+		<property name="idleConnectionTestPeriod" value="1800" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="initialPoolSize" value="5" />
+		<property name="acquireRetryAttempts" value="30" />
+		<property name="breakAfterAcquireFailure" value="true" />
+		<property name="testConnectionOnCheckout" value="false" />
+	</bean>
+	<bean id="ccclubs_dataSqlMapClient"
+		   class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		  <property name="configLocation" value="/WEB-INF/configs/sqlmapConfig-CcclubsData.xml" />
+		  <property name="dataSource" ref="ccclubs_dataDataSource"/>
+	</bean>
+	<!-- 事务管理 -->
+	<bean id="ccclubs_dataTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="ccclubs_dataDataSource"/>
+    </bean>
+    <!-- 事务拦截 -->
+	<bean id="ccclubs_dataTransactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="ccclubs_dataTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS</prop>
+				<prop key="persist*">PROPAGATION_SUPPORTS</prop>
+				<prop key="remove*">PROPAGATION_SUPPORTS</prop>
+				<prop key="add*">PROPAGATION_SUPPORTS</prop>
+				<prop key="send*">PROPAGATION_SUPPORTS</prop>
+				<prop key="find*">PROPAGATION_SUPPORTS</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="execute*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	
+	
+	
+	
+	<!-- 事务管理是由spring来管理   <模板 >自动代理配置，事务和业务并行，支持嵌套事务-->
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+		    <!-- 所有名字以Dao,Service结尾的bean,将由该"bean后处理器"为其创建事务代理-->
+			<value>*Service,*Dao</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>ccclubs_systemTransactionInterceptor</value>
+				<value>ccclubs_system_historyTransactionInterceptor</value>
+				<value>ccclubs_elec_historyTransactionInterceptor</value>
+				<value>ccclubs_dataTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- bean泄 -->
+	<bean class="com.lazy3q.web.helper.SpringBeanHelper"/>
+	
+	<!-- 加载其他配置文件 -->	
+	<import resource="applicationContext-Dao.xml" />
+	<import resource="applicationContext-Service.xml" />	
+	
+	<!-- 通用服务接口 -->
+	<import resource="common-applicationContext-Service.xml" />
+	
+	<!-- 导入各应该配置 -->	
+	<import resource="applicationContext-import.xml" />
+	
+	
+</beans>

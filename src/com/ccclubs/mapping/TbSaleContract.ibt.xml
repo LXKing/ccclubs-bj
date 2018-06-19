@@ -1,0 +1,1024 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 签约合同之SQL映射 -->
+	<resultMap id="TbSaleContract" class="com.ccclubs.model.TbSaleContract">
+		<result property="tbscId" column="tbsc_id"/>
+		<result property="tbscHost" column="tbsc_host"/>
+		<result property="tbscName" column="tbsc_name"/>
+		<result property="tbscNo" column="tbsc_no"/>
+		<result property="tbscBattle" column="tbsc_battle"/>
+		<result property="tbscEvent" column="tbsc_event"/>
+		<result property="tbscOpport" column="tbsc_opport"/>
+		<result property="tbscQuote" column="tbsc_quote"/>
+		<result property="tbscGroup" column="tbsc_group"/>
+		<result property="tbscCustom" column="tbsc_custom"/>
+		<result property="tbscSigner" column="tbsc_signer"/>
+		<result property="tbscSignDate" column="tbsc_sign_date"/>
+		<result property="tbscBegin" column="tbsc_begin"/>
+		<result property="tbscEnd" column="tbsc_end"/>
+		<result property="tbscMoney" column="tbsc_money"/>
+		<result property="tbscProfit" column="tbsc_profit"/>
+		<result property="tbscFile" column="tbsc_file"/>
+		<result property="tbscOnwer" column="tbsc_onwer"/>
+		<result property="tbscAdder" column="tbsc_adder"/>
+		<result property="tbscEditor" column="tbsc_editor"/>
+		<result property="tbscRemark" column="tbsc_remark"/>
+		<result property="tbscMemo" column="tbsc_memo"/>
+		<result property="tbscData" column="tbsc_data"/>
+		<result property="tbscUpdateTime" column="tbsc_update_time"/>
+		<result property="tbscAddTime" column="tbsc_add_time"/>
+		<result property="tbscStatus" column="tbsc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有签约合同 -->
+	<select id="getTbSaleContractList" resultMap="TbSaleContract">
+		select tb_sale_contract$suffix$.* from tb_sale_contract$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询-->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.tbsc_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询-->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<isNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.tbsc_quote=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id
+			</isNull>
+			<isNotNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.$TbSaleQuote.on$=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询-->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询-->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.tbsc_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_contract$suffix$.tbsc_status!=-1
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询条件sql片段 -->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<include refid="TbSaleQuote_part.tb_sale_quote_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleContract_part.tb_sale_contract_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取签约合同分页 -->
+	<select id="getTbSaleContractPage" parameterClass="java.util.HashMap" resultMap="TbSaleContract">
+		select tb_sale_contract$suffix$.* from tb_sale_contract$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询 -->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.tbsc_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询 -->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<isNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.tbsc_quote=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id
+			</isNull>
+			<isNotNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.$TbSaleQuote.on$=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询 -->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.tbsc_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_contract$suffix$.tbsc_status!=-1
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询条件sql片段 -->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<include refid="TbSaleQuote_part.tb_sale_quote_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleContract_part.tb_sale_contract_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取签约合同总数 -->
+	<select id="getTbSaleContractEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_sale_contract$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.tbsc_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<isNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.tbsc_quote=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id
+			</isNull>
+			<isNotNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.$TbSaleQuote.on$=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.tbsc_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_contract$suffix$.tbsc_status!=-1
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询条件sql片段 -->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<include refid="TbSaleQuote_part.tb_sale_quote_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleContract_part.tb_sale_contract_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取签约合同 -->
+	<select id="getTbSaleContractById" parameterClass="java.util.HashMap" resultMap="TbSaleContract">
+		select tb_sale_contract$suffix$.* from tb_sale_contract$suffix$
+		where tbsc_id=#id#
+	</select>
+	
+		
+	<!-- 保存签约合同 -->
+	<insert id="saveTbSaleContract"  parameterClass="com.ccclubs.model.TbSaleContract">
+		insert into tb_sale_contract$suffix$
+		(
+			tb_sale_contract$suffix$.tbsc_host
+			,tb_sale_contract$suffix$.tbsc_name
+			,tb_sale_contract$suffix$.tbsc_no
+			,tb_sale_contract$suffix$.tbsc_battle
+			,tb_sale_contract$suffix$.tbsc_event
+			,tb_sale_contract$suffix$.tbsc_opport
+			,tb_sale_contract$suffix$.tbsc_quote
+			,tb_sale_contract$suffix$.tbsc_group
+			,tb_sale_contract$suffix$.tbsc_custom
+			,tb_sale_contract$suffix$.tbsc_signer
+			,tb_sale_contract$suffix$.tbsc_sign_date
+			,tb_sale_contract$suffix$.tbsc_begin
+			,tb_sale_contract$suffix$.tbsc_end
+			,tb_sale_contract$suffix$.tbsc_money
+			,tb_sale_contract$suffix$.tbsc_profit
+			,tb_sale_contract$suffix$.tbsc_file
+			,tb_sale_contract$suffix$.tbsc_onwer
+			,tb_sale_contract$suffix$.tbsc_adder
+			,tb_sale_contract$suffix$.tbsc_editor
+			,tb_sale_contract$suffix$.tbsc_remark
+			,tb_sale_contract$suffix$.tbsc_memo
+			,tb_sale_contract$suffix$.tbsc_data
+			,tb_sale_contract$suffix$.tbsc_update_time
+			,tb_sale_contract$suffix$.tbsc_add_time
+			,tb_sale_contract$suffix$.tbsc_status
+		)
+		values(
+			<isNotNull property="tbscHost" prepend="">
+				#tbscHost#
+			</isNotNull>
+			<isNull property="tbscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbscName" prepend=",">
+				#tbscName#
+			</isNotNull>
+			<isNull property="tbscName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscNo" prepend=",">
+				#tbscNo#
+			</isNotNull>
+			<isNull property="tbscNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscBattle" prepend=",">
+				#tbscBattle#
+			</isNotNull>
+			<isNull property="tbscBattle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscEvent" prepend=",">
+				#tbscEvent#
+			</isNotNull>
+			<isNull property="tbscEvent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscOpport" prepend=",">
+				#tbscOpport#
+			</isNotNull>
+			<isNull property="tbscOpport" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscQuote" prepend=",">
+				#tbscQuote#
+			</isNotNull>
+			<isNull property="tbscQuote" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscGroup" prepend=",">
+				#tbscGroup#
+			</isNotNull>
+			<isNull property="tbscGroup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscCustom" prepend=",">
+				#tbscCustom#
+			</isNotNull>
+			<isNull property="tbscCustom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscSigner" prepend=",">
+				#tbscSigner#
+			</isNotNull>
+			<isNull property="tbscSigner" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscSignDate" prepend=",">
+				#tbscSignDate#
+			</isNotNull>
+			<isNull property="tbscSignDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscBegin" prepend=",">
+				#tbscBegin#
+			</isNotNull>
+			<isNull property="tbscBegin" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscEnd" prepend=",">
+				#tbscEnd#
+			</isNotNull>
+			<isNull property="tbscEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscMoney" prepend=",">
+				#tbscMoney#
+			</isNotNull>
+			<isNull property="tbscMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscProfit" prepend=",">
+				#tbscProfit#
+			</isNotNull>
+			<isNull property="tbscProfit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscFile" prepend=",">
+				#tbscFile#
+			</isNotNull>
+			<isNull property="tbscFile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscOnwer" prepend=",">
+				#tbscOnwer#
+			</isNotNull>
+			<isNull property="tbscOnwer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscAdder" prepend=",">
+				#tbscAdder#
+			</isNotNull>
+			<isNull property="tbscAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscEditor" prepend=",">
+				#tbscEditor#
+			</isNotNull>
+			<isNull property="tbscEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscRemark" prepend=",">
+				#tbscRemark#
+			</isNotNull>
+			<isNull property="tbscRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscMemo" prepend=",">
+				#tbscMemo#
+			</isNotNull>
+			<isNull property="tbscMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscData" prepend=",">
+				#tbscData#
+			</isNotNull>
+			<isNull property="tbscData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscUpdateTime" prepend=",">
+				#tbscUpdateTime#
+			</isNotNull>
+			<isNull property="tbscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscAddTime" prepend=",">
+				#tbscAddTime#
+			</isNotNull>
+			<isNull property="tbscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscStatus" prepend=",">
+				#tbscStatus#
+			</isNotNull>
+			<isNull property="tbscStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新签约合同 -->
+	<update id="updateTbSaleContract"  parameterClass="com.ccclubs.model.TbSaleContract">
+		update tb_sale_contract$suffix$ set
+			<isNotNull property="tbscHost" prepend="">
+				tb_sale_contract$suffix$.tbsc_host = #tbscHost#
+			</isNotNull>
+			<isNull property="tbscHost" prepend="">
+				tb_sale_contract$suffix$.tbsc_host = null
+			</isNull>				
+			<isNotNull property="tbscName" prepend=",">
+				tb_sale_contract$suffix$.tbsc_name = #tbscName#
+			</isNotNull>
+			<isNull property="tbscName" prepend=",">
+				tb_sale_contract$suffix$.tbsc_name = null
+			</isNull>				
+			<isNotNull property="tbscNo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_no = #tbscNo#
+			</isNotNull>
+			<isNull property="tbscNo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_no = null
+			</isNull>				
+			<isNotNull property="tbscBattle" prepend=",">
+				tb_sale_contract$suffix$.tbsc_battle = #tbscBattle#
+			</isNotNull>
+			<isNull property="tbscBattle" prepend=",">
+				tb_sale_contract$suffix$.tbsc_battle = null
+			</isNull>				
+			<isNotNull property="tbscEvent" prepend=",">
+				tb_sale_contract$suffix$.tbsc_event = #tbscEvent#
+			</isNotNull>
+			<isNull property="tbscEvent" prepend=",">
+				tb_sale_contract$suffix$.tbsc_event = null
+			</isNull>				
+			<isNotNull property="tbscOpport" prepend=",">
+				tb_sale_contract$suffix$.tbsc_opport = #tbscOpport#
+			</isNotNull>
+			<isNull property="tbscOpport" prepend=",">
+				tb_sale_contract$suffix$.tbsc_opport = null
+			</isNull>				
+			<isNotNull property="tbscQuote" prepend=",">
+				tb_sale_contract$suffix$.tbsc_quote = #tbscQuote#
+			</isNotNull>
+			<isNull property="tbscQuote" prepend=",">
+				tb_sale_contract$suffix$.tbsc_quote = null
+			</isNull>				
+			<isNotNull property="tbscGroup" prepend=",">
+				tb_sale_contract$suffix$.tbsc_group = #tbscGroup#
+			</isNotNull>
+			<isNull property="tbscGroup" prepend=",">
+				tb_sale_contract$suffix$.tbsc_group = null
+			</isNull>				
+			<isNotNull property="tbscCustom" prepend=",">
+				tb_sale_contract$suffix$.tbsc_custom = #tbscCustom#
+			</isNotNull>
+			<isNull property="tbscCustom" prepend=",">
+				tb_sale_contract$suffix$.tbsc_custom = null
+			</isNull>				
+			<isNotNull property="tbscSigner" prepend=",">
+				tb_sale_contract$suffix$.tbsc_signer = #tbscSigner#
+			</isNotNull>
+			<isNull property="tbscSigner" prepend=",">
+				tb_sale_contract$suffix$.tbsc_signer = null
+			</isNull>				
+			<isNotNull property="tbscSignDate" prepend=",">
+				tb_sale_contract$suffix$.tbsc_sign_date = #tbscSignDate#
+			</isNotNull>
+			<isNull property="tbscSignDate" prepend=",">
+				tb_sale_contract$suffix$.tbsc_sign_date = null
+			</isNull>				
+			<isNotNull property="tbscBegin" prepend=",">
+				tb_sale_contract$suffix$.tbsc_begin = #tbscBegin#
+			</isNotNull>
+			<isNull property="tbscBegin" prepend=",">
+				tb_sale_contract$suffix$.tbsc_begin = null
+			</isNull>				
+			<isNotNull property="tbscEnd" prepend=",">
+				tb_sale_contract$suffix$.tbsc_end = #tbscEnd#
+			</isNotNull>
+			<isNull property="tbscEnd" prepend=",">
+				tb_sale_contract$suffix$.tbsc_end = null
+			</isNull>				
+			<isNotNull property="tbscMoney" prepend=",">
+				tb_sale_contract$suffix$.tbsc_money = #tbscMoney#
+			</isNotNull>
+			<isNull property="tbscMoney" prepend=",">
+				tb_sale_contract$suffix$.tbsc_money = null
+			</isNull>				
+			<isNotNull property="tbscProfit" prepend=",">
+				tb_sale_contract$suffix$.tbsc_profit = #tbscProfit#
+			</isNotNull>
+			<isNull property="tbscProfit" prepend=",">
+				tb_sale_contract$suffix$.tbsc_profit = null
+			</isNull>				
+			<isNotNull property="tbscFile" prepend=",">
+				tb_sale_contract$suffix$.tbsc_file = #tbscFile#
+			</isNotNull>
+			<isNull property="tbscFile" prepend=",">
+				tb_sale_contract$suffix$.tbsc_file = null
+			</isNull>				
+			<isNotNull property="tbscOnwer" prepend=",">
+				tb_sale_contract$suffix$.tbsc_onwer = #tbscOnwer#
+			</isNotNull>
+			<isNull property="tbscOnwer" prepend=",">
+				tb_sale_contract$suffix$.tbsc_onwer = null
+			</isNull>				
+			<isNotNull property="tbscAdder" prepend=",">
+				tb_sale_contract$suffix$.tbsc_adder = #tbscAdder#
+			</isNotNull>
+			<isNull property="tbscAdder" prepend=",">
+				tb_sale_contract$suffix$.tbsc_adder = null
+			</isNull>				
+			<isNotNull property="tbscEditor" prepend=",">
+				tb_sale_contract$suffix$.tbsc_editor = #tbscEditor#
+			</isNotNull>
+			<isNull property="tbscEditor" prepend=",">
+				tb_sale_contract$suffix$.tbsc_editor = null
+			</isNull>				
+			<isNotNull property="tbscRemark" prepend=",">
+				tb_sale_contract$suffix$.tbsc_remark = #tbscRemark#
+			</isNotNull>
+			<isNull property="tbscRemark" prepend=",">
+				tb_sale_contract$suffix$.tbsc_remark = null
+			</isNull>				
+			<isNotNull property="tbscMemo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_memo = #tbscMemo#
+			</isNotNull>
+			<isNull property="tbscMemo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_memo = null
+			</isNull>				
+			<isNotNull property="tbscData" prepend=",">
+				tb_sale_contract$suffix$.tbsc_data = #tbscData#
+			</isNotNull>
+			<isNull property="tbscData" prepend=",">
+				tb_sale_contract$suffix$.tbsc_data = null
+			</isNull>				
+			<isNotNull property="tbscUpdateTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_update_time = #tbscUpdateTime#
+			</isNotNull>
+			<isNull property="tbscUpdateTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_update_time = null
+			</isNull>				
+			<isNotNull property="tbscAddTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_add_time = #tbscAddTime#
+			</isNotNull>
+			<isNull property="tbscAddTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_add_time = null
+			</isNull>				
+			<isNotNull property="tbscStatus" prepend=",">
+				tb_sale_contract$suffix$.tbsc_status = #tbscStatus#
+			</isNotNull>
+			<isNull property="tbscStatus" prepend=",">
+				tb_sale_contract$suffix$.tbsc_status = null
+			</isNull>				
+		where
+			tbsc_id=#tbscId#
+	</update>
+	
+	<!-- 更新签约合同非空字段 -->
+	<update id="updateTbSaleContract$NotNull"  parameterClass="com.ccclubs.model.TbSaleContract">
+		update tb_sale_contract$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbscHost" prepend=",">
+				tb_sale_contract$suffix$.tbsc_host = #tbscHost#
+			</isNotNull>		
+			<isNotNull property="tbscName" prepend=",">
+				tb_sale_contract$suffix$.tbsc_name = #tbscName#
+			</isNotNull>		
+			<isNotNull property="tbscNo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_no = #tbscNo#
+			</isNotNull>		
+			<isNotNull property="tbscBattle" prepend=",">
+				tb_sale_contract$suffix$.tbsc_battle = #tbscBattle#
+			</isNotNull>		
+			<isNotNull property="tbscEvent" prepend=",">
+				tb_sale_contract$suffix$.tbsc_event = #tbscEvent#
+			</isNotNull>		
+			<isNotNull property="tbscOpport" prepend=",">
+				tb_sale_contract$suffix$.tbsc_opport = #tbscOpport#
+			</isNotNull>		
+			<isNotNull property="tbscQuote" prepend=",">
+				tb_sale_contract$suffix$.tbsc_quote = #tbscQuote#
+			</isNotNull>		
+			<isNotNull property="tbscGroup" prepend=",">
+				tb_sale_contract$suffix$.tbsc_group = #tbscGroup#
+			</isNotNull>		
+			<isNotNull property="tbscCustom" prepend=",">
+				tb_sale_contract$suffix$.tbsc_custom = #tbscCustom#
+			</isNotNull>		
+			<isNotNull property="tbscSigner" prepend=",">
+				tb_sale_contract$suffix$.tbsc_signer = #tbscSigner#
+			</isNotNull>		
+			<isNotNull property="tbscSignDate" prepend=",">
+				tb_sale_contract$suffix$.tbsc_sign_date = #tbscSignDate#
+			</isNotNull>		
+			<isNotNull property="tbscBegin" prepend=",">
+				tb_sale_contract$suffix$.tbsc_begin = #tbscBegin#
+			</isNotNull>		
+			<isNotNull property="tbscEnd" prepend=",">
+				tb_sale_contract$suffix$.tbsc_end = #tbscEnd#
+			</isNotNull>		
+			<isNotNull property="tbscMoney" prepend=",">
+				tb_sale_contract$suffix$.tbsc_money = #tbscMoney#
+			</isNotNull>		
+			<isNotNull property="tbscProfit" prepend=",">
+				tb_sale_contract$suffix$.tbsc_profit = #tbscProfit#
+			</isNotNull>		
+			<isNotNull property="tbscFile" prepend=",">
+				tb_sale_contract$suffix$.tbsc_file = #tbscFile#
+			</isNotNull>		
+			<isNotNull property="tbscOnwer" prepend=",">
+				tb_sale_contract$suffix$.tbsc_onwer = #tbscOnwer#
+			</isNotNull>		
+			<isNotNull property="tbscAdder" prepend=",">
+				tb_sale_contract$suffix$.tbsc_adder = #tbscAdder#
+			</isNotNull>		
+			<isNotNull property="tbscEditor" prepend=",">
+				tb_sale_contract$suffix$.tbsc_editor = #tbscEditor#
+			</isNotNull>		
+			<isNotNull property="tbscRemark" prepend=",">
+				tb_sale_contract$suffix$.tbsc_remark = #tbscRemark#
+			</isNotNull>		
+			<isNotNull property="tbscMemo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_memo = #tbscMemo#
+			</isNotNull>		
+			<isNotNull property="tbscData" prepend=",">
+				tb_sale_contract$suffix$.tbsc_data = #tbscData#
+			</isNotNull>		
+			<isNotNull property="tbscUpdateTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_update_time = #tbscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbscAddTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_add_time = #tbscAddTime#
+			</isNotNull>		
+			<isNotNull property="tbscStatus" prepend=",">
+				tb_sale_contract$suffix$.tbsc_status = #tbscStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbsc_id=#tbscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个签约合同 -->
+	<delete id="deleteTbSaleContractById" parameterClass="java.util.HashMap">
+		delete from tb_sale_contract$suffix$ where tbsc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个签约合同 -->
+	<update id="removeTbSaleContractById" parameterClass="java.util.HashMap">
+		update tb_sale_contract$suffix$ set  tb_sale_contract$suffix$.tbsc_status=-1  where tbsc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新签约合同 -->
+	<update id="updateTbSaleContractBy"  parameterClass="java.util.HashMap">
+		update tb_sale_contract$suffix$ set		
+			tbsc_id=tbsc_id
+			<isNotNull property="V_tbscId" prepend=",">
+				tb_sale_contract$suffix$.tbsc_id = #V_tbscId#
+			</isNotNull>		
+			<isNotNull property="V_tbscHost" prepend=",">
+				tb_sale_contract$suffix$.tbsc_host = #V_tbscHost#
+			</isNotNull>		
+			<isNotNull property="V_tbscName" prepend=",">
+				tb_sale_contract$suffix$.tbsc_name = #V_tbscName#
+			</isNotNull>		
+			<isNotNull property="V_tbscNo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_no = #V_tbscNo#
+			</isNotNull>		
+			<isNotNull property="V_tbscBattle" prepend=",">
+				tb_sale_contract$suffix$.tbsc_battle = #V_tbscBattle#
+			</isNotNull>		
+			<isNotNull property="V_tbscEvent" prepend=",">
+				tb_sale_contract$suffix$.tbsc_event = #V_tbscEvent#
+			</isNotNull>		
+			<isNotNull property="V_tbscOpport" prepend=",">
+				tb_sale_contract$suffix$.tbsc_opport = #V_tbscOpport#
+			</isNotNull>		
+			<isNotNull property="V_tbscQuote" prepend=",">
+				tb_sale_contract$suffix$.tbsc_quote = #V_tbscQuote#
+			</isNotNull>		
+			<isNotNull property="V_tbscGroup" prepend=",">
+				tb_sale_contract$suffix$.tbsc_group = #V_tbscGroup#
+			</isNotNull>		
+			<isNotNull property="V_tbscCustom" prepend=",">
+				tb_sale_contract$suffix$.tbsc_custom = #V_tbscCustom#
+			</isNotNull>		
+			<isNotNull property="V_tbscSigner" prepend=",">
+				tb_sale_contract$suffix$.tbsc_signer = #V_tbscSigner#
+			</isNotNull>		
+			<isNotNull property="V_tbscSignDate" prepend=",">
+				tb_sale_contract$suffix$.tbsc_sign_date = #V_tbscSignDate#
+			</isNotNull>		
+			<isNotNull property="V_tbscBegin" prepend=",">
+				tb_sale_contract$suffix$.tbsc_begin = #V_tbscBegin#
+			</isNotNull>		
+			<isNotNull property="V_tbscEnd" prepend=",">
+				tb_sale_contract$suffix$.tbsc_end = #V_tbscEnd#
+			</isNotNull>		
+			<isNotNull property="V_tbscMoney" prepend=",">
+				tb_sale_contract$suffix$.tbsc_money = #V_tbscMoney#
+			</isNotNull>		
+			<isNotNull property="V_tbscProfit" prepend=",">
+				tb_sale_contract$suffix$.tbsc_profit = #V_tbscProfit#
+			</isNotNull>		
+			<isNotNull property="V_tbscFile" prepend=",">
+				tb_sale_contract$suffix$.tbsc_file = #V_tbscFile#
+			</isNotNull>		
+			<isNotNull property="V_tbscOnwer" prepend=",">
+				tb_sale_contract$suffix$.tbsc_onwer = #V_tbscOnwer#
+			</isNotNull>		
+			<isNotNull property="V_tbscAdder" prepend=",">
+				tb_sale_contract$suffix$.tbsc_adder = #V_tbscAdder#
+			</isNotNull>		
+			<isNotNull property="V_tbscEditor" prepend=",">
+				tb_sale_contract$suffix$.tbsc_editor = #V_tbscEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbscRemark" prepend=",">
+				tb_sale_contract$suffix$.tbsc_remark = #V_tbscRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbscMemo" prepend=",">
+				tb_sale_contract$suffix$.tbsc_memo = #V_tbscMemo#
+			</isNotNull>		
+			<isNotNull property="V_tbscData" prepend=",">
+				tb_sale_contract$suffix$.tbsc_data = #V_tbscData#
+			</isNotNull>		
+			<isNotNull property="V_tbscUpdateTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_update_time = #V_tbscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbscAddTime" prepend=",">
+				tb_sale_contract$suffix$.tbsc_add_time = #V_tbscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbscStatus" prepend=",">
+				tb_sale_contract$suffix$.tbsc_status = #V_tbscStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_contract$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询-->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.tbsc_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_contract$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询-->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<isNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.tbsc_quote=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id
+			</isNull>
+			<isNotNull property="TbSaleQuote.on">
+				left join tb_sale_quote tb_sale_quote$TbSaleQuote.suffix$ on tb_sale_contract$suffix$.$TbSaleQuote.on$=tb_sale_quote$TbSaleQuote.suffix$.tbsq_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询-->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_contract$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询-->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.tbsc_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on tb_sale_contract$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_sale_contract$suffix$.tbsc_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbscOpport"><!-- 调用一下TbscOpport，把CsSaleOpport指向TbscOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[跟单报价]查询条件sql片段 -->
+		<isNotNull property="TbscQuote"><!-- 调用一下TbscQuote，把TbSaleQuote指向TbscQuote --></isNotNull>
+		<isNotNull property="TbSaleQuote">
+			<include refid="TbSaleQuote_part.tb_sale_quote_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="TbscCustom"><!-- 调用一下TbscCustom，把TbSaleCustom指向TbscCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbSaleContract_part.tb_sale_contract_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除签约合同 -->
+	<update id="deleteTbSaleContractBy"  parameterClass="java.util.HashMap">
+		delete from tb_sale_contract$suffix$ where 
+		tb_sale_contract$suffix$.tbsc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbSaleContract_part.tb_sale_contract_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,41 @@
+<div class="ccc-my-panel-member-item">
+	<h3 class="ccc-my-panel-first-header">
+		我的工作日白天小时套餐
+	</h3>
+	<s:if test="#request.csUserPack==null">
+		<div class="ccc-my-panel-inner">
+			<a href="/my/discount.html" class="ccc-my-no-package"> <span>尚未购买套餐</span>
+				<div class="ccc-go">
+					立即购买&raquo;
+				</div> </a>
+		</div>
+	</s:if>
+	<s:else>
+		<div class="ccc-my-panel-inner">
+			${csUserPack.$csupPack.cspName}：
+			<s:if test="#request.giftLsit.size>0">
+				<s:iterator value="#request.giftLsit" id="item" status="i">
+					<div class="ccc-my-grade ccc-my-package-bal">
+						<div class="ccc-my-grade-bar" title="${lz:digit(item.csgCount - item.csgRemain,2)} / ${lz:digit(item.csgCount,2)}">
+							<i style="width: ${((item.csgCount - item.csgRemain)/ item.csgCount)*100}%"></i>
+						</div>
+
+					</div>
+					<div class="ccc-my-panel-bubble">
+						<i></i> 已使用
+						<span class="ccc-font-lato">${lz:digit(item.csgCount - item.csgRemain,2)}</span> 小时 ， 剩余
+						<span class="ccc-font-lato">${lz:digit(item.csgRemain,2)}</span> 小时
+					</div>
+				</s:iterator>
+			</s:if>
+			<em class="ccc-my-panel-divider"></em>
+			<p class="ccc-validity-tips">
+				有效期至：
+				<span class="ccc-font-lato">${lz:date(csUserPack.csupUntilTime,'yyyy年-MM月-dd日')}</span>
+			</p>
+			<p class="ccc-validity-tips">
+				* 订单中包含工作日白天小时产品，系统会自动优先使用套餐。
+			</p>
+		</div>
+	</s:else>
+</div>

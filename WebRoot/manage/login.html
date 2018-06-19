@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>欢迎管理员的登录</title>
+</head>
+
+<body class="login-bg gradient">
+<div>
+	<div class="header">
+		<h1>欢迎管理员登录</h1>
+	</div>
+	<form action="/manage/login_login.html" method="post" id="form_sm">
+	<div class="countent">
+			<div class="username" id="username">
+				<div class="uname_icon_bg">
+					<span class="uname_icon"></span>
+				</div>
+				<input type="text" placeholder="请输入用户名" name="username" id="uname">
+				<div class="name_clear_icon" id="clear_val"></div>
+			</div>
+			<div class="username" id="userpwd">
+				<div class="uname_icon_bg">
+					<span class="upwd_icon"></span>
+				</div>
+				<input type="password" placeholder="请输入密码" name="userpwd" id="upwd">
+				<div class="see_pwd_icon" id="see_password"></div>
+			</div>
+	</div>
+	<div class="bottom_btn" id="btn"><bottom>登录</bottom></div>
+	</form>
+</div>
+<div id="toast">
+	正在加载...
+</div>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+<script type="text/javascript">
+<s:if test="#session.tips.notNull==true">
+//当session里有错误提示时，显示错误提示
+var tips="${tips.value}";
+if(tips!=""&&tips!=null&&tips!=undefined){
+	Toast.show(tips);
+}
+</s:if>
+/**
+ * 手指触摸按钮效果变化事件
+ */
+var btn=document.getElementById("btn");
+btn.addEventListener("touchend", function(){
+	$("#userpwd").removeClass("login_border");
+	$("#username").removeClass("login_border");
+	var name=document.getElementById("uname").value;
+	var pwd=document.getElementById("upwd").value;
+	if(name=="" || name==undefined || name==null){
+		Toast.show("用户名不能为空");
+	}else if(pwd=="" || pwd==undefined || pwd==null){
+		Toast.show("密码不能为空");
+	}else{
+		document.getElementById("form_sm").submit();
+	}
+});
+var username=document.getElementById("username");
+username.addEventListener("touchend", function(){
+	$("#username").addClass("login_border");
+	$("#userpwd").removeClass("login_border");
+});
+var userpwd=document.getElementById("userpwd");
+userpwd.addEventListener("touchend", function(){
+	$("#userpwd").addClass("login_border");
+	$("#username").removeClass("login_border");
+});
+/**
+ * 清空用户名，密码转换明码
+ */
+$("#clear_val").click(function(){
+	$("#uname").val("");
+});
+$("#see_password").click(function(){
+	$("#upwd").attr("type","text");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 用户扩展信息之SQL映射 -->
+	<resultMap id="SrvUserExp" class="com.ccclubs.model.SrvUserExp">
+		<result property="sueId" column="sue_id"/>
+		<result property="sueUser" column="sue_user"/>
+		<result property="sueWxOpenid" column="sue_wx_openid"/>
+		<result property="sueIsQrOp" column="sue_is_qr_op"/>
+		<result property="sueIsServicer" column="sue_is_servicer"/>
+		<result property="sueChatNick" column="sue_chat_nick"/>
+		<result property="sueChatHeader" column="sue_chat_header"/>
+		<result property="sueChatSign" column="sue_chat_sign"/>
+		<result property="sueOutlets" column="sue_outlets"/>
+	</resultMap>
+		
+	<!-- 获取所有用户扩展信息 -->
+	<select id="getSrvUserExpList" resultMap="SrvUserExp">
+		select srv_user_exp$suffix$.* from srv_user_exp$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属用户]查询-->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.sue_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属网点]查询-->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.sue_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- and srv_user_exp$suffix$.sue_status!=-1 -->
+		<!-- 多对一外链接[所属用户]查询条件sql片段 -->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+<!-- 		<isNotNull property="SrvUser"> -->
+<!-- 			<include refid="SrvUser_part.srv_user_join"/> -->
+<!-- 		</isNotNull> -->
+		<!-- 多对一外链接[所属网点]查询条件sql片段 -->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvUserExp_part.srv_user_exp_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sue_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取用户扩展信息分页 -->
+	<select id="getSrvUserExpPage" parameterClass="java.util.HashMap" resultMap="SrvUserExp">
+		select srv_user_exp$suffix$.* from srv_user_exp$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属用户]查询-->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.sue_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属网点]查询-->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.sue_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- and srv_user_exp$suffix$.sue_status!=-1 -->
+		<!-- 多对一外链接[所属用户]查询条件sql片段 -->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+<!-- 		<isNotNull property="SrvUser"> -->
+<!-- 			<include refid="SrvUser_part.srv_user_join"/> -->
+<!-- 		</isNotNull> -->
+		<!-- 多对一外链接[所属网点]查询条件sql片段 -->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvUserExp_part.srv_user_exp_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sue_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取用户扩展信息总数 -->
+	<select id="getSrvUserExpEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_user_exp$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属用户]查询-->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.sue_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属网点]查询-->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.sue_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- and srv_user_exp$suffix$.sue_status!=-1 -->
+		<!-- 多对一外链接[所属用户]查询条件sql片段 -->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+<!-- 		<isNotNull property="SrvUser"> -->
+<!-- 			<include refid="SrvUser_part.srv_user_join"/> -->
+<!-- 		</isNotNull> -->
+		<!-- 多对一外链接[所属网点]查询条件sql片段 -->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvUserExp_part.srv_user_exp_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取用户扩展信息 -->
+	<select id="getSrvUserExpById" parameterClass="java.util.HashMap" resultMap="SrvUserExp">
+		select srv_user_exp$suffix$.* from srv_user_exp$suffix$
+		where sue_id=#id#
+	</select>
+	
+		
+	<!-- 保存用户扩展信息 -->
+	<insert id="saveSrvUserExp"  parameterClass="com.ccclubs.model.SrvUserExp">
+		insert into srv_user_exp$suffix$
+		(
+			srv_user_exp$suffix$.sue_user
+			,srv_user_exp$suffix$.sue_wx_openid
+			,srv_user_exp$suffix$.sue_is_qr_op
+			,srv_user_exp$suffix$.sue_is_servicer
+			,srv_user_exp$suffix$.sue_chat_nick
+			,srv_user_exp$suffix$.sue_chat_header
+			,srv_user_exp$suffix$.sue_chat_sign
+			,srv_user_exp$suffix$.sue_outlets
+		)
+		values(
+			<isNotNull property="sueUser" prepend="">
+				#sueUser#
+			</isNotNull>
+			<isNull property="sueUser" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="sueWxOpenid" prepend=",">
+				#sueWxOpenid#
+			</isNotNull>
+			<isNull property="sueWxOpenid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sueIsQrOp" prepend=",">
+				#sueIsQrOp#
+			</isNotNull>
+			<isNull property="sueIsQrOp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sueIsServicer" prepend=",">
+				#sueIsServicer#
+			</isNotNull>
+			<isNull property="sueIsServicer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sueChatNick" prepend=",">
+				#sueChatNick#
+			</isNotNull>
+			<isNull property="sueChatNick" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sueChatHeader" prepend=",">
+				#sueChatHeader#
+			</isNotNull>
+			<isNull property="sueChatHeader" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sueChatSign" prepend=",">
+				#sueChatSign#
+			</isNotNull>
+			<isNull property="sueChatSign" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sueOutlets" prepend=",">
+				#sueOutlets#
+			</isNotNull>
+			<isNull property="sueOutlets" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新用户扩展信息 -->
+	<update id="updateSrvUserExp"  parameterClass="com.ccclubs.model.SrvUserExp">
+		update srv_user_exp$suffix$ set
+			<isNotNull property="sueUser" prepend="">
+				srv_user_exp$suffix$.sue_user = #sueUser#
+			</isNotNull>
+			<isNull property="sueUser" prepend="">
+				srv_user_exp$suffix$.sue_user = null
+			</isNull>				
+			<isNotNull property="sueWxOpenid" prepend=",">
+				srv_user_exp$suffix$.sue_wx_openid = #sueWxOpenid#
+			</isNotNull>
+			<isNull property="sueWxOpenid" prepend=",">
+				srv_user_exp$suffix$.sue_wx_openid = null
+			</isNull>				
+			<isNotNull property="sueIsQrOp" prepend=",">
+				srv_user_exp$suffix$.sue_is_qr_op = #sueIsQrOp#
+			</isNotNull>
+			<isNull property="sueIsQrOp" prepend=",">
+				srv_user_exp$suffix$.sue_is_qr_op = null
+			</isNull>				
+			<isNotNull property="sueIsServicer" prepend=",">
+				srv_user_exp$suffix$.sue_is_servicer = #sueIsServicer#
+			</isNotNull>
+			<isNull property="sueIsServicer" prepend=",">
+				srv_user_exp$suffix$.sue_is_servicer = null
+			</isNull>				
+			<isNotNull property="sueChatNick" prepend=",">
+				srv_user_exp$suffix$.sue_chat_nick = #sueChatNick#
+			</isNotNull>
+			<isNull property="sueChatNick" prepend=",">
+				srv_user_exp$suffix$.sue_chat_nick = null
+			</isNull>				
+			<isNotNull property="sueChatHeader" prepend=",">
+				srv_user_exp$suffix$.sue_chat_header = #sueChatHeader#
+			</isNotNull>
+			<isNull property="sueChatHeader" prepend=",">
+				srv_user_exp$suffix$.sue_chat_header = null
+			</isNull>				
+			<isNotNull property="sueChatSign" prepend=",">
+				srv_user_exp$suffix$.sue_chat_sign = #sueChatSign#
+			</isNotNull>
+			<isNull property="sueChatSign" prepend=",">
+				srv_user_exp$suffix$.sue_chat_sign = null
+			</isNull>				
+			<isNotNull property="sueOutlets" prepend=",">
+				srv_user_exp$suffix$.sue_outlets = #sueOutlets#
+			</isNotNull>
+			<isNull property="sueOutlets" prepend=",">
+				srv_user_exp$suffix$.sue_outlets = null
+			</isNull>				
+		where
+			sue_id=#sueId#
+	</update>
+	
+	<!-- 更新用户扩展信息非空字段 -->
+	<update id="updateSrvUserExp$NotNull"  parameterClass="com.ccclubs.model.SrvUserExp">
+		update srv_user_exp$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="sueUser" prepend=",">
+				srv_user_exp$suffix$.sue_user = #sueUser#
+			</isNotNull>		
+			<isNotNull property="sueWxOpenid" prepend=",">
+				srv_user_exp$suffix$.sue_wx_openid = #sueWxOpenid#
+			</isNotNull>		
+			<isNotNull property="sueIsQrOp" prepend=",">
+				srv_user_exp$suffix$.sue_is_qr_op = #sueIsQrOp#
+			</isNotNull>		
+			<isNotNull property="sueIsServicer" prepend=",">
+				srv_user_exp$suffix$.sue_is_servicer = #sueIsServicer#
+			</isNotNull>		
+			<isNotNull property="sueChatNick" prepend=",">
+				srv_user_exp$suffix$.sue_chat_nick = #sueChatNick#
+			</isNotNull>		
+			<isNotNull property="sueChatHeader" prepend=",">
+				srv_user_exp$suffix$.sue_chat_header = #sueChatHeader#
+			</isNotNull>		
+			<isNotNull property="sueChatSign" prepend=",">
+				srv_user_exp$suffix$.sue_chat_sign = #sueChatSign#
+			</isNotNull>		
+			<isNotNull property="sueOutlets" prepend=",">
+				srv_user_exp$suffix$.sue_outlets = #sueOutlets#
+			</isNotNull>		
+			</dynamic>
+		where
+			sue_id=#sueId#
+	</update>
+	
+
+	<!-- 根据ID删除一个用户扩展信息 -->
+	<delete id="deleteSrvUserExpById" parameterClass="java.util.HashMap">
+		delete from srv_user_exp$suffix$ where sue_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个用户扩展信息 -->
+	<update id="removeSrvUserExpById" parameterClass="java.util.HashMap">
+		<!-- update srv_user_exp$suffix$ set  srv_user_exp$suffix$.sue_status=-1  where sue_id=#id# -->
+		delete from srv_user_exp$suffix$ where sue_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新用户扩展信息 -->
+	<update id="updateSrvUserExpBy"  parameterClass="java.util.HashMap">
+		update srv_user_exp$suffix$ set		
+			sue_id=sue_id
+			<isNotNull property="V_sueId" prepend=",">
+				srv_user_exp$suffix$.sue_id = #V_sueId#
+			</isNotNull>		
+			<isNotNull property="V_sueUser" prepend=",">
+				srv_user_exp$suffix$.sue_user = #V_sueUser#
+			</isNotNull>		
+			<isNotNull property="V_sueWxOpenid" prepend=",">
+				srv_user_exp$suffix$.sue_wx_openid = #V_sueWxOpenid#
+			</isNotNull>		
+			<isNotNull property="V_sueIsQrOp" prepend=",">
+				srv_user_exp$suffix$.sue_is_qr_op = #V_sueIsQrOp#
+			</isNotNull>		
+			<isNotNull property="V_sueIsServicer" prepend=",">
+				srv_user_exp$suffix$.sue_is_servicer = #V_sueIsServicer#
+			</isNotNull>		
+			<isNotNull property="V_sueChatNick" prepend=",">
+				srv_user_exp$suffix$.sue_chat_nick = #V_sueChatNick#
+			</isNotNull>		
+			<isNotNull property="V_sueChatHeader" prepend=",">
+				srv_user_exp$suffix$.sue_chat_header = #V_sueChatHeader#
+			</isNotNull>		
+			<isNotNull property="V_sueChatSign" prepend=",">
+				srv_user_exp$suffix$.sue_chat_sign = #V_sueChatSign#
+			</isNotNull>		
+			<isNotNull property="V_sueOutlets" prepend=",">
+				srv_user_exp$suffix$.sue_outlets = #V_sueOutlets#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[所属用户]查询-->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.sue_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on srv_user_exp$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属网点]查询-->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.sue_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on srv_user_exp$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				<!-- and srv_user_exp$suffix$.sue_status!=-1
+ and -->
+		1=1 		
+		<!-- 多对一外链接[所属用户]查询条件sql片段 -->
+		<isNotNull property="SueUser"><!-- 调用一下SueUser，把SrvUser指向SueUser --></isNotNull>
+<!-- 		<isNotNull property="SrvUser"> -->
+<!-- 			<include refid="SrvUser_part.srv_user_join"/> -->
+<!-- 		</isNotNull> -->
+		<!-- 多对一外链接[所属网点]查询条件sql片段 -->
+		<isNotNull property="SueOutlets"><!-- 调用一下SueOutlets，把CsOutlets指向SueOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvUserExp_part.srv_user_exp_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除用户扩展信息 -->
+	<update id="deleteSrvUserExpBy"  parameterClass="java.util.HashMap">
+		delete from srv_user_exp$suffix$ where 
+		<!-- srv_user_exp$suffix$.sue_status!=-1 and -->
+		1=1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvUserExp_part.srv_user_exp_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

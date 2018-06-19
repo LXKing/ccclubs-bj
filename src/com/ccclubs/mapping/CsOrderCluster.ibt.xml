@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 订单簇之SQL映射 -->
+	<resultMap id="CsOrderCluster" class="com.ccclubs.model.CsOrderCluster">
+		<result property="csocId" column="csoc_id"/>
+		<result property="csocHost" column="csoc_host"/>
+		<result property="csocSubOrders" column="csoc_sub_orders"/>
+		<result property="csocPayMember" column="csoc_pay_member"/>
+		<result property="csocMobile" column="csoc_mobile"/>
+		<result property="csocPrice" column="csoc_price"/>
+		<result property="csocMarginNeed" column="csoc_margin_need"/>
+		<result property="csocTotalDuration" column="csoc_total_duration"/>
+		<result property="csocPayMoney" column="csoc_pay_money"/>
+		<result property="csocPayCoupon" column="csoc_pay_coupon"/>
+		<result property="csocPayCoin" column="csoc_pay_coin"/>
+		<result property="csocPayNeed" column="csoc_pay_need"/>
+		<result property="csocPayReal" column="csoc_pay_real"/>
+		<result property="csocPayRent" column="csoc_pay_rent"/>
+		<result property="csocPayInsure" column="csoc_pay_insure"/>
+		<result property="csocPayTimeout" column="csoc_pay_timeout"/>
+		<result property="csocPayDetails" column="csoc_pay_details"/>
+		<result property="csocOutType" column="csoc_out_type"/>
+		<result property="csocOutId" column="csoc_out_id"/>
+		<result property="csocStartTime" column="csoc_start_time"/>
+		<result property="csocFinishTime" column="csoc_finish_time"/>
+		<result property="csocStatus" column="csoc_status"/>
+		<result property="csocAddTime" column="csoc_add_time"/>
+		<result property="csocUpdateTime" column="csoc_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有订单簇 -->
+	<select id="getCsOrderClusterList" resultMap="CsOrderCluster">
+		select cs_order_cluster$suffix$.* from cs_order_cluster$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[支付会员]查询-->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.csoc_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order_cluster$suffix$.csoc_status!=-1
+		<!-- 多对一外链接[支付会员]查询条件sql片段 -->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrderCluster_part.cs_order_cluster_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csoc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取订单簇分页 -->
+	<select id="getCsOrderClusterPage" parameterClass="java.util.HashMap" resultMap="CsOrderCluster">
+		select cs_order_cluster$suffix$.* from cs_order_cluster$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[支付会员]查询-->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.csoc_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order_cluster$suffix$.csoc_status!=-1
+		<!-- 多对一外链接[支付会员]查询条件sql片段 -->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrderCluster_part.cs_order_cluster_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csoc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取订单簇总数 -->
+	<select id="getCsOrderClusterEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_order_cluster$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[支付会员]查询-->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.csoc_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order_cluster$suffix$.csoc_status!=-1
+		<!-- 多对一外链接[支付会员]查询条件sql片段 -->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrderCluster_part.cs_order_cluster_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取订单簇 -->
+	<select id="getCsOrderClusterById" parameterClass="java.util.HashMap" resultMap="CsOrderCluster">
+		select cs_order_cluster$suffix$.* from cs_order_cluster$suffix$
+		where csoc_id=#id#
+	</select>
+	
+		
+	<!-- 保存订单簇 -->
+	<insert id="saveCsOrderCluster"  parameterClass="com.ccclubs.model.CsOrderCluster">
+		insert into cs_order_cluster$suffix$
+		(
+			cs_order_cluster$suffix$.csoc_host
+			,cs_order_cluster$suffix$.csoc_sub_orders
+			,cs_order_cluster$suffix$.csoc_pay_member
+			,cs_order_cluster$suffix$.csoc_mobile
+			,cs_order_cluster$suffix$.csoc_price
+			,cs_order_cluster$suffix$.csoc_margin_need
+			,cs_order_cluster$suffix$.csoc_total_duration
+			,cs_order_cluster$suffix$.csoc_pay_money
+			,cs_order_cluster$suffix$.csoc_pay_coupon
+			,cs_order_cluster$suffix$.csoc_pay_coin
+			,cs_order_cluster$suffix$.csoc_pay_need
+			,cs_order_cluster$suffix$.csoc_pay_real
+			,cs_order_cluster$suffix$.csoc_pay_rent
+			,cs_order_cluster$suffix$.csoc_pay_insure
+			,cs_order_cluster$suffix$.csoc_pay_timeout
+			,cs_order_cluster$suffix$.csoc_pay_details
+			,cs_order_cluster$suffix$.csoc_out_type
+			,cs_order_cluster$suffix$.csoc_out_id
+			,cs_order_cluster$suffix$.csoc_start_time
+			,cs_order_cluster$suffix$.csoc_finish_time
+			,cs_order_cluster$suffix$.csoc_status
+			,cs_order_cluster$suffix$.csoc_add_time
+			,cs_order_cluster$suffix$.csoc_update_time
+		)
+		values(
+			<isNotNull property="csocHost" prepend="">
+				#csocHost#
+			</isNotNull>
+			<isNull property="csocHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csocSubOrders" prepend=",">
+				#csocSubOrders#
+			</isNotNull>
+			<isNull property="csocSubOrders" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayMember" prepend=",">
+				#csocPayMember#
+			</isNotNull>
+			<isNull property="csocPayMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocMobile" prepend=",">
+				#csocMobile#
+			</isNotNull>
+			<isNull property="csocMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPrice" prepend=",">
+				#csocPrice#
+			</isNotNull>
+			<isNull property="csocPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocMarginNeed" prepend=",">
+				#csocMarginNeed#
+			</isNotNull>
+			<isNull property="csocMarginNeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocTotalDuration" prepend=",">
+				#csocTotalDuration#
+			</isNotNull>
+			<isNull property="csocTotalDuration" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayMoney" prepend=",">
+				#csocPayMoney#
+			</isNotNull>
+			<isNull property="csocPayMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayCoupon" prepend=",">
+				#csocPayCoupon#
+			</isNotNull>
+			<isNull property="csocPayCoupon" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayCoin" prepend=",">
+				#csocPayCoin#
+			</isNotNull>
+			<isNull property="csocPayCoin" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayNeed" prepend=",">
+				#csocPayNeed#
+			</isNotNull>
+			<isNull property="csocPayNeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayReal" prepend=",">
+				#csocPayReal#
+			</isNotNull>
+			<isNull property="csocPayReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayRent" prepend=",">
+				#csocPayRent#
+			</isNotNull>
+			<isNull property="csocPayRent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayInsure" prepend=",">
+				#csocPayInsure#
+			</isNotNull>
+			<isNull property="csocPayInsure" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayTimeout" prepend=",">
+				#csocPayTimeout#
+			</isNotNull>
+			<isNull property="csocPayTimeout" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocPayDetails" prepend=",">
+				#csocPayDetails#
+			</isNotNull>
+			<isNull property="csocPayDetails" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocOutType" prepend=",">
+				#csocOutType#
+			</isNotNull>
+			<isNull property="csocOutType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocOutId" prepend=",">
+				#csocOutId#
+			</isNotNull>
+			<isNull property="csocOutId" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocStartTime" prepend=",">
+				#csocStartTime#
+			</isNotNull>
+			<isNull property="csocStartTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocFinishTime" prepend=",">
+				#csocFinishTime#
+			</isNotNull>
+			<isNull property="csocFinishTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocStatus" prepend=",">
+				#csocStatus#
+			</isNotNull>
+			<isNull property="csocStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocAddTime" prepend=",">
+				#csocAddTime#
+			</isNotNull>
+			<isNull property="csocAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csocUpdateTime" prepend=",">
+				#csocUpdateTime#
+			</isNotNull>
+			<isNull property="csocUpdateTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新订单簇 -->
+	<update id="updateCsOrderCluster"  parameterClass="com.ccclubs.model.CsOrderCluster">
+		update cs_order_cluster$suffix$ set
+			<isNotNull property="csocHost" prepend="">
+				cs_order_cluster$suffix$.csoc_host = #csocHost#
+			</isNotNull>
+			<isNull property="csocHost" prepend="">
+				cs_order_cluster$suffix$.csoc_host = null
+			</isNull>				
+			<isNotNull property="csocSubOrders" prepend=",">
+				cs_order_cluster$suffix$.csoc_sub_orders = #csocSubOrders#
+			</isNotNull>
+			<isNull property="csocSubOrders" prepend=",">
+				cs_order_cluster$suffix$.csoc_sub_orders = null
+			</isNull>				
+			<isNotNull property="csocPayMember" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_member = #csocPayMember#
+			</isNotNull>
+			<isNull property="csocPayMember" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_member = null
+			</isNull>				
+			<isNotNull property="csocMobile" prepend=",">
+				cs_order_cluster$suffix$.csoc_mobile = #csocMobile#
+			</isNotNull>
+			<isNull property="csocMobile" prepend=",">
+				cs_order_cluster$suffix$.csoc_mobile = null
+			</isNull>				
+			<isNotNull property="csocPrice" prepend=",">
+				cs_order_cluster$suffix$.csoc_price = #csocPrice#
+			</isNotNull>
+			<isNull property="csocPrice" prepend=",">
+				cs_order_cluster$suffix$.csoc_price = null
+			</isNull>				
+			<isNotNull property="csocMarginNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_margin_need = #csocMarginNeed#
+			</isNotNull>
+			<isNull property="csocMarginNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_margin_need = null
+			</isNull>				
+			<isNotNull property="csocTotalDuration" prepend=",">
+				cs_order_cluster$suffix$.csoc_total_duration = #csocTotalDuration#
+			</isNotNull>
+			<isNull property="csocTotalDuration" prepend=",">
+				cs_order_cluster$suffix$.csoc_total_duration = null
+			</isNull>				
+			<isNotNull property="csocPayMoney" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_money = #csocPayMoney#
+			</isNotNull>
+			<isNull property="csocPayMoney" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_money = null
+			</isNull>				
+			<isNotNull property="csocPayCoupon" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coupon = #csocPayCoupon#
+			</isNotNull>
+			<isNull property="csocPayCoupon" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coupon = null
+			</isNull>				
+			<isNotNull property="csocPayCoin" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coin = #csocPayCoin#
+			</isNotNull>
+			<isNull property="csocPayCoin" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coin = null
+			</isNull>				
+			<isNotNull property="csocPayNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_need = #csocPayNeed#
+			</isNotNull>
+			<isNull property="csocPayNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_need = null
+			</isNull>				
+			<isNotNull property="csocPayReal" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_real = #csocPayReal#
+			</isNotNull>
+			<isNull property="csocPayReal" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_real = null
+			</isNull>				
+			<isNotNull property="csocPayRent" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_rent = #csocPayRent#
+			</isNotNull>
+			<isNull property="csocPayRent" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_rent = null
+			</isNull>				
+			<isNotNull property="csocPayInsure" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_insure = #csocPayInsure#
+			</isNotNull>
+			<isNull property="csocPayInsure" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_insure = null
+			</isNull>				
+			<isNotNull property="csocPayTimeout" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_timeout = #csocPayTimeout#
+			</isNotNull>
+			<isNull property="csocPayTimeout" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_timeout = null
+			</isNull>				
+			<isNotNull property="csocPayDetails" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_details = #csocPayDetails#
+			</isNotNull>
+			<isNull property="csocPayDetails" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_details = null
+			</isNull>				
+			<isNotNull property="csocOutType" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_type = #csocOutType#
+			</isNotNull>
+			<isNull property="csocOutType" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_type = null
+			</isNull>				
+			<isNotNull property="csocOutId" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_id = #csocOutId#
+			</isNotNull>
+			<isNull property="csocOutId" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_id = null
+			</isNull>				
+			<isNotNull property="csocStartTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_start_time = #csocStartTime#
+			</isNotNull>
+			<isNull property="csocStartTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_start_time = null
+			</isNull>				
+			<isNotNull property="csocFinishTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_finish_time = #csocFinishTime#
+			</isNotNull>
+			<isNull property="csocFinishTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_finish_time = null
+			</isNull>				
+			<isNotNull property="csocStatus" prepend=",">
+				cs_order_cluster$suffix$.csoc_status = #csocStatus#
+			</isNotNull>
+			<isNull property="csocStatus" prepend=",">
+				cs_order_cluster$suffix$.csoc_status = null
+			</isNull>				
+			<isNotNull property="csocAddTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_add_time = #csocAddTime#
+			</isNotNull>
+			<isNull property="csocAddTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_add_time = null
+			</isNull>				
+			<isNotNull property="csocUpdateTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_update_time = #csocUpdateTime#
+			</isNotNull>
+			<isNull property="csocUpdateTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_update_time = null
+			</isNull>				
+		where
+			csoc_id=#csocId#
+	</update>
+	
+	<!-- 更新订单簇非空字段 -->
+	<update id="updateCsOrderCluster$NotNull"  parameterClass="com.ccclubs.model.CsOrderCluster">
+		update cs_order_cluster$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csocHost" prepend=",">
+				cs_order_cluster$suffix$.csoc_host = #csocHost#
+			</isNotNull>		
+			<isNotNull property="csocSubOrders" prepend=",">
+				cs_order_cluster$suffix$.csoc_sub_orders = #csocSubOrders#
+			</isNotNull>		
+			<isNotNull property="csocPayMember" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_member = #csocPayMember#
+			</isNotNull>		
+			<isNotNull property="csocMobile" prepend=",">
+				cs_order_cluster$suffix$.csoc_mobile = #csocMobile#
+			</isNotNull>		
+			<isNotNull property="csocPrice" prepend=",">
+				cs_order_cluster$suffix$.csoc_price = #csocPrice#
+			</isNotNull>		
+			<isNotNull property="csocMarginNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_margin_need = #csocMarginNeed#
+			</isNotNull>		
+			<isNotNull property="csocTotalDuration" prepend=",">
+				cs_order_cluster$suffix$.csoc_total_duration = #csocTotalDuration#
+			</isNotNull>		
+			<isNotNull property="csocPayMoney" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_money = #csocPayMoney#
+			</isNotNull>		
+			<isNotNull property="csocPayCoupon" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coupon = #csocPayCoupon#
+			</isNotNull>		
+			<isNotNull property="csocPayCoin" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coin = #csocPayCoin#
+			</isNotNull>		
+			<isNotNull property="csocPayNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_need = #csocPayNeed#
+			</isNotNull>		
+			<isNotNull property="csocPayReal" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_real = #csocPayReal#
+			</isNotNull>		
+			<isNotNull property="csocPayRent" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_rent = #csocPayRent#
+			</isNotNull>		
+			<isNotNull property="csocPayInsure" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_insure = #csocPayInsure#
+			</isNotNull>		
+			<isNotNull property="csocPayTimeout" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_timeout = #csocPayTimeout#
+			</isNotNull>		
+			<isNotNull property="csocPayDetails" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_details = #csocPayDetails#
+			</isNotNull>		
+			<isNotNull property="csocOutType" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_type = #csocOutType#
+			</isNotNull>		
+			<isNotNull property="csocOutId" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_id = #csocOutId#
+			</isNotNull>		
+			<isNotNull property="csocStartTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_start_time = #csocStartTime#
+			</isNotNull>		
+			<isNotNull property="csocFinishTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_finish_time = #csocFinishTime#
+			</isNotNull>		
+			<isNotNull property="csocStatus" prepend=",">
+				cs_order_cluster$suffix$.csoc_status = #csocStatus#
+			</isNotNull>		
+			<isNotNull property="csocAddTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_add_time = #csocAddTime#
+			</isNotNull>		
+			<isNotNull property="csocUpdateTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_update_time = #csocUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csoc_id=#csocId#
+	</update>
+	
+
+	<!-- 根据ID删除一个订单簇 -->
+	<delete id="deleteCsOrderClusterById" parameterClass="java.util.HashMap">
+		delete from cs_order_cluster$suffix$ where csoc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个订单簇 -->
+	<update id="removeCsOrderClusterById" parameterClass="java.util.HashMap">
+		update cs_order_cluster$suffix$ set  cs_order_cluster$suffix$.csoc_status=-1  where csoc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新订单簇 -->
+	<update id="updateCsOrderClusterBy"  parameterClass="java.util.HashMap">
+		update cs_order_cluster$suffix$ set		
+			csoc_id=csoc_id
+			<isNotNull property="V_csocId" prepend=",">
+				cs_order_cluster$suffix$.csoc_id = #V_csocId#
+			</isNotNull>		
+			<isNotNull property="V_csocHost" prepend=",">
+				cs_order_cluster$suffix$.csoc_host = #V_csocHost#
+			</isNotNull>		
+			<isNotNull property="V_csocSubOrders" prepend=",">
+				cs_order_cluster$suffix$.csoc_sub_orders = #V_csocSubOrders#
+			</isNotNull>		
+			<isNotNull property="V_csocPayMember" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_member = #V_csocPayMember#
+			</isNotNull>		
+			<isNotNull property="V_csocMobile" prepend=",">
+				cs_order_cluster$suffix$.csoc_mobile = #V_csocMobile#
+			</isNotNull>		
+			<isNotNull property="V_csocPrice" prepend=",">
+				cs_order_cluster$suffix$.csoc_price = #V_csocPrice#
+			</isNotNull>		
+			<isNotNull property="V_csocMarginNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_margin_need = #V_csocMarginNeed#
+			</isNotNull>		
+			<isNotNull property="V_csocTotalDuration" prepend=",">
+				cs_order_cluster$suffix$.csoc_total_duration = #V_csocTotalDuration#
+			</isNotNull>		
+			<isNotNull property="V_csocPayMoney" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_money = #V_csocPayMoney#
+			</isNotNull>		
+			<isNotNull property="V_csocPayCoupon" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coupon = #V_csocPayCoupon#
+			</isNotNull>		
+			<isNotNull property="V_csocPayCoin" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_coin = #V_csocPayCoin#
+			</isNotNull>		
+			<isNotNull property="V_csocPayNeed" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_need = #V_csocPayNeed#
+			</isNotNull>		
+			<isNotNull property="V_csocPayReal" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_real = #V_csocPayReal#
+			</isNotNull>		
+			<isNotNull property="V_csocPayRent" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_rent = #V_csocPayRent#
+			</isNotNull>		
+			<isNotNull property="V_csocPayInsure" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_insure = #V_csocPayInsure#
+			</isNotNull>		
+			<isNotNull property="V_csocPayTimeout" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_timeout = #V_csocPayTimeout#
+			</isNotNull>		
+			<isNotNull property="V_csocPayDetails" prepend=",">
+				cs_order_cluster$suffix$.csoc_pay_details = #V_csocPayDetails#
+			</isNotNull>		
+			<isNotNull property="V_csocOutType" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_type = #V_csocOutType#
+			</isNotNull>		
+			<isNotNull property="V_csocOutId" prepend=",">
+				cs_order_cluster$suffix$.csoc_out_id = #V_csocOutId#
+			</isNotNull>		
+			<isNotNull property="V_csocStartTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_start_time = #V_csocStartTime#
+			</isNotNull>		
+			<isNotNull property="V_csocFinishTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_finish_time = #V_csocFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_csocStatus" prepend=",">
+				cs_order_cluster$suffix$.csoc_status = #V_csocStatus#
+			</isNotNull>		
+			<isNotNull property="V_csocAddTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_add_time = #V_csocAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csocUpdateTime" prepend=",">
+				cs_order_cluster$suffix$.csoc_update_time = #V_csocUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[支付会员]查询-->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.csoc_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order_cluster$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_order_cluster$suffix$.csoc_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[支付会员]查询条件sql片段 -->
+		<isNotNull property="CsocPayMember"><!-- 调用一下CsocPayMember，把CsMember指向CsocPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOrderCluster_part.cs_order_cluster_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除订单簇 -->
+	<update id="deleteCsOrderClusterBy"  parameterClass="java.util.HashMap">
+		delete from cs_order_cluster$suffix$ where 
+		cs_order_cluster$suffix$.csoc_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOrderCluster_part.cs_order_cluster_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

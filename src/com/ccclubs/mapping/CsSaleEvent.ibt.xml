@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 销售活动之SQL映射 -->
+	<resultMap id="CsSaleEvent" class="com.ccclubs.model.CsSaleEvent">
+		<result property="csseId" column="csse_id"/>
+		<result property="csseHost" column="csse_host"/>
+		<result property="csseSubject" column="csse_subject"/>
+		<result property="csseBattle" column="csse_battle"/>
+		<result property="csseType" column="csse_type"/>
+		<result property="cssePerson" column="csse_person"/>
+		<result property="cssePostion" column="csse_postion"/>
+		<result property="csseAddress" column="csse_address"/>
+		<result property="csseDesc" column="csse_desc"/>
+		<result property="csseStart" column="csse_start"/>
+		<result property="csseFinish" column="csse_finish"/>
+		<result property="csseUpdateTime" column="csse_update_time"/>
+		<result property="csseAddTime" column="csse_add_time"/>
+		<result property="csseRemark" column="csse_remark"/>
+		<result property="csseStatus" column="csse_status"/>
+	</resultMap>
+		
+	<!-- 获取所有销售活动 -->
+	<select id="getCsSaleEventList" resultMap="CsSaleEvent">
+		select cs_sale_event$suffix$.* from cs_sale_event$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询-->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.csse_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_event$suffix$.csse_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleEvent_part.cs_sale_event_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csse_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取销售活动分页 -->
+	<select id="getCsSaleEventPage" parameterClass="java.util.HashMap" resultMap="CsSaleEvent">
+		select cs_sale_event$suffix$.* from cs_sale_event$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询 -->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.csse_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_event$suffix$.csse_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleEvent_part.cs_sale_event_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csse_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取销售活动总数 -->
+	<select id="getCsSaleEventEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_sale_event$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.csse_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_event$suffix$.csse_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleEvent_part.cs_sale_event_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取销售活动 -->
+	<select id="getCsSaleEventById" parameterClass="java.util.HashMap" resultMap="CsSaleEvent">
+		select cs_sale_event$suffix$.* from cs_sale_event$suffix$
+		where csse_id=#id#
+	</select>
+	
+		
+	<!-- 保存销售活动 -->
+	<insert id="saveCsSaleEvent"  parameterClass="com.ccclubs.model.CsSaleEvent">
+		insert into cs_sale_event$suffix$
+		(
+			cs_sale_event$suffix$.csse_host
+			,cs_sale_event$suffix$.csse_subject
+			,cs_sale_event$suffix$.csse_battle
+			,cs_sale_event$suffix$.csse_type
+			,cs_sale_event$suffix$.csse_person
+			,cs_sale_event$suffix$.csse_postion
+			,cs_sale_event$suffix$.csse_address
+			,cs_sale_event$suffix$.csse_desc
+			,cs_sale_event$suffix$.csse_start
+			,cs_sale_event$suffix$.csse_finish
+			,cs_sale_event$suffix$.csse_update_time
+			,cs_sale_event$suffix$.csse_add_time
+			,cs_sale_event$suffix$.csse_remark
+			,cs_sale_event$suffix$.csse_status
+		)
+		values(
+			<isNotNull property="csseHost" prepend="">
+				#csseHost#
+			</isNotNull>
+			<isNull property="csseHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csseSubject" prepend=",">
+				#csseSubject#
+			</isNotNull>
+			<isNull property="csseSubject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseBattle" prepend=",">
+				#csseBattle#
+			</isNotNull>
+			<isNull property="csseBattle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseType" prepend=",">
+				#csseType#
+			</isNotNull>
+			<isNull property="csseType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssePerson" prepend=",">
+				#cssePerson#
+			</isNotNull>
+			<isNull property="cssePerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssePostion" prepend=",">
+				#cssePostion#
+			</isNotNull>
+			<isNull property="cssePostion" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseAddress" prepend=",">
+				#csseAddress#
+			</isNotNull>
+			<isNull property="csseAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseDesc" prepend=",">
+				#csseDesc#
+			</isNotNull>
+			<isNull property="csseDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseStart" prepend=",">
+				#csseStart#
+			</isNotNull>
+			<isNull property="csseStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseFinish" prepend=",">
+				#csseFinish#
+			</isNotNull>
+			<isNull property="csseFinish" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseUpdateTime" prepend=",">
+				#csseUpdateTime#
+			</isNotNull>
+			<isNull property="csseUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseAddTime" prepend=",">
+				#csseAddTime#
+			</isNotNull>
+			<isNull property="csseAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseRemark" prepend=",">
+				#csseRemark#
+			</isNotNull>
+			<isNull property="csseRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csseStatus" prepend=",">
+				#csseStatus#
+			</isNotNull>
+			<isNull property="csseStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新销售活动 -->
+	<update id="updateCsSaleEvent"  parameterClass="com.ccclubs.model.CsSaleEvent">
+		update cs_sale_event$suffix$ set
+			<isNotNull property="csseHost" prepend="">
+				cs_sale_event$suffix$.csse_host = #csseHost#
+			</isNotNull>
+			<isNull property="csseHost" prepend="">
+				cs_sale_event$suffix$.csse_host = null
+			</isNull>				
+			<isNotNull property="csseSubject" prepend=",">
+				cs_sale_event$suffix$.csse_subject = #csseSubject#
+			</isNotNull>
+			<isNull property="csseSubject" prepend=",">
+				cs_sale_event$suffix$.csse_subject = null
+			</isNull>				
+			<isNotNull property="csseBattle" prepend=",">
+				cs_sale_event$suffix$.csse_battle = #csseBattle#
+			</isNotNull>
+			<isNull property="csseBattle" prepend=",">
+				cs_sale_event$suffix$.csse_battle = null
+			</isNull>				
+			<isNotNull property="csseType" prepend=",">
+				cs_sale_event$suffix$.csse_type = #csseType#
+			</isNotNull>
+			<isNull property="csseType" prepend=",">
+				cs_sale_event$suffix$.csse_type = null
+			</isNull>				
+			<isNotNull property="cssePerson" prepend=",">
+				cs_sale_event$suffix$.csse_person = #cssePerson#
+			</isNotNull>
+			<isNull property="cssePerson" prepend=",">
+				cs_sale_event$suffix$.csse_person = null
+			</isNull>				
+			<isNotNull property="cssePostion" prepend=",">
+				cs_sale_event$suffix$.csse_postion = #cssePostion#
+			</isNotNull>
+			<isNull property="cssePostion" prepend=",">
+				cs_sale_event$suffix$.csse_postion = null
+			</isNull>				
+			<isNotNull property="csseAddress" prepend=",">
+				cs_sale_event$suffix$.csse_address = #csseAddress#
+			</isNotNull>
+			<isNull property="csseAddress" prepend=",">
+				cs_sale_event$suffix$.csse_address = null
+			</isNull>				
+			<isNotNull property="csseDesc" prepend=",">
+				cs_sale_event$suffix$.csse_desc = #csseDesc#
+			</isNotNull>
+			<isNull property="csseDesc" prepend=",">
+				cs_sale_event$suffix$.csse_desc = null
+			</isNull>				
+			<isNotNull property="csseStart" prepend=",">
+				cs_sale_event$suffix$.csse_start = #csseStart#
+			</isNotNull>
+			<isNull property="csseStart" prepend=",">
+				cs_sale_event$suffix$.csse_start = null
+			</isNull>				
+			<isNotNull property="csseFinish" prepend=",">
+				cs_sale_event$suffix$.csse_finish = #csseFinish#
+			</isNotNull>
+			<isNull property="csseFinish" prepend=",">
+				cs_sale_event$suffix$.csse_finish = null
+			</isNull>				
+			<isNotNull property="csseUpdateTime" prepend=",">
+				cs_sale_event$suffix$.csse_update_time = #csseUpdateTime#
+			</isNotNull>
+			<isNull property="csseUpdateTime" prepend=",">
+				cs_sale_event$suffix$.csse_update_time = null
+			</isNull>				
+			<isNotNull property="csseAddTime" prepend=",">
+				cs_sale_event$suffix$.csse_add_time = #csseAddTime#
+			</isNotNull>
+			<isNull property="csseAddTime" prepend=",">
+				cs_sale_event$suffix$.csse_add_time = null
+			</isNull>				
+			<isNotNull property="csseRemark" prepend=",">
+				cs_sale_event$suffix$.csse_remark = #csseRemark#
+			</isNotNull>
+			<isNull property="csseRemark" prepend=",">
+				cs_sale_event$suffix$.csse_remark = null
+			</isNull>				
+			<isNotNull property="csseStatus" prepend=",">
+				cs_sale_event$suffix$.csse_status = #csseStatus#
+			</isNotNull>
+			<isNull property="csseStatus" prepend=",">
+				cs_sale_event$suffix$.csse_status = null
+			</isNull>				
+		where
+			csse_id=#csseId#
+	</update>
+	
+	<!-- 更新销售活动非空字段 -->
+	<update id="updateCsSaleEvent$NotNull"  parameterClass="com.ccclubs.model.CsSaleEvent">
+		update cs_sale_event$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csseHost" prepend=",">
+				cs_sale_event$suffix$.csse_host = #csseHost#
+			</isNotNull>		
+			<isNotNull property="csseSubject" prepend=",">
+				cs_sale_event$suffix$.csse_subject = #csseSubject#
+			</isNotNull>		
+			<isNotNull property="csseBattle" prepend=",">
+				cs_sale_event$suffix$.csse_battle = #csseBattle#
+			</isNotNull>		
+			<isNotNull property="csseType" prepend=",">
+				cs_sale_event$suffix$.csse_type = #csseType#
+			</isNotNull>		
+			<isNotNull property="cssePerson" prepend=",">
+				cs_sale_event$suffix$.csse_person = #cssePerson#
+			</isNotNull>		
+			<isNotNull property="cssePostion" prepend=",">
+				cs_sale_event$suffix$.csse_postion = #cssePostion#
+			</isNotNull>		
+			<isNotNull property="csseAddress" prepend=",">
+				cs_sale_event$suffix$.csse_address = #csseAddress#
+			</isNotNull>		
+			<isNotNull property="csseDesc" prepend=",">
+				cs_sale_event$suffix$.csse_desc = #csseDesc#
+			</isNotNull>		
+			<isNotNull property="csseStart" prepend=",">
+				cs_sale_event$suffix$.csse_start = #csseStart#
+			</isNotNull>		
+			<isNotNull property="csseFinish" prepend=",">
+				cs_sale_event$suffix$.csse_finish = #csseFinish#
+			</isNotNull>		
+			<isNotNull property="csseUpdateTime" prepend=",">
+				cs_sale_event$suffix$.csse_update_time = #csseUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csseAddTime" prepend=",">
+				cs_sale_event$suffix$.csse_add_time = #csseAddTime#
+			</isNotNull>		
+			<isNotNull property="csseRemark" prepend=",">
+				cs_sale_event$suffix$.csse_remark = #csseRemark#
+			</isNotNull>		
+			<isNotNull property="csseStatus" prepend=",">
+				cs_sale_event$suffix$.csse_status = #csseStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csse_id=#csseId#
+	</update>
+	
+
+	<!-- 根据ID删除一个销售活动 -->
+	<delete id="deleteCsSaleEventById" parameterClass="java.util.HashMap">
+		delete from cs_sale_event$suffix$ where csse_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个销售活动 -->
+	<update id="removeCsSaleEventById" parameterClass="java.util.HashMap">
+		update cs_sale_event$suffix$ set  cs_sale_event$suffix$.csse_status=-1  where csse_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新销售活动 -->
+	<update id="updateCsSaleEventBy"  parameterClass="java.util.HashMap">
+		update cs_sale_event$suffix$ set		
+			csse_id=csse_id
+			<isNotNull property="V_csseId" prepend=",">
+				cs_sale_event$suffix$.csse_id = #V_csseId#
+			</isNotNull>		
+			<isNotNull property="V_csseHost" prepend=",">
+				cs_sale_event$suffix$.csse_host = #V_csseHost#
+			</isNotNull>		
+			<isNotNull property="V_csseSubject" prepend=",">
+				cs_sale_event$suffix$.csse_subject = #V_csseSubject#
+			</isNotNull>		
+			<isNotNull property="V_csseBattle" prepend=",">
+				cs_sale_event$suffix$.csse_battle = #V_csseBattle#
+			</isNotNull>		
+			<isNotNull property="V_csseType" prepend=",">
+				cs_sale_event$suffix$.csse_type = #V_csseType#
+			</isNotNull>		
+			<isNotNull property="V_cssePerson" prepend=",">
+				cs_sale_event$suffix$.csse_person = #V_cssePerson#
+			</isNotNull>		
+			<isNotNull property="V_cssePostion" prepend=",">
+				cs_sale_event$suffix$.csse_postion = #V_cssePostion#
+			</isNotNull>		
+			<isNotNull property="V_csseAddress" prepend=",">
+				cs_sale_event$suffix$.csse_address = #V_csseAddress#
+			</isNotNull>		
+			<isNotNull property="V_csseDesc" prepend=",">
+				cs_sale_event$suffix$.csse_desc = #V_csseDesc#
+			</isNotNull>		
+			<isNotNull property="V_csseStart" prepend=",">
+				cs_sale_event$suffix$.csse_start = #V_csseStart#
+			</isNotNull>		
+			<isNotNull property="V_csseFinish" prepend=",">
+				cs_sale_event$suffix$.csse_finish = #V_csseFinish#
+			</isNotNull>		
+			<isNotNull property="V_csseUpdateTime" prepend=",">
+				cs_sale_event$suffix$.csse_update_time = #V_csseUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csseAddTime" prepend=",">
+				cs_sale_event$suffix$.csse_add_time = #V_csseAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csseRemark" prepend=",">
+				cs_sale_event$suffix$.csse_remark = #V_csseRemark#
+			</isNotNull>		
+			<isNotNull property="V_csseStatus" prepend=",">
+				cs_sale_event$suffix$.csse_status = #V_csseStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询-->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.csse_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_event$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_sale_event$suffix$.csse_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CsseBattle"><!-- 调用一下CsseBattle，把TbSaleBattle指向CsseBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsSaleEvent_part.cs_sale_event_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除销售活动 -->
+	<update id="deleteCsSaleEventBy"  parameterClass="java.util.HashMap">
+		delete from cs_sale_event$suffix$ where 
+		cs_sale_event$suffix$.csse_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsSaleEvent_part.cs_sale_event_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

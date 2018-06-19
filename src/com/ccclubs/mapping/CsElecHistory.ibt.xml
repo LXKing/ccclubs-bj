@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 电桩历史数据之SQL映射 -->
+	<resultMap id="CsElecHistory" class="com.ccclubs.model.CsElecHistory">
+		<result property="csehId" column="cseh_id"/>
+		<result property="csehDid" column="cseh_did"/>
+		<result property="csehPowerPile" column="cseh_power_pile"/>
+		<result property="csehStatusCode" column="cseh_status_code"/>
+		<result property="csehStatusText" column="cseh_status_text"/>
+		<result property="csehEleAmount" column="cseh_ele_amount"/>
+		<result property="csehTimeLong" column="cseh_time_long"/>
+		<result property="csehErrorCode" column="cseh_error_code"/>
+		<result property="csehCollectTime" column="cseh_collect_time"/>
+		<result property="csehAddTime" column="cseh_add_time"/>
+		<result property="csehData" column="cseh_data"/>
+	</resultMap>
+		
+	<!-- 获取所有电桩历史数据 -->
+	<select id="getCsElecHistoryList" resultMap="CsElecHistory">
+		select cs_elec_history$suffix$.* from cs_elec_history$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsElecHistory_part.cs_elec_history_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cseh_id asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取电桩历史数据分页 -->
+	<select id="getCsElecHistoryPage" parameterClass="java.util.HashMap" resultMap="CsElecHistory">
+		select cs_elec_history$suffix$.* from cs_elec_history$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsElecHistory_part.cs_elec_history_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cseh_id asc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取电桩历史数据总数 -->
+	<select id="getCsElecHistoryEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_elec_history$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsElecHistory_part.cs_elec_history_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取电桩历史数据 -->
+	<select id="getCsElecHistoryById" parameterClass="java.util.HashMap" resultMap="CsElecHistory">
+		select cs_elec_history$suffix$.* from cs_elec_history$suffix$
+		where cseh_id=#id#
+	</select>
+	
+		
+	<!-- 保存电桩历史数据 -->
+	<insert id="saveCsElecHistory"  parameterClass="com.ccclubs.model.CsElecHistory">
+		insert into cs_elec_history$suffix$
+		(
+			cs_elec_history$suffix$.cseh_did
+			,cs_elec_history$suffix$.cseh_power_pile
+			,cs_elec_history$suffix$.cseh_status_code
+			,cs_elec_history$suffix$.cseh_status_text
+			,cs_elec_history$suffix$.cseh_ele_amount
+			,cs_elec_history$suffix$.cseh_time_long
+			,cs_elec_history$suffix$.cseh_error_code
+			,cs_elec_history$suffix$.cseh_collect_time
+			,cs_elec_history$suffix$.cseh_add_time
+			,cs_elec_history$suffix$.cseh_data
+		)
+		values(
+			<isNotNull property="csehDid" prepend="">
+				#csehDid#
+			</isNotNull>
+			<isNull property="csehDid" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csehPowerPile" prepend=",">
+				#csehPowerPile#
+			</isNotNull>
+			<isNull property="csehPowerPile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehStatusCode" prepend=",">
+				#csehStatusCode#
+			</isNotNull>
+			<isNull property="csehStatusCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehStatusText" prepend=",">
+				#csehStatusText#
+			</isNotNull>
+			<isNull property="csehStatusText" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehEleAmount" prepend=",">
+				#csehEleAmount#
+			</isNotNull>
+			<isNull property="csehEleAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehTimeLong" prepend=",">
+				#csehTimeLong#
+			</isNotNull>
+			<isNull property="csehTimeLong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehErrorCode" prepend=",">
+				#csehErrorCode#
+			</isNotNull>
+			<isNull property="csehErrorCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehCollectTime" prepend=",">
+				#csehCollectTime#
+			</isNotNull>
+			<isNull property="csehCollectTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehAddTime" prepend=",">
+				#csehAddTime#
+			</isNotNull>
+			<isNull property="csehAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehData" prepend=",">
+				#csehData#
+			</isNotNull>
+			<isNull property="csehData" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新电桩历史数据 -->
+	<update id="updateCsElecHistory"  parameterClass="com.ccclubs.model.CsElecHistory">
+		update cs_elec_history$suffix$ set
+			<isNotNull property="csehDid" prepend="">
+				cs_elec_history$suffix$.cseh_did = #csehDid#
+			</isNotNull>
+			<isNull property="csehDid" prepend="">
+				cs_elec_history$suffix$.cseh_did = null
+			</isNull>				
+			<isNotNull property="csehPowerPile" prepend=",">
+				cs_elec_history$suffix$.cseh_power_pile = #csehPowerPile#
+			</isNotNull>
+			<isNull property="csehPowerPile" prepend=",">
+				cs_elec_history$suffix$.cseh_power_pile = null
+			</isNull>				
+			<isNotNull property="csehStatusCode" prepend=",">
+				cs_elec_history$suffix$.cseh_status_code = #csehStatusCode#
+			</isNotNull>
+			<isNull property="csehStatusCode" prepend=",">
+				cs_elec_history$suffix$.cseh_status_code = null
+			</isNull>				
+			<isNotNull property="csehStatusText" prepend=",">
+				cs_elec_history$suffix$.cseh_status_text = #csehStatusText#
+			</isNotNull>
+			<isNull property="csehStatusText" prepend=",">
+				cs_elec_history$suffix$.cseh_status_text = null
+			</isNull>				
+			<isNotNull property="csehEleAmount" prepend=",">
+				cs_elec_history$suffix$.cseh_ele_amount = #csehEleAmount#
+			</isNotNull>
+			<isNull property="csehEleAmount" prepend=",">
+				cs_elec_history$suffix$.cseh_ele_amount = null
+			</isNull>				
+			<isNotNull property="csehTimeLong" prepend=",">
+				cs_elec_history$suffix$.cseh_time_long = #csehTimeLong#
+			</isNotNull>
+			<isNull property="csehTimeLong" prepend=",">
+				cs_elec_history$suffix$.cseh_time_long = null
+			</isNull>				
+			<isNotNull property="csehErrorCode" prepend=",">
+				cs_elec_history$suffix$.cseh_error_code = #csehErrorCode#
+			</isNotNull>
+			<isNull property="csehErrorCode" prepend=",">
+				cs_elec_history$suffix$.cseh_error_code = null
+			</isNull>				
+			<isNotNull property="csehCollectTime" prepend=",">
+				cs_elec_history$suffix$.cseh_collect_time = #csehCollectTime#
+			</isNotNull>
+			<isNull property="csehCollectTime" prepend=",">
+				cs_elec_history$suffix$.cseh_collect_time = null
+			</isNull>				
+			<isNotNull property="csehAddTime" prepend=",">
+				cs_elec_history$suffix$.cseh_add_time = #csehAddTime#
+			</isNotNull>
+			<isNull property="csehAddTime" prepend=",">
+				cs_elec_history$suffix$.cseh_add_time = null
+			</isNull>				
+			<isNotNull property="csehData" prepend=",">
+				cs_elec_history$suffix$.cseh_data = #csehData#
+			</isNotNull>
+			<isNull property="csehData" prepend=",">
+				cs_elec_history$suffix$.cseh_data = null
+			</isNull>				
+		where
+			cseh_id=#csehId#
+	</update>
+	
+	<!-- 更新电桩历史数据非空字段 -->
+	<update id="updateCsElecHistory$NotNull"  parameterClass="com.ccclubs.model.CsElecHistory">
+		update cs_elec_history$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csehDid" prepend=",">
+				cs_elec_history$suffix$.cseh_did = #csehDid#
+			</isNotNull>		
+			<isNotNull property="csehPowerPile" prepend=",">
+				cs_elec_history$suffix$.cseh_power_pile = #csehPowerPile#
+			</isNotNull>		
+			<isNotNull property="csehStatusCode" prepend=",">
+				cs_elec_history$suffix$.cseh_status_code = #csehStatusCode#
+			</isNotNull>		
+			<isNotNull property="csehStatusText" prepend=",">
+				cs_elec_history$suffix$.cseh_status_text = #csehStatusText#
+			</isNotNull>		
+			<isNotNull property="csehEleAmount" prepend=",">
+				cs_elec_history$suffix$.cseh_ele_amount = #csehEleAmount#
+			</isNotNull>		
+			<isNotNull property="csehTimeLong" prepend=",">
+				cs_elec_history$suffix$.cseh_time_long = #csehTimeLong#
+			</isNotNull>		
+			<isNotNull property="csehErrorCode" prepend=",">
+				cs_elec_history$suffix$.cseh_error_code = #csehErrorCode#
+			</isNotNull>		
+			<isNotNull property="csehCollectTime" prepend=",">
+				cs_elec_history$suffix$.cseh_collect_time = #csehCollectTime#
+			</isNotNull>		
+			<isNotNull property="csehAddTime" prepend=",">
+				cs_elec_history$suffix$.cseh_add_time = #csehAddTime#
+			</isNotNull>		
+			<isNotNull property="csehData" prepend=",">
+				cs_elec_history$suffix$.cseh_data = #csehData#
+			</isNotNull>		
+			</dynamic>
+		where
+			cseh_id=#csehId#
+	</update>
+	
+
+	<!-- 根据ID删除一个电桩历史数据 -->
+	<delete id="deleteCsElecHistoryById" parameterClass="java.util.HashMap">
+		delete from cs_elec_history$suffix$ where cseh_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新电桩历史数据 -->
+	<update id="updateCsElecHistoryBy"  parameterClass="java.util.HashMap">
+		update cs_elec_history$suffix$ set		
+			cseh_id=cseh_id
+			<isNotNull property="V_csehId" prepend=",">
+				cs_elec_history$suffix$.cseh_id = #V_csehId#
+			</isNotNull>		
+			<isNotNull property="V_csehDid" prepend=",">
+				cs_elec_history$suffix$.cseh_did = #V_csehDid#
+			</isNotNull>		
+			<isNotNull property="V_csehPowerPile" prepend=",">
+				cs_elec_history$suffix$.cseh_power_pile = #V_csehPowerPile#
+			</isNotNull>		
+			<isNotNull property="V_csehStatusCode" prepend=",">
+				cs_elec_history$suffix$.cseh_status_code = #V_csehStatusCode#
+			</isNotNull>		
+			<isNotNull property="V_csehStatusText" prepend=",">
+				cs_elec_history$suffix$.cseh_status_text = #V_csehStatusText#
+			</isNotNull>		
+			<isNotNull property="V_csehEleAmount" prepend=",">
+				cs_elec_history$suffix$.cseh_ele_amount = #V_csehEleAmount#
+			</isNotNull>		
+			<isNotNull property="V_csehTimeLong" prepend=",">
+				cs_elec_history$suffix$.cseh_time_long = #V_csehTimeLong#
+			</isNotNull>		
+			<isNotNull property="V_csehErrorCode" prepend=",">
+				cs_elec_history$suffix$.cseh_error_code = #V_csehErrorCode#
+			</isNotNull>		
+			<isNotNull property="V_csehCollectTime" prepend=",">
+				cs_elec_history$suffix$.cseh_collect_time = #V_csehCollectTime#
+			</isNotNull>		
+			<isNotNull property="V_csehAddTime" prepend=",">
+				cs_elec_history$suffix$.cseh_add_time = #V_csehAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csehData" prepend=",">
+				cs_elec_history$suffix$.cseh_data = #V_csehData#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsElecHistory_part.cs_elec_history_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除电桩历史数据 -->
+	<update id="deleteCsElecHistoryBy"  parameterClass="java.util.HashMap">
+		delete from cs_elec_history$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsElecHistory_part.cs_elec_history_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

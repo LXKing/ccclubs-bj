@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 上下班签到之SQL映射 -->
+	<resultMap id="TbPassCheck" class="com.ccclubs.model.TbPassCheck">
+		<result property="tbpcId" column="tbpc_id"/>
+		<result property="tbpcHost" column="tbpc_host"/>
+		<result property="tbpcTitle" column="tbpc_title"/>
+		<result property="tbpcEmployee" column="tbpc_employee"/>
+		<result property="tbpcInPos" column="tbpc_in_pos"/>
+		<result property="tbpcInDistance" column="tbpc_in_distance"/>
+		<result property="tbpcInTime" column="tbpc_in_time"/>
+		<result property="tbpcOutPos" column="tbpc_out_pos"/>
+		<result property="tbpcOutDistance" column="tbpc_out_distance"/>
+		<result property="tbpcOutTime" column="tbpc_out_time"/>
+		<result property="tbpcTimeLong" column="tbpc_time_long"/>
+		<result property="tbpcRemark" column="tbpc_remark"/>
+		<result property="tbpcStatus" column="tbpc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有上下班签到 -->
+	<select id="getTbPassCheckList" resultMap="TbPassCheck">
+		select tb_pass_check$suffix$.* from tb_pass_check$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[公司员工]查询-->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<isNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.tbpc_employee=tb_employee$TbEmployee.suffix$.tbe_id
+			</isNull>
+			<isNotNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.$TbEmployee.on$=tb_employee$TbEmployee.suffix$.tbe_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_pass_check$suffix$.tbpc_status!=-1
+		<!-- 多对一外链接[公司员工]查询条件sql片段 -->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<include refid="TbEmployee_part.tb_employee_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbPassCheck_part.tb_pass_check_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbpc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取上下班签到分页 -->
+	<select id="getTbPassCheckPage" parameterClass="java.util.HashMap" resultMap="TbPassCheck">
+		select tb_pass_check$suffix$.* from tb_pass_check$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[公司员工]查询 -->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<isNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.tbpc_employee=tb_employee$TbEmployee.suffix$.tbe_id
+			</isNull>
+			<isNotNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.$TbEmployee.on$=tb_employee$TbEmployee.suffix$.tbe_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_pass_check$suffix$.tbpc_status!=-1
+		<!-- 多对一外链接[公司员工]查询条件sql片段 -->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<include refid="TbEmployee_part.tb_employee_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbPassCheck_part.tb_pass_check_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbpc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取上下班签到总数 -->
+	<select id="getTbPassCheckEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_pass_check$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[公司员工]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<isNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.tbpc_employee=tb_employee$TbEmployee.suffix$.tbe_id
+			</isNull>
+			<isNotNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.$TbEmployee.on$=tb_employee$TbEmployee.suffix$.tbe_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_pass_check$suffix$.tbpc_status!=-1
+		<!-- 多对一外链接[公司员工]查询条件sql片段 -->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<include refid="TbEmployee_part.tb_employee_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbPassCheck_part.tb_pass_check_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取上下班签到 -->
+	<select id="getTbPassCheckById" parameterClass="java.util.HashMap" resultMap="TbPassCheck">
+		select tb_pass_check$suffix$.* from tb_pass_check$suffix$
+		where tbpc_id=#id#
+	</select>
+	
+		
+	<!-- 保存上下班签到 -->
+	<insert id="saveTbPassCheck"  parameterClass="com.ccclubs.model.TbPassCheck">
+		insert into tb_pass_check$suffix$
+		(
+			tb_pass_check$suffix$.tbpc_host
+			,tb_pass_check$suffix$.tbpc_title
+			,tb_pass_check$suffix$.tbpc_employee
+			,tb_pass_check$suffix$.tbpc_in_pos
+			,tb_pass_check$suffix$.tbpc_in_distance
+			,tb_pass_check$suffix$.tbpc_in_time
+			,tb_pass_check$suffix$.tbpc_out_pos
+			,tb_pass_check$suffix$.tbpc_out_distance
+			,tb_pass_check$suffix$.tbpc_out_time
+			,tb_pass_check$suffix$.tbpc_time_long
+			,tb_pass_check$suffix$.tbpc_remark
+			,tb_pass_check$suffix$.tbpc_status
+		)
+		values(
+			<isNotNull property="tbpcHost" prepend="">
+				#tbpcHost#
+			</isNotNull>
+			<isNull property="tbpcHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbpcTitle" prepend=",">
+				#tbpcTitle#
+			</isNotNull>
+			<isNull property="tbpcTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcEmployee" prepend=",">
+				#tbpcEmployee#
+			</isNotNull>
+			<isNull property="tbpcEmployee" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcInPos" prepend=",">
+				#tbpcInPos#
+			</isNotNull>
+			<isNull property="tbpcInPos" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcInDistance" prepend=",">
+				#tbpcInDistance#
+			</isNotNull>
+			<isNull property="tbpcInDistance" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcInTime" prepend=",">
+				#tbpcInTime#
+			</isNotNull>
+			<isNull property="tbpcInTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcOutPos" prepend=",">
+				#tbpcOutPos#
+			</isNotNull>
+			<isNull property="tbpcOutPos" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcOutDistance" prepend=",">
+				#tbpcOutDistance#
+			</isNotNull>
+			<isNull property="tbpcOutDistance" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcOutTime" prepend=",">
+				#tbpcOutTime#
+			</isNotNull>
+			<isNull property="tbpcOutTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcTimeLong" prepend=",">
+				#tbpcTimeLong#
+			</isNotNull>
+			<isNull property="tbpcTimeLong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcRemark" prepend=",">
+				#tbpcRemark#
+			</isNotNull>
+			<isNull property="tbpcRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpcStatus" prepend=",">
+				#tbpcStatus#
+			</isNotNull>
+			<isNull property="tbpcStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新上下班签到 -->
+	<update id="updateTbPassCheck"  parameterClass="com.ccclubs.model.TbPassCheck">
+		update tb_pass_check$suffix$ set
+			<isNotNull property="tbpcHost" prepend="">
+				tb_pass_check$suffix$.tbpc_host = #tbpcHost#
+			</isNotNull>
+			<isNull property="tbpcHost" prepend="">
+				tb_pass_check$suffix$.tbpc_host = null
+			</isNull>				
+			<isNotNull property="tbpcTitle" prepend=",">
+				tb_pass_check$suffix$.tbpc_title = #tbpcTitle#
+			</isNotNull>
+			<isNull property="tbpcTitle" prepend=",">
+				tb_pass_check$suffix$.tbpc_title = null
+			</isNull>				
+			<isNotNull property="tbpcEmployee" prepend=",">
+				tb_pass_check$suffix$.tbpc_employee = #tbpcEmployee#
+			</isNotNull>
+			<isNull property="tbpcEmployee" prepend=",">
+				tb_pass_check$suffix$.tbpc_employee = null
+			</isNull>				
+			<isNotNull property="tbpcInPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_pos = #tbpcInPos#
+			</isNotNull>
+			<isNull property="tbpcInPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_pos = null
+			</isNull>				
+			<isNotNull property="tbpcInDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_distance = #tbpcInDistance#
+			</isNotNull>
+			<isNull property="tbpcInDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_distance = null
+			</isNull>				
+			<isNotNull property="tbpcInTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_time = #tbpcInTime#
+			</isNotNull>
+			<isNull property="tbpcInTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_time = null
+			</isNull>				
+			<isNotNull property="tbpcOutPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_pos = #tbpcOutPos#
+			</isNotNull>
+			<isNull property="tbpcOutPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_pos = null
+			</isNull>				
+			<isNotNull property="tbpcOutDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_distance = #tbpcOutDistance#
+			</isNotNull>
+			<isNull property="tbpcOutDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_distance = null
+			</isNull>				
+			<isNotNull property="tbpcOutTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_time = #tbpcOutTime#
+			</isNotNull>
+			<isNull property="tbpcOutTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_time = null
+			</isNull>				
+			<isNotNull property="tbpcTimeLong" prepend=",">
+				tb_pass_check$suffix$.tbpc_time_long = #tbpcTimeLong#
+			</isNotNull>
+			<isNull property="tbpcTimeLong" prepend=",">
+				tb_pass_check$suffix$.tbpc_time_long = null
+			</isNull>				
+			<isNotNull property="tbpcRemark" prepend=",">
+				tb_pass_check$suffix$.tbpc_remark = #tbpcRemark#
+			</isNotNull>
+			<isNull property="tbpcRemark" prepend=",">
+				tb_pass_check$suffix$.tbpc_remark = null
+			</isNull>				
+			<isNotNull property="tbpcStatus" prepend=",">
+				tb_pass_check$suffix$.tbpc_status = #tbpcStatus#
+			</isNotNull>
+			<isNull property="tbpcStatus" prepend=",">
+				tb_pass_check$suffix$.tbpc_status = null
+			</isNull>				
+		where
+			tbpc_id=#tbpcId#
+	</update>
+	
+	<!-- 更新上下班签到非空字段 -->
+	<update id="updateTbPassCheck$NotNull"  parameterClass="com.ccclubs.model.TbPassCheck">
+		update tb_pass_check$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbpcHost" prepend=",">
+				tb_pass_check$suffix$.tbpc_host = #tbpcHost#
+			</isNotNull>		
+			<isNotNull property="tbpcTitle" prepend=",">
+				tb_pass_check$suffix$.tbpc_title = #tbpcTitle#
+			</isNotNull>		
+			<isNotNull property="tbpcEmployee" prepend=",">
+				tb_pass_check$suffix$.tbpc_employee = #tbpcEmployee#
+			</isNotNull>		
+			<isNotNull property="tbpcInPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_pos = #tbpcInPos#
+			</isNotNull>		
+			<isNotNull property="tbpcInDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_distance = #tbpcInDistance#
+			</isNotNull>		
+			<isNotNull property="tbpcInTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_time = #tbpcInTime#
+			</isNotNull>		
+			<isNotNull property="tbpcOutPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_pos = #tbpcOutPos#
+			</isNotNull>		
+			<isNotNull property="tbpcOutDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_distance = #tbpcOutDistance#
+			</isNotNull>		
+			<isNotNull property="tbpcOutTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_time = #tbpcOutTime#
+			</isNotNull>		
+			<isNotNull property="tbpcTimeLong" prepend=",">
+				tb_pass_check$suffix$.tbpc_time_long = #tbpcTimeLong#
+			</isNotNull>		
+			<isNotNull property="tbpcRemark" prepend=",">
+				tb_pass_check$suffix$.tbpc_remark = #tbpcRemark#
+			</isNotNull>		
+			<isNotNull property="tbpcStatus" prepend=",">
+				tb_pass_check$suffix$.tbpc_status = #tbpcStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbpc_id=#tbpcId#
+	</update>
+	
+
+	<!-- 根据ID删除一个上下班签到 -->
+	<delete id="deleteTbPassCheckById" parameterClass="java.util.HashMap">
+		delete from tb_pass_check$suffix$ where tbpc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个上下班签到 -->
+	<update id="removeTbPassCheckById" parameterClass="java.util.HashMap">
+		update tb_pass_check$suffix$ set  tb_pass_check$suffix$.tbpc_status=-1  where tbpc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新上下班签到 -->
+	<update id="updateTbPassCheckBy"  parameterClass="java.util.HashMap">
+		update tb_pass_check$suffix$ set		
+			tbpc_id=tbpc_id
+			<isNotNull property="V_tbpcId" prepend=",">
+				tb_pass_check$suffix$.tbpc_id = #V_tbpcId#
+			</isNotNull>		
+			<isNotNull property="V_tbpcHost" prepend=",">
+				tb_pass_check$suffix$.tbpc_host = #V_tbpcHost#
+			</isNotNull>		
+			<isNotNull property="V_tbpcTitle" prepend=",">
+				tb_pass_check$suffix$.tbpc_title = #V_tbpcTitle#
+			</isNotNull>		
+			<isNotNull property="V_tbpcEmployee" prepend=",">
+				tb_pass_check$suffix$.tbpc_employee = #V_tbpcEmployee#
+			</isNotNull>		
+			<isNotNull property="V_tbpcInPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_pos = #V_tbpcInPos#
+			</isNotNull>		
+			<isNotNull property="V_tbpcInDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_distance = #V_tbpcInDistance#
+			</isNotNull>		
+			<isNotNull property="V_tbpcInTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_in_time = #V_tbpcInTime#
+			</isNotNull>		
+			<isNotNull property="V_tbpcOutPos" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_pos = #V_tbpcOutPos#
+			</isNotNull>		
+			<isNotNull property="V_tbpcOutDistance" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_distance = #V_tbpcOutDistance#
+			</isNotNull>		
+			<isNotNull property="V_tbpcOutTime" prepend=",">
+				tb_pass_check$suffix$.tbpc_out_time = #V_tbpcOutTime#
+			</isNotNull>		
+			<isNotNull property="V_tbpcTimeLong" prepend=",">
+				tb_pass_check$suffix$.tbpc_time_long = #V_tbpcTimeLong#
+			</isNotNull>		
+			<isNotNull property="V_tbpcRemark" prepend=",">
+				tb_pass_check$suffix$.tbpc_remark = #V_tbpcRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbpcStatus" prepend=",">
+				tb_pass_check$suffix$.tbpc_status = #V_tbpcStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[公司员工]查询-->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<isNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.tbpc_employee=tb_employee$TbEmployee.suffix$.tbe_id
+			</isNull>
+			<isNotNull property="TbEmployee.on">
+				left join tb_employee tb_employee$TbEmployee.suffix$ on tb_pass_check$suffix$.$TbEmployee.on$=tb_employee$TbEmployee.suffix$.tbe_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_pass_check$suffix$.tbpc_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[公司员工]查询条件sql片段 -->
+		<isNotNull property="TbpcEmployee"><!-- 调用一下TbpcEmployee，把TbEmployee指向TbpcEmployee --></isNotNull>
+		<isNotNull property="TbEmployee">
+			<include refid="TbEmployee_part.tb_employee_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbPassCheck_part.tb_pass_check_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除上下班签到 -->
+	<update id="deleteTbPassCheckBy"  parameterClass="java.util.HashMap">
+		delete from tb_pass_check$suffix$ where 
+		tb_pass_check$suffix$.tbpc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbPassCheck_part.tb_pass_check_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

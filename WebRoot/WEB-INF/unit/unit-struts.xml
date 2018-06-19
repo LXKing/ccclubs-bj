@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢struts的Action框架 -->
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="do"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+	<constant name="struts.enable.SlashesInActionNames" value="true" />
+	<include file="struts-default.xml" />
+	
+	<package name="unit-default" extends="struts-default" namespace="/">
+	 	<global-results>
+            <result name="login" type="redirect">/unit/login.do</result>          
+        </global-results>
+    </package>
+    
+
+	<package name="unit.root" extends="unit-default" namespace="/unit">
+		<action name="login.*" method="{1}" class="unitLoginAction">
+			<result name="index">login.jsp</result>
+			<result name="success" type="redirect">/unit/index.do</result>
+			<result name="failure" type="redirect">/unit/login.do</result>
+		</action>
+		<action name="password.*" method="{1}" class="unitPasswordAction">			
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">password.jsp</result>
+			<result name="entry" type="redirect">password.do</result>
+		</action>
+		<action name="index.*" method="{1}" class="unitIndexAction">			
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">index.jsp</result>
+		</action>
+		<!-- API -->
+	    <action name="api" method="api" class="unitIndexAction"></action>
+		<action name="welcome.*" method="{1}" class="unitWelcomeAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">welcome.jsp</result>
+		</action>
+		<action name="user.*" method="{1}" class="unitUserAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">user.index.jsp</result>
+			<result name="edit">user.edit.jsp</result>
+			<result name="define">${#request.define}</result>
+			<result name="entry" type="redirect">/unit/user.do</result>
+		</action>
+		<action name="car.*" method="{1}" class="unitCarAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">car.jsp</result>
+			<result name="define">${#request.define}</result>
+			<result name="entry" type="redirect">/unit/car.do</result>
+		</action>
+		<action name="account.*" method="{1}" class="unitAccountAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">account.jsp</result>
+		</action>
+		<!-- 代理订单管理 -->
+		<action name="order.*" method="{1}" class="unitOrderAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">order.index.jsp</result>
+			<result name="edit">order.edit.jsp</result>
+		</action>		
+		<!-- 价格配置管理 -->
+		<action name="fee.*" method="{1}" class="unitFeeAction">
+			<result name="index">fee.index.jsp</result>
+			<result name="edit">fee.edit.jsp</result>
+		</action>
+		<!-- 套餐管理 -->
+		<action name="pack.*" method="{1}" class="unitPackAction">
+			<result name="index">pack.index.jsp</result>
+			<result name="edit">pack.edit.jsp</result>
+		</action>
+		<!-- 套餐管理 -->
+		<action name="gift.*" method="{1}" class="unitGiftAction">
+			<result name="index">gift.index.jsp</result>
+			<result name="edit">gift.edit.jsp</result>
+		</action>
+		<!-- 消费记录（帐单明细） -->
+		<action name="record.*" method="{1}" class="unitRecordAction">
+			<result name="index">record.index.jsp</result>
+			<result name="edit">record.edit.jsp</result>
+		</action>
+		<!-- 酒店机场管理 -->
+		<action name="airport.*" method="{1}" class="unitAirportAction">
+			<result name="index">airport.index.jsp</result>
+			<result name="edit">airport.edit.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 酒店机场管理 -->
+		<action name="bill.*" method="{1}" class="unitBillAction">
+			<result name="index">bill.index.jsp</result>
+			<result name="edit">bill.edit.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 地图监控 -->
+		<action name="map_*" method="{1}" class="mapAction">
+			<result name="index">map_index.jsp</result>
+			<result name="soso">map_soso.jsp</result>
+			<result name="info">map_info.jsp</result>
+			<result name="history">map_history.jsp</result>
+			<result name="power_info">map_power_info.jsp</result>
+		</action>
+		<!-- 部门分组 -->
+		<action name="group.*" method="{1}" class="unitGroupAction">
+			<result name="index">group.index.jsp</result>
+			<result name="edit">group.edit.jsp</result>
+		</action>
+		<!-- 用车人员 -->
+		<action name="person.*" method="{1}" class="unitPersonAction">
+			<result name="index">person.index.jsp</result>
+			<result name="edit">person.edit.jsp</result>
+		</action>
+		<action name="person_*" method="{1}" class="unitPersonAction">
+			<result name="index">person.index.jsp</result>
+			<result name="edit">person.edit.jsp</result>
+		</action>
+	</package>
+	
+	
+	<!-- ajax数据获取 -->
+	<package name="unit.ajax" extends="unit-default" namespace="/unit">
+		<action name="user/member_query" method="member_inquire" class="unitAdapterAction"></action>
+		<action name="user/member_inquire" method="member_inquire" class="unitAdapterAction"></action>	
+		<action name="user/member_account" method="member_account" class="unitAdapterAction"></action>	
+		<action name="user/member_info" method="member_info" class="unitAdapterAction"></action>
+		<action name="object/outlets_tree" method="outlets_tree" class="unitAdapterAction"></action>	
+		<action name="object/carmodel_query" method="carmodel_query" class="unitAdapterAction"></action>	
+		<action name="object/car_query" method="car_query" class="unitAdapterAction"></action>
+		<action name="service/orderdetail" method="orderdetail" class="unitAdapterAction">
+			<result name="index">/unit/all/orderdetail.jsp</result>
+		</action>
+		<action name="service/detaildynamic" method="detaildynamic" class="unitAdapterAction">
+			<result name="index">/unit/all/orderdetail.jsp</result>
+		</action>
+	</package>
+
+	<!-- 所有订单管理
+	<package name="unit.all" extends="unit-default" namespace="/unit/all">
+		<action name="order_*" method="{1}" class="unitAllOrderAction">
+			<result name="index">order_index.jsp</result>
+			<result name="edit">order_edit.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+	</package>
+	 -->
+	
+	
+</struts>

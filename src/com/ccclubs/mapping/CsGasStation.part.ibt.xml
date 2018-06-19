@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsGasStation_part">	
+	<!-- 加油站条件sql片段  -->
+	<sql id="cs_gas_station_dynamic">
+		<dynamic>
+			<isNotEmpty property="csgsId" prepend="and">
+			    $csgsIdNot$ cs_gas_station$suffix$.csgs_id = #csgsId#
+			</isNotEmpty>
+			<isNotNull property="csgsIdNot" prepend="and">
+				<isEmpty property="csgsId">
+				$csgsIdNot$ cs_gas_station$suffix$.csgs_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_gas_station$suffix$.csgs_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csgsHost" prepend="and">
+			    $csgsHostNot$ cs_gas_station$suffix$.csgs_host = #csgsHost#
+			</isNotEmpty>
+			<isNotNull property="csgsHostNot" prepend="and">
+				<isEmpty property="csgsHost">
+				$csgsHostNot$ cs_gas_station$suffix$.csgs_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csgsName" prepend="and">			    
+			    (<isNotNull property="csgsNameNot">
+			    cs_gas_station$suffix$.csgs_name is null or length(cs_gas_station$suffix$.csgs_name) &lt; 1 or
+			    </isNotNull>$csgsNameNot$ cs_gas_station$suffix$.csgs_name = #csgsName#)
+			</isNotEmpty>
+			<isNotNull property="csgsNameNot" prepend="and">
+				<isEmpty property="csgsName">
+				$csgsNameNot$ (cs_gas_station$suffix$.csgs_name is null or length(cs_gas_station$suffix$.csgs_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgsArea" prepend="and">
+			    $csgsAreaNot$ cs_gas_station$suffix$.csgs_area = #csgsArea#
+			</isNotEmpty>
+			<isNotNull property="csgsAreaNot" prepend="and">
+				<isEmpty property="csgsArea">
+				$csgsAreaNot$ cs_gas_station$suffix$.csgs_area is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgsLocation" prepend="and">			    
+			    (<isNotNull property="csgsLocationNot">
+			    cs_gas_station$suffix$.csgs_location is null or length(cs_gas_station$suffix$.csgs_location) &lt; 1 or
+			    </isNotNull>$csgsLocationNot$ cs_gas_station$suffix$.csgs_location = #csgsLocation#)
+			</isNotEmpty>
+			<isNotNull property="csgsLocationNot" prepend="and">
+				<isEmpty property="csgsLocation">
+				$csgsLocationNot$ (cs_gas_station$suffix$.csgs_location is null or length(cs_gas_station$suffix$.csgs_location) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgsAddress" prepend="and">			    
+			    (<isNotNull property="csgsAddressNot">
+			    cs_gas_station$suffix$.csgs_address is null or length(cs_gas_station$suffix$.csgs_address) &lt; 1 or
+			    </isNotNull>$csgsAddressNot$ cs_gas_station$suffix$.csgs_address like #csgsAddress#)
+			</isNotEmpty>
+			<isNotNull property="csgsAddressNot" prepend="and">
+				<isEmpty property="csgsAddress">
+				$csgsAddressNot$ (cs_gas_station$suffix$.csgs_address is null or length(cs_gas_station$suffix$.csgs_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgsAddTimeStart" prepend="and">
+			    $csgsAddTimeNot$   (cs_gas_station$suffix$.csgs_add_time &gt;= #csgsAddTimeStart#
+			   <isEmpty property="csgsAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgsAddTimeEnd" prepend="and">
+				<isEmpty property="csgsAddTimeStart">$csgsAddTimeNot$   (</isEmpty>
+			    cs_gas_station$suffix$.csgs_add_time &lt;= #csgsAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgsAddTime" prepend="and">
+			    $csgsAddTimeNot$ cs_gas_station$suffix$.csgs_add_time = #csgsAddTime#
+			</isNotEmpty>
+			<isNotNull property="csgsAddTimeNot" prepend="and">
+				<isEmpty property="csgsAddTimeStart"><isEmpty property="csgsAddTimeEnd"><isEmpty property="csgsAddTime">
+				$csgsAddTimeNot$ cs_gas_station$suffix$.csgs_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgsStatus" prepend="and">
+			    $csgsStatusNot$ cs_gas_station$suffix$.csgs_status = #csgsStatus#
+			</isNotEmpty>
+			<isNotNull property="csgsStatusNot" prepend="and">
+				<isEmpty property="csgsStatus">
+				$csgsStatusNot$ cs_gas_station$suffix$.csgs_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 加油站left join 条件sql片段 -->
+	<sql id="cs_gas_station_join">
+		<dynamic>
+			<isNotEmpty property="CsGasStation.csgsId" prepend="and">
+			    $CsGasStation.csgsIdNot$ cs_gas_station$CsGasStation.suffix$.csgs_id = #CsGasStation.csgsId#
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsIdNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsId">
+				$csgsIdNot$ cs_gas_station$CsGasStation.suffix$.csgs_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_gas_station$CsGasStation.suffix$.csgs_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsGasStation.csgsHost" prepend="and">
+			    $CsGasStation.csgsHostNot$ cs_gas_station$CsGasStation.suffix$.csgs_host = #CsGasStation.csgsHost#
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsHostNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsHost">
+				$csgsHostNot$ cs_gas_station$CsGasStation.suffix$.csgs_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGasStation.csgsName" prepend="and">
+				(<isNotNull property="CsGasStation.csgsNameNot">
+			    cs_gas_station$CsGasStation.suffix$.csgs_name is null or length(cs_gas_station$CsGasStation.suffix$.csgs_name) &lt; 1 or
+			    </isNotNull>$CsGasStation.csgsNameNot$ cs_gas_station$CsGasStation.suffix$.csgs_name = #CsGasStation.csgsName#)
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsNameNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsName">
+				$csgsNameNot$ (cs_gas_station$CsGasStation.suffix$.csgs_name is null or length(cs_gas_station$CsGasStation.suffix$.csgs_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGasStation.csgsArea" prepend="and">
+			    $CsGasStation.csgsAreaNot$ cs_gas_station$CsGasStation.suffix$.csgs_area = #CsGasStation.csgsArea#
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsAreaNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsArea">
+				$csgsAreaNot$ cs_gas_station$CsGasStation.suffix$.csgs_area is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGasStation.csgsLocation" prepend="and">
+				(<isNotNull property="CsGasStation.csgsLocationNot">
+			    cs_gas_station$CsGasStation.suffix$.csgs_location is null or length(cs_gas_station$CsGasStation.suffix$.csgs_location) &lt; 1 or
+			    </isNotNull>$CsGasStation.csgsLocationNot$ cs_gas_station$CsGasStation.suffix$.csgs_location = #CsGasStation.csgsLocation#)
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsLocationNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsLocation">
+				$csgsLocationNot$ (cs_gas_station$CsGasStation.suffix$.csgs_location is null or length(cs_gas_station$CsGasStation.suffix$.csgs_location) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGasStation.csgsAddress" prepend="and">
+				(<isNotNull property="CsGasStation.csgsAddressNot">
+			    cs_gas_station$CsGasStation.suffix$.csgs_address is null or length(cs_gas_station$CsGasStation.suffix$.csgs_address) &lt; 1 or
+			    </isNotNull>$CsGasStation.csgsAddressNot$ cs_gas_station$CsGasStation.suffix$.csgs_address like #CsGasStation.csgsAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsAddressNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsAddress">
+				$csgsAddressNot$ (cs_gas_station$CsGasStation.suffix$.csgs_address is null or length(cs_gas_station$CsGasStation.suffix$.csgs_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGasStation.csgsAddTimeStart" prepend="and">
+			    $CsGasStation.csgsAddTimeNot$   (cs_gas_station$CsGasStation.suffix$.csgs_add_time &gt;= #CsGasStation.csgsAddTimeStart#
+			   <isEmpty property="CsGasStation.csgsAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGasStation.csgsAddTimeEnd" prepend="and">
+				<isEmpty property="CsGasStation.csgsAddTimeStart">$CsGasStation.csgsAddTimeNot$   (</isEmpty>
+			    cs_gas_station$CsGasStation.suffix$.csgs_add_time &lt;= #CsGasStation.csgsAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGasStation.csgsAddTime" prepend="and">
+			    $CsGasStation.csgsAddTimeNot$ cs_gas_station$CsGasStation.suffix$.csgs_add_time = #CsGasStation.csgsAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsAddTimeNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsAddTimeStart"><isEmpty property="CsGasStation.csgsAddTimeEnd"><isEmpty property="CsGasStation.csgsAddTime">
+				$csgsAddTimeNot$ cs_gas_station$CsGasStation.suffix$.csgs_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGasStation.csgsStatus" prepend="and">
+			    $CsGasStation.csgsStatusNot$ cs_gas_station$CsGasStation.suffix$.csgs_status = #CsGasStation.csgsStatus#
+			</isNotEmpty>
+			<isNotNull property="CsGasStation.csgsStatusNot" prepend="and">
+				<isEmpty property="CsGasStation.csgsStatus">
+				$csgsStatusNot$ cs_gas_station$CsGasStation.suffix$.csgs_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

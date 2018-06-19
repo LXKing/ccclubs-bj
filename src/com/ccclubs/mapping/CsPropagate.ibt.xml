@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 传播内容之SQL映射 -->
+	<resultMap id="CsPropagate" class="com.ccclubs.model.CsPropagate">
+		<result property="cspId" column="csp_id"/>
+		<result property="cspTitle" column="csp_title"/>
+		<result property="cspType" column="csp_type"/>
+		<result property="cspRecommend" column="csp_order"/>
+		<result property="cspFlag" column="csp_flag"/>
+		<result property="cspThum" column="csp_thum"/>
+		<result property="cspContentType" column="csp_content_type"/>
+		<result property="cspContent" column="csp_content"/>
+		<result property="cspHtml" column="csp_html"/>
+		<result property="cspRedirect" column="csp_redirect"/>
+		<result property="cspAddTime" column="csp_add_time"/>
+		<result property="cspUpdateTime" column="csp_update_time"/>
+		<result property="cspViewS" column="csp_view_s"/>
+		<result property="cspReplyS" column="csp_reply_s"/>
+		<result property="cspCollectS" column="csp_collect_s"/>
+		<result property="cspPraiseS" column="csp_praise_s"/>
+		<result property="cspStatus" column="csp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有传播内容 -->
+	<select id="getCsPropagateList" resultMap="CsPropagate">
+		select cs_propagate$suffix$.* from cs_propagate$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_propagate$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPropagate_part.cs_propagate_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取传播内容分页 -->
+	<select id="getCsPropagatePage" parameterClass="java.util.HashMap" resultMap="CsPropagate">
+		select cs_propagate$suffix$.* from cs_propagate$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_propagate$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPropagate_part.cs_propagate_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取传播内容总数 -->
+	<select id="getCsPropagateEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_propagate$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_propagate$suffix$.csp_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPropagate_part.cs_propagate_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取传播内容 -->
+	<select id="getCsPropagateById" parameterClass="java.util.HashMap" resultMap="CsPropagate">
+		select cs_propagate$suffix$.* from cs_propagate$suffix$
+		where csp_id=#id#
+	</select>
+	
+		
+	<!-- 保存传播内容 -->
+	<insert id="saveCsPropagate"  parameterClass="com.ccclubs.model.CsPropagate">
+		insert into cs_propagate$suffix$
+		(
+			cs_propagate$suffix$.csp_title
+			,cs_propagate$suffix$.csp_type
+			,cs_propagate$suffix$.csp_order
+			,cs_propagate$suffix$.csp_flag
+			,cs_propagate$suffix$.csp_thum
+			,cs_propagate$suffix$.csp_content_type
+			,cs_propagate$suffix$.csp_content
+			,cs_propagate$suffix$.csp_html
+			,cs_propagate$suffix$.csp_redirect
+			,cs_propagate$suffix$.csp_add_time
+			,cs_propagate$suffix$.csp_update_time
+			,cs_propagate$suffix$.csp_view_s
+			,cs_propagate$suffix$.csp_reply_s
+			,cs_propagate$suffix$.csp_collect_s
+			,cs_propagate$suffix$.csp_praise_s
+			,cs_propagate$suffix$.csp_status
+		)
+		values(
+			<isNotNull property="cspTitle" prepend="">
+				#cspTitle#
+			</isNotNull>
+			<isNull property="cspTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspType" prepend=",">
+				#cspType#
+			</isNotNull>
+			<isNull property="cspType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspRecommend" prepend=",">
+				#cspRecommend#
+			</isNotNull>
+			<isNull property="cspRecommend" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspFlag" prepend=",">
+				#cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspThum" prepend=",">
+				#cspThum#
+			</isNotNull>
+			<isNull property="cspThum" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspContentType" prepend=",">
+				#cspContentType#
+			</isNotNull>
+			<isNull property="cspContentType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspContent" prepend=",">
+				#cspContent#
+			</isNotNull>
+			<isNull property="cspContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspHtml" prepend=",">
+				#cspHtml#
+			</isNotNull>
+			<isNull property="cspHtml" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspRedirect" prepend=",">
+				#cspRedirect#
+			</isNotNull>
+			<isNull property="cspRedirect" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspAddTime" prepend=",">
+				#cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspUpdateTime" prepend=",">
+				#cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspViewS" prepend=",">
+				#cspViewS#
+			</isNotNull>
+			<isNull property="cspViewS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspReplyS" prepend=",">
+				#cspReplyS#
+			</isNotNull>
+			<isNull property="cspReplyS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspCollectS" prepend=",">
+				#cspCollectS#
+			</isNotNull>
+			<isNull property="cspCollectS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspPraiseS" prepend=",">
+				#cspPraiseS#
+			</isNotNull>
+			<isNull property="cspPraiseS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspStatus" prepend=",">
+				#cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新传播内容 -->
+	<update id="updateCsPropagate"  parameterClass="com.ccclubs.model.CsPropagate">
+		update cs_propagate$suffix$ set
+			<isNotNull property="cspTitle" prepend="">
+				cs_propagate$suffix$.csp_title = #cspTitle#
+			</isNotNull>
+			<isNull property="cspTitle" prepend="">
+				cs_propagate$suffix$.csp_title = null
+			</isNull>				
+			<isNotNull property="cspType" prepend=",">
+				cs_propagate$suffix$.csp_type = #cspType#
+			</isNotNull>
+			<isNull property="cspType" prepend=",">
+				cs_propagate$suffix$.csp_type = null
+			</isNull>				
+			<isNotNull property="cspRecommend" prepend=",">
+				cs_propagate$suffix$.csp_order = #cspRecommend#
+			</isNotNull>
+			<isNull property="cspRecommend" prepend=",">
+				cs_propagate$suffix$.csp_order = null
+			</isNull>				
+			<isNotNull property="cspFlag" prepend=",">
+				cs_propagate$suffix$.csp_flag = #cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				cs_propagate$suffix$.csp_flag = null
+			</isNull>				
+			<isNotNull property="cspThum" prepend=",">
+				cs_propagate$suffix$.csp_thum = #cspThum#
+			</isNotNull>
+			<isNull property="cspThum" prepend=",">
+				cs_propagate$suffix$.csp_thum = null
+			</isNull>				
+			<isNotNull property="cspContentType" prepend=",">
+				cs_propagate$suffix$.csp_content_type = #cspContentType#
+			</isNotNull>
+			<isNull property="cspContentType" prepend=",">
+				cs_propagate$suffix$.csp_content_type = null
+			</isNull>				
+			<isNotNull property="cspContent" prepend=",">
+				cs_propagate$suffix$.csp_content = #cspContent#
+			</isNotNull>
+			<isNull property="cspContent" prepend=",">
+				cs_propagate$suffix$.csp_content = null
+			</isNull>				
+			<isNotNull property="cspHtml" prepend=",">
+				cs_propagate$suffix$.csp_html = #cspHtml#
+			</isNotNull>
+			<isNull property="cspHtml" prepend=",">
+				cs_propagate$suffix$.csp_html = null
+			</isNull>				
+			<isNotNull property="cspRedirect" prepend=",">
+				cs_propagate$suffix$.csp_redirect = #cspRedirect#
+			</isNotNull>
+			<isNull property="cspRedirect" prepend=",">
+				cs_propagate$suffix$.csp_redirect = null
+			</isNull>				
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_propagate$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				cs_propagate$suffix$.csp_add_time = null
+			</isNull>				
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_propagate$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				cs_propagate$suffix$.csp_update_time = null
+			</isNull>				
+			<isNotNull property="cspViewS" prepend=",">
+				cs_propagate$suffix$.csp_view_s = #cspViewS#
+			</isNotNull>
+			<isNull property="cspViewS" prepend=",">
+				cs_propagate$suffix$.csp_view_s = null
+			</isNull>				
+			<isNotNull property="cspReplyS" prepend=",">
+				cs_propagate$suffix$.csp_reply_s = #cspReplyS#
+			</isNotNull>
+			<isNull property="cspReplyS" prepend=",">
+				cs_propagate$suffix$.csp_reply_s = null
+			</isNull>				
+			<isNotNull property="cspCollectS" prepend=",">
+				cs_propagate$suffix$.csp_collect_s = #cspCollectS#
+			</isNotNull>
+			<isNull property="cspCollectS" prepend=",">
+				cs_propagate$suffix$.csp_collect_s = null
+			</isNull>				
+			<isNotNull property="cspPraiseS" prepend=",">
+				cs_propagate$suffix$.csp_praise_s = #cspPraiseS#
+			</isNotNull>
+			<isNull property="cspPraiseS" prepend=",">
+				cs_propagate$suffix$.csp_praise_s = null
+			</isNull>				
+			<isNotNull property="cspStatus" prepend=",">
+				cs_propagate$suffix$.csp_status = #cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				cs_propagate$suffix$.csp_status = null
+			</isNull>				
+		where
+			csp_id=#cspId#
+	</update>
+	
+	<!-- 更新传播内容非空字段 -->
+	<update id="updateCsPropagate$NotNull"  parameterClass="com.ccclubs.model.CsPropagate">
+		update cs_propagate$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspTitle" prepend=",">
+				cs_propagate$suffix$.csp_title = #cspTitle#
+			</isNotNull>		
+			<isNotNull property="cspType" prepend=",">
+				cs_propagate$suffix$.csp_type = #cspType#
+			</isNotNull>		
+			<isNotNull property="cspRecommend" prepend=",">
+				cs_propagate$suffix$.csp_order = #cspRecommend#
+			</isNotNull>		
+			<isNotNull property="cspFlag" prepend=",">
+				cs_propagate$suffix$.csp_flag = #cspFlag#
+			</isNotNull>		
+			<isNotNull property="cspThum" prepend=",">
+				cs_propagate$suffix$.csp_thum = #cspThum#
+			</isNotNull>		
+			<isNotNull property="cspContentType" prepend=",">
+				cs_propagate$suffix$.csp_content_type = #cspContentType#
+			</isNotNull>		
+			<isNotNull property="cspContent" prepend=",">
+				cs_propagate$suffix$.csp_content = #cspContent#
+			</isNotNull>		
+			<isNotNull property="cspHtml" prepend=",">
+				cs_propagate$suffix$.csp_html = #cspHtml#
+			</isNotNull>		
+			<isNotNull property="cspRedirect" prepend=",">
+				cs_propagate$suffix$.csp_redirect = #cspRedirect#
+			</isNotNull>		
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_propagate$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>		
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_propagate$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cspViewS" prepend=",">
+				cs_propagate$suffix$.csp_view_s = #cspViewS#
+			</isNotNull>		
+			<isNotNull property="cspReplyS" prepend=",">
+				cs_propagate$suffix$.csp_reply_s = #cspReplyS#
+			</isNotNull>		
+			<isNotNull property="cspCollectS" prepend=",">
+				cs_propagate$suffix$.csp_collect_s = #cspCollectS#
+			</isNotNull>		
+			<isNotNull property="cspPraiseS" prepend=",">
+				cs_propagate$suffix$.csp_praise_s = #cspPraiseS#
+			</isNotNull>		
+			<isNotNull property="cspStatus" prepend=",">
+				cs_propagate$suffix$.csp_status = #cspStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csp_id=#cspId#
+	</update>
+	
+
+	<!-- 根据ID删除一个传播内容 -->
+	<delete id="deleteCsPropagateById" parameterClass="java.util.HashMap">
+		delete from cs_propagate$suffix$ where csp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个传播内容 -->
+	<update id="removeCsPropagateById" parameterClass="java.util.HashMap">
+		update cs_propagate$suffix$ set  cs_propagate$suffix$.csp_status=-1  where csp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新传播内容 -->
+	<update id="updateCsPropagateBy"  parameterClass="java.util.HashMap">
+		update cs_propagate$suffix$ set		
+			csp_id=csp_id
+			<isNotNull property="V_cspId" prepend=",">
+				cs_propagate$suffix$.csp_id = #V_cspId#
+			</isNotNull>		
+			<isNotNull property="V_cspTitle" prepend=",">
+				cs_propagate$suffix$.csp_title = #V_cspTitle#
+			</isNotNull>		
+			<isNotNull property="V_cspType" prepend=",">
+				cs_propagate$suffix$.csp_type = #V_cspType#
+			</isNotNull>		
+			<isNotNull property="V_cspRecommend" prepend=",">
+				cs_propagate$suffix$.csp_order = #V_cspRecommend#
+			</isNotNull>		
+			<isNotNull property="V_cspFlag" prepend=",">
+				cs_propagate$suffix$.csp_flag = #V_cspFlag#
+			</isNotNull>		
+			<isNotNull property="V_cspThum" prepend=",">
+				cs_propagate$suffix$.csp_thum = #V_cspThum#
+			</isNotNull>		
+			<isNotNull property="V_cspContentType" prepend=",">
+				cs_propagate$suffix$.csp_content_type = #V_cspContentType#
+			</isNotNull>		
+			<isNotNull property="V_cspContent" prepend=",">
+				cs_propagate$suffix$.csp_content = #V_cspContent#
+			</isNotNull>		
+			<isNotNull property="V_cspHtml" prepend=",">
+				cs_propagate$suffix$.csp_html = #V_cspHtml#
+			</isNotNull>		
+			<isNotNull property="V_cspRedirect" prepend=",">
+				cs_propagate$suffix$.csp_redirect = #V_cspRedirect#
+			</isNotNull>		
+			<isNotNull property="V_cspAddTime" prepend=",">
+				cs_propagate$suffix$.csp_add_time = #V_cspAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cspUpdateTime" prepend=",">
+				cs_propagate$suffix$.csp_update_time = #V_cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cspViewS" prepend=",">
+				cs_propagate$suffix$.csp_view_s = #V_cspViewS#
+			</isNotNull>		
+			<isNotNull property="V_cspReplyS" prepend=",">
+				cs_propagate$suffix$.csp_reply_s = #V_cspReplyS#
+			</isNotNull>		
+			<isNotNull property="V_cspCollectS" prepend=",">
+				cs_propagate$suffix$.csp_collect_s = #V_cspCollectS#
+			</isNotNull>		
+			<isNotNull property="V_cspPraiseS" prepend=",">
+				cs_propagate$suffix$.csp_praise_s = #V_cspPraiseS#
+			</isNotNull>		
+			<isNotNull property="V_cspStatus" prepend=",">
+				cs_propagate$suffix$.csp_status = #V_cspStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_propagate$suffix$.csp_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsPropagate_part.cs_propagate_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除传播内容 -->
+	<update id="deleteCsPropagateBy"  parameterClass="java.util.HashMap">
+		delete from cs_propagate$suffix$ where 
+		cs_propagate$suffix$.csp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsPropagate_part.cs_propagate_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

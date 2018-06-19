@@ -1,0 +1,98 @@
+package com.ccclubs.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.lazy3q.web.util.Page;
+import com.ccclubs.model.CsOrderDetail;
+
+/**
+ * 订单明细的Dao接口
+ * @author 飞啊飘啊
+ */
+@SuppressWarnings("unchecked")
+public interface ICsOrderDetailDao
+{
+	/**
+	 * 获取所有订单明细
+	 * @return
+	 */
+	public List<CsOrderDetail> getCsOrderDetailList(Map params,Integer size);
+	
+	/**
+	 * 获取订单明细统计
+	 * @return
+	 */
+	public List getCsOrderDetailStats(Map params,Map<String,Object> groups,Map<String,Object> sums);
+
+	/**
+	 * 获取订单明细总数
+	 * @return
+	 */	
+	public Long getCsOrderDetailCount(Map params);
+	
+	/**
+	 * 获取订单明细自定义求和表达式,比如求和:eval="sum(id)"
+	 * @return
+	 */	
+	public <T> T getCsOrderDetailEval(String eval,Map params);
+	
+	/**
+	 * 获取订单明细分页
+	 * @return
+	 */	
+	public Page getCsOrderDetailPage(int page,int size,Map params);
+	
+	/**
+	 * 根据查询条件取订单明细
+	 * @param params
+	 * @return
+	 */
+	public CsOrderDetail getCsOrderDetail(Map params);	
+
+	/**
+	 * 根据ID取订单明细
+	 * @param id
+	 * @return
+	 */
+	public CsOrderDetail getCsOrderDetailById(Long id);
+
+
+	
+	
+
+	/**
+	 * 保存订单明细
+	 * @param csOrderDetail
+	 */
+	public CsOrderDetail saveCsOrderDetail(CsOrderDetail csOrderDetail);
+
+	/**
+	 * 更新订单明细
+	 * @param csOrderDetail
+	 */
+	public void updateCsOrderDetail(CsOrderDetail csOrderDetail);
+	/**
+	 * 更新订单明细非空字段
+	 * @param csOrderDetail
+	 */
+	public void updateCsOrderDetail$NotNull(CsOrderDetail csOrderDetail);
+
+	/**
+	 * 根据ID删除一个订单明细
+	 * @param id
+	 */
+	public void deleteCsOrderDetailById(Long id);
+	/**
+	 * 根据条件更新订单明细
+	 * @param values
+	 * @param params
+	 */
+	public void updateCsOrderDetailByConfirm(Map values, Map params);
+	/**
+	 * 根据条件删除订单明细
+	 * @param params
+	 */
+	public void deleteCsOrderDetailByConfirm(Map params);
+
+}

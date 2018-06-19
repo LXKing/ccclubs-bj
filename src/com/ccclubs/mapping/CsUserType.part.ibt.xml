@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUserType_part">	
+	<!-- 计费方式条件sql片段  -->
+	<sql id="cs_user_type_dynamic">
+		<dynamic>
+			<isNotEmpty property="csutId" prepend="and">
+			    $csutIdNot$ cs_user_type$suffix$.csut_id = #csutId#
+			</isNotEmpty>
+			<isNotNull property="csutIdNot" prepend="and">
+				<isEmpty property="csutId">
+				$csutIdNot$ cs_user_type$suffix$.csut_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csutName" prepend="and">			    
+			    (<isNotNull property="csutNameNot">
+			    cs_user_type$suffix$.csut_name is null or length(cs_user_type$suffix$.csut_name) &lt; 1 or
+			    </isNotNull>$csutNameNot$ cs_user_type$suffix$.csut_name = #csutName#)
+			</isNotEmpty>
+			<isNotNull property="csutNameNot" prepend="and">
+				<isEmpty property="csutName">
+				$csutNameNot$ (cs_user_type$suffix$.csut_name is null or length(cs_user_type$suffix$.csut_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csutProfileMin" prepend="and">
+			    $csutProfileNot$  ( cs_user_type$suffix$.csut_profile &gt;= #csutProfileMin#
+			    <isEmpty property="csutProfileMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csutProfileMax" prepend="and">
+				<isEmpty property="csutProfileMin">$csutProfileNot$   (</isEmpty>
+			    cs_user_type$suffix$.csut_profile &lt;= #csutProfileMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csutProfile" prepend="and">
+			    $csutProfileNot$ cs_user_type$suffix$.csut_profile = #csutProfile#
+			</isNotEmpty>
+			<isNotNull property="csutProfileNot" prepend="and">
+				<isEmpty property="csutProfileMax"><isEmpty property="csutProfileMin"><isEmpty property="csutProfile">
+				$csutProfileNot$ cs_user_type$suffix$.csut_profile is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csutFlag" prepend="and">			    
+			    (<isNotNull property="csutFlagNot">
+			    cs_user_type$suffix$.csut_flag is null or length(cs_user_type$suffix$.csut_flag) &lt; 1 or
+			    </isNotNull>$csutFlagNot$ cs_user_type$suffix$.csut_flag = #csutFlag#)
+			</isNotEmpty>
+			<isNotNull property="csutFlagNot" prepend="and">
+				<isEmpty property="csutFlag">
+				$csutFlagNot$ (cs_user_type$suffix$.csut_flag is null or length(cs_user_type$suffix$.csut_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csutStatus" prepend="and">
+			    $csutStatusNot$ cs_user_type$suffix$.csut_status = #csutStatus#
+			</isNotEmpty>
+			<isNotNull property="csutStatusNot" prepend="and">
+				<isEmpty property="csutStatus">
+				$csutStatusNot$ cs_user_type$suffix$.csut_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 计费方式left join 条件sql片段 -->
+	<sql id="cs_user_type_join">
+		<dynamic>
+			<isNotEmpty property="CsUserType.csutId" prepend="and">
+			    $CsUserType.csutIdNot$ cs_user_type$CsUserType.suffix$.csut_id = #CsUserType.csutId#
+			</isNotEmpty>
+			<isNotNull property="CsUserType.csutIdNot" prepend="and">
+				<isEmpty property="CsUserType.csutId">
+				$csutIdNot$ cs_user_type$CsUserType.suffix$.csut_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserType.csutName" prepend="and">
+				(<isNotNull property="CsUserType.csutNameNot">
+			    cs_user_type$CsUserType.suffix$.csut_name is null or length(cs_user_type$CsUserType.suffix$.csut_name) &lt; 1 or
+			    </isNotNull>$CsUserType.csutNameNot$ cs_user_type$CsUserType.suffix$.csut_name = #CsUserType.csutName#)
+			</isNotEmpty>
+			<isNotNull property="CsUserType.csutNameNot" prepend="and">
+				<isEmpty property="CsUserType.csutName">
+				$csutNameNot$ (cs_user_type$CsUserType.suffix$.csut_name is null or length(cs_user_type$CsUserType.suffix$.csut_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserType.csutProfileMin" prepend="and">
+			    $CsUserType.csutProfileNot$  ( cs_user_type$CsUserType.suffix$.csut_profile &gt;= #CsUserType.csutProfileMin#
+			    <isEmpty property="CsUserType.csutProfileMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUserType.csutProfileMax" prepend="and">
+				<isEmpty property="CsUserType.csutProfileMin">$CsUserType.csutProfileNot$   (</isEmpty>
+			    cs_user_type$CsUserType.suffix$.csut_profile &lt;= #CsUserType.csutProfileMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUserType.csutProfile" prepend="and">
+			    $CsUserType.csutProfileNot$ cs_user_type$CsUserType.suffix$.csut_profile = #CsUserType.csutProfile#
+			</isNotEmpty>
+			<isNotNull property="CsUserType.csutProfileNot" prepend="and">
+				<isEmpty property="CsUserType.csutProfileMax"><isEmpty property="CsUserType.csutProfileMin"><isEmpty property="CsUserType.csutProfile">
+				$csutProfileNot$ cs_user_type$CsUserType.suffix$.csut_profile is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserType.csutFlag" prepend="and">
+				(<isNotNull property="CsUserType.csutFlagNot">
+			    cs_user_type$CsUserType.suffix$.csut_flag is null or length(cs_user_type$CsUserType.suffix$.csut_flag) &lt; 1 or
+			    </isNotNull>$CsUserType.csutFlagNot$ cs_user_type$CsUserType.suffix$.csut_flag = #CsUserType.csutFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsUserType.csutFlagNot" prepend="and">
+				<isEmpty property="CsUserType.csutFlag">
+				$csutFlagNot$ (cs_user_type$CsUserType.suffix$.csut_flag is null or length(cs_user_type$CsUserType.suffix$.csut_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserType.csutStatus" prepend="and">
+			    $CsUserType.csutStatusNot$ cs_user_type$CsUserType.suffix$.csut_status = #CsUserType.csutStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUserType.csutStatusNot" prepend="and">
+				<isEmpty property="CsUserType.csutStatus">
+				$csutStatusNot$ cs_user_type$CsUserType.suffix$.csut_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

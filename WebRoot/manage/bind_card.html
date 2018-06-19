@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>会员注册</title>
+</head>
+
+<body class="login-bg gradient">
+<div class="overall-layer registra_bg"></div>
+<div class="registra">
+	<form action="/manage/register_bindMembercard.html" method="post" id="form_sm">
+		<div class="registra-name">
+			<input type="tel" id="tel_number" value="" placeholder="请输入用户的手机号码"  name="tel_number">
+			<input type="hidden" id="user_number" name="user_number">
+		</div>
+		<div class="registra-name">
+			<input type="text" placeholder="用户姓名" id="card_name" disabled="true">
+		</div>
+		<div class="registra-name">
+			<input type="text" placeholder="请输入会员卡卡号" id="card_number" name="card_number">
+		</div>
+	</form>
+</div>
+<div class="bottom_btn registra btn_bottom" id="btn"><bottom>确定绑定</bottom></div>
+<div id="toast">
+	正在加载...
+</div>
+
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+<script type="text/javascript" src="js/bind_card.js?v=${lz:config('version')}"></script>
+<script type="text/javascript">
+/*
+*提示信息
+*/
+<s:if test="#session.tips.notNull==true">
+//当session里有错误提示时，显示错误提示
+var tips="${tips.value}";
+if(tips!=""&&tips!=null&&tips!=undefined){
+	Toast.show(tips);
+}
+</s:if>
+/**
+ * 手指触摸按钮效果变化事件
+ */
+var btn=document.getElementById("btn");
+btn.addEventListener("touchend", function(){
+	var card_number=$("#card_number").val();
+	if(card_number!=""&&card_number!=null&&card_number!=undefined){
+		document.getElementById("form_sm").submit();
+	}else{
+		Toast.show("卡号不能为空！");
+	}
+});
+$("#tel_number").blur(function(){
+	selectuser($("#tel_number").val());
+});
+</script>
+</body>
+</html>

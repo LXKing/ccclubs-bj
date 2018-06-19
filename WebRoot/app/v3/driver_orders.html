@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>行程订单</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta content="telephone=yes" name="format-detection" />
+		<link rel="stylesheet" href="css/driver-app.css">
+		<link rel="stylesheet" href="css/weui.min.css">
+		<link rel="stylesheet" href="css/dropload.css">
+		<style>
+			/* TODO:内联CSS样式 */
+			
+			.order_item:after,
+			.order_item:before {
+				content: " ";
+				position: absolute;
+				left: 0;
+				width: 100%;
+				height: 1px;
+				color: #d9d9d9;
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+			}
+			
+			.order_item:before {
+				top: 0;
+				border-top: 1px solid #d9d9d9;
+				-webkit-transform-origin: 0 0;
+				transform-origin: 0 0;
+			}
+			
+			.order_item:after {
+				bottom: 0;
+				border-bottom: 1px solid #d9d9d9;
+				-webkit-transform-origin: 0 100%;
+				transform-origin: 0 100%;
+			}
+			
+			.order_item {
+				position: relative;
+				display: flex;
+				margin-top: 1.17647059em;
+				background-color: #fff;
+				line-height: 1.41176471;
+				font-size: 17px;
+				overflow: hidden;
+				position: relative;
+			}
+			
+			.order_item_content {
+				width: 100%;
+			}
+			
+			.order_item .order_title {
+				padding: 8px 15px;
+				font-size: 15px;
+				background-color: #D6D6D6;
+				position: relative;
+			}
+			
+			.order_item .order_title .order_time {
+				color: #454545;
+			}
+			
+			.order_item .order_title .order_tag {
+				margin: 0 15px;
+				padding: 3px 10px;
+				background: #b6412f;
+				border-radius: 3px;
+				color: #FFFFFF;
+			}
+			
+			.order_item .order_title .order_state {
+				position: absolute;
+				right: 15px;
+			}
+			
+			.order_item .order_des {
+				padding: 14px 0;
+				display: flex;
+			}
+			
+			.order_item .order_des.last {
+				padding-top: 0;
+			}
+			
+			.order_item .order_des img {
+				display: inline-block;
+				width: 30px;
+				height: 30px;
+			}
+			
+			.order_item .order_des .order_outlet {
+				width: auto;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				word-wrap: normal;
+				flex: 1;
+				line-height: 30px;
+			}
+			
+			.order_item:not(.no_access) {
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			}
+			
+			.order_item:not(.no_access):active {
+				background-color: #ECECEC;
+			}
+			
+			a.order_item {
+				color: inherit;
+			}
+			
+			.order_item:active {
+				background-color: #ECECEC;
+			}
+			
+			.order_primary {
+				display: flex;
+				padding: 0 15px;
+			}
+			
+			.order_primary_content {
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				-ms-flex: 1;
+				flex: 1;
+			}
+			
+			.order_primary .weui_cell_ft:after {
+				content: " ";
+				display: inline-block;
+				-webkit-transform: rotate(45deg);
+				transform: rotate(45deg);
+				height: 8px;
+				width: 8px;
+				border-width: 2px 2px 0 0;
+				border-color: #C8C8CD;
+				border-style: solid;
+				position: relative;
+				top: 38px;
+				margin-left: .3em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="pageBody">
+			<!-- TODO: 展示的内容 <div class="content"></div>-->
+			<div class="lists"></div>
+			<!--<a href="javascript:;" class="order_item">
+				<div class="order_item_content">
+					<div class="order_title">
+						<span class="order_time">08月24日 20:13</span><span class="order_tag">预约</span><span class="order_state">已接单</span>
+					</div>
+					<div class="order_primary">
+						<div class="order_primary_content">
+							<div class="order_des"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDEyODE5MDNDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyODE5MDRDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTI4MTkwMUMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTI4MTkwMkMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/BV+kAAAMXSURBVHja1JpLaFQxFIZv66s+qrgRBGVUUKFKdVFwrxWKFVHRpRV1oCrqgNJStWsfGy0oKlgoWlxKFz6YonalFkRUKLa6UfABgovpgGAt2PE/+AtS7D3JTXKdOfDBMCfJyX9vkjlJpqpUKkWVbNVRhdv0OOfCe5vKpqOF5kf2AixtHtgCNoL1YDlYQF8RvAevwAC4D74FfwOGtgy0gz0U8S9bRDaAVnb+FjhPYf9lDswCZ8BbcCim81O9LRHyBpxlW6kKyIDH4CSY6fAQpG4H28qkJaAODIIGj/OngW2uCS1gCegHiwMsNNJmnjGCCJDX3WcbIMED6rMZljYCTnseNnHDqdO3gAyXyrSs3XRSmwpoAzWGZYfBcU72GlLH74Ytlug2XwLmgBaDct/BYVAPLoIR8IOM8DvxHQXjBu21MLazgCZQq5SRDm0DV8HPmHLiuwy2GoioZWxnAY0GZU6AhxZj/AGHlHNsEwHrFP9rPnlbu8a6cVbvQ8BKxd+tDJu44dStlFnlQ8B8xd/vsFzmHWMbCdDKvHMQoNWd8CHgs+J32VRrKcMnHwIGFf8KBwHar+1zHwK05bHJQUCjY2wjAZIdjsX4D4BpCTovdbIx/jHGdhZQUBpaCw4mENDKunEPruArmetS/BeAzRnMZuZGLjGtBDxT1ntZTe7wTVQr8Y6Au8oKlGdMrxuaDmVdns2UYgjkwGowA8zlXjdH3yWl8xM8LPB+LiSHUr1gr8Gmv8thZeplrCCbenkLowF3YqOMEexU4gs4FVBAJ2MEPReSNHggQOelzSuhz4X+5D77PA+lItsspSFA7ANXFV+WY5tRWgLEboLbHjovbdxIWtn1hibrYT+QdemAqwCZB7uUZC8uWdvtOpd83JG9BMcS1JM6L1yD+7rkuw56LMr3sE5ULgIiJnJPDMo9TZh+BxcgJ207lOXwI9gemR0tpi5A7Gv0+9iwOMWPVTPLROUqIGLKvHPSUx7nd0O+g4W6qZe8Zj9TgxI/h8ifvF50Tza5B1761+eo0gSInQvcfuX/2aOq0v9u80uAAQCvh5mQVp6W7wAAAABJRU5ErkJggg=="
+								/>
+								<div class="order_outlet">北京市政府北京市政府北京市政府北京市政府北京市政府北京市政府北京市政府北京市政府</div>
+							</div>
+							<div class="order_des last"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDEyODE5MDNDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyODE5MDRDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTI4MTkwMUMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTI4MTkwMkMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/BV+kAAAMXSURBVHja1JpLaFQxFIZv66s+qrgRBGVUUKFKdVFwrxWKFVHRpRV1oCrqgNJStWsfGy0oKlgoWlxKFz6YonalFkRUKLa6UfABgovpgGAt2PE/+AtS7D3JTXKdOfDBMCfJyX9vkjlJpqpUKkWVbNVRhdv0OOfCe5vKpqOF5kf2AixtHtgCNoL1YDlYQF8RvAevwAC4D74FfwOGtgy0gz0U8S9bRDaAVnb+FjhPYf9lDswCZ8BbcCim81O9LRHyBpxlW6kKyIDH4CSY6fAQpG4H28qkJaAODIIGj/OngW2uCS1gCegHiwMsNNJmnjGCCJDX3WcbIMED6rMZljYCTnseNnHDqdO3gAyXyrSs3XRSmwpoAzWGZYfBcU72GlLH74Ytlug2XwLmgBaDct/BYVAPLoIR8IOM8DvxHQXjBu21MLazgCZQq5SRDm0DV8HPmHLiuwy2GoioZWxnAY0GZU6AhxZj/AGHlHNsEwHrFP9rPnlbu8a6cVbvQ8BKxd+tDJu44dStlFnlQ8B8xd/vsFzmHWMbCdDKvHMQoNWd8CHgs+J32VRrKcMnHwIGFf8KBwHar+1zHwK05bHJQUCjY2wjAZIdjsX4D4BpCTovdbIx/jHGdhZQUBpaCw4mENDKunEPruArmetS/BeAzRnMZuZGLjGtBDxT1ntZTe7wTVQr8Y6Au8oKlGdMrxuaDmVdns2UYgjkwGowA8zlXjdH3yWl8xM8LPB+LiSHUr1gr8Gmv8thZeplrCCbenkLowF3YqOMEexU4gs4FVBAJ2MEPReSNHggQOelzSuhz4X+5D77PA+lItsspSFA7ANXFV+WY5tRWgLEboLbHjovbdxIWtn1hibrYT+QdemAqwCZB7uUZC8uWdvtOpd83JG9BMcS1JM6L1yD+7rkuw56LMr3sE5ULgIiJnJPDMo9TZh+BxcgJ207lOXwI9gemR0tpi5A7Gv0+9iwOMWPVTPLROUqIGLKvHPSUx7nd0O+g4W6qZe8Zj9TgxI/h8ifvF50Tza5B1761+eo0gSInQvcfuX/2aOq0v9u80uAAQCvh5mQVp6W7wAAAABJRU5ErkJggg=="
+								/>
+								<div class="order_outlet">北京市政府</div>
+							</div>
+						</div>
+						<span class="weui_cell_ft"></span>
+					</div>
+				</div>
+			</a>-->
+			<!--<a href="javascript:;" class="order_item">
+				<div class="order_item_content">
+					<div class="order_title">
+						<span class="order_time">08月24日 20:13</span><span class="order_tag">预约</span><span class="order_state">已接单</span>
+					</div>
+					<div class="order_primary">
+						<div class="order_primary_content">
+							<div class="order_des"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDEyODE5MDNDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyODE5MDRDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTI4MTkwMUMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTI4MTkwMkMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/BV+kAAAMXSURBVHja1JpLaFQxFIZv66s+qrgRBGVUUKFKdVFwrxWKFVHRpRV1oCrqgNJStWsfGy0oKlgoWlxKFz6YonalFkRUKLa6UfABgovpgGAt2PE/+AtS7D3JTXKdOfDBMCfJyX9vkjlJpqpUKkWVbNVRhdv0OOfCe5vKpqOF5kf2AixtHtgCNoL1YDlYQF8RvAevwAC4D74FfwOGtgy0gz0U8S9bRDaAVnb+FjhPYf9lDswCZ8BbcCim81O9LRHyBpxlW6kKyIDH4CSY6fAQpG4H28qkJaAODIIGj/OngW2uCS1gCegHiwMsNNJmnjGCCJDX3WcbIMED6rMZljYCTnseNnHDqdO3gAyXyrSs3XRSmwpoAzWGZYfBcU72GlLH74Ytlug2XwLmgBaDct/BYVAPLoIR8IOM8DvxHQXjBu21MLazgCZQq5SRDm0DV8HPmHLiuwy2GoioZWxnAY0GZU6AhxZj/AGHlHNsEwHrFP9rPnlbu8a6cVbvQ8BKxd+tDJu44dStlFnlQ8B8xd/vsFzmHWMbCdDKvHMQoNWd8CHgs+J32VRrKcMnHwIGFf8KBwHar+1zHwK05bHJQUCjY2wjAZIdjsX4D4BpCTovdbIx/jHGdhZQUBpaCw4mENDKunEPruArmetS/BeAzRnMZuZGLjGtBDxT1ntZTe7wTVQr8Y6Au8oKlGdMrxuaDmVdns2UYgjkwGowA8zlXjdH3yWl8xM8LPB+LiSHUr1gr8Gmv8thZeplrCCbenkLowF3YqOMEexU4gs4FVBAJ2MEPReSNHggQOelzSuhz4X+5D77PA+lItsspSFA7ANXFV+WY5tRWgLEboLbHjovbdxIWtn1hibrYT+QdemAqwCZB7uUZC8uWdvtOpd83JG9BMcS1JM6L1yD+7rkuw56LMr3sE5ULgIiJnJPDMo9TZh+BxcgJ207lOXwI9gemR0tpi5A7Gv0+9iwOMWPVTPLROUqIGLKvHPSUx7nd0O+g4W6qZe8Zj9TgxI/h8ifvF50Tza5B1761+eo0gSInQvcfuX/2aOq0v9u80uAAQCvh5mQVp6W7wAAAABJRU5ErkJggg=="
+								/>
+								<div class="order_outlet">北京市政府北京市政府北京市政府北京市政府北京市政府北京市政府北京市政府北京市政府</div>
+							</div>
+							<div class="order_des last"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDEyODE5MDNDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyODE5MDRDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTI4MTkwMUMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTI4MTkwMkMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/BV+kAAAMXSURBVHja1JpLaFQxFIZv66s+qrgRBGVUUKFKdVFwrxWKFVHRpRV1oCrqgNJStWsfGy0oKlgoWlxKFz6YonalFkRUKLa6UfABgovpgGAt2PE/+AtS7D3JTXKdOfDBMCfJyX9vkjlJpqpUKkWVbNVRhdv0OOfCe5vKpqOF5kf2AixtHtgCNoL1YDlYQF8RvAevwAC4D74FfwOGtgy0gz0U8S9bRDaAVnb+FjhPYf9lDswCZ8BbcCim81O9LRHyBpxlW6kKyIDH4CSY6fAQpG4H28qkJaAODIIGj/OngW2uCS1gCegHiwMsNNJmnjGCCJDX3WcbIMED6rMZljYCTnseNnHDqdO3gAyXyrSs3XRSmwpoAzWGZYfBcU72GlLH74Ytlug2XwLmgBaDct/BYVAPLoIR8IOM8DvxHQXjBu21MLazgCZQq5SRDm0DV8HPmHLiuwy2GoioZWxnAY0GZU6AhxZj/AGHlHNsEwHrFP9rPnlbu8a6cVbvQ8BKxd+tDJu44dStlFnlQ8B8xd/vsFzmHWMbCdDKvHMQoNWd8CHgs+J32VRrKcMnHwIGFf8KBwHar+1zHwK05bHJQUCjY2wjAZIdjsX4D4BpCTovdbIx/jHGdhZQUBpaCw4mENDKunEPruArmetS/BeAzRnMZuZGLjGtBDxT1ntZTe7wTVQr8Y6Au8oKlGdMrxuaDmVdns2UYgjkwGowA8zlXjdH3yWl8xM8LPB+LiSHUr1gr8Gmv8thZeplrCCbenkLowF3YqOMEexU4gs4FVBAJ2MEPReSNHggQOelzSuhz4X+5D77PA+lItsspSFA7ANXFV+WY5tRWgLEboLbHjovbdxIWtn1hibrYT+QdemAqwCZB7uUZC8uWdvtOpd83JG9BMcS1JM6L1yD+7rkuw56LMr3sE5ULgIiJnJPDMo9TZh+BxcgJ207lOXwI9gemR0tpi5A7Gv0+9iwOMWPVTPLROUqIGLKvHPSUx7nd0O+g4W6qZe8Zj9TgxI/h8ifvF50Tza5B1761+eo0gSInQvcfuX/2aOq0v9u80uAAQCvh5mQVp6W7wAAAABJRU5ErkJggg=="
+								/>
+								<div class="order_outlet">北京市政府</div>
+							</div>
+						</div>
+						<span class="weui_cell_ft"></span>
+					</div>
+				</div>
+			</a>-->
+		</div>
+		<!--BEGIN toast-->
+		<div id="toast" style="display: none;">
+			<div class="weui_mask_transparent"></div>
+			<div class="weui_toast">
+				<i class="weui_icon_toast"></i>
+				<p class="weui_toast_content">已完成</p>
+			</div>
+		</div>
+		<!--end toast-->
+		<!-- loading toast -->
+		<div id="loadingToast" class="weui_loading_toast" style="display: none;">
+			<div class="weui_mask_transparent"></div>
+			<div class="weui_toast">
+				<div class="weui_loading">
+					<div class="weui_loading_leaf weui_loading_leaf_0"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_1"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_2"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_3"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_4"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_5"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_6"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_7"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_8"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_9"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_10"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_11"></div>
+				</div>
+				<p class="weui_toast_content">数据加载中</p>
+			</div>
+		</div>
+
+		<script src="js/driver-app.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script src="js/dropload.min.js"></script>
+		<script type="text/javascript">
+			// TODO: 自定义javascript
+			$(function() {
+				//				showLoadingToast();
+				//				setTimeout(function() {
+				//					closeLoadingToast();
+				//					showPageBody();
+				//				}, 1000);
+				// <span class="order_tag">预约</span>
+				showPageBody();
+				var htmlTemplate = '<a href="javascript:;" class="order_item" id="{specialId}"><div class="order_item_content"><div class="order_title"><span class="order_time">{addTime}</span>{tag}<span class="order_state">已接单</span></div><div class="order_primary"><div class="order_primary_content"><div class="order_des"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDEyODE5MDNDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyODE5MDRDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTI4MTkwMUMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTI4MTkwMkMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/BV+kAAAMXSURBVHja1JpLaFQxFIZv66s+qrgRBGVUUKFKdVFwrxWKFVHRpRV1oCrqgNJStWsfGy0oKlgoWlxKFz6YonalFkRUKLa6UfABgovpgGAt2PE/+AtS7D3JTXKdOfDBMCfJyX9vkjlJpqpUKkWVbNVRhdv0OOfCe5vKpqOF5kf2AixtHtgCNoL1YDlYQF8RvAevwAC4D74FfwOGtgy0gz0U8S9bRDaAVnb+FjhPYf9lDswCZ8BbcCim81O9LRHyBpxlW6kKyIDH4CSY6fAQpG4H28qkJaAODIIGj/OngW2uCS1gCegHiwMsNNJmnjGCCJDX3WcbIMED6rMZljYCTnseNnHDqdO3gAyXyrSs3XRSmwpoAzWGZYfBcU72GlLH74Ytlug2XwLmgBaDct/BYVAPLoIR8IOM8DvxHQXjBu21MLazgCZQq5SRDm0DV8HPmHLiuwy2GoioZWxnAY0GZU6AhxZj/AGHlHNsEwHrFP9rPnlbu8a6cVbvQ8BKxd+tDJu44dStlFnlQ8B8xd/vsFzmHWMbCdDKvHMQoNWd8CHgs+J32VRrKcMnHwIGFf8KBwHar+1zHwK05bHJQUCjY2wjAZIdjsX4D4BpCTovdbIx/jHGdhZQUBpaCw4mENDKunEPruArmetS/BeAzRnMZuZGLjGtBDxT1ntZTe7wTVQr8Y6Au8oKlGdMrxuaDmVdns2UYgjkwGowA8zlXjdH3yWl8xM8LPB+LiSHUr1gr8Gmv8thZeplrCCbenkLowF3YqOMEexU4gs4FVBAJ2MEPReSNHggQOelzSuhz4X+5D77PA+lItsspSFA7ANXFV+WY5tRWgLEboLbHjovbdxIWtn1hibrYT+QdemAqwCZB7uUZC8uWdvtOpd83JG9BMcS1JM6L1yD+7rkuw56LMr3sE5ULgIiJnJPDMo9TZh+BxcgJ207lOXwI9gemR0tpi5A7Gv0+9iwOMWPVTPLROUqIGLKvHPSUx7nd0O+g4W6qZe8Zj9TgxI/h8ifvF50Tza5B1761+eo0gSInQvcfuX/2aOq0v9u80uAAQCvh5mQVp6W7wAAAABJRU5ErkJggg=="/><div class="order_outlet">{fromAddr}</div></div><div class="order_des last"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MDEyODE5MDNDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyODE5MDRDMENBMTFFNUFBQkU5NTFDMEJDRDI3NUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTI4MTkwMUMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTI4MTkwMkMwQ0ExMUU1QUFCRTk1MUMwQkNEMjc1QiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/BV+kAAAMXSURBVHja1JpLaFQxFIZv66s+qrgRBGVUUKFKdVFwrxWKFVHRpRV1oCrqgNJStWsfGy0oKlgoWlxKFz6YonalFkRUKLa6UfABgovpgGAt2PE/+AtS7D3JTXKdOfDBMCfJyX9vkjlJpqpUKkWVbNVRhdv0OOfCe5vKpqOF5kf2AixtHtgCNoL1YDlYQF8RvAevwAC4D74FfwOGtgy0gz0U8S9bRDaAVnb+FjhPYf9lDswCZ8BbcCim81O9LRHyBpxlW6kKyIDH4CSY6fAQpG4H28qkJaAODIIGj/OngW2uCS1gCegHiwMsNNJmnjGCCJDX3WcbIMED6rMZljYCTnseNnHDqdO3gAyXyrSs3XRSmwpoAzWGZYfBcU72GlLH74Ytlug2XwLmgBaDct/BYVAPLoIR8IOM8DvxHQXjBu21MLazgCZQq5SRDm0DV8HPmHLiuwy2GoioZWxnAY0GZU6AhxZj/AGHlHNsEwHrFP9rPnlbu8a6cVbvQ8BKxd+tDJu44dStlFnlQ8B8xd/vsFzmHWMbCdDKvHMQoNWd8CHgs+J32VRrKcMnHwIGFf8KBwHar+1zHwK05bHJQUCjY2wjAZIdjsX4D4BpCTovdbIx/jHGdhZQUBpaCw4mENDKunEPruArmetS/BeAzRnMZuZGLjGtBDxT1ntZTe7wTVQr8Y6Au8oKlGdMrxuaDmVdns2UYgjkwGowA8zlXjdH3yWl8xM8LPB+LiSHUr1gr8Gmv8thZeplrCCbenkLowF3YqOMEexU4gs4FVBAJ2MEPReSNHggQOelzSuhz4X+5D77PA+lItsspSFA7ANXFV+WY5tRWgLEboLbHjovbdxIWtn1hibrYT+QdemAqwCZB7uUZC8uWdvtOpd83JG9BMcS1JM6L1yD+7rkuw56LMr3sE5ULgIiJnJPDMo9TZh+BxcgJ207lOXwI9gemR0tpi5A7Gv0+9iwOMWPVTPLROUqIGLKvHPSUx7nd0O+g4W6qZe8Zj9TgxI/h8ifvF50Tza5B1761+eo0gSInQvcfuX/2aOq0v9u80uAAQCvh5mQVp6W7wAAAABJRU5ErkJggg=="/><div class="order_outlet">{toAddr}</div></div></div><span class="weui_cell_ft"></span></div></div></a>';
+				var pageCurrent = -1,
+					pageTotal = -1;
+				// dropload
+				var dropload = $('.pageBody').dropload({
+					scrollArea: window,
+					domUp: {
+						domClass: 'dropload-up',
+						domRefresh: '<div class="dropload-refresh">↓下拉刷新</div>',
+						domUpdate: '<div class="dropload-update">↑释放更新</div>',
+						domLoad: '<div class="dropload-load"><span class="loading"></span>加载中...</div>'
+					},
+					domDown: {
+						domClass: 'dropload-down',
+						domRefresh: '<div class="dropload-refresh">↑上拉加载更多</div>',
+						domLoad: '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+						domNoData: '<div class="dropload-noData">暂无数据</div>'
+					},
+					// 加载上方数据
+					loadUpFn: function(me) {
+						console.log('loadDownFn');
+						$.ajax({
+							type: 'GET',
+							url: URLHelper.DriverOrders + '?t=' + new Date().getTime(),
+							data: {
+								access_token: getQueryString('access_token'),
+								page: pageCurrent
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (!data.success) {
+									if (data.code === 100 || data.code === '100')
+										showWarnToast('登录失效!');
+									else
+										showErrorToast(data.text);
+								}
+								var page = data.data.page;
+								var list = data.data.list;
+								// 设置总页数
+								pageTotal = page.total;
+								// TODO:格式化数据
+								var result = '';
+								if (page.count > 0 & list.length > 0) {
+									$.each(list, function(index, item) {
+										var itemHtml;
+										// {tag}
+										itemHtml = htmlTemplate.replace(/{specialId}/g, item.specialId).replace('{tag}', '').replace('{addTime}', new Date(item.addTime).toStringL()).replace('{fromAddr}', item.fromAddr).replace('{toAddr}', item.toAddr);
+										result = result + itemHtml;
+									});
+									// 为了测试，延迟1秒加载
+									setTimeout(function() {
+										$('.lists').html(result);
+										// 每次数据加载完，必须重置
+										me.resetload();
+										// 重置当前页
+										pageCurrent = 0;
+										// 解锁
+										me.unlock();
+										me.noData(false);
+									}, 1000);
+								} else {
+									// 为了测试，延迟1秒加载
+									setTimeout(function() {
+										$('.lists').html("<p style='text-align: center;'>没有数据</p>");
+										// 每次数据加载完，必须重置
+										me.resetload();
+										// 重置当前页
+										pageCurrent = 0;
+										// 解锁
+										me.unlock();
+										me.noData(true);
+									}, 1000);
+								}
+							},
+							error: function(xhr, type) {
+								//								alert('Ajax error!');
+								// 即使加载出错，也得重置
+								me.resetload();
+							}
+						});
+					},
+					// 加载下方数据  -- 首先加载下方数据
+					loadDownFn: function(me) {
+						console.log('loadUpFn');
+						pageCurrent++;
+						// 已经没有数据了
+						if (pageTotal === -1 || pageCurrent < pageTotal) {
+							$.ajax({
+								type: 'GET',
+								url: URLHelper.DriverOrders + '?t=' + new Date().getTime(),
+								data: {
+									access_token: getQueryString('access_token'),
+									page: pageCurrent
+								},
+								dataType: 'json',
+								success: function(data) {
+									if (!data.success) {
+										if (data.code === 100 || data.code === '100')
+											showWarnToast('登录失效!');
+										else
+											showErrorToast(data.text);
+									}
+									var page = data.data.page;
+									var list = data.data.list;
+									// 设置总页数
+									pageTotal = page.total;
+									var result = '';
+									// TODO:格式化数据
+									$.each(list, function(index, item) {
+										var itemHtml;
+										// {tag}
+										itemHtml = htmlTemplate.replace(/{specialId}/g, item.specialId).replace('{tag}', '').replace('{addTime}', new Date(item.addTime).toStringL()).replace('{fromAddr}', item.fromAddr).replace('{toAddr}', item.toAddr);
+										result = result + itemHtml;
+									});
+									// 为了测试，延迟1秒加载
+									setTimeout(function() {
+										$('.lists').append(result);
+										// 每次数据加载完，必须重置
+										dropload.resetload();
+									}, 1000);
+								},
+								error: function(xhr, type) {
+									//									alert('Ajax error!');
+									// 即使加载出错，也得重置
+									dropload.resetload();
+								}
+							});
+						} else {
+							// 锁定
+							me.unlock();
+							// 无数据
+							me.noData();
+							// 为了测试，延迟1秒加载
+							setTimeout(function() {
+								// 每次数据加载完，必须重置
+								me.resetload();
+							}, 1000);
+						}
+					},
+					threshold: 50
+				});
+			});
+		</script>
+	</body>
+
+</html>

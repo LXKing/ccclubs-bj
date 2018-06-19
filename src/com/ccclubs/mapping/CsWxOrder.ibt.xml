@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 微信指令之SQL映射 -->
+	<resultMap id="CsWxOrder" class="com.ccclubs.model.CsWxOrder">
+		<result property="cswoId" column="cswo_id"/>
+		<result property="cswoName" column="cswo_name"/>
+		<result property="cswoType" column="cswo_type"/>
+		<result property="cswoRtype" column="cswo_rtype"/>
+		<result property="cswoContent" column="cswo_content"/>
+		<result property="cswoClass" column="cswo_class"/>
+		<result property="cswoPriority" column="cswo_priority"/>
+		<result property="cswoTime" column="cswo_time"/>
+		<result property="cswoStatus" column="cswo_status"/>
+	</resultMap>
+		
+	<!-- 获取所有微信指令 -->
+	<select id="getCsWxOrderList" resultMap="CsWxOrder">
+		select cs_wx_order$suffix$.* from cs_wx_order$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_wx_order$suffix$.cswo_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxOrder_part.cs_wx_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswo_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取微信指令分页 -->
+	<select id="getCsWxOrderPage" parameterClass="java.util.HashMap" resultMap="CsWxOrder">
+		select cs_wx_order$suffix$.* from cs_wx_order$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_wx_order$suffix$.cswo_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxOrder_part.cs_wx_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswo_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取微信指令总数 -->
+	<select id="getCsWxOrderEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_wx_order$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_wx_order$suffix$.cswo_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxOrder_part.cs_wx_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取微信指令 -->
+	<select id="getCsWxOrderById" parameterClass="java.util.HashMap" resultMap="CsWxOrder">
+		select cs_wx_order$suffix$.* from cs_wx_order$suffix$
+		where cswo_id=#id#
+	</select>
+	
+		
+	<!-- 保存微信指令 -->
+	<insert id="saveCsWxOrder"  parameterClass="com.ccclubs.model.CsWxOrder">
+		insert into cs_wx_order$suffix$
+		(
+			cs_wx_order$suffix$.cswo_name
+			,cs_wx_order$suffix$.cswo_type
+			,cs_wx_order$suffix$.cswo_rtype
+			,cs_wx_order$suffix$.cswo_content
+			,cs_wx_order$suffix$.cswo_class
+			,cs_wx_order$suffix$.cswo_priority
+			,cs_wx_order$suffix$.cswo_time
+			,cs_wx_order$suffix$.cswo_status
+		)
+		values(
+			<isNotNull property="cswoName" prepend="">
+				#cswoName#
+			</isNotNull>
+			<isNull property="cswoName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cswoType" prepend=",">
+				#cswoType#
+			</isNotNull>
+			<isNull property="cswoType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswoRtype" prepend=",">
+				#cswoRtype#
+			</isNotNull>
+			<isNull property="cswoRtype" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswoContent" prepend=",">
+				#cswoContent#
+			</isNotNull>
+			<isNull property="cswoContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswoClass" prepend=",">
+				#cswoClass#
+			</isNotNull>
+			<isNull property="cswoClass" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswoPriority" prepend=",">
+				#cswoPriority#
+			</isNotNull>
+			<isNull property="cswoPriority" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswoTime" prepend=",">
+				#cswoTime#
+			</isNotNull>
+			<isNull property="cswoTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswoStatus" prepend=",">
+				#cswoStatus#
+			</isNotNull>
+			<isNull property="cswoStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新微信指令 -->
+	<update id="updateCsWxOrder"  parameterClass="com.ccclubs.model.CsWxOrder">
+		update cs_wx_order$suffix$ set
+			<isNotNull property="cswoName" prepend="">
+				cs_wx_order$suffix$.cswo_name = #cswoName#
+			</isNotNull>
+			<isNull property="cswoName" prepend="">
+				cs_wx_order$suffix$.cswo_name = null
+			</isNull>				
+			<isNotNull property="cswoType" prepend=",">
+				cs_wx_order$suffix$.cswo_type = #cswoType#
+			</isNotNull>
+			<isNull property="cswoType" prepend=",">
+				cs_wx_order$suffix$.cswo_type = null
+			</isNull>				
+			<isNotNull property="cswoRtype" prepend=",">
+				cs_wx_order$suffix$.cswo_rtype = #cswoRtype#
+			</isNotNull>
+			<isNull property="cswoRtype" prepend=",">
+				cs_wx_order$suffix$.cswo_rtype = null
+			</isNull>				
+			<isNotNull property="cswoContent" prepend=",">
+				cs_wx_order$suffix$.cswo_content = #cswoContent#
+			</isNotNull>
+			<isNull property="cswoContent" prepend=",">
+				cs_wx_order$suffix$.cswo_content = null
+			</isNull>				
+			<isNotNull property="cswoClass" prepend=",">
+				cs_wx_order$suffix$.cswo_class = #cswoClass#
+			</isNotNull>
+			<isNull property="cswoClass" prepend=",">
+				cs_wx_order$suffix$.cswo_class = null
+			</isNull>				
+			<isNotNull property="cswoPriority" prepend=",">
+				cs_wx_order$suffix$.cswo_priority = #cswoPriority#
+			</isNotNull>
+			<isNull property="cswoPriority" prepend=",">
+				cs_wx_order$suffix$.cswo_priority = null
+			</isNull>				
+			<isNotNull property="cswoTime" prepend=",">
+				cs_wx_order$suffix$.cswo_time = #cswoTime#
+			</isNotNull>
+			<isNull property="cswoTime" prepend=",">
+				cs_wx_order$suffix$.cswo_time = null
+			</isNull>				
+			<isNotNull property="cswoStatus" prepend=",">
+				cs_wx_order$suffix$.cswo_status = #cswoStatus#
+			</isNotNull>
+			<isNull property="cswoStatus" prepend=",">
+				cs_wx_order$suffix$.cswo_status = null
+			</isNull>				
+		where
+			cswo_id=#cswoId#
+	</update>
+	
+	<!-- 更新微信指令非空字段 -->
+	<update id="updateCsWxOrder$NotNull"  parameterClass="com.ccclubs.model.CsWxOrder">
+		update cs_wx_order$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cswoName" prepend=",">
+				cs_wx_order$suffix$.cswo_name = #cswoName#
+			</isNotNull>		
+			<isNotNull property="cswoType" prepend=",">
+				cs_wx_order$suffix$.cswo_type = #cswoType#
+			</isNotNull>		
+			<isNotNull property="cswoRtype" prepend=",">
+				cs_wx_order$suffix$.cswo_rtype = #cswoRtype#
+			</isNotNull>		
+			<isNotNull property="cswoContent" prepend=",">
+				cs_wx_order$suffix$.cswo_content = #cswoContent#
+			</isNotNull>		
+			<isNotNull property="cswoClass" prepend=",">
+				cs_wx_order$suffix$.cswo_class = #cswoClass#
+			</isNotNull>		
+			<isNotNull property="cswoPriority" prepend=",">
+				cs_wx_order$suffix$.cswo_priority = #cswoPriority#
+			</isNotNull>		
+			<isNotNull property="cswoTime" prepend=",">
+				cs_wx_order$suffix$.cswo_time = #cswoTime#
+			</isNotNull>		
+			<isNotNull property="cswoStatus" prepend=",">
+				cs_wx_order$suffix$.cswo_status = #cswoStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cswo_id=#cswoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个微信指令 -->
+	<delete id="deleteCsWxOrderById" parameterClass="java.util.HashMap">
+		delete from cs_wx_order$suffix$ where cswo_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个微信指令 -->
+	<update id="removeCsWxOrderById" parameterClass="java.util.HashMap">
+		update cs_wx_order$suffix$ set  cs_wx_order$suffix$.cswo_status=-1  where cswo_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新微信指令 -->
+	<update id="updateCsWxOrderBy"  parameterClass="java.util.HashMap">
+		update cs_wx_order$suffix$ set		
+			cswo_id=cswo_id
+			<isNotNull property="V_cswoId" prepend=",">
+				cs_wx_order$suffix$.cswo_id = #V_cswoId#
+			</isNotNull>		
+			<isNotNull property="V_cswoName" prepend=",">
+				cs_wx_order$suffix$.cswo_name = #V_cswoName#
+			</isNotNull>		
+			<isNotNull property="V_cswoType" prepend=",">
+				cs_wx_order$suffix$.cswo_type = #V_cswoType#
+			</isNotNull>		
+			<isNotNull property="V_cswoRtype" prepend=",">
+				cs_wx_order$suffix$.cswo_rtype = #V_cswoRtype#
+			</isNotNull>		
+			<isNotNull property="V_cswoContent" prepend=",">
+				cs_wx_order$suffix$.cswo_content = #V_cswoContent#
+			</isNotNull>		
+			<isNotNull property="V_cswoClass" prepend=",">
+				cs_wx_order$suffix$.cswo_class = #V_cswoClass#
+			</isNotNull>		
+			<isNotNull property="V_cswoPriority" prepend=",">
+				cs_wx_order$suffix$.cswo_priority = #V_cswoPriority#
+			</isNotNull>		
+			<isNotNull property="V_cswoTime" prepend=",">
+				cs_wx_order$suffix$.cswo_time = #V_cswoTime#
+			</isNotNull>		
+			<isNotNull property="V_cswoStatus" prepend=",">
+				cs_wx_order$suffix$.cswo_status = #V_cswoStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_wx_order$suffix$.cswo_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsWxOrder_part.cs_wx_order_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除微信指令 -->
+	<update id="deleteCsWxOrderBy"  parameterClass="java.util.HashMap">
+		delete from cs_wx_order$suffix$ where 
+		cs_wx_order$suffix$.cswo_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsWxOrder_part.cs_wx_order_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

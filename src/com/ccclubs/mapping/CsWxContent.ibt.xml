@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 微信素材之SQL映射 -->
+	<resultMap id="CsWxContent" class="com.ccclubs.model.CsWxContent">
+		<result property="cswcId" column="cswc_id"/>
+		<result property="cswcTitle" column="cswc_title"/>
+		<result property="cswcContnet" column="cswc_contnet"/>
+		<result property="cswcThumb" column="cswc_thumb"/>
+		<result property="cswcImage" column="cswc_image"/>
+		<result property="cswcLink" column="cswc_link"/>
+		<result property="cswcOrder" column="cswc_order"/>
+		<result property="cswcAddTime" column="cswc_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有微信素材 -->
+	<select id="getCsWxContentList" resultMap="CsWxContent">
+		select cs_wx_content$suffix$.* from cs_wx_content$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[微信指令]查询-->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<isNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.cswc_order=cs_wx_order$CsWxOrder.suffix$.cswo_id
+			</isNull>
+			<isNotNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.$CsWxOrder.on$=cs_wx_order$CsWxOrder.suffix$.cswo_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[微信指令]查询条件sql片段 -->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<include refid="CsWxOrder_part.cs_wx_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxContent_part.cs_wx_content_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取微信素材分页 -->
+	<select id="getCsWxContentPage" parameterClass="java.util.HashMap" resultMap="CsWxContent">
+		select cs_wx_content$suffix$.* from cs_wx_content$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[微信指令]查询 -->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<isNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.cswc_order=cs_wx_order$CsWxOrder.suffix$.cswo_id
+			</isNull>
+			<isNotNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.$CsWxOrder.on$=cs_wx_order$CsWxOrder.suffix$.cswo_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[微信指令]查询条件sql片段 -->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<include refid="CsWxOrder_part.cs_wx_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxContent_part.cs_wx_content_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取微信素材总数 -->
+	<select id="getCsWxContentEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_wx_content$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[微信指令]查询,同张表只能外链接一次 -->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<isNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.cswc_order=cs_wx_order$CsWxOrder.suffix$.cswo_id
+			</isNull>
+			<isNotNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.$CsWxOrder.on$=cs_wx_order$CsWxOrder.suffix$.cswo_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[微信指令]查询条件sql片段 -->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<include refid="CsWxOrder_part.cs_wx_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxContent_part.cs_wx_content_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取微信素材 -->
+	<select id="getCsWxContentById" parameterClass="java.util.HashMap" resultMap="CsWxContent">
+		select cs_wx_content$suffix$.* from cs_wx_content$suffix$
+		where cswc_id=#id#
+	</select>
+	
+		
+	<!-- 保存微信素材 -->
+	<insert id="saveCsWxContent"  parameterClass="com.ccclubs.model.CsWxContent">
+		insert into cs_wx_content$suffix$
+		(
+			cs_wx_content$suffix$.cswc_title
+			,cs_wx_content$suffix$.cswc_contnet
+			,cs_wx_content$suffix$.cswc_thumb
+			,cs_wx_content$suffix$.cswc_image
+			,cs_wx_content$suffix$.cswc_link
+			,cs_wx_content$suffix$.cswc_order
+			,cs_wx_content$suffix$.cswc_add_time
+		)
+		values(
+			<isNotNull property="cswcTitle" prepend="">
+				#cswcTitle#
+			</isNotNull>
+			<isNull property="cswcTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cswcContnet" prepend=",">
+				#cswcContnet#
+			</isNotNull>
+			<isNull property="cswcContnet" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswcThumb" prepend=",">
+				#cswcThumb#
+			</isNotNull>
+			<isNull property="cswcThumb" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswcImage" prepend=",">
+				#cswcImage#
+			</isNotNull>
+			<isNull property="cswcImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswcLink" prepend=",">
+				#cswcLink#
+			</isNotNull>
+			<isNull property="cswcLink" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswcOrder" prepend=",">
+				#cswcOrder#
+			</isNotNull>
+			<isNull property="cswcOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswcAddTime" prepend=",">
+				#cswcAddTime#
+			</isNotNull>
+			<isNull property="cswcAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新微信素材 -->
+	<update id="updateCsWxContent"  parameterClass="com.ccclubs.model.CsWxContent">
+		update cs_wx_content$suffix$ set
+			<isNotNull property="cswcTitle" prepend="">
+				cs_wx_content$suffix$.cswc_title = #cswcTitle#
+			</isNotNull>
+			<isNull property="cswcTitle" prepend="">
+				cs_wx_content$suffix$.cswc_title = null
+			</isNull>				
+			<isNotNull property="cswcContnet" prepend=",">
+				cs_wx_content$suffix$.cswc_contnet = #cswcContnet#
+			</isNotNull>
+			<isNull property="cswcContnet" prepend=",">
+				cs_wx_content$suffix$.cswc_contnet = null
+			</isNull>				
+			<isNotNull property="cswcThumb" prepend=",">
+				cs_wx_content$suffix$.cswc_thumb = #cswcThumb#
+			</isNotNull>
+			<isNull property="cswcThumb" prepend=",">
+				cs_wx_content$suffix$.cswc_thumb = null
+			</isNull>				
+			<isNotNull property="cswcImage" prepend=",">
+				cs_wx_content$suffix$.cswc_image = #cswcImage#
+			</isNotNull>
+			<isNull property="cswcImage" prepend=",">
+				cs_wx_content$suffix$.cswc_image = null
+			</isNull>				
+			<isNotNull property="cswcLink" prepend=",">
+				cs_wx_content$suffix$.cswc_link = #cswcLink#
+			</isNotNull>
+			<isNull property="cswcLink" prepend=",">
+				cs_wx_content$suffix$.cswc_link = null
+			</isNull>				
+			<isNotNull property="cswcOrder" prepend=",">
+				cs_wx_content$suffix$.cswc_order = #cswcOrder#
+			</isNotNull>
+			<isNull property="cswcOrder" prepend=",">
+				cs_wx_content$suffix$.cswc_order = null
+			</isNull>				
+			<isNotNull property="cswcAddTime" prepend=",">
+				cs_wx_content$suffix$.cswc_add_time = #cswcAddTime#
+			</isNotNull>
+			<isNull property="cswcAddTime" prepend=",">
+				cs_wx_content$suffix$.cswc_add_time = null
+			</isNull>				
+		where
+			cswc_id=#cswcId#
+	</update>
+	
+	<!-- 更新微信素材非空字段 -->
+	<update id="updateCsWxContent$NotNull"  parameterClass="com.ccclubs.model.CsWxContent">
+		update cs_wx_content$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cswcTitle" prepend=",">
+				cs_wx_content$suffix$.cswc_title = #cswcTitle#
+			</isNotNull>		
+			<isNotNull property="cswcContnet" prepend=",">
+				cs_wx_content$suffix$.cswc_contnet = #cswcContnet#
+			</isNotNull>		
+			<isNotNull property="cswcThumb" prepend=",">
+				cs_wx_content$suffix$.cswc_thumb = #cswcThumb#
+			</isNotNull>		
+			<isNotNull property="cswcImage" prepend=",">
+				cs_wx_content$suffix$.cswc_image = #cswcImage#
+			</isNotNull>		
+			<isNotNull property="cswcLink" prepend=",">
+				cs_wx_content$suffix$.cswc_link = #cswcLink#
+			</isNotNull>		
+			<isNotNull property="cswcOrder" prepend=",">
+				cs_wx_content$suffix$.cswc_order = #cswcOrder#
+			</isNotNull>		
+			<isNotNull property="cswcAddTime" prepend=",">
+				cs_wx_content$suffix$.cswc_add_time = #cswcAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cswc_id=#cswcId#
+	</update>
+	
+
+	<!-- 根据ID删除一个微信素材 -->
+	<delete id="deleteCsWxContentById" parameterClass="java.util.HashMap">
+		delete from cs_wx_content$suffix$ where cswc_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新微信素材 -->
+	<update id="updateCsWxContentBy"  parameterClass="java.util.HashMap">
+		update cs_wx_content$suffix$ set		
+			cswc_id=cswc_id
+			<isNotNull property="V_cswcId" prepend=",">
+				cs_wx_content$suffix$.cswc_id = #V_cswcId#
+			</isNotNull>		
+			<isNotNull property="V_cswcTitle" prepend=",">
+				cs_wx_content$suffix$.cswc_title = #V_cswcTitle#
+			</isNotNull>		
+			<isNotNull property="V_cswcContnet" prepend=",">
+				cs_wx_content$suffix$.cswc_contnet = #V_cswcContnet#
+			</isNotNull>		
+			<isNotNull property="V_cswcThumb" prepend=",">
+				cs_wx_content$suffix$.cswc_thumb = #V_cswcThumb#
+			</isNotNull>		
+			<isNotNull property="V_cswcImage" prepend=",">
+				cs_wx_content$suffix$.cswc_image = #V_cswcImage#
+			</isNotNull>		
+			<isNotNull property="V_cswcLink" prepend=",">
+				cs_wx_content$suffix$.cswc_link = #V_cswcLink#
+			</isNotNull>		
+			<isNotNull property="V_cswcOrder" prepend=",">
+				cs_wx_content$suffix$.cswc_order = #V_cswcOrder#
+			</isNotNull>		
+			<isNotNull property="V_cswcAddTime" prepend=",">
+				cs_wx_content$suffix$.cswc_add_time = #V_cswcAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[微信指令]查询-->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<isNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.cswc_order=cs_wx_order$CsWxOrder.suffix$.cswo_id
+			</isNull>
+			<isNotNull property="CsWxOrder.on">
+				left join cs_wx_order cs_wx_order$CsWxOrder.suffix$ on cs_wx_content$suffix$.$CsWxOrder.on$=cs_wx_order$CsWxOrder.suffix$.cswo_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[微信指令]查询条件sql片段 -->
+		<isNotNull property="CswcOrder"><!-- 调用一下CswcOrder，把CsWxOrder指向CswcOrder --></isNotNull>
+		<isNotNull property="CsWxOrder">
+			<include refid="CsWxOrder_part.cs_wx_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsWxContent_part.cs_wx_content_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除微信素材 -->
+	<update id="deleteCsWxContentBy"  parameterClass="java.util.HashMap">
+		delete from cs_wx_content$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsWxContent_part.cs_wx_content_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

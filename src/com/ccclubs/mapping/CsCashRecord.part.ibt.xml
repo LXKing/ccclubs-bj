@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCashRecord_part">	
+	<!-- 提现记录条件sql片段  -->
+	<sql id="cs_cash_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscrId" prepend="and">
+			    $cscrIdNot$ cs_cash_record$suffix$.cscr_id = #cscrId#
+			</isNotEmpty>
+			<isNotNull property="cscrIdNot" prepend="and">
+				<isEmpty property="cscrId">
+				$cscrIdNot$ cs_cash_record$suffix$.cscr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_cash_record$suffix$.cscr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscrHost" prepend="and">
+			    $cscrHostNot$ cs_cash_record$suffix$.cscr_host = #cscrHost#
+			</isNotEmpty>
+			<isNotNull property="cscrHostNot" prepend="and">
+				<isEmpty property="cscrHost">
+				$cscrHostNot$ cs_cash_record$suffix$.cscr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscrTradeNo" prepend="and">			    
+			    (<isNotNull property="cscrTradeNoNot">
+			    cs_cash_record$suffix$.cscr_trade_no is null or length(cs_cash_record$suffix$.cscr_trade_no) &lt; 1 or
+			    </isNotNull>$cscrTradeNoNot$ cs_cash_record$suffix$.cscr_trade_no = #cscrTradeNo#)
+			</isNotEmpty>
+			<isNotNull property="cscrTradeNoNot" prepend="and">
+				<isEmpty property="cscrTradeNo">
+				$cscrTradeNoNot$ (cs_cash_record$suffix$.cscr_trade_no is null or length(cs_cash_record$suffix$.cscr_trade_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrAmmountMin" prepend="and">
+			    $cscrAmmountNot$  ( cs_cash_record$suffix$.cscr_ammount &gt;= #cscrAmmountMin#
+			    <isEmpty property="cscrAmmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscrAmmountMax" prepend="and">
+				<isEmpty property="cscrAmmountMin">$cscrAmmountNot$   (</isEmpty>
+			    cs_cash_record$suffix$.cscr_ammount &lt;= #cscrAmmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscrAmmount" prepend="and">
+			    $cscrAmmountNot$ cs_cash_record$suffix$.cscr_ammount = #cscrAmmount#
+			</isNotEmpty>
+			<isNotNull property="cscrAmmountNot" prepend="and">
+				<isEmpty property="cscrAmmountMax"><isEmpty property="cscrAmmountMin"><isEmpty property="cscrAmmount">
+				$cscrAmmountNot$ cs_cash_record$suffix$.cscr_ammount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscrTitle" prepend="and">			    
+			    (<isNotNull property="cscrTitleNot">
+			    cs_cash_record$suffix$.cscr_title is null or length(cs_cash_record$suffix$.cscr_title) &lt; 1 or
+			    </isNotNull>$cscrTitleNot$ cs_cash_record$suffix$.cscr_title like #cscrTitle#)
+			</isNotEmpty>
+			<isNotNull property="cscrTitleNot" prepend="and">
+				<isEmpty property="cscrTitle">
+				$cscrTitleNot$ (cs_cash_record$suffix$.cscr_title is null or length(cs_cash_record$suffix$.cscr_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrVoucher" prepend="and">			    
+			    (<isNotNull property="cscrVoucherNot">
+			    cs_cash_record$suffix$.cscr_voucher is null or length(cs_cash_record$suffix$.cscr_voucher) &lt; 1 or
+			    </isNotNull>$cscrVoucherNot$ cs_cash_record$suffix$.cscr_voucher like #cscrVoucher#)
+			</isNotEmpty>
+			<isNotNull property="cscrVoucherNot" prepend="and">
+				<isEmpty property="cscrVoucher">
+				$cscrVoucherNot$ (cs_cash_record$suffix$.cscr_voucher is null or length(cs_cash_record$suffix$.cscr_voucher) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrImage" prepend="and">
+			    $cscrImageNot$ cs_cash_record$suffix$.cscr_image = #cscrImage#
+			</isNotEmpty>
+			<isNotNull property="cscrImageNot" prepend="and">
+				<isEmpty property="cscrImage">
+				$cscrImageNot$ cs_cash_record$suffix$.cscr_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrAdder" prepend="and">
+			    $cscrAdderNot$ cs_cash_record$suffix$.cscr_adder = #cscrAdder#
+			</isNotEmpty>
+			<isNotNull property="cscrAdderNot" prepend="and">
+				<isEmpty property="cscrAdder">
+				$cscrAdderNot$ cs_cash_record$suffix$.cscr_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrChecker" prepend="and">
+			    $cscrCheckerNot$ cs_cash_record$suffix$.cscr_checker = #cscrChecker#
+			</isNotEmpty>
+			<isNotNull property="cscrCheckerNot" prepend="and">
+				<isEmpty property="cscrChecker">
+				$cscrCheckerNot$ cs_cash_record$suffix$.cscr_checker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrRemark" prepend="and">			    
+			    (<isNotNull property="cscrRemarkNot">
+			    cs_cash_record$suffix$.cscr_remark is null or length(cs_cash_record$suffix$.cscr_remark) &lt; 1 or
+			    </isNotNull>$cscrRemarkNot$ cs_cash_record$suffix$.cscr_remark like #cscrRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscrRemarkNot" prepend="and">
+				<isEmpty property="cscrRemark">
+				$cscrRemarkNot$ (cs_cash_record$suffix$.cscr_remark is null or length(cs_cash_record$suffix$.cscr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrUpdateTimeStart" prepend="and">
+			    $cscrUpdateTimeNot$   (cs_cash_record$suffix$.cscr_update_time &gt;= #cscrUpdateTimeStart#
+			   <isEmpty property="cscrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscrUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscrUpdateTimeStart">$cscrUpdateTimeNot$   (</isEmpty>
+			    cs_cash_record$suffix$.cscr_update_time &lt;= #cscrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscrUpdateTime" prepend="and">
+			    $cscrUpdateTimeNot$ cs_cash_record$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscrUpdateTimeNot" prepend="and">
+				<isEmpty property="cscrUpdateTimeStart"><isEmpty property="cscrUpdateTimeEnd"><isEmpty property="cscrUpdateTime">
+				$cscrUpdateTimeNot$ cs_cash_record$suffix$.cscr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrAddTimeStart" prepend="and">
+			    $cscrAddTimeNot$   (cs_cash_record$suffix$.cscr_add_time &gt;= #cscrAddTimeStart#
+			   <isEmpty property="cscrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscrAddTimeEnd" prepend="and">
+				<isEmpty property="cscrAddTimeStart">$cscrAddTimeNot$   (</isEmpty>
+			    cs_cash_record$suffix$.cscr_add_time &lt;= #cscrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscrAddTime" prepend="and">
+			    $cscrAddTimeNot$ cs_cash_record$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscrAddTimeNot" prepend="and">
+				<isEmpty property="cscrAddTimeStart"><isEmpty property="cscrAddTimeEnd"><isEmpty property="cscrAddTime">
+				$cscrAddTimeNot$ cs_cash_record$suffix$.cscr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrStatus" prepend="and">
+			    $cscrStatusNot$ cs_cash_record$suffix$.cscr_status = #cscrStatus#
+			</isNotEmpty>
+			<isNotNull property="cscrStatusNot" prepend="and">
+				<isEmpty property="cscrStatus">
+				$cscrStatusNot$ cs_cash_record$suffix$.cscr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 提现记录left join 条件sql片段 -->
+	<sql id="cs_cash_record_join">
+		<dynamic>
+			<isNotEmpty property="CsCashRecord.cscrId" prepend="and">
+			    $CsCashRecord.cscrIdNot$ cs_cash_record$CsCashRecord.suffix$.cscr_id = #CsCashRecord.cscrId#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrIdNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrId">
+				$cscrIdNot$ cs_cash_record$CsCashRecord.suffix$.cscr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_cash_record$CsCashRecord.suffix$.cscr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrHost" prepend="and">
+			    $CsCashRecord.cscrHostNot$ cs_cash_record$CsCashRecord.suffix$.cscr_host = #CsCashRecord.cscrHost#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrHostNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrHost">
+				$cscrHostNot$ cs_cash_record$CsCashRecord.suffix$.cscr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrTradeNo" prepend="and">
+				(<isNotNull property="CsCashRecord.cscrTradeNoNot">
+			    cs_cash_record$CsCashRecord.suffix$.cscr_trade_no is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_trade_no) &lt; 1 or
+			    </isNotNull>$CsCashRecord.cscrTradeNoNot$ cs_cash_record$CsCashRecord.suffix$.cscr_trade_no = #CsCashRecord.cscrTradeNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrTradeNoNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrTradeNo">
+				$cscrTradeNoNot$ (cs_cash_record$CsCashRecord.suffix$.cscr_trade_no is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_trade_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrAmmountMin" prepend="and">
+			    $CsCashRecord.cscrAmmountNot$  ( cs_cash_record$CsCashRecord.suffix$.cscr_ammount &gt;= #CsCashRecord.cscrAmmountMin#
+			    <isEmpty property="CsCashRecord.cscrAmmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrAmmountMax" prepend="and">
+				<isEmpty property="CsCashRecord.cscrAmmountMin">$CsCashRecord.cscrAmmountNot$   (</isEmpty>
+			    cs_cash_record$CsCashRecord.suffix$.cscr_ammount &lt;= #CsCashRecord.cscrAmmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrAmmount" prepend="and">
+			    $CsCashRecord.cscrAmmountNot$ cs_cash_record$CsCashRecord.suffix$.cscr_ammount = #CsCashRecord.cscrAmmount#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrAmmountNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrAmmountMax"><isEmpty property="CsCashRecord.cscrAmmountMin"><isEmpty property="CsCashRecord.cscrAmmount">
+				$cscrAmmountNot$ cs_cash_record$CsCashRecord.suffix$.cscr_ammount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrTitle" prepend="and">
+				(<isNotNull property="CsCashRecord.cscrTitleNot">
+			    cs_cash_record$CsCashRecord.suffix$.cscr_title is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_title) &lt; 1 or
+			    </isNotNull>$CsCashRecord.cscrTitleNot$ cs_cash_record$CsCashRecord.suffix$.cscr_title like #CsCashRecord.cscrTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrTitleNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrTitle">
+				$cscrTitleNot$ (cs_cash_record$CsCashRecord.suffix$.cscr_title is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrVoucher" prepend="and">
+				(<isNotNull property="CsCashRecord.cscrVoucherNot">
+			    cs_cash_record$CsCashRecord.suffix$.cscr_voucher is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_voucher) &lt; 1 or
+			    </isNotNull>$CsCashRecord.cscrVoucherNot$ cs_cash_record$CsCashRecord.suffix$.cscr_voucher like #CsCashRecord.cscrVoucher#)
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrVoucherNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrVoucher">
+				$cscrVoucherNot$ (cs_cash_record$CsCashRecord.suffix$.cscr_voucher is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_voucher) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrImage" prepend="and">
+			    $CsCashRecord.cscrImageNot$ cs_cash_record$CsCashRecord.suffix$.cscr_image = #CsCashRecord.cscrImage#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrImageNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrImage">
+				$cscrImageNot$ cs_cash_record$CsCashRecord.suffix$.cscr_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrAdder" prepend="and">
+			    $CsCashRecord.cscrAdderNot$ cs_cash_record$CsCashRecord.suffix$.cscr_adder = #CsCashRecord.cscrAdder#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrAdderNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrAdder">
+				$cscrAdderNot$ cs_cash_record$CsCashRecord.suffix$.cscr_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrChecker" prepend="and">
+			    $CsCashRecord.cscrCheckerNot$ cs_cash_record$CsCashRecord.suffix$.cscr_checker = #CsCashRecord.cscrChecker#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrCheckerNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrChecker">
+				$cscrCheckerNot$ cs_cash_record$CsCashRecord.suffix$.cscr_checker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrRemark" prepend="and">
+				(<isNotNull property="CsCashRecord.cscrRemarkNot">
+			    cs_cash_record$CsCashRecord.suffix$.cscr_remark is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_remark) &lt; 1 or
+			    </isNotNull>$CsCashRecord.cscrRemarkNot$ cs_cash_record$CsCashRecord.suffix$.cscr_remark like #CsCashRecord.cscrRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrRemarkNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrRemark">
+				$cscrRemarkNot$ (cs_cash_record$CsCashRecord.suffix$.cscr_remark is null or length(cs_cash_record$CsCashRecord.suffix$.cscr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrUpdateTimeStart" prepend="and">
+			    $CsCashRecord.cscrUpdateTimeNot$   (cs_cash_record$CsCashRecord.suffix$.cscr_update_time &gt;= #CsCashRecord.cscrUpdateTimeStart#
+			   <isEmpty property="CsCashRecord.cscrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsCashRecord.cscrUpdateTimeStart">$CsCashRecord.cscrUpdateTimeNot$   (</isEmpty>
+			    cs_cash_record$CsCashRecord.suffix$.cscr_update_time &lt;= #CsCashRecord.cscrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrUpdateTime" prepend="and">
+			    $CsCashRecord.cscrUpdateTimeNot$ cs_cash_record$CsCashRecord.suffix$.cscr_update_time = #CsCashRecord.cscrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrUpdateTimeNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrUpdateTimeStart"><isEmpty property="CsCashRecord.cscrUpdateTimeEnd"><isEmpty property="CsCashRecord.cscrUpdateTime">
+				$cscrUpdateTimeNot$ cs_cash_record$CsCashRecord.suffix$.cscr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrAddTimeStart" prepend="and">
+			    $CsCashRecord.cscrAddTimeNot$   (cs_cash_record$CsCashRecord.suffix$.cscr_add_time &gt;= #CsCashRecord.cscrAddTimeStart#
+			   <isEmpty property="CsCashRecord.cscrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrAddTimeEnd" prepend="and">
+				<isEmpty property="CsCashRecord.cscrAddTimeStart">$CsCashRecord.cscrAddTimeNot$   (</isEmpty>
+			    cs_cash_record$CsCashRecord.suffix$.cscr_add_time &lt;= #CsCashRecord.cscrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCashRecord.cscrAddTime" prepend="and">
+			    $CsCashRecord.cscrAddTimeNot$ cs_cash_record$CsCashRecord.suffix$.cscr_add_time = #CsCashRecord.cscrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrAddTimeNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrAddTimeStart"><isEmpty property="CsCashRecord.cscrAddTimeEnd"><isEmpty property="CsCashRecord.cscrAddTime">
+				$cscrAddTimeNot$ cs_cash_record$CsCashRecord.suffix$.cscr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCashRecord.cscrStatus" prepend="and">
+			    $CsCashRecord.cscrStatusNot$ cs_cash_record$CsCashRecord.suffix$.cscr_status = #CsCashRecord.cscrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCashRecord.cscrStatusNot" prepend="and">
+				<isEmpty property="CsCashRecord.cscrStatus">
+				$cscrStatusNot$ cs_cash_record$CsCashRecord.suffix$.cscr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

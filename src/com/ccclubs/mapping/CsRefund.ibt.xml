@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员退款之SQL映射 -->
+	<resultMap id="CsRefund" class="com.ccclubs.model.CsRefund">
+		<result property="csrId" column="csr_id"/>
+		<result property="csrHost" column="csr_host"/>
+		<result property="csrMember" column="csr_member"/>
+		<result property="csrAmount" column="csr_amount"/>
+		<result property="csrReturnType" column="csr_return_type"/>
+		<result property="csrAccountNo" column="csr_account_no"/>
+		<result property="csrAccountName" column="csr_account_name"/>
+		<result property="csrMobile" column="csr_mobile"/>
+		<result property="csrChecker" column="csr_checker"/>
+		<result property="csrBacker" column="csr_backer"/>
+		<result property="csrMemo" column="csr_memo"/>
+		<result property="csrAddTime" column="csr_add_time"/>
+		<result property="csrCheckTime" column="csr_check_time"/>
+		<result property="csrBackTime" column="csr_back_time"/>
+		<result property="csrEndTime" column="csr_end_time"/>
+		<result property="csrRemark" column="csr_remark"/>
+		<result property="csrStatus" column="csr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员退款 -->
+	<select id="getCsRefundList" resultMap="CsRefund">
+		select cs_refund$suffix$.* from cs_refund$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_refund$suffix$.csr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRefund_part.cs_refund_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员退款分页 -->
+	<select id="getCsRefundPage" parameterClass="java.util.HashMap" resultMap="CsRefund">
+		select cs_refund$suffix$.* from cs_refund$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_refund$suffix$.csr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRefund_part.cs_refund_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员退款总数 -->
+	<select id="getCsRefundEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_refund$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_refund$suffix$.csr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRefund_part.cs_refund_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员退款 -->
+	<select id="getCsRefundById" parameterClass="java.util.HashMap" resultMap="CsRefund">
+		select cs_refund$suffix$.* from cs_refund$suffix$
+		where csr_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员退款 -->
+	<insert id="saveCsRefund"  parameterClass="com.ccclubs.model.CsRefund">
+		insert into cs_refund$suffix$
+		(
+			cs_refund$suffix$.csr_host
+			,cs_refund$suffix$.csr_member
+			,cs_refund$suffix$.csr_amount
+			,cs_refund$suffix$.csr_return_type
+			,cs_refund$suffix$.csr_account_no
+			,cs_refund$suffix$.csr_account_name
+			,cs_refund$suffix$.csr_mobile
+			,cs_refund$suffix$.csr_checker
+			,cs_refund$suffix$.csr_backer
+			,cs_refund$suffix$.csr_memo
+			,cs_refund$suffix$.csr_add_time
+			,cs_refund$suffix$.csr_check_time
+			,cs_refund$suffix$.csr_back_time
+			,cs_refund$suffix$.csr_end_time
+			,cs_refund$suffix$.csr_remark
+			,cs_refund$suffix$.csr_status
+		)
+		values(
+			<isNotNull property="csrHost" prepend="">
+				#csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrMember" prepend=",">
+				#csrMember#
+			</isNotNull>
+			<isNull property="csrMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAmount" prepend=",">
+				#csrAmount#
+			</isNotNull>
+			<isNull property="csrAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrReturnType" prepend=",">
+				#csrReturnType#
+			</isNotNull>
+			<isNull property="csrReturnType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAccountNo" prepend=",">
+				#csrAccountNo#
+			</isNotNull>
+			<isNull property="csrAccountNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAccountName" prepend=",">
+				#csrAccountName#
+			</isNotNull>
+			<isNull property="csrAccountName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrMobile" prepend=",">
+				#csrMobile#
+			</isNotNull>
+			<isNull property="csrMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrChecker" prepend=",">
+				#csrChecker#
+			</isNotNull>
+			<isNull property="csrChecker" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrBacker" prepend=",">
+				#csrBacker#
+			</isNotNull>
+			<isNull property="csrBacker" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrMemo" prepend=",">
+				#csrMemo#
+			</isNotNull>
+			<isNull property="csrMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAddTime" prepend=",">
+				#csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrCheckTime" prepend=",">
+				#csrCheckTime#
+			</isNotNull>
+			<isNull property="csrCheckTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrBackTime" prepend=",">
+				#csrBackTime#
+			</isNotNull>
+			<isNull property="csrBackTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrEndTime" prepend=",">
+				#csrEndTime#
+			</isNotNull>
+			<isNull property="csrEndTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRemark" prepend=",">
+				#csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrStatus" prepend=",">
+				#csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员退款 -->
+	<update id="updateCsRefund"  parameterClass="com.ccclubs.model.CsRefund">
+		update cs_refund$suffix$ set
+			<isNotNull property="csrHost" prepend="">
+				cs_refund$suffix$.csr_host = #csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				cs_refund$suffix$.csr_host = null
+			</isNull>				
+			<isNotNull property="csrMember" prepend=",">
+				cs_refund$suffix$.csr_member = #csrMember#
+			</isNotNull>
+			<isNull property="csrMember" prepend=",">
+				cs_refund$suffix$.csr_member = null
+			</isNull>				
+			<isNotNull property="csrAmount" prepend=",">
+				cs_refund$suffix$.csr_amount = #csrAmount#
+			</isNotNull>
+			<isNull property="csrAmount" prepend=",">
+				cs_refund$suffix$.csr_amount = null
+			</isNull>				
+			<isNotNull property="csrReturnType" prepend=",">
+				cs_refund$suffix$.csr_return_type = #csrReturnType#
+			</isNotNull>
+			<isNull property="csrReturnType" prepend=",">
+				cs_refund$suffix$.csr_return_type = null
+			</isNull>				
+			<isNotNull property="csrAccountNo" prepend=",">
+				cs_refund$suffix$.csr_account_no = #csrAccountNo#
+			</isNotNull>
+			<isNull property="csrAccountNo" prepend=",">
+				cs_refund$suffix$.csr_account_no = null
+			</isNull>				
+			<isNotNull property="csrAccountName" prepend=",">
+				cs_refund$suffix$.csr_account_name = #csrAccountName#
+			</isNotNull>
+			<isNull property="csrAccountName" prepend=",">
+				cs_refund$suffix$.csr_account_name = null
+			</isNull>				
+			<isNotNull property="csrMobile" prepend=",">
+				cs_refund$suffix$.csr_mobile = #csrMobile#
+			</isNotNull>
+			<isNull property="csrMobile" prepend=",">
+				cs_refund$suffix$.csr_mobile = null
+			</isNull>				
+			<isNotNull property="csrChecker" prepend=",">
+				cs_refund$suffix$.csr_checker = #csrChecker#
+			</isNotNull>
+			<isNull property="csrChecker" prepend=",">
+				cs_refund$suffix$.csr_checker = null
+			</isNull>				
+			<isNotNull property="csrBacker" prepend=",">
+				cs_refund$suffix$.csr_backer = #csrBacker#
+			</isNotNull>
+			<isNull property="csrBacker" prepend=",">
+				cs_refund$suffix$.csr_backer = null
+			</isNull>				
+			<isNotNull property="csrMemo" prepend=",">
+				cs_refund$suffix$.csr_memo = #csrMemo#
+			</isNotNull>
+			<isNull property="csrMemo" prepend=",">
+				cs_refund$suffix$.csr_memo = null
+			</isNull>				
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_refund$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				cs_refund$suffix$.csr_add_time = null
+			</isNull>				
+			<isNotNull property="csrCheckTime" prepend=",">
+				cs_refund$suffix$.csr_check_time = #csrCheckTime#
+			</isNotNull>
+			<isNull property="csrCheckTime" prepend=",">
+				cs_refund$suffix$.csr_check_time = null
+			</isNull>				
+			<isNotNull property="csrBackTime" prepend=",">
+				cs_refund$suffix$.csr_back_time = #csrBackTime#
+			</isNotNull>
+			<isNull property="csrBackTime" prepend=",">
+				cs_refund$suffix$.csr_back_time = null
+			</isNull>				
+			<isNotNull property="csrEndTime" prepend=",">
+				cs_refund$suffix$.csr_end_time = #csrEndTime#
+			</isNotNull>
+			<isNull property="csrEndTime" prepend=",">
+				cs_refund$suffix$.csr_end_time = null
+			</isNull>				
+			<isNotNull property="csrRemark" prepend=",">
+				cs_refund$suffix$.csr_remark = #csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				cs_refund$suffix$.csr_remark = null
+			</isNull>				
+			<isNotNull property="csrStatus" prepend=",">
+				cs_refund$suffix$.csr_status = #csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				cs_refund$suffix$.csr_status = null
+			</isNull>				
+		where
+			csr_id=#csrId#
+	</update>
+	
+	<!-- 更新会员退款非空字段 -->
+	<update id="updateCsRefund$NotNull"  parameterClass="com.ccclubs.model.CsRefund">
+		update cs_refund$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrHost" prepend=",">
+				cs_refund$suffix$.csr_host = #csrHost#
+			</isNotNull>		
+			<isNotNull property="csrMember" prepend=",">
+				cs_refund$suffix$.csr_member = #csrMember#
+			</isNotNull>		
+			<isNotNull property="csrAmount" prepend=",">
+				cs_refund$suffix$.csr_amount = #csrAmount#
+			</isNotNull>		
+			<isNotNull property="csrReturnType" prepend=",">
+				cs_refund$suffix$.csr_return_type = #csrReturnType#
+			</isNotNull>		
+			<isNotNull property="csrAccountNo" prepend=",">
+				cs_refund$suffix$.csr_account_no = #csrAccountNo#
+			</isNotNull>		
+			<isNotNull property="csrAccountName" prepend=",">
+				cs_refund$suffix$.csr_account_name = #csrAccountName#
+			</isNotNull>		
+			<isNotNull property="csrMobile" prepend=",">
+				cs_refund$suffix$.csr_mobile = #csrMobile#
+			</isNotNull>		
+			<isNotNull property="csrChecker" prepend=",">
+				cs_refund$suffix$.csr_checker = #csrChecker#
+			</isNotNull>		
+			<isNotNull property="csrBacker" prepend=",">
+				cs_refund$suffix$.csr_backer = #csrBacker#
+			</isNotNull>		
+			<isNotNull property="csrMemo" prepend=",">
+				cs_refund$suffix$.csr_memo = #csrMemo#
+			</isNotNull>		
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_refund$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>		
+			<isNotNull property="csrCheckTime" prepend=",">
+				cs_refund$suffix$.csr_check_time = #csrCheckTime#
+			</isNotNull>		
+			<isNotNull property="csrBackTime" prepend=",">
+				cs_refund$suffix$.csr_back_time = #csrBackTime#
+			</isNotNull>		
+			<isNotNull property="csrEndTime" prepend=",">
+				cs_refund$suffix$.csr_end_time = #csrEndTime#
+			</isNotNull>		
+			<isNotNull property="csrRemark" prepend=",">
+				cs_refund$suffix$.csr_remark = #csrRemark#
+			</isNotNull>		
+			<isNotNull property="csrStatus" prepend=",">
+				cs_refund$suffix$.csr_status = #csrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csr_id=#csrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员退款 -->
+	<delete id="deleteCsRefundById" parameterClass="java.util.HashMap">
+		delete from cs_refund$suffix$ where csr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员退款 -->
+	<update id="removeCsRefundById" parameterClass="java.util.HashMap">
+		update cs_refund$suffix$ set  cs_refund$suffix$.csr_status=-1  where csr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员退款 -->
+	<update id="updateCsRefundBy"  parameterClass="java.util.HashMap">
+		update cs_refund$suffix$ set		
+			csr_id=csr_id
+			<isNotNull property="V_csrId" prepend=",">
+				cs_refund$suffix$.csr_id = #V_csrId#
+			</isNotNull>		
+			<isNotNull property="V_csrHost" prepend=",">
+				cs_refund$suffix$.csr_host = #V_csrHost#
+			</isNotNull>		
+			<isNotNull property="V_csrMember" prepend=",">
+				cs_refund$suffix$.csr_member = #V_csrMember#
+			</isNotNull>		
+			<isNotNull property="V_csrAmount" prepend=",">
+				cs_refund$suffix$.csr_amount = #V_csrAmount#
+			</isNotNull>		
+			<isNotNull property="V_csrReturnType" prepend=",">
+				cs_refund$suffix$.csr_return_type = #V_csrReturnType#
+			</isNotNull>		
+			<isNotNull property="V_csrAccountNo" prepend=",">
+				cs_refund$suffix$.csr_account_no = #V_csrAccountNo#
+			</isNotNull>		
+			<isNotNull property="V_csrAccountName" prepend=",">
+				cs_refund$suffix$.csr_account_name = #V_csrAccountName#
+			</isNotNull>		
+			<isNotNull property="V_csrMobile" prepend=",">
+				cs_refund$suffix$.csr_mobile = #V_csrMobile#
+			</isNotNull>		
+			<isNotNull property="V_csrChecker" prepend=",">
+				cs_refund$suffix$.csr_checker = #V_csrChecker#
+			</isNotNull>		
+			<isNotNull property="V_csrBacker" prepend=",">
+				cs_refund$suffix$.csr_backer = #V_csrBacker#
+			</isNotNull>		
+			<isNotNull property="V_csrMemo" prepend=",">
+				cs_refund$suffix$.csr_memo = #V_csrMemo#
+			</isNotNull>		
+			<isNotNull property="V_csrAddTime" prepend=",">
+				cs_refund$suffix$.csr_add_time = #V_csrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csrCheckTime" prepend=",">
+				cs_refund$suffix$.csr_check_time = #V_csrCheckTime#
+			</isNotNull>		
+			<isNotNull property="V_csrBackTime" prepend=",">
+				cs_refund$suffix$.csr_back_time = #V_csrBackTime#
+			</isNotNull>		
+			<isNotNull property="V_csrEndTime" prepend=",">
+				cs_refund$suffix$.csr_end_time = #V_csrEndTime#
+			</isNotNull>		
+			<isNotNull property="V_csrRemark" prepend=",">
+				cs_refund$suffix$.csr_remark = #V_csrRemark#
+			</isNotNull>		
+			<isNotNull property="V_csrStatus" prepend=",">
+				cs_refund$suffix$.csr_status = #V_csrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_refund$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_refund$suffix$.csr_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRefund_part.cs_refund_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员退款 -->
+	<update id="deleteCsRefundBy"  parameterClass="java.util.HashMap">
+		delete from cs_refund$suffix$ where 
+		cs_refund$suffix$.csr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRefund_part.cs_refund_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

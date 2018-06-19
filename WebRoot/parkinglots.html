@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>网点分布${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.parking-lots.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.reserve.panel.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.timepicker.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<input type="hidden" id="host_input" value="${currentHost}" />
+		<div id="ccc-fullscreen">
+			<div class="ccc-background"></div>
+			<div class="ccc-fullfill"></div>
+
+			<%@ include file="/include/nav.html"%>
+
+			<div id="ccc-fullscreen-map"></div>
+
+			<div id="ccc-widget-toolbox">
+				<div id="ccc-widget-search" class="ccc-clearfix">
+					<input type="text" placeholder="输入您的位置..." class="ccc-input" id="ccc-searchbox" />
+					<button id="ccc-search-btn" class="ccc-btn-green">
+						<span>搜索</span>
+					</button>
+				</div>
+				<div id="ccc-widget-filter">
+					<ul>
+						<li class="available sel">
+							<!-- class: + [sel]/选中 -->
+							<em class="value">50</em><a href="#"><i></i>现有网点</a>
+						</li>
+						<li class="presets">
+							<em class="value">20</em><a href="#" title="加载预设网点"><i></i>预设网点</a>
+						</li>
+						<s:if test="#request.currentHost == 1">
+							<li class="gas-station">
+								<em class="value">30</em><a href="#" title="加载加油站"><i></i>加油站</a>
+							</li>
+						</s:if>
+						<li class="powerpile">
+							<em class="value">2</em><a href="#" title="加载现有充电桩"><i></i>现有充电桩</a>
+						</li>
+						<li class="prepowerpile">
+							<em class="value">0</em><a href="#" title="加载预设充电桩"><i></i>预设充电桩</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div id="ccc-widget-viewcard">
+				<div class="ccc-margin-12pct ccc-clearfix">
+
+					<!-- 点击 现有网点 加载 -->
+					<div class="ccc-viewcard-cont" id="viewcar" style="display: none">
+						<div id="ccc-widget-viewcar">
+							<!-- 点击 预设网点/加油站 不加载 -->
+							<!-- ajax -->
+						</div>
+						<div id="ccc-widget-viewinfo">
+							<ul>
+								<!-- loop temp [begin] -->
+								<!-- loop temp [end] -->
+							</ul>
+						</div>
+					</div>
+
+					<!-- 搜索时加载 -->
+					<div class="ccc-viewcard-cont" id="viewinfo">
+						<!-- ajax -->
+						<ul></ul>
+					</div>
+
+				</div>
+				<button id="ccc-widget-viewcard-close"></button>
+			</div>
+
+		</div>
+		<input id="location" type="hidden" value="${point}" />
+		<!-- ajax 弹出层 -->
+		<div id="ccc-layer">
+			<div id="ccc-overlay"></div>
+			<div id="ccc-ajax-loader"><i></i>正在加载...</div>
+			<div id="ccc-overpage">
+				<!-- 异步加载 -->
+			</div>
+			<div id="ccc-overclose">
+				<button>
+				</button>
+			</div>
+		</div>
+		<div id="ccc-global-tips"><i></i><span>正在加载...</span></div>
+		<script src="/js/jquery-1.10.1.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/jquery.easing.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/ccclubs.scrollbar.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+        <!-- <script src="/js/markerclusterer.js?v=${lz:config('version')}" type="text/javascript"></script> -->
+		<script type="text/javascript" src="http://map.qq.com/api/js?v=2.exp&key=0e2941f1708f3eb3d19c029c3802521b&libraries=place"></script>
+		<script src="/js/ccclubs.maps.tencent.common.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/jquery-ui-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/jquery-ui-timepicker.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script>
+		$('#viewinfo').cccScrollbar({
+			horizontalScroll: true,
+			scrollInertia: 500,
+			mouseWheelPixels: 255,
+			advanced:{
+				autoExpandHorizontalScroll: true
+			}
+		});
+	</script>
+
+	</body>
+</html>

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRecord_part">	
+	<!-- 消费记录条件sql片段  -->
+	<sql id="cs_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrId" prepend="and">
+			    $csrIdNot$ cs_record$suffix$.csr_id = #csrId#
+			</isNotEmpty>
+			<isNotNull property="csrIdNot" prepend="and">
+				<isEmpty property="csrId">
+				$csrIdNot$ cs_record$suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_record$suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csrHost" prepend="and">
+			    $csrHostNot$ cs_record$suffix$.csr_host = #csrHost#
+			</isNotEmpty>
+			<isNotNull property="csrHostNot" prepend="and">
+				<isEmpty property="csrHost">
+				$csrHostNot$ cs_record$suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csrRemark" prepend="and">			    
+			    (<isNotNull property="csrRemarkNot">
+			    cs_record$suffix$.csr_remark is null or length(cs_record$suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$csrRemarkNot$ cs_record$suffix$.csr_remark like #csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="csrRemarkNot" prepend="and">
+				<isEmpty property="csrRemark">
+				$csrRemarkNot$ (cs_record$suffix$.csr_remark is null or length(cs_record$suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrMember" prepend="and">
+			    $csrMemberNot$ cs_record$suffix$.csr_member = #csrMember#
+			</isNotEmpty>
+			<isNotNull property="csrMemberNot" prepend="and">
+				<isEmpty property="csrMember">
+				$csrMemberNot$ cs_record$suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrMoneyType" prepend="and">
+			    $csrMoneyTypeNot$ cs_record$suffix$.csr_money_type = #csrMoneyType#
+			</isNotEmpty>
+			<isNotNull property="csrMoneyTypeNot" prepend="and">
+				<isEmpty property="csrMoneyType">
+				$csrMoneyTypeNot$ cs_record$suffix$.csr_money_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRecordSubject" prepend="and">
+			    $csrRecordSubjectNot$ cs_record$suffix$.csr_record_subject = #csrRecordSubject#
+			</isNotEmpty>
+			<isNotNull property="csrRecordSubjectNot" prepend="and">
+				<isEmpty property="csrRecordSubject">
+				$csrRecordSubjectNot$ cs_record$suffix$.csr_record_subject is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRecordType" prepend="and">
+			    $csrRecordTypeNot$ cs_record$suffix$.csr_record_type = #csrRecordType#
+			</isNotEmpty>
+			<isNotNull property="csrRecordTypeNot" prepend="and">
+				<isEmpty property="csrRecordType">
+				$csrRecordTypeNot$ cs_record$suffix$.csr_record_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAmountMin" prepend="and">
+			    $csrAmountNot$  ( cs_record$suffix$.csr_amount &gt;= #csrAmountMin#
+			    <isEmpty property="csrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAmountMax" prepend="and">
+				<isEmpty property="csrAmountMin">$csrAmountNot$   (</isEmpty>
+			    cs_record$suffix$.csr_amount &lt;= #csrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrAmount" prepend="and">
+			    $csrAmountNot$ cs_record$suffix$.csr_amount = #csrAmount#
+			</isNotEmpty>
+			<isNotNull property="csrAmountNot" prepend="and">
+				<isEmpty property="csrAmountMax"><isEmpty property="csrAmountMin"><isEmpty property="csrAmount">
+				$csrAmountNot$ cs_record$suffix$.csr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrRemainMin" prepend="and">
+			    $csrRemainNot$  ( cs_record$suffix$.csr_remain &gt;= #csrRemainMin#
+			    <isEmpty property="csrRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrRemainMax" prepend="and">
+				<isEmpty property="csrRemainMin">$csrRemainNot$   (</isEmpty>
+			    cs_record$suffix$.csr_remain &lt;= #csrRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrRemain" prepend="and">
+			    $csrRemainNot$ cs_record$suffix$.csr_remain = #csrRemain#
+			</isNotEmpty>
+			<isNotNull property="csrRemainNot" prepend="and">
+				<isEmpty property="csrRemainMax"><isEmpty property="csrRemainMin"><isEmpty property="csrRemain">
+				$csrRemainNot$ cs_record$suffix$.csr_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrAddTimeStart" prepend="and">
+			    $csrAddTimeNot$   (cs_record$suffix$.csr_add_time &gt;= #csrAddTimeStart#
+			   <isEmpty property="csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTimeEnd" prepend="and">
+				<isEmpty property="csrAddTimeStart">$csrAddTimeNot$   (</isEmpty>
+			    cs_record$suffix$.csr_add_time &lt;= #csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTime" prepend="and">
+			    $csrAddTimeNot$ cs_record$suffix$.csr_add_time = #csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="csrAddTimeNot" prepend="and">
+				<isEmpty property="csrAddTimeStart"><isEmpty property="csrAddTimeEnd"><isEmpty property="csrAddTime">
+				$csrAddTimeNot$ cs_record$suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrOrder" prepend="and">
+			    $csrOrderNot$ cs_record$suffix$.csr_order = #csrOrder#
+			</isNotEmpty>
+			<isNotNull property="csrOrderNot" prepend="and">
+				<isEmpty property="csrOrder">
+				$csrOrderNot$ cs_record$suffix$.csr_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRelateMin" prepend="and">
+			    $csrRelateNot$  ( cs_record$suffix$.csr_relate &gt;= #csrRelateMin#
+			    <isEmpty property="csrRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrRelateMax" prepend="and">
+				<isEmpty property="csrRelateMin">$csrRelateNot$   (</isEmpty>
+			    cs_record$suffix$.csr_relate &lt;= #csrRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrRelate" prepend="and">
+			    $csrRelateNot$ cs_record$suffix$.csr_relate = #csrRelate#
+			</isNotEmpty>
+			<isNotNull property="csrRelateNot" prepend="and">
+				<isEmpty property="csrRelateMax"><isEmpty property="csrRelateMin"><isEmpty property="csrRelate">
+				$csrRelateNot$ cs_record$suffix$.csr_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrObject" prepend="and">
+			    $csrObjectNot$ cs_record$suffix$.csr_object = #csrObject#
+			</isNotEmpty>
+			<isNotNull property="csrObjectNot" prepend="and">
+				<isEmpty property="csrObject">
+				$csrObjectNot$ cs_record$suffix$.csr_object is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrEditor" prepend="and">
+			    $csrEditorNot$ cs_record$suffix$.csr_editor = #csrEditor#
+			</isNotEmpty>
+			<isNotNull property="csrEditorNot" prepend="and">
+				<isEmpty property="csrEditor">
+				$csrEditorNot$ cs_record$suffix$.csr_editor is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 消费记录left join 条件sql片段 -->
+	<sql id="cs_record_join">
+		<dynamic>
+			<isNotEmpty property="CsRecord.csrId" prepend="and">
+			    $CsRecord.csrIdNot$ cs_record$CsRecord.suffix$.csr_id = #CsRecord.csrId#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrIdNot" prepend="and">
+				<isEmpty property="CsRecord.csrId">
+				$csrIdNot$ cs_record$CsRecord.suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_record$CsRecord.suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrHost" prepend="and">
+			    $CsRecord.csrHostNot$ cs_record$CsRecord.suffix$.csr_host = #CsRecord.csrHost#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrHostNot" prepend="and">
+				<isEmpty property="CsRecord.csrHost">
+				$csrHostNot$ cs_record$CsRecord.suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrRemark" prepend="and">
+				(<isNotNull property="CsRecord.csrRemarkNot">
+			    cs_record$CsRecord.suffix$.csr_remark is null or length(cs_record$CsRecord.suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$CsRecord.csrRemarkNot$ cs_record$CsRecord.suffix$.csr_remark like #CsRecord.csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrRemarkNot" prepend="and">
+				<isEmpty property="CsRecord.csrRemark">
+				$csrRemarkNot$ (cs_record$CsRecord.suffix$.csr_remark is null or length(cs_record$CsRecord.suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrMember" prepend="and">
+			    $CsRecord.csrMemberNot$ cs_record$CsRecord.suffix$.csr_member = #CsRecord.csrMember#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrMemberNot" prepend="and">
+				<isEmpty property="CsRecord.csrMember">
+				$csrMemberNot$ cs_record$CsRecord.suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrMoneyType" prepend="and">
+			    $CsRecord.csrMoneyTypeNot$ cs_record$CsRecord.suffix$.csr_money_type = #CsRecord.csrMoneyType#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrMoneyTypeNot" prepend="and">
+				<isEmpty property="CsRecord.csrMoneyType">
+				$csrMoneyTypeNot$ cs_record$CsRecord.suffix$.csr_money_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrRecordSubject" prepend="and">
+			    $CsRecord.csrRecordSubjectNot$ cs_record$CsRecord.suffix$.csr_record_subject = #CsRecord.csrRecordSubject#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrRecordSubjectNot" prepend="and">
+				<isEmpty property="CsRecord.csrRecordSubject">
+				$csrRecordSubjectNot$ cs_record$CsRecord.suffix$.csr_record_subject is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrRecordType" prepend="and">
+			    $CsRecord.csrRecordTypeNot$ cs_record$CsRecord.suffix$.csr_record_type = #CsRecord.csrRecordType#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrRecordTypeNot" prepend="and">
+				<isEmpty property="CsRecord.csrRecordType">
+				$csrRecordTypeNot$ cs_record$CsRecord.suffix$.csr_record_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrAmountMin" prepend="and">
+			    $CsRecord.csrAmountNot$  ( cs_record$CsRecord.suffix$.csr_amount &gt;= #CsRecord.csrAmountMin#
+			    <isEmpty property="CsRecord.csrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrAmountMax" prepend="and">
+				<isEmpty property="CsRecord.csrAmountMin">$CsRecord.csrAmountNot$   (</isEmpty>
+			    cs_record$CsRecord.suffix$.csr_amount &lt;= #CsRecord.csrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrAmount" prepend="and">
+			    $CsRecord.csrAmountNot$ cs_record$CsRecord.suffix$.csr_amount = #CsRecord.csrAmount#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrAmountNot" prepend="and">
+				<isEmpty property="CsRecord.csrAmountMax"><isEmpty property="CsRecord.csrAmountMin"><isEmpty property="CsRecord.csrAmount">
+				$csrAmountNot$ cs_record$CsRecord.suffix$.csr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrRemainMin" prepend="and">
+			    $CsRecord.csrRemainNot$  ( cs_record$CsRecord.suffix$.csr_remain &gt;= #CsRecord.csrRemainMin#
+			    <isEmpty property="CsRecord.csrRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrRemainMax" prepend="and">
+				<isEmpty property="CsRecord.csrRemainMin">$CsRecord.csrRemainNot$   (</isEmpty>
+			    cs_record$CsRecord.suffix$.csr_remain &lt;= #CsRecord.csrRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrRemain" prepend="and">
+			    $CsRecord.csrRemainNot$ cs_record$CsRecord.suffix$.csr_remain = #CsRecord.csrRemain#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrRemainNot" prepend="and">
+				<isEmpty property="CsRecord.csrRemainMax"><isEmpty property="CsRecord.csrRemainMin"><isEmpty property="CsRecord.csrRemain">
+				$csrRemainNot$ cs_record$CsRecord.suffix$.csr_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrAddTimeStart" prepend="and">
+			    $CsRecord.csrAddTimeNot$   (cs_record$CsRecord.suffix$.csr_add_time &gt;= #CsRecord.csrAddTimeStart#
+			   <isEmpty property="CsRecord.csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrAddTimeEnd" prepend="and">
+				<isEmpty property="CsRecord.csrAddTimeStart">$CsRecord.csrAddTimeNot$   (</isEmpty>
+			    cs_record$CsRecord.suffix$.csr_add_time &lt;= #CsRecord.csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrAddTime" prepend="and">
+			    $CsRecord.csrAddTimeNot$ cs_record$CsRecord.suffix$.csr_add_time = #CsRecord.csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrAddTimeNot" prepend="and">
+				<isEmpty property="CsRecord.csrAddTimeStart"><isEmpty property="CsRecord.csrAddTimeEnd"><isEmpty property="CsRecord.csrAddTime">
+				$csrAddTimeNot$ cs_record$CsRecord.suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrOrder" prepend="and">
+			    $CsRecord.csrOrderNot$ cs_record$CsRecord.suffix$.csr_order = #CsRecord.csrOrder#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrOrderNot" prepend="and">
+				<isEmpty property="CsRecord.csrOrder">
+				$csrOrderNot$ cs_record$CsRecord.suffix$.csr_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrRelateMin" prepend="and">
+			    $CsRecord.csrRelateNot$  ( cs_record$CsRecord.suffix$.csr_relate &gt;= #CsRecord.csrRelateMin#
+			    <isEmpty property="CsRecord.csrRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrRelateMax" prepend="and">
+				<isEmpty property="CsRecord.csrRelateMin">$CsRecord.csrRelateNot$   (</isEmpty>
+			    cs_record$CsRecord.suffix$.csr_relate &lt;= #CsRecord.csrRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRecord.csrRelate" prepend="and">
+			    $CsRecord.csrRelateNot$ cs_record$CsRecord.suffix$.csr_relate = #CsRecord.csrRelate#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrRelateNot" prepend="and">
+				<isEmpty property="CsRecord.csrRelateMax"><isEmpty property="CsRecord.csrRelateMin"><isEmpty property="CsRecord.csrRelate">
+				$csrRelateNot$ cs_record$CsRecord.suffix$.csr_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrObject" prepend="and">
+			    $CsRecord.csrObjectNot$ cs_record$CsRecord.suffix$.csr_object = #CsRecord.csrObject#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrObjectNot" prepend="and">
+				<isEmpty property="CsRecord.csrObject">
+				$csrObjectNot$ cs_record$CsRecord.suffix$.csr_object is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRecord.csrEditor" prepend="and">
+			    $CsRecord.csrEditorNot$ cs_record$CsRecord.suffix$.csr_editor = #CsRecord.csrEditor#
+			</isNotEmpty>
+			<isNotNull property="CsRecord.csrEditorNot" prepend="and">
+				<isEmpty property="CsRecord.csrEditor">
+				$csrEditorNot$ cs_record$CsRecord.suffix$.csr_editor is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

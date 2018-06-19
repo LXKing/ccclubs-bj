@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>余额充值</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<form action="${basePath}m/home/account_alipay.html" class="input-group" id="alipayment" name="alipayment" method="post" onsubmit="return CheckForm();">
+		<div id="content" class="content">
+				<div class="input-row">
+					<label>
+						充值金额
+					</label>
+					<input class="input-dur" name="alimoney" value="100" id="alimoney" type="tel" placeholder="请输入充值金额">
+				</div>
+				<ul class="table-view mt15">
+					<li class="table-view-cell media">
+						<div class="media-body">
+							支付方式
+						</div>
+						<span class="badge media-object pull-left icon-alipay"></span>
+					</li>
+				</ul>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block">
+					立即充值
+				</button>
+			</div>
+		</div>
+		</form>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+        //校验输入框
+        function CheckForm() {
+            if (document.alipayment.alimoney.value.length == 0) {
+                alert("请输入充值金额");
+                document.alipayment.alimoney.focus();
+                return false;
+            }
+            var reg = new RegExp(/^\d*\.?\d{0,2}$/);
+            if (!reg.test(document.alipayment.alimoney.value)) {
+                alert("请正确输入充值金额，小数点后最多两位");
+                document.alipayment.alimoney.focus();
+                return false;
+            }
+            if (Number(document.alipayment.alimoney.value) < 10) {
+                alert("充值金额最小是 10 元");
+                document.alipayment.alimoney.focus();
+                return false;
+            }
+        }  
+    </script>
+	</body>
+
+</html>

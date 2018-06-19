@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 市场调查之SQL映射 -->
+	<resultMap id="CsSaleSurvey" class="com.ccclubs.model.CsSaleSurvey">
+		<result property="csssId" column="csss_id"/>
+		<result property="csssHost" column="csss_host"/>
+		<result property="csssSubject" column="csss_subject"/>
+		<result property="csssEvent" column="csss_event"/>
+		<result property="csssType" column="csss_type"/>
+		<result property="csssDetail" column="csss_detail"/>
+		<result property="csssUser" column="csss_user"/>
+		<result property="csssUpdateTime" column="csss_update_time"/>
+		<result property="csssAddTime" column="csss_add_time"/>
+		<result property="csssStatus" column="csss_status"/>
+	</resultMap>
+		
+	<!-- 获取所有市场调查 -->
+	<select id="getCsSaleSurveyList" resultMap="CsSaleSurvey">
+		select cs_sale_survey$suffix$.* from cs_sale_survey$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.csss_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_survey$suffix$.csss_status!=-1
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleSurvey_part.cs_sale_survey_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csss_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取市场调查分页 -->
+	<select id="getCsSaleSurveyPage" parameterClass="java.util.HashMap" resultMap="CsSaleSurvey">
+		select cs_sale_survey$suffix$.* from cs_sale_survey$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询 -->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.csss_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_survey$suffix$.csss_status!=-1
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleSurvey_part.cs_sale_survey_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csss_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取市场调查总数 -->
+	<select id="getCsSaleSurveyEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_sale_survey$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.csss_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_survey$suffix$.csss_status!=-1
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleSurvey_part.cs_sale_survey_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取市场调查 -->
+	<select id="getCsSaleSurveyById" parameterClass="java.util.HashMap" resultMap="CsSaleSurvey">
+		select cs_sale_survey$suffix$.* from cs_sale_survey$suffix$
+		where csss_id=#id#
+	</select>
+	
+		
+	<!-- 保存市场调查 -->
+	<insert id="saveCsSaleSurvey"  parameterClass="com.ccclubs.model.CsSaleSurvey">
+		insert into cs_sale_survey$suffix$
+		(
+			cs_sale_survey$suffix$.csss_host
+			,cs_sale_survey$suffix$.csss_subject
+			,cs_sale_survey$suffix$.csss_event
+			,cs_sale_survey$suffix$.csss_type
+			,cs_sale_survey$suffix$.csss_detail
+			,cs_sale_survey$suffix$.csss_user
+			,cs_sale_survey$suffix$.csss_update_time
+			,cs_sale_survey$suffix$.csss_add_time
+			,cs_sale_survey$suffix$.csss_status
+		)
+		values(
+			<isNotNull property="csssHost" prepend="">
+				#csssHost#
+			</isNotNull>
+			<isNull property="csssHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csssSubject" prepend=",">
+				#csssSubject#
+			</isNotNull>
+			<isNull property="csssSubject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssEvent" prepend=",">
+				#csssEvent#
+			</isNotNull>
+			<isNull property="csssEvent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssType" prepend=",">
+				#csssType#
+			</isNotNull>
+			<isNull property="csssType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssDetail" prepend=",">
+				#csssDetail#
+			</isNotNull>
+			<isNull property="csssDetail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssUser" prepend=",">
+				#csssUser#
+			</isNotNull>
+			<isNull property="csssUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssUpdateTime" prepend=",">
+				#csssUpdateTime#
+			</isNotNull>
+			<isNull property="csssUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssAddTime" prepend=",">
+				#csssAddTime#
+			</isNotNull>
+			<isNull property="csssAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csssStatus" prepend=",">
+				#csssStatus#
+			</isNotNull>
+			<isNull property="csssStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新市场调查 -->
+	<update id="updateCsSaleSurvey"  parameterClass="com.ccclubs.model.CsSaleSurvey">
+		update cs_sale_survey$suffix$ set
+			<isNotNull property="csssHost" prepend="">
+				cs_sale_survey$suffix$.csss_host = #csssHost#
+			</isNotNull>
+			<isNull property="csssHost" prepend="">
+				cs_sale_survey$suffix$.csss_host = null
+			</isNull>				
+			<isNotNull property="csssSubject" prepend=",">
+				cs_sale_survey$suffix$.csss_subject = #csssSubject#
+			</isNotNull>
+			<isNull property="csssSubject" prepend=",">
+				cs_sale_survey$suffix$.csss_subject = null
+			</isNull>				
+			<isNotNull property="csssEvent" prepend=",">
+				cs_sale_survey$suffix$.csss_event = #csssEvent#
+			</isNotNull>
+			<isNull property="csssEvent" prepend=",">
+				cs_sale_survey$suffix$.csss_event = null
+			</isNull>				
+			<isNotNull property="csssType" prepend=",">
+				cs_sale_survey$suffix$.csss_type = #csssType#
+			</isNotNull>
+			<isNull property="csssType" prepend=",">
+				cs_sale_survey$suffix$.csss_type = null
+			</isNull>				
+			<isNotNull property="csssDetail" prepend=",">
+				cs_sale_survey$suffix$.csss_detail = #csssDetail#
+			</isNotNull>
+			<isNull property="csssDetail" prepend=",">
+				cs_sale_survey$suffix$.csss_detail = null
+			</isNull>				
+			<isNotNull property="csssUser" prepend=",">
+				cs_sale_survey$suffix$.csss_user = #csssUser#
+			</isNotNull>
+			<isNull property="csssUser" prepend=",">
+				cs_sale_survey$suffix$.csss_user = null
+			</isNull>				
+			<isNotNull property="csssUpdateTime" prepend=",">
+				cs_sale_survey$suffix$.csss_update_time = #csssUpdateTime#
+			</isNotNull>
+			<isNull property="csssUpdateTime" prepend=",">
+				cs_sale_survey$suffix$.csss_update_time = null
+			</isNull>				
+			<isNotNull property="csssAddTime" prepend=",">
+				cs_sale_survey$suffix$.csss_add_time = #csssAddTime#
+			</isNotNull>
+			<isNull property="csssAddTime" prepend=",">
+				cs_sale_survey$suffix$.csss_add_time = null
+			</isNull>				
+			<isNotNull property="csssStatus" prepend=",">
+				cs_sale_survey$suffix$.csss_status = #csssStatus#
+			</isNotNull>
+			<isNull property="csssStatus" prepend=",">
+				cs_sale_survey$suffix$.csss_status = null
+			</isNull>				
+		where
+			csss_id=#csssId#
+	</update>
+	
+	<!-- 更新市场调查非空字段 -->
+	<update id="updateCsSaleSurvey$NotNull"  parameterClass="com.ccclubs.model.CsSaleSurvey">
+		update cs_sale_survey$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csssHost" prepend=",">
+				cs_sale_survey$suffix$.csss_host = #csssHost#
+			</isNotNull>		
+			<isNotNull property="csssSubject" prepend=",">
+				cs_sale_survey$suffix$.csss_subject = #csssSubject#
+			</isNotNull>		
+			<isNotNull property="csssEvent" prepend=",">
+				cs_sale_survey$suffix$.csss_event = #csssEvent#
+			</isNotNull>		
+			<isNotNull property="csssType" prepend=",">
+				cs_sale_survey$suffix$.csss_type = #csssType#
+			</isNotNull>		
+			<isNotNull property="csssDetail" prepend=",">
+				cs_sale_survey$suffix$.csss_detail = #csssDetail#
+			</isNotNull>		
+			<isNotNull property="csssUser" prepend=",">
+				cs_sale_survey$suffix$.csss_user = #csssUser#
+			</isNotNull>		
+			<isNotNull property="csssUpdateTime" prepend=",">
+				cs_sale_survey$suffix$.csss_update_time = #csssUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csssAddTime" prepend=",">
+				cs_sale_survey$suffix$.csss_add_time = #csssAddTime#
+			</isNotNull>		
+			<isNotNull property="csssStatus" prepend=",">
+				cs_sale_survey$suffix$.csss_status = #csssStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csss_id=#csssId#
+	</update>
+	
+
+	<!-- 根据ID删除一个市场调查 -->
+	<delete id="deleteCsSaleSurveyById" parameterClass="java.util.HashMap">
+		delete from cs_sale_survey$suffix$ where csss_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个市场调查 -->
+	<update id="removeCsSaleSurveyById" parameterClass="java.util.HashMap">
+		update cs_sale_survey$suffix$ set  cs_sale_survey$suffix$.csss_status=-1  where csss_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新市场调查 -->
+	<update id="updateCsSaleSurveyBy"  parameterClass="java.util.HashMap">
+		update cs_sale_survey$suffix$ set		
+			csss_id=csss_id
+			<isNotNull property="V_csssId" prepend=",">
+				cs_sale_survey$suffix$.csss_id = #V_csssId#
+			</isNotNull>		
+			<isNotNull property="V_csssHost" prepend=",">
+				cs_sale_survey$suffix$.csss_host = #V_csssHost#
+			</isNotNull>		
+			<isNotNull property="V_csssSubject" prepend=",">
+				cs_sale_survey$suffix$.csss_subject = #V_csssSubject#
+			</isNotNull>		
+			<isNotNull property="V_csssEvent" prepend=",">
+				cs_sale_survey$suffix$.csss_event = #V_csssEvent#
+			</isNotNull>		
+			<isNotNull property="V_csssType" prepend=",">
+				cs_sale_survey$suffix$.csss_type = #V_csssType#
+			</isNotNull>		
+			<isNotNull property="V_csssDetail" prepend=",">
+				cs_sale_survey$suffix$.csss_detail = #V_csssDetail#
+			</isNotNull>		
+			<isNotNull property="V_csssUser" prepend=",">
+				cs_sale_survey$suffix$.csss_user = #V_csssUser#
+			</isNotNull>		
+			<isNotNull property="V_csssUpdateTime" prepend=",">
+				cs_sale_survey$suffix$.csss_update_time = #V_csssUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csssAddTime" prepend=",">
+				cs_sale_survey$suffix$.csss_add_time = #V_csssAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csssStatus" prepend=",">
+				cs_sale_survey$suffix$.csss_status = #V_csssStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.csss_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_survey$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_sale_survey$suffix$.csss_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CsssEvent"><!-- 调用一下CsssEvent，把CsSaleEvent指向CsssEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsSaleSurvey_part.cs_sale_survey_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除市场调查 -->
+	<update id="deleteCsSaleSurveyBy"  parameterClass="java.util.HashMap">
+		delete from cs_sale_survey$suffix$ where 
+		cs_sale_survey$suffix$.csss_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsSaleSurvey_part.cs_sale_survey_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

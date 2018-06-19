@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 省市地区之SQL映射 -->
+	<resultMap id="CsPlace" class="com.ccclubs.model.CsPlace">
+		<result property="cspId" column="csp_id"/>
+		<result property="cspName" column="csp_name"/>
+		<result property="cspParent" column="csp_parent"/>
+		<result property="cspFlag" column="csp_flag"/>
+		<result property="cspStatus" column="csp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有省市地区 -->
+	<select id="getCsPlaceList" resultMap="CsPlace">
+		select cs_place$suffix$.* from cs_place$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPlace_part.cs_place_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_parent asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取省市地区分页 -->
+	<select id="getCsPlacePage" parameterClass="java.util.HashMap" resultMap="CsPlace">
+		select cs_place$suffix$.* from cs_place$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPlace_part.cs_place_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_parent asc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取省市地区总数 -->
+	<select id="getCsPlaceEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_place$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPlace_part.cs_place_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取省市地区 -->
+	<select id="getCsPlaceById" parameterClass="java.util.HashMap" resultMap="CsPlace">
+		select cs_place$suffix$.* from cs_place$suffix$
+		where csp_id=#id#
+	</select>
+	
+		
+	<!-- 保存省市地区 -->
+	<insert id="saveCsPlace"  parameterClass="com.ccclubs.model.CsPlace">
+		insert into cs_place$suffix$
+		(
+			cs_place$suffix$.csp_name
+			,cs_place$suffix$.csp_parent
+			,cs_place$suffix$.csp_flag
+			,cs_place$suffix$.csp_status
+		)
+		values(
+			<isNotNull property="cspName" prepend="">
+				#cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspParent" prepend=",">
+				#cspParent#
+			</isNotNull>
+			<isNull property="cspParent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspFlag" prepend=",">
+				#cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspStatus" prepend=",">
+				#cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新省市地区 -->
+	<update id="updateCsPlace"  parameterClass="com.ccclubs.model.CsPlace">
+		update cs_place$suffix$ set
+			<isNotNull property="cspName" prepend="">
+				cs_place$suffix$.csp_name = #cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend="">
+				cs_place$suffix$.csp_name = null
+			</isNull>				
+			<isNotNull property="cspParent" prepend=",">
+				cs_place$suffix$.csp_parent = #cspParent#
+			</isNotNull>
+			<isNull property="cspParent" prepend=",">
+				cs_place$suffix$.csp_parent = null
+			</isNull>				
+			<isNotNull property="cspFlag" prepend=",">
+				cs_place$suffix$.csp_flag = #cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				cs_place$suffix$.csp_flag = null
+			</isNull>				
+			<isNotNull property="cspStatus" prepend=",">
+				cs_place$suffix$.csp_status = #cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				cs_place$suffix$.csp_status = null
+			</isNull>				
+		where
+			csp_id=#cspId#
+	</update>
+	
+	<!-- 更新省市地区非空字段 -->
+	<update id="updateCsPlace$NotNull"  parameterClass="com.ccclubs.model.CsPlace">
+		update cs_place$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspName" prepend=",">
+				cs_place$suffix$.csp_name = #cspName#
+			</isNotNull>		
+			<isNotNull property="cspParent" prepend=",">
+				cs_place$suffix$.csp_parent = #cspParent#
+			</isNotNull>		
+			<isNotNull property="cspFlag" prepend=",">
+				cs_place$suffix$.csp_flag = #cspFlag#
+			</isNotNull>		
+			<isNotNull property="cspStatus" prepend=",">
+				cs_place$suffix$.csp_status = #cspStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csp_id=#cspId#
+	</update>
+	
+
+	<!-- 根据ID删除一个省市地区 -->
+	<delete id="deleteCsPlaceById" parameterClass="java.util.HashMap">
+		delete from cs_place$suffix$ where csp_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新省市地区 -->
+	<update id="updateCsPlaceBy"  parameterClass="java.util.HashMap">
+		update cs_place$suffix$ set		
+			csp_id=csp_id
+			<isNotNull property="V_cspId" prepend=",">
+				cs_place$suffix$.csp_id = #V_cspId#
+			</isNotNull>		
+			<isNotNull property="V_cspName" prepend=",">
+				cs_place$suffix$.csp_name = #V_cspName#
+			</isNotNull>		
+			<isNotNull property="V_cspParent" prepend=",">
+				cs_place$suffix$.csp_parent = #V_cspParent#
+			</isNotNull>		
+			<isNotNull property="V_cspFlag" prepend=",">
+				cs_place$suffix$.csp_flag = #V_cspFlag#
+			</isNotNull>		
+			<isNotNull property="V_cspStatus" prepend=",">
+				cs_place$suffix$.csp_status = #V_cspStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsPlace_part.cs_place_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除省市地区 -->
+	<update id="deleteCsPlaceBy"  parameterClass="java.util.HashMap">
+		delete from cs_place$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsPlace_part.cs_place_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsLimitTime_part">	
+	<!-- 交通限行条件sql片段  -->
+	<sql id="cs_limit_time_dynamic">
+		<dynamic>
+			<isNotEmpty property="csltId" prepend="and">
+			    $csltIdNot$ cs_limit_time$suffix$.cslt_id = #csltId#
+			</isNotEmpty>
+			<isNotNull property="csltIdNot" prepend="and">
+				<isEmpty property="csltId">
+				$csltIdNot$ cs_limit_time$suffix$.cslt_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_limit_time$suffix$.cslt_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csltHost" prepend="and">
+			    $csltHostNot$ cs_limit_time$suffix$.cslt_host = #csltHost#
+			</isNotEmpty>
+			<isNotNull property="csltHostNot" prepend="and">
+				<isEmpty property="csltHost">
+				$csltHostNot$ cs_limit_time$suffix$.cslt_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csltWeekDay" prepend="and">
+			    $csltWeekDayNot$ cs_limit_time$suffix$.cslt_week_day = #csltWeekDay#
+			</isNotEmpty>
+			<isNotNull property="csltWeekDayNot" prepend="and">
+				<isEmpty property="csltWeekDay">
+				$csltWeekDayNot$ cs_limit_time$suffix$.cslt_week_day is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csltNum" prepend="and">			    
+			    (<isNotNull property="csltNumNot">
+			    cs_limit_time$suffix$.cslt_num is null or length(cs_limit_time$suffix$.cslt_num) &lt; 1 or
+			    </isNotNull>$csltNumNot$ cs_limit_time$suffix$.cslt_num like #csltNum#)
+			</isNotEmpty>
+			<isNotNull property="csltNumNot" prepend="and">
+				<isEmpty property="csltNum">
+				$csltNumNot$ (cs_limit_time$suffix$.cslt_num is null or length(cs_limit_time$suffix$.cslt_num) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csltStart" prepend="and">			    
+			    (<isNotNull property="csltStartNot">
+			    cs_limit_time$suffix$.cslt_start is null or length(cs_limit_time$suffix$.cslt_start) &lt; 1 or
+			    </isNotNull>$csltStartNot$ cs_limit_time$suffix$.cslt_start = #csltStart#)
+			</isNotEmpty>
+			<isNotNull property="csltStartNot" prepend="and">
+				<isEmpty property="csltStart">
+				$csltStartNot$ (cs_limit_time$suffix$.cslt_start is null or length(cs_limit_time$suffix$.cslt_start) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csltEnd" prepend="and">			    
+			    (<isNotNull property="csltEndNot">
+			    cs_limit_time$suffix$.cslt_end is null or length(cs_limit_time$suffix$.cslt_end) &lt; 1 or
+			    </isNotNull>$csltEndNot$ cs_limit_time$suffix$.cslt_end = #csltEnd#)
+			</isNotEmpty>
+			<isNotNull property="csltEndNot" prepend="and">
+				<isEmpty property="csltEnd">
+				$csltEndNot$ (cs_limit_time$suffix$.cslt_end is null or length(cs_limit_time$suffix$.cslt_end) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csltUpdateTimeStart" prepend="and">
+			    $csltUpdateTimeNot$   (cs_limit_time$suffix$.cslt_update_time &gt;= #csltUpdateTimeStart#
+			   <isEmpty property="csltUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csltUpdateTimeEnd" prepend="and">
+				<isEmpty property="csltUpdateTimeStart">$csltUpdateTimeNot$   (</isEmpty>
+			    cs_limit_time$suffix$.cslt_update_time &lt;= #csltUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csltUpdateTime" prepend="and">
+			    $csltUpdateTimeNot$ cs_limit_time$suffix$.cslt_update_time = #csltUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csltUpdateTimeNot" prepend="and">
+				<isEmpty property="csltUpdateTimeStart"><isEmpty property="csltUpdateTimeEnd"><isEmpty property="csltUpdateTime">
+				$csltUpdateTimeNot$ cs_limit_time$suffix$.cslt_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 交通限行left join 条件sql片段 -->
+	<sql id="cs_limit_time_join">
+		<dynamic>
+			<isNotEmpty property="CsLimitTime.csltId" prepend="and">
+			    $CsLimitTime.csltIdNot$ cs_limit_time$CsLimitTime.suffix$.cslt_id = #CsLimitTime.csltId#
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltIdNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltId">
+				$csltIdNot$ cs_limit_time$CsLimitTime.suffix$.cslt_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_limit_time$CsLimitTime.suffix$.cslt_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsLimitTime.csltHost" prepend="and">
+			    $CsLimitTime.csltHostNot$ cs_limit_time$CsLimitTime.suffix$.cslt_host = #CsLimitTime.csltHost#
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltHostNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltHost">
+				$csltHostNot$ cs_limit_time$CsLimitTime.suffix$.cslt_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLimitTime.csltWeekDay" prepend="and">
+			    $CsLimitTime.csltWeekDayNot$ cs_limit_time$CsLimitTime.suffix$.cslt_week_day = #CsLimitTime.csltWeekDay#
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltWeekDayNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltWeekDay">
+				$csltWeekDayNot$ cs_limit_time$CsLimitTime.suffix$.cslt_week_day is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLimitTime.csltNum" prepend="and">
+				(<isNotNull property="CsLimitTime.csltNumNot">
+			    cs_limit_time$CsLimitTime.suffix$.cslt_num is null or length(cs_limit_time$CsLimitTime.suffix$.cslt_num) &lt; 1 or
+			    </isNotNull>$CsLimitTime.csltNumNot$ cs_limit_time$CsLimitTime.suffix$.cslt_num like #CsLimitTime.csltNum#)
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltNumNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltNum">
+				$csltNumNot$ (cs_limit_time$CsLimitTime.suffix$.cslt_num is null or length(cs_limit_time$CsLimitTime.suffix$.cslt_num) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLimitTime.csltStart" prepend="and">
+				(<isNotNull property="CsLimitTime.csltStartNot">
+			    cs_limit_time$CsLimitTime.suffix$.cslt_start is null or length(cs_limit_time$CsLimitTime.suffix$.cslt_start) &lt; 1 or
+			    </isNotNull>$CsLimitTime.csltStartNot$ cs_limit_time$CsLimitTime.suffix$.cslt_start = #CsLimitTime.csltStart#)
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltStartNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltStart">
+				$csltStartNot$ (cs_limit_time$CsLimitTime.suffix$.cslt_start is null or length(cs_limit_time$CsLimitTime.suffix$.cslt_start) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLimitTime.csltEnd" prepend="and">
+				(<isNotNull property="CsLimitTime.csltEndNot">
+			    cs_limit_time$CsLimitTime.suffix$.cslt_end is null or length(cs_limit_time$CsLimitTime.suffix$.cslt_end) &lt; 1 or
+			    </isNotNull>$CsLimitTime.csltEndNot$ cs_limit_time$CsLimitTime.suffix$.cslt_end = #CsLimitTime.csltEnd#)
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltEndNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltEnd">
+				$csltEndNot$ (cs_limit_time$CsLimitTime.suffix$.cslt_end is null or length(cs_limit_time$CsLimitTime.suffix$.cslt_end) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLimitTime.csltUpdateTimeStart" prepend="and">
+			    $CsLimitTime.csltUpdateTimeNot$   (cs_limit_time$CsLimitTime.suffix$.cslt_update_time &gt;= #CsLimitTime.csltUpdateTimeStart#
+			   <isEmpty property="CsLimitTime.csltUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLimitTime.csltUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsLimitTime.csltUpdateTimeStart">$CsLimitTime.csltUpdateTimeNot$   (</isEmpty>
+			    cs_limit_time$CsLimitTime.suffix$.cslt_update_time &lt;= #CsLimitTime.csltUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLimitTime.csltUpdateTime" prepend="and">
+			    $CsLimitTime.csltUpdateTimeNot$ cs_limit_time$CsLimitTime.suffix$.cslt_update_time = #CsLimitTime.csltUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsLimitTime.csltUpdateTimeNot" prepend="and">
+				<isEmpty property="CsLimitTime.csltUpdateTimeStart"><isEmpty property="CsLimitTime.csltUpdateTimeEnd"><isEmpty property="CsLimitTime.csltUpdateTime">
+				$csltUpdateTimeNot$ cs_limit_time$CsLimitTime.suffix$.cslt_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

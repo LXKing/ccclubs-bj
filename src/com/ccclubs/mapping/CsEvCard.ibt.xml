@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员卡之SQL映射 -->
+	<resultMap id="CsEvCard" class="com.ccclubs.model.CsEvCard">
+		<result property="csecId" column="csec_id"/>
+		<result property="csecHost" column="csec_host"/>
+		<result property="csecNumber" column="csec_number"/>
+		<result property="csecRfid" column="csec_rfid"/>
+		<result property="csecRemark" column="csec_remark"/>
+		<result property="csecAddTime" column="csec_add_time"/>
+		<result property="csecFlag" column="csec_flag"/>
+		<result property="csecStatus" column="csec_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员卡 -->
+	<select id="getCsEvCardList" resultMap="CsEvCard">
+		select cs_ev_card$suffix$.* from cs_ev_card$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_ev_card$suffix$.csec_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEvCard_part.cs_ev_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csec_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员卡分页 -->
+	<select id="getCsEvCardPage" parameterClass="java.util.HashMap" resultMap="CsEvCard">
+		select cs_ev_card$suffix$.* from cs_ev_card$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_ev_card$suffix$.csec_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEvCard_part.cs_ev_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csec_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员卡总数 -->
+	<select id="getCsEvCardEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_ev_card$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_ev_card$suffix$.csec_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEvCard_part.cs_ev_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员卡 -->
+	<select id="getCsEvCardById" parameterClass="java.util.HashMap" resultMap="CsEvCard">
+		select cs_ev_card$suffix$.* from cs_ev_card$suffix$
+		where csec_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员卡 -->
+	<insert id="saveCsEvCard"  parameterClass="com.ccclubs.model.CsEvCard">
+		insert into cs_ev_card$suffix$
+		(
+			cs_ev_card$suffix$.csec_host
+			,cs_ev_card$suffix$.csec_number
+			,cs_ev_card$suffix$.csec_rfid
+			,cs_ev_card$suffix$.csec_remark
+			,cs_ev_card$suffix$.csec_add_time
+			,cs_ev_card$suffix$.csec_flag
+			,cs_ev_card$suffix$.csec_status
+		)
+		values(
+			<isNotNull property="csecHost" prepend="">
+				#csecHost#
+			</isNotNull>
+			<isNull property="csecHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csecNumber" prepend=",">
+				#csecNumber#
+			</isNotNull>
+			<isNull property="csecNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csecRfid" prepend=",">
+				#csecRfid#
+			</isNotNull>
+			<isNull property="csecRfid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csecRemark" prepend=",">
+				#csecRemark#
+			</isNotNull>
+			<isNull property="csecRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csecAddTime" prepend=",">
+				#csecAddTime#
+			</isNotNull>
+			<isNull property="csecAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csecFlag" prepend=",">
+				#csecFlag#
+			</isNotNull>
+			<isNull property="csecFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csecStatus" prepend=",">
+				#csecStatus#
+			</isNotNull>
+			<isNull property="csecStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员卡 -->
+	<update id="updateCsEvCard"  parameterClass="com.ccclubs.model.CsEvCard">
+		update cs_ev_card$suffix$ set
+			<isNotNull property="csecHost" prepend="">
+				cs_ev_card$suffix$.csec_host = #csecHost#
+			</isNotNull>
+			<isNull property="csecHost" prepend="">
+				cs_ev_card$suffix$.csec_host = null
+			</isNull>				
+			<isNotNull property="csecNumber" prepend=",">
+				cs_ev_card$suffix$.csec_number = #csecNumber#
+			</isNotNull>
+			<isNull property="csecNumber" prepend=",">
+				cs_ev_card$suffix$.csec_number = null
+			</isNull>				
+			<isNotNull property="csecRfid" prepend=",">
+				cs_ev_card$suffix$.csec_rfid = #csecRfid#
+			</isNotNull>
+			<isNull property="csecRfid" prepend=",">
+				cs_ev_card$suffix$.csec_rfid = null
+			</isNull>				
+			<isNotNull property="csecRemark" prepend=",">
+				cs_ev_card$suffix$.csec_remark = #csecRemark#
+			</isNotNull>
+			<isNull property="csecRemark" prepend=",">
+				cs_ev_card$suffix$.csec_remark = null
+			</isNull>				
+			<isNotNull property="csecAddTime" prepend=",">
+				cs_ev_card$suffix$.csec_add_time = #csecAddTime#
+			</isNotNull>
+			<isNull property="csecAddTime" prepend=",">
+				cs_ev_card$suffix$.csec_add_time = null
+			</isNull>				
+			<isNotNull property="csecFlag" prepend=",">
+				cs_ev_card$suffix$.csec_flag = #csecFlag#
+			</isNotNull>
+			<isNull property="csecFlag" prepend=",">
+				cs_ev_card$suffix$.csec_flag = null
+			</isNull>				
+			<isNotNull property="csecStatus" prepend=",">
+				cs_ev_card$suffix$.csec_status = #csecStatus#
+			</isNotNull>
+			<isNull property="csecStatus" prepend=",">
+				cs_ev_card$suffix$.csec_status = null
+			</isNull>				
+		where
+			csec_id=#csecId#
+	</update>
+	
+	<!-- 更新会员卡非空字段 -->
+	<update id="updateCsEvCard$NotNull"  parameterClass="com.ccclubs.model.CsEvCard">
+		update cs_ev_card$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csecHost" prepend=",">
+				cs_ev_card$suffix$.csec_host = #csecHost#
+			</isNotNull>		
+			<isNotNull property="csecNumber" prepend=",">
+				cs_ev_card$suffix$.csec_number = #csecNumber#
+			</isNotNull>		
+			<isNotNull property="csecRfid" prepend=",">
+				cs_ev_card$suffix$.csec_rfid = #csecRfid#
+			</isNotNull>		
+			<isNotNull property="csecRemark" prepend=",">
+				cs_ev_card$suffix$.csec_remark = #csecRemark#
+			</isNotNull>		
+			<isNotNull property="csecAddTime" prepend=",">
+				cs_ev_card$suffix$.csec_add_time = #csecAddTime#
+			</isNotNull>		
+			<isNotNull property="csecFlag" prepend=",">
+				cs_ev_card$suffix$.csec_flag = #csecFlag#
+			</isNotNull>		
+			<isNotNull property="csecStatus" prepend=",">
+				cs_ev_card$suffix$.csec_status = #csecStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csec_id=#csecId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员卡 -->
+	<delete id="deleteCsEvCardById" parameterClass="java.util.HashMap">
+		delete from cs_ev_card$suffix$ where csec_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员卡 -->
+	<update id="removeCsEvCardById" parameterClass="java.util.HashMap">
+		update cs_ev_card$suffix$ set  cs_ev_card$suffix$.csec_status=-1  where csec_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员卡 -->
+	<update id="updateCsEvCardBy"  parameterClass="java.util.HashMap">
+		update cs_ev_card$suffix$ set		
+			csec_id=csec_id
+			<isNotNull property="V_csecId" prepend=",">
+				cs_ev_card$suffix$.csec_id = #V_csecId#
+			</isNotNull>		
+			<isNotNull property="V_csecHost" prepend=",">
+				cs_ev_card$suffix$.csec_host = #V_csecHost#
+			</isNotNull>		
+			<isNotNull property="V_csecNumber" prepend=",">
+				cs_ev_card$suffix$.csec_number = #V_csecNumber#
+			</isNotNull>		
+			<isNotNull property="V_csecRfid" prepend=",">
+				cs_ev_card$suffix$.csec_rfid = #V_csecRfid#
+			</isNotNull>		
+			<isNotNull property="V_csecRemark" prepend=",">
+				cs_ev_card$suffix$.csec_remark = #V_csecRemark#
+			</isNotNull>		
+			<isNotNull property="V_csecAddTime" prepend=",">
+				cs_ev_card$suffix$.csec_add_time = #V_csecAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csecFlag" prepend=",">
+				cs_ev_card$suffix$.csec_flag = #V_csecFlag#
+			</isNotNull>		
+			<isNotNull property="V_csecStatus" prepend=",">
+				cs_ev_card$suffix$.csec_status = #V_csecStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_ev_card$suffix$.csec_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsEvCard_part.cs_ev_card_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员卡 -->
+	<update id="deleteCsEvCardBy"  parameterClass="java.util.HashMap">
+		delete from cs_ev_card$suffix$ where 
+		cs_ev_card$suffix$.csec_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsEvCard_part.cs_ev_card_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

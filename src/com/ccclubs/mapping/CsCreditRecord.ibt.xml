@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 信用记录之SQL映射 -->
+	<resultMap id="CsCreditRecord" class="com.ccclubs.model.CsCreditRecord">
+		<result property="cscrId" column="cscr_id"/>
+		<result property="cscrTitle" column="cscr_title"/>
+		<result property="cscrMember" column="cscr_member"/>
+		<result property="cscrValue" column="cscr_value"/>
+		<result property="cscrUpdateTime" column="cscr_update_time"/>
+		<result property="cscrAddTime" column="cscr_add_time"/>
+		<result property="cscrStatus" column="cscr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有信用记录 -->
+	<select id="getCsCreditRecordList" resultMap="CsCreditRecord">
+		select cs_credit_record$suffix$.* from cs_credit_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.cscr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_record$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditRecord_part.cs_credit_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取信用记录分页 -->
+	<select id="getCsCreditRecordPage" parameterClass="java.util.HashMap" resultMap="CsCreditRecord">
+		select cs_credit_record$suffix$.* from cs_credit_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.cscr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_record$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditRecord_part.cs_credit_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取信用记录总数 -->
+	<select id="getCsCreditRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_credit_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.cscr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_record$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditRecord_part.cs_credit_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取信用记录 -->
+	<select id="getCsCreditRecordById" parameterClass="java.util.HashMap" resultMap="CsCreditRecord">
+		select cs_credit_record$suffix$.* from cs_credit_record$suffix$
+		where cscr_id=#id#
+	</select>
+	
+		
+	<!-- 保存信用记录 -->
+	<insert id="saveCsCreditRecord"  parameterClass="com.ccclubs.model.CsCreditRecord">
+		insert into cs_credit_record$suffix$
+		(
+			cs_credit_record$suffix$.cscr_title
+			,cs_credit_record$suffix$.cscr_member
+			,cs_credit_record$suffix$.cscr_value
+			,cs_credit_record$suffix$.cscr_update_time
+			,cs_credit_record$suffix$.cscr_add_time
+			,cs_credit_record$suffix$.cscr_status
+		)
+		values(
+			<isNotNull property="cscrTitle" prepend="">
+				#cscrTitle#
+			</isNotNull>
+			<isNull property="cscrTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscrMember" prepend=",">
+				#cscrMember#
+			</isNotNull>
+			<isNull property="cscrMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrValue" prepend=",">
+				#cscrValue#
+			</isNotNull>
+			<isNull property="cscrValue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				#cscrUpdateTime#
+			</isNotNull>
+			<isNull property="cscrUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrAddTime" prepend=",">
+				#cscrAddTime#
+			</isNotNull>
+			<isNull property="cscrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrStatus" prepend=",">
+				#cscrStatus#
+			</isNotNull>
+			<isNull property="cscrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新信用记录 -->
+	<update id="updateCsCreditRecord"  parameterClass="com.ccclubs.model.CsCreditRecord">
+		update cs_credit_record$suffix$ set
+			<isNotNull property="cscrTitle" prepend="">
+				cs_credit_record$suffix$.cscr_title = #cscrTitle#
+			</isNotNull>
+			<isNull property="cscrTitle" prepend="">
+				cs_credit_record$suffix$.cscr_title = null
+			</isNull>				
+			<isNotNull property="cscrMember" prepend=",">
+				cs_credit_record$suffix$.cscr_member = #cscrMember#
+			</isNotNull>
+			<isNull property="cscrMember" prepend=",">
+				cs_credit_record$suffix$.cscr_member = null
+			</isNull>				
+			<isNotNull property="cscrValue" prepend=",">
+				cs_credit_record$suffix$.cscr_value = #cscrValue#
+			</isNotNull>
+			<isNull property="cscrValue" prepend=",">
+				cs_credit_record$suffix$.cscr_value = null
+			</isNull>				
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				cs_credit_record$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotNull>
+			<isNull property="cscrUpdateTime" prepend=",">
+				cs_credit_record$suffix$.cscr_update_time = null
+			</isNull>				
+			<isNotNull property="cscrAddTime" prepend=",">
+				cs_credit_record$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotNull>
+			<isNull property="cscrAddTime" prepend=",">
+				cs_credit_record$suffix$.cscr_add_time = null
+			</isNull>				
+			<isNotNull property="cscrStatus" prepend=",">
+				cs_credit_record$suffix$.cscr_status = #cscrStatus#
+			</isNotNull>
+			<isNull property="cscrStatus" prepend=",">
+				cs_credit_record$suffix$.cscr_status = null
+			</isNull>				
+		where
+			cscr_id=#cscrId#
+	</update>
+	
+	<!-- 更新信用记录非空字段 -->
+	<update id="updateCsCreditRecord$NotNull"  parameterClass="com.ccclubs.model.CsCreditRecord">
+		update cs_credit_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscrTitle" prepend=",">
+				cs_credit_record$suffix$.cscr_title = #cscrTitle#
+			</isNotNull>		
+			<isNotNull property="cscrMember" prepend=",">
+				cs_credit_record$suffix$.cscr_member = #cscrMember#
+			</isNotNull>		
+			<isNotNull property="cscrValue" prepend=",">
+				cs_credit_record$suffix$.cscr_value = #cscrValue#
+			</isNotNull>		
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				cs_credit_record$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscrAddTime" prepend=",">
+				cs_credit_record$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotNull>		
+			<isNotNull property="cscrStatus" prepend=",">
+				cs_credit_record$suffix$.cscr_status = #cscrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscr_id=#cscrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个信用记录 -->
+	<delete id="deleteCsCreditRecordById" parameterClass="java.util.HashMap">
+		delete from cs_credit_record$suffix$ where cscr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个信用记录 -->
+	<update id="removeCsCreditRecordById" parameterClass="java.util.HashMap">
+		update cs_credit_record$suffix$ set  cs_credit_record$suffix$.cscr_status=-1  where cscr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新信用记录 -->
+	<update id="updateCsCreditRecordBy"  parameterClass="java.util.HashMap">
+		update cs_credit_record$suffix$ set		
+			cscr_id=cscr_id
+			<isNotNull property="V_cscrId" prepend=",">
+				cs_credit_record$suffix$.cscr_id = #V_cscrId#
+			</isNotNull>		
+			<isNotNull property="V_cscrTitle" prepend=",">
+				cs_credit_record$suffix$.cscr_title = #V_cscrTitle#
+			</isNotNull>		
+			<isNotNull property="V_cscrMember" prepend=",">
+				cs_credit_record$suffix$.cscr_member = #V_cscrMember#
+			</isNotNull>		
+			<isNotNull property="V_cscrValue" prepend=",">
+				cs_credit_record$suffix$.cscr_value = #V_cscrValue#
+			</isNotNull>		
+			<isNotNull property="V_cscrUpdateTime" prepend=",">
+				cs_credit_record$suffix$.cscr_update_time = #V_cscrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscrAddTime" prepend=",">
+				cs_credit_record$suffix$.cscr_add_time = #V_cscrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscrStatus" prepend=",">
+				cs_credit_record$suffix$.cscr_status = #V_cscrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.cscr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_credit_record$suffix$.cscr_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscrMember"><!-- 调用一下CscrMember，把CsMember指向CscrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCreditRecord_part.cs_credit_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除信用记录 -->
+	<update id="deleteCsCreditRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_credit_record$suffix$ where 
+		cs_credit_record$suffix$.cscr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCreditRecord_part.cs_credit_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

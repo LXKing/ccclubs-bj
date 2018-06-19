@@ -1,0 +1,1463 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsOrder_part">	
+	<!-- 系统订单条件sql片段  -->
+	<sql id="cs_order_dynamic">
+		<dynamic>
+			<isNotEmpty property="csoId" prepend="and">
+			    $csoIdNot$ cs_order$suffix$.cso_id = #csoId#
+			</isNotEmpty>
+			<isNotNull property="csoIdNot" prepend="and">
+				<isEmpty property="csoId">
+				$csoIdNot$ cs_order$suffix$.cso_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_order$suffix$.cso_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csoHost" prepend="and">
+			    $csoHostNot$ cs_order$suffix$.cso_host = #csoHost#
+			</isNotEmpty>
+			<isNotNull property="csoHostNot" prepend="and">
+				<isEmpty property="csoHost">
+				$csoHostNot$ cs_order$suffix$.cso_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csoPayMember" prepend="and">
+			    $csoPayMemberNot$ cs_order$suffix$.cso_pay_member = #csoPayMember#
+			</isNotEmpty>
+			<isNotNull property="csoPayMemberNot" prepend="and">
+				<isEmpty property="csoPayMember">
+				$csoPayMemberNot$ cs_order$suffix$.cso_pay_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoUseMember" prepend="and">
+			    $csoUseMemberNot$ cs_order$suffix$.cso_use_member = #csoUseMember#
+			</isNotEmpty>
+			<isNotNull property="csoUseMemberNot" prepend="and">
+				<isEmpty property="csoUseMember">
+				$csoUseMemberNot$ cs_order$suffix$.cso_use_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoFeeType" prepend="and">
+			    $csoFeeTypeNot$ cs_order$suffix$.cso_fee_type = #csoFeeType#
+			</isNotEmpty>
+			<isNotNull property="csoFeeTypeNot" prepend="and">
+				<isEmpty property="csoFeeType">
+				$csoFeeTypeNot$ cs_order$suffix$.cso_fee_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoArea" prepend="and">
+			    $csoAreaNot$ cs_order$suffix$.cso_area = #csoArea#
+			</isNotEmpty>
+			<isNotNull property="csoAreaNot" prepend="and">
+				<isEmpty property="csoArea">
+				$csoAreaNot$ cs_order$suffix$.cso_area is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoOutlets" prepend="and">
+			    $csoOutletsNot$ cs_order$suffix$.cso_outlets = #csoOutlets#
+			</isNotEmpty>
+			<isNotNull property="csoOutletsNot" prepend="and">
+				<isEmpty property="csoOutlets">
+				$csoOutletsNot$ cs_order$suffix$.cso_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoOutletsRet" prepend="and">
+			    $csoOutletsRetNot$ cs_order$suffix$.cso_outlets_ret = #csoOutletsRet#
+			</isNotEmpty>
+			<isNotNull property="csoOutletsRetNot" prepend="and">
+				<isEmpty property="csoOutletsRet">
+				$csoOutletsRetNot$ cs_order$suffix$.cso_outlets_ret is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoModel" prepend="and">
+			    $csoModelNot$ cs_order$suffix$.cso_model = #csoModel#
+			</isNotEmpty>
+			<isNotNull property="csoModelNot" prepend="and">
+				<isEmpty property="csoModel">
+				$csoModelNot$ cs_order$suffix$.cso_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoCar" prepend="and">
+			    $csoCarNot$ cs_order$suffix$.cso_car = #csoCar#
+			</isNotEmpty>
+			<isNotNull property="csoCarNot" prepend="and">
+				<isEmpty property="csoCar">
+				$csoCarNot$ cs_order$suffix$.cso_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoProvid" prepend="and">
+			    $csoProvidNot$ cs_order$suffix$.cso_provid = #csoProvid#
+			</isNotEmpty>
+			<isNotNull property="csoProvidNot" prepend="and">
+				<isEmpty property="csoProvid">
+				$csoProvidNot$ cs_order$suffix$.cso_provid is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoCarNumber" prepend="and">			    
+			    (<isNotNull property="csoCarNumberNot">
+			    cs_order$suffix$.cso_car_number is null or length(cs_order$suffix$.cso_car_number) &lt; 1 or
+			    </isNotNull>$csoCarNumberNot$ cs_order$suffix$.cso_car_number = #csoCarNumber#)
+			</isNotEmpty>
+			<isNotNull property="csoCarNumberNot" prepend="and">
+				<isEmpty property="csoCarNumber">
+				$csoCarNumberNot$ (cs_order$suffix$.cso_car_number is null or length(cs_order$suffix$.cso_car_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoMobile" prepend="and">			    
+			    (<isNotNull property="csoMobileNot">
+			    cs_order$suffix$.cso_mobile is null or length(cs_order$suffix$.cso_mobile) &lt; 1 or
+			    </isNotNull>$csoMobileNot$ cs_order$suffix$.cso_mobile = #csoMobile#)
+			</isNotEmpty>
+			<isNotNull property="csoMobileNot" prepend="and">
+				<isEmpty property="csoMobile">
+				$csoMobileNot$ (cs_order$suffix$.cso_mobile is null or length(cs_order$suffix$.cso_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoEvRfid" prepend="and">			    
+			    (<isNotNull property="csoEvRfidNot">
+			    cs_order$suffix$.cso_ev_rfid is null or length(cs_order$suffix$.cso_ev_rfid) &lt; 1 or
+			    </isNotNull>$csoEvRfidNot$ cs_order$suffix$.cso_ev_rfid = #csoEvRfid#)
+			</isNotEmpty>
+			<isNotNull property="csoEvRfidNot" prepend="and">
+				<isEmpty property="csoEvRfid">
+				$csoEvRfidNot$ (cs_order$suffix$.cso_ev_rfid is null or length(cs_order$suffix$.cso_ev_rfid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoIsAdCar" prepend="and">
+			    $csoIsAdCarNot$ cs_order$suffix$.cso_is_ad_car = #csoIsAdCar#
+			</isNotEmpty>
+			<isNotNull property="csoIsAdCarNot" prepend="and">
+				<isEmpty property="csoIsAdCar">
+				$csoIsAdCarNot$ cs_order$suffix$.cso_is_ad_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoStartTimeStart" prepend="and">
+			    $csoStartTimeNot$   (cs_order$suffix$.cso_start_time &gt;= #csoStartTimeStart#
+			   <isEmpty property="csoStartTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoStartTimeEnd" prepend="and">
+				<isEmpty property="csoStartTimeStart">$csoStartTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_start_time &lt;= #csoStartTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoStartTime" prepend="and">
+			    $csoStartTimeNot$ cs_order$suffix$.cso_start_time = #csoStartTime#
+			</isNotEmpty>
+			<isNotNull property="csoStartTimeNot" prepend="and">
+				<isEmpty property="csoStartTimeStart"><isEmpty property="csoStartTimeEnd"><isEmpty property="csoStartTime">
+				$csoStartTimeNot$ cs_order$suffix$.cso_start_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoFinishTimeStart" prepend="and">
+			    $csoFinishTimeNot$   (cs_order$suffix$.cso_finish_time &gt;= #csoFinishTimeStart#
+			   <isEmpty property="csoFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoFinishTimeEnd" prepend="and">
+				<isEmpty property="csoFinishTimeStart">$csoFinishTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_finish_time &lt;= #csoFinishTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoFinishTime" prepend="and">
+			    $csoFinishTimeNot$ cs_order$suffix$.cso_finish_time = #csoFinishTime#
+			</isNotEmpty>
+			<isNotNull property="csoFinishTimeNot" prepend="and">
+				<isEmpty property="csoFinishTimeStart"><isEmpty property="csoFinishTimeEnd"><isEmpty property="csoFinishTime">
+				$csoFinishTimeNot$ cs_order$suffix$.cso_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoLongOrder" prepend="and">
+			    $csoLongOrderNot$ cs_order$suffix$.cso_long_order = #csoLongOrder#
+			</isNotEmpty>
+			<isNotNull property="csoLongOrderNot" prepend="and">
+				<isEmpty property="csoLongOrder">
+				$csoLongOrderNot$ cs_order$suffix$.cso_long_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoLongPriceMin" prepend="and">
+			    $csoLongPriceNot$  ( cs_order$suffix$.cso_long_price &gt;= #csoLongPriceMin#
+			    <isEmpty property="csoLongPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoLongPriceMax" prepend="and">
+				<isEmpty property="csoLongPriceMin">$csoLongPriceNot$   (</isEmpty>
+			    cs_order$suffix$.cso_long_price &lt;= #csoLongPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoLongPrice" prepend="and">
+			    $csoLongPriceNot$ cs_order$suffix$.cso_long_price = #csoLongPrice#
+			</isNotEmpty>
+			<isNotNull property="csoLongPriceNot" prepend="and">
+				<isEmpty property="csoLongPriceMax"><isEmpty property="csoLongPriceMin"><isEmpty property="csoLongPrice">
+				$csoLongPriceNot$ cs_order$suffix$.cso_long_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoUseType" prepend="and">
+			    $csoUseTypeNot$ cs_order$suffix$.cso_use_type = #csoUseType#
+			</isNotEmpty>
+			<isNotNull property="csoUseTypeNot" prepend="and">
+				<isEmpty property="csoUseType">
+				$csoUseTypeNot$ cs_order$suffix$.cso_use_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoTakeTimeStart" prepend="and">
+			    $csoTakeTimeNot$   (cs_order$suffix$.cso_take_time &gt;= #csoTakeTimeStart#
+			   <isEmpty property="csoTakeTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoTakeTimeEnd" prepend="and">
+				<isEmpty property="csoTakeTimeStart">$csoTakeTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_take_time &lt;= #csoTakeTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoTakeTime" prepend="and">
+			    $csoTakeTimeNot$ cs_order$suffix$.cso_take_time = #csoTakeTime#
+			</isNotEmpty>
+			<isNotNull property="csoTakeTimeNot" prepend="and">
+				<isEmpty property="csoTakeTimeStart"><isEmpty property="csoTakeTimeEnd"><isEmpty property="csoTakeTime">
+				$csoTakeTimeNot$ cs_order$suffix$.cso_take_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoRetTimeStart" prepend="and">
+			    $csoRetTimeNot$   (cs_order$suffix$.cso_ret_time &gt;= #csoRetTimeStart#
+			   <isEmpty property="csoRetTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoRetTimeEnd" prepend="and">
+				<isEmpty property="csoRetTimeStart">$csoRetTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_ret_time &lt;= #csoRetTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoRetTime" prepend="and">
+			    $csoRetTimeNot$ cs_order$suffix$.cso_ret_time = #csoRetTime#
+			</isNotEmpty>
+			<isNotNull property="csoRetTimeNot" prepend="and">
+				<isEmpty property="csoRetTimeStart"><isEmpty property="csoRetTimeEnd"><isEmpty property="csoRetTime">
+				$csoRetTimeNot$ cs_order$suffix$.cso_ret_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoDurationMin" prepend="and">
+			    $csoDurationNot$  ( cs_order$suffix$.cso_duration &gt;= #csoDurationMin#
+			    <isEmpty property="csoDurationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoDurationMax" prepend="and">
+				<isEmpty property="csoDurationMin">$csoDurationNot$   (</isEmpty>
+			    cs_order$suffix$.cso_duration &lt;= #csoDurationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoDuration" prepend="and">
+			    $csoDurationNot$ cs_order$suffix$.cso_duration = #csoDuration#
+			</isNotEmpty>
+			<isNotNull property="csoDurationNot" prepend="and">
+				<isEmpty property="csoDurationMax"><isEmpty property="csoDurationMin"><isEmpty property="csoDuration">
+				$csoDurationNot$ cs_order$suffix$.cso_duration is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoFuelMin" prepend="and">
+			    $csoFuelNot$  ( cs_order$suffix$.cso_fuel &gt;= #csoFuelMin#
+			    <isEmpty property="csoFuelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoFuelMax" prepend="and">
+				<isEmpty property="csoFuelMin">$csoFuelNot$   (</isEmpty>
+			    cs_order$suffix$.cso_fuel &lt;= #csoFuelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoFuel" prepend="and">
+			    $csoFuelNot$ cs_order$suffix$.cso_fuel = #csoFuel#
+			</isNotEmpty>
+			<isNotNull property="csoFuelNot" prepend="and">
+				<isEmpty property="csoFuelMax"><isEmpty property="csoFuelMin"><isEmpty property="csoFuel">
+				$csoFuelNot$ cs_order$suffix$.cso_fuel is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoElectricMin" prepend="and">
+			    $csoElectricNot$  ( cs_order$suffix$.cso_electric &gt;= #csoElectricMin#
+			    <isEmpty property="csoElectricMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoElectricMax" prepend="and">
+				<isEmpty property="csoElectricMin">$csoElectricNot$   (</isEmpty>
+			    cs_order$suffix$.cso_electric &lt;= #csoElectricMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoElectric" prepend="and">
+			    $csoElectricNot$ cs_order$suffix$.cso_electric = #csoElectric#
+			</isNotEmpty>
+			<isNotNull property="csoElectricNot" prepend="and">
+				<isEmpty property="csoElectricMax"><isEmpty property="csoElectricMin"><isEmpty property="csoElectric">
+				$csoElectricNot$ cs_order$suffix$.cso_electric is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoCreditCard" prepend="and">
+			    $csoCreditCardNot$ cs_order$suffix$.cso_credit_card = #csoCreditCard#
+			</isNotEmpty>
+			<isNotNull property="csoCreditCardNot" prepend="and">
+				<isEmpty property="csoCreditCard">
+				$csoCreditCardNot$ cs_order$suffix$.cso_credit_card is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoCreditBill" prepend="and">
+			    $csoCreditBillNot$ cs_order$suffix$.cso_credit_bill = #csoCreditBill#
+			</isNotEmpty>
+			<isNotNull property="csoCreditBillNot" prepend="and">
+				<isEmpty property="csoCreditBill">
+				$csoCreditBillNot$ cs_order$suffix$.cso_credit_bill is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoInsureType" prepend="and">
+			    $csoInsureTypeNot$ cs_order$suffix$.cso_insure_type = #csoInsureType#
+			</isNotEmpty>
+			<isNotNull property="csoInsureTypeNot" prepend="and">
+				<isEmpty property="csoInsureType">
+				$csoInsureTypeNot$ cs_order$suffix$.cso_insure_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoFreehourMin" prepend="and">
+			    $csoFreehourNot$  ( cs_order$suffix$.cso_freehour &gt;= #csoFreehourMin#
+			    <isEmpty property="csoFreehourMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoFreehourMax" prepend="and">
+				<isEmpty property="csoFreehourMin">$csoFreehourNot$   (</isEmpty>
+			    cs_order$suffix$.cso_freehour &lt;= #csoFreehourMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoFreehour" prepend="and">
+			    $csoFreehourNot$ cs_order$suffix$.cso_freehour = #csoFreehour#
+			</isNotEmpty>
+			<isNotNull property="csoFreehourNot" prepend="and">
+				<isEmpty property="csoFreehourMax"><isEmpty property="csoFreehourMin"><isEmpty property="csoFreehour">
+				$csoFreehourNot$ cs_order$suffix$.cso_freehour is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoRebateMin" prepend="and">
+			    $csoRebateNot$  ( cs_order$suffix$.cso_rebate &gt;= #csoRebateMin#
+			    <isEmpty property="csoRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoRebateMax" prepend="and">
+				<isEmpty property="csoRebateMin">$csoRebateNot$   (</isEmpty>
+			    cs_order$suffix$.cso_rebate &lt;= #csoRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoRebate" prepend="and">
+			    $csoRebateNot$ cs_order$suffix$.cso_rebate = #csoRebate#
+			</isNotEmpty>
+			<isNotNull property="csoRebateNot" prepend="and">
+				<isEmpty property="csoRebateMax"><isEmpty property="csoRebateMin"><isEmpty property="csoRebate">
+				$csoRebateNot$ cs_order$suffix$.cso_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoMarginNeedMin" prepend="and">
+			    $csoMarginNeedNot$  ( cs_order$suffix$.cso_margin_need &gt;= #csoMarginNeedMin#
+			    <isEmpty property="csoMarginNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoMarginNeedMax" prepend="and">
+				<isEmpty property="csoMarginNeedMin">$csoMarginNeedNot$   (</isEmpty>
+			    cs_order$suffix$.cso_margin_need &lt;= #csoMarginNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoMarginNeed" prepend="and">
+			    $csoMarginNeedNot$ cs_order$suffix$.cso_margin_need = #csoMarginNeed#
+			</isNotEmpty>
+			<isNotNull property="csoMarginNeedNot" prepend="and">
+				<isEmpty property="csoMarginNeedMax"><isEmpty property="csoMarginNeedMin"><isEmpty property="csoMarginNeed">
+				$csoMarginNeedNot$ cs_order$suffix$.cso_margin_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPredictMin" prepend="and">
+			    $csoPredictNot$  ( cs_order$suffix$.cso_predict &gt;= #csoPredictMin#
+			    <isEmpty property="csoPredictMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPredictMax" prepend="and">
+				<isEmpty property="csoPredictMin">$csoPredictNot$   (</isEmpty>
+			    cs_order$suffix$.cso_predict &lt;= #csoPredictMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPredict" prepend="and">
+			    $csoPredictNot$ cs_order$suffix$.cso_predict = #csoPredict#
+			</isNotEmpty>
+			<isNotNull property="csoPredictNot" prepend="and">
+				<isEmpty property="csoPredictMax"><isEmpty property="csoPredictMin"><isEmpty property="csoPredict">
+				$csoPredictNot$ cs_order$suffix$.cso_predict is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayNeedMin" prepend="and">
+			    $csoPayNeedNot$  ( cs_order$suffix$.cso_pay_need &gt;= #csoPayNeedMin#
+			    <isEmpty property="csoPayNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayNeedMax" prepend="and">
+				<isEmpty property="csoPayNeedMin">$csoPayNeedNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_need &lt;= #csoPayNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayNeed" prepend="and">
+			    $csoPayNeedNot$ cs_order$suffix$.cso_pay_need = #csoPayNeed#
+			</isNotEmpty>
+			<isNotNull property="csoPayNeedNot" prepend="and">
+				<isEmpty property="csoPayNeedMax"><isEmpty property="csoPayNeedMin"><isEmpty property="csoPayNeed">
+				$csoPayNeedNot$ cs_order$suffix$.cso_pay_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayRealMin" prepend="and">
+			    $csoPayRealNot$  ( cs_order$suffix$.cso_pay_real &gt;= #csoPayRealMin#
+			    <isEmpty property="csoPayRealMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayRealMax" prepend="and">
+				<isEmpty property="csoPayRealMin">$csoPayRealNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_real &lt;= #csoPayRealMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayReal" prepend="and">
+			    $csoPayRealNot$ cs_order$suffix$.cso_pay_real = #csoPayReal#
+			</isNotEmpty>
+			<isNotNull property="csoPayRealNot" prepend="and">
+				<isEmpty property="csoPayRealMax"><isEmpty property="csoPayRealMin"><isEmpty property="csoPayReal">
+				$csoPayRealNot$ cs_order$suffix$.cso_pay_real is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayMoneyMin" prepend="and">
+			    $csoPayMoneyNot$  ( cs_order$suffix$.cso_pay_money &gt;= #csoPayMoneyMin#
+			    <isEmpty property="csoPayMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayMoneyMax" prepend="and">
+				<isEmpty property="csoPayMoneyMin">$csoPayMoneyNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_money &lt;= #csoPayMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayMoney" prepend="and">
+			    $csoPayMoneyNot$ cs_order$suffix$.cso_pay_money = #csoPayMoney#
+			</isNotEmpty>
+			<isNotNull property="csoPayMoneyNot" prepend="and">
+				<isEmpty property="csoPayMoneyMax"><isEmpty property="csoPayMoneyMin"><isEmpty property="csoPayMoney">
+				$csoPayMoneyNot$ cs_order$suffix$.cso_pay_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayCouponMin" prepend="and">
+			    $csoPayCouponNot$  ( cs_order$suffix$.cso_pay_coupon &gt;= #csoPayCouponMin#
+			    <isEmpty property="csoPayCouponMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayCouponMax" prepend="and">
+				<isEmpty property="csoPayCouponMin">$csoPayCouponNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_coupon &lt;= #csoPayCouponMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayCoupon" prepend="and">
+			    $csoPayCouponNot$ cs_order$suffix$.cso_pay_coupon = #csoPayCoupon#
+			</isNotEmpty>
+			<isNotNull property="csoPayCouponNot" prepend="and">
+				<isEmpty property="csoPayCouponMax"><isEmpty property="csoPayCouponMin"><isEmpty property="csoPayCoupon">
+				$csoPayCouponNot$ cs_order$suffix$.cso_pay_coupon is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayCoinMin" prepend="and">
+			    $csoPayCoinNot$  ( cs_order$suffix$.cso_pay_coin &gt;= #csoPayCoinMin#
+			    <isEmpty property="csoPayCoinMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayCoinMax" prepend="and">
+				<isEmpty property="csoPayCoinMin">$csoPayCoinNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_coin &lt;= #csoPayCoinMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayCoin" prepend="and">
+			    $csoPayCoinNot$ cs_order$suffix$.cso_pay_coin = #csoPayCoin#
+			</isNotEmpty>
+			<isNotNull property="csoPayCoinNot" prepend="and">
+				<isEmpty property="csoPayCoinMax"><isEmpty property="csoPayCoinMin"><isEmpty property="csoPayCoin">
+				$csoPayCoinNot$ cs_order$suffix$.cso_pay_coin is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayKilomMin" prepend="and">
+			    $csoPayKilomNot$  ( cs_order$suffix$.cso_pay_kilom &gt;= #csoPayKilomMin#
+			    <isEmpty property="csoPayKilomMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayKilomMax" prepend="and">
+				<isEmpty property="csoPayKilomMin">$csoPayKilomNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_kilom &lt;= #csoPayKilomMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayKilom" prepend="and">
+			    $csoPayKilomNot$ cs_order$suffix$.cso_pay_kilom = #csoPayKilom#
+			</isNotEmpty>
+			<isNotNull property="csoPayKilomNot" prepend="and">
+				<isEmpty property="csoPayKilomMax"><isEmpty property="csoPayKilomMin"><isEmpty property="csoPayKilom">
+				$csoPayKilomNot$ cs_order$suffix$.cso_pay_kilom is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayMileageMin" prepend="and">
+			    $csoPayMileageNot$  ( cs_order$suffix$.cso_pay_mileage &gt;= #csoPayMileageMin#
+			    <isEmpty property="csoPayMileageMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayMileageMax" prepend="and">
+				<isEmpty property="csoPayMileageMin">$csoPayMileageNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_mileage &lt;= #csoPayMileageMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayMileage" prepend="and">
+			    $csoPayMileageNot$ cs_order$suffix$.cso_pay_mileage = #csoPayMileage#
+			</isNotEmpty>
+			<isNotNull property="csoPayMileageNot" prepend="and">
+				<isEmpty property="csoPayMileageMax"><isEmpty property="csoPayMileageMin"><isEmpty property="csoPayMileage">
+				$csoPayMileageNot$ cs_order$suffix$.cso_pay_mileage is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayRentMin" prepend="and">
+			    $csoPayRentNot$  ( cs_order$suffix$.cso_pay_rent &gt;= #csoPayRentMin#
+			    <isEmpty property="csoPayRentMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayRentMax" prepend="and">
+				<isEmpty property="csoPayRentMin">$csoPayRentNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_rent &lt;= #csoPayRentMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayRent" prepend="and">
+			    $csoPayRentNot$ cs_order$suffix$.cso_pay_rent = #csoPayRent#
+			</isNotEmpty>
+			<isNotNull property="csoPayRentNot" prepend="and">
+				<isEmpty property="csoPayRentMax"><isEmpty property="csoPayRentMin"><isEmpty property="csoPayRent">
+				$csoPayRentNot$ cs_order$suffix$.cso_pay_rent is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayInsureMin" prepend="and">
+			    $csoPayInsureNot$  ( cs_order$suffix$.cso_pay_insure &gt;= #csoPayInsureMin#
+			    <isEmpty property="csoPayInsureMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayInsureMax" prepend="and">
+				<isEmpty property="csoPayInsureMin">$csoPayInsureNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_insure &lt;= #csoPayInsureMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayInsure" prepend="and">
+			    $csoPayInsureNot$ cs_order$suffix$.cso_pay_insure = #csoPayInsure#
+			</isNotEmpty>
+			<isNotNull property="csoPayInsureNot" prepend="and">
+				<isEmpty property="csoPayInsureMax"><isEmpty property="csoPayInsureMin"><isEmpty property="csoPayInsure">
+				$csoPayInsureNot$ cs_order$suffix$.cso_pay_insure is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayTimeoutMin" prepend="and">
+			    $csoPayTimeoutNot$  ( cs_order$suffix$.cso_pay_timeout &gt;= #csoPayTimeoutMin#
+			    <isEmpty property="csoPayTimeoutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayTimeoutMax" prepend="and">
+				<isEmpty property="csoPayTimeoutMin">$csoPayTimeoutNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_timeout &lt;= #csoPayTimeoutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayTimeout" prepend="and">
+			    $csoPayTimeoutNot$ cs_order$suffix$.cso_pay_timeout = #csoPayTimeout#
+			</isNotEmpty>
+			<isNotNull property="csoPayTimeoutNot" prepend="and">
+				<isEmpty property="csoPayTimeoutMax"><isEmpty property="csoPayTimeoutMin"><isEmpty property="csoPayTimeout">
+				$csoPayTimeoutNot$ cs_order$suffix$.cso_pay_timeout is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoPayDriverMin" prepend="and">
+			    $csoPayDriverNot$  ( cs_order$suffix$.cso_pay_driver &gt;= #csoPayDriverMin#
+			    <isEmpty property="csoPayDriverMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoPayDriverMax" prepend="and">
+				<isEmpty property="csoPayDriverMin">$csoPayDriverNot$   (</isEmpty>
+			    cs_order$suffix$.cso_pay_driver &lt;= #csoPayDriverMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoPayDriver" prepend="and">
+			    $csoPayDriverNot$ cs_order$suffix$.cso_pay_driver = #csoPayDriver#
+			</isNotEmpty>
+			<isNotNull property="csoPayDriverNot" prepend="and">
+				<isEmpty property="csoPayDriverMax"><isEmpty property="csoPayDriverMin"><isEmpty property="csoPayDriver">
+				$csoPayDriverNot$ cs_order$suffix$.cso_pay_driver is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoIncome" prepend="and">
+			    $csoIncomeNot$ cs_order$suffix$.cso_income = #csoIncome#
+			</isNotEmpty>
+			<isNotNull property="csoIncomeNot" prepend="and">
+				<isEmpty property="csoIncome">
+				$csoIncomeNot$ cs_order$suffix$.cso_income is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoUseIndexMin" prepend="and">
+			    $csoUseIndexNot$  ( cs_order$suffix$.cso_use_index &gt;= #csoUseIndexMin#
+			    <isEmpty property="csoUseIndexMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoUseIndexMax" prepend="and">
+				<isEmpty property="csoUseIndexMin">$csoUseIndexNot$   (</isEmpty>
+			    cs_order$suffix$.cso_use_index &lt;= #csoUseIndexMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoUseIndex" prepend="and">
+			    $csoUseIndexNot$ cs_order$suffix$.cso_use_index = #csoUseIndex#
+			</isNotEmpty>
+			<isNotNull property="csoUseIndexNot" prepend="and">
+				<isEmpty property="csoUseIndexMax"><isEmpty property="csoUseIndexMin"><isEmpty property="csoUseIndex">
+				$csoUseIndexNot$ cs_order$suffix$.cso_use_index is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoFlag" prepend="and">
+			    $csoFlagNot$ cs_order$suffix$.cso_flag = #csoFlag#
+			</isNotEmpty>
+			<isNotNull property="csoFlagNot" prepend="and">
+				<isEmpty property="csoFlag">
+				$csoFlagNot$ cs_order$suffix$.cso_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoFrom" prepend="and">
+			    $csoFromNot$ cs_order$suffix$.cso_from = #csoFrom#
+			</isNotEmpty>
+			<isNotNull property="csoFromNot" prepend="and">
+				<isEmpty property="csoFrom">
+				$csoFromNot$ cs_order$suffix$.cso_from is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoSrc" prepend="and">
+			    $csoSrcNot$ cs_order$suffix$.cso_src = #csoSrc#
+			</isNotEmpty>
+			<isNotNull property="csoSrcNot" prepend="and">
+				<isEmpty property="csoSrc">
+				$csoSrcNot$ cs_order$suffix$.cso_src is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoUpdateTimeStart" prepend="and">
+			    $csoUpdateTimeNot$   (cs_order$suffix$.cso_update_time &gt;= #csoUpdateTimeStart#
+			   <isEmpty property="csoUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoUpdateTimeEnd" prepend="and">
+				<isEmpty property="csoUpdateTimeStart">$csoUpdateTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_update_time &lt;= #csoUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoUpdateTime" prepend="and">
+			    $csoUpdateTimeNot$ cs_order$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csoUpdateTimeNot" prepend="and">
+				<isEmpty property="csoUpdateTimeStart"><isEmpty property="csoUpdateTimeEnd"><isEmpty property="csoUpdateTime">
+				$csoUpdateTimeNot$ cs_order$suffix$.cso_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoAddTimeStart" prepend="and">
+			    $csoAddTimeNot$   (cs_order$suffix$.cso_add_time &gt;= #csoAddTimeStart#
+			   <isEmpty property="csoAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoAddTimeEnd" prepend="and">
+				<isEmpty property="csoAddTimeStart">$csoAddTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_add_time &lt;= #csoAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoAddTime" prepend="and">
+			    $csoAddTimeNot$ cs_order$suffix$.cso_add_time = #csoAddTime#
+			</isNotEmpty>
+			<isNotNull property="csoAddTimeNot" prepend="and">
+				<isEmpty property="csoAddTimeStart"><isEmpty property="csoAddTimeEnd"><isEmpty property="csoAddTime">
+				$csoAddTimeNot$ cs_order$suffix$.cso_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoEndTimeStart" prepend="and">
+			    $csoEndTimeNot$   (cs_order$suffix$.cso_end_time &gt;= #csoEndTimeStart#
+			   <isEmpty property="csoEndTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoEndTimeEnd" prepend="and">
+				<isEmpty property="csoEndTimeStart">$csoEndTimeNot$   (</isEmpty>
+			    cs_order$suffix$.cso_end_time &lt;= #csoEndTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoEndTime" prepend="and">
+			    $csoEndTimeNot$ cs_order$suffix$.cso_end_time = #csoEndTime#
+			</isNotEmpty>
+			<isNotNull property="csoEndTimeNot" prepend="and">
+				<isEmpty property="csoEndTimeStart"><isEmpty property="csoEndTimeEnd"><isEmpty property="csoEndTime">
+				$csoEndTimeNot$ cs_order$suffix$.cso_end_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoSerial" prepend="and">			    
+			    (<isNotNull property="csoSerialNot">
+			    cs_order$suffix$.cso_serial is null or length(cs_order$suffix$.cso_serial) &lt; 1 or
+			    </isNotNull>$csoSerialNot$ cs_order$suffix$.cso_serial = #csoSerial#)
+			</isNotEmpty>
+			<isNotNull property="csoSerialNot" prepend="and">
+				<isEmpty property="csoSerial">
+				$csoSerialNot$ (cs_order$suffix$.cso_serial is null or length(cs_order$suffix$.cso_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoCode" prepend="and">			    
+			    (<isNotNull property="csoCodeNot">
+			    cs_order$suffix$.cso_code is null or length(cs_order$suffix$.cso_code) &lt; 1 or
+			    </isNotNull>$csoCodeNot$ cs_order$suffix$.cso_code = #csoCode#)
+			</isNotEmpty>
+			<isNotNull property="csoCodeNot" prepend="and">
+				<isEmpty property="csoCode">
+				$csoCodeNot$ (cs_order$suffix$.cso_code is null or length(cs_order$suffix$.cso_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoRemark" prepend="and">			    
+			    (<isNotNull property="csoRemarkNot">
+			    cs_order$suffix$.cso_remark is null or length(cs_order$suffix$.cso_remark) &lt; 1 or
+			    </isNotNull>$csoRemarkNot$ cs_order$suffix$.cso_remark like #csoRemark#)
+			</isNotEmpty>
+			<isNotNull property="csoRemarkNot" prepend="and">
+				<isEmpty property="csoRemark">
+				$csoRemarkNot$ (cs_order$suffix$.cso_remark is null or length(cs_order$suffix$.cso_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoLog" prepend="and">			    
+			    (<isNotNull property="csoLogNot">
+			    cs_order$suffix$.cso_log is null or length(cs_order$suffix$.cso_log) &lt; 1 or
+			    </isNotNull>$csoLogNot$ cs_order$suffix$.cso_log = #csoLog#)
+			</isNotEmpty>
+			<isNotNull property="csoLogNot" prepend="and">
+				<isEmpty property="csoLog">
+				$csoLogNot$ (cs_order$suffix$.cso_log is null or length(cs_order$suffix$.cso_log) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoEditor" prepend="and">
+			    $csoEditorNot$ cs_order$suffix$.cso_editor = #csoEditor#
+			</isNotEmpty>
+			<isNotNull property="csoEditorNot" prepend="and">
+				<isEmpty property="csoEditor">
+				$csoEditorNot$ cs_order$suffix$.cso_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoMask" prepend="and">
+			    $csoMaskNot$ (cs_order$suffix$.cso_mask &amp; #csoMask#) = #csoMask#
+			</isNotEmpty>
+			<isNotNull property="csoMaskNot" prepend="and">
+				<isEmpty property="csoMask">
+				$csoMaskNot$ cs_order$suffix$.cso_mask is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoDeviceVesion" prepend="and">
+			    $csoDeviceVesionNot$ cs_order$suffix$.cso_device_vesion = #csoDeviceVesion#
+			</isNotEmpty>
+			<isNotNull property="csoDeviceVesionNot" prepend="and">
+				<isEmpty property="csoDeviceVesion">
+				$csoDeviceVesionNot$ cs_order$suffix$.cso_device_vesion is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoAlarm" prepend="and">
+			    $csoAlarmNot$ cs_order$suffix$.cso_alarm = #csoAlarm#
+			</isNotEmpty>
+			<isNotNull property="csoAlarmNot" prepend="and">
+				<isEmpty property="csoAlarm">
+				$csoAlarmNot$ cs_order$suffix$.cso_alarm is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoState" prepend="and">
+			    $csoStateNot$ cs_order$suffix$.cso_state = #csoState#
+			</isNotEmpty>
+			<isNotNull property="csoStateNot" prepend="and">
+				<isEmpty property="csoState">
+				$csoStateNot$ cs_order$suffix$.cso_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoStatus" prepend="and">
+			    $csoStatusNot$ cs_order$suffix$.cso_status = #csoStatus#
+			</isNotEmpty>
+			<isNotNull property="csoStatusNot" prepend="and">
+				<isEmpty property="csoStatus">
+				$csoStatusNot$ cs_order$suffix$.cso_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统订单left join 条件sql片段 -->
+	<sql id="cs_order_join">
+		<dynamic>
+			<isNotEmpty property="CsOrder.csoId" prepend="and">
+			    $CsOrder.csoIdNot$ cs_order$CsOrder.suffix$.cso_id = #CsOrder.csoId#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoIdNot" prepend="and">
+				<isEmpty property="CsOrder.csoId">
+				$csoIdNot$ cs_order$CsOrder.suffix$.cso_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_order$CsOrder.suffix$.cso_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoHost" prepend="and">
+			    $CsOrder.csoHostNot$ cs_order$CsOrder.suffix$.cso_host = #CsOrder.csoHost#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoHostNot" prepend="and">
+				<isEmpty property="CsOrder.csoHost">
+				$csoHostNot$ cs_order$CsOrder.suffix$.cso_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayMember" prepend="and">
+			    $CsOrder.csoPayMemberNot$ cs_order$CsOrder.suffix$.cso_pay_member = #CsOrder.csoPayMember#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayMemberNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayMember">
+				$csoPayMemberNot$ cs_order$CsOrder.suffix$.cso_pay_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoUseMember" prepend="and">
+			    $CsOrder.csoUseMemberNot$ cs_order$CsOrder.suffix$.cso_use_member = #CsOrder.csoUseMember#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoUseMemberNot" prepend="and">
+				<isEmpty property="CsOrder.csoUseMember">
+				$csoUseMemberNot$ cs_order$CsOrder.suffix$.cso_use_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoFeeType" prepend="and">
+			    $CsOrder.csoFeeTypeNot$ cs_order$CsOrder.suffix$.cso_fee_type = #CsOrder.csoFeeType#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoFeeTypeNot" prepend="and">
+				<isEmpty property="CsOrder.csoFeeType">
+				$csoFeeTypeNot$ cs_order$CsOrder.suffix$.cso_fee_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoArea" prepend="and">
+			    $CsOrder.csoAreaNot$ cs_order$CsOrder.suffix$.cso_area = #CsOrder.csoArea#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoAreaNot" prepend="and">
+				<isEmpty property="CsOrder.csoArea">
+				$csoAreaNot$ cs_order$CsOrder.suffix$.cso_area is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoOutlets" prepend="and">
+			    $CsOrder.csoOutletsNot$ cs_order$CsOrder.suffix$.cso_outlets = #CsOrder.csoOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoOutletsNot" prepend="and">
+				<isEmpty property="CsOrder.csoOutlets">
+				$csoOutletsNot$ cs_order$CsOrder.suffix$.cso_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoOutletsRet" prepend="and">
+			    $CsOrder.csoOutletsRetNot$ cs_order$CsOrder.suffix$.cso_outlets_ret = #CsOrder.csoOutletsRet#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoOutletsRetNot" prepend="and">
+				<isEmpty property="CsOrder.csoOutletsRet">
+				$csoOutletsRetNot$ cs_order$CsOrder.suffix$.cso_outlets_ret is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoModel" prepend="and">
+			    $CsOrder.csoModelNot$ cs_order$CsOrder.suffix$.cso_model = #CsOrder.csoModel#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoModelNot" prepend="and">
+				<isEmpty property="CsOrder.csoModel">
+				$csoModelNot$ cs_order$CsOrder.suffix$.cso_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoCar" prepend="and">
+			    $CsOrder.csoCarNot$ cs_order$CsOrder.suffix$.cso_car = #CsOrder.csoCar#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoCarNot" prepend="and">
+				<isEmpty property="CsOrder.csoCar">
+				$csoCarNot$ cs_order$CsOrder.suffix$.cso_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoProvid" prepend="and">
+			    $CsOrder.csoProvidNot$ cs_order$CsOrder.suffix$.cso_provid = #CsOrder.csoProvid#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoProvidNot" prepend="and">
+				<isEmpty property="CsOrder.csoProvid">
+				$csoProvidNot$ cs_order$CsOrder.suffix$.cso_provid is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoCarNumber" prepend="and">
+				(<isNotNull property="CsOrder.csoCarNumberNot">
+			    cs_order$CsOrder.suffix$.cso_car_number is null or length(cs_order$CsOrder.suffix$.cso_car_number) &lt; 1 or
+			    </isNotNull>$CsOrder.csoCarNumberNot$ cs_order$CsOrder.suffix$.cso_car_number = #CsOrder.csoCarNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoCarNumberNot" prepend="and">
+				<isEmpty property="CsOrder.csoCarNumber">
+				$csoCarNumberNot$ (cs_order$CsOrder.suffix$.cso_car_number is null or length(cs_order$CsOrder.suffix$.cso_car_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoMobile" prepend="and">
+				(<isNotNull property="CsOrder.csoMobileNot">
+			    cs_order$CsOrder.suffix$.cso_mobile is null or length(cs_order$CsOrder.suffix$.cso_mobile) &lt; 1 or
+			    </isNotNull>$CsOrder.csoMobileNot$ cs_order$CsOrder.suffix$.cso_mobile = #CsOrder.csoMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoMobileNot" prepend="and">
+				<isEmpty property="CsOrder.csoMobile">
+				$csoMobileNot$ (cs_order$CsOrder.suffix$.cso_mobile is null or length(cs_order$CsOrder.suffix$.cso_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoEvRfid" prepend="and">
+				(<isNotNull property="CsOrder.csoEvRfidNot">
+			    cs_order$CsOrder.suffix$.cso_ev_rfid is null or length(cs_order$CsOrder.suffix$.cso_ev_rfid) &lt; 1 or
+			    </isNotNull>$CsOrder.csoEvRfidNot$ cs_order$CsOrder.suffix$.cso_ev_rfid = #CsOrder.csoEvRfid#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoEvRfidNot" prepend="and">
+				<isEmpty property="CsOrder.csoEvRfid">
+				$csoEvRfidNot$ (cs_order$CsOrder.suffix$.cso_ev_rfid is null or length(cs_order$CsOrder.suffix$.cso_ev_rfid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoIsAdCar" prepend="and">
+			    $CsOrder.csoIsAdCarNot$ cs_order$CsOrder.suffix$.cso_is_ad_car = #CsOrder.csoIsAdCar#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoIsAdCarNot" prepend="and">
+				<isEmpty property="CsOrder.csoIsAdCar">
+				$csoIsAdCarNot$ cs_order$CsOrder.suffix$.cso_is_ad_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoStartTimeStart" prepend="and">
+			    $CsOrder.csoStartTimeNot$   (cs_order$CsOrder.suffix$.cso_start_time &gt;= #CsOrder.csoStartTimeStart#
+			   <isEmpty property="CsOrder.csoStartTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoStartTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoStartTimeStart">$CsOrder.csoStartTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_start_time &lt;= #CsOrder.csoStartTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoStartTime" prepend="and">
+			    $CsOrder.csoStartTimeNot$ cs_order$CsOrder.suffix$.cso_start_time = #CsOrder.csoStartTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoStartTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoStartTimeStart"><isEmpty property="CsOrder.csoStartTimeEnd"><isEmpty property="CsOrder.csoStartTime">
+				$csoStartTimeNot$ cs_order$CsOrder.suffix$.cso_start_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoFinishTimeStart" prepend="and">
+			    $CsOrder.csoFinishTimeNot$   (cs_order$CsOrder.suffix$.cso_finish_time &gt;= #CsOrder.csoFinishTimeStart#
+			   <isEmpty property="CsOrder.csoFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoFinishTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoFinishTimeStart">$CsOrder.csoFinishTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_finish_time &lt;= #CsOrder.csoFinishTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoFinishTime" prepend="and">
+			    $CsOrder.csoFinishTimeNot$ cs_order$CsOrder.suffix$.cso_finish_time = #CsOrder.csoFinishTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoFinishTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoFinishTimeStart"><isEmpty property="CsOrder.csoFinishTimeEnd"><isEmpty property="CsOrder.csoFinishTime">
+				$csoFinishTimeNot$ cs_order$CsOrder.suffix$.cso_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoLongOrder" prepend="and">
+			    $CsOrder.csoLongOrderNot$ cs_order$CsOrder.suffix$.cso_long_order = #CsOrder.csoLongOrder#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoLongOrderNot" prepend="and">
+				<isEmpty property="CsOrder.csoLongOrder">
+				$csoLongOrderNot$ cs_order$CsOrder.suffix$.cso_long_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoLongPriceMin" prepend="and">
+			    $CsOrder.csoLongPriceNot$  ( cs_order$CsOrder.suffix$.cso_long_price &gt;= #CsOrder.csoLongPriceMin#
+			    <isEmpty property="CsOrder.csoLongPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoLongPriceMax" prepend="and">
+				<isEmpty property="CsOrder.csoLongPriceMin">$CsOrder.csoLongPriceNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_long_price &lt;= #CsOrder.csoLongPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoLongPrice" prepend="and">
+			    $CsOrder.csoLongPriceNot$ cs_order$CsOrder.suffix$.cso_long_price = #CsOrder.csoLongPrice#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoLongPriceNot" prepend="and">
+				<isEmpty property="CsOrder.csoLongPriceMax"><isEmpty property="CsOrder.csoLongPriceMin"><isEmpty property="CsOrder.csoLongPrice">
+				$csoLongPriceNot$ cs_order$CsOrder.suffix$.cso_long_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoUseType" prepend="and">
+			    $CsOrder.csoUseTypeNot$ cs_order$CsOrder.suffix$.cso_use_type = #CsOrder.csoUseType#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoUseTypeNot" prepend="and">
+				<isEmpty property="CsOrder.csoUseType">
+				$csoUseTypeNot$ cs_order$CsOrder.suffix$.cso_use_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoTakeTimeStart" prepend="and">
+			    $CsOrder.csoTakeTimeNot$   (cs_order$CsOrder.suffix$.cso_take_time &gt;= #CsOrder.csoTakeTimeStart#
+			   <isEmpty property="CsOrder.csoTakeTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoTakeTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoTakeTimeStart">$CsOrder.csoTakeTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_take_time &lt;= #CsOrder.csoTakeTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoTakeTime" prepend="and">
+			    $CsOrder.csoTakeTimeNot$ cs_order$CsOrder.suffix$.cso_take_time = #CsOrder.csoTakeTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoTakeTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoTakeTimeStart"><isEmpty property="CsOrder.csoTakeTimeEnd"><isEmpty property="CsOrder.csoTakeTime">
+				$csoTakeTimeNot$ cs_order$CsOrder.suffix$.cso_take_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoRetTimeStart" prepend="and">
+			    $CsOrder.csoRetTimeNot$   (cs_order$CsOrder.suffix$.cso_ret_time &gt;= #CsOrder.csoRetTimeStart#
+			   <isEmpty property="CsOrder.csoRetTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoRetTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoRetTimeStart">$CsOrder.csoRetTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_ret_time &lt;= #CsOrder.csoRetTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoRetTime" prepend="and">
+			    $CsOrder.csoRetTimeNot$ cs_order$CsOrder.suffix$.cso_ret_time = #CsOrder.csoRetTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoRetTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoRetTimeStart"><isEmpty property="CsOrder.csoRetTimeEnd"><isEmpty property="CsOrder.csoRetTime">
+				$csoRetTimeNot$ cs_order$CsOrder.suffix$.cso_ret_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoDurationMin" prepend="and">
+			    $CsOrder.csoDurationNot$  ( cs_order$CsOrder.suffix$.cso_duration &gt;= #CsOrder.csoDurationMin#
+			    <isEmpty property="CsOrder.csoDurationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoDurationMax" prepend="and">
+				<isEmpty property="CsOrder.csoDurationMin">$CsOrder.csoDurationNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_duration &lt;= #CsOrder.csoDurationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoDuration" prepend="and">
+			    $CsOrder.csoDurationNot$ cs_order$CsOrder.suffix$.cso_duration = #CsOrder.csoDuration#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoDurationNot" prepend="and">
+				<isEmpty property="CsOrder.csoDurationMax"><isEmpty property="CsOrder.csoDurationMin"><isEmpty property="CsOrder.csoDuration">
+				$csoDurationNot$ cs_order$CsOrder.suffix$.cso_duration is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoFuelMin" prepend="and">
+			    $CsOrder.csoFuelNot$  ( cs_order$CsOrder.suffix$.cso_fuel &gt;= #CsOrder.csoFuelMin#
+			    <isEmpty property="CsOrder.csoFuelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoFuelMax" prepend="and">
+				<isEmpty property="CsOrder.csoFuelMin">$CsOrder.csoFuelNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_fuel &lt;= #CsOrder.csoFuelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoFuel" prepend="and">
+			    $CsOrder.csoFuelNot$ cs_order$CsOrder.suffix$.cso_fuel = #CsOrder.csoFuel#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoFuelNot" prepend="and">
+				<isEmpty property="CsOrder.csoFuelMax"><isEmpty property="CsOrder.csoFuelMin"><isEmpty property="CsOrder.csoFuel">
+				$csoFuelNot$ cs_order$CsOrder.suffix$.cso_fuel is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoElectricMin" prepend="and">
+			    $CsOrder.csoElectricNot$  ( cs_order$CsOrder.suffix$.cso_electric &gt;= #CsOrder.csoElectricMin#
+			    <isEmpty property="CsOrder.csoElectricMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoElectricMax" prepend="and">
+				<isEmpty property="CsOrder.csoElectricMin">$CsOrder.csoElectricNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_electric &lt;= #CsOrder.csoElectricMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoElectric" prepend="and">
+			    $CsOrder.csoElectricNot$ cs_order$CsOrder.suffix$.cso_electric = #CsOrder.csoElectric#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoElectricNot" prepend="and">
+				<isEmpty property="CsOrder.csoElectricMax"><isEmpty property="CsOrder.csoElectricMin"><isEmpty property="CsOrder.csoElectric">
+				$csoElectricNot$ cs_order$CsOrder.suffix$.cso_electric is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoCreditCard" prepend="and">
+			    $CsOrder.csoCreditCardNot$ cs_order$CsOrder.suffix$.cso_credit_card = #CsOrder.csoCreditCard#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoCreditCardNot" prepend="and">
+				<isEmpty property="CsOrder.csoCreditCard">
+				$csoCreditCardNot$ cs_order$CsOrder.suffix$.cso_credit_card is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoCreditBill" prepend="and">
+			    $CsOrder.csoCreditBillNot$ cs_order$CsOrder.suffix$.cso_credit_bill = #CsOrder.csoCreditBill#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoCreditBillNot" prepend="and">
+				<isEmpty property="CsOrder.csoCreditBill">
+				$csoCreditBillNot$ cs_order$CsOrder.suffix$.cso_credit_bill is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoInsureType" prepend="and">
+			    $CsOrder.csoInsureTypeNot$ cs_order$CsOrder.suffix$.cso_insure_type = #CsOrder.csoInsureType#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoInsureTypeNot" prepend="and">
+				<isEmpty property="CsOrder.csoInsureType">
+				$csoInsureTypeNot$ cs_order$CsOrder.suffix$.cso_insure_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoFreehourMin" prepend="and">
+			    $CsOrder.csoFreehourNot$  ( cs_order$CsOrder.suffix$.cso_freehour &gt;= #CsOrder.csoFreehourMin#
+			    <isEmpty property="CsOrder.csoFreehourMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoFreehourMax" prepend="and">
+				<isEmpty property="CsOrder.csoFreehourMin">$CsOrder.csoFreehourNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_freehour &lt;= #CsOrder.csoFreehourMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoFreehour" prepend="and">
+			    $CsOrder.csoFreehourNot$ cs_order$CsOrder.suffix$.cso_freehour = #CsOrder.csoFreehour#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoFreehourNot" prepend="and">
+				<isEmpty property="CsOrder.csoFreehourMax"><isEmpty property="CsOrder.csoFreehourMin"><isEmpty property="CsOrder.csoFreehour">
+				$csoFreehourNot$ cs_order$CsOrder.suffix$.cso_freehour is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoRebateMin" prepend="and">
+			    $CsOrder.csoRebateNot$  ( cs_order$CsOrder.suffix$.cso_rebate &gt;= #CsOrder.csoRebateMin#
+			    <isEmpty property="CsOrder.csoRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoRebateMax" prepend="and">
+				<isEmpty property="CsOrder.csoRebateMin">$CsOrder.csoRebateNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_rebate &lt;= #CsOrder.csoRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoRebate" prepend="and">
+			    $CsOrder.csoRebateNot$ cs_order$CsOrder.suffix$.cso_rebate = #CsOrder.csoRebate#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoRebateNot" prepend="and">
+				<isEmpty property="CsOrder.csoRebateMax"><isEmpty property="CsOrder.csoRebateMin"><isEmpty property="CsOrder.csoRebate">
+				$csoRebateNot$ cs_order$CsOrder.suffix$.cso_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoMarginNeedMin" prepend="and">
+			    $CsOrder.csoMarginNeedNot$  ( cs_order$CsOrder.suffix$.cso_margin_need &gt;= #CsOrder.csoMarginNeedMin#
+			    <isEmpty property="CsOrder.csoMarginNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoMarginNeedMax" prepend="and">
+				<isEmpty property="CsOrder.csoMarginNeedMin">$CsOrder.csoMarginNeedNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_margin_need &lt;= #CsOrder.csoMarginNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoMarginNeed" prepend="and">
+			    $CsOrder.csoMarginNeedNot$ cs_order$CsOrder.suffix$.cso_margin_need = #CsOrder.csoMarginNeed#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoMarginNeedNot" prepend="and">
+				<isEmpty property="CsOrder.csoMarginNeedMax"><isEmpty property="CsOrder.csoMarginNeedMin"><isEmpty property="CsOrder.csoMarginNeed">
+				$csoMarginNeedNot$ cs_order$CsOrder.suffix$.cso_margin_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPredictMin" prepend="and">
+			    $CsOrder.csoPredictNot$  ( cs_order$CsOrder.suffix$.cso_predict &gt;= #CsOrder.csoPredictMin#
+			    <isEmpty property="CsOrder.csoPredictMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPredictMax" prepend="and">
+				<isEmpty property="CsOrder.csoPredictMin">$CsOrder.csoPredictNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_predict &lt;= #CsOrder.csoPredictMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPredict" prepend="and">
+			    $CsOrder.csoPredictNot$ cs_order$CsOrder.suffix$.cso_predict = #CsOrder.csoPredict#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPredictNot" prepend="and">
+				<isEmpty property="CsOrder.csoPredictMax"><isEmpty property="CsOrder.csoPredictMin"><isEmpty property="CsOrder.csoPredict">
+				$csoPredictNot$ cs_order$CsOrder.suffix$.cso_predict is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayNeedMin" prepend="and">
+			    $CsOrder.csoPayNeedNot$  ( cs_order$CsOrder.suffix$.cso_pay_need &gt;= #CsOrder.csoPayNeedMin#
+			    <isEmpty property="CsOrder.csoPayNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayNeedMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayNeedMin">$CsOrder.csoPayNeedNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_need &lt;= #CsOrder.csoPayNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayNeed" prepend="and">
+			    $CsOrder.csoPayNeedNot$ cs_order$CsOrder.suffix$.cso_pay_need = #CsOrder.csoPayNeed#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayNeedNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayNeedMax"><isEmpty property="CsOrder.csoPayNeedMin"><isEmpty property="CsOrder.csoPayNeed">
+				$csoPayNeedNot$ cs_order$CsOrder.suffix$.cso_pay_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayRealMin" prepend="and">
+			    $CsOrder.csoPayRealNot$  ( cs_order$CsOrder.suffix$.cso_pay_real &gt;= #CsOrder.csoPayRealMin#
+			    <isEmpty property="CsOrder.csoPayRealMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayRealMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayRealMin">$CsOrder.csoPayRealNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_real &lt;= #CsOrder.csoPayRealMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayReal" prepend="and">
+			    $CsOrder.csoPayRealNot$ cs_order$CsOrder.suffix$.cso_pay_real = #CsOrder.csoPayReal#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayRealNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayRealMax"><isEmpty property="CsOrder.csoPayRealMin"><isEmpty property="CsOrder.csoPayReal">
+				$csoPayRealNot$ cs_order$CsOrder.suffix$.cso_pay_real is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayMoneyMin" prepend="and">
+			    $CsOrder.csoPayMoneyNot$  ( cs_order$CsOrder.suffix$.cso_pay_money &gt;= #CsOrder.csoPayMoneyMin#
+			    <isEmpty property="CsOrder.csoPayMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayMoneyMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayMoneyMin">$CsOrder.csoPayMoneyNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_money &lt;= #CsOrder.csoPayMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayMoney" prepend="and">
+			    $CsOrder.csoPayMoneyNot$ cs_order$CsOrder.suffix$.cso_pay_money = #CsOrder.csoPayMoney#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayMoneyNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayMoneyMax"><isEmpty property="CsOrder.csoPayMoneyMin"><isEmpty property="CsOrder.csoPayMoney">
+				$csoPayMoneyNot$ cs_order$CsOrder.suffix$.cso_pay_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayCouponMin" prepend="and">
+			    $CsOrder.csoPayCouponNot$  ( cs_order$CsOrder.suffix$.cso_pay_coupon &gt;= #CsOrder.csoPayCouponMin#
+			    <isEmpty property="CsOrder.csoPayCouponMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayCouponMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayCouponMin">$CsOrder.csoPayCouponNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_coupon &lt;= #CsOrder.csoPayCouponMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayCoupon" prepend="and">
+			    $CsOrder.csoPayCouponNot$ cs_order$CsOrder.suffix$.cso_pay_coupon = #CsOrder.csoPayCoupon#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayCouponNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayCouponMax"><isEmpty property="CsOrder.csoPayCouponMin"><isEmpty property="CsOrder.csoPayCoupon">
+				$csoPayCouponNot$ cs_order$CsOrder.suffix$.cso_pay_coupon is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayCoinMin" prepend="and">
+			    $CsOrder.csoPayCoinNot$  ( cs_order$CsOrder.suffix$.cso_pay_coin &gt;= #CsOrder.csoPayCoinMin#
+			    <isEmpty property="CsOrder.csoPayCoinMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayCoinMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayCoinMin">$CsOrder.csoPayCoinNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_coin &lt;= #CsOrder.csoPayCoinMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayCoin" prepend="and">
+			    $CsOrder.csoPayCoinNot$ cs_order$CsOrder.suffix$.cso_pay_coin = #CsOrder.csoPayCoin#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayCoinNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayCoinMax"><isEmpty property="CsOrder.csoPayCoinMin"><isEmpty property="CsOrder.csoPayCoin">
+				$csoPayCoinNot$ cs_order$CsOrder.suffix$.cso_pay_coin is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayKilomMin" prepend="and">
+			    $CsOrder.csoPayKilomNot$  ( cs_order$CsOrder.suffix$.cso_pay_kilom &gt;= #CsOrder.csoPayKilomMin#
+			    <isEmpty property="CsOrder.csoPayKilomMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayKilomMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayKilomMin">$CsOrder.csoPayKilomNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_kilom &lt;= #CsOrder.csoPayKilomMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayKilom" prepend="and">
+			    $CsOrder.csoPayKilomNot$ cs_order$CsOrder.suffix$.cso_pay_kilom = #CsOrder.csoPayKilom#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayKilomNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayKilomMax"><isEmpty property="CsOrder.csoPayKilomMin"><isEmpty property="CsOrder.csoPayKilom">
+				$csoPayKilomNot$ cs_order$CsOrder.suffix$.cso_pay_kilom is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayMileageMin" prepend="and">
+			    $CsOrder.csoPayMileageNot$  ( cs_order$CsOrder.suffix$.cso_pay_mileage &gt;= #CsOrder.csoPayMileageMin#
+			    <isEmpty property="CsOrder.csoPayMileageMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayMileageMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayMileageMin">$CsOrder.csoPayMileageNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_mileage &lt;= #CsOrder.csoPayMileageMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayMileage" prepend="and">
+			    $CsOrder.csoPayMileageNot$ cs_order$CsOrder.suffix$.cso_pay_mileage = #CsOrder.csoPayMileage#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayMileageNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayMileageMax"><isEmpty property="CsOrder.csoPayMileageMin"><isEmpty property="CsOrder.csoPayMileage">
+				$csoPayMileageNot$ cs_order$CsOrder.suffix$.cso_pay_mileage is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayRentMin" prepend="and">
+			    $CsOrder.csoPayRentNot$  ( cs_order$CsOrder.suffix$.cso_pay_rent &gt;= #CsOrder.csoPayRentMin#
+			    <isEmpty property="CsOrder.csoPayRentMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayRentMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayRentMin">$CsOrder.csoPayRentNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_rent &lt;= #CsOrder.csoPayRentMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayRent" prepend="and">
+			    $CsOrder.csoPayRentNot$ cs_order$CsOrder.suffix$.cso_pay_rent = #CsOrder.csoPayRent#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayRentNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayRentMax"><isEmpty property="CsOrder.csoPayRentMin"><isEmpty property="CsOrder.csoPayRent">
+				$csoPayRentNot$ cs_order$CsOrder.suffix$.cso_pay_rent is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayInsureMin" prepend="and">
+			    $CsOrder.csoPayInsureNot$  ( cs_order$CsOrder.suffix$.cso_pay_insure &gt;= #CsOrder.csoPayInsureMin#
+			    <isEmpty property="CsOrder.csoPayInsureMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayInsureMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayInsureMin">$CsOrder.csoPayInsureNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_insure &lt;= #CsOrder.csoPayInsureMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayInsure" prepend="and">
+			    $CsOrder.csoPayInsureNot$ cs_order$CsOrder.suffix$.cso_pay_insure = #CsOrder.csoPayInsure#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayInsureNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayInsureMax"><isEmpty property="CsOrder.csoPayInsureMin"><isEmpty property="CsOrder.csoPayInsure">
+				$csoPayInsureNot$ cs_order$CsOrder.suffix$.cso_pay_insure is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayTimeoutMin" prepend="and">
+			    $CsOrder.csoPayTimeoutNot$  ( cs_order$CsOrder.suffix$.cso_pay_timeout &gt;= #CsOrder.csoPayTimeoutMin#
+			    <isEmpty property="CsOrder.csoPayTimeoutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayTimeoutMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayTimeoutMin">$CsOrder.csoPayTimeoutNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_timeout &lt;= #CsOrder.csoPayTimeoutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayTimeout" prepend="and">
+			    $CsOrder.csoPayTimeoutNot$ cs_order$CsOrder.suffix$.cso_pay_timeout = #CsOrder.csoPayTimeout#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayTimeoutNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayTimeoutMax"><isEmpty property="CsOrder.csoPayTimeoutMin"><isEmpty property="CsOrder.csoPayTimeout">
+				$csoPayTimeoutNot$ cs_order$CsOrder.suffix$.cso_pay_timeout is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoPayDriverMin" prepend="and">
+			    $CsOrder.csoPayDriverNot$  ( cs_order$CsOrder.suffix$.cso_pay_driver &gt;= #CsOrder.csoPayDriverMin#
+			    <isEmpty property="CsOrder.csoPayDriverMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayDriverMax" prepend="and">
+				<isEmpty property="CsOrder.csoPayDriverMin">$CsOrder.csoPayDriverNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_pay_driver &lt;= #CsOrder.csoPayDriverMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoPayDriver" prepend="and">
+			    $CsOrder.csoPayDriverNot$ cs_order$CsOrder.suffix$.cso_pay_driver = #CsOrder.csoPayDriver#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoPayDriverNot" prepend="and">
+				<isEmpty property="CsOrder.csoPayDriverMax"><isEmpty property="CsOrder.csoPayDriverMin"><isEmpty property="CsOrder.csoPayDriver">
+				$csoPayDriverNot$ cs_order$CsOrder.suffix$.cso_pay_driver is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoIncome" prepend="and">
+			    $CsOrder.csoIncomeNot$ cs_order$CsOrder.suffix$.cso_income = #CsOrder.csoIncome#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoIncomeNot" prepend="and">
+				<isEmpty property="CsOrder.csoIncome">
+				$csoIncomeNot$ cs_order$CsOrder.suffix$.cso_income is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoUseIndexMin" prepend="and">
+			    $CsOrder.csoUseIndexNot$  ( cs_order$CsOrder.suffix$.cso_use_index &gt;= #CsOrder.csoUseIndexMin#
+			    <isEmpty property="CsOrder.csoUseIndexMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoUseIndexMax" prepend="and">
+				<isEmpty property="CsOrder.csoUseIndexMin">$CsOrder.csoUseIndexNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_use_index &lt;= #CsOrder.csoUseIndexMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoUseIndex" prepend="and">
+			    $CsOrder.csoUseIndexNot$ cs_order$CsOrder.suffix$.cso_use_index = #CsOrder.csoUseIndex#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoUseIndexNot" prepend="and">
+				<isEmpty property="CsOrder.csoUseIndexMax"><isEmpty property="CsOrder.csoUseIndexMin"><isEmpty property="CsOrder.csoUseIndex">
+				$csoUseIndexNot$ cs_order$CsOrder.suffix$.cso_use_index is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoFlag" prepend="and">
+			    $CsOrder.csoFlagNot$ cs_order$CsOrder.suffix$.cso_flag = #CsOrder.csoFlag#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoFlagNot" prepend="and">
+				<isEmpty property="CsOrder.csoFlag">
+				$csoFlagNot$ cs_order$CsOrder.suffix$.cso_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoFrom" prepend="and">
+			    $CsOrder.csoFromNot$ cs_order$CsOrder.suffix$.cso_from = #CsOrder.csoFrom#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoFromNot" prepend="and">
+				<isEmpty property="CsOrder.csoFrom">
+				$csoFromNot$ cs_order$CsOrder.suffix$.cso_from is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoSrc" prepend="and">
+			    $CsOrder.csoSrcNot$ cs_order$CsOrder.suffix$.cso_src = #CsOrder.csoSrc#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoSrcNot" prepend="and">
+				<isEmpty property="CsOrder.csoSrc">
+				$csoSrcNot$ cs_order$CsOrder.suffix$.cso_src is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoUpdateTimeStart" prepend="and">
+			    $CsOrder.csoUpdateTimeNot$   (cs_order$CsOrder.suffix$.cso_update_time &gt;= #CsOrder.csoUpdateTimeStart#
+			   <isEmpty property="CsOrder.csoUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoUpdateTimeStart">$CsOrder.csoUpdateTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_update_time &lt;= #CsOrder.csoUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoUpdateTime" prepend="and">
+			    $CsOrder.csoUpdateTimeNot$ cs_order$CsOrder.suffix$.cso_update_time = #CsOrder.csoUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoUpdateTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoUpdateTimeStart"><isEmpty property="CsOrder.csoUpdateTimeEnd"><isEmpty property="CsOrder.csoUpdateTime">
+				$csoUpdateTimeNot$ cs_order$CsOrder.suffix$.cso_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoAddTimeStart" prepend="and">
+			    $CsOrder.csoAddTimeNot$   (cs_order$CsOrder.suffix$.cso_add_time &gt;= #CsOrder.csoAddTimeStart#
+			   <isEmpty property="CsOrder.csoAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoAddTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoAddTimeStart">$CsOrder.csoAddTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_add_time &lt;= #CsOrder.csoAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoAddTime" prepend="and">
+			    $CsOrder.csoAddTimeNot$ cs_order$CsOrder.suffix$.cso_add_time = #CsOrder.csoAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoAddTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoAddTimeStart"><isEmpty property="CsOrder.csoAddTimeEnd"><isEmpty property="CsOrder.csoAddTime">
+				$csoAddTimeNot$ cs_order$CsOrder.suffix$.cso_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoEndTimeStart" prepend="and">
+			    $CsOrder.csoEndTimeNot$   (cs_order$CsOrder.suffix$.cso_end_time &gt;= #CsOrder.csoEndTimeStart#
+			   <isEmpty property="CsOrder.csoEndTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoEndTimeEnd" prepend="and">
+				<isEmpty property="CsOrder.csoEndTimeStart">$CsOrder.csoEndTimeNot$   (</isEmpty>
+			    cs_order$CsOrder.suffix$.cso_end_time &lt;= #CsOrder.csoEndTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrder.csoEndTime" prepend="and">
+			    $CsOrder.csoEndTimeNot$ cs_order$CsOrder.suffix$.cso_end_time = #CsOrder.csoEndTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoEndTimeNot" prepend="and">
+				<isEmpty property="CsOrder.csoEndTimeStart"><isEmpty property="CsOrder.csoEndTimeEnd"><isEmpty property="CsOrder.csoEndTime">
+				$csoEndTimeNot$ cs_order$CsOrder.suffix$.cso_end_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoSerial" prepend="and">
+				(<isNotNull property="CsOrder.csoSerialNot">
+			    cs_order$CsOrder.suffix$.cso_serial is null or length(cs_order$CsOrder.suffix$.cso_serial) &lt; 1 or
+			    </isNotNull>$CsOrder.csoSerialNot$ cs_order$CsOrder.suffix$.cso_serial = #CsOrder.csoSerial#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoSerialNot" prepend="and">
+				<isEmpty property="CsOrder.csoSerial">
+				$csoSerialNot$ (cs_order$CsOrder.suffix$.cso_serial is null or length(cs_order$CsOrder.suffix$.cso_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoCode" prepend="and">
+				(<isNotNull property="CsOrder.csoCodeNot">
+			    cs_order$CsOrder.suffix$.cso_code is null or length(cs_order$CsOrder.suffix$.cso_code) &lt; 1 or
+			    </isNotNull>$CsOrder.csoCodeNot$ cs_order$CsOrder.suffix$.cso_code = #CsOrder.csoCode#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoCodeNot" prepend="and">
+				<isEmpty property="CsOrder.csoCode">
+				$csoCodeNot$ (cs_order$CsOrder.suffix$.cso_code is null or length(cs_order$CsOrder.suffix$.cso_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoRemark" prepend="and">
+				(<isNotNull property="CsOrder.csoRemarkNot">
+			    cs_order$CsOrder.suffix$.cso_remark is null or length(cs_order$CsOrder.suffix$.cso_remark) &lt; 1 or
+			    </isNotNull>$CsOrder.csoRemarkNot$ cs_order$CsOrder.suffix$.cso_remark like #CsOrder.csoRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoRemarkNot" prepend="and">
+				<isEmpty property="CsOrder.csoRemark">
+				$csoRemarkNot$ (cs_order$CsOrder.suffix$.cso_remark is null or length(cs_order$CsOrder.suffix$.cso_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoLog" prepend="and">
+				(<isNotNull property="CsOrder.csoLogNot">
+			    cs_order$CsOrder.suffix$.cso_log is null or length(cs_order$CsOrder.suffix$.cso_log) &lt; 1 or
+			    </isNotNull>$CsOrder.csoLogNot$ cs_order$CsOrder.suffix$.cso_log = #CsOrder.csoLog#)
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoLogNot" prepend="and">
+				<isEmpty property="CsOrder.csoLog">
+				$csoLogNot$ (cs_order$CsOrder.suffix$.cso_log is null or length(cs_order$CsOrder.suffix$.cso_log) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoEditor" prepend="and">
+			    $CsOrder.csoEditorNot$ cs_order$CsOrder.suffix$.cso_editor = #CsOrder.csoEditor#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoEditorNot" prepend="and">
+				<isEmpty property="CsOrder.csoEditor">
+				$csoEditorNot$ cs_order$CsOrder.suffix$.cso_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoMask" prepend="and">
+			    $CsOrder.csoMaskNot$ (cs_order$CsOrder.suffix$.cso_mask &amp; #CsOrder.csoMask#) = #CsOrder.csoMask#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoMaskNot" prepend="and">
+				<isEmpty property="CsOrder.csoMask">
+				$csoMaskNot$ cs_order$CsOrder.suffix$.cso_mask is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoDeviceVesion" prepend="and">
+			    $CsOrder.csoDeviceVesionNot$ cs_order$CsOrder.suffix$.cso_device_vesion = #CsOrder.csoDeviceVesion#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoDeviceVesionNot" prepend="and">
+				<isEmpty property="CsOrder.csoDeviceVesion">
+				$csoDeviceVesionNot$ cs_order$CsOrder.suffix$.cso_device_vesion is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoAlarm" prepend="and">
+			    $CsOrder.csoAlarmNot$ cs_order$CsOrder.suffix$.cso_alarm = #CsOrder.csoAlarm#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoAlarmNot" prepend="and">
+				<isEmpty property="CsOrder.csoAlarm">
+				$csoAlarmNot$ cs_order$CsOrder.suffix$.cso_alarm is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoState" prepend="and">
+			    $CsOrder.csoStateNot$ cs_order$CsOrder.suffix$.cso_state = #CsOrder.csoState#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoStateNot" prepend="and">
+				<isEmpty property="CsOrder.csoState">
+				$csoStateNot$ cs_order$CsOrder.suffix$.cso_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrder.csoStatus" prepend="and">
+			    $CsOrder.csoStatusNot$ cs_order$CsOrder.suffix$.cso_status = #CsOrder.csoStatus#
+			</isNotEmpty>
+			<isNotNull property="CsOrder.csoStatusNot" prepend="and">
+				<isEmpty property="CsOrder.csoStatus">
+				$csoStatusNot$ cs_order$CsOrder.suffix$.cso_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

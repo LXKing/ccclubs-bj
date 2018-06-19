@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMarketPlan_part">	
+	<!-- 营销方案条件sql片段  -->
+	<sql id="cs_market_plan_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmpId" prepend="and">
+			    $csmpIdNot$ cs_market_plan$suffix$.csmp_id = #csmpId#
+			</isNotEmpty>
+			<isNotNull property="csmpIdNot" prepend="and">
+				<isEmpty property="csmpId">
+				$csmpIdNot$ cs_market_plan$suffix$.csmp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_market_plan$suffix$.csmp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csmpHost" prepend="and">
+			    $csmpHostNot$ cs_market_plan$suffix$.csmp_host = #csmpHost#
+			</isNotEmpty>
+			<isNotNull property="csmpHostNot" prepend="and">
+				<isEmpty property="csmpHost">
+				$csmpHostNot$ cs_market_plan$suffix$.csmp_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csmpName" prepend="and">			    
+			    (<isNotNull property="csmpNameNot">
+			    cs_market_plan$suffix$.csmp_name is null or length(cs_market_plan$suffix$.csmp_name) &lt; 1 or
+			    </isNotNull>$csmpNameNot$ cs_market_plan$suffix$.csmp_name like #csmpName#)
+			</isNotEmpty>
+			<isNotNull property="csmpNameNot" prepend="and">
+				<isEmpty property="csmpName">
+				$csmpNameNot$ (cs_market_plan$suffix$.csmp_name is null or length(cs_market_plan$suffix$.csmp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpType" prepend="and">
+			    $csmpTypeNot$ cs_market_plan$suffix$.csmp_type = #csmpType#
+			</isNotEmpty>
+			<isNotNull property="csmpTypeNot" prepend="and">
+				<isEmpty property="csmpType">
+				$csmpTypeNot$ cs_market_plan$suffix$.csmp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpMethod" prepend="and">
+			    $csmpMethodNot$ cs_market_plan$suffix$.csmp_method = #csmpMethod#
+			</isNotEmpty>
+			<isNotNull property="csmpMethodNot" prepend="and">
+				<isEmpty property="csmpMethod">
+				$csmpMethodNot$ cs_market_plan$suffix$.csmp_method is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpPerson" prepend="and">
+			    $csmpPersonNot$ cs_market_plan$suffix$.csmp_person = #csmpPerson#
+			</isNotEmpty>
+			<isNotNull property="csmpPersonNot" prepend="and">
+				<isEmpty property="csmpPerson">
+				$csmpPersonNot$ cs_market_plan$suffix$.csmp_person is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpProfile" prepend="and">			    
+			    (<isNotNull property="csmpProfileNot">
+			    cs_market_plan$suffix$.csmp_profile is null or length(cs_market_plan$suffix$.csmp_profile) &lt; 1 or
+			    </isNotNull>$csmpProfileNot$ cs_market_plan$suffix$.csmp_profile like #csmpProfile#)
+			</isNotEmpty>
+			<isNotNull property="csmpProfileNot" prepend="and">
+				<isEmpty property="csmpProfile">
+				$csmpProfileNot$ (cs_market_plan$suffix$.csmp_profile is null or length(cs_market_plan$suffix$.csmp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpPlanBook" prepend="and">
+			    $csmpPlanBookNot$ cs_market_plan$suffix$.csmp_plan_book = #csmpPlanBook#
+			</isNotEmpty>
+			<isNotNull property="csmpPlanBookNot" prepend="and">
+				<isEmpty property="csmpPlanBook">
+				$csmpPlanBookNot$ cs_market_plan$suffix$.csmp_plan_book is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpMindMap" prepend="and">
+			    $csmpMindMapNot$ cs_market_plan$suffix$.csmp_mind_map = #csmpMindMap#
+			</isNotEmpty>
+			<isNotNull property="csmpMindMapNot" prepend="and">
+				<isEmpty property="csmpMindMap">
+				$csmpMindMapNot$ cs_market_plan$suffix$.csmp_mind_map is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpVIndex" prepend="and">
+			    $csmpVIndexNot$ cs_market_plan$suffix$.csmp_v_index = #csmpVIndex#
+			</isNotEmpty>
+			<isNotNull property="csmpVIndexNot" prepend="and">
+				<isEmpty property="csmpVIndex">
+				$csmpVIndexNot$ cs_market_plan$suffix$.csmp_v_index is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpStartStart" prepend="and">
+			    $csmpStartNot$   (cs_market_plan$suffix$.csmp_start &gt;= #csmpStartStart#
+			   <isEmpty property="csmpStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmpStartEnd" prepend="and">
+				<isEmpty property="csmpStartStart">$csmpStartNot$   (</isEmpty>
+			    cs_market_plan$suffix$.csmp_start &lt;= #csmpStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmpStart" prepend="and">
+			    $csmpStartNot$ cs_market_plan$suffix$.csmp_start = #csmpStart#
+			</isNotEmpty>
+			<isNotNull property="csmpStartNot" prepend="and">
+				<isEmpty property="csmpStartStart"><isEmpty property="csmpStartEnd"><isEmpty property="csmpStart">
+				$csmpStartNot$ cs_market_plan$suffix$.csmp_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpFinishStart" prepend="and">
+			    $csmpFinishNot$   (cs_market_plan$suffix$.csmp_finish &gt;= #csmpFinishStart#
+			   <isEmpty property="csmpFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmpFinishEnd" prepend="and">
+				<isEmpty property="csmpFinishStart">$csmpFinishNot$   (</isEmpty>
+			    cs_market_plan$suffix$.csmp_finish &lt;= #csmpFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmpFinish" prepend="and">
+			    $csmpFinishNot$ cs_market_plan$suffix$.csmp_finish = #csmpFinish#
+			</isNotEmpty>
+			<isNotNull property="csmpFinishNot" prepend="and">
+				<isEmpty property="csmpFinishStart"><isEmpty property="csmpFinishEnd"><isEmpty property="csmpFinish">
+				$csmpFinishNot$ cs_market_plan$suffix$.csmp_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpUpdateTimeStart" prepend="and">
+			    $csmpUpdateTimeNot$   (cs_market_plan$suffix$.csmp_update_time &gt;= #csmpUpdateTimeStart#
+			   <isEmpty property="csmpUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmpUpdateTimeEnd" prepend="and">
+				<isEmpty property="csmpUpdateTimeStart">$csmpUpdateTimeNot$   (</isEmpty>
+			    cs_market_plan$suffix$.csmp_update_time &lt;= #csmpUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmpUpdateTime" prepend="and">
+			    $csmpUpdateTimeNot$ cs_market_plan$suffix$.csmp_update_time = #csmpUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csmpUpdateTimeNot" prepend="and">
+				<isEmpty property="csmpUpdateTimeStart"><isEmpty property="csmpUpdateTimeEnd"><isEmpty property="csmpUpdateTime">
+				$csmpUpdateTimeNot$ cs_market_plan$suffix$.csmp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpAddTimeStart" prepend="and">
+			    $csmpAddTimeNot$   (cs_market_plan$suffix$.csmp_add_time &gt;= #csmpAddTimeStart#
+			   <isEmpty property="csmpAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmpAddTimeEnd" prepend="and">
+				<isEmpty property="csmpAddTimeStart">$csmpAddTimeNot$   (</isEmpty>
+			    cs_market_plan$suffix$.csmp_add_time &lt;= #csmpAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmpAddTime" prepend="and">
+			    $csmpAddTimeNot$ cs_market_plan$suffix$.csmp_add_time = #csmpAddTime#
+			</isNotEmpty>
+			<isNotNull property="csmpAddTimeNot" prepend="and">
+				<isEmpty property="csmpAddTimeStart"><isEmpty property="csmpAddTimeEnd"><isEmpty property="csmpAddTime">
+				$csmpAddTimeNot$ cs_market_plan$suffix$.csmp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpRemark" prepend="and">			    
+			    (<isNotNull property="csmpRemarkNot">
+			    cs_market_plan$suffix$.csmp_remark is null or length(cs_market_plan$suffix$.csmp_remark) &lt; 1 or
+			    </isNotNull>$csmpRemarkNot$ cs_market_plan$suffix$.csmp_remark like #csmpRemark#)
+			</isNotEmpty>
+			<isNotNull property="csmpRemarkNot" prepend="and">
+				<isEmpty property="csmpRemark">
+				$csmpRemarkNot$ (cs_market_plan$suffix$.csmp_remark is null or length(cs_market_plan$suffix$.csmp_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmpStatus" prepend="and">
+			    $csmpStatusNot$ cs_market_plan$suffix$.csmp_status = #csmpStatus#
+			</isNotEmpty>
+			<isNotNull property="csmpStatusNot" prepend="and">
+				<isEmpty property="csmpStatus">
+				$csmpStatusNot$ cs_market_plan$suffix$.csmp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 营销方案left join 条件sql片段 -->
+	<sql id="cs_market_plan_join">
+		<dynamic>
+			<isNotEmpty property="CsMarketPlan.csmpId" prepend="and">
+			    $CsMarketPlan.csmpIdNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_id = #CsMarketPlan.csmpId#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpIdNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpId">
+				$csmpIdNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpHost" prepend="and">
+			    $CsMarketPlan.csmpHostNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_host = #CsMarketPlan.csmpHost#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpHostNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpHost">
+				$csmpHostNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpName" prepend="and">
+				(<isNotNull property="CsMarketPlan.csmpNameNot">
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_name is null or length(cs_market_plan$CsMarketPlan.suffix$.csmp_name) &lt; 1 or
+			    </isNotNull>$CsMarketPlan.csmpNameNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_name like #CsMarketPlan.csmpName#)
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpNameNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpName">
+				$csmpNameNot$ (cs_market_plan$CsMarketPlan.suffix$.csmp_name is null or length(cs_market_plan$CsMarketPlan.suffix$.csmp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpType" prepend="and">
+			    $CsMarketPlan.csmpTypeNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_type = #CsMarketPlan.csmpType#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpTypeNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpType">
+				$csmpTypeNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpMethod" prepend="and">
+			    $CsMarketPlan.csmpMethodNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_method = #CsMarketPlan.csmpMethod#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpMethodNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpMethod">
+				$csmpMethodNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_method is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpPerson" prepend="and">
+			    $CsMarketPlan.csmpPersonNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_person = #CsMarketPlan.csmpPerson#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpPersonNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpPerson">
+				$csmpPersonNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_person is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpProfile" prepend="and">
+				(<isNotNull property="CsMarketPlan.csmpProfileNot">
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_profile is null or length(cs_market_plan$CsMarketPlan.suffix$.csmp_profile) &lt; 1 or
+			    </isNotNull>$CsMarketPlan.csmpProfileNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_profile like #CsMarketPlan.csmpProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpProfileNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpProfile">
+				$csmpProfileNot$ (cs_market_plan$CsMarketPlan.suffix$.csmp_profile is null or length(cs_market_plan$CsMarketPlan.suffix$.csmp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpPlanBook" prepend="and">
+			    $CsMarketPlan.csmpPlanBookNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_plan_book = #CsMarketPlan.csmpPlanBook#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpPlanBookNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpPlanBook">
+				$csmpPlanBookNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_plan_book is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpMindMap" prepend="and">
+			    $CsMarketPlan.csmpMindMapNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_mind_map = #CsMarketPlan.csmpMindMap#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpMindMapNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpMindMap">
+				$csmpMindMapNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_mind_map is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpVIndex" prepend="and">
+			    $CsMarketPlan.csmpVIndexNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_v_index = #CsMarketPlan.csmpVIndex#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpVIndexNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpVIndex">
+				$csmpVIndexNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_v_index is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpStartStart" prepend="and">
+			    $CsMarketPlan.csmpStartNot$   (cs_market_plan$CsMarketPlan.suffix$.csmp_start &gt;= #CsMarketPlan.csmpStartStart#
+			   <isEmpty property="CsMarketPlan.csmpStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpStartEnd" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpStartStart">$CsMarketPlan.csmpStartNot$   (</isEmpty>
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_start &lt;= #CsMarketPlan.csmpStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpStart" prepend="and">
+			    $CsMarketPlan.csmpStartNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_start = #CsMarketPlan.csmpStart#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpStartNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpStartStart"><isEmpty property="CsMarketPlan.csmpStartEnd"><isEmpty property="CsMarketPlan.csmpStart">
+				$csmpStartNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpFinishStart" prepend="and">
+			    $CsMarketPlan.csmpFinishNot$   (cs_market_plan$CsMarketPlan.suffix$.csmp_finish &gt;= #CsMarketPlan.csmpFinishStart#
+			   <isEmpty property="CsMarketPlan.csmpFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpFinishEnd" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpFinishStart">$CsMarketPlan.csmpFinishNot$   (</isEmpty>
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_finish &lt;= #CsMarketPlan.csmpFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpFinish" prepend="and">
+			    $CsMarketPlan.csmpFinishNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_finish = #CsMarketPlan.csmpFinish#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpFinishNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpFinishStart"><isEmpty property="CsMarketPlan.csmpFinishEnd"><isEmpty property="CsMarketPlan.csmpFinish">
+				$csmpFinishNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpUpdateTimeStart" prepend="and">
+			    $CsMarketPlan.csmpUpdateTimeNot$   (cs_market_plan$CsMarketPlan.suffix$.csmp_update_time &gt;= #CsMarketPlan.csmpUpdateTimeStart#
+			   <isEmpty property="CsMarketPlan.csmpUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpUpdateTimeStart">$CsMarketPlan.csmpUpdateTimeNot$   (</isEmpty>
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_update_time &lt;= #CsMarketPlan.csmpUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpUpdateTime" prepend="and">
+			    $CsMarketPlan.csmpUpdateTimeNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_update_time = #CsMarketPlan.csmpUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpUpdateTimeNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpUpdateTimeStart"><isEmpty property="CsMarketPlan.csmpUpdateTimeEnd"><isEmpty property="CsMarketPlan.csmpUpdateTime">
+				$csmpUpdateTimeNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpAddTimeStart" prepend="and">
+			    $CsMarketPlan.csmpAddTimeNot$   (cs_market_plan$CsMarketPlan.suffix$.csmp_add_time &gt;= #CsMarketPlan.csmpAddTimeStart#
+			   <isEmpty property="CsMarketPlan.csmpAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpAddTimeEnd" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpAddTimeStart">$CsMarketPlan.csmpAddTimeNot$   (</isEmpty>
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_add_time &lt;= #CsMarketPlan.csmpAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketPlan.csmpAddTime" prepend="and">
+			    $CsMarketPlan.csmpAddTimeNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_add_time = #CsMarketPlan.csmpAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpAddTimeNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpAddTimeStart"><isEmpty property="CsMarketPlan.csmpAddTimeEnd"><isEmpty property="CsMarketPlan.csmpAddTime">
+				$csmpAddTimeNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpRemark" prepend="and">
+				(<isNotNull property="CsMarketPlan.csmpRemarkNot">
+			    cs_market_plan$CsMarketPlan.suffix$.csmp_remark is null or length(cs_market_plan$CsMarketPlan.suffix$.csmp_remark) &lt; 1 or
+			    </isNotNull>$CsMarketPlan.csmpRemarkNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_remark like #CsMarketPlan.csmpRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpRemarkNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpRemark">
+				$csmpRemarkNot$ (cs_market_plan$CsMarketPlan.suffix$.csmp_remark is null or length(cs_market_plan$CsMarketPlan.suffix$.csmp_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketPlan.csmpStatus" prepend="and">
+			    $CsMarketPlan.csmpStatusNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_status = #CsMarketPlan.csmpStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMarketPlan.csmpStatusNot" prepend="and">
+				<isEmpty property="CsMarketPlan.csmpStatus">
+				$csmpStatusNot$ cs_market_plan$CsMarketPlan.suffix$.csmp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

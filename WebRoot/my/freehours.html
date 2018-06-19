@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>免费小时${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.my.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/grass2.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-my-page">
+			<%@ include file="/include/myUserInfo.html"%>
+
+			<div class="ccc-my-paper ccc-clearfix">
+				<%@ include file="/include/myLeftNavigation.html"%>
+				<div class="ccc-my-main ccc-my-page" id="ccc-my-point">
+					<div class="ccc-my-paper-borderleft"></div>
+					<div class="ccc-my-paper-deco"></div>
+					<div class="ccc-my-main-cont">
+						<div class="ccc-my-main-middle">
+							<div class="ccc-my-main-middle-cont">
+								<article id="ccc-my-panel-point">
+								<div class="ccc-my-panel">
+									<header>
+									<img src="/images/colorful-bar.png" class="ccc-colorful-bar">
+									<h1>
+										免费小时明细
+									</h1>
+									</header>
+									<div class="ccc-my-panel-summary ccc-clearfix">
+										<div class="ccc-my-panel-summary-item">
+											<span class="ccc-my-title">可用免费小时</span>
+											<div class="ccc-my-num">
+												${lz:digit(sum,2)}
+												<span class="ccc-my-num-unit">小时</span>
+											</div>
+										</div>
+										<div class="ccc-my-panel-summary-item">
+											<span class="ccc-my-title">将过期的免费小时</span>
+											<div class="ccc-my-num">
+												${lz:digit(overSum,2)}
+												<span class="ccc-my-num-unit">小时<a class="ccc-help">[?]
+														<div class="ccc-bubble-azure">
+															<p>
+																即日起7天内将过期的免费小时
+															</p>
+															<p>
+																（
+																<span class="ccc-font-lato">${lz:date(overDate,"yyyy年MM月dd日")}</span>过期）
+															</p>
+														</div> </a> </span>
+											</div>
+										</div>
+									</div>
+									<img src="/images/icons/simple-divider.png" class="ccc-my-divider">
+
+									<nav class="ccc-my-panel-tabnav ccc-clearfix">
+									<ul>
+										<li class="alpha">
+											<a href="/my/freehours.html?type=1" class="${freehourType == 1 ? 'cur' : ''}">收入明细</a>
+										</li>
+										<li>
+											<a href="/my/freehours.html?type=3" class="${freehourType == 3 ? 'cur' : ''}">支出明细</a>
+										</li>
+										<li>
+											<a href="/my/freehours.html?type=2" class="${freehourType == 2 ? 'cur' : ''}">过期小时</a>
+										</li>
+									</ul>
+									</nav>
+									<!-- 免费小时发放 -->
+									<s:if test="#request.freehourType == 1">
+										<table class="ccc-my-record-table" width="100%">
+											<colgroup>
+												<col width="">
+												<col width="50%">
+												<col width="">
+												<col width="">
+												<col width="">
+											</colgroup>
+											<thead>
+												<tr>
+													<th class="time">
+														生成时间
+													</th>
+													<th class="description">
+														来源 | 用途
+													</th>
+													<th class="validity">
+														有效期
+													</th>
+													<th class="amount single">
+														收支
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<s:if test="#request.page.result.size==0">
+													<tr>
+														<td colspan="4">
+															<s:if test="#request.member.csmIntegral >=500">
+																<div class="ccc-my-noresult">
+																	<a href="/my/point.html"><span>亲，现在可以积分兑换小时啦～</span> 立即兑换 »</a>
+																</div>
+															</s:if>
+															<s:else>
+																<div class="ccc-my-noresult">
+																	<a href="/my/account.html"><span>完善资料拿积分</span> 立即完善 »</a>
+																</div>
+															</s:else>
+														</td>
+													</tr>
+												</s:if>
+												<s:else>
+													<s:iterator value="#request.page.result" id="item" status="i">
+														<!-- loop temp [begin] -->
+														<s:if test="#i.modulus(2) == 1">
+															<tr>
+														</s:if>
+														<s:else>
+															<tr class="split">
+														</s:else>
+														<td class="time">
+															<p>
+																${lz:date(item.csfhAddTime,"yyyy-MM-dd")}
+															</p>
+															<p class="ccc-color-gray">
+																${lz:date(item.csfhAddTime,"HH:mm")}
+															</p>
+														</td>
+														<td class="description">
+															<p>
+																${item.csfhRemark}
+															</p>
+														</td>
+														<td class="validity">
+															<div>
+																${item.csfhValidity==0?"4个月":""}${item.csfhValidity==1?"1个月":""} ${item.csfhValidity==2?"2个月":""} ${item.csfhValidity==3?"3个月":""} ${item.csfhValidity==6?"半年":""} ${item.csfhValidity==12?"1年":""}
+																<a class="ccc-trigger"><b></b><i></i>
+																	<div class="ccc-bubble-azure">
+																		有效期至：
+																		<span class="ccc-font-lato">${lz:date(item.csfhEnd,"yyyy-MM-dd , HH:mm")}</span>
+																	</div> </a>
+															</div>
+														</td>
+														<td class="amount single">
+															<span class="plus">+${lz:digit(item.csfhCount,2)}</span>
+														</td>
+														</tr>
+													</s:iterator>
+												</s:else>
+											</tbody>
+										</table>
+									</s:if>
+									<!-- 免费小时过期 -->
+									<s:if test="#request.freehourType == 2">
+										<table class="ccc-my-record-table" width="100%">
+											<colgroup>
+												<col width="">
+												<col width="50%">
+												<col width="">
+												<col width="">
+												<col width="">
+											</colgroup>
+											<thead>
+												<tr>
+													<th class="time">
+														生成时间
+													</th>
+													<th class="description">
+														来源 | 用途
+													</th>
+													<th class="validity">
+														有效期
+													</th>
+													<th class="amount single">
+														收支
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<s:if test="#request.page.result.size==0">
+													<tr>
+														<td colspan="4">
+															<s:if test="#request.overSum>0">
+																<div class="ccc-my-noresult">
+																	<a href="/reserve.html"><span>哎哟，有免费小时快过期啦，现在就去用掉吧</span> 立即使用 »</a>
+																</div>
+															</s:if>
+															<s:else>
+																<div class="ccc-my-noresult single">
+																	<a>还好，免费小时都没过期~</a>
+																</div>
+															</s:else>
+														</td>
+													</tr>
+												</s:if>
+												<s:else>
+													<s:iterator value="#request.page.result" id="item" status="i">
+														<!-- loop temp [begin] -->
+														<s:if test="#i.modulus(2) == 1">
+															<tr>
+														</s:if>
+														<s:else>
+															<tr class="split">
+														</s:else>
+														<td class="time">
+															<p>
+																${lz:date(item.csfhEnd,"yyyy-MM-dd")}
+															</p>
+															<p class="ccc-color-gray">
+																${lz:date(item.csfhEnd,"HH:mm")}
+															</p>
+														</td>
+														<td class="description">
+															<p>
+																${item.csfhRemark}
+															</p>
+														</td>
+														<td class="validity">
+															<div>
+																<p class="ccc-color-gray">
+																	已过期
+																</p>
+															</div>
+														</td>
+														<td class="amount single">
+															<span class="subtract">-${lz:digit(item.csfhRemain,2)}</span>
+														</td>
+														</tr>
+													</s:iterator>
+												</s:else>
+											</tbody>
+										</table>
+									</s:if>
+									<!-- 免费小时支出 -->
+									<s:if test="#request.freehourType == 3">
+										<table class="ccc-my-record-table" width="100%">
+											<colgroup>
+												<col width="">
+												<col width="50%">
+												<col width="">
+												<col width="">
+												<col width="">
+											</colgroup>
+											<thead>
+												<tr>
+													<th class="time">
+														生成时间
+													</th>
+													<th class="description">
+														来源 | 用途
+													</th>
+													<th class="validity">
+														有效期
+													</th>
+													<th class="amount single">
+														收支
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<s:if test="#request.page.result.size==0">
+													<tr>
+														<td colspan="4">
+															<s:if test="#request.sum>0">
+																<div class="ccc-my-noresult">
+																	<a href="/reserve.html"><span>哎哟，还没有使用过免费小时？</span> 立即使用 »</a>
+																</div>
+															</s:if>
+															<s:else>
+																<div class="ccc-my-noresult single">
+																	<a>哎哟，暂无支出记录哦，亲~</a>
+																</div>
+															</s:else>
+														</td>
+													</tr>
+												</s:if>
+												<s:else>
+													<s:iterator value="#request.page.result" id="item" status="i">
+														<!-- loop temp [begin] -->
+														<s:if test="#i.modulus(2) == 1">
+															<tr>
+														</s:if>
+														<s:else>
+															<tr class="split">
+														</s:else>
+														<td class="time">
+															<p>
+																${lz:date(item.csurAddTime,"yyyy-MM-dd")}
+															</p>
+															<p class="ccc-color-gray">
+																${lz:date(item.csurAddTime,"HH:mm")}
+															</p>
+														</td>
+														<td class="description">
+															<p>
+																订单租金消费
+															</p>
+															<p class="ccc-color-gray">
+																订单号：
+																<span class="ccc-font-lato">${item.csurOrder}</span>
+															</p>
+														</td>
+														<td class="validity">
+															<div>
+																<p class="ccc-color-gray">
+																	已使用
+																</p>
+															</div>
+														</td>
+														<td class="amount single">
+															<span class="subtract">-${lz:digit(item.csurCount,2)}</span>
+														</td>
+														</tr>
+													</s:iterator>
+												</s:else>
+											</tbody>
+										</table>
+									</s:if>
+								</div>
+								</article>
+							</div>
+						</div>
+						<%@ include file="/include/myRightNavigation.html"%>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<%@ include file="/include/myInfoBox.html"%>
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/ccclubs.my.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script>
+			$(document).ready(function() {
+				
+					var page = 0;
+					var maxPage = ${page.total};
+					$(window).bind('scroll', function() {
+						if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+							if(page < maxPage-1)
+							{
+								page++;
+								$.get('/my/freehours_moreFreehours.html',{page:page,type:${freehourType},t:new Date().getTime()},function(data){
+									if($.trim(data).indexOf('<!DOCTYPE html>')>-1)
+									{
+										location.href = '/my/freehours.html';
+									}else{
+										$('.ccc-my-record-table').append(data);
+									}
+								});
+							}
+						};
+					});
+				
+				$('td.validity .ccc-trigger').on('click',function() {
+					var cur = $(this).children('.ccc-bubble-azure');
+					$('td.validity .ccc-trigger .ccc-bubble-azure').not(cur).slideUp(100);
+					cur.slideToggle(120);
+				})
+			});
+	</script>
+
+	</body>
+</html>

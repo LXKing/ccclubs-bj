@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUnitFee_part">	
+	<!-- 价格配置条件sql片段  -->
+	<sql id="cs_unit_fee_dynamic">
+		<dynamic>
+			<isNotEmpty property="csufId" prepend="and">
+			    $csufIdNot$ cs_unit_fee$suffix$.csuf_id = #csufId#
+			</isNotEmpty>
+			<isNotNull property="csufIdNot" prepend="and">
+				<isEmpty property="csufId">
+				$csufIdNot$ cs_unit_fee$suffix$.csuf_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_fee$suffix$.csuf_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csufHost" prepend="and">
+			    $csufHostNot$ cs_unit_fee$suffix$.csuf_host = #csufHost#
+			</isNotEmpty>
+			<isNotNull property="csufHostNot" prepend="and">
+				<isEmpty property="csufHost">
+				$csufHostNot$ cs_unit_fee$suffix$.csuf_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csufName" prepend="and">			    
+			    (<isNotNull property="csufNameNot">
+			    cs_unit_fee$suffix$.csuf_name is null or length(cs_unit_fee$suffix$.csuf_name) &lt; 1 or
+			    </isNotNull>$csufNameNot$ cs_unit_fee$suffix$.csuf_name = #csufName#)
+			</isNotEmpty>
+			<isNotNull property="csufNameNot" prepend="and">
+				<isEmpty property="csufName">
+				$csufNameNot$ (cs_unit_fee$suffix$.csuf_name is null or length(cs_unit_fee$suffix$.csuf_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csufUnitInfo" prepend="and">
+			    $csufUnitInfoNot$ cs_unit_fee$suffix$.csuf_unit_info = #csufUnitInfo#
+			</isNotEmpty>
+			<isNotNull property="csufUnitInfoNot" prepend="and">
+				<isEmpty property="csufUnitInfo">
+				$csufUnitInfoNot$ cs_unit_fee$suffix$.csuf_unit_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csufModel" prepend="and">
+			    $csufModelNot$ cs_unit_fee$suffix$.csuf_model = #csufModel#
+			</isNotEmpty>
+			<isNotNull property="csufModelNot" prepend="and">
+				<isEmpty property="csufModel">
+				$csufModelNot$ cs_unit_fee$suffix$.csuf_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csufDayPriceMin" prepend="and">
+			    $csufDayPriceNot$  ( cs_unit_fee$suffix$.csuf_day_price &gt;= #csufDayPriceMin#
+			    <isEmpty property="csufDayPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csufDayPriceMax" prepend="and">
+				<isEmpty property="csufDayPriceMin">$csufDayPriceNot$   (</isEmpty>
+			    cs_unit_fee$suffix$.csuf_day_price &lt;= #csufDayPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csufDayPrice" prepend="and">
+			    $csufDayPriceNot$ cs_unit_fee$suffix$.csuf_day_price = #csufDayPrice#
+			</isNotEmpty>
+			<isNotNull property="csufDayPriceNot" prepend="and">
+				<isEmpty property="csufDayPriceMax"><isEmpty property="csufDayPriceMin"><isEmpty property="csufDayPrice">
+				$csufDayPriceNot$ cs_unit_fee$suffix$.csuf_day_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csufHourPriceMin" prepend="and">
+			    $csufHourPriceNot$  ( cs_unit_fee$suffix$.csuf_hour_price &gt;= #csufHourPriceMin#
+			    <isEmpty property="csufHourPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csufHourPriceMax" prepend="and">
+				<isEmpty property="csufHourPriceMin">$csufHourPriceNot$   (</isEmpty>
+			    cs_unit_fee$suffix$.csuf_hour_price &lt;= #csufHourPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csufHourPrice" prepend="and">
+			    $csufHourPriceNot$ cs_unit_fee$suffix$.csuf_hour_price = #csufHourPrice#
+			</isNotEmpty>
+			<isNotNull property="csufHourPriceNot" prepend="and">
+				<isEmpty property="csufHourPriceMax"><isEmpty property="csufHourPriceMin"><isEmpty property="csufHourPrice">
+				$csufHourPriceNot$ cs_unit_fee$suffix$.csuf_hour_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csufMileageMin" prepend="and">
+			    $csufMileageNot$  ( cs_unit_fee$suffix$.csuf_mileage &gt;= #csufMileageMin#
+			    <isEmpty property="csufMileageMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csufMileageMax" prepend="and">
+				<isEmpty property="csufMileageMin">$csufMileageNot$   (</isEmpty>
+			    cs_unit_fee$suffix$.csuf_mileage &lt;= #csufMileageMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csufMileage" prepend="and">
+			    $csufMileageNot$ cs_unit_fee$suffix$.csuf_mileage = #csufMileage#
+			</isNotEmpty>
+			<isNotNull property="csufMileageNot" prepend="and">
+				<isEmpty property="csufMileageMax"><isEmpty property="csufMileageMin"><isEmpty property="csufMileage">
+				$csufMileageNot$ cs_unit_fee$suffix$.csuf_mileage is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 价格配置left join 条件sql片段 -->
+	<sql id="cs_unit_fee_join">
+		<dynamic>
+			<isNotEmpty property="CsUnitFee.csufId" prepend="and">
+			    $CsUnitFee.csufIdNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_id = #CsUnitFee.csufId#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufIdNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufId">
+				$csufIdNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_fee$CsUnitFee.suffix$.csuf_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufHost" prepend="and">
+			    $CsUnitFee.csufHostNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_host = #CsUnitFee.csufHost#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufHostNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufHost">
+				$csufHostNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitFee.csufName" prepend="and">
+				(<isNotNull property="CsUnitFee.csufNameNot">
+			    cs_unit_fee$CsUnitFee.suffix$.csuf_name is null or length(cs_unit_fee$CsUnitFee.suffix$.csuf_name) &lt; 1 or
+			    </isNotNull>$CsUnitFee.csufNameNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_name = #CsUnitFee.csufName#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufNameNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufName">
+				$csufNameNot$ (cs_unit_fee$CsUnitFee.suffix$.csuf_name is null or length(cs_unit_fee$CsUnitFee.suffix$.csuf_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitFee.csufUnitInfo" prepend="and">
+			    $CsUnitFee.csufUnitInfoNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_unit_info = #CsUnitFee.csufUnitInfo#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufUnitInfoNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufUnitInfo">
+				$csufUnitInfoNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_unit_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitFee.csufModel" prepend="and">
+			    $CsUnitFee.csufModelNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_model = #CsUnitFee.csufModel#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufModelNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufModel">
+				$csufModelNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitFee.csufDayPriceMin" prepend="and">
+			    $CsUnitFee.csufDayPriceNot$  ( cs_unit_fee$CsUnitFee.suffix$.csuf_day_price &gt;= #CsUnitFee.csufDayPriceMin#
+			    <isEmpty property="CsUnitFee.csufDayPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufDayPriceMax" prepend="and">
+				<isEmpty property="CsUnitFee.csufDayPriceMin">$CsUnitFee.csufDayPriceNot$   (</isEmpty>
+			    cs_unit_fee$CsUnitFee.suffix$.csuf_day_price &lt;= #CsUnitFee.csufDayPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufDayPrice" prepend="and">
+			    $CsUnitFee.csufDayPriceNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_day_price = #CsUnitFee.csufDayPrice#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufDayPriceNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufDayPriceMax"><isEmpty property="CsUnitFee.csufDayPriceMin"><isEmpty property="CsUnitFee.csufDayPrice">
+				$csufDayPriceNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_day_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitFee.csufHourPriceMin" prepend="and">
+			    $CsUnitFee.csufHourPriceNot$  ( cs_unit_fee$CsUnitFee.suffix$.csuf_hour_price &gt;= #CsUnitFee.csufHourPriceMin#
+			    <isEmpty property="CsUnitFee.csufHourPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufHourPriceMax" prepend="and">
+				<isEmpty property="CsUnitFee.csufHourPriceMin">$CsUnitFee.csufHourPriceNot$   (</isEmpty>
+			    cs_unit_fee$CsUnitFee.suffix$.csuf_hour_price &lt;= #CsUnitFee.csufHourPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufHourPrice" prepend="and">
+			    $CsUnitFee.csufHourPriceNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_hour_price = #CsUnitFee.csufHourPrice#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufHourPriceNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufHourPriceMax"><isEmpty property="CsUnitFee.csufHourPriceMin"><isEmpty property="CsUnitFee.csufHourPrice">
+				$csufHourPriceNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_hour_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitFee.csufMileageMin" prepend="and">
+			    $CsUnitFee.csufMileageNot$  ( cs_unit_fee$CsUnitFee.suffix$.csuf_mileage &gt;= #CsUnitFee.csufMileageMin#
+			    <isEmpty property="CsUnitFee.csufMileageMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufMileageMax" prepend="and">
+				<isEmpty property="CsUnitFee.csufMileageMin">$CsUnitFee.csufMileageNot$   (</isEmpty>
+			    cs_unit_fee$CsUnitFee.suffix$.csuf_mileage &lt;= #CsUnitFee.csufMileageMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitFee.csufMileage" prepend="and">
+			    $CsUnitFee.csufMileageNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_mileage = #CsUnitFee.csufMileage#
+			</isNotEmpty>
+			<isNotNull property="CsUnitFee.csufMileageNot" prepend="and">
+				<isEmpty property="CsUnitFee.csufMileageMax"><isEmpty property="CsUnitFee.csufMileageMin"><isEmpty property="CsUnitFee.csufMileage">
+				$csufMileageNot$ cs_unit_fee$CsUnitFee.suffix$.csuf_mileage is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

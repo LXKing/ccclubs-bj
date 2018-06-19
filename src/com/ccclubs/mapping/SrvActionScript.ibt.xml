@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 后台事务脚本之SQL映射 -->
+	<resultMap id="SrvActionScript" class="com.ccclubs.model.SrvActionScript">
+		<result property="ssId" column="ss_id"/>
+		<result property="ssName" column="ss_name"/>
+		<result property="ssModelClass" column="ss_model_class"/>
+		<result property="ssEvent" column="ss_event"/>
+		<result property="ssCode" column="ss_code"/>
+		<result property="ssUpdateTime" column="ss_update_time"/>
+		<result property="ssAddTime" column="ss_add_time"/>
+		<result property="ssStatus" column="ss_status"/>
+	</resultMap>
+		
+	<!-- 获取所有后台事务脚本 -->
+	<select id="getSrvActionScriptList" resultMap="SrvActionScript">
+		select srv_action_script$suffix$.* from srv_action_script$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_action_script$suffix$.ss_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvActionScript_part.srv_action_script_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by ss_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取后台事务脚本分页 -->
+	<select id="getSrvActionScriptPage" parameterClass="java.util.HashMap" resultMap="SrvActionScript">
+		select srv_action_script$suffix$.* from srv_action_script$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_action_script$suffix$.ss_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvActionScript_part.srv_action_script_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by ss_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取后台事务脚本总数 -->
+	<select id="getSrvActionScriptEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_action_script$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_action_script$suffix$.ss_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvActionScript_part.srv_action_script_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取后台事务脚本 -->
+	<select id="getSrvActionScriptById" parameterClass="java.util.HashMap" resultMap="SrvActionScript">
+		select srv_action_script$suffix$.* from srv_action_script$suffix$
+		where ss_id=#id#
+	</select>
+	
+		
+	<!-- 保存后台事务脚本 -->
+	<insert id="saveSrvActionScript"  parameterClass="com.ccclubs.model.SrvActionScript">
+		insert into srv_action_script$suffix$
+		(
+			srv_action_script$suffix$.ss_name
+			,srv_action_script$suffix$.ss_model_class
+			,srv_action_script$suffix$.ss_event
+			,srv_action_script$suffix$.ss_code
+			,srv_action_script$suffix$.ss_update_time
+			,srv_action_script$suffix$.ss_add_time
+			,srv_action_script$suffix$.ss_status
+		)
+		values(
+			<isNotNull property="ssName" prepend="">
+				#ssName#
+			</isNotNull>
+			<isNull property="ssName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="ssModelClass" prepend=",">
+				#ssModelClass#
+			</isNotNull>
+			<isNull property="ssModelClass" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="ssEvent" prepend=",">
+				#ssEvent#
+			</isNotNull>
+			<isNull property="ssEvent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="ssCode" prepend=",">
+				#ssCode#
+			</isNotNull>
+			<isNull property="ssCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="ssUpdateTime" prepend=",">
+				#ssUpdateTime#
+			</isNotNull>
+			<isNull property="ssUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="ssAddTime" prepend=",">
+				#ssAddTime#
+			</isNotNull>
+			<isNull property="ssAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="ssStatus" prepend=",">
+				#ssStatus#
+			</isNotNull>
+			<isNull property="ssStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新后台事务脚本 -->
+	<update id="updateSrvActionScript"  parameterClass="com.ccclubs.model.SrvActionScript">
+		update srv_action_script$suffix$ set
+			<isNotNull property="ssName" prepend="">
+				srv_action_script$suffix$.ss_name = #ssName#
+			</isNotNull>
+			<isNull property="ssName" prepend="">
+				srv_action_script$suffix$.ss_name = null
+			</isNull>				
+			<isNotNull property="ssModelClass" prepend=",">
+				srv_action_script$suffix$.ss_model_class = #ssModelClass#
+			</isNotNull>
+			<isNull property="ssModelClass" prepend=",">
+				srv_action_script$suffix$.ss_model_class = null
+			</isNull>				
+			<isNotNull property="ssEvent" prepend=",">
+				srv_action_script$suffix$.ss_event = #ssEvent#
+			</isNotNull>
+			<isNull property="ssEvent" prepend=",">
+				srv_action_script$suffix$.ss_event = null
+			</isNull>				
+			<isNotNull property="ssCode" prepend=",">
+				srv_action_script$suffix$.ss_code = #ssCode#
+			</isNotNull>
+			<isNull property="ssCode" prepend=",">
+				srv_action_script$suffix$.ss_code = null
+			</isNull>				
+			<isNotNull property="ssUpdateTime" prepend=",">
+				srv_action_script$suffix$.ss_update_time = #ssUpdateTime#
+			</isNotNull>
+			<isNull property="ssUpdateTime" prepend=",">
+				srv_action_script$suffix$.ss_update_time = null
+			</isNull>				
+			<isNotNull property="ssAddTime" prepend=",">
+				srv_action_script$suffix$.ss_add_time = #ssAddTime#
+			</isNotNull>
+			<isNull property="ssAddTime" prepend=",">
+				srv_action_script$suffix$.ss_add_time = null
+			</isNull>				
+			<isNotNull property="ssStatus" prepend=",">
+				srv_action_script$suffix$.ss_status = #ssStatus#
+			</isNotNull>
+			<isNull property="ssStatus" prepend=",">
+				srv_action_script$suffix$.ss_status = null
+			</isNull>				
+		where
+			ss_id=#ssId#
+	</update>
+	
+	<!-- 更新后台事务脚本非空字段 -->
+	<update id="updateSrvActionScript$NotNull"  parameterClass="com.ccclubs.model.SrvActionScript">
+		update srv_action_script$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="ssName" prepend=",">
+				srv_action_script$suffix$.ss_name = #ssName#
+			</isNotNull>		
+			<isNotNull property="ssModelClass" prepend=",">
+				srv_action_script$suffix$.ss_model_class = #ssModelClass#
+			</isNotNull>		
+			<isNotNull property="ssEvent" prepend=",">
+				srv_action_script$suffix$.ss_event = #ssEvent#
+			</isNotNull>		
+			<isNotNull property="ssCode" prepend=",">
+				srv_action_script$suffix$.ss_code = #ssCode#
+			</isNotNull>		
+			<isNotNull property="ssUpdateTime" prepend=",">
+				srv_action_script$suffix$.ss_update_time = #ssUpdateTime#
+			</isNotNull>		
+			<isNotNull property="ssAddTime" prepend=",">
+				srv_action_script$suffix$.ss_add_time = #ssAddTime#
+			</isNotNull>		
+			<isNotNull property="ssStatus" prepend=",">
+				srv_action_script$suffix$.ss_status = #ssStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			ss_id=#ssId#
+	</update>
+	
+
+	<!-- 根据ID删除一个后台事务脚本 -->
+	<delete id="deleteSrvActionScriptById" parameterClass="java.util.HashMap">
+		delete from srv_action_script$suffix$ where ss_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个后台事务脚本 -->
+	<update id="removeSrvActionScriptById" parameterClass="java.util.HashMap">
+		update srv_action_script$suffix$ set  srv_action_script$suffix$.ss_status=-1  where ss_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新后台事务脚本 -->
+	<update id="updateSrvActionScriptBy"  parameterClass="java.util.HashMap">
+		update srv_action_script$suffix$ set		
+			ss_id=ss_id
+			<isNotNull property="V_ssId" prepend=",">
+				srv_action_script$suffix$.ss_id = #V_ssId#
+			</isNotNull>		
+			<isNotNull property="V_ssName" prepend=",">
+				srv_action_script$suffix$.ss_name = #V_ssName#
+			</isNotNull>		
+			<isNotNull property="V_ssModelClass" prepend=",">
+				srv_action_script$suffix$.ss_model_class = #V_ssModelClass#
+			</isNotNull>		
+			<isNotNull property="V_ssEvent" prepend=",">
+				srv_action_script$suffix$.ss_event = #V_ssEvent#
+			</isNotNull>		
+			<isNotNull property="V_ssCode" prepend=",">
+				srv_action_script$suffix$.ss_code = #V_ssCode#
+			</isNotNull>		
+			<isNotNull property="V_ssUpdateTime" prepend=",">
+				srv_action_script$suffix$.ss_update_time = #V_ssUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_ssAddTime" prepend=",">
+				srv_action_script$suffix$.ss_add_time = #V_ssAddTime#
+			</isNotNull>		
+			<isNotNull property="V_ssStatus" prepend=",">
+				srv_action_script$suffix$.ss_status = #V_ssStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		srv_action_script$suffix$.ss_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvActionScript_part.srv_action_script_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除后台事务脚本 -->
+	<update id="deleteSrvActionScriptBy"  parameterClass="java.util.HashMap">
+		delete from srv_action_script$suffix$ where 
+		srv_action_script$suffix$.ss_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvActionScript_part.srv_action_script_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

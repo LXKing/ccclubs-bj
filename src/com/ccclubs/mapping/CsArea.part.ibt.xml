@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsArea_part">	
+	<!-- 网点区域条件sql片段  -->
+	<sql id="cs_area_dynamic">
+		<dynamic>
+			<isNotEmpty property="csaId" prepend="and">
+			    $csaIdNot$ cs_area$suffix$.csa_id = #csaId#
+			</isNotEmpty>
+			<isNotNull property="csaIdNot" prepend="and">
+				<isEmpty property="csaId">
+				$csaIdNot$ cs_area$suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_area$suffix$.csa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csaHost" prepend="and">
+			    $csaHostNot$ cs_area$suffix$.csa_host = #csaHost#
+			</isNotEmpty>
+			<isNotNull property="csaHostNot" prepend="and">
+				<isEmpty property="csaHost">
+				$csaHostNot$ cs_area$suffix$.csa_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csaName" prepend="and">			    
+			    (<isNotNull property="csaNameNot">
+			    cs_area$suffix$.csa_name is null or length(cs_area$suffix$.csa_name) &lt; 1 or
+			    </isNotNull>$csaNameNot$ cs_area$suffix$.csa_name = #csaName#)
+			</isNotEmpty>
+			<isNotNull property="csaNameNot" prepend="and">
+				<isEmpty property="csaName">
+				$csaNameNot$ (cs_area$suffix$.csa_name is null or length(cs_area$suffix$.csa_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaLevelMin" prepend="and">
+			    $csaLevelNot$  ( cs_area$suffix$.csa_level &gt;= #csaLevelMin#
+			    <isEmpty property="csaLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaLevelMax" prepend="and">
+				<isEmpty property="csaLevelMin">$csaLevelNot$   (</isEmpty>
+			    cs_area$suffix$.csa_level &lt;= #csaLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csaLevel" prepend="and">
+			    $csaLevelNot$ cs_area$suffix$.csa_level = #csaLevel#
+			</isNotEmpty>
+			<isNotNull property="csaLevelNot" prepend="and">
+				<isEmpty property="csaLevelMax"><isEmpty property="csaLevelMin"><isEmpty property="csaLevel">
+				$csaLevelNot$ cs_area$suffix$.csa_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csaStatus" prepend="and">
+			    $csaStatusNot$ cs_area$suffix$.csa_status = #csaStatus#
+			</isNotEmpty>
+			<isNotNull property="csaStatusNot" prepend="and">
+				<isEmpty property="csaStatus">
+				$csaStatusNot$ cs_area$suffix$.csa_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 网点区域left join 条件sql片段 -->
+	<sql id="cs_area_join">
+		<dynamic>
+			<isNotEmpty property="CsArea.csaId" prepend="and">
+			    $CsArea.csaIdNot$ cs_area$CsArea.suffix$.csa_id = #CsArea.csaId#
+			</isNotEmpty>
+			<isNotNull property="CsArea.csaIdNot" prepend="and">
+				<isEmpty property="CsArea.csaId">
+				$csaIdNot$ cs_area$CsArea.suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_area$CsArea.suffix$.csa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsArea.csaHost" prepend="and">
+			    $CsArea.csaHostNot$ cs_area$CsArea.suffix$.csa_host = #CsArea.csaHost#
+			</isNotEmpty>
+			<isNotNull property="CsArea.csaHostNot" prepend="and">
+				<isEmpty property="CsArea.csaHost">
+				$csaHostNot$ cs_area$CsArea.suffix$.csa_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArea.csaName" prepend="and">
+				(<isNotNull property="CsArea.csaNameNot">
+			    cs_area$CsArea.suffix$.csa_name is null or length(cs_area$CsArea.suffix$.csa_name) &lt; 1 or
+			    </isNotNull>$CsArea.csaNameNot$ cs_area$CsArea.suffix$.csa_name = #CsArea.csaName#)
+			</isNotEmpty>
+			<isNotNull property="CsArea.csaNameNot" prepend="and">
+				<isEmpty property="CsArea.csaName">
+				$csaNameNot$ (cs_area$CsArea.suffix$.csa_name is null or length(cs_area$CsArea.suffix$.csa_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArea.csaLevelMin" prepend="and">
+			    $CsArea.csaLevelNot$  ( cs_area$CsArea.suffix$.csa_level &gt;= #CsArea.csaLevelMin#
+			    <isEmpty property="CsArea.csaLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsArea.csaLevelMax" prepend="and">
+				<isEmpty property="CsArea.csaLevelMin">$CsArea.csaLevelNot$   (</isEmpty>
+			    cs_area$CsArea.suffix$.csa_level &lt;= #CsArea.csaLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsArea.csaLevel" prepend="and">
+			    $CsArea.csaLevelNot$ cs_area$CsArea.suffix$.csa_level = #CsArea.csaLevel#
+			</isNotEmpty>
+			<isNotNull property="CsArea.csaLevelNot" prepend="and">
+				<isEmpty property="CsArea.csaLevelMax"><isEmpty property="CsArea.csaLevelMin"><isEmpty property="CsArea.csaLevel">
+				$csaLevelNot$ cs_area$CsArea.suffix$.csa_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArea.csaStatus" prepend="and">
+			    $CsArea.csaStatusNot$ cs_area$CsArea.suffix$.csa_status = #CsArea.csaStatus#
+			</isNotEmpty>
+			<isNotNull property="CsArea.csaStatusNot" prepend="and">
+				<isEmpty property="CsArea.csaStatus">
+				$csaStatusNot$ cs_area$CsArea.suffix$.csa_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+	<resultMap id="SrvUser" class="com.ccclubs.model.SrvUser">
+		<result property="suId" column="su_id"/>
+		<result property="suUsername" column="su_username"/>
+		<result property="suPassword" column="su_password"/>
+		<result property="suRealName" column="su_real_name"/>
+		<result property="suMobile" column="su_mobile"/>
+		<result property="suEmail" column="su_email"/>
+		<result property="suHost" column="su_host"/>
+		<result property="suGroupId" column="su_group_id"/>
+		<result property="suParentId" column="su_parent_id"/>
+		<result property="suFamily" column="su_family"/>
+		<result property="suShortcut" column="su_shortcut"/>		
+		<result property="suAddTime" column="su_add_time"/>
+		<result property="suLastTime" column="su_last_time"/>
+		<result property="suLastIp" column="su_last_ip"/>
+		<result property="suStatus" column="su_status"/>
+	</resultMap>
+
+	<select id="getSrvUserById" parameterClass="java.util.HashMap" resultMap="SrvUser">
+		select * from srv_user where su_id=#id#
+	</select>
+	
+	<select id="getSrvUserByUsername" parameterClass="java.util.HashMap" resultMap="SrvUser">
+		select * from srv_user where su_username=#suUsername#
+	</select>	
+		
+	<insert id="saveSrvUser"  parameterClass="com.ccclubs.model.SrvUser">
+		insert into srv_user 
+		(su_username,su_password,su_real_name,su_mobile,su_email,su_host,su_group_id,su_parent_id,su_family,su_shortcut,su_add_time,su_last_time,su_last_ip,su_status)
+		values(#suUsername#,#suPassword#,#suRealName#,#suMobile#,#suEmail#,#suHost#,#suGroupId#,#suParentId#,#suFamily#,#suShortcut#,#suAddTime#,#suLastTime#,#suLastIp#,#suStatus#)
+		<selectKey resultClass="long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>	
+	<update id="updateSrvUser"  parameterClass="com.ccclubs.model.SrvUser">
+		update srv_user set 
+			su_id=#suId#
+		<dynamic>			
+			<isNotNull property="suUsername" prepend=",">
+			su_username=#suUsername#
+			</isNotNull>
+			<isNotNull property="suPassword" prepend=",">
+			su_password=#suPassword#
+			</isNotNull>
+			<isNotNull property="suRealName" prepend=",">
+			su_real_name=#suRealName#
+			</isNotNull>
+			<isNotNull property="suMobile" prepend=",">
+			su_mobile=#suMobile#
+			</isNotNull>
+			<isNotNull property="suEmail" prepend=",">
+			su_email=#suEmail#
+			</isNotNull>
+			<isNotNull property="suHost" prepend=",">
+			su_host=#suHost#
+			</isNotNull>
+			<isNotNull property="suGroupId" prepend=",">
+			su_group_id=#suGroupId#
+			</isNotNull>
+			<isNotNull property="suParentId" prepend=",">
+			su_parent_id=#suParentId#
+			</isNotNull>
+			<isNotNull property="suFamily" prepend=",">
+			su_family=#suFamily#
+			</isNotNull>
+			<isNotNull property="suShortcut" prepend=",">
+			su_shortcut=#suShortcut#
+			</isNotNull>
+			<isNotNull property="suAddTime" prepend=",">
+			su_add_time=#suAddTime#
+			</isNotNull>
+			<isNotNull property="suLastTime" prepend=",">
+			su_last_time=#suLastTime#
+			</isNotNull>
+			<isNotNull property="suLastIp" prepend=",">
+			su_last_ip=#suLastIp#
+			</isNotNull>
+			<isNotNull property="suStatus" prepend=",">
+			su_status=#suStatus#
+			</isNotNull>
+		 </dynamic>		
+		where
+			su_id=#suId#
+	</update>
+	
+	<update id="updatePassword"  parameterClass="com.ccclubs.model.SrvUser">
+		update srv_user set 
+			su_password=#suPassword#			
+		where
+			su_id=#suId#
+	</update>	
+	
+	<update id="updateLastIp"  parameterClass="com.ccclubs.model.SrvUser">
+		update srv_user set 
+			su_last_ip=#suLastIp#,
+			su_last_time=#suLastTime#
+		where
+			su_id=#suId#
+	</update>		
+	
+	<delete id="deleteUserTree"  parameterClass="com.ccclubs.model.SrvUser">
+		delete from srv_user where su_family like '$suFamily$,%' or su_family='$suFamily$'
+	</delete>
+	
+	<select id="getSrvUserList" resultMap="SrvUser"  parameterClass="com.ccclubs.model.SrvUser">
+		select * from srv_user where su_parent_id=#suId# order by su_family asc
+	</select>
+	
+	<select id="getSrvUserTree"  parameterClass="com.ccclubs.model.SrvUser" resultMap="SrvUser">
+		select * from srv_user where su_family like '$suFamily$,%' or su_family='$suFamily$'
+	</select>
+	
+	<select id="getSrvUserOnwerTree"  parameterClass="com.ccclubs.model.SrvUser" resultMap="SrvUser">
+		select * from srv_user where su_family like '$suFamily$,%' order by su_family asc
+	</select>
+	
+	<select id="getNoLimitUsersByGroupId"  parameterClass="java.util.HashMap" resultMap="SrvUser">
+		select * from srv_user su where su.su_group_id = #groupId# and (select count(sl_id) from srv_limited where sl_actor_type=1 and sl_actor_id=su.su_id)=0
+	</select>
+	
+	<select id="getUserTreeByFamilys"  parameterClass="java.util.HashMap" resultMap="SrvUser">
+		select * from srv_user su where 
+		<iterate property="familys" open="(" close=")" conjunction="or">
+		su_family like '$familys[]$,%' or su_family='$familys[]$'
+        </iterate> 
+	</select>
+	
+	<!-- 获取所有用户 -->
+	<select id="getSrvUserListBy" resultMap="SrvUser">
+		select * from srv_user where 1=1 
+		<dynamic>
+			<isNotEmpty property="suUsername" prepend="and">
+			    su_username like #suUsername#
+			</isNotEmpty>
+			<isNotEmpty property="suPassword" prepend="and">
+			    su_password like #suPassword#
+			</isNotEmpty>
+			<isNotEmpty property="suRealName" prepend="and">
+			    su_real_name like #suRealName#
+			</isNotEmpty>
+			<isNotEmpty property="suMobile" prepend="and">
+			    su_mobile like #suMobile#
+			</isNotEmpty>
+			<isNotEmpty property="suEmail" prepend=",">
+				su_email like #suEmail#
+			</isNotEmpty>
+			<isNotEmpty property="suHost" prepend="and">
+			    su_host = #suHost#
+			</isNotEmpty>
+			<isNotEmpty property="suGroupIdMin" prepend="and">
+			    su_group_id &gt;= #suGroupIdMin#
+			</isNotEmpty>
+			<isNotEmpty property="suGroupIdMax" prepend="and">
+			    su_group_id &lt;= #suGroupIdMax#
+			</isNotEmpty>
+			<isNotEmpty property="suParentIdMin" prepend="and">
+			    su_parent_id &gt;= #suParentIdMin#
+			</isNotEmpty>
+			<isNotEmpty property="suParentIdMax" prepend="and">
+			    su_parent_id &lt;= #suParentIdMax#
+			</isNotEmpty>
+			<isNotEmpty property="suFamily" prepend="and">
+			    su_family like #suFamily#
+			</isNotEmpty>
+			<isNotEmpty property="suShortcut" prepend="and">
+			    su_shortcut like #suShortcut#
+			</isNotEmpty>	
+			<isNotEmpty property="suAddTimeStart" prepend="and">
+			    su_add_time &gt;= #suAddTimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="suAddTimeEnd" prepend="and">
+			    su_add_time &lt;= #suAddTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty property="suLastTimeStart" prepend="and">
+			    su_last_time &gt;= #suLastTimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="suLastTimeEnd" prepend="and">
+			    su_last_time &lt;= #suLastTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty property="suLastIp" prepend="and">
+			    su_last_ip like #suLastIp#
+			</isNotEmpty>
+			<isNotEmpty property="suStatus" prepend="and">
+			    su_status = #suStatus#
+			</isNotEmpty>	
+		</dynamic>
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by su_id asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		
+	</select>
+	
+</sqlMap>

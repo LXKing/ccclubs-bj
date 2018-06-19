@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 问题故障报修之SQL映射 -->
+	<resultMap id="TbProblem" class="com.ccclubs.model.TbProblem">
+		<result property="tbpId" column="tbp_id"/>
+		<result property="tbpHost" column="tbp_host"/>
+		<result property="tbpProfile" column="tbp_profile"/>
+		<result property="tbpType" column="tbp_type"/>
+		<result property="tbpMember" column="tbp_member"/>
+		<result property="tbpOrder" column="tbp_order"/>
+		<result property="tbpRelate" column="tbp_relate"/>
+		<result property="tbpAdder" column="tbp_adder"/>
+		<result property="tbpEditor" column="tbp_editor"/>
+		<result property="tbpDealer" column="tbp_dealer"/>
+		<result property="tbpResult" column="tbp_result"/>
+		<result property="tbpRemark" column="tbp_remark"/>
+		<result property="tbpMemo" column="tbp_memo"/>
+		<result property="tbpData" column="tbp_data"/>
+		<result property="tbpUpdateTime" column="tbp_update_time"/>
+		<result property="tbpAddTime" column="tbp_add_time"/>
+		<result property="tbpStatus" column="tbp_status"/>
+		<result property="tbpOutlets" column="tbp_outlets"/>
+		<result property="tbpSpecialData" column="tbp_special_data"/>
+	</resultMap>
+		
+	<!-- 获取所有问题故障报修 -->
+	<select id="getTbProblemList" resultMap="TbProblem">
+		select tb_problem$suffix$.* from tb_problem$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[反馈会员]查询-->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.tbp_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询-->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.tbp_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[添加人员]查询-->
+		<isNotNull property="TbpAdder"><!-- 调用一下TbpAdder，把SrvUser指向TbpAdder --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_adder=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人员]查询-->
+		<isNotNull property="TbpEditor"><!-- 调用一下TbpEditor，把SrvUser指向TbpEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[任务指派]查询-->
+		<isNotNull property="TbpDealer"><!-- 调用一下TbpDealer，把SrvUser指向TbpDealer --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_dealer=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询-->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.tbp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_problem$suffix$.tbp_status!=-1
+		<!-- 多对一外链接[反馈会员]查询条件sql片段 -->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询条件sql片段 -->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询条件sql片段 -->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbProblem_part.tb_problem_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取问题故障报修分页 -->
+	<select id="getTbProblemPage" parameterClass="java.util.HashMap" resultMap="TbProblem">
+		select tb_problem$suffix$.* from tb_problem$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[反馈会员]查询-->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.tbp_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询-->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.tbp_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[添加人员]查询-->
+		<isNotNull property="TbpAdder"><!-- 调用一下TbpAdder，把SrvUser指向TbpAdder --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_adder=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人员]查询-->
+		<isNotNull property="TbpEditor"><!-- 调用一下TbpEditor，把SrvUser指向TbpEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[任务指派]查询-->
+		<isNotNull property="TbpDealer"><!-- 调用一下TbpDealer，把SrvUser指向TbpDealer --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_dealer=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询-->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.tbp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_problem$suffix$.tbp_status!=-1
+		<!-- 多对一外链接[反馈会员]查询条件sql片段 -->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询条件sql片段 -->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询条件sql片段 -->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbProblem_part.tb_problem_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取问题故障报修总数 -->
+	<select id="getTbProblemEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_problem$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[反馈会员]查询-->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.tbp_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询-->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.tbp_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[添加人员]查询-->
+		<isNotNull property="TbpAdder"><!-- 调用一下TbpAdder，把SrvUser指向TbpAdder --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_adder=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人员]查询-->
+		<isNotNull property="TbpEditor"><!-- 调用一下TbpEditor，把SrvUser指向TbpEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[任务指派]查询-->
+		<isNotNull property="TbpDealer"><!-- 调用一下TbpDealer，把SrvUser指向TbpDealer --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_dealer=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询-->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.tbp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_problem$suffix$.tbp_status!=-1
+		<!-- 多对一外链接[反馈会员]查询条件sql片段 -->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询条件sql片段 -->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询条件sql片段 -->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbProblem_part.tb_problem_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取问题故障报修 -->
+	<select id="getTbProblemById" parameterClass="java.util.HashMap" resultMap="TbProblem">
+		select tb_problem$suffix$.* from tb_problem$suffix$
+		where tbp_id=#id#
+	</select>
+	
+		
+	<!-- 保存问题故障报修 -->
+	<insert id="saveTbProblem"  parameterClass="com.ccclubs.model.TbProblem">
+		insert into tb_problem$suffix$
+		(
+			tb_problem$suffix$.tbp_host
+			,tb_problem$suffix$.tbp_profile
+			,tb_problem$suffix$.tbp_type
+			,tb_problem$suffix$.tbp_member
+			,tb_problem$suffix$.tbp_order
+			,tb_problem$suffix$.tbp_relate
+			,tb_problem$suffix$.tbp_adder
+			,tb_problem$suffix$.tbp_editor
+			,tb_problem$suffix$.tbp_dealer
+			,tb_problem$suffix$.tbp_result
+			,tb_problem$suffix$.tbp_remark
+			,tb_problem$suffix$.tbp_memo
+			,tb_problem$suffix$.tbp_data
+			,tb_problem$suffix$.tbp_update_time
+			,tb_problem$suffix$.tbp_add_time
+			,tb_problem$suffix$.tbp_status
+			,tb_problem$suffix$.tbp_outlets
+			,tb_problem$suffix$.tbp_special_data
+		)
+		values(
+			<isNotNull property="tbpHost" prepend="">
+				#tbpHost#
+			</isNotNull>
+			<isNull property="tbpHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbpProfile" prepend=",">
+				#tbpProfile#
+			</isNotNull>
+			<isNull property="tbpProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpType" prepend=",">
+				#tbpType#
+			</isNotNull>
+			<isNull property="tbpType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpMember" prepend=",">
+				#tbpMember#
+			</isNotNull>
+			<isNull property="tbpMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpOrder" prepend=",">
+				#tbpOrder#
+			</isNotNull>
+			<isNull property="tbpOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpRelate" prepend=",">
+				#tbpRelate#
+			</isNotNull>
+			<isNull property="tbpRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpAdder" prepend=",">
+				#tbpAdder#
+			</isNotNull>
+			<isNull property="tbpAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpEditor" prepend=",">
+				#tbpEditor#
+			</isNotNull>
+			<isNull property="tbpEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpDealer" prepend=",">
+				#tbpDealer#
+			</isNotNull>
+			<isNull property="tbpDealer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpResult" prepend=",">
+				#tbpResult#
+			</isNotNull>
+			<isNull property="tbpResult" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpRemark" prepend=",">
+				#tbpRemark#
+			</isNotNull>
+			<isNull property="tbpRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpMemo" prepend=",">
+				#tbpMemo#
+			</isNotNull>
+			<isNull property="tbpMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpData" prepend=",">
+				#tbpData#
+			</isNotNull>
+			<isNull property="tbpData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpUpdateTime" prepend=",">
+				#tbpUpdateTime#
+			</isNotNull>
+			<isNull property="tbpUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpAddTime" prepend=",">
+				#tbpAddTime#
+			</isNotNull>
+			<isNull property="tbpAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpStatus" prepend=",">
+				#tbpStatus#
+			</isNotNull>
+			<isNull property="tbpStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpOutlets" prepend=",">
+				#tbpOutlets#
+			</isNotNull>
+			<isNull property="tbpOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbpSpecialData" prepend=",">
+				#tbpSpecialData#
+			</isNotNull>
+			<isNull property="tbpSpecialData" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新问题故障报修 -->
+	<update id="updateTbProblem"  parameterClass="com.ccclubs.model.TbProblem">
+		update tb_problem$suffix$ set
+			<isNotNull property="tbpHost" prepend="">
+				tb_problem$suffix$.tbp_host = #tbpHost#
+			</isNotNull>
+			<isNull property="tbpHost" prepend="">
+				tb_problem$suffix$.tbp_host = null
+			</isNull>				
+			<isNotNull property="tbpProfile" prepend=",">
+				tb_problem$suffix$.tbp_profile = #tbpProfile#
+			</isNotNull>
+			<isNull property="tbpProfile" prepend=",">
+				tb_problem$suffix$.tbp_profile = null
+			</isNull>				
+			<isNotNull property="tbpType" prepend=",">
+				tb_problem$suffix$.tbp_type = #tbpType#
+			</isNotNull>
+			<isNull property="tbpType" prepend=",">
+				tb_problem$suffix$.tbp_type = null
+			</isNull>				
+			<isNotNull property="tbpMember" prepend=",">
+				tb_problem$suffix$.tbp_member = #tbpMember#
+			</isNotNull>
+			<isNull property="tbpMember" prepend=",">
+				tb_problem$suffix$.tbp_member = null
+			</isNull>				
+			<isNotNull property="tbpOrder" prepend=",">
+				tb_problem$suffix$.tbp_order = #tbpOrder#
+			</isNotNull>
+			<isNull property="tbpOrder" prepend=",">
+				tb_problem$suffix$.tbp_order = null
+			</isNull>				
+			<isNotNull property="tbpRelate" prepend=",">
+				tb_problem$suffix$.tbp_relate = #tbpRelate#
+			</isNotNull>
+			<isNull property="tbpRelate" prepend=",">
+				tb_problem$suffix$.tbp_relate = null
+			</isNull>				
+			<isNotNull property="tbpAdder" prepend=",">
+				tb_problem$suffix$.tbp_adder = #tbpAdder#
+			</isNotNull>
+			<isNull property="tbpAdder" prepend=",">
+				tb_problem$suffix$.tbp_adder = null
+			</isNull>				
+			<isNotNull property="tbpEditor" prepend=",">
+				tb_problem$suffix$.tbp_editor = #tbpEditor#
+			</isNotNull>
+			<isNull property="tbpEditor" prepend=",">
+				tb_problem$suffix$.tbp_editor = null
+			</isNull>				
+			<isNotNull property="tbpDealer" prepend=",">
+				tb_problem$suffix$.tbp_dealer = #tbpDealer#
+			</isNotNull>
+			<isNull property="tbpDealer" prepend=",">
+				tb_problem$suffix$.tbp_dealer = null
+			</isNull>				
+			<isNotNull property="tbpResult" prepend=",">
+				tb_problem$suffix$.tbp_result = #tbpResult#
+			</isNotNull>
+			<isNull property="tbpResult" prepend=",">
+				tb_problem$suffix$.tbp_result = null
+			</isNull>				
+			<isNotNull property="tbpRemark" prepend=",">
+				tb_problem$suffix$.tbp_remark = #tbpRemark#
+			</isNotNull>
+			<isNull property="tbpRemark" prepend=",">
+				tb_problem$suffix$.tbp_remark = null
+			</isNull>				
+			<isNotNull property="tbpMemo" prepend=",">
+				tb_problem$suffix$.tbp_memo = #tbpMemo#
+			</isNotNull>
+			<isNull property="tbpMemo" prepend=",">
+				tb_problem$suffix$.tbp_memo = null
+			</isNull>				
+			<isNotNull property="tbpData" prepend=",">
+				tb_problem$suffix$.tbp_data = #tbpData#
+			</isNotNull>
+			<isNull property="tbpData" prepend=",">
+				tb_problem$suffix$.tbp_data = null
+			</isNull>				
+			<isNotNull property="tbpUpdateTime" prepend=",">
+				tb_problem$suffix$.tbp_update_time = #tbpUpdateTime#
+			</isNotNull>
+			<isNull property="tbpUpdateTime" prepend=",">
+				tb_problem$suffix$.tbp_update_time = null
+			</isNull>				
+			<isNotNull property="tbpAddTime" prepend=",">
+				tb_problem$suffix$.tbp_add_time = #tbpAddTime#
+			</isNotNull>
+			<isNull property="tbpAddTime" prepend=",">
+				tb_problem$suffix$.tbp_add_time = null
+			</isNull>				
+			<isNotNull property="tbpStatus" prepend=",">
+				tb_problem$suffix$.tbp_status = #tbpStatus#
+			</isNotNull>
+			<isNull property="tbpStatus" prepend=",">
+				tb_problem$suffix$.tbp_status = null
+			</isNull>				
+			<isNotNull property="tbpOutlets" prepend=",">
+				tb_problem$suffix$.tbp_outlets = #tbpOutlets#
+			</isNotNull>
+			<isNull property="tbpOutlets" prepend=",">
+				tb_problem$suffix$.tbp_outlets = null
+			</isNull>				
+			<isNotNull property="tbpSpecialData" prepend=",">
+				tb_problem$suffix$.tbp_special_data = #tbpSpecialData#
+			</isNotNull>
+			<isNull property="tbpSpecialData" prepend=",">
+				tb_problem$suffix$.tbp_special_data = null
+			</isNull>				
+		where
+			tbp_id=#tbpId#
+	</update>
+	
+	<!-- 更新问题故障报修非空字段 -->
+	<update id="updateTbProblem$NotNull"  parameterClass="com.ccclubs.model.TbProblem">
+		update tb_problem$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbpHost" prepend=",">
+				tb_problem$suffix$.tbp_host = #tbpHost#
+			</isNotNull>		
+			<isNotNull property="tbpProfile" prepend=",">
+				tb_problem$suffix$.tbp_profile = #tbpProfile#
+			</isNotNull>		
+			<isNotNull property="tbpType" prepend=",">
+				tb_problem$suffix$.tbp_type = #tbpType#
+			</isNotNull>		
+			<isNotNull property="tbpMember" prepend=",">
+				tb_problem$suffix$.tbp_member = #tbpMember#
+			</isNotNull>		
+			<isNotNull property="tbpOrder" prepend=",">
+				tb_problem$suffix$.tbp_order = #tbpOrder#
+			</isNotNull>		
+			<isNotNull property="tbpRelate" prepend=",">
+				tb_problem$suffix$.tbp_relate = #tbpRelate#
+			</isNotNull>		
+			<isNotNull property="tbpAdder" prepend=",">
+				tb_problem$suffix$.tbp_adder = #tbpAdder#
+			</isNotNull>		
+			<isNotNull property="tbpEditor" prepend=",">
+				tb_problem$suffix$.tbp_editor = #tbpEditor#
+			</isNotNull>		
+			<isNotNull property="tbpDealer" prepend=",">
+				tb_problem$suffix$.tbp_dealer = #tbpDealer#
+			</isNotNull>		
+			<isNotNull property="tbpResult" prepend=",">
+				tb_problem$suffix$.tbp_result = #tbpResult#
+			</isNotNull>		
+			<isNotNull property="tbpRemark" prepend=",">
+				tb_problem$suffix$.tbp_remark = #tbpRemark#
+			</isNotNull>		
+			<isNotNull property="tbpMemo" prepend=",">
+				tb_problem$suffix$.tbp_memo = #tbpMemo#
+			</isNotNull>		
+			<isNotNull property="tbpData" prepend=",">
+				tb_problem$suffix$.tbp_data = #tbpData#
+			</isNotNull>		
+			<isNotNull property="tbpUpdateTime" prepend=",">
+				tb_problem$suffix$.tbp_update_time = #tbpUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbpAddTime" prepend=",">
+				tb_problem$suffix$.tbp_add_time = #tbpAddTime#
+			</isNotNull>		
+			<isNotNull property="tbpStatus" prepend=",">
+				tb_problem$suffix$.tbp_status = #tbpStatus#
+			</isNotNull>		
+			<isNotNull property="tbpOutlets" prepend=",">
+				tb_problem$suffix$.tbp_outlets = #tbpOutlets#
+			</isNotNull>		
+			<isNotNull property="tbpSpecialData" prepend=",">
+				tb_problem$suffix$.tbp_special_data = #tbpSpecialData#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbp_id=#tbpId#
+	</update>
+	
+
+	<!-- 根据ID删除一个问题故障报修 -->
+	<delete id="deleteTbProblemById" parameterClass="java.util.HashMap">
+		delete from tb_problem$suffix$ where tbp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个问题故障报修 -->
+	<update id="removeTbProblemById" parameterClass="java.util.HashMap">
+		update tb_problem$suffix$ set  tb_problem$suffix$.tbp_status=-1  where tbp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新问题故障报修 -->
+	<update id="updateTbProblemBy"  parameterClass="java.util.HashMap">
+		update tb_problem$suffix$ set		
+			tbp_id=tbp_id
+			<isNotNull property="V_tbpId" prepend=",">
+				tb_problem$suffix$.tbp_id = #V_tbpId#
+			</isNotNull>		
+			<isNotNull property="V_tbpHost" prepend=",">
+				tb_problem$suffix$.tbp_host = #V_tbpHost#
+			</isNotNull>		
+			<isNotNull property="V_tbpProfile" prepend=",">
+				tb_problem$suffix$.tbp_profile = #V_tbpProfile#
+			</isNotNull>		
+			<isNotNull property="V_tbpType" prepend=",">
+				tb_problem$suffix$.tbp_type = #V_tbpType#
+			</isNotNull>		
+			<isNotNull property="V_tbpMember" prepend=",">
+				tb_problem$suffix$.tbp_member = #V_tbpMember#
+			</isNotNull>		
+			<isNotNull property="V_tbpOrder" prepend=",">
+				tb_problem$suffix$.tbp_order = #V_tbpOrder#
+			</isNotNull>		
+			<isNotNull property="V_tbpRelate" prepend=",">
+				tb_problem$suffix$.tbp_relate = #V_tbpRelate#
+			</isNotNull>		
+			<isNotNull property="V_tbpAdder" prepend=",">
+				tb_problem$suffix$.tbp_adder = #V_tbpAdder#
+			</isNotNull>		
+			<isNotNull property="V_tbpEditor" prepend=",">
+				tb_problem$suffix$.tbp_editor = #V_tbpEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbpDealer" prepend=",">
+				tb_problem$suffix$.tbp_dealer = #V_tbpDealer#
+			</isNotNull>		
+			<isNotNull property="V_tbpResult" prepend=",">
+				tb_problem$suffix$.tbp_result = #V_tbpResult#
+			</isNotNull>		
+			<isNotNull property="V_tbpRemark" prepend=",">
+				tb_problem$suffix$.tbp_remark = #V_tbpRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbpMemo" prepend=",">
+				tb_problem$suffix$.tbp_memo = #V_tbpMemo#
+			</isNotNull>		
+			<isNotNull property="V_tbpData" prepend=",">
+				tb_problem$suffix$.tbp_data = #V_tbpData#
+			</isNotNull>		
+			<isNotNull property="V_tbpUpdateTime" prepend=",">
+				tb_problem$suffix$.tbp_update_time = #V_tbpUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbpAddTime" prepend=",">
+				tb_problem$suffix$.tbp_add_time = #V_tbpAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbpStatus" prepend=",">
+				tb_problem$suffix$.tbp_status = #V_tbpStatus#
+			</isNotNull>		
+			<isNotNull property="V_tbpOutlets" prepend=",">
+				tb_problem$suffix$.tbp_outlets = #V_tbpOutlets#
+			</isNotNull>		
+			<isNotNull property="V_tbpSpecialData" prepend=",">
+				tb_problem$suffix$.tbp_special_data = #V_tbpSpecialData#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[反馈会员]查询-->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.tbp_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on tb_problem$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询-->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.tbp_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_problem$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[添加人员]查询-->
+		<isNotNull property="TbpAdder"><!-- 调用一下TbpAdder，把SrvUser指向TbpAdder --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_adder=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人员]查询-->
+		<isNotNull property="TbpEditor"><!-- 调用一下TbpEditor，把SrvUser指向TbpEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[任务指派]查询-->
+		<isNotNull property="TbpDealer"><!-- 调用一下TbpDealer，把SrvUser指向TbpDealer --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.tbp_dealer=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on tb_problem$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询-->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.tbp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_problem$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and tb_problem$suffix$.tbp_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[反馈会员]查询条件sql片段 -->
+		<isNotNull property="TbpMember"><!-- 调用一下TbpMember，把CsMember指向TbpMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属订单]查询条件sql片段 -->
+		<isNotNull property="TbpOrder"><!-- 调用一下TbpOrder，把CsOrder指向TbpOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在网点]查询条件sql片段 -->
+		<isNotNull property="TbpOutlets"><!-- 调用一下TbpOutlets，把CsOutlets指向TbpOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbProblem_part.tb_problem_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除问题故障报修 -->
+	<update id="deleteTbProblemBy"  parameterClass="java.util.HashMap">
+		delete from tb_problem$suffix$ where 
+		tb_problem$suffix$.tbp_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbProblem_part.tb_problem_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

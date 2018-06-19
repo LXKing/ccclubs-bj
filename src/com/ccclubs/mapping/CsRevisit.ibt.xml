@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 用户回访之SQL映射 -->
+	<resultMap id="CsRevisit" class="com.ccclubs.model.CsRevisit">
+		<result property="csrId" column="csr_id"/>
+		<result property="csrHost" column="csr_host"/>
+		<result property="csrMember" column="csr_member"/>
+		<result property="csrVisitor" column="csr_visitor"/>
+		<result property="csrType" column="csr_type"/>
+		<result property="csrResponse" column="csr_response"/>
+		<result property="csrRemark" column="csr_remark"/>
+		<result property="csrUpdateTime" column="csr_update_time"/>
+		<result property="csrAddTime" column="csr_add_time"/>
+		<result property="csrStatus" column="csr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有用户回访 -->
+	<select id="getCsRevisitList" resultMap="CsRevisit">
+		select cs_revisit$suffix$.* from cs_revisit$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询-->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<isNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.csr_type=cs_quest_template$CsQuestTemplate.suffix$.csqt_id
+			</isNull>
+			<isNotNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.$CsQuestTemplate.on$=cs_quest_template$CsQuestTemplate.suffix$.csqt_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_revisit$suffix$.csr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询条件sql片段 -->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<include refid="CsQuestTemplate_part.cs_quest_template_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRevisit_part.cs_revisit_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取用户回访分页 -->
+	<select id="getCsRevisitPage" parameterClass="java.util.HashMap" resultMap="CsRevisit">
+		select cs_revisit$suffix$.* from cs_revisit$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询 -->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<isNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.csr_type=cs_quest_template$CsQuestTemplate.suffix$.csqt_id
+			</isNull>
+			<isNotNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.$CsQuestTemplate.on$=cs_quest_template$CsQuestTemplate.suffix$.csqt_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_revisit$suffix$.csr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询条件sql片段 -->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<include refid="CsQuestTemplate_part.cs_quest_template_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRevisit_part.cs_revisit_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取用户回访总数 -->
+	<select id="getCsRevisitEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_revisit$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<isNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.csr_type=cs_quest_template$CsQuestTemplate.suffix$.csqt_id
+			</isNull>
+			<isNotNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.$CsQuestTemplate.on$=cs_quest_template$CsQuestTemplate.suffix$.csqt_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_revisit$suffix$.csr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询条件sql片段 -->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<include refid="CsQuestTemplate_part.cs_quest_template_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRevisit_part.cs_revisit_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取用户回访 -->
+	<select id="getCsRevisitById" parameterClass="java.util.HashMap" resultMap="CsRevisit">
+		select cs_revisit$suffix$.* from cs_revisit$suffix$
+		where csr_id=#id#
+	</select>
+	
+		
+	<!-- 保存用户回访 -->
+	<insert id="saveCsRevisit"  parameterClass="com.ccclubs.model.CsRevisit">
+		insert into cs_revisit$suffix$
+		(
+			cs_revisit$suffix$.csr_host
+			,cs_revisit$suffix$.csr_member
+			,cs_revisit$suffix$.csr_visitor
+			,cs_revisit$suffix$.csr_type
+			,cs_revisit$suffix$.csr_response
+			,cs_revisit$suffix$.csr_remark
+			,cs_revisit$suffix$.csr_update_time
+			,cs_revisit$suffix$.csr_add_time
+			,cs_revisit$suffix$.csr_status
+		)
+		values(
+			<isNotNull property="csrHost" prepend="">
+				#csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrMember" prepend=",">
+				#csrMember#
+			</isNotNull>
+			<isNull property="csrMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrVisitor" prepend=",">
+				#csrVisitor#
+			</isNotNull>
+			<isNull property="csrVisitor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrType" prepend=",">
+				#csrType#
+			</isNotNull>
+			<isNull property="csrType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrResponse" prepend=",">
+				#csrResponse#
+			</isNotNull>
+			<isNull property="csrResponse" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRemark" prepend=",">
+				#csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrUpdateTime" prepend=",">
+				#csrUpdateTime#
+			</isNotNull>
+			<isNull property="csrUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAddTime" prepend=",">
+				#csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrStatus" prepend=",">
+				#csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新用户回访 -->
+	<update id="updateCsRevisit"  parameterClass="com.ccclubs.model.CsRevisit">
+		update cs_revisit$suffix$ set
+			<isNotNull property="csrHost" prepend="">
+				cs_revisit$suffix$.csr_host = #csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				cs_revisit$suffix$.csr_host = null
+			</isNull>				
+			<isNotNull property="csrMember" prepend=",">
+				cs_revisit$suffix$.csr_member = #csrMember#
+			</isNotNull>
+			<isNull property="csrMember" prepend=",">
+				cs_revisit$suffix$.csr_member = null
+			</isNull>				
+			<isNotNull property="csrVisitor" prepend=",">
+				cs_revisit$suffix$.csr_visitor = #csrVisitor#
+			</isNotNull>
+			<isNull property="csrVisitor" prepend=",">
+				cs_revisit$suffix$.csr_visitor = null
+			</isNull>				
+			<isNotNull property="csrType" prepend=",">
+				cs_revisit$suffix$.csr_type = #csrType#
+			</isNotNull>
+			<isNull property="csrType" prepend=",">
+				cs_revisit$suffix$.csr_type = null
+			</isNull>				
+			<isNotNull property="csrResponse" prepend=",">
+				cs_revisit$suffix$.csr_response = #csrResponse#
+			</isNotNull>
+			<isNull property="csrResponse" prepend=",">
+				cs_revisit$suffix$.csr_response = null
+			</isNull>				
+			<isNotNull property="csrRemark" prepend=",">
+				cs_revisit$suffix$.csr_remark = #csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				cs_revisit$suffix$.csr_remark = null
+			</isNull>				
+			<isNotNull property="csrUpdateTime" prepend=",">
+				cs_revisit$suffix$.csr_update_time = #csrUpdateTime#
+			</isNotNull>
+			<isNull property="csrUpdateTime" prepend=",">
+				cs_revisit$suffix$.csr_update_time = null
+			</isNull>				
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_revisit$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				cs_revisit$suffix$.csr_add_time = null
+			</isNull>				
+			<isNotNull property="csrStatus" prepend=",">
+				cs_revisit$suffix$.csr_status = #csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				cs_revisit$suffix$.csr_status = null
+			</isNull>				
+		where
+			csr_id=#csrId#
+	</update>
+	
+	<!-- 更新用户回访非空字段 -->
+	<update id="updateCsRevisit$NotNull"  parameterClass="com.ccclubs.model.CsRevisit">
+		update cs_revisit$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrHost" prepend=",">
+				cs_revisit$suffix$.csr_host = #csrHost#
+			</isNotNull>		
+			<isNotNull property="csrMember" prepend=",">
+				cs_revisit$suffix$.csr_member = #csrMember#
+			</isNotNull>		
+			<isNotNull property="csrVisitor" prepend=",">
+				cs_revisit$suffix$.csr_visitor = #csrVisitor#
+			</isNotNull>		
+			<isNotNull property="csrType" prepend=",">
+				cs_revisit$suffix$.csr_type = #csrType#
+			</isNotNull>		
+			<isNotNull property="csrResponse" prepend=",">
+				cs_revisit$suffix$.csr_response = #csrResponse#
+			</isNotNull>		
+			<isNotNull property="csrRemark" prepend=",">
+				cs_revisit$suffix$.csr_remark = #csrRemark#
+			</isNotNull>		
+			<isNotNull property="csrUpdateTime" prepend=",">
+				cs_revisit$suffix$.csr_update_time = #csrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_revisit$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>		
+			<isNotNull property="csrStatus" prepend=",">
+				cs_revisit$suffix$.csr_status = #csrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csr_id=#csrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个用户回访 -->
+	<delete id="deleteCsRevisitById" parameterClass="java.util.HashMap">
+		delete from cs_revisit$suffix$ where csr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个用户回访 -->
+	<update id="removeCsRevisitById" parameterClass="java.util.HashMap">
+		update cs_revisit$suffix$ set  cs_revisit$suffix$.csr_status=-1  where csr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新用户回访 -->
+	<update id="updateCsRevisitBy"  parameterClass="java.util.HashMap">
+		update cs_revisit$suffix$ set		
+			csr_id=csr_id
+			<isNotNull property="V_csrId" prepend=",">
+				cs_revisit$suffix$.csr_id = #V_csrId#
+			</isNotNull>		
+			<isNotNull property="V_csrHost" prepend=",">
+				cs_revisit$suffix$.csr_host = #V_csrHost#
+			</isNotNull>		
+			<isNotNull property="V_csrMember" prepend=",">
+				cs_revisit$suffix$.csr_member = #V_csrMember#
+			</isNotNull>		
+			<isNotNull property="V_csrVisitor" prepend=",">
+				cs_revisit$suffix$.csr_visitor = #V_csrVisitor#
+			</isNotNull>		
+			<isNotNull property="V_csrType" prepend=",">
+				cs_revisit$suffix$.csr_type = #V_csrType#
+			</isNotNull>		
+			<isNotNull property="V_csrResponse" prepend=",">
+				cs_revisit$suffix$.csr_response = #V_csrResponse#
+			</isNotNull>		
+			<isNotNull property="V_csrRemark" prepend=",">
+				cs_revisit$suffix$.csr_remark = #V_csrRemark#
+			</isNotNull>		
+			<isNotNull property="V_csrUpdateTime" prepend=",">
+				cs_revisit$suffix$.csr_update_time = #V_csrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csrAddTime" prepend=",">
+				cs_revisit$suffix$.csr_add_time = #V_csrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csrStatus" prepend=",">
+				cs_revisit$suffix$.csr_status = #V_csrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_revisit$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询-->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<isNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.csr_type=cs_quest_template$CsQuestTemplate.suffix$.csqt_id
+			</isNull>
+			<isNotNull property="CsQuestTemplate.on">
+				left join cs_quest_template cs_quest_template$CsQuestTemplate.suffix$ on cs_revisit$suffix$.$CsQuestTemplate.on$=cs_quest_template$CsQuestTemplate.suffix$.csqt_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_revisit$suffix$.csr_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[问卷模板]查询条件sql片段 -->
+		<isNotNull property="CsrType"><!-- 调用一下CsrType，把CsQuestTemplate指向CsrType --></isNotNull>
+		<isNotNull property="CsQuestTemplate">
+			<include refid="CsQuestTemplate_part.cs_quest_template_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRevisit_part.cs_revisit_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除用户回访 -->
+	<update id="deleteCsRevisitBy"  parameterClass="java.util.HashMap">
+		delete from cs_revisit$suffix$ where 
+		cs_revisit$suffix$.csr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRevisit_part.cs_revisit_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

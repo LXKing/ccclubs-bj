@@ -1,0 +1,1 @@
+﻿insert into cs_scheduling(css_host,css_outlets,css_car,css_time,css_type,css_dir,css_explain,css_order,css_operator,css_status) select a.csc_host,a.csc_outlets,a.csc_id,a.csc_add_time,0,0,'车辆投放',null,null,1 from cs_car a left join (select * from cs_scheduling where css_type=0) b on a.csc_id=b.css_car where b.css_id is null

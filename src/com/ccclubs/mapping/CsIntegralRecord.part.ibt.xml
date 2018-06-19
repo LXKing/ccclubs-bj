@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsIntegralRecord_part">	
+	<!-- 积分记录条件sql片段  -->
+	<sql id="cs_integral_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrId" prepend="and">
+			    $csrIdNot$ cs_integral_record$suffix$.csr_id = #csrId#
+			</isNotEmpty>
+			<isNotNull property="csrIdNot" prepend="and">
+				<isEmpty property="csrId">
+				$csrIdNot$ cs_integral_record$suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_integral_record$suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csrHost" prepend="and">
+			    $csrHostNot$ cs_integral_record$suffix$.csr_host = #csrHost#
+			</isNotEmpty>
+			<isNotNull property="csrHostNot" prepend="and">
+				<isEmpty property="csrHost">
+				$csrHostNot$ cs_integral_record$suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csrMember" prepend="and">
+			    $csrMemberNot$ cs_integral_record$suffix$.csr_member = #csrMember#
+			</isNotEmpty>
+			<isNotNull property="csrMemberNot" prepend="and">
+				<isEmpty property="csrMember">
+				$csrMemberNot$ cs_integral_record$suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrType" prepend="and">			    
+			    (<isNotNull property="csrTypeNot">
+			    cs_integral_record$suffix$.csr_type is null or length(cs_integral_record$suffix$.csr_type) &lt; 1 or
+			    </isNotNull>$csrTypeNot$ cs_integral_record$suffix$.csr_type = #csrType#)
+			</isNotEmpty>
+			<isNotNull property="csrTypeNot" prepend="and">
+				<isEmpty property="csrType">
+				$csrTypeNot$ (cs_integral_record$suffix$.csr_type is null or length(cs_integral_record$suffix$.csr_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAmountMin" prepend="and">
+			    $csrAmountNot$  ( cs_integral_record$suffix$.csr_amount &gt;= #csrAmountMin#
+			    <isEmpty property="csrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAmountMax" prepend="and">
+				<isEmpty property="csrAmountMin">$csrAmountNot$   (</isEmpty>
+			    cs_integral_record$suffix$.csr_amount &lt;= #csrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrAmount" prepend="and">
+			    $csrAmountNot$ cs_integral_record$suffix$.csr_amount = #csrAmount#
+			</isNotEmpty>
+			<isNotNull property="csrAmountNot" prepend="and">
+				<isEmpty property="csrAmountMax"><isEmpty property="csrAmountMin"><isEmpty property="csrAmount">
+				$csrAmountNot$ cs_integral_record$suffix$.csr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrRemainMin" prepend="and">
+			    $csrRemainNot$  ( cs_integral_record$suffix$.csr_remain &gt;= #csrRemainMin#
+			    <isEmpty property="csrRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrRemainMax" prepend="and">
+				<isEmpty property="csrRemainMin">$csrRemainNot$   (</isEmpty>
+			    cs_integral_record$suffix$.csr_remain &lt;= #csrRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrRemain" prepend="and">
+			    $csrRemainNot$ cs_integral_record$suffix$.csr_remain = #csrRemain#
+			</isNotEmpty>
+			<isNotNull property="csrRemainNot" prepend="and">
+				<isEmpty property="csrRemainMax"><isEmpty property="csrRemainMin"><isEmpty property="csrRemain">
+				$csrRemainNot$ cs_integral_record$suffix$.csr_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrRemark" prepend="and">			    
+			    (<isNotNull property="csrRemarkNot">
+			    cs_integral_record$suffix$.csr_remark is null or length(cs_integral_record$suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$csrRemarkNot$ cs_integral_record$suffix$.csr_remark like #csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="csrRemarkNot" prepend="and">
+				<isEmpty property="csrRemark">
+				$csrRemarkNot$ (cs_integral_record$suffix$.csr_remark is null or length(cs_integral_record$suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAddTimeStart" prepend="and">
+			    $csrAddTimeNot$   (cs_integral_record$suffix$.csr_add_time &gt;= #csrAddTimeStart#
+			   <isEmpty property="csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTimeEnd" prepend="and">
+				<isEmpty property="csrAddTimeStart">$csrAddTimeNot$   (</isEmpty>
+			    cs_integral_record$suffix$.csr_add_time &lt;= #csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTime" prepend="and">
+			    $csrAddTimeNot$ cs_integral_record$suffix$.csr_add_time = #csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="csrAddTimeNot" prepend="and">
+				<isEmpty property="csrAddTimeStart"><isEmpty property="csrAddTimeEnd"><isEmpty property="csrAddTime">
+				$csrAddTimeNot$ cs_integral_record$suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrOrder" prepend="and">
+			    $csrOrderNot$ cs_integral_record$suffix$.csr_order = #csrOrder#
+			</isNotEmpty>
+			<isNotNull property="csrOrderNot" prepend="and">
+				<isEmpty property="csrOrder">
+				$csrOrderNot$ cs_integral_record$suffix$.csr_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRelateMin" prepend="and">
+			    $csrRelateNot$  ( cs_integral_record$suffix$.csr_relate &gt;= #csrRelateMin#
+			    <isEmpty property="csrRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrRelateMax" prepend="and">
+				<isEmpty property="csrRelateMin">$csrRelateNot$   (</isEmpty>
+			    cs_integral_record$suffix$.csr_relate &lt;= #csrRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrRelate" prepend="and">
+			    $csrRelateNot$ cs_integral_record$suffix$.csr_relate = #csrRelate#
+			</isNotEmpty>
+			<isNotNull property="csrRelateNot" prepend="and">
+				<isEmpty property="csrRelateMax"><isEmpty property="csrRelateMin"><isEmpty property="csrRelate">
+				$csrRelateNot$ cs_integral_record$suffix$.csr_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrSerial" prepend="and">			    
+			    (<isNotNull property="csrSerialNot">
+			    cs_integral_record$suffix$.csr_serial is null or length(cs_integral_record$suffix$.csr_serial) &lt; 1 or
+			    </isNotNull>$csrSerialNot$ cs_integral_record$suffix$.csr_serial = #csrSerial#)
+			</isNotEmpty>
+			<isNotNull property="csrSerialNot" prepend="and">
+				<isEmpty property="csrSerial">
+				$csrSerialNot$ (cs_integral_record$suffix$.csr_serial is null or length(cs_integral_record$suffix$.csr_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrEditor" prepend="and">
+			    $csrEditorNot$ cs_integral_record$suffix$.csr_editor = #csrEditor#
+			</isNotEmpty>
+			<isNotNull property="csrEditorNot" prepend="and">
+				<isEmpty property="csrEditor">
+				$csrEditorNot$ cs_integral_record$suffix$.csr_editor is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 积分记录left join 条件sql片段 -->
+	<sql id="cs_integral_record_join">
+		<dynamic>
+			<isNotEmpty property="CsIntegralRecord.csrId" prepend="and">
+			    $CsIntegralRecord.csrIdNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_id = #CsIntegralRecord.csrId#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrIdNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrId">
+				$csrIdNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrHost" prepend="and">
+			    $CsIntegralRecord.csrHostNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_host = #CsIntegralRecord.csrHost#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrHostNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrHost">
+				$csrHostNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrMember" prepend="and">
+			    $CsIntegralRecord.csrMemberNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_member = #CsIntegralRecord.csrMember#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrMemberNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrMember">
+				$csrMemberNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrType" prepend="and">
+				(<isNotNull property="CsIntegralRecord.csrTypeNot">
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_type is null or length(cs_integral_record$CsIntegralRecord.suffix$.csr_type) &lt; 1 or
+			    </isNotNull>$CsIntegralRecord.csrTypeNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_type = #CsIntegralRecord.csrType#)
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrTypeNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrType">
+				$csrTypeNot$ (cs_integral_record$CsIntegralRecord.suffix$.csr_type is null or length(cs_integral_record$CsIntegralRecord.suffix$.csr_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrAmountMin" prepend="and">
+			    $CsIntegralRecord.csrAmountNot$  ( cs_integral_record$CsIntegralRecord.suffix$.csr_amount &gt;= #CsIntegralRecord.csrAmountMin#
+			    <isEmpty property="CsIntegralRecord.csrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrAmountMax" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrAmountMin">$CsIntegralRecord.csrAmountNot$   (</isEmpty>
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_amount &lt;= #CsIntegralRecord.csrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrAmount" prepend="and">
+			    $CsIntegralRecord.csrAmountNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_amount = #CsIntegralRecord.csrAmount#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrAmountNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrAmountMax"><isEmpty property="CsIntegralRecord.csrAmountMin"><isEmpty property="CsIntegralRecord.csrAmount">
+				$csrAmountNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrRemainMin" prepend="and">
+			    $CsIntegralRecord.csrRemainNot$  ( cs_integral_record$CsIntegralRecord.suffix$.csr_remain &gt;= #CsIntegralRecord.csrRemainMin#
+			    <isEmpty property="CsIntegralRecord.csrRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrRemainMax" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrRemainMin">$CsIntegralRecord.csrRemainNot$   (</isEmpty>
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_remain &lt;= #CsIntegralRecord.csrRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrRemain" prepend="and">
+			    $CsIntegralRecord.csrRemainNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_remain = #CsIntegralRecord.csrRemain#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrRemainNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrRemainMax"><isEmpty property="CsIntegralRecord.csrRemainMin"><isEmpty property="CsIntegralRecord.csrRemain">
+				$csrRemainNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrRemark" prepend="and">
+				(<isNotNull property="CsIntegralRecord.csrRemarkNot">
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_remark is null or length(cs_integral_record$CsIntegralRecord.suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$CsIntegralRecord.csrRemarkNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_remark like #CsIntegralRecord.csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrRemarkNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrRemark">
+				$csrRemarkNot$ (cs_integral_record$CsIntegralRecord.suffix$.csr_remark is null or length(cs_integral_record$CsIntegralRecord.suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrAddTimeStart" prepend="and">
+			    $CsIntegralRecord.csrAddTimeNot$   (cs_integral_record$CsIntegralRecord.suffix$.csr_add_time &gt;= #CsIntegralRecord.csrAddTimeStart#
+			   <isEmpty property="CsIntegralRecord.csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrAddTimeEnd" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrAddTimeStart">$CsIntegralRecord.csrAddTimeNot$   (</isEmpty>
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_add_time &lt;= #CsIntegralRecord.csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrAddTime" prepend="and">
+			    $CsIntegralRecord.csrAddTimeNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_add_time = #CsIntegralRecord.csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrAddTimeNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrAddTimeStart"><isEmpty property="CsIntegralRecord.csrAddTimeEnd"><isEmpty property="CsIntegralRecord.csrAddTime">
+				$csrAddTimeNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrOrder" prepend="and">
+			    $CsIntegralRecord.csrOrderNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_order = #CsIntegralRecord.csrOrder#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrOrderNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrOrder">
+				$csrOrderNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrRelateMin" prepend="and">
+			    $CsIntegralRecord.csrRelateNot$  ( cs_integral_record$CsIntegralRecord.suffix$.csr_relate &gt;= #CsIntegralRecord.csrRelateMin#
+			    <isEmpty property="CsIntegralRecord.csrRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrRelateMax" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrRelateMin">$CsIntegralRecord.csrRelateNot$   (</isEmpty>
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_relate &lt;= #CsIntegralRecord.csrRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsIntegralRecord.csrRelate" prepend="and">
+			    $CsIntegralRecord.csrRelateNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_relate = #CsIntegralRecord.csrRelate#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrRelateNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrRelateMax"><isEmpty property="CsIntegralRecord.csrRelateMin"><isEmpty property="CsIntegralRecord.csrRelate">
+				$csrRelateNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrSerial" prepend="and">
+				(<isNotNull property="CsIntegralRecord.csrSerialNot">
+			    cs_integral_record$CsIntegralRecord.suffix$.csr_serial is null or length(cs_integral_record$CsIntegralRecord.suffix$.csr_serial) &lt; 1 or
+			    </isNotNull>$CsIntegralRecord.csrSerialNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_serial = #CsIntegralRecord.csrSerial#)
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrSerialNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrSerial">
+				$csrSerialNot$ (cs_integral_record$CsIntegralRecord.suffix$.csr_serial is null or length(cs_integral_record$CsIntegralRecord.suffix$.csr_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsIntegralRecord.csrEditor" prepend="and">
+			    $CsIntegralRecord.csrEditorNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_editor = #CsIntegralRecord.csrEditor#
+			</isNotEmpty>
+			<isNotNull property="CsIntegralRecord.csrEditorNot" prepend="and">
+				<isEmpty property="CsIntegralRecord.csrEditor">
+				$csrEditorNot$ cs_integral_record$CsIntegralRecord.suffix$.csr_editor is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

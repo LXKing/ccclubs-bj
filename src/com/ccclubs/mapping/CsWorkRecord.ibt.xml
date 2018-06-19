@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 后勤工作记录之SQL映射 -->
+	<resultMap id="CsWorkRecord" class="com.ccclubs.model.CsWorkRecord">
+		<result property="cswrId" column="cswr_id"/>
+		<result property="cswrHost" column="cswr_host"/>
+		<result property="cswrOutlets" column="cswr_outlets"/>
+		<result property="cswrCar" column="cswr_car"/>
+		<result property="cswrUser" column="cswr_user"/>
+		<result property="cswrItem" column="cswr_item"/>
+		<result property="cswrItemname" column="cswr_itemname"/>
+		<result property="cswrOperation" column="cswr_operation"/>
+		<result property="cswrData" column="cswr_data"/>
+		<result property="cswrStatus" column="cswr_status"/>
+		<result property="cswrAddTime" column="cswr_add_time"/>
+		<result property="cswrUpdateTime" column="cswr_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有后勤工作记录 -->
+	<select id="getCsWorkRecordList" resultMap="CsWorkRecord">
+		select cs_work_record$suffix$.* from cs_work_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.cswr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询-->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.cswr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询-->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.cswr_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询-->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.cswr_item=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_work_record$suffix$.cswr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询条件sql片段 -->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询条件sql片段 -->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询条件sql片段 -->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWorkRecord_part.cs_work_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取后勤工作记录分页 -->
+	<select id="getCsWorkRecordPage" parameterClass="java.util.HashMap" resultMap="CsWorkRecord">
+		select cs_work_record$suffix$.* from cs_work_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.cswr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询-->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.cswr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询-->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.cswr_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询-->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.cswr_item=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_work_record$suffix$.cswr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询条件sql片段 -->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询条件sql片段 -->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询条件sql片段 -->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWorkRecord_part.cs_work_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取后勤工作记录总数 -->
+	<select id="getCsWorkRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_work_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.cswr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询-->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.cswr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询-->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.cswr_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询-->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.cswr_item=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_work_record$suffix$.cswr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询条件sql片段 -->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询条件sql片段 -->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询条件sql片段 -->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWorkRecord_part.cs_work_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取后勤工作记录 -->
+	<select id="getCsWorkRecordById" parameterClass="java.util.HashMap" resultMap="CsWorkRecord">
+		select cs_work_record$suffix$.* from cs_work_record$suffix$
+		where cswr_id=#id#
+	</select>
+	
+		
+	<!-- 保存后勤工作记录 -->
+	<insert id="saveCsWorkRecord"  parameterClass="com.ccclubs.model.CsWorkRecord">
+		insert into cs_work_record$suffix$
+		(
+			cs_work_record$suffix$.cswr_host
+			,cs_work_record$suffix$.cswr_outlets
+			,cs_work_record$suffix$.cswr_car
+			,cs_work_record$suffix$.cswr_user
+			,cs_work_record$suffix$.cswr_item
+			,cs_work_record$suffix$.cswr_itemname
+			,cs_work_record$suffix$.cswr_operation
+			,cs_work_record$suffix$.cswr_data
+			,cs_work_record$suffix$.cswr_status
+			,cs_work_record$suffix$.cswr_add_time
+			,cs_work_record$suffix$.cswr_update_time
+		)
+		values(
+			<isNotNull property="cswrHost" prepend="">
+				#cswrHost#
+			</isNotNull>
+			<isNull property="cswrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cswrOutlets" prepend=",">
+				#cswrOutlets#
+			</isNotNull>
+			<isNull property="cswrOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrCar" prepend=",">
+				#cswrCar#
+			</isNotNull>
+			<isNull property="cswrCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrUser" prepend=",">
+				#cswrUser#
+			</isNotNull>
+			<isNull property="cswrUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrItem" prepend=",">
+				#cswrItem#
+			</isNotNull>
+			<isNull property="cswrItem" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrItemname" prepend=",">
+				#cswrItemname#
+			</isNotNull>
+			<isNull property="cswrItemname" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrOperation" prepend=",">
+				#cswrOperation#
+			</isNotNull>
+			<isNull property="cswrOperation" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrData" prepend=",">
+				#cswrData#
+			</isNotNull>
+			<isNull property="cswrData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrStatus" prepend=",">
+				#cswrStatus#
+			</isNotNull>
+			<isNull property="cswrStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrAddTime" prepend=",">
+				#cswrAddTime#
+			</isNotNull>
+			<isNull property="cswrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswrUpdateTime" prepend=",">
+				#cswrUpdateTime#
+			</isNotNull>
+			<isNull property="cswrUpdateTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新后勤工作记录 -->
+	<update id="updateCsWorkRecord"  parameterClass="com.ccclubs.model.CsWorkRecord">
+		update cs_work_record$suffix$ set
+			<isNotNull property="cswrHost" prepend="">
+				cs_work_record$suffix$.cswr_host = #cswrHost#
+			</isNotNull>
+			<isNull property="cswrHost" prepend="">
+				cs_work_record$suffix$.cswr_host = null
+			</isNull>				
+			<isNotNull property="cswrOutlets" prepend=",">
+				cs_work_record$suffix$.cswr_outlets = #cswrOutlets#
+			</isNotNull>
+			<isNull property="cswrOutlets" prepend=",">
+				cs_work_record$suffix$.cswr_outlets = null
+			</isNull>				
+			<isNotNull property="cswrCar" prepend=",">
+				cs_work_record$suffix$.cswr_car = #cswrCar#
+			</isNotNull>
+			<isNull property="cswrCar" prepend=",">
+				cs_work_record$suffix$.cswr_car = null
+			</isNull>				
+			<isNotNull property="cswrUser" prepend=",">
+				cs_work_record$suffix$.cswr_user = #cswrUser#
+			</isNotNull>
+			<isNull property="cswrUser" prepend=",">
+				cs_work_record$suffix$.cswr_user = null
+			</isNull>				
+			<isNotNull property="cswrItem" prepend=",">
+				cs_work_record$suffix$.cswr_item = #cswrItem#
+			</isNotNull>
+			<isNull property="cswrItem" prepend=",">
+				cs_work_record$suffix$.cswr_item = null
+			</isNull>				
+			<isNotNull property="cswrItemname" prepend=",">
+				cs_work_record$suffix$.cswr_itemname = #cswrItemname#
+			</isNotNull>
+			<isNull property="cswrItemname" prepend=",">
+				cs_work_record$suffix$.cswr_itemname = null
+			</isNull>				
+			<isNotNull property="cswrOperation" prepend=",">
+				cs_work_record$suffix$.cswr_operation = #cswrOperation#
+			</isNotNull>
+			<isNull property="cswrOperation" prepend=",">
+				cs_work_record$suffix$.cswr_operation = null
+			</isNull>				
+			<isNotNull property="cswrData" prepend=",">
+				cs_work_record$suffix$.cswr_data = #cswrData#
+			</isNotNull>
+			<isNull property="cswrData" prepend=",">
+				cs_work_record$suffix$.cswr_data = null
+			</isNull>				
+			<isNotNull property="cswrStatus" prepend=",">
+				cs_work_record$suffix$.cswr_status = #cswrStatus#
+			</isNotNull>
+			<isNull property="cswrStatus" prepend=",">
+				cs_work_record$suffix$.cswr_status = null
+			</isNull>				
+			<isNotNull property="cswrAddTime" prepend=",">
+				cs_work_record$suffix$.cswr_add_time = #cswrAddTime#
+			</isNotNull>
+			<isNull property="cswrAddTime" prepend=",">
+				cs_work_record$suffix$.cswr_add_time = null
+			</isNull>				
+			<isNotNull property="cswrUpdateTime" prepend=",">
+				cs_work_record$suffix$.cswr_update_time = #cswrUpdateTime#
+			</isNotNull>
+			<isNull property="cswrUpdateTime" prepend=",">
+				cs_work_record$suffix$.cswr_update_time = null
+			</isNull>				
+		where
+			cswr_id=#cswrId#
+	</update>
+	
+	<!-- 更新后勤工作记录非空字段 -->
+	<update id="updateCsWorkRecord$NotNull"  parameterClass="com.ccclubs.model.CsWorkRecord">
+		update cs_work_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cswrHost" prepend=",">
+				cs_work_record$suffix$.cswr_host = #cswrHost#
+			</isNotNull>		
+			<isNotNull property="cswrOutlets" prepend=",">
+				cs_work_record$suffix$.cswr_outlets = #cswrOutlets#
+			</isNotNull>		
+			<isNotNull property="cswrCar" prepend=",">
+				cs_work_record$suffix$.cswr_car = #cswrCar#
+			</isNotNull>		
+			<isNotNull property="cswrUser" prepend=",">
+				cs_work_record$suffix$.cswr_user = #cswrUser#
+			</isNotNull>		
+			<isNotNull property="cswrItem" prepend=",">
+				cs_work_record$suffix$.cswr_item = #cswrItem#
+			</isNotNull>		
+			<isNotNull property="cswrItemname" prepend=",">
+				cs_work_record$suffix$.cswr_itemname = #cswrItemname#
+			</isNotNull>		
+			<isNotNull property="cswrOperation" prepend=",">
+				cs_work_record$suffix$.cswr_operation = #cswrOperation#
+			</isNotNull>		
+			<isNotNull property="cswrData" prepend=",">
+				cs_work_record$suffix$.cswr_data = #cswrData#
+			</isNotNull>		
+			<isNotNull property="cswrStatus" prepend=",">
+				cs_work_record$suffix$.cswr_status = #cswrStatus#
+			</isNotNull>		
+			<isNotNull property="cswrAddTime" prepend=",">
+				cs_work_record$suffix$.cswr_add_time = #cswrAddTime#
+			</isNotNull>		
+			<isNotNull property="cswrUpdateTime" prepend=",">
+				cs_work_record$suffix$.cswr_update_time = #cswrUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cswr_id=#cswrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个后勤工作记录 -->
+	<delete id="deleteCsWorkRecordById" parameterClass="java.util.HashMap">
+		delete from cs_work_record$suffix$ where cswr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个后勤工作记录 -->
+	<update id="removeCsWorkRecordById" parameterClass="java.util.HashMap">
+		update cs_work_record$suffix$ set  cs_work_record$suffix$.cswr_status=-1  where cswr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新后勤工作记录 -->
+	<update id="updateCsWorkRecordBy"  parameterClass="java.util.HashMap">
+		update cs_work_record$suffix$ set		
+			cswr_id=cswr_id
+			<isNotNull property="V_cswrId" prepend=",">
+				cs_work_record$suffix$.cswr_id = #V_cswrId#
+			</isNotNull>		
+			<isNotNull property="V_cswrHost" prepend=",">
+				cs_work_record$suffix$.cswr_host = #V_cswrHost#
+			</isNotNull>		
+			<isNotNull property="V_cswrOutlets" prepend=",">
+				cs_work_record$suffix$.cswr_outlets = #V_cswrOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cswrCar" prepend=",">
+				cs_work_record$suffix$.cswr_car = #V_cswrCar#
+			</isNotNull>		
+			<isNotNull property="V_cswrUser" prepend=",">
+				cs_work_record$suffix$.cswr_user = #V_cswrUser#
+			</isNotNull>		
+			<isNotNull property="V_cswrItem" prepend=",">
+				cs_work_record$suffix$.cswr_item = #V_cswrItem#
+			</isNotNull>		
+			<isNotNull property="V_cswrItemname" prepend=",">
+				cs_work_record$suffix$.cswr_itemname = #V_cswrItemname#
+			</isNotNull>		
+			<isNotNull property="V_cswrOperation" prepend=",">
+				cs_work_record$suffix$.cswr_operation = #V_cswrOperation#
+			</isNotNull>		
+			<isNotNull property="V_cswrData" prepend=",">
+				cs_work_record$suffix$.cswr_data = #V_cswrData#
+			</isNotNull>		
+			<isNotNull property="V_cswrStatus" prepend=",">
+				cs_work_record$suffix$.cswr_status = #V_cswrStatus#
+			</isNotNull>		
+			<isNotNull property="V_cswrAddTime" prepend=",">
+				cs_work_record$suffix$.cswr_add_time = #V_cswrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cswrUpdateTime" prepend=",">
+				cs_work_record$suffix$.cswr_update_time = #V_cswrUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.cswr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_work_record$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询-->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.cswr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_work_record$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询-->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.cswr_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_work_record$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询-->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.cswr_item=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_work_record$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+		where cs_work_record$suffix$.cswr_status!=-1 and 1=1 		
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CswrOutlets"><!-- 调用一下CswrOutlets，把CsOutlets指向CswrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业车辆]查询条件sql片段 -->
+		<isNotNull property="CswrCar"><!-- 调用一下CswrCar，把CsCar指向CswrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[人员]查询条件sql片段 -->
+		<isNotNull property="CswrUser"><!-- 调用一下CswrUser，把SrvUser指向CswrUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[作业项目]查询条件sql片段 -->
+		<isNotNull property="CswrItem"><!-- 调用一下CswrItem，把SrvProperty指向CswrItem --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsWorkRecord_part.cs_work_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除后勤工作记录 -->
+	<update id="deleteCsWorkRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_work_record$suffix$ where 
+		cs_work_record$suffix$.cswr_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsWorkRecord_part.cs_work_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

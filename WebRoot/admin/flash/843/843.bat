@@ -1,0 +1,1 @@
+start "843" java -classpath .;843.jar  com.lazy3q.mqtt.SecurityXMLServer 1883-1883

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMemberMemo_part">	
+	<!-- 会员备忘条件sql片段  -->
+	<sql id="cs_member_memo_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmmId" prepend="and">
+			    $csmmIdNot$ cs_member_memo$suffix$.csmm_id = #csmmId#
+			</isNotEmpty>
+			<isNotNull property="csmmIdNot" prepend="and">
+				<isEmpty property="csmmId">
+				$csmmIdNot$ cs_member_memo$suffix$.csmm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmmContent" prepend="and">			    
+			    (<isNotNull property="csmmContentNot">
+			    cs_member_memo$suffix$.csmm_content is null or length(cs_member_memo$suffix$.csmm_content) &lt; 1 or
+			    </isNotNull>$csmmContentNot$ cs_member_memo$suffix$.csmm_content like #csmmContent#)
+			</isNotEmpty>
+			<isNotNull property="csmmContentNot" prepend="and">
+				<isEmpty property="csmmContent">
+				$csmmContentNot$ (cs_member_memo$suffix$.csmm_content is null or length(cs_member_memo$suffix$.csmm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmmMember" prepend="and">
+			    $csmmMemberNot$ cs_member_memo$suffix$.csmm_member = #csmmMember#
+			</isNotEmpty>
+			<isNotNull property="csmmMemberNot" prepend="and">
+				<isEmpty property="csmmMember">
+				$csmmMemberNot$ cs_member_memo$suffix$.csmm_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmmEditor" prepend="and">
+			    $csmmEditorNot$ cs_member_memo$suffix$.csmm_editor = #csmmEditor#
+			</isNotEmpty>
+			<isNotNull property="csmmEditorNot" prepend="and">
+				<isEmpty property="csmmEditor">
+				$csmmEditorNot$ cs_member_memo$suffix$.csmm_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmmUpdateTimeStart" prepend="and">
+			    $csmmUpdateTimeNot$   (cs_member_memo$suffix$.csmm_update_time &gt;= #csmmUpdateTimeStart#
+			   <isEmpty property="csmmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmmUpdateTimeEnd" prepend="and">
+				<isEmpty property="csmmUpdateTimeStart">$csmmUpdateTimeNot$   (</isEmpty>
+			    cs_member_memo$suffix$.csmm_update_time &lt;= #csmmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmmUpdateTime" prepend="and">
+			    $csmmUpdateTimeNot$ cs_member_memo$suffix$.csmm_update_time = #csmmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csmmUpdateTimeNot" prepend="and">
+				<isEmpty property="csmmUpdateTimeStart"><isEmpty property="csmmUpdateTimeEnd"><isEmpty property="csmmUpdateTime">
+				$csmmUpdateTimeNot$ cs_member_memo$suffix$.csmm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmmAddTimeStart" prepend="and">
+			    $csmmAddTimeNot$   (cs_member_memo$suffix$.csmm_add_time &gt;= #csmmAddTimeStart#
+			   <isEmpty property="csmmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmmAddTimeEnd" prepend="and">
+				<isEmpty property="csmmAddTimeStart">$csmmAddTimeNot$   (</isEmpty>
+			    cs_member_memo$suffix$.csmm_add_time &lt;= #csmmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmmAddTime" prepend="and">
+			    $csmmAddTimeNot$ cs_member_memo$suffix$.csmm_add_time = #csmmAddTime#
+			</isNotEmpty>
+			<isNotNull property="csmmAddTimeNot" prepend="and">
+				<isEmpty property="csmmAddTimeStart"><isEmpty property="csmmAddTimeEnd"><isEmpty property="csmmAddTime">
+				$csmmAddTimeNot$ cs_member_memo$suffix$.csmm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmmStatus" prepend="and">
+			    $csmmStatusNot$ cs_member_memo$suffix$.csmm_status = #csmmStatus#
+			</isNotEmpty>
+			<isNotNull property="csmmStatusNot" prepend="and">
+				<isEmpty property="csmmStatus">
+				$csmmStatusNot$ cs_member_memo$suffix$.csmm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员备忘left join 条件sql片段 -->
+	<sql id="cs_member_memo_join">
+		<dynamic>
+			<isNotEmpty property="CsMemberMemo.csmmId" prepend="and">
+			    $CsMemberMemo.csmmIdNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_id = #CsMemberMemo.csmmId#
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmIdNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmId">
+				$csmmIdNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberMemo.csmmContent" prepend="and">
+				(<isNotNull property="CsMemberMemo.csmmContentNot">
+			    cs_member_memo$CsMemberMemo.suffix$.csmm_content is null or length(cs_member_memo$CsMemberMemo.suffix$.csmm_content) &lt; 1 or
+			    </isNotNull>$CsMemberMemo.csmmContentNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_content like #CsMemberMemo.csmmContent#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmContentNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmContent">
+				$csmmContentNot$ (cs_member_memo$CsMemberMemo.suffix$.csmm_content is null or length(cs_member_memo$CsMemberMemo.suffix$.csmm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberMemo.csmmMember" prepend="and">
+			    $CsMemberMemo.csmmMemberNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_member = #CsMemberMemo.csmmMember#
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmMemberNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmMember">
+				$csmmMemberNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberMemo.csmmEditor" prepend="and">
+			    $CsMemberMemo.csmmEditorNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_editor = #CsMemberMemo.csmmEditor#
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmEditorNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmEditor">
+				$csmmEditorNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberMemo.csmmUpdateTimeStart" prepend="and">
+			    $CsMemberMemo.csmmUpdateTimeNot$   (cs_member_memo$CsMemberMemo.suffix$.csmm_update_time &gt;= #CsMemberMemo.csmmUpdateTimeStart#
+			   <isEmpty property="CsMemberMemo.csmmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberMemo.csmmUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmUpdateTimeStart">$CsMemberMemo.csmmUpdateTimeNot$   (</isEmpty>
+			    cs_member_memo$CsMemberMemo.suffix$.csmm_update_time &lt;= #CsMemberMemo.csmmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberMemo.csmmUpdateTime" prepend="and">
+			    $CsMemberMemo.csmmUpdateTimeNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_update_time = #CsMemberMemo.csmmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmUpdateTimeNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmUpdateTimeStart"><isEmpty property="CsMemberMemo.csmmUpdateTimeEnd"><isEmpty property="CsMemberMemo.csmmUpdateTime">
+				$csmmUpdateTimeNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberMemo.csmmAddTimeStart" prepend="and">
+			    $CsMemberMemo.csmmAddTimeNot$   (cs_member_memo$CsMemberMemo.suffix$.csmm_add_time &gt;= #CsMemberMemo.csmmAddTimeStart#
+			   <isEmpty property="CsMemberMemo.csmmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberMemo.csmmAddTimeEnd" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmAddTimeStart">$CsMemberMemo.csmmAddTimeNot$   (</isEmpty>
+			    cs_member_memo$CsMemberMemo.suffix$.csmm_add_time &lt;= #CsMemberMemo.csmmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberMemo.csmmAddTime" prepend="and">
+			    $CsMemberMemo.csmmAddTimeNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_add_time = #CsMemberMemo.csmmAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmAddTimeNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmAddTimeStart"><isEmpty property="CsMemberMemo.csmmAddTimeEnd"><isEmpty property="CsMemberMemo.csmmAddTime">
+				$csmmAddTimeNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberMemo.csmmStatus" prepend="and">
+			    $CsMemberMemo.csmmStatusNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_status = #CsMemberMemo.csmmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMemberMemo.csmmStatusNot" prepend="and">
+				<isEmpty property="CsMemberMemo.csmmStatus">
+				$csmmStatusNot$ cs_member_memo$CsMemberMemo.suffix$.csmm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

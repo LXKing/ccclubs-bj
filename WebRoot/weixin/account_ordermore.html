@@ -1,0 +1,41 @@
+<s:iterator value="#request.page.result" id="item" status="i">
+	<div class="carlist">
+		<dl>
+			<dt>
+				<img src="/images/cars/${item.csoModel}_wide.jpg">
+				<s:if test="#item.csoStatus==0||#item.csoStatus==1">
+					<a href="account_ordercontinue.html?order=${item.csoId}" class="okbuybtn">续订</a>
+				</s:if>
+				<s:else>
+					<a href="reserve.html?csoArea=${item.csoArea}&csoOutlets=${item.csoOutlets}" class="ono">再次预订</a>
+				</s:else>
+			</dt>
+			<dd style="line-height: 24px;">
+				<a href="account_orderdetail.html?order=${item.csoId}">
+					<div class="order-item-detail">
+						<h1>
+							<b>${item.$csoModel.cscmName}<u>|</u>${item.$csoCar.cscCarNo}</b>
+							<s:if test="#item.csoIsAdCar">
+								<span>宣</span>
+							</s:if>
+						</h1>
+						<p>
+							订单号：${item.csoId}
+							<span class="${item.csoStatus==0?'caryyc':'caryyd'}"> ${item.csoStatus==0?"已预定":""} ${item.csoStatus==1?"正在执行":""} ${item.csoStatus==2?"已还车":""} ${item.csoStatus==3?"已取消":""} ${item.csoStatus==4?"已完成":""} ${item.csoStatus==5?"待处理":""} ${item.csoStatus==6?"已退款":""} ${item.csoStatus==7?"已撤销":""}</span>
+						</p>
+						<p>
+							下单时间：${lz:date(item.csoAddTime,"yyyy-MM-dd,HH:mm")}
+						</p>
+						<p>
+							金额：
+							<strong>${lz:digit(item.csoPayNeed,2)}</strong>元
+						</p>
+						<p>
+							<img src="images/address.png">
+							${item.$csoOutlets.csoName}
+						</p>
+					</div> </a>
+			</dd>
+		</dl>
+	</div>
+</s:iterator>

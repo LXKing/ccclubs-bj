@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 网点之SQL映射 -->
+	<resultMap id="CsOutlets" class="com.ccclubs.model.CsOutlets">
+		<result property="csoId" column="cso_id"/>
+		<result property="csoHost" column="cso_host"/>
+		<result property="csoName" column="cso_name"/>
+		<result property="csoArea" column="cso_area"/>
+		<result property="csoType" column="cso_type"/>
+		<result property="csoLongitude" column="cso_longitude"/>
+		<result property="csoLatitude" column="cso_latitude"/>
+		<result property="csoAddress" column="cso_address"/>
+		<result property="csoSpace" column="cso_space"/>
+		<result property="csoDetails" column="cso_details"/>
+		<result property="csoDoorTime" column="cso_door_time"/>
+		<result property="csoCost" column="cso_cost"/>
+		<result property="csoPerson" column="cso_person"/>
+		<result property="csoContact" column="cso_contact"/>
+		<result property="csoUntil" column="cso_until"/>
+		<result property="csoExpire" column="cso_expire"/>
+		<result property="csoPileTime" column="cso_pile_time"/>
+		<result property="csoCarS" column="cso_car_s"/>
+		<result property="csoPositionS" column="cso_position_s"/>
+		<result property="csoImage" column="cso_image"/>
+		<result property="csoCanA" column="cso_can_a"/>
+		<result property="csoCanB" column="cso_can_b"/>
+		<result property="csoCanReg" column="cso_can_reg"/>
+		<result property="csoCanOrder" column="cso_can_order"/>
+		<result property="csoPriority" column="cso_priority"/>
+		<result property="csoVoteS" column="cso_vote_s"/>
+		<result property="csoProfile" column="cso_profile"/>
+		<result property="csoOnlineTime" column="cso_online_time"/>
+		<result property="csoUpdateTime" column="cso_update_time"/>
+		<result property="csoAddTime" column="cso_add_time"/>
+		<result property="csoStatus" column="cso_status"/>
+	</resultMap>
+		
+	<!-- 获取所有网点 -->
+	<select id="getCsOutletsList" resultMap="CsOutlets">
+		select cs_outlets$suffix$.* from cs_outlets$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询-->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_outlets$suffix$.cso_status!=-1
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutlets_part.cs_outlets_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cso_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取网点分页 -->
+	<select id="getCsOutletsPage" parameterClass="java.util.HashMap" resultMap="CsOutlets">
+		select cs_outlets$suffix$.* from cs_outlets$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_outlets$suffix$.cso_status!=-1
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutlets_part.cs_outlets_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cso_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取网点总数 -->
+	<select id="getCsOutletsEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_outlets$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_outlets$suffix$.cso_status!=-1
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutlets_part.cs_outlets_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取网点 -->
+	<select id="getCsOutletsById" parameterClass="java.util.HashMap" resultMap="CsOutlets">
+		select cs_outlets$suffix$.* from cs_outlets$suffix$
+		where cso_id=#id#
+	</select>
+	
+		
+	<!-- 保存网点 -->
+	<insert id="saveCsOutlets"  parameterClass="com.ccclubs.model.CsOutlets">
+		insert into cs_outlets$suffix$
+		(
+			cs_outlets$suffix$.cso_host
+			,cs_outlets$suffix$.cso_name
+			,cs_outlets$suffix$.cso_area
+			,cs_outlets$suffix$.cso_type
+			,cs_outlets$suffix$.cso_longitude
+			,cs_outlets$suffix$.cso_latitude
+			,cs_outlets$suffix$.cso_address
+			,cs_outlets$suffix$.cso_space
+			,cs_outlets$suffix$.cso_details
+			,cs_outlets$suffix$.cso_door_time
+			,cs_outlets$suffix$.cso_cost
+			,cs_outlets$suffix$.cso_person
+			,cs_outlets$suffix$.cso_contact
+			,cs_outlets$suffix$.cso_until
+			,cs_outlets$suffix$.cso_expire
+			,cs_outlets$suffix$.cso_pile_time
+			,cs_outlets$suffix$.cso_car_s
+			,cs_outlets$suffix$.cso_position_s
+			,cs_outlets$suffix$.cso_image
+			,cs_outlets$suffix$.cso_can_a
+			,cs_outlets$suffix$.cso_can_b
+			,cs_outlets$suffix$.cso_can_reg
+			,cs_outlets$suffix$.cso_can_order
+			,cs_outlets$suffix$.cso_priority
+			,cs_outlets$suffix$.cso_vote_s
+			,cs_outlets$suffix$.cso_profile
+			,cs_outlets$suffix$.cso_online_time
+			,cs_outlets$suffix$.cso_update_time
+			,cs_outlets$suffix$.cso_add_time
+			,cs_outlets$suffix$.cso_status
+		)
+		values(
+			<isNotNull property="csoHost" prepend="">
+				#csoHost#
+			</isNotNull>
+			<isNull property="csoHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csoName" prepend=",">
+				#csoName#
+			</isNotNull>
+			<isNull property="csoName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoArea" prepend=",">
+				#csoArea#
+			</isNotNull>
+			<isNull property="csoArea" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoType" prepend=",">
+				#csoType#
+			</isNotNull>
+			<isNull property="csoType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoLongitude" prepend=",">
+				#csoLongitude#
+			</isNotNull>
+			<isNull property="csoLongitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoLatitude" prepend=",">
+				#csoLatitude#
+			</isNotNull>
+			<isNull property="csoLatitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAddress" prepend=",">
+				#csoAddress#
+			</isNotNull>
+			<isNull property="csoAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoSpace" prepend=",">
+				#csoSpace#
+			</isNotNull>
+			<isNull property="csoSpace" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoDetails" prepend=",">
+				#csoDetails#
+			</isNotNull>
+			<isNull property="csoDetails" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoDoorTime" prepend=",">
+				#csoDoorTime#
+			</isNotNull>
+			<isNull property="csoDoorTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCost" prepend=",">
+				#csoCost#
+			</isNotNull>
+			<isNull property="csoCost" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPerson" prepend=",">
+				#csoPerson#
+			</isNotNull>
+			<isNull property="csoPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoContact" prepend=",">
+				#csoContact#
+			</isNotNull>
+			<isNull property="csoContact" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUntil" prepend=",">
+				#csoUntil#
+			</isNotNull>
+			<isNull property="csoUntil" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoExpire" prepend=",">
+				#csoExpire#
+			</isNotNull>
+			<isNull property="csoExpire" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPileTime" prepend=",">
+				#csoPileTime#
+			</isNotNull>
+			<isNull property="csoPileTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCarS" prepend=",">
+				#csoCarS#
+			</isNotNull>
+			<isNull property="csoCarS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPositionS" prepend=",">
+				#csoPositionS#
+			</isNotNull>
+			<isNull property="csoPositionS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoImage" prepend=",">
+				#csoImage#
+			</isNotNull>
+			<isNull property="csoImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCanA" prepend=",">
+				#csoCanA#
+			</isNotNull>
+			<isNull property="csoCanA" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCanB" prepend=",">
+				#csoCanB#
+			</isNotNull>
+			<isNull property="csoCanB" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCanReg" prepend=",">
+				#csoCanReg#
+			</isNotNull>
+			<isNull property="csoCanReg" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCanOrder" prepend=",">
+				#csoCanOrder#
+			</isNotNull>
+			<isNull property="csoCanOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPriority" prepend=",">
+				#csoPriority#
+			</isNotNull>
+			<isNull property="csoPriority" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoVoteS" prepend=",">
+				#csoVoteS#
+			</isNotNull>
+			<isNull property="csoVoteS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoProfile" prepend=",">
+				#csoProfile#
+			</isNotNull>
+			<isNull property="csoProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoOnlineTime" prepend=",">
+				#csoOnlineTime#
+			</isNotNull>
+			<isNull property="csoOnlineTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUpdateTime" prepend=",">
+				#csoUpdateTime#
+			</isNotNull>
+			<isNull property="csoUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAddTime" prepend=",">
+				#csoAddTime#
+			</isNotNull>
+			<isNull property="csoAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoStatus" prepend=",">
+				#csoStatus#
+			</isNotNull>
+			<isNull property="csoStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新网点 -->
+	<update id="updateCsOutlets"  parameterClass="com.ccclubs.model.CsOutlets">
+		update cs_outlets$suffix$ set
+			<isNotNull property="csoHost" prepend="">
+				cs_outlets$suffix$.cso_host = #csoHost#
+			</isNotNull>
+			<isNull property="csoHost" prepend="">
+				cs_outlets$suffix$.cso_host = null
+			</isNull>				
+			<isNotNull property="csoName" prepend=",">
+				cs_outlets$suffix$.cso_name = #csoName#
+			</isNotNull>
+			<isNull property="csoName" prepend=",">
+				cs_outlets$suffix$.cso_name = null
+			</isNull>				
+			<isNotNull property="csoArea" prepend=",">
+				cs_outlets$suffix$.cso_area = #csoArea#
+			</isNotNull>
+			<isNull property="csoArea" prepend=",">
+				cs_outlets$suffix$.cso_area = null
+			</isNull>				
+			<isNotNull property="csoType" prepend=",">
+				cs_outlets$suffix$.cso_type = #csoType#
+			</isNotNull>
+			<isNull property="csoType" prepend=",">
+				cs_outlets$suffix$.cso_type = null
+			</isNull>				
+			<isNotNull property="csoLongitude" prepend=",">
+				cs_outlets$suffix$.cso_longitude = #csoLongitude#
+			</isNotNull>
+			<isNull property="csoLongitude" prepend=",">
+				cs_outlets$suffix$.cso_longitude = null
+			</isNull>				
+			<isNotNull property="csoLatitude" prepend=",">
+				cs_outlets$suffix$.cso_latitude = #csoLatitude#
+			</isNotNull>
+			<isNull property="csoLatitude" prepend=",">
+				cs_outlets$suffix$.cso_latitude = null
+			</isNull>				
+			<isNotNull property="csoAddress" prepend=",">
+				cs_outlets$suffix$.cso_address = #csoAddress#
+			</isNotNull>
+			<isNull property="csoAddress" prepend=",">
+				cs_outlets$suffix$.cso_address = null
+			</isNull>				
+			<isNotNull property="csoSpace" prepend=",">
+				cs_outlets$suffix$.cso_space = #csoSpace#
+			</isNotNull>
+			<isNull property="csoSpace" prepend=",">
+				cs_outlets$suffix$.cso_space = null
+			</isNull>				
+			<isNotNull property="csoDetails" prepend=",">
+				cs_outlets$suffix$.cso_details = #csoDetails#
+			</isNotNull>
+			<isNull property="csoDetails" prepend=",">
+				cs_outlets$suffix$.cso_details = null
+			</isNull>				
+			<isNotNull property="csoDoorTime" prepend=",">
+				cs_outlets$suffix$.cso_door_time = #csoDoorTime#
+			</isNotNull>
+			<isNull property="csoDoorTime" prepend=",">
+				cs_outlets$suffix$.cso_door_time = null
+			</isNull>				
+			<isNotNull property="csoCost" prepend=",">
+				cs_outlets$suffix$.cso_cost = #csoCost#
+			</isNotNull>
+			<isNull property="csoCost" prepend=",">
+				cs_outlets$suffix$.cso_cost = null
+			</isNull>				
+			<isNotNull property="csoPerson" prepend=",">
+				cs_outlets$suffix$.cso_person = #csoPerson#
+			</isNotNull>
+			<isNull property="csoPerson" prepend=",">
+				cs_outlets$suffix$.cso_person = null
+			</isNull>				
+			<isNotNull property="csoContact" prepend=",">
+				cs_outlets$suffix$.cso_contact = #csoContact#
+			</isNotNull>
+			<isNull property="csoContact" prepend=",">
+				cs_outlets$suffix$.cso_contact = null
+			</isNull>				
+			<isNotNull property="csoUntil" prepend=",">
+				cs_outlets$suffix$.cso_until = #csoUntil#
+			</isNotNull>
+			<isNull property="csoUntil" prepend=",">
+				cs_outlets$suffix$.cso_until = null
+			</isNull>				
+			<isNotNull property="csoExpire" prepend=",">
+				cs_outlets$suffix$.cso_expire = #csoExpire#
+			</isNotNull>
+			<isNull property="csoExpire" prepend=",">
+				cs_outlets$suffix$.cso_expire = null
+			</isNull>				
+			<isNotNull property="csoPileTime" prepend=",">
+				cs_outlets$suffix$.cso_pile_time = #csoPileTime#
+			</isNotNull>
+			<isNull property="csoPileTime" prepend=",">
+				cs_outlets$suffix$.cso_pile_time = null
+			</isNull>				
+			<isNotNull property="csoCarS" prepend=",">
+				cs_outlets$suffix$.cso_car_s = #csoCarS#
+			</isNotNull>
+			<isNull property="csoCarS" prepend=",">
+				cs_outlets$suffix$.cso_car_s = null
+			</isNull>				
+			<isNotNull property="csoPositionS" prepend=",">
+				cs_outlets$suffix$.cso_position_s = #csoPositionS#
+			</isNotNull>
+			<isNull property="csoPositionS" prepend=",">
+				cs_outlets$suffix$.cso_position_s = null
+			</isNull>				
+			<isNotNull property="csoImage" prepend=",">
+				cs_outlets$suffix$.cso_image = #csoImage#
+			</isNotNull>
+			<isNull property="csoImage" prepend=",">
+				cs_outlets$suffix$.cso_image = null
+			</isNull>				
+			<isNotNull property="csoCanA" prepend=",">
+				cs_outlets$suffix$.cso_can_a = #csoCanA#
+			</isNotNull>
+			<isNull property="csoCanA" prepend=",">
+				cs_outlets$suffix$.cso_can_a = null
+			</isNull>				
+			<isNotNull property="csoCanB" prepend=",">
+				cs_outlets$suffix$.cso_can_b = #csoCanB#
+			</isNotNull>
+			<isNull property="csoCanB" prepend=",">
+				cs_outlets$suffix$.cso_can_b = null
+			</isNull>				
+			<isNotNull property="csoCanReg" prepend=",">
+				cs_outlets$suffix$.cso_can_reg = #csoCanReg#
+			</isNotNull>
+			<isNull property="csoCanReg" prepend=",">
+				cs_outlets$suffix$.cso_can_reg = null
+			</isNull>				
+			<isNotNull property="csoCanOrder" prepend=",">
+				cs_outlets$suffix$.cso_can_order = #csoCanOrder#
+			</isNotNull>
+			<isNull property="csoCanOrder" prepend=",">
+				cs_outlets$suffix$.cso_can_order = null
+			</isNull>				
+			<isNotNull property="csoPriority" prepend=",">
+				cs_outlets$suffix$.cso_priority = #csoPriority#
+			</isNotNull>
+			<isNull property="csoPriority" prepend=",">
+				cs_outlets$suffix$.cso_priority = null
+			</isNull>				
+			<isNotNull property="csoVoteS" prepend=",">
+				cs_outlets$suffix$.cso_vote_s = #csoVoteS#
+			</isNotNull>
+			<isNull property="csoVoteS" prepend=",">
+				cs_outlets$suffix$.cso_vote_s = null
+			</isNull>				
+			<isNotNull property="csoProfile" prepend=",">
+				cs_outlets$suffix$.cso_profile = #csoProfile#
+			</isNotNull>
+			<isNull property="csoProfile" prepend=",">
+				cs_outlets$suffix$.cso_profile = null
+			</isNull>				
+			<isNotNull property="csoOnlineTime" prepend=",">
+				cs_outlets$suffix$.cso_online_time = #csoOnlineTime#
+			</isNotNull>
+			<isNull property="csoOnlineTime" prepend=",">
+				cs_outlets$suffix$.cso_online_time = null
+			</isNull>				
+			<isNotNull property="csoUpdateTime" prepend=",">
+				cs_outlets$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotNull>
+			<isNull property="csoUpdateTime" prepend=",">
+				cs_outlets$suffix$.cso_update_time = null
+			</isNull>				
+			<isNotNull property="csoAddTime" prepend=",">
+				cs_outlets$suffix$.cso_add_time = #csoAddTime#
+			</isNotNull>
+			<isNull property="csoAddTime" prepend=",">
+				cs_outlets$suffix$.cso_add_time = null
+			</isNull>				
+			<isNotNull property="csoStatus" prepend=",">
+				cs_outlets$suffix$.cso_status = #csoStatus#
+			</isNotNull>
+			<isNull property="csoStatus" prepend=",">
+				cs_outlets$suffix$.cso_status = null
+			</isNull>				
+		where
+			cso_id=#csoId#
+	</update>
+	
+	<!-- 更新网点非空字段 -->
+	<update id="updateCsOutlets$NotNull"  parameterClass="com.ccclubs.model.CsOutlets">
+		update cs_outlets$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csoHost" prepend=",">
+				cs_outlets$suffix$.cso_host = #csoHost#
+			</isNotNull>		
+			<isNotNull property="csoName" prepend=",">
+				cs_outlets$suffix$.cso_name = #csoName#
+			</isNotNull>		
+			<isNotNull property="csoArea" prepend=",">
+				cs_outlets$suffix$.cso_area = #csoArea#
+			</isNotNull>		
+			<isNotNull property="csoType" prepend=",">
+				cs_outlets$suffix$.cso_type = #csoType#
+			</isNotNull>		
+			<isNotNull property="csoLongitude" prepend=",">
+				cs_outlets$suffix$.cso_longitude = #csoLongitude#
+			</isNotNull>		
+			<isNotNull property="csoLatitude" prepend=",">
+				cs_outlets$suffix$.cso_latitude = #csoLatitude#
+			</isNotNull>		
+			<isNotNull property="csoAddress" prepend=",">
+				cs_outlets$suffix$.cso_address = #csoAddress#
+			</isNotNull>		
+			<isNotNull property="csoSpace" prepend=",">
+				cs_outlets$suffix$.cso_space = #csoSpace#
+			</isNotNull>		
+			<isNotNull property="csoDetails" prepend=",">
+				cs_outlets$suffix$.cso_details = #csoDetails#
+			</isNotNull>		
+			<isNotNull property="csoDoorTime" prepend=",">
+				cs_outlets$suffix$.cso_door_time = #csoDoorTime#
+			</isNotNull>		
+			<isNotNull property="csoCost" prepend=",">
+				cs_outlets$suffix$.cso_cost = #csoCost#
+			</isNotNull>		
+			<isNotNull property="csoPerson" prepend=",">
+				cs_outlets$suffix$.cso_person = #csoPerson#
+			</isNotNull>		
+			<isNotNull property="csoContact" prepend=",">
+				cs_outlets$suffix$.cso_contact = #csoContact#
+			</isNotNull>		
+			<isNotNull property="csoUntil" prepend=",">
+				cs_outlets$suffix$.cso_until = #csoUntil#
+			</isNotNull>		
+			<isNotNull property="csoExpire" prepend=",">
+				cs_outlets$suffix$.cso_expire = #csoExpire#
+			</isNotNull>		
+			<isNotNull property="csoPileTime" prepend=",">
+				cs_outlets$suffix$.cso_pile_time = #csoPileTime#
+			</isNotNull>		
+			<isNotNull property="csoCarS" prepend=",">
+				cs_outlets$suffix$.cso_car_s = #csoCarS#
+			</isNotNull>		
+			<isNotNull property="csoPositionS" prepend=",">
+				cs_outlets$suffix$.cso_position_s = #csoPositionS#
+			</isNotNull>		
+			<isNotNull property="csoImage" prepend=",">
+				cs_outlets$suffix$.cso_image = #csoImage#
+			</isNotNull>		
+			<isNotNull property="csoCanA" prepend=",">
+				cs_outlets$suffix$.cso_can_a = #csoCanA#
+			</isNotNull>		
+			<isNotNull property="csoCanB" prepend=",">
+				cs_outlets$suffix$.cso_can_b = #csoCanB#
+			</isNotNull>		
+			<isNotNull property="csoCanReg" prepend=",">
+				cs_outlets$suffix$.cso_can_reg = #csoCanReg#
+			</isNotNull>		
+			<isNotNull property="csoCanOrder" prepend=",">
+				cs_outlets$suffix$.cso_can_order = #csoCanOrder#
+			</isNotNull>		
+			<isNotNull property="csoPriority" prepend=",">
+				cs_outlets$suffix$.cso_priority = #csoPriority#
+			</isNotNull>		
+			<isNotNull property="csoVoteS" prepend=",">
+				cs_outlets$suffix$.cso_vote_s = #csoVoteS#
+			</isNotNull>		
+			<isNotNull property="csoProfile" prepend=",">
+				cs_outlets$suffix$.cso_profile = #csoProfile#
+			</isNotNull>		
+			<isNotNull property="csoOnlineTime" prepend=",">
+				cs_outlets$suffix$.cso_online_time = #csoOnlineTime#
+			</isNotNull>		
+			<isNotNull property="csoUpdateTime" prepend=",">
+				cs_outlets$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csoAddTime" prepend=",">
+				cs_outlets$suffix$.cso_add_time = #csoAddTime#
+			</isNotNull>		
+			<isNotNull property="csoStatus" prepend=",">
+				cs_outlets$suffix$.cso_status = #csoStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cso_id=#csoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个网点 -->
+	<delete id="deleteCsOutletsById" parameterClass="java.util.HashMap">
+		delete from cs_outlets$suffix$ where cso_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个网点 -->
+	<update id="removeCsOutletsById" parameterClass="java.util.HashMap">
+		update cs_outlets$suffix$ set  cs_outlets$suffix$.cso_status=-1  where cso_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新网点 -->
+	<update id="updateCsOutletsBy"  parameterClass="java.util.HashMap">
+		update cs_outlets$suffix$ set		
+			cso_id=cso_id
+			<isNotNull property="V_csoId" prepend=",">
+				cs_outlets$suffix$.cso_id = #V_csoId#
+			</isNotNull>		
+			<isNotNull property="V_csoHost" prepend=",">
+				cs_outlets$suffix$.cso_host = #V_csoHost#
+			</isNotNull>		
+			<isNotNull property="V_csoName" prepend=",">
+				cs_outlets$suffix$.cso_name = #V_csoName#
+			</isNotNull>		
+			<isNotNull property="V_csoArea" prepend=",">
+				cs_outlets$suffix$.cso_area = #V_csoArea#
+			</isNotNull>		
+			<isNotNull property="V_csoType" prepend=",">
+				cs_outlets$suffix$.cso_type = #V_csoType#
+			</isNotNull>		
+			<isNotNull property="V_csoLongitude" prepend=",">
+				cs_outlets$suffix$.cso_longitude = #V_csoLongitude#
+			</isNotNull>		
+			<isNotNull property="V_csoLatitude" prepend=",">
+				cs_outlets$suffix$.cso_latitude = #V_csoLatitude#
+			</isNotNull>		
+			<isNotNull property="V_csoAddress" prepend=",">
+				cs_outlets$suffix$.cso_address = #V_csoAddress#
+			</isNotNull>		
+			<isNotNull property="V_csoSpace" prepend=",">
+				cs_outlets$suffix$.cso_space = #V_csoSpace#
+			</isNotNull>		
+			<isNotNull property="V_csoDetails" prepend=",">
+				cs_outlets$suffix$.cso_details = #V_csoDetails#
+			</isNotNull>		
+			<isNotNull property="V_csoDoorTime" prepend=",">
+				cs_outlets$suffix$.cso_door_time = #V_csoDoorTime#
+			</isNotNull>		
+			<isNotNull property="V_csoCost" prepend=",">
+				cs_outlets$suffix$.cso_cost = #V_csoCost#
+			</isNotNull>		
+			<isNotNull property="V_csoPerson" prepend=",">
+				cs_outlets$suffix$.cso_person = #V_csoPerson#
+			</isNotNull>		
+			<isNotNull property="V_csoContact" prepend=",">
+				cs_outlets$suffix$.cso_contact = #V_csoContact#
+			</isNotNull>		
+			<isNotNull property="V_csoUntil" prepend=",">
+				cs_outlets$suffix$.cso_until = #V_csoUntil#
+			</isNotNull>		
+			<isNotNull property="V_csoExpire" prepend=",">
+				cs_outlets$suffix$.cso_expire = #V_csoExpire#
+			</isNotNull>		
+			<isNotNull property="V_csoPileTime" prepend=",">
+				cs_outlets$suffix$.cso_pile_time = #V_csoPileTime#
+			</isNotNull>		
+			<isNotNull property="V_csoCarS" prepend=",">
+				cs_outlets$suffix$.cso_car_s = #V_csoCarS#
+			</isNotNull>		
+			<isNotNull property="V_csoPositionS" prepend=",">
+				cs_outlets$suffix$.cso_position_s = #V_csoPositionS#
+			</isNotNull>		
+			<isNotNull property="V_csoImage" prepend=",">
+				cs_outlets$suffix$.cso_image = #V_csoImage#
+			</isNotNull>		
+			<isNotNull property="V_csoCanA" prepend=",">
+				cs_outlets$suffix$.cso_can_a = #V_csoCanA#
+			</isNotNull>		
+			<isNotNull property="V_csoCanB" prepend=",">
+				cs_outlets$suffix$.cso_can_b = #V_csoCanB#
+			</isNotNull>		
+			<isNotNull property="V_csoCanReg" prepend=",">
+				cs_outlets$suffix$.cso_can_reg = #V_csoCanReg#
+			</isNotNull>		
+			<isNotNull property="V_csoCanOrder" prepend=",">
+				cs_outlets$suffix$.cso_can_order = #V_csoCanOrder#
+			</isNotNull>		
+			<isNotNull property="V_csoPriority" prepend=",">
+				cs_outlets$suffix$.cso_priority = #V_csoPriority#
+			</isNotNull>		
+			<isNotNull property="V_csoVoteS" prepend=",">
+				cs_outlets$suffix$.cso_vote_s = #V_csoVoteS#
+			</isNotNull>		
+			<isNotNull property="V_csoProfile" prepend=",">
+				cs_outlets$suffix$.cso_profile = #V_csoProfile#
+			</isNotNull>		
+			<isNotNull property="V_csoOnlineTime" prepend=",">
+				cs_outlets$suffix$.cso_online_time = #V_csoOnlineTime#
+			</isNotNull>		
+			<isNotNull property="V_csoUpdateTime" prepend=",">
+				cs_outlets$suffix$.cso_update_time = #V_csoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csoAddTime" prepend=",">
+				cs_outlets$suffix$.cso_add_time = #V_csoAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csoStatus" prepend=",">
+				cs_outlets$suffix$.cso_status = #V_csoStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询-->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_outlets$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_outlets$suffix$.cso_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOutlets_part.cs_outlets_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除网点 -->
+	<update id="deleteCsOutletsBy"  parameterClass="java.util.HashMap">
+		delete from cs_outlets$suffix$ where 
+		cs_outlets$suffix$.cso_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOutlets_part.cs_outlets_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

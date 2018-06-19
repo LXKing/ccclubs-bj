@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 免费小时之SQL映射 -->
+	<resultMap id="CsFreeHour" class="com.ccclubs.model.CsFreeHour">
+		<result property="csfhId" column="csfh_id"/>
+		<result property="csfhHost" column="csfh_host"/>
+		<result property="csfhMember" column="csfh_member"/>
+		<result property="csfhCount" column="csfh_count"/>
+		<result property="csfhRemain" column="csfh_remain"/>
+		<result property="csfhValidity" column="csfh_validity"/>
+		<result property="csfhEnd" column="csfh_end"/>
+		<result property="csfhEditor" column="csfh_editor"/>
+		<result property="csfhUpdateTime" column="csfh_update_time"/>
+		<result property="csfhAddTime" column="csfh_add_time"/>
+		<result property="csfhRemark" column="csfh_remark"/>
+		<result property="csfhStatus" column="csfh_status"/>
+	</resultMap>
+		
+	<!-- 获取所有免费小时 -->
+	<select id="getCsFreeHourList" resultMap="CsFreeHour">
+		select cs_free_hour$suffix$.* from cs_free_hour$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.csfh_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_free_hour$suffix$.csfh_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsFreeHour_part.cs_free_hour_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csfh_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取免费小时分页 -->
+	<select id="getCsFreeHourPage" parameterClass="java.util.HashMap" resultMap="CsFreeHour">
+		select cs_free_hour$suffix$.* from cs_free_hour$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.csfh_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_free_hour$suffix$.csfh_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsFreeHour_part.cs_free_hour_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csfh_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取免费小时总数 -->
+	<select id="getCsFreeHourEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_free_hour$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.csfh_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_free_hour$suffix$.csfh_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsFreeHour_part.cs_free_hour_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取免费小时 -->
+	<select id="getCsFreeHourById" parameterClass="java.util.HashMap" resultMap="CsFreeHour">
+		select cs_free_hour$suffix$.* from cs_free_hour$suffix$
+		where csfh_id=#id#
+	</select>
+	
+		
+	<!-- 保存免费小时 -->
+	<insert id="saveCsFreeHour"  parameterClass="com.ccclubs.model.CsFreeHour">
+		insert into cs_free_hour$suffix$
+		(
+			cs_free_hour$suffix$.csfh_host
+			,cs_free_hour$suffix$.csfh_member
+			,cs_free_hour$suffix$.csfh_count
+			,cs_free_hour$suffix$.csfh_remain
+			,cs_free_hour$suffix$.csfh_validity
+			,cs_free_hour$suffix$.csfh_end
+			,cs_free_hour$suffix$.csfh_editor
+			,cs_free_hour$suffix$.csfh_update_time
+			,cs_free_hour$suffix$.csfh_add_time
+			,cs_free_hour$suffix$.csfh_remark
+			,cs_free_hour$suffix$.csfh_status
+		)
+		values(
+			<isNotNull property="csfhHost" prepend="">
+				#csfhHost#
+			</isNotNull>
+			<isNull property="csfhHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csfhMember" prepend=",">
+				#csfhMember#
+			</isNotNull>
+			<isNull property="csfhMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhCount" prepend=",">
+				#csfhCount#
+			</isNotNull>
+			<isNull property="csfhCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhRemain" prepend=",">
+				#csfhRemain#
+			</isNotNull>
+			<isNull property="csfhRemain" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhValidity" prepend=",">
+				#csfhValidity#
+			</isNotNull>
+			<isNull property="csfhValidity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhEnd" prepend=",">
+				#csfhEnd#
+			</isNotNull>
+			<isNull property="csfhEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhEditor" prepend=",">
+				#csfhEditor#
+			</isNotNull>
+			<isNull property="csfhEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhUpdateTime" prepend=",">
+				#csfhUpdateTime#
+			</isNotNull>
+			<isNull property="csfhUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhAddTime" prepend=",">
+				#csfhAddTime#
+			</isNotNull>
+			<isNull property="csfhAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhRemark" prepend=",">
+				#csfhRemark#
+			</isNotNull>
+			<isNull property="csfhRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csfhStatus" prepend=",">
+				#csfhStatus#
+			</isNotNull>
+			<isNull property="csfhStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新免费小时 -->
+	<update id="updateCsFreeHour"  parameterClass="com.ccclubs.model.CsFreeHour">
+		update cs_free_hour$suffix$ set
+			<isNotNull property="csfhHost" prepend="">
+				cs_free_hour$suffix$.csfh_host = #csfhHost#
+			</isNotNull>
+			<isNull property="csfhHost" prepend="">
+				cs_free_hour$suffix$.csfh_host = null
+			</isNull>				
+			<isNotNull property="csfhMember" prepend=",">
+				cs_free_hour$suffix$.csfh_member = #csfhMember#
+			</isNotNull>
+			<isNull property="csfhMember" prepend=",">
+				cs_free_hour$suffix$.csfh_member = null
+			</isNull>				
+			<isNotNull property="csfhCount" prepend=",">
+				cs_free_hour$suffix$.csfh_count = #csfhCount#
+			</isNotNull>
+			<isNull property="csfhCount" prepend=",">
+				cs_free_hour$suffix$.csfh_count = null
+			</isNull>				
+			<isNotNull property="csfhRemain" prepend=",">
+				cs_free_hour$suffix$.csfh_remain = #csfhRemain#
+			</isNotNull>
+			<isNull property="csfhRemain" prepend=",">
+				cs_free_hour$suffix$.csfh_remain = null
+			</isNull>				
+			<isNotNull property="csfhValidity" prepend=",">
+				cs_free_hour$suffix$.csfh_validity = #csfhValidity#
+			</isNotNull>
+			<isNull property="csfhValidity" prepend=",">
+				cs_free_hour$suffix$.csfh_validity = null
+			</isNull>				
+			<isNotNull property="csfhEnd" prepend=",">
+				cs_free_hour$suffix$.csfh_end = #csfhEnd#
+			</isNotNull>
+			<isNull property="csfhEnd" prepend=",">
+				cs_free_hour$suffix$.csfh_end = null
+			</isNull>				
+			<isNotNull property="csfhEditor" prepend=",">
+				cs_free_hour$suffix$.csfh_editor = #csfhEditor#
+			</isNotNull>
+			<isNull property="csfhEditor" prepend=",">
+				cs_free_hour$suffix$.csfh_editor = null
+			</isNull>				
+			<isNotNull property="csfhUpdateTime" prepend=",">
+				cs_free_hour$suffix$.csfh_update_time = #csfhUpdateTime#
+			</isNotNull>
+			<isNull property="csfhUpdateTime" prepend=",">
+				cs_free_hour$suffix$.csfh_update_time = null
+			</isNull>				
+			<isNotNull property="csfhAddTime" prepend=",">
+				cs_free_hour$suffix$.csfh_add_time = #csfhAddTime#
+			</isNotNull>
+			<isNull property="csfhAddTime" prepend=",">
+				cs_free_hour$suffix$.csfh_add_time = null
+			</isNull>				
+			<isNotNull property="csfhRemark" prepend=",">
+				cs_free_hour$suffix$.csfh_remark = #csfhRemark#
+			</isNotNull>
+			<isNull property="csfhRemark" prepend=",">
+				cs_free_hour$suffix$.csfh_remark = null
+			</isNull>				
+			<isNotNull property="csfhStatus" prepend=",">
+				cs_free_hour$suffix$.csfh_status = #csfhStatus#
+			</isNotNull>
+			<isNull property="csfhStatus" prepend=",">
+				cs_free_hour$suffix$.csfh_status = null
+			</isNull>				
+		where
+			csfh_id=#csfhId#
+	</update>
+	
+	<!-- 更新免费小时非空字段 -->
+	<update id="updateCsFreeHour$NotNull"  parameterClass="com.ccclubs.model.CsFreeHour">
+		update cs_free_hour$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csfhHost" prepend=",">
+				cs_free_hour$suffix$.csfh_host = #csfhHost#
+			</isNotNull>		
+			<isNotNull property="csfhMember" prepend=",">
+				cs_free_hour$suffix$.csfh_member = #csfhMember#
+			</isNotNull>		
+			<isNotNull property="csfhCount" prepend=",">
+				cs_free_hour$suffix$.csfh_count = #csfhCount#
+			</isNotNull>		
+			<isNotNull property="csfhRemain" prepend=",">
+				cs_free_hour$suffix$.csfh_remain = #csfhRemain#
+			</isNotNull>		
+			<isNotNull property="csfhValidity" prepend=",">
+				cs_free_hour$suffix$.csfh_validity = #csfhValidity#
+			</isNotNull>		
+			<isNotNull property="csfhEnd" prepend=",">
+				cs_free_hour$suffix$.csfh_end = #csfhEnd#
+			</isNotNull>		
+			<isNotNull property="csfhEditor" prepend=",">
+				cs_free_hour$suffix$.csfh_editor = #csfhEditor#
+			</isNotNull>		
+			<isNotNull property="csfhUpdateTime" prepend=",">
+				cs_free_hour$suffix$.csfh_update_time = #csfhUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csfhAddTime" prepend=",">
+				cs_free_hour$suffix$.csfh_add_time = #csfhAddTime#
+			</isNotNull>		
+			<isNotNull property="csfhRemark" prepend=",">
+				cs_free_hour$suffix$.csfh_remark = #csfhRemark#
+			</isNotNull>		
+			<isNotNull property="csfhStatus" prepend=",">
+				cs_free_hour$suffix$.csfh_status = #csfhStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csfh_id=#csfhId#
+	</update>
+	
+
+	<!-- 根据ID删除一个免费小时 -->
+	<delete id="deleteCsFreeHourById" parameterClass="java.util.HashMap">
+		delete from cs_free_hour$suffix$ where csfh_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个免费小时 -->
+	<update id="removeCsFreeHourById" parameterClass="java.util.HashMap">
+		update cs_free_hour$suffix$ set  cs_free_hour$suffix$.csfh_status=-1  where csfh_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新免费小时 -->
+	<update id="updateCsFreeHourBy"  parameterClass="java.util.HashMap">
+		update cs_free_hour$suffix$ set		
+			csfh_id=csfh_id
+			<isNotNull property="V_csfhId" prepend=",">
+				cs_free_hour$suffix$.csfh_id = #V_csfhId#
+			</isNotNull>		
+			<isNotNull property="V_csfhHost" prepend=",">
+				cs_free_hour$suffix$.csfh_host = #V_csfhHost#
+			</isNotNull>		
+			<isNotNull property="V_csfhMember" prepend=",">
+				cs_free_hour$suffix$.csfh_member = #V_csfhMember#
+			</isNotNull>		
+			<isNotNull property="V_csfhCount" prepend=",">
+				cs_free_hour$suffix$.csfh_count = #V_csfhCount#
+			</isNotNull>		
+			<isNotNull property="V_csfhRemain" prepend=",">
+				cs_free_hour$suffix$.csfh_remain = #V_csfhRemain#
+			</isNotNull>		
+			<isNotNull property="V_csfhValidity" prepend=",">
+				cs_free_hour$suffix$.csfh_validity = #V_csfhValidity#
+			</isNotNull>		
+			<isNotNull property="V_csfhEnd" prepend=",">
+				cs_free_hour$suffix$.csfh_end = #V_csfhEnd#
+			</isNotNull>		
+			<isNotNull property="V_csfhEditor" prepend=",">
+				cs_free_hour$suffix$.csfh_editor = #V_csfhEditor#
+			</isNotNull>		
+			<isNotNull property="V_csfhUpdateTime" prepend=",">
+				cs_free_hour$suffix$.csfh_update_time = #V_csfhUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csfhAddTime" prepend=",">
+				cs_free_hour$suffix$.csfh_add_time = #V_csfhAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csfhRemark" prepend=",">
+				cs_free_hour$suffix$.csfh_remark = #V_csfhRemark#
+			</isNotNull>		
+			<isNotNull property="V_csfhStatus" prepend=",">
+				cs_free_hour$suffix$.csfh_status = #V_csfhStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.csfh_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_free_hour$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_free_hour$suffix$.csfh_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsfhMember"><!-- 调用一下CsfhMember，把CsMember指向CsfhMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsFreeHour_part.cs_free_hour_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除免费小时 -->
+	<update id="deleteCsFreeHourBy"  parameterClass="java.util.HashMap">
+		delete from cs_free_hour$suffix$ where 
+		cs_free_hour$suffix$.csfh_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsFreeHour_part.cs_free_hour_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

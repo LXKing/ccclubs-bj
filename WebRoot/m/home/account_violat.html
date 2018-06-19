@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>违章列表</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-home.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content" style="margin-top:15px;">
+		<s:if test="#request.violatlist.size==0">
+			<li class="first" style="list-style: none;">
+			<h2 style="text-align: center;color:green">恭喜你，没有违章哦!笑脸</h2>
+			</li></s:if>
+		<s:else>
+		<s:iterator value="#request.violatlist" id="item" status="i">
+			<s:if test="#item.csvType==0||#item.csvType==2">
+				<s:if test="#item.csvStatus==0||#item.csvStatus==1">
+					<a href="account_violatdetail.html?violateid=${item.csvId}">
+					<div class="list-item mt15">
+						<div class="list-item-head active">
+							<span class="badge">订单号</span><span class="badge">${item.csvOrder}</span><span class="badge pull-right">待处理</span>
+						</div>
+						<div class="list-item-content">
+							<dl class="dl-list">
+								<dd class="dl-list-dd split car-type">
+									<span class="badge">${item.$csvOrder.$csoModel.cscmName}</span><span class="text-split"></span>
+									<span class="badge">${item.$csvOrder.$csoCar.cscCarNo}</span>
+								</dd>
+								<dd class="dl-list-dd violat-des">
+									<span class="badge">罚款</span><span class="text-split"></span>
+									<span class="badge">扣${item.csvScore}分，罚款${lz:digit(item.csvMoney,2)}元</span>
+									<s:if test="#item.csvType==0">
+										<span class="badge pull-right">自己处理</span>
+									</s:if>
+									<s:elseif test="#item.csvType==1">
+										<span class="badge pull-right">协商委托</span>
+									</s:elseif>
+									<s:elseif test="#item.csvType==2">
+										<span class="badge pull-right">强制代办</span>
+									</s:elseif>
+								</dd>
+							</dl>
+						</div>
+					</div></a>
+				</s:if>
+				<s:else>
+					<a href="account_violatdetail.html?violateid=${item.csvId}">
+					<div class="list-item">
+						<div class="list-item-head ">
+							<span class="badge">订单号</span><span class="badge">${item.csvOrder}</span><span class="badge pull-right">已处理</span>
+						</div>
+						<div class="list-item-content">
+							<dl class="dl-list">
+								<dd class="dl-list-dd split car-type">
+									<span class="badge">${item.$csvOrder.$csoModel.cscmName}</span><span class="text-split"></span>
+									<span class="badge">${item.$csvOrder.$csoCar.cscNumber}</span>
+								</dd>
+								<dd class="dl-list-dd violat-des">
+									<span class="badge">罚款</span><span class="text-split"></span>
+									<span class="badge">扣${item.csvScore}分，罚款${lz:digit(item.csvMoney,2)}元</span>
+									<s:if test="#item.csvType==0">
+										<span class="badge pull-right">自己处理</span>
+									</s:if>
+									<s:elseif test="#item.csvType==1">
+										<span class="badge pull-right">协商委托</span>
+									</s:elseif>
+									<s:elseif test="#item.csvType==2">
+										<span class="badge pull-right">强制代办</span>
+									</s:elseif>
+								</dd>
+							</dl>
+						</div>
+					</div> </a>
+				</s:else>
+			</s:if>
+			<s:else>
+				<a href="account_violatdetail.html?violateid=${item.csvId}">
+					<div class="list-item">
+						<div class="list-item-head ">
+							<span class="badge">订单号</span><span class="badge">${item.csvOrder}</span><span class="badge pull-right">已处理</span>
+						</div>
+						<div class="list-item-content">
+							<dl class="dl-list">
+								<dd class="dl-list-dd split car-type">
+									<span class="badge">${item.$csvOrder.$csoModel.cscmName}</span><span class="text-split"></span>
+									<span class="badge">${item.$csvOrder.$csoCar.cscNumber}</span>
+								</dd>
+								<dd class="dl-list-dd violat-des">
+									<span class="badge">罚款</span><span class="text-split"></span>
+									<span class="badge">扣${item.csvScore}分，罚款${lz:digit(item.csvMoney,2)}元</span>
+									<s:if test="#item.csvType==0">
+										<span class="badge pull-right">自己处理</span>
+									</s:if>
+									<s:elseif test="#item.csvType==1">
+										<span class="badge pull-right">协商委托</span>
+									</s:elseif>
+									<s:elseif test="#item.csvType==2">
+										<span class="badge pull-right">强制代办</span>
+									</s:elseif>
+								</dd>
+							</dl>
+						</div>
+					</div> </a>
+			</s:else>
+		</s:iterator>
+		</s:else>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+	</body>
+
+</html>

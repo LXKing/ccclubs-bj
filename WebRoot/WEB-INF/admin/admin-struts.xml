@@ -1,0 +1,2778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢struts的Action框架 -->
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="do"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+    <include file="struts-default.xml" />
+    
+    <package name="root.upload" extends="struts-default" namespace="/">
+	    <action name="upload" method="execute" class="defaultUploadAction"></action>
+	</package>
+   
+	<package name="root.admin" extends="struts-default" namespace="/admin">
+	    <default-interceptor-ref name="paramsPrepareParamsStack" />
+	    <action name="index_*" method="{1}" class="adminIndexAction">
+	    	<result name="index">index.${#session.EXTFIX}jsp</result>
+	    </action>
+	    <action name="window" method="window" class="adminIndexAction">
+	    	<result name="window">window.jsp</result>
+	    </action>
+	    <action name="desktop" method="desktop" class="adminIndexAction">
+	    	<result name="desktop">desktop.jsp</result>
+	    </action>
+	    <action name="frame" method="frame" class="adminIndexAction">
+	    	<result name="frame">frame.jsp</result>
+	    </action>
+	    <action name="welcome" method="welcome" class="adminIndexAction">
+	    	<result name="welcome">welcome.jsp</result>
+	    </action>
+	    <action name="example" method="example" class="adminIndexAction">
+	    	<result name="example">example.jsp</result>
+	    </action>
+	    <action name="edit" method="edit" class="adminIndexAction">
+	    	<result name="edit">edit.jsp</result>
+	    </action>
+	    <action name="details" method="details" class="adminIndexAction">
+	    	<result name="details">details.jsp</result>
+	    </action>
+	    <action name="switcher" method="switcher" class="adminIndexAction">
+	    	<result name="switcher">switcher.jsp</result>
+	    </action>
+	    <action name="separator" method="separator" class="adminIndexAction">
+	    	<result name="separator">separator.jsp</result>
+	    </action>
+	    <action name="header" method="header" class="adminIndexAction">
+	    	<result name="header">header.jsp</result>
+	    </action>
+	    <action name="left" method="left" class="adminIndexAction">
+	    	<result name="left">left.jsp</result>
+	    </action>
+	    <action name="right" method="right" class="adminIndexAction">
+	    	<result name="right">right.jsp</result>
+	    </action>
+	    <action name="style" method="style" class="adminIndexAction">
+	    	<result name="style" type="redirect">index.do</result>
+	    </action>
+	    <action name="shortcut" method="shortcut" class="adminIndexAction">
+	    	<result name="shortcut">shortcut.jsp</result>
+	    </action>
+	    <action name="shortcut_*" method="{1}" class="adminIndexAction">
+	    	<result name="header-entry" type="redirect">header.do</result>
+	    </action>
+	    <action name="export" method="export" class="adminIndexAction">
+	    	<result name="export">export.jsp</result>
+	    </action>
+	    <action name="mind" method="mind" class="adminIndexAction">
+	    	<result name="mind">mind.jsp</result>
+	    </action>
+	    <action name="help.*" method="help${1}" class="adminIndexAction">
+	    	<result name="{1}">help.{1}.jsp</result>
+	    </action>
+	    <!-- API -->
+	    <action name="api" method="api" class="adminIndexAction"></action>
+	    <!-- 登录 -->
+	    <action name="login_*" method="{1}" class="adminLoginAction">
+	        <result name="index">login.${#session.EXTFIX}jsp</result>
+	        <result name="success" type="redirect">index.do</result>
+	        <result name="failure" type="redirect">login.do</result>            
+	    </action>
+	    <action name="search" method="search" class="adminIndexAction">
+	        <result name="search">search.jsp</result>           
+	    </action>
+	    <action name="upgrade.log" method="upgrade_log" class="adminIndexAction">
+	        <result name="upgrade.log">upgrade.log.jsp</result>           
+	    </action>
+	</package>
+	
+	
+	<package name="admin.user.alipay.alipay" extends="struts-default" namespace="/admin/finance/alipay">
+		<!-- 支付宝退款 -->
+		<action name="alipay_*" method="{1}" class="alipayAction"></action>
+	</package>
+	
+	
+	<package name="admin.control.map" extends="struts-default" namespace="/admin/control">
+		<action name="map_*" method="{1}" class="mapAction">
+			<result name="index">map_index.jsp</result>
+			<result name="soso">map_soso.jsp</result>
+			<result name="gaode">map_gaode.jsp</result>
+			<result name="info">map_info.jsp</result>
+			<result name="history">map_history.jsp</result>
+			<result name="power_info">map_power_info.jsp</result>
+		</action>
+		<action name="gps_*" method="{1}" class="gpsAction">
+			<result name="index">gps_index.jsp</result>
+			<result name="soso">gps_soso.jsp</result>
+			<result name="info">gps_info.jsp</result>
+		</action>
+		<action name="newMap_*" method="{1}" class="newMapAction">
+			<result name="index" >new_map_index.jsp</result>
+		</action>
+	</package>
+	
+	
+	<!-- 运营指标 -->
+	<package name="admin.operate.quota" extends="struts-default" namespace="/admin/operate/quota">
+		<action name="member_*" method="{1}" class="operateQuotaMemberAction">
+			<result name="index">member.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<action name="order_*" method="{1}" class="operateQuotaOrderAction">
+			<result name="index">order.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<action name="finance_*" method="{1}" class="operateQuotaFinanceAction">
+			<result name="index">finance.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+	</package>
+	
+		
+	
+	<!-- 会员分类回访 -->
+	<package name="admin.csm.member" extends="struts-default" namespace="/admin/csm">
+		<action name="classify.*" method="execute" class="memberClassifyAction">
+			<result name="index">classify.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+	</package>
+	
+	<!-- 在线客户管理 -->
+	<package name="admin.csm.csmq" extends="struts-default" namespace="/admin/csm">
+		<action name="csmq.*" method="execute" class="csmqAction">
+			<result name="index">csmq.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+	</package>
+	
+	
+	<package name="admin.root" extends="struts-default" namespace="/admin">
+		<action name="message.*" method="{1}" class="messageAction">
+			<result name="member">messages/dialogs/member.jsp</result>
+			<result name="tips">messages/dialogs/tips.jsp</result>
+			<result name="box">messages/box/box.jsp</result>
+			<result name="notice">messages/box/notice.jsp</result>
+			<result name="todo">messages/box/todo.jsp</result>
+			<result name="heed">messages/box/heed.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="admin.user.regist" extends="struts-default" namespace="/admin/user">
+		<!-- 会员注册 -->
+		<action name="regist_*" method="{1}" class="adminRegistAction">
+			<result name="index">regist_index.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 绑定会员卡 -->
+		<action name="rebind_*" method="{1}" class="adminRebindAction">
+			<result name="index">rebind_index.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>		
+	</package>
+	
+	
+	<package name="admin.permissions" extends="struts-default" namespace="/admin/permissions">
+	    <default-interceptor-ref name="paramsPrepareParamsStack" />
+	    <action name="project_*" method="{1}" class="projectAction">
+	    	<result name="index">project_list.jsp</result>
+	    	<result name="edit">project_edit.jsp</result>
+	    	<result name="details">project_edit.jsp</result>
+	    	<result name="common" type="redirect">project.do</result>
+	    </action>        
+	    <action name="group_*" method="{1}" class="groupAction">
+	    	<result name="index">group_list.jsp</result>
+	    	<result name="edit">group_edit.jsp</result>
+	    	<result name="details">group_edit.jsp</result>
+	    	<result name="common" type="redirect">group.do</result>
+	    </action>        
+	    <action name="user_*" method="{1}" class="userAction">
+	    	<result name="index">user_list.jsp</result>
+	    	<result name="edit">user_edit.jsp</result>
+	    	<result name="details">user_details.jsp</result>
+	    	<result name="info">user_info.jsp</result>
+	    	<result name="common" type="redirect">user.do</result>    	
+	    </action>        
+	    <action name="password" method="password" class="userAction">
+	    	<result name="password">password.${#session.EXTFIX}jsp</result>
+	    	<result name="common" type="redirect">password.do</result>
+	    </action>  
+	    <action name="password_update_password" method="update_password" class="userAction">
+	    	<result name="common" type="redirect">password.do</result>
+	    </action>      
+	    <action name="limit_*" method="{1}" class="limitAction">
+	    	<result name="index">limit_index.jsp</result>
+	    	<result name="limit">limit_limit.jsp</result>
+	    	<result name="common" type="redirect">limit_limit.do?actorid=${#request.actorid}&amp;actortype=${#request.actortype}</result>       	
+	    </action>
+	    <action name="host_*" method="{1}" class="hostAction">
+			<result name="index">host_index.jsp</result>
+			<result name="edit">host_edit.jsp</result>
+			<result name="details">host_details.jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+	</package>
+	
+	
+	<package name="admin.configurator.property" extends="struts-default" namespace="/admin/configurator">
+		<!-- 系统属性管理 -->
+		<action name="property_*" method="{1}" class="srvPropertyAction">
+			<result name="index">property_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">property_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">property_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">property_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统属性别名入口 -->
+		<action name="property.*" method="execute" class="srvPropertyAction">
+			<result name="index">property_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.holiday" extends="struts-default" namespace="/admin/configurator">
+		<!-- 节假日管理 -->
+		<action name="holiday_*" method="{1}" class="csHolidayAction">
+			<result name="index">holiday_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">holiday_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">holiday_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">holiday_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 节假日别名入口 -->
+		<action name="holiday.*" method="execute" class="csHolidayAction">
+			<result name="index">holiday_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.template" extends="struts-default" namespace="/admin/configurator">
+		<!-- 短信模版管理 -->
+		<action name="template_*" method="{1}" class="csSmsTemplateAction">
+			<result name="index">template_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">template_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">template_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">template_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 短信模版别名入口 -->
+		<action name="template.*" method="execute" class="csSmsTemplateAction">
+			<result name="index">template_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.member" extends="struts-default" namespace="/admin/user">
+		<!-- 会员帐号管理 -->
+		<action name="member_*" method="{1}" class="csMemberAction">
+			<result name="index">member_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">member_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">member_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">member_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员帐号别名入口 -->
+		<action name="member.*" method="execute" class="csMemberAction">
+			<result name="index">member_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.type" extends="struts-default" namespace="/admin/user">
+		<!-- 计费方式管理 -->
+		<action name="type_*" method="{1}" class="csUserTypeAction">
+			<result name="index">type_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">type_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">type_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">type_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 计费方式别名入口 -->
+		<action name="type.*" method="execute" class="csUserTypeAction">
+			<result name="index">type_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.gift" extends="struts-default" namespace="/admin/user">
+		<!-- 优惠内容管理 -->
+		<action name="gift_*" method="{1}" class="csGiftAction">
+			<result name="index">gift_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">gift_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">gift_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">gift_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 优惠内容别名入口 -->
+		<action name="gift.*" method="execute" class="csGiftAction">
+			<result name="index">gift_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.record" extends="struts-default" namespace="/admin/finance">
+		<!-- 消费记录管理 -->
+		<action name="record_*" method="{1}" class="csRecordAction">
+			<result name="index">record_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">record_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">record_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">record_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 消费记录别名入口 -->
+		<action name="record.*" method="execute" class="csRecordAction">
+			<result name="index">record_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.pack" extends="struts-default" namespace="/admin/user">
+		<!-- 用户套餐管理 -->
+		<action name="pack_*" method="{1}" class="csUserPackAction">
+			<result name="index">pack_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">pack_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">pack_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">pack_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 用户套餐别名入口 -->
+		<action name="pack.*" method="execute" class="csUserPackAction">
+			<result name="index">pack_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>	
+	<package name="admin.systematic.smsmt" extends="struts-default" namespace="/admin/systematic">
+		<!-- 短信发送管理 -->
+		<action name="smsmt_*" method="{1}" class="csSmsMtAction">
+			<result name="index">smsmt_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">smsmt_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">smsmt_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">smsmt_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 短信发送别名入口 -->
+		<action name="smsmt.*" method="execute" class="csSmsMtAction">
+			<result name="index">smsmt_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.log" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统日志管理 -->
+		<action name="log_*" method="{1}" class="csLogAction">
+			<result name="index">log_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">log_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">log_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">log_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统日志别名入口 -->
+		<action name="log.*" method="execute" class="csLogAction">
+			<result name="index">log_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.message" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统消息管理 -->
+		<action name="message_*" method="{1}" class="csMessageAction">
+			<result name="index">message_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">message_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">message_details.${#session.EXTFIX}jsp</result>
+		</action>		
+	</package>
+	<package name="admin.fee.rule" extends="struts-default" namespace="/admin/fee">
+		<!-- 规则管理 -->
+		<action name="rule_*" method="{1}" class="csRuleAction">
+			<result name="index">rule_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">rule_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">rule_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">rule_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 规则别名入口 -->
+		<action name="rule.*" method="execute" class="csRuleAction">
+			<result name="index">rule_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.fee.product" extends="struts-default" namespace="/admin/fee">
+		<!-- 产品管理 -->
+		<action name="product_*" method="{1}" class="csProductAction">
+			<result name="index">product_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">product_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">product_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">product_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 产品别名入口 -->
+		<action name="product.*" method="execute" class="csProductAction">
+			<result name="index">product_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.fee.goods" extends="struts-default" namespace="/admin/fee">
+		<!-- 商品管理 -->
+		<action name="goods_*" method="{1}" class="csGoodsAction">
+			<result name="index">goods_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">goods_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">goods_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">goods_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 商品别名入口 -->
+		<action name="goods.*" method="execute" class="csGoodsAction">
+			<result name="index">goods_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.fee.price" extends="struts-default" namespace="/admin/fee">
+		<!-- 价格管理 -->
+		<action name="price_*" method="{1}" class="csPriceAction">
+			<result name="index">price_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">price_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">price_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">price_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 价格别名入口 -->
+		<action name="price.*" method="execute" class="csPriceAction">
+			<result name="index">price_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.fee.pack" extends="struts-default" namespace="/admin/fee">
+		<!-- 系统套餐管理 -->
+		<action name="pack_*" method="{1}" class="csPackAction">
+			<result name="index">pack_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">pack_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">pack_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">pack_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统套餐别名入口 -->
+		<action name="pack.*" method="execute" class="csPackAction">
+			<result name="index">pack_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.fee.packinfo" extends="struts-default" namespace="/admin/fee">
+		<!-- 套餐内容管理 -->
+		<action name="packinfo_*" method="{1}" class="csPackInfoAction">
+			<result name="index">packinfo_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">packinfo_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">packinfo_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">packinfo_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 套餐内容别名入口 -->
+		<action name="packinfo.*" method="execute" class="csPackInfoAction">
+			<result name="index">packinfo_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.carmodel" extends="struts-default" namespace="/admin/object">
+		<!-- 车型管理 -->
+		<action name="carmodel_*" method="{1}" class="csCarModelAction">
+			<result name="index">carmodel_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">carmodel_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">carmodel_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">carmodel_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车型别名入口 -->
+		<action name="carmodel.*" method="execute" class="csCarModelAction">
+			<result name="index">carmodel_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.car" extends="struts-default" namespace="/admin/object">
+		<!-- 车辆管理 -->
+		<action name="car_*" method="{1}" class="csCarAction">
+			<result name="index">car_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">car_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">car_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">car_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆别名入口 -->
+		<action name="car.*" method="execute" class="csCarAction">
+			<result name="index">car_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.outlets" extends="struts-default" namespace="/admin/object">
+		<!-- 网点管理 -->
+		<action name="outlets_*" method="{1}" class="csOutletsAction">
+			<result name="index">outlets_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">outlets_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">outlets_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">outlets_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 网点别名入口 -->
+		<action name="outlets.*" method="execute" class="csOutletsAction">
+			<result name="index">outlets_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.evcard" extends="struts-default" namespace="/admin/object">
+		<!-- 会员卡管理 -->
+		<action name="evcard_*" method="{1}" class="csEvCardAction">
+			<result name="index">evcard_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">evcard_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">evcard_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">evcard_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员卡别名入口 -->
+		<action name="evcard.*" method="execute" class="csEvCardAction">
+			<result name="index">evcard_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.provid" extends="struts-default" namespace="/admin/object">
+		<!-- 供应商管理 -->
+		<action name="provid_*" method="{1}" class="csProvidAction">
+			<result name="index">provid_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">provid_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">provid_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">provid_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 供应商别名入口 -->
+		<action name="provid.*" method="execute" class="csProvidAction">
+			<result name="index">provid_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.trouble" extends="struts-default" namespace="/admin/service">
+		<!-- 车辆事故管理 -->
+		<action name="trouble_*" method="{1}" class="csTroubleAction">
+			<result name="index">trouble_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">trouble_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">trouble_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">trouble_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆事故别名入口 -->
+		<action name="trouble.*" method="execute" class="csTroubleAction">
+			<result name="index">trouble_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.order" extends="struts-default" namespace="/admin/service">
+		<!-- 系统订单管理 -->
+		<action name="order_*" method="{1}" class="csOrderAction">
+			<result name="index">order_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">order_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">order_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">order_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统订单别名入口 -->
+		<action name="order.*" method="execute" class="csOrderAction">
+			<result name="index">order_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.orderdetail" extends="struts-default" namespace="/admin/service">
+		<!-- 订单明细管理 -->
+		<action name="orderdetail_*" method="{1}" class="csOrderDetailAction">
+			<result name="index">orderdetail_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">orderdetail_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">orderdetail_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">orderdetail_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 订单明细别名入口 -->
+		<action name="orderdetail.*" method="execute" class="csOrderDetailAction">
+			<result name="index">orderdetail_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.app.update" extends="struts-default" namespace="/admin/object/app">
+		<!-- App更新管理 -->
+		<action name="update_*" method="{1}" class="csUpdateAction">
+			<result name="index">update_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">update_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">update_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">update_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- App更新别名入口 -->
+		<action name="update.*" method="execute" class="csUpdateAction">
+			<result name="index">update_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.membership" extends="struts-default" namespace="/admin/user">
+		<!-- 会员关系管理 -->
+		<action name="membership_*" method="{1}" class="csMemberShipAction">
+			<result name="index">membership_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">membership_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">membership_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">membership_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员关系别名入口 -->
+		<action name="membership.*" method="execute" class="csMemberShipAction">
+			<result name="index">membership_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.memberinfo" extends="struts-default" namespace="/admin/user">
+		<!-- 会员信息管理 -->
+		<action name="memberinfo_*" method="{1}" class="csMemberInfoAction">
+			<result name="index">memberinfo_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">memberinfo_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">memberinfo_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">memberinfo_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员信息别名入口 -->
+		<action name="memberinfo.*" method="execute" class="csMemberInfoAction">
+			<result name="index">memberinfo_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.freehour" extends="struts-default" namespace="/admin/user">
+		<!-- 免费小时管理 -->
+		<action name="freehour_*" method="{1}" class="csFreeHourAction">
+			<result name="index">freehour_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">freehour_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">freehour_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">freehour_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 免费小时别名入口 -->
+		<action name="freehour.*" method="execute" class="csFreeHourAction">
+			<result name="index">freehour_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.integralrule" extends="struts-default" namespace="/admin/configurator">
+		<!-- 积分规则管理 -->
+		<action name="integralrule_*" method="{1}" class="csIntegralRuleAction">
+			<result name="index">integralrule_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">integralrule_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">integralrule_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">integralrule_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 积分规则别名入口 -->
+		<action name="integralrule.*" method="execute" class="csIntegralRuleAction">
+			<result name="index">integralrule_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.message" extends="struts-default" namespace="/admin/user">
+		<!-- 会员消息管理 -->
+		<action name="message_*" method="{1}" class="csMessageAction">
+			<result name="index">message_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">message_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">message_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">message_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员消息别名入口 -->
+		<action name="message.*" method="execute" class="csMessageAction">
+			<result name="index">message_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.userecord" extends="struts-default" namespace="/admin/user">
+		<!-- 惠免记录管理 -->
+		<action name="userecord_*" method="{1}" class="csUseRecordAction">
+			<result name="index">userecord_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">userecord_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">userecord_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">userecord_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 惠免记录别名入口 -->
+		<action name="userecord.*" method="execute" class="csUseRecordAction">
+			<result name="index">userecord_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.notice" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统通知管理 -->
+		<action name="notice_*" method="{1}" class="csNoticeAction">
+			<result name="index">notice_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">notice_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">notice_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">notice_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统通知别名入口 -->
+		<action name="notice.*" method="execute" class="csNoticeAction">
+			<result name="index">notice_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.control.remote" extends="struts-default" namespace="/admin/control">
+		<!-- 远程控制管理 -->
+		<action name="remote_*" method="{1}" class="csRemoteAction">
+			<result name="index">remote_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">remote_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">remote_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">remote_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 远程控制别名入口 -->
+		<action name="remote.*" method="execute" class="csRemoteAction">
+			<result name="index">remote_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.violat" extends="struts-default" namespace="/admin/service">
+		<!-- 车辆违章管理 -->
+		<action name="violat_*" method="{1}" class="csViolatAction">
+			<result name="index">violat_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">violat_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">violat_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">violat_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆违章别名入口 -->
+		<action name="violat.*" method="execute" class="csViolatAction">
+			<result name="index">violat_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>	
+	<package name="admin.finance.refund" extends="struts-default" namespace="/admin/finance">
+		<!-- 会员退款管理 -->
+		<action name="refund_*" method="{1}" class="csRefundAction">
+			<result name="index">refund_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">refund_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">refund_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">refund_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员退款别名入口 -->
+		<action name="refund.*" method="execute" class="csRefundAction">
+			<result name="index">refund_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.alipay.alipayrecord" extends="struts-default" namespace="/admin/finance/alipay">
+		<!-- 接口充值管理 -->
+		<action name="alipayrecord_*" method="{1}" class="csAlipayRecordAction">
+			<result name="index">alipayrecord_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">alipayrecord_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">alipayrecord_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">alipayrecord_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 接口充值别名入口 -->
+		<action name="alipayrecord.*" method="execute" class="csAlipayRecordAction">
+			<result name="index">alipayrecord_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.alipay.alipayrefund" extends="struts-default" namespace="/admin/finance/alipay">
+		<!-- 接口退款管理 -->
+		<action name="alipayrefund_*" method="{1}" class="csAlipayRefundAction">
+			<result name="index">alipayrefund_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">alipayrefund_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">alipayrefund_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">alipayrefund_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 接口退款别名入口 -->
+		<action name="alipayrefund.*" method="execute" class="csAlipayRefundAction">
+			<result name="index">alipayrefund_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.control.state" extends="struts-default" namespace="/admin/control">
+		<!-- 车辆当前状态管理 -->
+		<action name="state_*" method="{1}" class="csStateAction">
+			<result name="index">state_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">state_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">state_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">state_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆当前状态别名入口 -->
+		<action name="state.*" method="execute" class="csStateAction">
+			<result name="index">state_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.control.alarm" extends="struts-default" namespace="/admin/control">
+		<!-- 车辆警报管理 -->
+		<action name="alarm_*" method="{1}" class="csAlarmAction">
+			<result name="index">alarm_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">alarm_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">alarm_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">alarm_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆警报别名入口 -->
+		<action name="alarm.*" method="execute" class="csAlarmAction">
+			<result name="index">alarm_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.control.history" extends="struts-default" namespace="/admin/control">
+		<!-- 车辆历史状态管理 -->
+		<action name="history_*" method="{1}" class="csHistoryStateAction">
+			<result name="index">history_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">history_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">history_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">history_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆历史状态别名入口 -->
+		<action name="history.*" method="execute" class="csHistoryStateAction">
+			<result name="index">history_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.repair" extends="struts-default" namespace="/admin/service">
+		<!-- 车辆维修管理 -->
+		<action name="repair_*" method="{1}" class="csRepairAction">
+			<result name="index">repair_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">repair_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">repair_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">repair_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆维修别名入口 -->
+		<action name="repair.*" method="execute" class="csRepairAction">
+			<result name="index">repair_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.membergroup" extends="struts-default" namespace="/admin/user">
+		<!-- 会员组织管理 -->
+		<action name="membergroup_*" method="{1}" class="csMemberGroupAction">
+			<result name="index">membergroup_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">membergroup_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">membergroup_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">membergroup_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员组织别名入口 -->
+		<action name="membergroup.*" method="execute" class="csMemberGroupAction">
+			<result name="index">membergroup_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.argument" extends="struts-default" namespace="/admin/configurator">
+		<!-- 系统参数管理 -->
+		<action name="argument_*" method="{1}" class="csArgumentAction">
+			<result name="index">argument_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">argument_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">argument_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">argument_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统参数别名入口 -->
+		<action name="argument.*" method="execute" class="csArgumentAction">
+			<result name="index">argument_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.bug" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统BUG管理 -->
+		<action name="bug_*" method="{1}" class="csBugAction">
+			<result name="index">bug_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">bug_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">bug_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">bug_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统BUG别名入口 -->
+		<action name="bug.*" method="execute" class="csBugAction">
+			<result name="index">bug_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.maintain" extends="struts-default" namespace="/admin/service">
+		<!-- 车辆保养管理 -->
+		<action name="maintain_*" method="{1}" class="csMaintainAction">
+			<result name="index">maintain_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">maintain_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">maintain_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">maintain_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆保养别名入口 -->
+		<action name="maintain.*" method="execute" class="csMaintainAction">
+			<result name="index">maintain_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.task" extends="struts-default" namespace="/admin/configurator">
+		<!-- 数据任务管理 -->
+		<action name="task_*" method="{1}" class="csTaskAction">
+			<result name="index">task_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">task_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">task_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">task_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 数据任务别名入口 -->
+		<action name="task.*" method="execute" class="csTaskAction">
+			<result name="index">task_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.wxorder" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信指令管理 -->
+		<action name="wxorder_*" method="{1}" class="csWxOrderAction">
+			<result name="index">wxorder_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxorder_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxorder_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxorder_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>		
+	</package>
+	<package name="admin.configurator.wxcontent" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信回复管理 -->
+		<action name="wxcontent_*" method="{1}" class="csWxContentAction">
+			<result name="index">wxcontent_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxcontent_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxcontent_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxcontent_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>		
+	</package>
+	<package name="admin.configurator.wxmenu" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信菜单管理 -->
+		<action name="wxmenu_*" method="{1}" class="csWxMenuAction">
+			<result name="index">wxmenu_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxmenu_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxmenu_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxmenu_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>		
+	</package>
+	<package name="admin.cms.content" extends="struts-default" namespace="/admin/cms">
+		<!-- 静态内容管理 -->
+		<action name="content_*" method="{1}" class="csContentAction">
+			<result name="index">content_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">content_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">content_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">content_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 静态内容别名入口 -->
+		<action name="content.*" method="execute" class="csContentAction">
+			<result name="index">content_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.gasstation" extends="struts-default" namespace="/admin/configurator">
+		<!-- 加油站管理 -->
+		<action name="gasstation_*" method="{1}" class="csGasStationAction">
+			<result name="index">gasstation_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">gasstation_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">gasstation_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">gasstation_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 加油站别名入口 -->
+		<action name="gasstation.*" method="execute" class="csGasStationAction">
+			<result name="index">gasstation_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.lucky.lucky" extends="struts-default" namespace="/admin/operate/lucky">
+		<!-- 抽奖活动管理 -->
+		<action name="lucky_*" method="{1}" class="csLuckyAction">
+			<result name="index">lucky_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">lucky_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">lucky_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">lucky_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 抽奖活动别名入口 -->
+		<action name="lucky.*" method="execute" class="csLuckyAction">
+			<result name="index">lucky_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.lucky.luckyitem" extends="struts-default" namespace="/admin/operate/lucky">
+		<!-- 抽奖奖项管理 -->
+		<action name="luckyitem_*" method="{1}" class="csLuckyItemAction">
+			<result name="index">luckyitem_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">luckyitem_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">luckyitem_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">luckyitem_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 抽奖奖项别名入口 -->
+		<action name="luckyitem.*" method="execute" class="csLuckyItemAction">
+			<result name="index">luckyitem_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.lucky.luckyresult" extends="struts-default" namespace="/admin/operate/lucky">
+		<!-- 中奖结果管理 -->
+		<action name="luckyresult_*" method="{1}" class="csLuckyResultAction">
+			<result name="index">luckyresult_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">luckyresult_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">luckyresult_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">luckyresult_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 中奖结果别名入口 -->
+		<action name="luckyresult.*" method="execute" class="csLuckyResultAction">
+			<result name="index">luckyresult_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.carphoto" extends="struts-default" namespace="/admin/systematic">
+		<!-- 车辆照片管理 -->
+		<action name="carphoto_*" method="{1}" class="csCarPhotoAction">
+			<result name="index">carphoto_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">carphoto_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">carphoto_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">carphoto_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆照片别名入口 -->
+		<action name="carphoto.*" method="execute" class="csCarPhotoAction">
+			<result name="index">carphoto_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.shareindex" extends="struts-default" namespace="/admin/operate">
+		<!-- 分享指数管理 -->
+		<action name="shareindex_*" method="{1}" class="csShareIndexAction">
+			<result name="index">shareindex_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">shareindex_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">shareindex_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">shareindex_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 分享指数别名入口 -->
+		<action name="shareindex.*" method="execute" class="csShareIndexAction">
+			<result name="index">shareindex_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.chjsign" extends="struts-default" namespace="/admin/operate">
+		<!-- 春节套餐报名管理 -->
+		<action name="chjsign_*" method="{1}" class="csChjSignAction">
+			<result name="index">chjsign_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">chjsign_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">chjsign_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">chjsign_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 春节套餐报名别名入口 -->
+		<action name="chjsign.*" method="execute" class="csChjSignAction">
+			<result name="index">chjsign_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>	
+	<package name="admin.fee.item" extends="struts-default" namespace="/admin/fee">
+		<!-- 商品信息管理 -->
+		<action name="item_*" method="{1}" class="csItemAction">
+			<result name="index">item_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">item_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">item_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">item_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 商品信息别名入口 -->
+		<action name="item.*" method="execute" class="csItemAction">
+			<result name="index">item_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>	
+	<package name="admin.configurator.sku" extends="struts-default" namespace="/admin/configurator">
+		<!-- SKU属性管理 -->
+		<action name="sku_*" method="{1}" class="csSkuAction">
+			<result name="index">sku_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">sku_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">sku_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">sku_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>		
+	</package>
+	<package name="admin.configurator.quest" extends="struts-default" namespace="/admin/configurator">
+		<!-- 问卷模板管理 -->
+		<action name="quest_*" method="{1}" class="csQuestTemplateAction">
+			<result name="index">quest_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">quest_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">quest_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">quest_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 问卷模板别名入口 -->
+		<action name="quest.*" method="execute" class="csQuestTemplateAction">
+			<result name="index">quest_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.wx.wxorder" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信指令管理 -->
+		<action name="wxorder_*" method="{1}" class="csWxOrderAction">
+			<result name="index">wxorder_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxorder_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxorder_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxorder_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 微信指令别名入口 -->
+		<action name="wxorder.*" method="execute" class="csWxOrderAction">
+			<result name="index">wxorder_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.wx.wxmenu" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信菜单管理 -->
+		<action name="wxmenu_*" method="{1}" class="csWxMenuAction">
+			<result name="index">wxmenu_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxmenu_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxmenu_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxmenu_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 微信菜单别名入口 -->
+		<action name="wxmenu.*" method="execute" class="csWxMenuAction">
+			<result name="index">wxmenu_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.wx.wxcontent" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信素材管理 -->
+		<action name="wxcontent_*" method="{1}" class="csWxContentAction">
+			<result name="index">wxcontent_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxcontent_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxcontent_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxcontent_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 微信素材别名入口 -->
+		<action name="wxcontent.*" method="execute" class="csWxContentAction">
+			<result name="index">wxcontent_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.rcgcard" extends="struts-default" namespace="/admin/object">
+		<!-- 充值卡管理 -->
+		<action name="rcgcard_*" method="{1}" class="csRechargeCardAction">
+			<result name="index">rcgcard_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">rcgcard_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">rcgcard_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">rcgcard_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 充值卡别名入口 -->
+		<action name="rcgcard.*" method="execute" class="csRechargeCardAction">
+			<result name="index">rcgcard_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.cms.propagate" extends="struts-default" namespace="/admin/operate/cms">
+		<!-- 传播内容管理 -->
+		<action name="propagate_*" method="{1}" class="csPropagateAction">
+			<result name="index">propagate_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">propagate_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">propagate_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">propagate_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 传播内容别名入口 -->
+		<action name="propagate.*" method="execute" class="csPropagateAction">
+			<result name="index">propagate_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.repairadr" extends="struts-default" namespace="/admin/service">
+		<!-- 维修地点管理 -->
+		<action name="repairadr_*" method="{1}" class="csRepairAdrAction">
+			<result name="index">repairadr_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">repairadr_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">repairadr_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">repairadr_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 维修地点别名入口 -->
+		<action name="repairadr.*" method="execute" class="csRepairAdrAction">
+			<result name="index">repairadr_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.area" extends="struts-default" namespace="/admin/configurator">
+		<!-- 网点区域管理 -->
+		<action name="area_*" method="{1}" class="csAreaAction">
+			<result name="index">area_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">area_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">area_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">area_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 网点区域别名入口 -->
+		<action name="area.*" method="execute" class="csAreaAction">
+			<result name="index">area_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.config" extends="struts-default" namespace="/admin/configurator">
+		<!-- 系统配置(城市)管理 -->
+		<action name="config_*" method="{1}" class="csConfigAction">
+			<result name="index">config_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">config_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">config_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">config_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统配置(城市)别名入口 -->
+		<action name="config.*" method="execute" class="csConfigAction">
+			<result name="index">config_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.permissions.host" extends="struts-default" namespace="/admin/permissions">
+		<!-- 运营城市管理 -->
+		<action name="host_*" method="{1}" class="srvHostAction">
+			<result name="index">host_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">host_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">host_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">host_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 运营城市别名入口 -->
+		<action name="host.*" method="execute" class="srvHostAction">
+			<result name="index">host_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.limittime" extends="struts-default" namespace="/admin/configurator">
+		<!-- 交通限行管理 -->
+		<action name="limittime_*" method="{1}" class="csLimitTimeAction">
+			<result name="index">limittime_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">limittime_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">limittime_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">limittime_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 交通限行别名入口 -->
+		<action name="limittime.*" method="execute" class="csLimitTimeAction">
+			<result name="index">limittime_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.info" extends="struts-default" namespace="/admin/unit">
+		<!-- 企业信息管理 -->
+		<action name="info_*" method="{1}" class="csUnitInfoAction">
+			<result name="index">info_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">info_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">info_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">info_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 企业信息别名入口 -->
+		<action name="info.*" method="execute" class="csUnitInfoAction">
+			<result name="index">info_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.user" extends="struts-default" namespace="/admin/unit">
+		<!-- 企业车管管理 -->
+		<action name="user_*" method="{1}" class="csUnitUserAction">
+			<result name="index">user_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">user_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">user_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">user_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 企业车管别名入口 -->
+		<action name="user.*" method="execute" class="csUnitUserAction">
+			<result name="index">user_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.order" extends="struts-default" namespace="/admin/unit">
+		<!-- 企业订单管理 -->
+		<action name="order_*" method="{1}" class="csUnitOrderAction">
+			<result name="index">order_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">order_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">order_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">order_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 企业订单别名入口 -->
+		<action name="order.*" method="execute" class="csUnitOrderAction">
+			<result name="index">order_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.fee" extends="struts-default" namespace="/admin/unit">
+		<!-- 价格配置管理 -->
+		<action name="fee_*" method="{1}" class="csUnitFeeAction">
+			<result name="index">fee_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">fee_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">fee_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">fee_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 价格配置别名入口 -->
+		<action name="fee.*" method="execute" class="csUnitFeeAction">
+			<result name="index">fee_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.airport" extends="struts-default" namespace="/admin/unit">
+		<!-- 机场服务管理 -->
+		<action name="airport_*" method="{1}" class="csUnitAirportAction">
+			<result name="index">airport_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">airport_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">airport_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">airport_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 机场服务别名入口 -->
+		<action name="airport.*" method="execute" class="csUnitAirportAction">
+			<result name="index">airport_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.bill" extends="struts-default" namespace="/admin/unit">
+		<!-- 企业对账管理 -->
+		<action name="bill_*" method="{1}" class="csUnitBillAction">
+			<result name="index">bill_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">bill_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">bill_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">bill_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 企业对账别名入口 -->
+		<action name="bill.*" method="execute" class="csUnitBillAction">
+			<result name="index">bill_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.credit.card" extends="struts-default" namespace="/admin/user/credit">
+		<!-- 信用卡管理 -->
+		<action name="card_*" method="{1}" class="csCreditCardAction">
+			<result name="index">card_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">card_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">card_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">card_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 信用卡别名入口 -->
+		<action name="card.*" method="execute" class="csCreditCardAction">
+			<result name="index">card_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.credit.record" extends="struts-default" namespace="/admin/user/credit">
+		<!-- 信用记录管理 -->
+		<action name="record_*" method="{1}" class="csCreditRecordAction">
+			<result name="index">record_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">record_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">record_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">record_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 信用记录别名入口 -->
+		<action name="record.*" method="execute" class="csCreditRecordAction">
+			<result name="index">record_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.credit.bill" extends="struts-default" namespace="/admin/finance/credit">
+		<!-- 信用账单管理 -->
+		<action name="bill_*" method="{1}" class="csCreditBillAction">
+			<result name="index">bill_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">bill_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">bill_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">bill_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 信用账单别名入口 -->
+		<action name="bill.*" method="execute" class="csCreditBillAction">
+			<result name="index">bill_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.apiclient" extends="struts-default" namespace="/admin/configurator">
+		<!-- API客户端管理 -->
+		<action name="apiclient_*" method="{1}" class="srvApiClientAction">
+			<result name="index">apiclient_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">apiclient_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">apiclient_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">apiclient_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- API客户端别名入口 -->
+		<action name="apiclient.*" method="execute" class="srvApiClientAction">
+			<result name="index">apiclient_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.powerpile" extends="struts-default" namespace="/admin/object">
+		<!-- 充电桩管理 -->
+		<action name="powerpile_*" method="{1}" class="csPowerPileAction">
+			<result name="index">powerpile_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">powerpile_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">powerpile_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">powerpile_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 充电桩别名入口 -->
+		<action name="powerpile.*" method="execute" class="csPowerPileAction">
+			<result name="index">powerpile_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.coin" extends="struts-default" namespace="/admin/user">
+		<!-- 红包管理 -->
+		<action name="coin_*" method="{1}" class="csCoinAction">
+			<result name="index">coin_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">coin_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">coin_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">coin_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 红包别名入口 -->
+		<action name="coin.*" method="execute" class="csCoinAction">
+			<result name="index">coin_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<package name="admin.user.coinsource" extends="struts-default" namespace="/admin/user">
+		<!-- 红包管理 -->
+		<action name="coinsource_*" method="{1}" class="csCoinSourceAction">
+			<result name="index">coinsource_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">coinsource_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">coinsource_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">coinsource_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 红包别名入口 -->
+		<action name="coinsource.*" method="execute" class="csCoinSourceAction">
+			<result name="index">coinsource_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<package name="admin.service.orderlog" extends="struts-default" namespace="/admin/service">
+		<!-- 订单操作记录管理 -->
+		<action name="orderlog_*" method="{1}" class="csOrderLogAction">
+			<result name="index">orderlog_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">orderlog_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">orderlog_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">orderlog_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 订单操作记录别名入口 -->
+		<action name="orderlog.*" method="execute" class="csOrderLogAction">
+			<result name="index">orderlog_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.alipay.alipaylog" extends="struts-default" namespace="/admin/finance/alipay">
+		<!-- 接口日志管理 -->
+		<action name="alipaylog_*" method="{1}" class="csAlipayLogAction">
+			<result name="index">alipaylog_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">alipaylog_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">alipaylog_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">alipaylog_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 接口日志别名入口 -->
+		<action name="alipaylog.*" method="execute" class="csAlipayLogAction">
+			<result name="index">alipaylog_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.invoice" extends="struts-default" namespace="/admin/finance">
+		<!-- 发票记录管理 -->
+		<action name="invoice_*" method="{1}" class="csInvoiceAction">
+			<result name="index">invoice_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">invoice_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">invoice_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">invoice_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 发票记录别名入口 -->
+		<action name="invoice.*" method="execute" class="csInvoiceAction">
+			<result name="index">invoice_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.address" extends="struts-default" namespace="/admin/user">
+		<!-- 会员地址管理 -->
+		<action name="address_*" method="{1}" class="csAddressAction">
+			<result name="index">address_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">address_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">address_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">address_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员地址别名入口 -->
+		<action name="address.*" method="execute" class="csAddressAction">
+			<result name="index">address_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.membermemo" extends="struts-default" namespace="/admin/user">
+		<!-- 会员备忘管理 -->
+		<action name="membermemo_*" method="{1}" class="csMemberMemoAction">
+			<result name="index">membermemo_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">membermemo_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">membermemo_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">membermemo_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员备忘别名入口 -->
+		<action name="membermemo.*" method="execute" class="csMemberMemoAction">
+			<result name="index">membermemo_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.recordtype" extends="struts-default" namespace="/admin/configurator">
+		<!-- 消费类型管理 -->
+		<action name="recordtype_*" method="{1}" class="csRecordTypeAction">
+			<result name="index">recordtype_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">recordtype_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">recordtype_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">recordtype_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 消费类型别名入口 -->
+		<action name="recordtype.*" method="execute" class="csRecordTypeAction">
+			<result name="index">recordtype_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.integralrecord" extends="struts-default" namespace="/admin/user">
+		<!-- 积分记录管理 -->
+		<action name="integralrecord_*" method="{1}" class="csIntegralRecordAction">
+			<result name="index">integralrecord_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">integralrecord_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">integralrecord_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">integralrecord_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 积分记录别名入口 -->
+		<action name="integralrecord.*" method="execute" class="csIntegralRecordAction">
+			<result name="index">integralrecord_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.error" extends="struts-default" namespace="/admin/systematic">
+		<!-- 错误信息管理 -->
+		<action name="error_*" method="{1}" class="csErrorAction">
+			<result name="index">error_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">error_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">error_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">error_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 错误信息别名入口 -->
+		<action name="error.*" method="execute" class="csErrorAction">
+			<result name="index">error_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.event" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统事件管理 -->
+		<action name="event_*" method="{1}" class="csEventAction">
+			<result name="index">event_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">event_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">event_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">event_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统事件别名入口 -->
+		<action name="event.*" method="execute" class="csEventAction">
+			<result name="index">event_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.eventheed" extends="struts-default" namespace="/admin/systematic">
+		<!-- 事件关注管理 -->
+		<action name="eventheed_*" method="{1}" class="csEventHeedAction">
+			<result name="index">eventheed_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">eventheed_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">eventheed_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">eventheed_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 事件关注别名入口 -->
+		<action name="eventheed.*" method="execute" class="csEventHeedAction">
+			<result name="index">eventheed_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.eventtype" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统事件类型管理 -->
+		<action name="eventtype_*" method="{1}" class="csEventTypeAction">
+			<result name="index">eventtype_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">eventtype_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">eventtype_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">eventtype_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统事件类型别名入口 -->
+		<action name="eventtype.*" method="execute" class="csEventTypeAction">
+			<result name="index">eventtype_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.todo" extends="struts-default" namespace="/admin/systematic">
+		<!-- 待办事项管理 -->
+		<action name="todo_*" method="{1}" class="csTodoAction">
+			<result name="index">todo_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">todo_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">todo_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">todo_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 待办事项别名入口 -->
+		<action name="todo.*" method="execute" class="csTodoAction">
+			<result name="index">todo_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.query" extends="struts-default" namespace="/admin/configurator">
+		<!-- 表单查询管理 -->
+		<action name="query_*" method="{1}" class="srvQueryAction">
+			<result name="index">query_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">query_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">query_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">query_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 表单查询别名入口 -->
+		<action name="query.*" method="execute" class="srvQueryAction">
+			<result name="index">query_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.control.elechistory" extends="struts-default" namespace="/admin/control">
+		<!-- 电桩历史数据管理 -->
+		<action name="elechistory_*" method="{1}" class="csElecHistoryAction">
+			<result name="index">elechistory_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">elechistory_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">elechistory_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">elechistory_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 电桩历史数据别名入口 -->
+		<action name="elechistory.*" method="execute" class="csElecHistoryAction">
+			<result name="index">elechistory_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.feetypeset" extends="struts-default" namespace="/admin/configurator">
+		<!-- 计费策略管理 -->
+		<action name="feetypeset_*" method="{1}" class="csFeeTypeSetAction">
+			<result name="index">feetypeset_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">feetypeset_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">feetypeset_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">feetypeset_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 计费策略别名入口 -->
+		<action name="feetypeset.*" method="execute" class="csFeeTypeSetAction">
+			<result name="index">feetypeset_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.workflow" extends="struts-default" namespace="/admin/oa">
+		<!-- 工作流管理 -->
+		<action name="workflow_*" method="{1}" class="srvWorkflowAction">
+			<result name="index">workflow_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">workflow_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">workflow_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">workflow_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 工作流别名入口 -->
+		<action name="workflow.*" method="execute" class="srvWorkflowAction">
+			<result name="index">workflow_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.model" extends="struts-default" namespace="/admin/oa">
+		<!-- 表单设计管理 -->
+		<action name="model_*" method="{1}" class="srvModelAction">
+			<result name="index">model_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">model_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">model_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">model_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 表单设计别名入口 -->
+		<action name="model.*" method="execute" class="srvModelAction">
+			<result name="index">model_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	
+	<package name="admin.systematic.email" extends="struts-default" namespace="/admin/systematic">
+		<!-- 邮件内容管理 -->
+		<action name="email_*" method="{1}" class="csEmailAction">
+			<result name="index">email_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">email_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">email_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">email_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 邮件内容别名入口 -->
+		<action name="email.*" method="execute" class="csEmailAction">
+			<result name="index">email_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.object.car.caron" extends="struts-default" namespace="/admin/object/car">
+		<!-- 车辆上线记录管理 -->
+		<action name="caron_*" method="{1}" class="csCarOnAction">
+			<result name="index">caron_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">caron_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">caron_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">caron_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆上线记录别名入口 -->
+		<action name="caron.*" method="execute" class="csCarOnAction">
+			<result name="index">caron_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.script" extends="struts-default" namespace="/admin/configurator">
+		<!-- 后台事务脚本管理 -->
+		<action name="script_*" method="{1}" class="srvActionScriptAction">
+			<result name="index">script_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">script_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">script_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">script_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 后台事务脚本别名入口 -->
+		<action name="script.*" method="execute" class="srvActionScriptAction">
+			<result name="index">script_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.api" extends="struts-default" namespace="/admin/configurator">
+		<!-- API接口管理 -->
+		<action name="api_*" method="{1}" class="srvApiAction">
+			<result name="index">api_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">api_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">api_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">api_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- API接口别名入口 -->
+		<action name="api.*" method="execute" class="srvApiAction">
+			<result name="index">api_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.oauth" extends="struts-default" namespace="/admin/systematic">
+		<!-- 用户授权管理 -->
+		<action name="oauth_*" method="{1}" class="srvOauthAction">
+			<result name="index">oauth_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">oauth_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">oauth_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">oauth_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 用户授权别名入口 -->
+		<action name="oauth.*" method="execute" class="srvOauthAction">
+			<result name="index">oauth_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.apilog" extends="struts-default" namespace="/admin/systematic">
+		<!-- API日志管理 -->
+		<action name="apilog_*" method="{1}" class="srvApiLogAction">
+			<result name="index">apilog_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">apilog_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">apilog_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">apilog_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- API日志别名入口 -->
+		<action name="apilog.*" method="execute" class="srvApiLogAction">
+			<result name="index">apilog_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.activitys.activity" extends="struts-default" namespace="/admin/operate/activitys">
+		<!-- 营销活动管理 -->
+		<action name="activity_*" method="{1}" class="csActivityAction">
+			<result name="index">activity_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">activity_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">activity_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">activity_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 营销活动别名入口 -->
+		<action name="activity.*" method="execute" class="csActivityAction">
+			<result name="index">activity_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.activitys.activity.in" extends="struts-default" namespace="/admin/operate/activitys/activity">
+		<!-- 活动参与管理 -->
+		<action name="in_*" method="{1}" class="csActivityInAction">
+			<result name="index">in_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">in_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">in_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">in_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 活动参与别名入口 -->
+		<action name="in.*" method="execute" class="csActivityInAction">
+			<result name="index">in_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.activitys.activity.promotion" extends="struts-default" namespace="/admin/operate/activitys/activity">
+		<!-- 促销配置管理 -->
+		<action name="promotion_*" method="{1}" class="csPromotionAction">
+			<result name="index">promotion_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">promotion_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">promotion_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">promotion_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 促销配置别名入口 -->
+		<action name="promotion.*" method="execute" class="csPromotionAction">
+			<result name="index">promotion_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.activitys.present" extends="struts-default" namespace="/admin/operate/activitys">
+		<!-- 礼品赠品管理 -->
+		<action name="present_*" method="{1}" class="csPresentAction">
+			<result name="index">present_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">present_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">present_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">present_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 礼品赠品别名入口 -->
+		<action name="present.*" method="execute" class="csPresentAction">
+			<result name="index">present_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.present" extends="struts-default" namespace="/admin/operate">
+		<!-- 礼品赠品管理 -->
+		<action name="present_*" method="{1}" class="csPresentAction">
+			<result name="index">present_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">present_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">present_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">present_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 礼品赠品别名入口 -->
+		<action name="present.*" method="execute" class="csPresentAction">
+			<result name="index">present_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.marketplan" extends="struts-default" namespace="/admin/operate">
+		<!-- 营销方案管理 -->
+		<action name="marketplan_*" method="{1}" class="csMarketPlanAction">
+			<result name="index">marketplan_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">marketplan_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">marketplan_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">marketplan_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 营销方案别名入口 -->
+		<action name="marketplan.*" method="execute" class="csMarketPlanAction">
+			<result name="index">marketplan_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.marketindex" extends="struts-default" namespace="/admin/operate">
+		<!-- 营销指标管理 -->
+		<action name="marketindex_*" method="{1}" class="csMarketIndexAction">
+			<result name="index">marketindex_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">marketindex_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">marketindex_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">marketindex_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 营销指标别名入口 -->
+		<action name="marketindex.*" method="execute" class="csMarketIndexAction">
+			<result name="index">marketindex_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.operate.marketlog" extends="struts-default" namespace="/admin/operate">
+		<!-- 营销跟踪管理 -->
+		<action name="marketlog_*" method="{1}" class="csMarketLogAction">
+			<result name="index">marketlog_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">marketlog_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">marketlog_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">marketlog_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 营销跟踪别名入口 -->
+		<action name="marketlog.*" method="execute" class="csMarketLogAction">
+			<result name="index">marketlog_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.event" extends="struts-default" namespace="/admin/sale">
+		<!-- 销售活动管理 -->
+		<action name="event_*" method="{1}" class="csSaleEventAction">
+			<result name="index">event_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">event_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">event_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">event_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 销售活动别名入口 -->
+		<action name="event.*" method="execute" class="csSaleEventAction">
+			<result name="index">event_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.survey" extends="struts-default" namespace="/admin/sale">
+		<!-- 市场调查管理 -->
+		<action name="survey_*" method="{1}" class="csSaleSurveyAction">
+			<result name="index">survey_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">survey_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">survey_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">survey_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 市场调查别名入口 -->
+		<action name="survey.*" method="execute" class="csSaleSurveyAction">
+			<result name="index">survey_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.opport" extends="struts-default" namespace="/admin/sale">
+		<!-- 销售机会管理 -->
+		<action name="opport_*" method="{1}" class="csSaleOpportAction">
+			<result name="index">opport_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">opport_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">opport_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">opport_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 销售机会别名入口 -->
+		<action name="opport.*" method="execute" class="csSaleOpportAction">
+			<result name="index">opport_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.extension.channel" extends="struts-default" namespace="/admin/extension">
+		<!-- 访问渠道管理 -->
+		<action name="channel_*" method="{1}" class="csChannelAction">
+			<result name="index">channel_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">channel_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">channel_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">channel_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 访问渠道别名入口 -->
+		<action name="channel.*" method="execute" class="csChannelAction">
+			<result name="index">channel_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.extension.detail" extends="struts-default" namespace="/admin/extension">
+		<!-- 访问详情管理 -->
+		<action name="detail_*" method="{1}" class="csVisitDetailAction">
+			<result name="index">detail_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">detail_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">detail_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">detail_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 访问详情别名入口 -->
+		<action name="detail.*" method="execute" class="csVisitDetailAction">
+			<result name="index">detail_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.extension.visitip" extends="struts-default" namespace="/admin/extension">
+		<!-- 独立IP访问管理 -->
+		<action name="visitip_*" method="{1}" class="csVisitIpAction">
+			<result name="index">visitip_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">visitip_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">visitip_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">visitip_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 独立IP访问别名入口 -->
+		<action name="visitip.*" method="execute" class="csVisitIpAction">
+			<result name="index">visitip_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.extension.channelindex" extends="struts-default" namespace="/admin/extension">
+		<!-- 渠道指标管理 -->
+		<action name="channelindex_*" method="{1}" class="csChannelIndexAction">
+			<result name="index">channelindex_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">channelindex_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">channelindex_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">channelindex_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 渠道指标别名入口 -->
+		<action name="channelindex.*" method="execute" class="csChannelIndexAction">
+			<result name="index">channelindex_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.extension.channellog" extends="struts-default" namespace="/admin/extension">
+		<!-- 渠道跟踪维护管理 -->
+		<action name="channellog_*" method="{1}" class="csChannelLogAction">
+			<result name="index">channellog_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">channellog_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">channellog_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">channellog_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 渠道跟踪维护别名入口 -->
+		<action name="channellog.*" method="execute" class="csChannelLogAction">
+			<result name="index">channellog_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.complain" extends="struts-default" namespace="/admin/csm">
+		<!-- 意见反馈管理 -->
+		<action name="complain_*" method="{1}" class="csComplainAction">
+			<result name="index">complain_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">complain_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">complain_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">complain_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 意见反馈别名入口 -->
+		<action name="complain.*" method="execute" class="csComplainAction">
+			<result name="index">complain_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.revisit" extends="struts-default" namespace="/admin/csm">
+		<!-- 用户回访管理 -->
+		<action name="revisit_*" method="{1}" class="csRevisitAction">
+			<result name="index">revisit_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">revisit_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">revisit_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">revisit_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 用户回访别名入口 -->
+		<action name="revisit.*" method="execute" class="csRevisitAction">
+			<result name="index">revisit_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.care" extends="struts-default" namespace="/admin/csm">
+		<!-- 客户关怀管理 -->
+		<action name="care_*" method="{1}" class="csCareAction">
+			<result name="index">care_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">care_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">care_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">care_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 客户关怀别名入口 -->
+		<action name="care.*" method="execute" class="csCareAction">
+			<result name="index">care_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.serve" extends="struts-default" namespace="/admin/csm">
+		<!-- 客户服务管理 -->
+		<action name="serve_*" method="{1}" class="csServeAction">
+			<result name="index">serve_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">serve_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">serve_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">serve_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 客户服务别名入口 -->
+		<action name="serve.*" method="execute" class="csServeAction">
+			<result name="index">serve_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.callin" extends="struts-default" namespace="/admin/csm">
+		<!-- 客户来电管理 -->
+		<action name="callin_*" method="{1}" class="csCallInAction">
+			<result name="index">callin_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">callin_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">callin_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">callin_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 客户来电别名入口 -->
+		<action name="callin.*" method="execute" class="csCallInAction">
+			<result name="index">callin_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.message" extends="struts-default" namespace="/admin/csm">
+		<!-- 客服消息管理 -->
+		<action name="message_*" method="{1}" class="csChatMessageAction">
+			<result name="index">message_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">message_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">message_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">message_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 客服消息别名入口 -->
+		<action name="message.*" method="execute" class="csChatMessageAction">
+			<result name="index">message_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.revisit.quest" extends="struts-default" namespace="/admin/csm/revisit">
+		<!-- 问卷模板管理 -->
+		<action name="quest_*" method="{1}" class="csQuestTemplateAction">
+			<result name="index">quest_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">quest_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">quest_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">quest_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 问卷模板别名入口 -->
+		<action name="quest.*" method="execute" class="csQuestTemplateAction">
+			<result name="index">quest_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.revisit.answer" extends="struts-default" namespace="/admin/csm/revisit">
+		<!-- 问题及选项管理 -->
+		<action name="answer_*" method="{1}" class="csQuestAnswerAction">
+			<result name="index">answer_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">answer_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">answer_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">answer_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 问题及选项别名入口 -->
+		<action name="answer.*" method="execute" class="csQuestAnswerAction">
+			<result name="index">answer_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.csm.talker" extends="struts-default" namespace="/admin/csm">
+		<!-- 在线访客管理 -->
+		<action name="talker_*" method="{1}" class="csChatTalkerAction">
+			<result name="index">talker_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">talker_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">talker_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">talker_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 在线访客别名入口 -->
+		<action name="talker.*" method="execute" class="csChatTalkerAction">
+			<result name="index">talker_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.outside.outsideqr" extends="struts-default" namespace="/admin/oa/outside">
+		<!-- 巡检作业管理 -->
+		<action name="outsideqr_*" method="{1}" class="csOutsideQrAction">
+			<result name="index">outsideqr_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">outsideqr_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">outsideqr_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">outsideqr_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 巡检作业别名入口 -->
+		<action name="outsideqr.*" method="execute" class="csOutsideQrAction">
+			<result name="index">outsideqr_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.permissions.userexp" extends="struts-default" namespace="/admin/permissions">
+		<!-- 用户扩展信息管理 -->
+		<action name="userexp_*" method="{1}" class="srvUserExpAction">
+			<result name="index">userexp_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">userexp_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">userexp_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">userexp_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 用户扩展信息别名入口 -->
+		<action name="userexp.*" method="execute" class="srvUserExpAction">
+			<result name="index">userexp_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.user.growrecord" extends="struts-default" namespace="/admin/user">
+		<!-- 成长记录管理 -->
+		<action name="growrecord_*" method="{1}" class="csGrowRecordAction">
+			<result name="index">growrecord_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">growrecord_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">growrecord_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">growrecord_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 成长记录别名入口 -->
+		<action name="growrecord.*" method="execute" class="csGrowRecordAction">
+			<result name="index">growrecord_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.upgradelog" extends="struts-default" namespace="/admin/systematic">
+		<!-- 升级日志管理 -->
+		<action name="upgradelog_*" method="{1}" class="csUpgradeLogAction">
+			<result name="index">upgradelog_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">upgradelog_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">upgradelog_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">upgradelog_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 升级日志别名入口 -->
+		<action name="upgradelog.*" method="execute" class="csUpgradeLogAction">
+			<result name="index">upgradelog_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.wx.wxmt" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信下行管理 -->
+		<action name="wxmt_*" method="{1}" class="csWxMtAction">
+			<result name="index">wxmt_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxmt_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxmt_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxmt_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 微信下行别名入口 -->
+		<action name="wxmt.*" method="execute" class="csWxMtAction">
+			<result name="index">wxmt_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.wx.wxmo" extends="struts-default" namespace="/admin/configurator/wx">
+		<!-- 微信上行管理 -->
+		<action name="wxmo_*" method="{1}" class="csWxMoAction">
+			<result name="index">wxmo_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">wxmo_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">wxmo_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">wxmo_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 微信上行别名入口 -->
+		<action name="wxmo.*" method="execute" class="csWxMoAction">
+			<result name="index">wxmo_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>	
+	<package name="admin.oa.outside.problem" extends="struts-default" namespace="/admin/oa/outside">
+		<!-- 定产报修管理 -->
+		<action name="problem_*" method="{1}" class="tbProblemAction">
+			<result name="index">problem_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">problem_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">problem_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">problem_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 定产报修别名入口 -->
+		<action name="problem.*" method="execute" class="tbProblemAction">
+			<result name="index">problem_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.recordsubject" extends="struts-default" namespace="/admin/configurator">
+		<!-- 消费科目管理 -->
+		<action name="recordsubject_*" method="{1}" class="csRecordSubjectAction">
+			<result name="index">recordsubject_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">recordsubject_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">recordsubject_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">recordsubject_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 消费科目别名入口 -->
+		<action name="recordsubject.*" method="execute" class="csRecordSubjectAction">
+			<result name="index">recordsubject_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.recharge" extends="struts-default" namespace="/admin/finance">
+		<!-- 充值扣款管理 -->
+		<action name="recharge_*" method="{1}" class="csArtifRecordAction">
+			<result name="index">recharge_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">recharge_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">recharge_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">recharge_stats.${#session.EXTFIX}jsp</result>
+			<result name="batchedit">recharge_batchedit.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 充值扣款别名入口 -->
+		<action name="recharge.*" method="execute" class="csArtifRecordAction">
+			<result name="index">recharge_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.operecord" extends="struts-default" namespace="/admin/finance">
+		<!-- 收支记录管理 -->
+		<action name="operecord_*" method="{1}" class="csOperRecordAction">
+			<result name="index">operecord_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">operecord_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">operecord_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">operecord_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 收支记录别名入口 -->
+		<action name="operecord.*" method="execute" class="csOperRecordAction">
+			<result name="index">operecord_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.oper" extends="struts-default" namespace="/admin/configurator">
+		<!-- 运营商管理 -->
+		<action name="oper_*" method="{1}" class="csOperAction">
+			<result name="index">oper_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">oper_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">oper_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">oper_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 运营商别名入口 -->
+		<action name="oper.*" method="execute" class="csOperAction">
+			<result name="index">oper_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.scheduling" extends="struts-default" namespace="/admin/service">
+		<!-- 车辆调度管理 -->
+		<action name="scheduling_*" method="{1}" class="csSchedulingAction">
+			<result name="index">scheduling_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">scheduling_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">scheduling_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">scheduling_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆调度别名入口 -->
+		<action name="scheduling.*" method="execute" class="csSchedulingAction">
+			<result name="index">scheduling_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.cooperate.problem" extends="struts-default" namespace="/admin/oa/cooperate">
+		<!-- 问题故障报修管理 -->
+		<action name="problem_*" method="{1}" class="tbProblemAction">
+			<result name="index">problem_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">problem_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">problem_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">problem_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 问题故障报修别名入口 -->
+		<action name="problem.*" method="execute" class="tbProblemAction">
+			<result name="index">problem_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.cooperate.solve" extends="struts-default" namespace="/admin/oa/cooperate">
+		<!-- 问题处理记录管理 -->
+		<action name="solve_*" method="{1}" class="tbSolveAction">
+			<result name="index">solve_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">solve_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">solve_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">solve_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 问题处理记录别名入口 -->
+		<action name="solve.*" method="execute" class="tbSolveAction">
+			<result name="index">solve_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.outside.affirm" extends="struts-default" namespace="/admin/oa/outside">
+		<!-- 异借确认管理 -->
+		<action name="affirm_*" method="{1}" class="tbAbAffirmAction">
+			<result name="index">affirm_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">affirm_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">affirm_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">affirm_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 异借确认别名入口 -->
+		<action name="affirm.*" method="execute" class="tbAbAffirmAction">
+			<result name="index">affirm_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.provid" extends="struts-default" namespace="/admin/configurator">
+		<!-- 供应商管理 -->
+		<action name="provid_*" method="{1}" class="csProvidAction">
+			<result name="index">provid_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">provid_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">provid_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">provid_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 供应商别名入口 -->
+		<action name="provid.*" method="execute" class="csProvidAction">
+			<result name="index">provid_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.transaction" extends="struts-default" namespace="/admin/systematic">
+		<!-- 数据事务管理 -->
+		<action name="transaction_*" method="{1}" class="srvTransactionAction">
+			<result name="index">transaction_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">transaction_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">transaction_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">transaction_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 数据事务别名入口 -->
+		<action name="transaction.*" method="execute" class="srvTransactionAction">
+			<result name="index">transaction_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.srvlock" extends="struts-default" namespace="/admin/systematic">
+		<!-- 事务锁管理 -->
+		<action name="srvlock_*" method="{1}" class="srvLockAction">
+			<result name="index">srvlock_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">srvlock_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">srvlock_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">srvlock_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 事务锁别名入口 -->
+		<action name="srvlock.*" method="execute" class="srvLockAction">
+			<result name="index">srvlock_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.extension.strategy" extends="struts-default" namespace="/admin/extension">
+		<!-- 品牌战略管理 -->
+		<action name="strategy_*" method="{1}" class="csStrategyAction">
+			<result name="index">strategy_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">strategy_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">strategy_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">strategy_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 品牌战略别名入口 -->
+		<action name="strategy.*" method="execute" class="csStrategyAction">
+			<result name="index">strategy_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.customgroup" extends="struts-default" namespace="/admin/sale">
+		<!-- 客户组织管理 -->
+		<action name="customgroup_*" method="{1}" class="tbCustomGroupAction">
+			<result name="index">customgroup_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">customgroup_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">customgroup_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">customgroup_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 客户组织别名入口 -->
+		<action name="customgroup.*" method="execute" class="tbCustomGroupAction">
+			<result name="index">customgroup_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.custom" extends="struts-default" namespace="/admin/sale">
+		<!-- 客户资料管理 -->
+		<action name="custom_*" method="{1}" class="tbSaleCustomAction">
+			<result name="index">custom_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">custom_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">custom_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">custom_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 客户资料别名入口 -->
+		<action name="custom.*" method="execute" class="tbSaleCustomAction">
+			<result name="index">custom_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.salequote" extends="struts-default" namespace="/admin/sale">
+		<!-- 跟单报价管理 -->
+		<action name="salequote_*" method="{1}" class="tbSaleQuoteAction">
+			<result name="index">salequote_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">salequote_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">salequote_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">salequote_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 跟单报价别名入口 -->
+		<action name="salequote.*" method="execute" class="tbSaleQuoteAction">
+			<result name="index">salequote_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.contract" extends="struts-default" namespace="/admin/sale">
+		<!-- 签约合同管理 -->
+		<action name="contract_*" method="{1}" class="tbSaleContractAction">
+			<result name="index">contract_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">contract_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">contract_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">contract_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 签约合同别名入口 -->
+		<action name="contract.*" method="execute" class="tbSaleContractAction">
+			<result name="index">contract_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.sale.battle" extends="struts-default" namespace="/admin/sale">
+		<!-- 销售战役管理 -->
+		<action name="battle_*" method="{1}" class="tbSaleBattleAction">
+			<result name="index">battle_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">battle_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">battle_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">battle_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 销售战役别名入口 -->
+		<action name="battle.*" method="execute" class="tbSaleBattleAction">
+			<result name="index">battle_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.growtype" extends="struts-default" namespace="/admin/configurator">
+		<!-- 成长分类型管理 -->
+		<action name="growtype_*" method="{1}" class="csGrowTypeAction">
+			<result name="index">growtype_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">growtype_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">growtype_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">growtype_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 成长分类型别名入口 -->
+		<action name="growtype.*" method="execute" class="csGrowTypeAction">
+			<result name="index">growtype_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.shop.cartitem" extends="struts-default" namespace="/admin/shop">
+		<!-- 购物车项管理 -->
+		<action name="cartitem_*" method="{1}" class="csCartItemAction">
+			<result name="index">cartitem_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">cartitem_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">cartitem_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">cartitem_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 购物车项别名入口 -->
+		<action name="cartitem.*" method="execute" class="csCartItemAction">
+			<result name="index">cartitem_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.shop.order" extends="struts-default" namespace="/admin/shop">
+		<!-- 商城订单管理 -->
+		<action name="order_*" method="{1}" class="csShopOrderAction">
+			<result name="index">order_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">order_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">order_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">order_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 商城订单别名入口 -->
+		<action name="order.*" method="execute" class="csShopOrderAction">
+			<result name="index">order_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.shop.detail" extends="struts-default" namespace="/admin/shop">
+		<!-- 订单明细管理 -->
+		<action name="detail_*" method="{1}" class="csShopOrderItemAction">
+			<result name="index">detail_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">detail_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">detail_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">detail_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 订单明细别名入口 -->
+		<action name="detail.*" method="execute" class="csShopOrderItemAction">
+			<result name="index">detail_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.systematic.help" extends="struts-default" namespace="/admin/systematic">
+		<!-- 系统帮助管理 -->
+		<action name="help_*" method="{1}" class="srvHelpAction">
+			<result name="index">help_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">help_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">help_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">help_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统帮助别名入口 -->
+		<action name="help.*" method="execute" class="srvHelpAction">
+			<result name="index">help_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.finance.cashrecord" extends="struts-default" namespace="/admin/finance">
+		<!-- 提现记录管理 -->
+		<action name="cashrecord_*" method="{1}" class="csCashRecordAction">
+			<result name="index">cashrecord_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">cashrecord_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">cashrecord_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">cashrecord_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 提现记录别名入口 -->
+		<action name="cashrecord.*" method="execute" class="csCashRecordAction">
+			<result name="index">cashrecord_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.hr.department" extends="struts-default" namespace="/admin/oa/hr">
+		<!-- 公司部门管理 -->
+		<action name="department_*" method="{1}" class="tbDepartmentAction">
+			<result name="index">department_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">department_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">department_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">department_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 公司部门别名入口 -->
+		<action name="department.*" method="execute" class="tbDepartmentAction">
+			<result name="index">department_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.hr.employee" extends="struts-default" namespace="/admin/oa/hr">
+		<!-- 公司员工管理 -->
+		<action name="employee_*" method="{1}" class="tbEmployeeAction">
+			<result name="index">employee_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">employee_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">employee_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">employee_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 公司员工别名入口 -->
+		<action name="employee.*" method="execute" class="tbEmployeeAction">
+			<result name="index">employee_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.oa.hr.passcheck" extends="struts-default" namespace="/admin/oa/hr">
+		<!-- 上下班签到管理 -->
+		<action name="passcheck_*" method="{1}" class="tbPassCheckAction">
+			<result name="index">passcheck_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">passcheck_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">passcheck_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">passcheck_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 上下班签到别名入口 -->
+		<action name="passcheck.*" method="execute" class="tbPassCheckAction">
+			<result name="index">passcheck_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.group" extends="struts-default" namespace="/admin/unit">
+		<!-- 分组信息管理 -->
+		<action name="group_*" method="{1}" class="csUnitGroupAction">
+			<result name="index">group_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">group_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">group_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">group_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 分组信息别名入口 -->
+		<action name="group.*" method="execute" class="csUnitGroupAction">
+			<result name="index">group_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.person" extends="struts-default" namespace="/admin/unit">
+		<!-- 用车人员管理 -->
+		<action name="person_*" method="{1}" class="csUnitPersonAction">
+			<result name="index">person_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">person_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">person_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">person_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 用车人员别名入口 -->
+		<action name="person.*" method="execute" class="csUnitPersonAction">
+			<result name="index">person_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.configurator.place" extends="struts-default" namespace="/admin/configurator">
+		<!-- 省市地区管理 -->
+		<action name="place_*" method="{1}" class="csPlaceAction">
+			<result name="index">place_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">place_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">place_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">place_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 省市地区别名入口 -->
+		<action name="place.*" method="execute" class="csPlaceAction">
+			<result name="index">place_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.mt" extends="struts-default" namespace="/admin/unit">
+		<!-- 推送消息管理 -->
+		<action name="mt_*" method="{1}" class="csUnitMtAction">
+			<result name="index">mt_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">mt_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">mt_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">mt_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 推送消息别名入口 -->
+		<action name="mt.*" method="execute" class="csUnitMtAction">
+			<result name="index">mt_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.specialcar" extends="struts-default" namespace="/admin/unit">
+		<!-- 专车订单管理 -->
+		<action name="specialcar_*" method="{1}" class="csSpecialCarAction">
+			<result name="index">specialcar_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">specialcar_edit.${#session.EXTFIX}jsp</result>
+			<result name="appoint">specialcar_appoint.${#session.EXTFIX}jsp</result>
+			<result name="settle">specialcar_settle.${#session.EXTFIX}jsp</result>
+			<result name="details">specialcar_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">specialcar_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 专车订单别名入口 -->
+		<action name="specialcar.*" method="execute" class="csSpecialCarAction">
+			<result name="index">specialcar_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.specialmodel" extends="struts-default" namespace="/admin/unit">
+		<!-- 专车车型管理 -->
+		<action name="specialmodel_*" method="{1}" class="csSpecialModelAction">
+			<result name="index">specialmodel_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">specialmodel_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">specialmodel_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">specialmodel_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 专车车型别名入口 -->
+		<action name="specialmodel.*" method="execute" class="csSpecialModelAction">
+			<result name="index">specialmodel_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.longorder" extends="struts-default" namespace="/admin/service">
+		<!-- 长租订单管理 -->
+		<action name="longorder_*" method="{1}" class="csLongOrderAction">
+			<result name="index">longorder_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">longorder_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">longorder_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">longorder_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 长租订单别名入口 -->
+		<action name="longorder.*" method="execute" class="csLongOrderAction">
+			<result name="index">longorder_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.longorderdetail" extends="struts-default" namespace="/admin/service">
+		<!-- 长单明细管理 -->
+		<action name="longorderdetail_*" method="{1}" class="csLongOrderDetailAction">
+			<result name="index">longorderdetail_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">longorderdetail_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">longorderdetail_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">longorderdetail_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 长单明细别名入口 -->
+		<action name="longorderdetail.*" method="execute" class="csLongOrderDetailAction">
+			<result name="index">longorderdetail_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.service.longorderfee" extends="struts-default" namespace="/admin/service">
+		<!-- 长单缴费管理 -->
+		<action name="longorderfee_*" method="{1}" class="csLongOrderFeeAction">
+			<result name="index">longorderfee_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">longorderfee_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">longorderfee_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">longorderfee_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 长单缴费别名入口 -->
+		<action name="longorderfee.*" method="execute" class="csLongOrderFeeAction">
+			<result name="index">longorderfee_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.driver" extends="struts-default" namespace="/admin/unit">
+		<!-- 司机管理 -->
+		<action name="driver_*" method="{1}" class="driverAction">
+			<result name="index">driver_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">driver_edit.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!--司机管理别名入口 -->
+		<action name="driver.*" method="execute" class="driverAction">
+			<result name="index">driver_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.carres" extends="struts-default" namespace="/admin/unit">
+		<!-- 专车管理 -->
+		<action name="carres_*" method="{1}" class="carresAction">
+			<result name="index">carres_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">carres_edit.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!--专车管理别名入口 -->
+		<action name="carres.*" method="execute" class="carresAction">
+			<result name="index">carres_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	<package name="admin.unit.drivercar" extends="struts-default" namespace="/admin/unit">
+		<!-- 专车司机管理 -->
+		<action name="drivercar_*" method="{1}" class="drivercarAction">
+			<result name="index">drivercar_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">drivercar_edit.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!--专车司机管理别名入口 -->
+		<action name="drivercar.*" method="execute" class="drivercarAction">
+			<result name="index">drivercar_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<package name="admin.service.ordercluster" extends="struts-default" namespace="/admin/service">
+		<!-- 订单簇管理 -->
+		<action name="ordercluster_*" method="{1}" class="csOrderClusterAction">
+			<result name="index">ordercluster_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">ordercluster_edit.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统订单别名入口 -->
+		<action name="ordercluster.*" method="execute" class="csOrderClusterAction">
+			<result name="index">ordercluster_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<!-- 统计模块 -->
+	<package name="admin.analysis.consume" extends="struts-default" namespace="/admin/analysis">
+		<!-- 会员消费统计 -->
+		<action name="consume_*" method="{1}" class="memberConsuMeAction">
+			<result name="index">consume_index.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 会员消费统计-->
+		<action name="consume.*" method="execute" class="memberConsuMeAction">
+			<result name="index">consume_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<!-- 统计模块 -->
+	<package name="admin.analysis.remote" extends="struts-default" namespace="/admin/analysis">
+		<!-- 远程控制统计 -->
+		<action name="remote_*" method="{1}" class="remoteStatisticAction">
+			<result name="index">remote_index.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 远程控制统计-->
+		<action name="remote.*" method="execute" class="remoteStatisticAction">
+			<result name="index">remote_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<!-- 导出模块  -->
+	<package name="admin.export" extends="struts-default" namespace="/admin/export">
+		<action name="export.*" method="{1}" class="exportAction"/>
+	</package>
+	
+	<package name="admin.object.car.sysissue" extends="struts-default" namespace="/admin/object/car">
+		<!-- 系统人员车况反馈管理 -->
+		<action name="sysissue_*" method="{1}" class="csCarSysIssueAction">
+			<result name="index">sysissue_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">sysissue_edit.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 系统人员车况反馈别名入口 -->
+		<action name="sysissue.*" method="execute" class="csCarSysIssueAction">
+			<result name="index">sysissue_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<package name="admin.object.carparts" extends="struts-default" namespace="/admin/object/car">
+		<!-- 车辆部件管理 -->
+		<action name="carparts_*" method="{1}" class="csCarPartsAction">
+			<result name="index">carparts_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">carparts_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">carparts_details.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆部件别名入口 -->
+		<action name="carparts.*" method="execute" class="csCarPartsAction">
+			<result name="index">carparts_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	
+	<!--外勤系统    -->
+	<package name="admin.oa.outside" extends="struts-default" namespace="/admin/oa/outside/">
+		<!--  车辆整备管理  -->
+		<action name="carparts.*" method="execute" class="csCarPartsAction">
+			<result name="index">carparts_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>
+	
+	<!-- 车辆整备管理 -->
+	<package name="admin.oa.outside.outsideStatistics" extends="struts-default" namespace="/admin/oa/outside">
+		<!-- 车辆违章管理 -->
+		<action name="outsideStatistics_*" method="{1}" class="csOutsideStatisticsAction">
+			<result name="index">outsideStatistics_index.${#session.EXTFIX}jsp</result>
+			<result name="edit">outsideStatistics_edit.${#session.EXTFIX}jsp</result>
+			<result name="details">outsideStatistics_details.${#session.EXTFIX}jsp</result>
+			<result name="stats">outsideStatistics_stats.${#session.EXTFIX}jsp</result>
+			<result name="define">${#request.define}</result>
+		</action>
+		<!-- 车辆违章别名入口 -->
+		<action name="outsideStatistics.*" method="execute" class="csOutsideStatisticsAction">
+			<result name="index">outsideStatistics_index.${#session.EXTFIX}jsp</result>
+		</action>	
+	</package>	
+	
+</struts>

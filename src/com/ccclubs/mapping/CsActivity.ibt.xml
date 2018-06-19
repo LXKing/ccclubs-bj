@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 营销活动之SQL映射 -->
+	<resultMap id="CsActivity" class="com.ccclubs.model.CsActivity">
+		<result property="csaId" column="csa_id"/>
+		<result property="csaHost" column="csa_host"/>
+		<result property="csaTitle" column="csa_title"/>
+		<result property="csaFlag" column="csa_flag"/>
+		<result property="csaType" column="csa_type"/>
+		<result property="csaPlan" column="csa_plan"/>
+		<result property="csaStart" column="csa_start"/>
+		<result property="csaFinish" column="csa_finish"/>
+		<result property="csaPoster" column="csa_poster"/>
+		<result property="csaZip" column="csa_zip"/>
+		<result property="csaCreater" column="csa_creater"/>
+		<result property="csaUpdateTime" column="csa_update_time"/>
+		<result property="csaAddTime" column="csa_add_time"/>
+		<result property="csaStatus" column="csa_status"/>
+	</resultMap>
+		
+	<!-- 获取所有营销活动 -->
+	<select id="getCsActivityList" resultMap="CsActivity">
+		select cs_activity$suffix$.* from cs_activity$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.csa_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_activity$suffix$.csa_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsActivity_part.cs_activity_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取营销活动分页 -->
+	<select id="getCsActivityPage" parameterClass="java.util.HashMap" resultMap="CsActivity">
+		select cs_activity$suffix$.* from cs_activity$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询 -->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.csa_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_activity$suffix$.csa_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsActivity_part.cs_activity_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取营销活动总数 -->
+	<select id="getCsActivityEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_activity$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.csa_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_activity$suffix$.csa_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsActivity_part.cs_activity_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取营销活动 -->
+	<select id="getCsActivityById" parameterClass="java.util.HashMap" resultMap="CsActivity">
+		select cs_activity$suffix$.* from cs_activity$suffix$
+		where csa_id=#id#
+	</select>
+	
+		
+	<!-- 保存营销活动 -->
+	<insert id="saveCsActivity"  parameterClass="com.ccclubs.model.CsActivity">
+		insert into cs_activity$suffix$
+		(
+			cs_activity$suffix$.csa_host
+			,cs_activity$suffix$.csa_title
+			,cs_activity$suffix$.csa_flag
+			,cs_activity$suffix$.csa_type
+			,cs_activity$suffix$.csa_plan
+			,cs_activity$suffix$.csa_start
+			,cs_activity$suffix$.csa_finish
+			,cs_activity$suffix$.csa_poster
+			,cs_activity$suffix$.csa_zip
+			,cs_activity$suffix$.csa_creater
+			,cs_activity$suffix$.csa_update_time
+			,cs_activity$suffix$.csa_add_time
+			,cs_activity$suffix$.csa_status
+		)
+		values(
+			<isNotNull property="csaHost" prepend="">
+				#csaHost#
+			</isNotNull>
+			<isNull property="csaHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csaTitle" prepend=",">
+				#csaTitle#
+			</isNotNull>
+			<isNull property="csaTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaFlag" prepend=",">
+				#csaFlag#
+			</isNotNull>
+			<isNull property="csaFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaType" prepend=",">
+				#csaType#
+			</isNotNull>
+			<isNull property="csaType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaPlan" prepend=",">
+				#csaPlan#
+			</isNotNull>
+			<isNull property="csaPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaStart" prepend=",">
+				#csaStart#
+			</isNotNull>
+			<isNull property="csaStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaFinish" prepend=",">
+				#csaFinish#
+			</isNotNull>
+			<isNull property="csaFinish" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaPoster" prepend=",">
+				#csaPoster#
+			</isNotNull>
+			<isNull property="csaPoster" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaZip" prepend=",">
+				#csaZip#
+			</isNotNull>
+			<isNull property="csaZip" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaCreater" prepend=",">
+				#csaCreater#
+			</isNotNull>
+			<isNull property="csaCreater" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaUpdateTime" prepend=",">
+				#csaUpdateTime#
+			</isNotNull>
+			<isNull property="csaUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaAddTime" prepend=",">
+				#csaAddTime#
+			</isNotNull>
+			<isNull property="csaAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaStatus" prepend=",">
+				#csaStatus#
+			</isNotNull>
+			<isNull property="csaStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新营销活动 -->
+	<update id="updateCsActivity"  parameterClass="com.ccclubs.model.CsActivity">
+		update cs_activity$suffix$ set
+			<isNotNull property="csaHost" prepend="">
+				cs_activity$suffix$.csa_host = #csaHost#
+			</isNotNull>
+			<isNull property="csaHost" prepend="">
+				cs_activity$suffix$.csa_host = null
+			</isNull>				
+			<isNotNull property="csaTitle" prepend=",">
+				cs_activity$suffix$.csa_title = #csaTitle#
+			</isNotNull>
+			<isNull property="csaTitle" prepend=",">
+				cs_activity$suffix$.csa_title = null
+			</isNull>				
+			<isNotNull property="csaFlag" prepend=",">
+				cs_activity$suffix$.csa_flag = #csaFlag#
+			</isNotNull>
+			<isNull property="csaFlag" prepend=",">
+				cs_activity$suffix$.csa_flag = null
+			</isNull>				
+			<isNotNull property="csaType" prepend=",">
+				cs_activity$suffix$.csa_type = #csaType#
+			</isNotNull>
+			<isNull property="csaType" prepend=",">
+				cs_activity$suffix$.csa_type = null
+			</isNull>				
+			<isNotNull property="csaPlan" prepend=",">
+				cs_activity$suffix$.csa_plan = #csaPlan#
+			</isNotNull>
+			<isNull property="csaPlan" prepend=",">
+				cs_activity$suffix$.csa_plan = null
+			</isNull>				
+			<isNotNull property="csaStart" prepend=",">
+				cs_activity$suffix$.csa_start = #csaStart#
+			</isNotNull>
+			<isNull property="csaStart" prepend=",">
+				cs_activity$suffix$.csa_start = null
+			</isNull>				
+			<isNotNull property="csaFinish" prepend=",">
+				cs_activity$suffix$.csa_finish = #csaFinish#
+			</isNotNull>
+			<isNull property="csaFinish" prepend=",">
+				cs_activity$suffix$.csa_finish = null
+			</isNull>				
+			<isNotNull property="csaPoster" prepend=",">
+				cs_activity$suffix$.csa_poster = #csaPoster#
+			</isNotNull>
+			<isNull property="csaPoster" prepend=",">
+				cs_activity$suffix$.csa_poster = null
+			</isNull>				
+			<isNotNull property="csaZip" prepend=",">
+				cs_activity$suffix$.csa_zip = #csaZip#
+			</isNotNull>
+			<isNull property="csaZip" prepend=",">
+				cs_activity$suffix$.csa_zip = null
+			</isNull>				
+			<isNotNull property="csaCreater" prepend=",">
+				cs_activity$suffix$.csa_creater = #csaCreater#
+			</isNotNull>
+			<isNull property="csaCreater" prepend=",">
+				cs_activity$suffix$.csa_creater = null
+			</isNull>				
+			<isNotNull property="csaUpdateTime" prepend=",">
+				cs_activity$suffix$.csa_update_time = #csaUpdateTime#
+			</isNotNull>
+			<isNull property="csaUpdateTime" prepend=",">
+				cs_activity$suffix$.csa_update_time = null
+			</isNull>				
+			<isNotNull property="csaAddTime" prepend=",">
+				cs_activity$suffix$.csa_add_time = #csaAddTime#
+			</isNotNull>
+			<isNull property="csaAddTime" prepend=",">
+				cs_activity$suffix$.csa_add_time = null
+			</isNull>				
+			<isNotNull property="csaStatus" prepend=",">
+				cs_activity$suffix$.csa_status = #csaStatus#
+			</isNotNull>
+			<isNull property="csaStatus" prepend=",">
+				cs_activity$suffix$.csa_status = null
+			</isNull>				
+		where
+			csa_id=#csaId#
+	</update>
+	
+	<!-- 更新营销活动非空字段 -->
+	<update id="updateCsActivity$NotNull"  parameterClass="com.ccclubs.model.CsActivity">
+		update cs_activity$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csaHost" prepend=",">
+				cs_activity$suffix$.csa_host = #csaHost#
+			</isNotNull>		
+			<isNotNull property="csaTitle" prepend=",">
+				cs_activity$suffix$.csa_title = #csaTitle#
+			</isNotNull>		
+			<isNotNull property="csaFlag" prepend=",">
+				cs_activity$suffix$.csa_flag = #csaFlag#
+			</isNotNull>		
+			<isNotNull property="csaType" prepend=",">
+				cs_activity$suffix$.csa_type = #csaType#
+			</isNotNull>		
+			<isNotNull property="csaPlan" prepend=",">
+				cs_activity$suffix$.csa_plan = #csaPlan#
+			</isNotNull>		
+			<isNotNull property="csaStart" prepend=",">
+				cs_activity$suffix$.csa_start = #csaStart#
+			</isNotNull>		
+			<isNotNull property="csaFinish" prepend=",">
+				cs_activity$suffix$.csa_finish = #csaFinish#
+			</isNotNull>		
+			<isNotNull property="csaPoster" prepend=",">
+				cs_activity$suffix$.csa_poster = #csaPoster#
+			</isNotNull>		
+			<isNotNull property="csaZip" prepend=",">
+				cs_activity$suffix$.csa_zip = #csaZip#
+			</isNotNull>		
+			<isNotNull property="csaCreater" prepend=",">
+				cs_activity$suffix$.csa_creater = #csaCreater#
+			</isNotNull>		
+			<isNotNull property="csaUpdateTime" prepend=",">
+				cs_activity$suffix$.csa_update_time = #csaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csaAddTime" prepend=",">
+				cs_activity$suffix$.csa_add_time = #csaAddTime#
+			</isNotNull>		
+			<isNotNull property="csaStatus" prepend=",">
+				cs_activity$suffix$.csa_status = #csaStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csa_id=#csaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个营销活动 -->
+	<delete id="deleteCsActivityById" parameterClass="java.util.HashMap">
+		delete from cs_activity$suffix$ where csa_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个营销活动 -->
+	<update id="removeCsActivityById" parameterClass="java.util.HashMap">
+		update cs_activity$suffix$ set  cs_activity$suffix$.csa_status=-1  where csa_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新营销活动 -->
+	<update id="updateCsActivityBy"  parameterClass="java.util.HashMap">
+		update cs_activity$suffix$ set		
+			csa_id=csa_id
+			<isNotNull property="V_csaId" prepend=",">
+				cs_activity$suffix$.csa_id = #V_csaId#
+			</isNotNull>		
+			<isNotNull property="V_csaHost" prepend=",">
+				cs_activity$suffix$.csa_host = #V_csaHost#
+			</isNotNull>		
+			<isNotNull property="V_csaTitle" prepend=",">
+				cs_activity$suffix$.csa_title = #V_csaTitle#
+			</isNotNull>		
+			<isNotNull property="V_csaFlag" prepend=",">
+				cs_activity$suffix$.csa_flag = #V_csaFlag#
+			</isNotNull>		
+			<isNotNull property="V_csaType" prepend=",">
+				cs_activity$suffix$.csa_type = #V_csaType#
+			</isNotNull>		
+			<isNotNull property="V_csaPlan" prepend=",">
+				cs_activity$suffix$.csa_plan = #V_csaPlan#
+			</isNotNull>		
+			<isNotNull property="V_csaStart" prepend=",">
+				cs_activity$suffix$.csa_start = #V_csaStart#
+			</isNotNull>		
+			<isNotNull property="V_csaFinish" prepend=",">
+				cs_activity$suffix$.csa_finish = #V_csaFinish#
+			</isNotNull>		
+			<isNotNull property="V_csaPoster" prepend=",">
+				cs_activity$suffix$.csa_poster = #V_csaPoster#
+			</isNotNull>		
+			<isNotNull property="V_csaZip" prepend=",">
+				cs_activity$suffix$.csa_zip = #V_csaZip#
+			</isNotNull>		
+			<isNotNull property="V_csaCreater" prepend=",">
+				cs_activity$suffix$.csa_creater = #V_csaCreater#
+			</isNotNull>		
+			<isNotNull property="V_csaUpdateTime" prepend=",">
+				cs_activity$suffix$.csa_update_time = #V_csaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csaAddTime" prepend=",">
+				cs_activity$suffix$.csa_add_time = #V_csaAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csaStatus" prepend=",">
+				cs_activity$suffix$.csa_status = #V_csaStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.csa_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_activity$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_activity$suffix$.csa_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsaPlan"><!-- 调用一下CsaPlan，把CsMarketPlan指向CsaPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsActivity_part.cs_activity_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除营销活动 -->
+	<update id="deleteCsActivityBy"  parameterClass="java.util.HashMap">
+		delete from cs_activity$suffix$ where 
+		cs_activity$suffix$.csa_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsActivity_part.cs_activity_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

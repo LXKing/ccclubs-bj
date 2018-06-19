@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员消息之SQL映射 -->
+	<resultMap id="CsMessage" class="com.ccclubs.model.CsMessage">
+		<result property="csmId" column="csm_id"/>
+		<result property="csmTitle" column="csm_title"/>
+		<result property="csmContent" column="csm_content"/>
+		<result property="csmRelate" column="csm_relate"/>
+		<result property="csmObject" column="csm_object"/>
+		<result property="csmAttach" column="csm_attach"/>
+		<result property="csmReceiver" column="csm_receiver"/>
+		<result property="csmSender" column="csm_sender"/>
+		<result property="csmRcvTime" column="csm_rcv_time"/>
+		<result property="csmSndTime" column="csm_snd_time"/>
+		<result property="csmRcvStatus" column="csm_rcv_status"/>
+		<result property="csmSndStatus" column="csm_snd_status"/>
+		<result property="csmStatus" column="csm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员消息 -->
+	<select id="getCsMessageList" resultMap="CsMessage">
+		select cs_message$suffix$.* from cs_message$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.csm_receiver=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_message$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMessage_part.cs_message_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员消息分页 -->
+	<select id="getCsMessagePage" parameterClass="java.util.HashMap" resultMap="CsMessage">
+		select cs_message$suffix$.* from cs_message$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.csm_receiver=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_message$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMessage_part.cs_message_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员消息总数 -->
+	<select id="getCsMessageEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_message$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.csm_receiver=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_message$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMessage_part.cs_message_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员消息 -->
+	<select id="getCsMessageById" parameterClass="java.util.HashMap" resultMap="CsMessage">
+		select cs_message$suffix$.* from cs_message$suffix$
+		where csm_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员消息 -->
+	<insert id="saveCsMessage"  parameterClass="com.ccclubs.model.CsMessage">
+		insert into cs_message$suffix$
+		(
+			cs_message$suffix$.csm_title
+			,cs_message$suffix$.csm_content
+			,cs_message$suffix$.csm_relate
+			,cs_message$suffix$.csm_object
+			,cs_message$suffix$.csm_attach
+			,cs_message$suffix$.csm_receiver
+			,cs_message$suffix$.csm_sender
+			,cs_message$suffix$.csm_rcv_time
+			,cs_message$suffix$.csm_snd_time
+			,cs_message$suffix$.csm_rcv_status
+			,cs_message$suffix$.csm_snd_status
+			,cs_message$suffix$.csm_status
+		)
+		values(
+			<isNotNull property="csmTitle" prepend="">
+				#csmTitle#
+			</isNotNull>
+			<isNull property="csmTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmContent" prepend=",">
+				#csmContent#
+			</isNotNull>
+			<isNull property="csmContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRelate" prepend=",">
+				#csmRelate#
+			</isNotNull>
+			<isNull property="csmRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmObject" prepend=",">
+				#csmObject#
+			</isNotNull>
+			<isNull property="csmObject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAttach" prepend=",">
+				#csmAttach#
+			</isNotNull>
+			<isNull property="csmAttach" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmReceiver" prepend=",">
+				#csmReceiver#
+			</isNotNull>
+			<isNull property="csmReceiver" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmSender" prepend=",">
+				#csmSender#
+			</isNotNull>
+			<isNull property="csmSender" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRcvTime" prepend=",">
+				#csmRcvTime#
+			</isNotNull>
+			<isNull property="csmRcvTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmSndTime" prepend=",">
+				#csmSndTime#
+			</isNotNull>
+			<isNull property="csmSndTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRcvStatus" prepend=",">
+				#csmRcvStatus#
+			</isNotNull>
+			<isNull property="csmRcvStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmSndStatus" prepend=",">
+				#csmSndStatus#
+			</isNotNull>
+			<isNull property="csmSndStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmStatus" prepend=",">
+				#csmStatus#
+			</isNotNull>
+			<isNull property="csmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员消息 -->
+	<update id="updateCsMessage"  parameterClass="com.ccclubs.model.CsMessage">
+		update cs_message$suffix$ set
+			<isNotNull property="csmTitle" prepend="">
+				cs_message$suffix$.csm_title = #csmTitle#
+			</isNotNull>
+			<isNull property="csmTitle" prepend="">
+				cs_message$suffix$.csm_title = null
+			</isNull>				
+			<isNotNull property="csmContent" prepend=",">
+				cs_message$suffix$.csm_content = #csmContent#
+			</isNotNull>
+			<isNull property="csmContent" prepend=",">
+				cs_message$suffix$.csm_content = null
+			</isNull>				
+			<isNotNull property="csmRelate" prepend=",">
+				cs_message$suffix$.csm_relate = #csmRelate#
+			</isNotNull>
+			<isNull property="csmRelate" prepend=",">
+				cs_message$suffix$.csm_relate = null
+			</isNull>				
+			<isNotNull property="csmObject" prepend=",">
+				cs_message$suffix$.csm_object = #csmObject#
+			</isNotNull>
+			<isNull property="csmObject" prepend=",">
+				cs_message$suffix$.csm_object = null
+			</isNull>				
+			<isNotNull property="csmAttach" prepend=",">
+				cs_message$suffix$.csm_attach = #csmAttach#
+			</isNotNull>
+			<isNull property="csmAttach" prepend=",">
+				cs_message$suffix$.csm_attach = null
+			</isNull>				
+			<isNotNull property="csmReceiver" prepend=",">
+				cs_message$suffix$.csm_receiver = #csmReceiver#
+			</isNotNull>
+			<isNull property="csmReceiver" prepend=",">
+				cs_message$suffix$.csm_receiver = null
+			</isNull>				
+			<isNotNull property="csmSender" prepend=",">
+				cs_message$suffix$.csm_sender = #csmSender#
+			</isNotNull>
+			<isNull property="csmSender" prepend=",">
+				cs_message$suffix$.csm_sender = null
+			</isNull>				
+			<isNotNull property="csmRcvTime" prepend=",">
+				cs_message$suffix$.csm_rcv_time = #csmRcvTime#
+			</isNotNull>
+			<isNull property="csmRcvTime" prepend=",">
+				cs_message$suffix$.csm_rcv_time = null
+			</isNull>				
+			<isNotNull property="csmSndTime" prepend=",">
+				cs_message$suffix$.csm_snd_time = #csmSndTime#
+			</isNotNull>
+			<isNull property="csmSndTime" prepend=",">
+				cs_message$suffix$.csm_snd_time = null
+			</isNull>				
+			<isNotNull property="csmRcvStatus" prepend=",">
+				cs_message$suffix$.csm_rcv_status = #csmRcvStatus#
+			</isNotNull>
+			<isNull property="csmRcvStatus" prepend=",">
+				cs_message$suffix$.csm_rcv_status = null
+			</isNull>				
+			<isNotNull property="csmSndStatus" prepend=",">
+				cs_message$suffix$.csm_snd_status = #csmSndStatus#
+			</isNotNull>
+			<isNull property="csmSndStatus" prepend=",">
+				cs_message$suffix$.csm_snd_status = null
+			</isNull>				
+			<isNotNull property="csmStatus" prepend=",">
+				cs_message$suffix$.csm_status = #csmStatus#
+			</isNotNull>
+			<isNull property="csmStatus" prepend=",">
+				cs_message$suffix$.csm_status = null
+			</isNull>				
+		where
+			csm_id=#csmId#
+	</update>
+	
+	<!-- 更新会员消息非空字段 -->
+	<update id="updateCsMessage$NotNull"  parameterClass="com.ccclubs.model.CsMessage">
+		update cs_message$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmTitle" prepend=",">
+				cs_message$suffix$.csm_title = #csmTitle#
+			</isNotNull>		
+			<isNotNull property="csmContent" prepend=",">
+				cs_message$suffix$.csm_content = #csmContent#
+			</isNotNull>		
+			<isNotNull property="csmRelate" prepend=",">
+				cs_message$suffix$.csm_relate = #csmRelate#
+			</isNotNull>		
+			<isNotNull property="csmObject" prepend=",">
+				cs_message$suffix$.csm_object = #csmObject#
+			</isNotNull>		
+			<isNotNull property="csmAttach" prepend=",">
+				cs_message$suffix$.csm_attach = #csmAttach#
+			</isNotNull>		
+			<isNotNull property="csmReceiver" prepend=",">
+				cs_message$suffix$.csm_receiver = #csmReceiver#
+			</isNotNull>		
+			<isNotNull property="csmSender" prepend=",">
+				cs_message$suffix$.csm_sender = #csmSender#
+			</isNotNull>		
+			<isNotNull property="csmRcvTime" prepend=",">
+				cs_message$suffix$.csm_rcv_time = #csmRcvTime#
+			</isNotNull>		
+			<isNotNull property="csmSndTime" prepend=",">
+				cs_message$suffix$.csm_snd_time = #csmSndTime#
+			</isNotNull>		
+			<isNotNull property="csmRcvStatus" prepend=",">
+				cs_message$suffix$.csm_rcv_status = #csmRcvStatus#
+			</isNotNull>		
+			<isNotNull property="csmSndStatus" prepend=",">
+				cs_message$suffix$.csm_snd_status = #csmSndStatus#
+			</isNotNull>		
+			<isNotNull property="csmStatus" prepend=",">
+				cs_message$suffix$.csm_status = #csmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csm_id=#csmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员消息 -->
+	<delete id="deleteCsMessageById" parameterClass="java.util.HashMap">
+		delete from cs_message$suffix$ where csm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员消息 -->
+	<update id="removeCsMessageById" parameterClass="java.util.HashMap">
+		update cs_message$suffix$ set  cs_message$suffix$.csm_status=-1  where csm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员消息 -->
+	<update id="updateCsMessageBy"  parameterClass="java.util.HashMap">
+		update cs_message$suffix$ set		
+			csm_id=csm_id
+			<isNotNull property="V_csmId" prepend=",">
+				cs_message$suffix$.csm_id = #V_csmId#
+			</isNotNull>		
+			<isNotNull property="V_csmTitle" prepend=",">
+				cs_message$suffix$.csm_title = #V_csmTitle#
+			</isNotNull>		
+			<isNotNull property="V_csmContent" prepend=",">
+				cs_message$suffix$.csm_content = #V_csmContent#
+			</isNotNull>		
+			<isNotNull property="V_csmRelate" prepend=",">
+				cs_message$suffix$.csm_relate = #V_csmRelate#
+			</isNotNull>		
+			<isNotNull property="V_csmObject" prepend=",">
+				cs_message$suffix$.csm_object = #V_csmObject#
+			</isNotNull>		
+			<isNotNull property="V_csmAttach" prepend=",">
+				cs_message$suffix$.csm_attach = #V_csmAttach#
+			</isNotNull>		
+			<isNotNull property="V_csmReceiver" prepend=",">
+				cs_message$suffix$.csm_receiver = #V_csmReceiver#
+			</isNotNull>		
+			<isNotNull property="V_csmSender" prepend=",">
+				cs_message$suffix$.csm_sender = #V_csmSender#
+			</isNotNull>		
+			<isNotNull property="V_csmRcvTime" prepend=",">
+				cs_message$suffix$.csm_rcv_time = #V_csmRcvTime#
+			</isNotNull>		
+			<isNotNull property="V_csmSndTime" prepend=",">
+				cs_message$suffix$.csm_snd_time = #V_csmSndTime#
+			</isNotNull>		
+			<isNotNull property="V_csmRcvStatus" prepend=",">
+				cs_message$suffix$.csm_rcv_status = #V_csmRcvStatus#
+			</isNotNull>		
+			<isNotNull property="V_csmSndStatus" prepend=",">
+				cs_message$suffix$.csm_snd_status = #V_csmSndStatus#
+			</isNotNull>		
+			<isNotNull property="V_csmStatus" prepend=",">
+				cs_message$suffix$.csm_status = #V_csmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.csm_receiver=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_message$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_message$suffix$.csm_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmReceiver"><!-- 调用一下CsmReceiver，把CsMember指向CsmReceiver --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMessage_part.cs_message_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员消息 -->
+	<update id="deleteCsMessageBy"  parameterClass="java.util.HashMap">
+		delete from cs_message$suffix$ where 
+		cs_message$suffix$.csm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMessage_part.cs_message_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

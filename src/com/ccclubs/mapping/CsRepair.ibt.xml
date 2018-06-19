@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆维修之SQL映射 -->
+	<resultMap id="CsRepair" class="com.ccclubs.model.CsRepair">
+		<result property="csrId" column="csr_id"/>
+		<result property="csrHost" column="csr_host"/>
+		<result property="csrProfile" column="csr_profile"/>
+		<result property="csrCar" column="csr_car"/>
+		<result property="csrAdr" column="csr_adr"/>
+		<result property="csrOrder" column="csr_order"/>
+		<result property="csrSender" column="csr_sender"/>
+		<result property="csrInDate" column="csr_in_date"/>
+		<result property="csrOutDate" column="csr_out_date"/>
+		<result property="csrDescript" column="csr_descript"/>
+		<result property="csrRepairNo" column="csr_repair_no"/>
+		<result property="csrMoney" column="csr_money"/>
+		<result property="csrIsSettle" column="csr_is_settle"/>
+		<result property="csrSettleTime" column="csr_settle_time"/>
+		<result property="csrEditor" column="csr_editor"/>
+		<result property="csrAddTime" column="csr_add_time"/>
+		<result property="csrMemo" column="csr_memo"/>
+		<result property="csrStatus" column="csr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆维修 -->
+	<select id="getCsRepairList" resultMap="CsRepair">
+		select cs_repair$suffix$.* from cs_repair$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询-->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.csr_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_repair$suffix$.csr_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRepair_part.cs_repair_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆维修分页 -->
+	<select id="getCsRepairPage" parameterClass="java.util.HashMap" resultMap="CsRepair">
+		select cs_repair$suffix$.* from cs_repair$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询 -->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.csr_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_repair$suffix$.csr_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRepair_part.cs_repair_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆维修总数 -->
+	<select id="getCsRepairEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_repair$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.csr_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_repair$suffix$.csr_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRepair_part.cs_repair_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆维修 -->
+	<select id="getCsRepairById" parameterClass="java.util.HashMap" resultMap="CsRepair">
+		select cs_repair$suffix$.* from cs_repair$suffix$
+		where csr_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆维修 -->
+	<insert id="saveCsRepair"  parameterClass="com.ccclubs.model.CsRepair">
+		insert into cs_repair$suffix$
+		(
+			cs_repair$suffix$.csr_host
+			,cs_repair$suffix$.csr_profile
+			,cs_repair$suffix$.csr_car
+			,cs_repair$suffix$.csr_adr
+			,cs_repair$suffix$.csr_order
+			,cs_repair$suffix$.csr_sender
+			,cs_repair$suffix$.csr_in_date
+			,cs_repair$suffix$.csr_out_date
+			,cs_repair$suffix$.csr_descript
+			,cs_repair$suffix$.csr_repair_no
+			,cs_repair$suffix$.csr_money
+			,cs_repair$suffix$.csr_is_settle
+			,cs_repair$suffix$.csr_settle_time
+			,cs_repair$suffix$.csr_editor
+			,cs_repair$suffix$.csr_add_time
+			,cs_repair$suffix$.csr_memo
+			,cs_repair$suffix$.csr_status
+		)
+		values(
+			<isNotNull property="csrHost" prepend="">
+				#csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrProfile" prepend=",">
+				#csrProfile#
+			</isNotNull>
+			<isNull property="csrProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrCar" prepend=",">
+				#csrCar#
+			</isNotNull>
+			<isNull property="csrCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAdr" prepend=",">
+				#csrAdr#
+			</isNotNull>
+			<isNull property="csrAdr" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrOrder" prepend=",">
+				#csrOrder#
+			</isNotNull>
+			<isNull property="csrOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrSender" prepend=",">
+				#csrSender#
+			</isNotNull>
+			<isNull property="csrSender" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrInDate" prepend=",">
+				#csrInDate#
+			</isNotNull>
+			<isNull property="csrInDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrOutDate" prepend=",">
+				#csrOutDate#
+			</isNotNull>
+			<isNull property="csrOutDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrDescript" prepend=",">
+				#csrDescript#
+			</isNotNull>
+			<isNull property="csrDescript" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRepairNo" prepend=",">
+				#csrRepairNo#
+			</isNotNull>
+			<isNull property="csrRepairNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrMoney" prepend=",">
+				#csrMoney#
+			</isNotNull>
+			<isNull property="csrMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrIsSettle" prepend=",">
+				#csrIsSettle#
+			</isNotNull>
+			<isNull property="csrIsSettle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrSettleTime" prepend=",">
+				#csrSettleTime#
+			</isNotNull>
+			<isNull property="csrSettleTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrEditor" prepend=",">
+				#csrEditor#
+			</isNotNull>
+			<isNull property="csrEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAddTime" prepend=",">
+				#csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrMemo" prepend=",">
+				#csrMemo#
+			</isNotNull>
+			<isNull property="csrMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrStatus" prepend=",">
+				#csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆维修 -->
+	<update id="updateCsRepair"  parameterClass="com.ccclubs.model.CsRepair">
+		update cs_repair$suffix$ set
+			<isNotNull property="csrHost" prepend="">
+				cs_repair$suffix$.csr_host = #csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				cs_repair$suffix$.csr_host = null
+			</isNull>				
+			<isNotNull property="csrProfile" prepend=",">
+				cs_repair$suffix$.csr_profile = #csrProfile#
+			</isNotNull>
+			<isNull property="csrProfile" prepend=",">
+				cs_repair$suffix$.csr_profile = null
+			</isNull>				
+			<isNotNull property="csrCar" prepend=",">
+				cs_repair$suffix$.csr_car = #csrCar#
+			</isNotNull>
+			<isNull property="csrCar" prepend=",">
+				cs_repair$suffix$.csr_car = null
+			</isNull>				
+			<isNotNull property="csrAdr" prepend=",">
+				cs_repair$suffix$.csr_adr = #csrAdr#
+			</isNotNull>
+			<isNull property="csrAdr" prepend=",">
+				cs_repair$suffix$.csr_adr = null
+			</isNull>				
+			<isNotNull property="csrOrder" prepend=",">
+				cs_repair$suffix$.csr_order = #csrOrder#
+			</isNotNull>
+			<isNull property="csrOrder" prepend=",">
+				cs_repair$suffix$.csr_order = null
+			</isNull>				
+			<isNotNull property="csrSender" prepend=",">
+				cs_repair$suffix$.csr_sender = #csrSender#
+			</isNotNull>
+			<isNull property="csrSender" prepend=",">
+				cs_repair$suffix$.csr_sender = null
+			</isNull>				
+			<isNotNull property="csrInDate" prepend=",">
+				cs_repair$suffix$.csr_in_date = #csrInDate#
+			</isNotNull>
+			<isNull property="csrInDate" prepend=",">
+				cs_repair$suffix$.csr_in_date = null
+			</isNull>				
+			<isNotNull property="csrOutDate" prepend=",">
+				cs_repair$suffix$.csr_out_date = #csrOutDate#
+			</isNotNull>
+			<isNull property="csrOutDate" prepend=",">
+				cs_repair$suffix$.csr_out_date = null
+			</isNull>				
+			<isNotNull property="csrDescript" prepend=",">
+				cs_repair$suffix$.csr_descript = #csrDescript#
+			</isNotNull>
+			<isNull property="csrDescript" prepend=",">
+				cs_repair$suffix$.csr_descript = null
+			</isNull>				
+			<isNotNull property="csrRepairNo" prepend=",">
+				cs_repair$suffix$.csr_repair_no = #csrRepairNo#
+			</isNotNull>
+			<isNull property="csrRepairNo" prepend=",">
+				cs_repair$suffix$.csr_repair_no = null
+			</isNull>				
+			<isNotNull property="csrMoney" prepend=",">
+				cs_repair$suffix$.csr_money = #csrMoney#
+			</isNotNull>
+			<isNull property="csrMoney" prepend=",">
+				cs_repair$suffix$.csr_money = null
+			</isNull>				
+			<isNotNull property="csrIsSettle" prepend=",">
+				cs_repair$suffix$.csr_is_settle = #csrIsSettle#
+			</isNotNull>
+			<isNull property="csrIsSettle" prepend=",">
+				cs_repair$suffix$.csr_is_settle = null
+			</isNull>				
+			<isNotNull property="csrSettleTime" prepend=",">
+				cs_repair$suffix$.csr_settle_time = #csrSettleTime#
+			</isNotNull>
+			<isNull property="csrSettleTime" prepend=",">
+				cs_repair$suffix$.csr_settle_time = null
+			</isNull>				
+			<isNotNull property="csrEditor" prepend=",">
+				cs_repair$suffix$.csr_editor = #csrEditor#
+			</isNotNull>
+			<isNull property="csrEditor" prepend=",">
+				cs_repair$suffix$.csr_editor = null
+			</isNull>				
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_repair$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				cs_repair$suffix$.csr_add_time = null
+			</isNull>				
+			<isNotNull property="csrMemo" prepend=",">
+				cs_repair$suffix$.csr_memo = #csrMemo#
+			</isNotNull>
+			<isNull property="csrMemo" prepend=",">
+				cs_repair$suffix$.csr_memo = null
+			</isNull>				
+			<isNotNull property="csrStatus" prepend=",">
+				cs_repair$suffix$.csr_status = #csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				cs_repair$suffix$.csr_status = null
+			</isNull>				
+		where
+			csr_id=#csrId#
+	</update>
+	
+	<!-- 更新车辆维修非空字段 -->
+	<update id="updateCsRepair$NotNull"  parameterClass="com.ccclubs.model.CsRepair">
+		update cs_repair$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrHost" prepend=",">
+				cs_repair$suffix$.csr_host = #csrHost#
+			</isNotNull>		
+			<isNotNull property="csrProfile" prepend=",">
+				cs_repair$suffix$.csr_profile = #csrProfile#
+			</isNotNull>		
+			<isNotNull property="csrCar" prepend=",">
+				cs_repair$suffix$.csr_car = #csrCar#
+			</isNotNull>		
+			<isNotNull property="csrAdr" prepend=",">
+				cs_repair$suffix$.csr_adr = #csrAdr#
+			</isNotNull>		
+			<isNotNull property="csrOrder" prepend=",">
+				cs_repair$suffix$.csr_order = #csrOrder#
+			</isNotNull>		
+			<isNotNull property="csrSender" prepend=",">
+				cs_repair$suffix$.csr_sender = #csrSender#
+			</isNotNull>		
+			<isNotNull property="csrInDate" prepend=",">
+				cs_repair$suffix$.csr_in_date = #csrInDate#
+			</isNotNull>		
+			<isNotNull property="csrOutDate" prepend=",">
+				cs_repair$suffix$.csr_out_date = #csrOutDate#
+			</isNotNull>		
+			<isNotNull property="csrDescript" prepend=",">
+				cs_repair$suffix$.csr_descript = #csrDescript#
+			</isNotNull>		
+			<isNotNull property="csrRepairNo" prepend=",">
+				cs_repair$suffix$.csr_repair_no = #csrRepairNo#
+			</isNotNull>		
+			<isNotNull property="csrMoney" prepend=",">
+				cs_repair$suffix$.csr_money = #csrMoney#
+			</isNotNull>		
+			<isNotNull property="csrIsSettle" prepend=",">
+				cs_repair$suffix$.csr_is_settle = #csrIsSettle#
+			</isNotNull>		
+			<isNotNull property="csrSettleTime" prepend=",">
+				cs_repair$suffix$.csr_settle_time = #csrSettleTime#
+			</isNotNull>		
+			<isNotNull property="csrEditor" prepend=",">
+				cs_repair$suffix$.csr_editor = #csrEditor#
+			</isNotNull>		
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_repair$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>		
+			<isNotNull property="csrMemo" prepend=",">
+				cs_repair$suffix$.csr_memo = #csrMemo#
+			</isNotNull>		
+			<isNotNull property="csrStatus" prepend=",">
+				cs_repair$suffix$.csr_status = #csrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csr_id=#csrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆维修 -->
+	<delete id="deleteCsRepairById" parameterClass="java.util.HashMap">
+		delete from cs_repair$suffix$ where csr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆维修 -->
+	<update id="removeCsRepairById" parameterClass="java.util.HashMap">
+		update cs_repair$suffix$ set  cs_repair$suffix$.csr_status=-1  where csr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆维修 -->
+	<update id="updateCsRepairBy"  parameterClass="java.util.HashMap">
+		update cs_repair$suffix$ set		
+			csr_id=csr_id
+			<isNotNull property="V_csrId" prepend=",">
+				cs_repair$suffix$.csr_id = #V_csrId#
+			</isNotNull>		
+			<isNotNull property="V_csrHost" prepend=",">
+				cs_repair$suffix$.csr_host = #V_csrHost#
+			</isNotNull>		
+			<isNotNull property="V_csrProfile" prepend=",">
+				cs_repair$suffix$.csr_profile = #V_csrProfile#
+			</isNotNull>		
+			<isNotNull property="V_csrCar" prepend=",">
+				cs_repair$suffix$.csr_car = #V_csrCar#
+			</isNotNull>		
+			<isNotNull property="V_csrAdr" prepend=",">
+				cs_repair$suffix$.csr_adr = #V_csrAdr#
+			</isNotNull>		
+			<isNotNull property="V_csrOrder" prepend=",">
+				cs_repair$suffix$.csr_order = #V_csrOrder#
+			</isNotNull>		
+			<isNotNull property="V_csrSender" prepend=",">
+				cs_repair$suffix$.csr_sender = #V_csrSender#
+			</isNotNull>		
+			<isNotNull property="V_csrInDate" prepend=",">
+				cs_repair$suffix$.csr_in_date = #V_csrInDate#
+			</isNotNull>		
+			<isNotNull property="V_csrOutDate" prepend=",">
+				cs_repair$suffix$.csr_out_date = #V_csrOutDate#
+			</isNotNull>		
+			<isNotNull property="V_csrDescript" prepend=",">
+				cs_repair$suffix$.csr_descript = #V_csrDescript#
+			</isNotNull>		
+			<isNotNull property="V_csrRepairNo" prepend=",">
+				cs_repair$suffix$.csr_repair_no = #V_csrRepairNo#
+			</isNotNull>		
+			<isNotNull property="V_csrMoney" prepend=",">
+				cs_repair$suffix$.csr_money = #V_csrMoney#
+			</isNotNull>		
+			<isNotNull property="V_csrIsSettle" prepend=",">
+				cs_repair$suffix$.csr_is_settle = #V_csrIsSettle#
+			</isNotNull>		
+			<isNotNull property="V_csrSettleTime" prepend=",">
+				cs_repair$suffix$.csr_settle_time = #V_csrSettleTime#
+			</isNotNull>		
+			<isNotNull property="V_csrEditor" prepend=",">
+				cs_repair$suffix$.csr_editor = #V_csrEditor#
+			</isNotNull>		
+			<isNotNull property="V_csrAddTime" prepend=",">
+				cs_repair$suffix$.csr_add_time = #V_csrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csrMemo" prepend=",">
+				cs_repair$suffix$.csr_memo = #V_csrMemo#
+			</isNotNull>		
+			<isNotNull property="V_csrStatus" prepend=",">
+				cs_repair$suffix$.csr_status = #V_csrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_repair$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询-->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.csr_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_repair$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_repair$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_repair$suffix$.csr_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CsrAdr"><!-- 调用一下CsrAdr，把CsRepairAdr指向CsrAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRepair_part.cs_repair_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆维修 -->
+	<update id="deleteCsRepairBy"  parameterClass="java.util.HashMap">
+		delete from cs_repair$suffix$ where 
+		cs_repair$suffix$.csr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRepair_part.cs_repair_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

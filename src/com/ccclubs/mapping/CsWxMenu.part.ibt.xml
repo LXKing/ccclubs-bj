@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsWxMenu_part">	
+	<!-- 微信菜单条件sql片段  -->
+	<sql id="cs_wx_menu_dynamic">
+		<dynamic>
+			<isNotEmpty property="cswmId" prepend="and">
+			    $cswmIdNot$ cs_wx_menu$suffix$.cswm_id = #cswmId#
+			</isNotEmpty>
+			<isNotNull property="cswmIdNot" prepend="and">
+				<isEmpty property="cswmId">
+				$cswmIdNot$ cs_wx_menu$suffix$.cswm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmName" prepend="and">			    
+			    (<isNotNull property="cswmNameNot">
+			    cs_wx_menu$suffix$.cswm_name is null or length(cs_wx_menu$suffix$.cswm_name) &lt; 1 or
+			    </isNotNull>$cswmNameNot$ cs_wx_menu$suffix$.cswm_name = #cswmName#)
+			</isNotEmpty>
+			<isNotNull property="cswmNameNot" prepend="and">
+				<isEmpty property="cswmName">
+				$cswmNameNot$ (cs_wx_menu$suffix$.cswm_name is null or length(cs_wx_menu$suffix$.cswm_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmParent" prepend="and">
+			    $cswmParentNot$ cs_wx_menu$suffix$.cswm_parent = #cswmParent#
+			</isNotEmpty>
+			<isNotNull property="cswmParentNot" prepend="and">
+				<isEmpty property="cswmParent">
+				$cswmParentNot$ cs_wx_menu$suffix$.cswm_parent is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmType" prepend="and">
+			    $cswmTypeNot$ cs_wx_menu$suffix$.cswm_type = #cswmType#
+			</isNotEmpty>
+			<isNotNull property="cswmTypeNot" prepend="and">
+				<isEmpty property="cswmType">
+				$cswmTypeNot$ cs_wx_menu$suffix$.cswm_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmSupport" prepend="and">			    
+			    (<isNotNull property="cswmSupportNot">
+			    cs_wx_menu$suffix$.cswm_support is null or length(cs_wx_menu$suffix$.cswm_support) &lt; 1 or
+			    </isNotNull>$cswmSupportNot$ cs_wx_menu$suffix$.cswm_support like #cswmSupport#)
+			</isNotEmpty>
+			<isNotNull property="cswmSupportNot" prepend="and">
+				<isEmpty property="cswmSupport">
+				$cswmSupportNot$ (cs_wx_menu$suffix$.cswm_support is null or length(cs_wx_menu$suffix$.cswm_support) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmUrlKey" prepend="and">			    
+			    (<isNotNull property="cswmUrlKeyNot">
+			    cs_wx_menu$suffix$.cswm_url_key is null or length(cs_wx_menu$suffix$.cswm_url_key) &lt; 1 or
+			    </isNotNull>$cswmUrlKeyNot$ cs_wx_menu$suffix$.cswm_url_key = #cswmUrlKey#)
+			</isNotEmpty>
+			<isNotNull property="cswmUrlKeyNot" prepend="and">
+				<isEmpty property="cswmUrlKey">
+				$cswmUrlKeyNot$ (cs_wx_menu$suffix$.cswm_url_key is null or length(cs_wx_menu$suffix$.cswm_url_key) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmLevel" prepend="and">
+			    $cswmLevelNot$ cs_wx_menu$suffix$.cswm_level = #cswmLevel#
+			</isNotEmpty>
+			<isNotNull property="cswmLevelNot" prepend="and">
+				<isEmpty property="cswmLevel">
+				$cswmLevelNot$ cs_wx_menu$suffix$.cswm_level is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmTimeStart" prepend="and">
+			    $cswmTimeNot$   (cs_wx_menu$suffix$.cswm_time &gt;= #cswmTimeStart#
+			   <isEmpty property="cswmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswmTimeEnd" prepend="and">
+				<isEmpty property="cswmTimeStart">$cswmTimeNot$   (</isEmpty>
+			    cs_wx_menu$suffix$.cswm_time &lt;= #cswmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cswmTime" prepend="and">
+			    $cswmTimeNot$ cs_wx_menu$suffix$.cswm_time = #cswmTime#
+			</isNotEmpty>
+			<isNotNull property="cswmTimeNot" prepend="and">
+				<isEmpty property="cswmTimeStart"><isEmpty property="cswmTimeEnd"><isEmpty property="cswmTime">
+				$cswmTimeNot$ cs_wx_menu$suffix$.cswm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmStatus" prepend="and">
+			    $cswmStatusNot$ cs_wx_menu$suffix$.cswm_status = #cswmStatus#
+			</isNotEmpty>
+			<isNotNull property="cswmStatusNot" prepend="and">
+				<isEmpty property="cswmStatus">
+				$cswmStatusNot$ cs_wx_menu$suffix$.cswm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 微信菜单left join 条件sql片段 -->
+	<sql id="cs_wx_menu_join">
+		<dynamic>
+			<isNotEmpty property="CsWxMenu.cswmId" prepend="and">
+			    $CsWxMenu.cswmIdNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_id = #CsWxMenu.cswmId#
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmIdNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmId">
+				$cswmIdNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmName" prepend="and">
+				(<isNotNull property="CsWxMenu.cswmNameNot">
+			    cs_wx_menu$CsWxMenu.suffix$.cswm_name is null or length(cs_wx_menu$CsWxMenu.suffix$.cswm_name) &lt; 1 or
+			    </isNotNull>$CsWxMenu.cswmNameNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_name = #CsWxMenu.cswmName#)
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmNameNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmName">
+				$cswmNameNot$ (cs_wx_menu$CsWxMenu.suffix$.cswm_name is null or length(cs_wx_menu$CsWxMenu.suffix$.cswm_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmParent" prepend="and">
+			    $CsWxMenu.cswmParentNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_parent = #CsWxMenu.cswmParent#
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmParentNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmParent">
+				$cswmParentNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_parent is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmType" prepend="and">
+			    $CsWxMenu.cswmTypeNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_type = #CsWxMenu.cswmType#
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmTypeNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmType">
+				$cswmTypeNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmSupport" prepend="and">
+				(<isNotNull property="CsWxMenu.cswmSupportNot">
+			    cs_wx_menu$CsWxMenu.suffix$.cswm_support is null or length(cs_wx_menu$CsWxMenu.suffix$.cswm_support) &lt; 1 or
+			    </isNotNull>$CsWxMenu.cswmSupportNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_support like #CsWxMenu.cswmSupport#)
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmSupportNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmSupport">
+				$cswmSupportNot$ (cs_wx_menu$CsWxMenu.suffix$.cswm_support is null or length(cs_wx_menu$CsWxMenu.suffix$.cswm_support) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmUrlKey" prepend="and">
+				(<isNotNull property="CsWxMenu.cswmUrlKeyNot">
+			    cs_wx_menu$CsWxMenu.suffix$.cswm_url_key is null or length(cs_wx_menu$CsWxMenu.suffix$.cswm_url_key) &lt; 1 or
+			    </isNotNull>$CsWxMenu.cswmUrlKeyNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_url_key = #CsWxMenu.cswmUrlKey#)
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmUrlKeyNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmUrlKey">
+				$cswmUrlKeyNot$ (cs_wx_menu$CsWxMenu.suffix$.cswm_url_key is null or length(cs_wx_menu$CsWxMenu.suffix$.cswm_url_key) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmLevel" prepend="and">
+			    $CsWxMenu.cswmLevelNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_level = #CsWxMenu.cswmLevel#
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmLevelNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmLevel">
+				$cswmLevelNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_level is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmTimeStart" prepend="and">
+			    $CsWxMenu.cswmTimeNot$   (cs_wx_menu$CsWxMenu.suffix$.cswm_time &gt;= #CsWxMenu.cswmTimeStart#
+			   <isEmpty property="CsWxMenu.cswmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMenu.cswmTimeEnd" prepend="and">
+				<isEmpty property="CsWxMenu.cswmTimeStart">$CsWxMenu.cswmTimeNot$   (</isEmpty>
+			    cs_wx_menu$CsWxMenu.suffix$.cswm_time &lt;= #CsWxMenu.cswmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMenu.cswmTime" prepend="and">
+			    $CsWxMenu.cswmTimeNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_time = #CsWxMenu.cswmTime#
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmTimeNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmTimeStart"><isEmpty property="CsWxMenu.cswmTimeEnd"><isEmpty property="CsWxMenu.cswmTime">
+				$cswmTimeNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMenu.cswmStatus" prepend="and">
+			    $CsWxMenu.cswmStatusNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_status = #CsWxMenu.cswmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsWxMenu.cswmStatusNot" prepend="and">
+				<isEmpty property="CsWxMenu.cswmStatus">
+				$cswmStatusNot$ cs_wx_menu$CsWxMenu.suffix$.cswm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

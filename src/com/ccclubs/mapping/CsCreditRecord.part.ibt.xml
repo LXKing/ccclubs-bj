@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCreditRecord_part">	
+	<!-- 信用记录条件sql片段  -->
+	<sql id="cs_credit_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscrId" prepend="and">
+			    $cscrIdNot$ cs_credit_record$suffix$.cscr_id = #cscrId#
+			</isNotEmpty>
+			<isNotNull property="cscrIdNot" prepend="and">
+				<isEmpty property="cscrId">
+				$cscrIdNot$ cs_credit_record$suffix$.cscr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrTitle" prepend="and">			    
+			    (<isNotNull property="cscrTitleNot">
+			    cs_credit_record$suffix$.cscr_title is null or length(cs_credit_record$suffix$.cscr_title) &lt; 1 or
+			    </isNotNull>$cscrTitleNot$ cs_credit_record$suffix$.cscr_title like #cscrTitle#)
+			</isNotEmpty>
+			<isNotNull property="cscrTitleNot" prepend="and">
+				<isEmpty property="cscrTitle">
+				$cscrTitleNot$ (cs_credit_record$suffix$.cscr_title is null or length(cs_credit_record$suffix$.cscr_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrMember" prepend="and">
+			    $cscrMemberNot$ cs_credit_record$suffix$.cscr_member = #cscrMember#
+			</isNotEmpty>
+			<isNotNull property="cscrMemberNot" prepend="and">
+				<isEmpty property="cscrMember">
+				$cscrMemberNot$ cs_credit_record$suffix$.cscr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrValueMin" prepend="and">
+			    $cscrValueNot$  ( cs_credit_record$suffix$.cscr_value &gt;= #cscrValueMin#
+			    <isEmpty property="cscrValueMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscrValueMax" prepend="and">
+				<isEmpty property="cscrValueMin">$cscrValueNot$   (</isEmpty>
+			    cs_credit_record$suffix$.cscr_value &lt;= #cscrValueMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscrValue" prepend="and">
+			    $cscrValueNot$ cs_credit_record$suffix$.cscr_value = #cscrValue#
+			</isNotEmpty>
+			<isNotNull property="cscrValueNot" prepend="and">
+				<isEmpty property="cscrValueMax"><isEmpty property="cscrValueMin"><isEmpty property="cscrValue">
+				$cscrValueNot$ cs_credit_record$suffix$.cscr_value is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscrUpdateTimeStart" prepend="and">
+			    $cscrUpdateTimeNot$   (cs_credit_record$suffix$.cscr_update_time &gt;= #cscrUpdateTimeStart#
+			   <isEmpty property="cscrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscrUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscrUpdateTimeStart">$cscrUpdateTimeNot$   (</isEmpty>
+			    cs_credit_record$suffix$.cscr_update_time &lt;= #cscrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscrUpdateTime" prepend="and">
+			    $cscrUpdateTimeNot$ cs_credit_record$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscrUpdateTimeNot" prepend="and">
+				<isEmpty property="cscrUpdateTimeStart"><isEmpty property="cscrUpdateTimeEnd"><isEmpty property="cscrUpdateTime">
+				$cscrUpdateTimeNot$ cs_credit_record$suffix$.cscr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrAddTimeStart" prepend="and">
+			    $cscrAddTimeNot$   (cs_credit_record$suffix$.cscr_add_time &gt;= #cscrAddTimeStart#
+			   <isEmpty property="cscrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscrAddTimeEnd" prepend="and">
+				<isEmpty property="cscrAddTimeStart">$cscrAddTimeNot$   (</isEmpty>
+			    cs_credit_record$suffix$.cscr_add_time &lt;= #cscrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscrAddTime" prepend="and">
+			    $cscrAddTimeNot$ cs_credit_record$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscrAddTimeNot" prepend="and">
+				<isEmpty property="cscrAddTimeStart"><isEmpty property="cscrAddTimeEnd"><isEmpty property="cscrAddTime">
+				$cscrAddTimeNot$ cs_credit_record$suffix$.cscr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscrStatus" prepend="and">
+			    $cscrStatusNot$ cs_credit_record$suffix$.cscr_status = #cscrStatus#
+			</isNotEmpty>
+			<isNotNull property="cscrStatusNot" prepend="and">
+				<isEmpty property="cscrStatus">
+				$cscrStatusNot$ cs_credit_record$suffix$.cscr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 信用记录left join 条件sql片段 -->
+	<sql id="cs_credit_record_join">
+		<dynamic>
+			<isNotEmpty property="CsCreditRecord.cscrId" prepend="and">
+			    $CsCreditRecord.cscrIdNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_id = #CsCreditRecord.cscrId#
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrIdNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrId">
+				$cscrIdNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditRecord.cscrTitle" prepend="and">
+				(<isNotNull property="CsCreditRecord.cscrTitleNot">
+			    cs_credit_record$CsCreditRecord.suffix$.cscr_title is null or length(cs_credit_record$CsCreditRecord.suffix$.cscr_title) &lt; 1 or
+			    </isNotNull>$CsCreditRecord.cscrTitleNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_title like #CsCreditRecord.cscrTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrTitleNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrTitle">
+				$cscrTitleNot$ (cs_credit_record$CsCreditRecord.suffix$.cscr_title is null or length(cs_credit_record$CsCreditRecord.suffix$.cscr_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditRecord.cscrMember" prepend="and">
+			    $CsCreditRecord.cscrMemberNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_member = #CsCreditRecord.cscrMember#
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrMemberNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrMember">
+				$cscrMemberNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditRecord.cscrValueMin" prepend="and">
+			    $CsCreditRecord.cscrValueNot$  ( cs_credit_record$CsCreditRecord.suffix$.cscr_value &gt;= #CsCreditRecord.cscrValueMin#
+			    <isEmpty property="CsCreditRecord.cscrValueMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditRecord.cscrValueMax" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrValueMin">$CsCreditRecord.cscrValueNot$   (</isEmpty>
+			    cs_credit_record$CsCreditRecord.suffix$.cscr_value &lt;= #CsCreditRecord.cscrValueMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditRecord.cscrValue" prepend="and">
+			    $CsCreditRecord.cscrValueNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_value = #CsCreditRecord.cscrValue#
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrValueNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrValueMax"><isEmpty property="CsCreditRecord.cscrValueMin"><isEmpty property="CsCreditRecord.cscrValue">
+				$cscrValueNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_value is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditRecord.cscrUpdateTimeStart" prepend="and">
+			    $CsCreditRecord.cscrUpdateTimeNot$   (cs_credit_record$CsCreditRecord.suffix$.cscr_update_time &gt;= #CsCreditRecord.cscrUpdateTimeStart#
+			   <isEmpty property="CsCreditRecord.cscrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditRecord.cscrUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrUpdateTimeStart">$CsCreditRecord.cscrUpdateTimeNot$   (</isEmpty>
+			    cs_credit_record$CsCreditRecord.suffix$.cscr_update_time &lt;= #CsCreditRecord.cscrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditRecord.cscrUpdateTime" prepend="and">
+			    $CsCreditRecord.cscrUpdateTimeNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_update_time = #CsCreditRecord.cscrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrUpdateTimeNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrUpdateTimeStart"><isEmpty property="CsCreditRecord.cscrUpdateTimeEnd"><isEmpty property="CsCreditRecord.cscrUpdateTime">
+				$cscrUpdateTimeNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditRecord.cscrAddTimeStart" prepend="and">
+			    $CsCreditRecord.cscrAddTimeNot$   (cs_credit_record$CsCreditRecord.suffix$.cscr_add_time &gt;= #CsCreditRecord.cscrAddTimeStart#
+			   <isEmpty property="CsCreditRecord.cscrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditRecord.cscrAddTimeEnd" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrAddTimeStart">$CsCreditRecord.cscrAddTimeNot$   (</isEmpty>
+			    cs_credit_record$CsCreditRecord.suffix$.cscr_add_time &lt;= #CsCreditRecord.cscrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditRecord.cscrAddTime" prepend="and">
+			    $CsCreditRecord.cscrAddTimeNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_add_time = #CsCreditRecord.cscrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrAddTimeNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrAddTimeStart"><isEmpty property="CsCreditRecord.cscrAddTimeEnd"><isEmpty property="CsCreditRecord.cscrAddTime">
+				$cscrAddTimeNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditRecord.cscrStatus" prepend="and">
+			    $CsCreditRecord.cscrStatusNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_status = #CsCreditRecord.cscrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCreditRecord.cscrStatusNot" prepend="and">
+				<isEmpty property="CsCreditRecord.cscrStatus">
+				$cscrStatusNot$ cs_credit_record$CsCreditRecord.suffix$.cscr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

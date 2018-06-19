@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 企业信息之SQL映射 -->
+	<resultMap id="CsUnitInfo" class="com.ccclubs.model.CsUnitInfo">
+		<result property="csuiId" column="csui_id"/>
+		<result property="csuiHost" column="csui_host"/>
+		<result property="csuiName" column="csui_name"/>
+		<result property="csuiPerson" column="csui_person"/>
+		<result property="csuiType" column="csui_type"/>
+		<result property="csuiAddress" column="csui_address"/>
+		<result property="csuiContact" column="csui_contact"/>
+		<result property="csuiMember" column="csui_member"/>
+		<result property="csuiOutlets" column="csui_outlets"/>
+		<result property="csuiFeeType" column="csui_fee_type"/>
+		<result property="csuiSettleType" column="csui_settle_type"/>
+		<result property="csuiUpdateTime" column="csui_update_time"/>
+		<result property="csuiAddTime" column="csui_add_time"/>
+		<result property="csuiRemark" column="csui_remark"/>
+		<result property="csuiStatus" column="csui_status"/>
+		<result property="csuiArea" column="csui_area"/>
+	</resultMap>
+		
+	<!-- 获取所有企业信息 -->
+	<select id="getCsUnitInfoList" resultMap="CsUnitInfo">
+		select cs_unit_info$suffix$.* from cs_unit_info$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.csui_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询-->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.csui_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询-->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.csui_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询-->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.csui_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_info$suffix$.csui_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询条件sql片段 -->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询条件sql片段 -->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询条件sql片段 -->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitInfo_part.cs_unit_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csui_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取企业信息分页 -->
+	<select id="getCsUnitInfoPage" parameterClass="java.util.HashMap" resultMap="CsUnitInfo">
+		select cs_unit_info$suffix$.* from cs_unit_info$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.csui_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询-->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.csui_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询-->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.csui_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询-->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.csui_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_info$suffix$.csui_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询条件sql片段 -->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询条件sql片段 -->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询条件sql片段 -->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitInfo_part.cs_unit_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csui_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取企业信息总数 -->
+	<select id="getCsUnitInfoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_info$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.csui_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询-->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.csui_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询-->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.csui_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询-->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.csui_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_info$suffix$.csui_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询条件sql片段 -->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询条件sql片段 -->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询条件sql片段 -->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitInfo_part.cs_unit_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取企业信息 -->
+	<select id="getCsUnitInfoById" parameterClass="java.util.HashMap" resultMap="CsUnitInfo">
+		select cs_unit_info$suffix$.* from cs_unit_info$suffix$
+		where csui_id=#id#
+	</select>
+	
+		
+	<!-- 保存企业信息 -->
+	<insert id="saveCsUnitInfo"  parameterClass="com.ccclubs.model.CsUnitInfo">
+		insert into cs_unit_info$suffix$
+		(
+			cs_unit_info$suffix$.csui_host
+			,cs_unit_info$suffix$.csui_name
+			,cs_unit_info$suffix$.csui_person
+			,cs_unit_info$suffix$.csui_type
+			,cs_unit_info$suffix$.csui_address
+			,cs_unit_info$suffix$.csui_contact
+			,cs_unit_info$suffix$.csui_member
+			,cs_unit_info$suffix$.csui_outlets
+			,cs_unit_info$suffix$.csui_fee_type
+			,cs_unit_info$suffix$.csui_settle_type
+			,cs_unit_info$suffix$.csui_update_time
+			,cs_unit_info$suffix$.csui_add_time
+			,cs_unit_info$suffix$.csui_remark
+			,cs_unit_info$suffix$.csui_status
+			,cs_unit_info$suffix$.csui_area
+		)
+		values(
+			<isNotNull property="csuiHost" prepend="">
+				#csuiHost#
+			</isNotNull>
+			<isNull property="csuiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csuiName" prepend=",">
+				#csuiName#
+			</isNotNull>
+			<isNull property="csuiName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiPerson" prepend=",">
+				#csuiPerson#
+			</isNotNull>
+			<isNull property="csuiPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiType" prepend=",">
+				#csuiType#
+			</isNotNull>
+			<isNull property="csuiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiAddress" prepend=",">
+				#csuiAddress#
+			</isNotNull>
+			<isNull property="csuiAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiContact" prepend=",">
+				#csuiContact#
+			</isNotNull>
+			<isNull property="csuiContact" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiMember" prepend=",">
+				#csuiMember#
+			</isNotNull>
+			<isNull property="csuiMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiOutlets" prepend=",">
+				#csuiOutlets#
+			</isNotNull>
+			<isNull property="csuiOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiFeeType" prepend=",">
+				#csuiFeeType#
+			</isNotNull>
+			<isNull property="csuiFeeType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiSettleType" prepend=",">
+				#csuiSettleType#
+			</isNotNull>
+			<isNull property="csuiSettleType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiUpdateTime" prepend=",">
+				#csuiUpdateTime#
+			</isNotNull>
+			<isNull property="csuiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiAddTime" prepend=",">
+				#csuiAddTime#
+			</isNotNull>
+			<isNull property="csuiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiRemark" prepend=",">
+				#csuiRemark#
+			</isNotNull>
+			<isNull property="csuiRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiStatus" prepend=",">
+				#csuiStatus#
+			</isNotNull>
+			<isNull property="csuiStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuiArea" prepend=",">
+				#csuiArea#
+			</isNotNull>
+			<isNull property="csuiArea" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新企业信息 -->
+	<update id="updateCsUnitInfo"  parameterClass="com.ccclubs.model.CsUnitInfo">
+		update cs_unit_info$suffix$ set
+			<isNotNull property="csuiHost" prepend="">
+				cs_unit_info$suffix$.csui_host = #csuiHost#
+			</isNotNull>
+			<isNull property="csuiHost" prepend="">
+				cs_unit_info$suffix$.csui_host = null
+			</isNull>				
+			<isNotNull property="csuiName" prepend=",">
+				cs_unit_info$suffix$.csui_name = #csuiName#
+			</isNotNull>
+			<isNull property="csuiName" prepend=",">
+				cs_unit_info$suffix$.csui_name = null
+			</isNull>				
+			<isNotNull property="csuiPerson" prepend=",">
+				cs_unit_info$suffix$.csui_person = #csuiPerson#
+			</isNotNull>
+			<isNull property="csuiPerson" prepend=",">
+				cs_unit_info$suffix$.csui_person = null
+			</isNull>				
+			<isNotNull property="csuiType" prepend=",">
+				cs_unit_info$suffix$.csui_type = #csuiType#
+			</isNotNull>
+			<isNull property="csuiType" prepend=",">
+				cs_unit_info$suffix$.csui_type = null
+			</isNull>				
+			<isNotNull property="csuiAddress" prepend=",">
+				cs_unit_info$suffix$.csui_address = #csuiAddress#
+			</isNotNull>
+			<isNull property="csuiAddress" prepend=",">
+				cs_unit_info$suffix$.csui_address = null
+			</isNull>				
+			<isNotNull property="csuiContact" prepend=",">
+				cs_unit_info$suffix$.csui_contact = #csuiContact#
+			</isNotNull>
+			<isNull property="csuiContact" prepend=",">
+				cs_unit_info$suffix$.csui_contact = null
+			</isNull>				
+			<isNotNull property="csuiMember" prepend=",">
+				cs_unit_info$suffix$.csui_member = #csuiMember#
+			</isNotNull>
+			<isNull property="csuiMember" prepend=",">
+				cs_unit_info$suffix$.csui_member = null
+			</isNull>				
+			<isNotNull property="csuiOutlets" prepend=",">
+				cs_unit_info$suffix$.csui_outlets = #csuiOutlets#
+			</isNotNull>
+			<isNull property="csuiOutlets" prepend=",">
+				cs_unit_info$suffix$.csui_outlets = null
+			</isNull>				
+			<isNotNull property="csuiFeeType" prepend=",">
+				cs_unit_info$suffix$.csui_fee_type = #csuiFeeType#
+			</isNotNull>
+			<isNull property="csuiFeeType" prepend=",">
+				cs_unit_info$suffix$.csui_fee_type = null
+			</isNull>				
+			<isNotNull property="csuiSettleType" prepend=",">
+				cs_unit_info$suffix$.csui_settle_type = #csuiSettleType#
+			</isNotNull>
+			<isNull property="csuiSettleType" prepend=",">
+				cs_unit_info$suffix$.csui_settle_type = null
+			</isNull>				
+			<isNotNull property="csuiUpdateTime" prepend=",">
+				cs_unit_info$suffix$.csui_update_time = #csuiUpdateTime#
+			</isNotNull>
+			<isNull property="csuiUpdateTime" prepend=",">
+				cs_unit_info$suffix$.csui_update_time = null
+			</isNull>				
+			<isNotNull property="csuiAddTime" prepend=",">
+				cs_unit_info$suffix$.csui_add_time = #csuiAddTime#
+			</isNotNull>
+			<isNull property="csuiAddTime" prepend=",">
+				cs_unit_info$suffix$.csui_add_time = null
+			</isNull>				
+			<isNotNull property="csuiRemark" prepend=",">
+				cs_unit_info$suffix$.csui_remark = #csuiRemark#
+			</isNotNull>
+			<isNull property="csuiRemark" prepend=",">
+				cs_unit_info$suffix$.csui_remark = null
+			</isNull>				
+			<isNotNull property="csuiStatus" prepend=",">
+				cs_unit_info$suffix$.csui_status = #csuiStatus#
+			</isNotNull>
+			<isNull property="csuiStatus" prepend=",">
+				cs_unit_info$suffix$.csui_status = null
+			</isNull>				
+			<isNotNull property="csuiArea" prepend=",">
+				cs_unit_info$suffix$.csui_area = #csuiArea#
+			</isNotNull>
+			<isNull property="csuiArea" prepend=",">
+				cs_unit_info$suffix$.csui_area = null
+			</isNull>				
+		where
+			csui_id=#csuiId#
+	</update>
+	
+	<!-- 更新企业信息非空字段 -->
+	<update id="updateCsUnitInfo$NotNull"  parameterClass="com.ccclubs.model.CsUnitInfo">
+		update cs_unit_info$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csuiHost" prepend=",">
+				cs_unit_info$suffix$.csui_host = #csuiHost#
+			</isNotNull>		
+			<isNotNull property="csuiName" prepend=",">
+				cs_unit_info$suffix$.csui_name = #csuiName#
+			</isNotNull>		
+			<isNotNull property="csuiPerson" prepend=",">
+				cs_unit_info$suffix$.csui_person = #csuiPerson#
+			</isNotNull>		
+			<isNotNull property="csuiType" prepend=",">
+				cs_unit_info$suffix$.csui_type = #csuiType#
+			</isNotNull>		
+			<isNotNull property="csuiAddress" prepend=",">
+				cs_unit_info$suffix$.csui_address = #csuiAddress#
+			</isNotNull>		
+			<isNotNull property="csuiContact" prepend=",">
+				cs_unit_info$suffix$.csui_contact = #csuiContact#
+			</isNotNull>		
+			<isNotNull property="csuiMember" prepend=",">
+				cs_unit_info$suffix$.csui_member = #csuiMember#
+			</isNotNull>		
+			<isNotNull property="csuiOutlets" prepend=",">
+				cs_unit_info$suffix$.csui_outlets = #csuiOutlets#
+			</isNotNull>		
+			<isNotNull property="csuiFeeType" prepend=",">
+				cs_unit_info$suffix$.csui_fee_type = #csuiFeeType#
+			</isNotNull>		
+			<isNotNull property="csuiSettleType" prepend=",">
+				cs_unit_info$suffix$.csui_settle_type = #csuiSettleType#
+			</isNotNull>		
+			<isNotNull property="csuiUpdateTime" prepend=",">
+				cs_unit_info$suffix$.csui_update_time = #csuiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csuiAddTime" prepend=",">
+				cs_unit_info$suffix$.csui_add_time = #csuiAddTime#
+			</isNotNull>		
+			<isNotNull property="csuiRemark" prepend=",">
+				cs_unit_info$suffix$.csui_remark = #csuiRemark#
+			</isNotNull>		
+			<isNotNull property="csuiStatus" prepend=",">
+				cs_unit_info$suffix$.csui_status = #csuiStatus#
+			</isNotNull>		
+			<isNotNull property="csuiArea" prepend=",">
+				cs_unit_info$suffix$.csui_area = #csuiArea#
+			</isNotNull>		
+			</dynamic>
+		where
+			csui_id=#csuiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个企业信息 -->
+	<delete id="deleteCsUnitInfoById" parameterClass="java.util.HashMap">
+		delete from cs_unit_info$suffix$ where csui_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个企业信息 -->
+	<update id="removeCsUnitInfoById" parameterClass="java.util.HashMap">
+		update cs_unit_info$suffix$ set  cs_unit_info$suffix$.csui_status=-1  where csui_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新企业信息 -->
+	<update id="updateCsUnitInfoBy"  parameterClass="java.util.HashMap">
+		update cs_unit_info$suffix$ set		
+			csui_id=csui_id
+			<isNotNull property="V_csuiId" prepend=",">
+				cs_unit_info$suffix$.csui_id = #V_csuiId#
+			</isNotNull>		
+			<isNotNull property="V_csuiHost" prepend=",">
+				cs_unit_info$suffix$.csui_host = #V_csuiHost#
+			</isNotNull>		
+			<isNotNull property="V_csuiName" prepend=",">
+				cs_unit_info$suffix$.csui_name = #V_csuiName#
+			</isNotNull>		
+			<isNotNull property="V_csuiPerson" prepend=",">
+				cs_unit_info$suffix$.csui_person = #V_csuiPerson#
+			</isNotNull>		
+			<isNotNull property="V_csuiType" prepend=",">
+				cs_unit_info$suffix$.csui_type = #V_csuiType#
+			</isNotNull>		
+			<isNotNull property="V_csuiAddress" prepend=",">
+				cs_unit_info$suffix$.csui_address = #V_csuiAddress#
+			</isNotNull>		
+			<isNotNull property="V_csuiContact" prepend=",">
+				cs_unit_info$suffix$.csui_contact = #V_csuiContact#
+			</isNotNull>		
+			<isNotNull property="V_csuiMember" prepend=",">
+				cs_unit_info$suffix$.csui_member = #V_csuiMember#
+			</isNotNull>		
+			<isNotNull property="V_csuiOutlets" prepend=",">
+				cs_unit_info$suffix$.csui_outlets = #V_csuiOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csuiFeeType" prepend=",">
+				cs_unit_info$suffix$.csui_fee_type = #V_csuiFeeType#
+			</isNotNull>		
+			<isNotNull property="V_csuiSettleType" prepend=",">
+				cs_unit_info$suffix$.csui_settle_type = #V_csuiSettleType#
+			</isNotNull>		
+			<isNotNull property="V_csuiUpdateTime" prepend=",">
+				cs_unit_info$suffix$.csui_update_time = #V_csuiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csuiAddTime" prepend=",">
+				cs_unit_info$suffix$.csui_add_time = #V_csuiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csuiRemark" prepend=",">
+				cs_unit_info$suffix$.csui_remark = #V_csuiRemark#
+			</isNotNull>		
+			<isNotNull property="V_csuiStatus" prepend=",">
+				cs_unit_info$suffix$.csui_status = #V_csuiStatus#
+			</isNotNull>		
+			<isNotNull property="V_csuiArea" prepend=",">
+				cs_unit_info$suffix$.csui_area = #V_csuiArea#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[支付帐号]查询-->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.csui_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询-->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.csui_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_unit_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询-->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.csui_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_unit_info$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询-->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.csui_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_unit_info$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_unit_info$suffix$.csui_status!=-1 and
+		
+		1=1		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuiMember"><!-- 调用一下CsuiMember，把CsMember指向CsuiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[指定网点]查询条件sql片段 -->
+		<isNotNull property="CsuiOutlets"><!-- 调用一下CsuiOutlets，把CsOutlets指向CsuiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费策略]查询条件sql片段 -->
+		<isNotNull property="CsuiFeeType"><!-- 调用一下CsuiFeeType，把CsUserType指向CsuiFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所在区域]查询条件sql片段 -->
+		<isNotNull property="CsuiArea"><!-- 调用一下CsuiArea，把CsArea指向CsuiArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitInfo_part.cs_unit_info_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除企业信息 -->
+	<update id="deleteCsUnitInfoBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_info$suffix$ where 
+		cs_unit_info$suffix$.csui_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitInfo_part.cs_unit_info_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

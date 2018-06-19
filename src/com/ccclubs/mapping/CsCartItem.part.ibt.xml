@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCartItem_part">	
+	<!-- 购物车项条件sql片段  -->
+	<sql id="cs_cart_item_dynamic">
+		<dynamic>
+			<isNotEmpty property="csciId" prepend="and">
+			    $csciIdNot$ cs_cart_item$suffix$.csci_id = #csciId#
+			</isNotEmpty>
+			<isNotNull property="csciIdNot" prepend="and">
+				<isEmpty property="csciId">
+				$csciIdNot$ cs_cart_item$suffix$.csci_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciMember" prepend="and">
+			    $csciMemberNot$ cs_cart_item$suffix$.csci_member = #csciMember#
+			</isNotEmpty>
+			<isNotNull property="csciMemberNot" prepend="and">
+				<isEmpty property="csciMember">
+				$csciMemberNot$ cs_cart_item$suffix$.csci_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciItem" prepend="and">
+			    $csciItemNot$ cs_cart_item$suffix$.csci_item = #csciItem#
+			</isNotEmpty>
+			<isNotNull property="csciItemNot" prepend="and">
+				<isEmpty property="csciItem">
+				$csciItemNot$ cs_cart_item$suffix$.csci_item is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciCountMin" prepend="and">
+			    $csciCountNot$  ( cs_cart_item$suffix$.csci_count &gt;= #csciCountMin#
+			    <isEmpty property="csciCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csciCountMax" prepend="and">
+				<isEmpty property="csciCountMin">$csciCountNot$   (</isEmpty>
+			    cs_cart_item$suffix$.csci_count &lt;= #csciCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csciCount" prepend="and">
+			    $csciCountNot$ cs_cart_item$suffix$.csci_count = #csciCount#
+			</isNotEmpty>
+			<isNotNull property="csciCountNot" prepend="and">
+				<isEmpty property="csciCountMax"><isEmpty property="csciCountMin"><isEmpty property="csciCount">
+				$csciCountNot$ cs_cart_item$suffix$.csci_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csciAddTimeStart" prepend="and">
+			    $csciAddTimeNot$   (cs_cart_item$suffix$.csci_add_time &gt;= #csciAddTimeStart#
+			   <isEmpty property="csciAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csciAddTimeEnd" prepend="and">
+				<isEmpty property="csciAddTimeStart">$csciAddTimeNot$   (</isEmpty>
+			    cs_cart_item$suffix$.csci_add_time &lt;= #csciAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csciAddTime" prepend="and">
+			    $csciAddTimeNot$ cs_cart_item$suffix$.csci_add_time = #csciAddTime#
+			</isNotEmpty>
+			<isNotNull property="csciAddTimeNot" prepend="and">
+				<isEmpty property="csciAddTimeStart"><isEmpty property="csciAddTimeEnd"><isEmpty property="csciAddTime">
+				$csciAddTimeNot$ cs_cart_item$suffix$.csci_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 购物车项left join 条件sql片段 -->
+	<sql id="cs_cart_item_join">
+		<dynamic>
+			<isNotEmpty property="CsCartItem.csciId" prepend="and">
+			    $CsCartItem.csciIdNot$ cs_cart_item$CsCartItem.suffix$.csci_id = #CsCartItem.csciId#
+			</isNotEmpty>
+			<isNotNull property="CsCartItem.csciIdNot" prepend="and">
+				<isEmpty property="CsCartItem.csciId">
+				$csciIdNot$ cs_cart_item$CsCartItem.suffix$.csci_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCartItem.csciMember" prepend="and">
+			    $CsCartItem.csciMemberNot$ cs_cart_item$CsCartItem.suffix$.csci_member = #CsCartItem.csciMember#
+			</isNotEmpty>
+			<isNotNull property="CsCartItem.csciMemberNot" prepend="and">
+				<isEmpty property="CsCartItem.csciMember">
+				$csciMemberNot$ cs_cart_item$CsCartItem.suffix$.csci_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCartItem.csciItem" prepend="and">
+			    $CsCartItem.csciItemNot$ cs_cart_item$CsCartItem.suffix$.csci_item = #CsCartItem.csciItem#
+			</isNotEmpty>
+			<isNotNull property="CsCartItem.csciItemNot" prepend="and">
+				<isEmpty property="CsCartItem.csciItem">
+				$csciItemNot$ cs_cart_item$CsCartItem.suffix$.csci_item is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCartItem.csciCountMin" prepend="and">
+			    $CsCartItem.csciCountNot$  ( cs_cart_item$CsCartItem.suffix$.csci_count &gt;= #CsCartItem.csciCountMin#
+			    <isEmpty property="CsCartItem.csciCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCartItem.csciCountMax" prepend="and">
+				<isEmpty property="CsCartItem.csciCountMin">$CsCartItem.csciCountNot$   (</isEmpty>
+			    cs_cart_item$CsCartItem.suffix$.csci_count &lt;= #CsCartItem.csciCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCartItem.csciCount" prepend="and">
+			    $CsCartItem.csciCountNot$ cs_cart_item$CsCartItem.suffix$.csci_count = #CsCartItem.csciCount#
+			</isNotEmpty>
+			<isNotNull property="CsCartItem.csciCountNot" prepend="and">
+				<isEmpty property="CsCartItem.csciCountMax"><isEmpty property="CsCartItem.csciCountMin"><isEmpty property="CsCartItem.csciCount">
+				$csciCountNot$ cs_cart_item$CsCartItem.suffix$.csci_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCartItem.csciAddTimeStart" prepend="and">
+			    $CsCartItem.csciAddTimeNot$   (cs_cart_item$CsCartItem.suffix$.csci_add_time &gt;= #CsCartItem.csciAddTimeStart#
+			   <isEmpty property="CsCartItem.csciAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCartItem.csciAddTimeEnd" prepend="and">
+				<isEmpty property="CsCartItem.csciAddTimeStart">$CsCartItem.csciAddTimeNot$   (</isEmpty>
+			    cs_cart_item$CsCartItem.suffix$.csci_add_time &lt;= #CsCartItem.csciAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCartItem.csciAddTime" prepend="and">
+			    $CsCartItem.csciAddTimeNot$ cs_cart_item$CsCartItem.suffix$.csci_add_time = #CsCartItem.csciAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCartItem.csciAddTimeNot" prepend="and">
+				<isEmpty property="CsCartItem.csciAddTimeStart"><isEmpty property="CsCartItem.csciAddTimeEnd"><isEmpty property="CsCartItem.csciAddTime">
+				$csciAddTimeNot$ cs_cart_item$CsCartItem.suffix$.csci_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

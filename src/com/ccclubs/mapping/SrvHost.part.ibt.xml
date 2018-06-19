@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvHost_part">	
+	<!-- 运营城市条件sql片段  -->
+	<sql id="srv_host_dynamic">
+		<dynamic>
+			<isNotEmpty property="shId" prepend="and">
+			    $shIdNot$ srv_host$suffix$.sh_id = #shId#
+			</isNotEmpty>
+			<isNotNull property="shIdNot" prepend="and">
+				<isEmpty property="shId">
+				$shIdNot$ srv_host$suffix$.sh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shName" prepend="and">			    
+			    (<isNotNull property="shNameNot">
+			    srv_host$suffix$.sh_name is null or length(srv_host$suffix$.sh_name) &lt; 1 or
+			    </isNotNull>$shNameNot$ srv_host$suffix$.sh_name = #shName#)
+			</isNotEmpty>
+			<isNotNull property="shNameNot" prepend="and">
+				<isEmpty property="shName">
+				$shNameNot$ (srv_host$suffix$.sh_name is null or length(srv_host$suffix$.sh_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shOper" prepend="and">
+			    $shOperNot$ srv_host$suffix$.sh_oper = #shOper#
+			</isNotEmpty>
+			<isNotNull property="shOperNot" prepend="and">
+				<isEmpty property="shOper">
+				$shOperNot$ srv_host$suffix$.sh_oper is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shFlag" prepend="and">			    
+			    (<isNotNull property="shFlagNot">
+			    srv_host$suffix$.sh_flag is null or length(srv_host$suffix$.sh_flag) &lt; 1 or
+			    </isNotNull>$shFlagNot$ srv_host$suffix$.sh_flag = #shFlag#)
+			</isNotEmpty>
+			<isNotNull property="shFlagNot" prepend="and">
+				<isEmpty property="shFlag">
+				$shFlagNot$ (srv_host$suffix$.sh_flag is null or length(srv_host$suffix$.sh_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shFeeType" prepend="and">
+			    $shFeeTypeNot$ srv_host$suffix$.sh_fee_type = #shFeeType#
+			</isNotEmpty>
+			<isNotNull property="shFeeTypeNot" prepend="and">
+				<isEmpty property="shFeeType">
+				$shFeeTypeNot$ srv_host$suffix$.sh_fee_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shOnHourMin" prepend="and">
+			    $shOnHourNot$  ( srv_host$suffix$.sh_on_hour &gt;= #shOnHourMin#
+			    <isEmpty property="shOnHourMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="shOnHourMax" prepend="and">
+				<isEmpty property="shOnHourMin">$shOnHourNot$   (</isEmpty>
+			    srv_host$suffix$.sh_on_hour &lt;= #shOnHourMax# )
+			</isNotEmpty>
+			<isNotEmpty property="shOnHour" prepend="and">
+			    $shOnHourNot$ srv_host$suffix$.sh_on_hour = #shOnHour#
+			</isNotEmpty>
+			<isNotNull property="shOnHourNot" prepend="and">
+				<isEmpty property="shOnHourMax"><isEmpty property="shOnHourMin"><isEmpty property="shOnHour">
+				$shOnHourNot$ srv_host$suffix$.sh_on_hour is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="shOffHourMin" prepend="and">
+			    $shOffHourNot$  ( srv_host$suffix$.sh_off_hour &gt;= #shOffHourMin#
+			    <isEmpty property="shOffHourMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="shOffHourMax" prepend="and">
+				<isEmpty property="shOffHourMin">$shOffHourNot$   (</isEmpty>
+			    srv_host$suffix$.sh_off_hour &lt;= #shOffHourMax# )
+			</isNotEmpty>
+			<isNotEmpty property="shOffHour" prepend="and">
+			    $shOffHourNot$ srv_host$suffix$.sh_off_hour = #shOffHour#
+			</isNotEmpty>
+			<isNotNull property="shOffHourNot" prepend="and">
+				<isEmpty property="shOffHourMax"><isEmpty property="shOffHourMin"><isEmpty property="shOffHour">
+				$shOffHourNot$ srv_host$suffix$.sh_off_hour is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="shLocation" prepend="and">			    
+			    (<isNotNull property="shLocationNot">
+			    srv_host$suffix$.sh_location is null or length(srv_host$suffix$.sh_location) &lt; 1 or
+			    </isNotNull>$shLocationNot$ srv_host$suffix$.sh_location = #shLocation#)
+			</isNotEmpty>
+			<isNotNull property="shLocationNot" prepend="and">
+				<isEmpty property="shLocation">
+				$shLocationNot$ (srv_host$suffix$.sh_location is null or length(srv_host$suffix$.sh_location) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shState" prepend="and">
+			    $shStateNot$ srv_host$suffix$.sh_state = #shState#
+			</isNotEmpty>
+			<isNotNull property="shStateNot" prepend="and">
+				<isEmpty property="shState">
+				$shStateNot$ srv_host$suffix$.sh_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="shStatus" prepend="and">
+			    $shStatusNot$ srv_host$suffix$.sh_status = #shStatus#
+			</isNotEmpty>
+			<isNotNull property="shStatusNot" prepend="and">
+				<isEmpty property="shStatus">
+				$shStatusNot$ srv_host$suffix$.sh_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 运营城市left join 条件sql片段 -->
+	<sql id="srv_host_join">
+		<dynamic>
+			<isNotEmpty property="SrvHost.shId" prepend="and">
+			    $SrvHost.shIdNot$ srv_host$SrvHost.suffix$.sh_id = #SrvHost.shId#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shIdNot" prepend="and">
+				<isEmpty property="SrvHost.shId">
+				$shIdNot$ srv_host$SrvHost.suffix$.sh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shName" prepend="and">
+				(<isNotNull property="SrvHost.shNameNot">
+			    srv_host$SrvHost.suffix$.sh_name is null or length(srv_host$SrvHost.suffix$.sh_name) &lt; 1 or
+			    </isNotNull>$SrvHost.shNameNot$ srv_host$SrvHost.suffix$.sh_name = #SrvHost.shName#)
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shNameNot" prepend="and">
+				<isEmpty property="SrvHost.shName">
+				$shNameNot$ (srv_host$SrvHost.suffix$.sh_name is null or length(srv_host$SrvHost.suffix$.sh_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shOper" prepend="and">
+			    $SrvHost.shOperNot$ srv_host$SrvHost.suffix$.sh_oper = #SrvHost.shOper#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shOperNot" prepend="and">
+				<isEmpty property="SrvHost.shOper">
+				$shOperNot$ srv_host$SrvHost.suffix$.sh_oper is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shFlag" prepend="and">
+				(<isNotNull property="SrvHost.shFlagNot">
+			    srv_host$SrvHost.suffix$.sh_flag is null or length(srv_host$SrvHost.suffix$.sh_flag) &lt; 1 or
+			    </isNotNull>$SrvHost.shFlagNot$ srv_host$SrvHost.suffix$.sh_flag = #SrvHost.shFlag#)
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shFlagNot" prepend="and">
+				<isEmpty property="SrvHost.shFlag">
+				$shFlagNot$ (srv_host$SrvHost.suffix$.sh_flag is null or length(srv_host$SrvHost.suffix$.sh_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shFeeType" prepend="and">
+			    $SrvHost.shFeeTypeNot$ srv_host$SrvHost.suffix$.sh_fee_type = #SrvHost.shFeeType#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shFeeTypeNot" prepend="and">
+				<isEmpty property="SrvHost.shFeeType">
+				$shFeeTypeNot$ srv_host$SrvHost.suffix$.sh_fee_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shOnHourMin" prepend="and">
+			    $SrvHost.shOnHourNot$  ( srv_host$SrvHost.suffix$.sh_on_hour &gt;= #SrvHost.shOnHourMin#
+			    <isEmpty property="SrvHost.shOnHourMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvHost.shOnHourMax" prepend="and">
+				<isEmpty property="SrvHost.shOnHourMin">$SrvHost.shOnHourNot$   (</isEmpty>
+			    srv_host$SrvHost.suffix$.sh_on_hour &lt;= #SrvHost.shOnHourMax# )
+			</isNotEmpty>
+			<isNotEmpty property="SrvHost.shOnHour" prepend="and">
+			    $SrvHost.shOnHourNot$ srv_host$SrvHost.suffix$.sh_on_hour = #SrvHost.shOnHour#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shOnHourNot" prepend="and">
+				<isEmpty property="SrvHost.shOnHourMax"><isEmpty property="SrvHost.shOnHourMin"><isEmpty property="SrvHost.shOnHour">
+				$shOnHourNot$ srv_host$SrvHost.suffix$.sh_on_hour is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shOffHourMin" prepend="and">
+			    $SrvHost.shOffHourNot$  ( srv_host$SrvHost.suffix$.sh_off_hour &gt;= #SrvHost.shOffHourMin#
+			    <isEmpty property="SrvHost.shOffHourMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvHost.shOffHourMax" prepend="and">
+				<isEmpty property="SrvHost.shOffHourMin">$SrvHost.shOffHourNot$   (</isEmpty>
+			    srv_host$SrvHost.suffix$.sh_off_hour &lt;= #SrvHost.shOffHourMax# )
+			</isNotEmpty>
+			<isNotEmpty property="SrvHost.shOffHour" prepend="and">
+			    $SrvHost.shOffHourNot$ srv_host$SrvHost.suffix$.sh_off_hour = #SrvHost.shOffHour#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shOffHourNot" prepend="and">
+				<isEmpty property="SrvHost.shOffHourMax"><isEmpty property="SrvHost.shOffHourMin"><isEmpty property="SrvHost.shOffHour">
+				$shOffHourNot$ srv_host$SrvHost.suffix$.sh_off_hour is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shLocation" prepend="and">
+				(<isNotNull property="SrvHost.shLocationNot">
+			    srv_host$SrvHost.suffix$.sh_location is null or length(srv_host$SrvHost.suffix$.sh_location) &lt; 1 or
+			    </isNotNull>$SrvHost.shLocationNot$ srv_host$SrvHost.suffix$.sh_location = #SrvHost.shLocation#)
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shLocationNot" prepend="and">
+				<isEmpty property="SrvHost.shLocation">
+				$shLocationNot$ (srv_host$SrvHost.suffix$.sh_location is null or length(srv_host$SrvHost.suffix$.sh_location) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shState" prepend="and">
+			    $SrvHost.shStateNot$ srv_host$SrvHost.suffix$.sh_state = #SrvHost.shState#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shStateNot" prepend="and">
+				<isEmpty property="SrvHost.shState">
+				$shStateNot$ srv_host$SrvHost.suffix$.sh_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvHost.shStatus" prepend="and">
+			    $SrvHost.shStatusNot$ srv_host$SrvHost.suffix$.sh_status = #SrvHost.shStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvHost.shStatusNot" prepend="and">
+				<isEmpty property="SrvHost.shStatus">
+				$shStatusNot$ srv_host$SrvHost.suffix$.sh_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

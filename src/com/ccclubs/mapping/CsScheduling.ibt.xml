@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆调度之SQL映射 -->
+	<resultMap id="CsScheduling" class="com.ccclubs.model.CsScheduling">
+		<result property="cssId" column="css_id"/>
+		<result property="cssHost" column="css_host"/>
+		<result property="cssOutlets" column="css_outlets"/>
+		<result property="cssCar" column="css_car"/>
+		<result property="cssTime" column="css_time"/>
+		<result property="cssType" column="css_type"/>
+		<result property="cssDir" column="css_dir"/>
+		<result property="cssExplain" column="css_explain"/>
+		<result property="cssOrder" column="css_order"/>
+		<result property="cssOperator" column="css_operator"/>
+		<result property="cssStatus" column="css_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆调度 -->
+	<select id="getCsSchedulingList" resultMap="CsScheduling">
+		select cs_scheduling$suffix$.* from cs_scheduling$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.css_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_scheduling$suffix$.css_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsScheduling_part.cs_scheduling_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by css_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆调度分页 -->
+	<select id="getCsSchedulingPage" parameterClass="java.util.HashMap" resultMap="CsScheduling">
+		select cs_scheduling$suffix$.* from cs_scheduling$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.css_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_scheduling$suffix$.css_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsScheduling_part.cs_scheduling_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by css_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆调度总数 -->
+	<select id="getCsSchedulingEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_scheduling$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.css_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_scheduling$suffix$.css_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsScheduling_part.cs_scheduling_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆调度 -->
+	<select id="getCsSchedulingById" parameterClass="java.util.HashMap" resultMap="CsScheduling">
+		select cs_scheduling$suffix$.* from cs_scheduling$suffix$
+		where css_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆调度 -->
+	<insert id="saveCsScheduling"  parameterClass="com.ccclubs.model.CsScheduling">
+		insert into cs_scheduling$suffix$
+		(
+			cs_scheduling$suffix$.css_host
+			,cs_scheduling$suffix$.css_outlets
+			,cs_scheduling$suffix$.css_car
+			,cs_scheduling$suffix$.css_time
+			,cs_scheduling$suffix$.css_type
+			,cs_scheduling$suffix$.css_dir
+			,cs_scheduling$suffix$.css_explain
+			,cs_scheduling$suffix$.css_order
+			,cs_scheduling$suffix$.css_operator
+			,cs_scheduling$suffix$.css_status
+		)
+		values(
+			<isNotNull property="cssHost" prepend="">
+				#cssHost#
+			</isNotNull>
+			<isNull property="cssHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssOutlets" prepend=",">
+				#cssOutlets#
+			</isNotNull>
+			<isNull property="cssOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssCar" prepend=",">
+				#cssCar#
+			</isNotNull>
+			<isNull property="cssCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssTime" prepend=",">
+				#cssTime#
+			</isNotNull>
+			<isNull property="cssTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssType" prepend=",">
+				#cssType#
+			</isNotNull>
+			<isNull property="cssType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssDir" prepend=",">
+				#cssDir#
+			</isNotNull>
+			<isNull property="cssDir" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssExplain" prepend=",">
+				#cssExplain#
+			</isNotNull>
+			<isNull property="cssExplain" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssOrder" prepend=",">
+				#cssOrder#
+			</isNotNull>
+			<isNull property="cssOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssOperator" prepend=",">
+				#cssOperator#
+			</isNotNull>
+			<isNull property="cssOperator" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssStatus" prepend=",">
+				#cssStatus#
+			</isNotNull>
+			<isNull property="cssStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆调度 -->
+	<update id="updateCsScheduling"  parameterClass="com.ccclubs.model.CsScheduling">
+		update cs_scheduling$suffix$ set
+			<isNotNull property="cssHost" prepend="">
+				cs_scheduling$suffix$.css_host = #cssHost#
+			</isNotNull>
+			<isNull property="cssHost" prepend="">
+				cs_scheduling$suffix$.css_host = null
+			</isNull>				
+			<isNotNull property="cssOutlets" prepend=",">
+				cs_scheduling$suffix$.css_outlets = #cssOutlets#
+			</isNotNull>
+			<isNull property="cssOutlets" prepend=",">
+				cs_scheduling$suffix$.css_outlets = null
+			</isNull>				
+			<isNotNull property="cssCar" prepend=",">
+				cs_scheduling$suffix$.css_car = #cssCar#
+			</isNotNull>
+			<isNull property="cssCar" prepend=",">
+				cs_scheduling$suffix$.css_car = null
+			</isNull>				
+			<isNotNull property="cssTime" prepend=",">
+				cs_scheduling$suffix$.css_time = #cssTime#
+			</isNotNull>
+			<isNull property="cssTime" prepend=",">
+				cs_scheduling$suffix$.css_time = null
+			</isNull>				
+			<isNotNull property="cssType" prepend=",">
+				cs_scheduling$suffix$.css_type = #cssType#
+			</isNotNull>
+			<isNull property="cssType" prepend=",">
+				cs_scheduling$suffix$.css_type = null
+			</isNull>				
+			<isNotNull property="cssDir" prepend=",">
+				cs_scheduling$suffix$.css_dir = #cssDir#
+			</isNotNull>
+			<isNull property="cssDir" prepend=",">
+				cs_scheduling$suffix$.css_dir = null
+			</isNull>				
+			<isNotNull property="cssExplain" prepend=",">
+				cs_scheduling$suffix$.css_explain = #cssExplain#
+			</isNotNull>
+			<isNull property="cssExplain" prepend=",">
+				cs_scheduling$suffix$.css_explain = null
+			</isNull>				
+			<isNotNull property="cssOrder" prepend=",">
+				cs_scheduling$suffix$.css_order = #cssOrder#
+			</isNotNull>
+			<isNull property="cssOrder" prepend=",">
+				cs_scheduling$suffix$.css_order = null
+			</isNull>				
+			<isNotNull property="cssOperator" prepend=",">
+				cs_scheduling$suffix$.css_operator = #cssOperator#
+			</isNotNull>
+			<isNull property="cssOperator" prepend=",">
+				cs_scheduling$suffix$.css_operator = null
+			</isNull>				
+			<isNotNull property="cssStatus" prepend=",">
+				cs_scheduling$suffix$.css_status = #cssStatus#
+			</isNotNull>
+			<isNull property="cssStatus" prepend=",">
+				cs_scheduling$suffix$.css_status = null
+			</isNull>				
+		where
+			css_id=#cssId#
+	</update>
+	
+	<!-- 更新车辆调度非空字段 -->
+	<update id="updateCsScheduling$NotNull"  parameterClass="com.ccclubs.model.CsScheduling">
+		update cs_scheduling$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssHost" prepend=",">
+				cs_scheduling$suffix$.css_host = #cssHost#
+			</isNotNull>		
+			<isNotNull property="cssOutlets" prepend=",">
+				cs_scheduling$suffix$.css_outlets = #cssOutlets#
+			</isNotNull>		
+			<isNotNull property="cssCar" prepend=",">
+				cs_scheduling$suffix$.css_car = #cssCar#
+			</isNotNull>		
+			<isNotNull property="cssTime" prepend=",">
+				cs_scheduling$suffix$.css_time = #cssTime#
+			</isNotNull>		
+			<isNotNull property="cssType" prepend=",">
+				cs_scheduling$suffix$.css_type = #cssType#
+			</isNotNull>		
+			<isNotNull property="cssDir" prepend=",">
+				cs_scheduling$suffix$.css_dir = #cssDir#
+			</isNotNull>		
+			<isNotNull property="cssExplain" prepend=",">
+				cs_scheduling$suffix$.css_explain = #cssExplain#
+			</isNotNull>		
+			<isNotNull property="cssOrder" prepend=",">
+				cs_scheduling$suffix$.css_order = #cssOrder#
+			</isNotNull>		
+			<isNotNull property="cssOperator" prepend=",">
+				cs_scheduling$suffix$.css_operator = #cssOperator#
+			</isNotNull>		
+			<isNotNull property="cssStatus" prepend=",">
+				cs_scheduling$suffix$.css_status = #cssStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			css_id=#cssId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆调度 -->
+	<delete id="deleteCsSchedulingById" parameterClass="java.util.HashMap">
+		delete from cs_scheduling$suffix$ where css_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆调度 -->
+	<update id="removeCsSchedulingById" parameterClass="java.util.HashMap">
+		update cs_scheduling$suffix$ set  cs_scheduling$suffix$.css_status=-1  where css_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆调度 -->
+	<update id="updateCsSchedulingBy"  parameterClass="java.util.HashMap">
+		update cs_scheduling$suffix$ set		
+			css_id=css_id
+			<isNotNull property="V_cssId" prepend=",">
+				cs_scheduling$suffix$.css_id = #V_cssId#
+			</isNotNull>		
+			<isNotNull property="V_cssHost" prepend=",">
+				cs_scheduling$suffix$.css_host = #V_cssHost#
+			</isNotNull>		
+			<isNotNull property="V_cssOutlets" prepend=",">
+				cs_scheduling$suffix$.css_outlets = #V_cssOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cssCar" prepend=",">
+				cs_scheduling$suffix$.css_car = #V_cssCar#
+			</isNotNull>		
+			<isNotNull property="V_cssTime" prepend=",">
+				cs_scheduling$suffix$.css_time = #V_cssTime#
+			</isNotNull>		
+			<isNotNull property="V_cssType" prepend=",">
+				cs_scheduling$suffix$.css_type = #V_cssType#
+			</isNotNull>		
+			<isNotNull property="V_cssDir" prepend=",">
+				cs_scheduling$suffix$.css_dir = #V_cssDir#
+			</isNotNull>		
+			<isNotNull property="V_cssExplain" prepend=",">
+				cs_scheduling$suffix$.css_explain = #V_cssExplain#
+			</isNotNull>		
+			<isNotNull property="V_cssOrder" prepend=",">
+				cs_scheduling$suffix$.css_order = #V_cssOrder#
+			</isNotNull>		
+			<isNotNull property="V_cssOperator" prepend=",">
+				cs_scheduling$suffix$.css_operator = #V_cssOperator#
+			</isNotNull>		
+			<isNotNull property="V_cssStatus" prepend=",">
+				cs_scheduling$suffix$.css_status = #V_cssStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.css_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_scheduling$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_scheduling$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_scheduling$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_scheduling$suffix$.css_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssOutlets"><!-- 调用一下CssOutlets，把CsOutlets指向CssOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsScheduling_part.cs_scheduling_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆调度 -->
+	<update id="deleteCsSchedulingBy"  parameterClass="java.util.HashMap">
+		delete from cs_scheduling$suffix$ where 
+		cs_scheduling$suffix$.css_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsScheduling_part.cs_scheduling_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 运营城市之SQL映射 -->
+	<resultMap id="SrvHost" class="com.ccclubs.model.SrvHost">
+		<result property="shId" column="sh_id"/>
+		<result property="shName" column="sh_name"/>
+		<result property="shOper" column="sh_oper"/>
+		<result property="shFlag" column="sh_flag"/>
+		<result property="shFeeType" column="sh_fee_type"/>
+		<result property="shOnHour" column="sh_on_hour"/>
+		<result property="shOffHour" column="sh_off_hour"/>
+		<result property="shLocation" column="sh_location"/>
+		<result property="shState" column="sh_state"/>
+		<result property="shStatus" column="sh_status"/>
+	</resultMap>
+		
+	<!-- 获取所有运营城市 -->
+	<select id="getSrvHostList" resultMap="SrvHost">
+		select srv_host$suffix$.* from srv_host$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[运营商]查询-->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<isNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.sh_oper=cs_oper$CsOper.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.$CsOper.on$=cs_oper$CsOper.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询-->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.sh_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and srv_host$suffix$.sh_status!=-1
+		<!-- 多对一外链接[运营商]查询条件sql片段 -->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<include refid="CsOper_part.cs_oper_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvHost_part.srv_host_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sh_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取运营城市分页 -->
+	<select id="getSrvHostPage" parameterClass="java.util.HashMap" resultMap="SrvHost">
+		select srv_host$suffix$.* from srv_host$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[运营商]查询 -->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<isNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.sh_oper=cs_oper$CsOper.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.$CsOper.on$=cs_oper$CsOper.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询 -->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.sh_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and srv_host$suffix$.sh_status!=-1
+		<!-- 多对一外链接[运营商]查询条件sql片段 -->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<include refid="CsOper_part.cs_oper_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvHost_part.srv_host_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sh_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取运营城市总数 -->
+	<select id="getSrvHostEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_host$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[运营商]查询,同张表只能外链接一次 -->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<isNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.sh_oper=cs_oper$CsOper.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.$CsOper.on$=cs_oper$CsOper.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询,同张表只能外链接一次 -->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.sh_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and srv_host$suffix$.sh_status!=-1
+		<!-- 多对一外链接[运营商]查询条件sql片段 -->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<include refid="CsOper_part.cs_oper_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvHost_part.srv_host_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取运营城市 -->
+	<select id="getSrvHostById" parameterClass="java.util.HashMap" resultMap="SrvHost">
+		select srv_host$suffix$.* from srv_host$suffix$
+		where sh_id=#id#
+	</select>
+	
+		
+	<!-- 保存运营城市 -->
+	<insert id="saveSrvHost"  parameterClass="com.ccclubs.model.SrvHost">
+		insert into srv_host$suffix$
+		(
+			srv_host$suffix$.sh_name
+			,srv_host$suffix$.sh_oper
+			,srv_host$suffix$.sh_flag
+			,srv_host$suffix$.sh_fee_type
+			,srv_host$suffix$.sh_on_hour
+			,srv_host$suffix$.sh_off_hour
+			,srv_host$suffix$.sh_location
+			,srv_host$suffix$.sh_state
+			,srv_host$suffix$.sh_status
+		)
+		values(
+			<isNotNull property="shName" prepend="">
+				#shName#
+			</isNotNull>
+			<isNull property="shName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="shOper" prepend=",">
+				#shOper#
+			</isNotNull>
+			<isNull property="shOper" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shFlag" prepend=",">
+				#shFlag#
+			</isNotNull>
+			<isNull property="shFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shFeeType" prepend=",">
+				#shFeeType#
+			</isNotNull>
+			<isNull property="shFeeType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shOnHour" prepend=",">
+				#shOnHour#
+			</isNotNull>
+			<isNull property="shOnHour" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shOffHour" prepend=",">
+				#shOffHour#
+			</isNotNull>
+			<isNull property="shOffHour" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shLocation" prepend=",">
+				#shLocation#
+			</isNotNull>
+			<isNull property="shLocation" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shState" prepend=",">
+				#shState#
+			</isNotNull>
+			<isNull property="shState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shStatus" prepend=",">
+				#shStatus#
+			</isNotNull>
+			<isNull property="shStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新运营城市 -->
+	<update id="updateSrvHost"  parameterClass="com.ccclubs.model.SrvHost">
+		update srv_host$suffix$ set
+			<isNotNull property="shName" prepend="">
+				srv_host$suffix$.sh_name = #shName#
+			</isNotNull>
+			<isNull property="shName" prepend="">
+				srv_host$suffix$.sh_name = null
+			</isNull>				
+			<isNotNull property="shOper" prepend=",">
+				srv_host$suffix$.sh_oper = #shOper#
+			</isNotNull>
+			<isNull property="shOper" prepend=",">
+				srv_host$suffix$.sh_oper = null
+			</isNull>				
+			<isNotNull property="shFlag" prepend=",">
+				srv_host$suffix$.sh_flag = #shFlag#
+			</isNotNull>
+			<isNull property="shFlag" prepend=",">
+				srv_host$suffix$.sh_flag = null
+			</isNull>				
+			<isNotNull property="shFeeType" prepend=",">
+				srv_host$suffix$.sh_fee_type = #shFeeType#
+			</isNotNull>
+			<isNull property="shFeeType" prepend=",">
+				srv_host$suffix$.sh_fee_type = null
+			</isNull>				
+			<isNotNull property="shOnHour" prepend=",">
+				srv_host$suffix$.sh_on_hour = #shOnHour#
+			</isNotNull>
+			<isNull property="shOnHour" prepend=",">
+				srv_host$suffix$.sh_on_hour = null
+			</isNull>				
+			<isNotNull property="shOffHour" prepend=",">
+				srv_host$suffix$.sh_off_hour = #shOffHour#
+			</isNotNull>
+			<isNull property="shOffHour" prepend=",">
+				srv_host$suffix$.sh_off_hour = null
+			</isNull>				
+			<isNotNull property="shLocation" prepend=",">
+				srv_host$suffix$.sh_location = #shLocation#
+			</isNotNull>
+			<isNull property="shLocation" prepend=",">
+				srv_host$suffix$.sh_location = null
+			</isNull>				
+			<isNotNull property="shState" prepend=",">
+				srv_host$suffix$.sh_state = #shState#
+			</isNotNull>
+			<isNull property="shState" prepend=",">
+				srv_host$suffix$.sh_state = null
+			</isNull>				
+			<isNotNull property="shStatus" prepend=",">
+				srv_host$suffix$.sh_status = #shStatus#
+			</isNotNull>
+			<isNull property="shStatus" prepend=",">
+				srv_host$suffix$.sh_status = null
+			</isNull>				
+		where
+			sh_id=#shId#
+	</update>
+	
+	<!-- 更新运营城市非空字段 -->
+	<update id="updateSrvHost$NotNull"  parameterClass="com.ccclubs.model.SrvHost">
+		update srv_host$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="shName" prepend=",">
+				srv_host$suffix$.sh_name = #shName#
+			</isNotNull>		
+			<isNotNull property="shOper" prepend=",">
+				srv_host$suffix$.sh_oper = #shOper#
+			</isNotNull>		
+			<isNotNull property="shFlag" prepend=",">
+				srv_host$suffix$.sh_flag = #shFlag#
+			</isNotNull>		
+			<isNotNull property="shFeeType" prepend=",">
+				srv_host$suffix$.sh_fee_type = #shFeeType#
+			</isNotNull>		
+			<isNotNull property="shOnHour" prepend=",">
+				srv_host$suffix$.sh_on_hour = #shOnHour#
+			</isNotNull>		
+			<isNotNull property="shOffHour" prepend=",">
+				srv_host$suffix$.sh_off_hour = #shOffHour#
+			</isNotNull>		
+			<isNotNull property="shLocation" prepend=",">
+				srv_host$suffix$.sh_location = #shLocation#
+			</isNotNull>		
+			<isNotNull property="shState" prepend=",">
+				srv_host$suffix$.sh_state = #shState#
+			</isNotNull>		
+			<isNotNull property="shStatus" prepend=",">
+				srv_host$suffix$.sh_status = #shStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sh_id=#shId#
+	</update>
+	
+
+	<!-- 根据ID删除一个运营城市 -->
+	<delete id="deleteSrvHostById" parameterClass="java.util.HashMap">
+		delete from srv_host$suffix$ where sh_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个运营城市 -->
+	<update id="removeSrvHostById" parameterClass="java.util.HashMap">
+		update srv_host$suffix$ set  srv_host$suffix$.sh_status=-1  where sh_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新运营城市 -->
+	<update id="updateSrvHostBy"  parameterClass="java.util.HashMap">
+		update srv_host$suffix$ set		
+			sh_id=sh_id
+			<isNotNull property="V_shId" prepend=",">
+				srv_host$suffix$.sh_id = #V_shId#
+			</isNotNull>		
+			<isNotNull property="V_shName" prepend=",">
+				srv_host$suffix$.sh_name = #V_shName#
+			</isNotNull>		
+			<isNotNull property="V_shOper" prepend=",">
+				srv_host$suffix$.sh_oper = #V_shOper#
+			</isNotNull>		
+			<isNotNull property="V_shFlag" prepend=",">
+				srv_host$suffix$.sh_flag = #V_shFlag#
+			</isNotNull>		
+			<isNotNull property="V_shFeeType" prepend=",">
+				srv_host$suffix$.sh_fee_type = #V_shFeeType#
+			</isNotNull>		
+			<isNotNull property="V_shOnHour" prepend=",">
+				srv_host$suffix$.sh_on_hour = #V_shOnHour#
+			</isNotNull>		
+			<isNotNull property="V_shOffHour" prepend=",">
+				srv_host$suffix$.sh_off_hour = #V_shOffHour#
+			</isNotNull>		
+			<isNotNull property="V_shLocation" prepend=",">
+				srv_host$suffix$.sh_location = #V_shLocation#
+			</isNotNull>		
+			<isNotNull property="V_shState" prepend=",">
+				srv_host$suffix$.sh_state = #V_shState#
+			</isNotNull>		
+			<isNotNull property="V_shStatus" prepend=",">
+				srv_host$suffix$.sh_status = #V_shStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[运营商]查询-->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<isNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.sh_oper=cs_oper$CsOper.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOper.on">
+				left join cs_oper cs_oper$CsOper.suffix$ on srv_host$suffix$.$CsOper.on$=cs_oper$CsOper.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询-->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.sh_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on srv_host$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		srv_host$suffix$.sh_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[运营商]查询条件sql片段 -->
+		<isNotNull property="ShOper"><!-- 调用一下ShOper，把CsOper指向ShOper --></isNotNull>
+		<isNotNull property="CsOper">
+			<include refid="CsOper_part.cs_oper_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="ShFeeType"><!-- 调用一下ShFeeType，把CsUserType指向ShFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvHost_part.srv_host_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除运营城市 -->
+	<update id="deleteSrvHostBy"  parameterClass="java.util.HashMap">
+		delete from srv_host$suffix$ where 
+		srv_host$suffix$.sh_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvHost_part.srv_host_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>手机开关车门</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-operate.css?key=12&v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body style="background: #e4e5ea">
+		<div id="content" class="content">
+			<div class="oprate-top">
+				<div class="oprate-top-banner">
+					<div class="oprate-model-text">
+						${carType}
+					</div>
+					<div class="oprate-carnum-text">
+						${carNum}
+					</div>
+					<div class="ring_big loading5"></div>
+					<div class="ring_bg loading4" onclick="star_ring()"></div>
+				</div>
+				<div class="operate-block" id="orderdetail">
+					<span class="operate-detail" ></span><!-- 订单详情 -->
+				</div>
+				<div class="operate-block reorder" id="reorder">
+					<span class="operate-reorder"></span><!-- 续订 -->
+				</div>
+				<div class="operate-block return" id="returncar">
+					<span class="operate-return"></span>
+				</div>
+			</div>
+			<div class="operate-content">
+				<div class="operate-content-banner">
+					<img src="../img/bg/24_04.png" />
+				</div>
+				<div class="operate-block whistle touch_btn" id="whisper">
+					<div class="operate-corner">
+
+					</div>
+					<span>鸣笛</span>
+				</div>
+				<div class="operate-block open touch_btn" id="opendoor">
+					<div id="operate_color" class="operate-corner" >
+
+					</div>
+					<span>开门</span>
+				</div>
+				<div class="operate-block lock touch_btn" id="closedoor">
+					<div class="operate-corner">
+
+					</div>
+					<span>锁门</span>
+				</div>
+				<div class="operate-block search touch_btn" id="searchcar">
+					<div class="operate-corner ">
+
+					</div>
+					<span>寻车</span>
+				</div>
+			</div>
+			<div id="toast">
+				正在加载...
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script>
+			stop_ring();
+			$(".touch_btn").live("touchstart", function(){  
+				$(this).children("div").css("backgroundColor","#FFFFFF");
+			}) ;
+			$(".touch_btn").live("touchend", function(){  
+				$(this).children("div").css("backgroundColor","#C9CBD1");
+			});  
+			$(".touch_btn").live("touchmove", function(){  
+				$(this).children("div").css("backgroundColor","#C9CBD1");
+			});
+			/*
+			*旋转代码
+			*/
+			var myring=$(".ring_bg");
+			var big_ring=$(".ring_big");
+			function stop_ring(){
+				setTimeout("remove_ring()",2000); 
+			}
+			function remove_ring(){
+				myring.removeClass("loading4");
+				big_ring.removeClass("loading5");
+			}
+			function add_ring(){
+				myring.addClass("loading4");
+				big_ring.addClass("loading5");
+			}
+			function star_ring(){
+				add_ring();
+				stop_ring();
+			}
+			/*
+			*旋转结束
+			*/
+			var controllType = "-1";//操作码
+			var orderStatus = '${csOrder.csoStatus}';
+			//存储点击频率信息
+		    var VAR ={
+		        repeatTemp:[]
+		    }
+		    var COM = {
+	    		repeat:function(s,t){//限制执行频率，默认为15秒 允许执行时返回false
+	    			t = t ? t * 1000 : 10000;//毫秒
+	    			var time = microtime();
+	    			if(!VAR.repeatTemp[s]){
+	    				VAR.repeatTemp[s] = time;
+	    				star_ring();
+	                    return false;//允许
+	    			}else{
+	    				var ts = t - (time - VAR.repeatTemp[s]);
+	                    ts = parseInt(ts/1000);
+	    			}
+	    			if(ts > 0){
+	    				Toast.show("频率限制：还有 "+ ts +"秒才可以再执行！");
+	                    return true;//禁止执行
+	    			}else{
+	    				VAR.repeatTemp[s] = time;//更新时间
+	    				star_ring();
+	                    return false;//允许
+	    			}
+	    		}
+			}
+		    //获取毫秒级时间戳
+		    function microtime(){
+		    	return new Date().getTime();
+			}
+			
+		    $(document).ready(function() {
+		    	//订单前10分钟才可以取车
+				var msg = '${msg}';
+				if(msg!=null && msg!=''){
+					alert(msg);
+				}
+				
+				document.querySelector('#whisper').onclick = function() {
+					controllType = "3";
+					if(controllType!="-1"){
+	                	var btn = COM.repeat('whisper');
+	                	if(!btn){
+	    					controll(controllType);
+	                	}else{return;}
+	                }
+				};
+				document.querySelector('#opendoor').onclick = function() {
+					controllType = "1";
+					if(controllType!="-1"){
+	                	var btn = COM.repeat('opendoor');
+	                	if(!btn){
+	    					controll(controllType);
+	                	}else{return;}
+	                }
+				};
+				document.querySelector('#closedoor').onclick = function() {
+					controllType = "2";
+					if(controllType!="-1"){
+	                	var btn = COM.repeat('closedoor');
+	                	if(!btn){
+	    					controll(controllType);
+	                	}else{return;}
+	                }
+				};
+				document.querySelector('#searchcar').onclick = function() {
+					var dest = '${csOrder.$csoOutlets.csoLongitude},${csOrder.$csoOutlets.csoLatitude}';
+					var destname = '${csOrder.$csoOutlets.csoName}';
+					location.href = "http://m.amap.com/navi/?dest="+dest+"&destName="+destname+"&key=82580560262998be89e2bc7d535f5b5d";
+				};
+				document.querySelector('#returncar').onclick = function() {
+					if(orderStatus=='0'){
+						Toast.show("您尚未取车，暂不能还车结算");
+						return;
+					}
+	                if (confirm("请确认关闭车门后还车。")) {
+		                controllType = "4";
+		                if(controllType!="-1"){
+		                	var btn = COM.repeat('closedoor');
+		                	if(!btn){
+		    					controll(controllType);
+		                	}else{return;}
+		                }
+	                }
+				};
+				document.querySelector('#orderdetail').onclick = function() {
+					location.href = "order_detail.html?orderid=" + ${csOrder.csoId};
+				};
+				document.querySelector('#reorder').onclick = function() {
+					if(orderStatus=='0'||orderStatus=='1'){
+						location.href = "order_reorder.html?orderid=" + ${csOrder.csoId};
+					}
+				};
+		    });
+		    
+		    function controll(type){
+				$.ajax({
+					url: '${basePath}m/home/order_remoteCon.html',
+					type: "GET",
+					data: {
+						type: type,
+						orderId: '${csOrder.csoId}'
+					},
+					async: false,
+					success: function(data) {
+						switch (data) {
+							case "101":
+								location.href = '403.html';
+								break;
+							case "9999":
+								Toast.show("订单已完结，不允许操作");
+								//订单详情
+								location.href="${basePath}m/home/order_detail.html?orderid=${csOrder.csoId}";
+								break;
+							case "444":
+								Toast.show("您的订单尚未开始，在取车时间前10分钟开始就能操控小纷咯，享受开关门的乐趣。");
+								break;
+							case "111":
+				                if(controllType=="1"){
+				                	setTimeout("location.reload();", 30000);
+				                }else if(controllType=="4"){
+				                	Toast.show("您的订单正在结算中，欢迎再次使用！");
+				                	setTimeout("location.href='${basePath}m/home/order.html';", 1000);
+				                }
+						}
+					}
+				});
+			}
+		    
+		    function zhimaAuth(){
+				if(isZhimaAuthToken()){
+					location.href = '${basePath}m/home/account_credit.html';
+				}else{
+					if(confirm("查看免押金将会进行芝麻信用授权，您的相关信息将会回传给芝麻信用，确定要开始授权吗？")){
+						accountZhimaAuth();
+					}
+				}
+			}
+		    
+		    function isZhimaAuthToken(){//是否已经授权过
+				var s = false;
+				$.ajax({
+					url: '${basePath}weixin/account_isZhimaAuthToken.html',
+					type: "GET",
+					async: false,
+					success: function(data) {
+						if(data=='101'){
+							location.href = '403.html';
+						}else if(data=='111'){
+							s = true;
+						}else if(data=='222'){
+							s = false;
+						}
+					}
+				});
+				return s;
+			}
+		    function accountZhimaAuth(){//授权
+				$.ajax({
+					url: '${basePath}weixin/account_zhimaAuth.html',
+					type: "GET",
+					async: false,
+					success: function(data) {
+						if(data=='101'){
+							location.href = '403.html';
+						}else{
+							location.href = data;
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

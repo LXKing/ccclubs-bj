@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 发票记录之SQL映射 -->
+	<resultMap id="CsInvoice" class="com.ccclubs.model.CsInvoice">
+		<result property="csiId" column="csi_id"/>
+		<result property="csiHost" column="csi_host"/>
+		<result property="csiTitle" column="csi_title"/>
+		<result property="csiContent" column="csi_content"/>
+		<result property="csiType" column="csi_type"/>
+		<result property="csiTariffNo" column="csi_tariff_no"/>
+		<result property="csiMoney" column="csi_money"/>
+		<result property="csiMember" column="csi_member"/>
+		<result property="csiSendType" column="csi_send_type"/>
+		<result property="csiAddress" column="csi_address"/>
+		<result property="csiChecker" column="csi_checker"/>
+		<result property="csiEditor" column="csi_editor"/>
+		<result property="csiAdder" column="csi_adder"/>
+		<result property="csiRemark" column="csi_remark"/>
+		<result property="csiCheckTime" column="csi_check_time"/>
+		<result property="csiInvoiceTime" column="csi_invoice_time"/>
+		<result property="csiUpdateTime" column="csi_update_time"/>
+		<result property="csiAddTime" column="csi_add_time"/>
+		<result property="csiStatus" column="csi_status"/>
+	</resultMap>
+		
+	<!-- 获取所有发票记录 -->
+	<select id="getCsInvoiceList" resultMap="CsInvoice">
+		select cs_invoice$suffix$.* from cs_invoice$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.csi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询-->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<isNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.csi_address=cs_address$CsAddress.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.$CsAddress.on$=cs_address$CsAddress.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_invoice$suffix$.csi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询条件sql片段 -->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<include refid="CsAddress_part.cs_address_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsInvoice_part.cs_invoice_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取发票记录分页 -->
+	<select id="getCsInvoicePage" parameterClass="java.util.HashMap" resultMap="CsInvoice">
+		select cs_invoice$suffix$.* from cs_invoice$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.csi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询 -->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<isNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.csi_address=cs_address$CsAddress.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.$CsAddress.on$=cs_address$CsAddress.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_invoice$suffix$.csi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询条件sql片段 -->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<include refid="CsAddress_part.cs_address_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsInvoice_part.cs_invoice_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取发票记录总数 -->
+	<select id="getCsInvoiceEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_invoice$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.csi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<isNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.csi_address=cs_address$CsAddress.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.$CsAddress.on$=cs_address$CsAddress.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_invoice$suffix$.csi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询条件sql片段 -->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<include refid="CsAddress_part.cs_address_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsInvoice_part.cs_invoice_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取发票记录 -->
+	<select id="getCsInvoiceById" parameterClass="java.util.HashMap" resultMap="CsInvoice">
+		select cs_invoice$suffix$.* from cs_invoice$suffix$
+		where csi_id=#id#
+	</select>
+	
+		
+	<!-- 保存发票记录 -->
+	<insert id="saveCsInvoice"  parameterClass="com.ccclubs.model.CsInvoice">
+		insert into cs_invoice$suffix$
+		(
+			cs_invoice$suffix$.csi_host
+			,cs_invoice$suffix$.csi_title
+			,cs_invoice$suffix$.csi_content
+			,cs_invoice$suffix$.csi_type
+			,cs_invoice$suffix$.csi_tariff_no
+			,cs_invoice$suffix$.csi_money
+			,cs_invoice$suffix$.csi_member
+			,cs_invoice$suffix$.csi_send_type
+			,cs_invoice$suffix$.csi_address
+			,cs_invoice$suffix$.csi_checker
+			,cs_invoice$suffix$.csi_editor
+			,cs_invoice$suffix$.csi_adder
+			,cs_invoice$suffix$.csi_remark
+			,cs_invoice$suffix$.csi_check_time
+			,cs_invoice$suffix$.csi_invoice_time
+			,cs_invoice$suffix$.csi_update_time
+			,cs_invoice$suffix$.csi_add_time
+			,cs_invoice$suffix$.csi_status
+		)
+		values(
+			<isNotNull property="csiHost" prepend="">
+				#csiHost#
+			</isNotNull>
+			<isNull property="csiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csiTitle" prepend=",">
+				#csiTitle#
+			</isNotNull>
+			<isNull property="csiTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiContent" prepend=",">
+				#csiContent#
+			</isNotNull>
+			<isNull property="csiContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiType" prepend=",">
+				#csiType#
+			</isNotNull>
+			<isNull property="csiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiTariffNo" prepend=",">
+				#csiTariffNo#
+			</isNotNull>
+			<isNull property="csiTariffNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiMoney" prepend=",">
+				#csiMoney#
+			</isNotNull>
+			<isNull property="csiMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiMember" prepend=",">
+				#csiMember#
+			</isNotNull>
+			<isNull property="csiMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiSendType" prepend=",">
+				#csiSendType#
+			</isNotNull>
+			<isNull property="csiSendType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiAddress" prepend=",">
+				#csiAddress#
+			</isNotNull>
+			<isNull property="csiAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiChecker" prepend=",">
+				#csiChecker#
+			</isNotNull>
+			<isNull property="csiChecker" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiEditor" prepend=",">
+				#csiEditor#
+			</isNotNull>
+			<isNull property="csiEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiAdder" prepend=",">
+				#csiAdder#
+			</isNotNull>
+			<isNull property="csiAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiRemark" prepend=",">
+				#csiRemark#
+			</isNotNull>
+			<isNull property="csiRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiCheckTime" prepend=",">
+				#csiCheckTime#
+			</isNotNull>
+			<isNull property="csiCheckTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiInvoiceTime" prepend=",">
+				#csiInvoiceTime#
+			</isNotNull>
+			<isNull property="csiInvoiceTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiUpdateTime" prepend=",">
+				#csiUpdateTime#
+			</isNotNull>
+			<isNull property="csiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiAddTime" prepend=",">
+				#csiAddTime#
+			</isNotNull>
+			<isNull property="csiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiStatus" prepend=",">
+				#csiStatus#
+			</isNotNull>
+			<isNull property="csiStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新发票记录 -->
+	<update id="updateCsInvoice"  parameterClass="com.ccclubs.model.CsInvoice">
+		update cs_invoice$suffix$ set
+			<isNotNull property="csiHost" prepend="">
+				cs_invoice$suffix$.csi_host = #csiHost#
+			</isNotNull>
+			<isNull property="csiHost" prepend="">
+				cs_invoice$suffix$.csi_host = null
+			</isNull>				
+			<isNotNull property="csiTitle" prepend=",">
+				cs_invoice$suffix$.csi_title = #csiTitle#
+			</isNotNull>
+			<isNull property="csiTitle" prepend=",">
+				cs_invoice$suffix$.csi_title = null
+			</isNull>				
+			<isNotNull property="csiContent" prepend=",">
+				cs_invoice$suffix$.csi_content = #csiContent#
+			</isNotNull>
+			<isNull property="csiContent" prepend=",">
+				cs_invoice$suffix$.csi_content = null
+			</isNull>				
+			<isNotNull property="csiType" prepend=",">
+				cs_invoice$suffix$.csi_type = #csiType#
+			</isNotNull>
+			<isNull property="csiType" prepend=",">
+				cs_invoice$suffix$.csi_type = null
+			</isNull>				
+			<isNotNull property="csiTariffNo" prepend=",">
+				cs_invoice$suffix$.csi_tariff_no = #csiTariffNo#
+			</isNotNull>
+			<isNull property="csiTariffNo" prepend=",">
+				cs_invoice$suffix$.csi_tariff_no = null
+			</isNull>				
+			<isNotNull property="csiMoney" prepend=",">
+				cs_invoice$suffix$.csi_money = #csiMoney#
+			</isNotNull>
+			<isNull property="csiMoney" prepend=",">
+				cs_invoice$suffix$.csi_money = null
+			</isNull>				
+			<isNotNull property="csiMember" prepend=",">
+				cs_invoice$suffix$.csi_member = #csiMember#
+			</isNotNull>
+			<isNull property="csiMember" prepend=",">
+				cs_invoice$suffix$.csi_member = null
+			</isNull>				
+			<isNotNull property="csiSendType" prepend=",">
+				cs_invoice$suffix$.csi_send_type = #csiSendType#
+			</isNotNull>
+			<isNull property="csiSendType" prepend=",">
+				cs_invoice$suffix$.csi_send_type = null
+			</isNull>				
+			<isNotNull property="csiAddress" prepend=",">
+				cs_invoice$suffix$.csi_address = #csiAddress#
+			</isNotNull>
+			<isNull property="csiAddress" prepend=",">
+				cs_invoice$suffix$.csi_address = null
+			</isNull>				
+			<isNotNull property="csiChecker" prepend=",">
+				cs_invoice$suffix$.csi_checker = #csiChecker#
+			</isNotNull>
+			<isNull property="csiChecker" prepend=",">
+				cs_invoice$suffix$.csi_checker = null
+			</isNull>				
+			<isNotNull property="csiEditor" prepend=",">
+				cs_invoice$suffix$.csi_editor = #csiEditor#
+			</isNotNull>
+			<isNull property="csiEditor" prepend=",">
+				cs_invoice$suffix$.csi_editor = null
+			</isNull>				
+			<isNotNull property="csiAdder" prepend=",">
+				cs_invoice$suffix$.csi_adder = #csiAdder#
+			</isNotNull>
+			<isNull property="csiAdder" prepend=",">
+				cs_invoice$suffix$.csi_adder = null
+			</isNull>				
+			<isNotNull property="csiRemark" prepend=",">
+				cs_invoice$suffix$.csi_remark = #csiRemark#
+			</isNotNull>
+			<isNull property="csiRemark" prepend=",">
+				cs_invoice$suffix$.csi_remark = null
+			</isNull>				
+			<isNotNull property="csiCheckTime" prepend=",">
+				cs_invoice$suffix$.csi_check_time = #csiCheckTime#
+			</isNotNull>
+			<isNull property="csiCheckTime" prepend=",">
+				cs_invoice$suffix$.csi_check_time = null
+			</isNull>				
+			<isNotNull property="csiInvoiceTime" prepend=",">
+				cs_invoice$suffix$.csi_invoice_time = #csiInvoiceTime#
+			</isNotNull>
+			<isNull property="csiInvoiceTime" prepend=",">
+				cs_invoice$suffix$.csi_invoice_time = null
+			</isNull>				
+			<isNotNull property="csiUpdateTime" prepend=",">
+				cs_invoice$suffix$.csi_update_time = #csiUpdateTime#
+			</isNotNull>
+			<isNull property="csiUpdateTime" prepend=",">
+				cs_invoice$suffix$.csi_update_time = null
+			</isNull>				
+			<isNotNull property="csiAddTime" prepend=",">
+				cs_invoice$suffix$.csi_add_time = #csiAddTime#
+			</isNotNull>
+			<isNull property="csiAddTime" prepend=",">
+				cs_invoice$suffix$.csi_add_time = null
+			</isNull>				
+			<isNotNull property="csiStatus" prepend=",">
+				cs_invoice$suffix$.csi_status = #csiStatus#
+			</isNotNull>
+			<isNull property="csiStatus" prepend=",">
+				cs_invoice$suffix$.csi_status = null
+			</isNull>				
+		where
+			csi_id=#csiId#
+	</update>
+	
+	<!-- 更新发票记录非空字段 -->
+	<update id="updateCsInvoice$NotNull"  parameterClass="com.ccclubs.model.CsInvoice">
+		update cs_invoice$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csiHost" prepend=",">
+				cs_invoice$suffix$.csi_host = #csiHost#
+			</isNotNull>		
+			<isNotNull property="csiTitle" prepend=",">
+				cs_invoice$suffix$.csi_title = #csiTitle#
+			</isNotNull>		
+			<isNotNull property="csiContent" prepend=",">
+				cs_invoice$suffix$.csi_content = #csiContent#
+			</isNotNull>		
+			<isNotNull property="csiType" prepend=",">
+				cs_invoice$suffix$.csi_type = #csiType#
+			</isNotNull>		
+			<isNotNull property="csiTariffNo" prepend=",">
+				cs_invoice$suffix$.csi_tariff_no = #csiTariffNo#
+			</isNotNull>		
+			<isNotNull property="csiMoney" prepend=",">
+				cs_invoice$suffix$.csi_money = #csiMoney#
+			</isNotNull>		
+			<isNotNull property="csiMember" prepend=",">
+				cs_invoice$suffix$.csi_member = #csiMember#
+			</isNotNull>		
+			<isNotNull property="csiSendType" prepend=",">
+				cs_invoice$suffix$.csi_send_type = #csiSendType#
+			</isNotNull>		
+			<isNotNull property="csiAddress" prepend=",">
+				cs_invoice$suffix$.csi_address = #csiAddress#
+			</isNotNull>		
+			<isNotNull property="csiChecker" prepend=",">
+				cs_invoice$suffix$.csi_checker = #csiChecker#
+			</isNotNull>		
+			<isNotNull property="csiEditor" prepend=",">
+				cs_invoice$suffix$.csi_editor = #csiEditor#
+			</isNotNull>		
+			<isNotNull property="csiAdder" prepend=",">
+				cs_invoice$suffix$.csi_adder = #csiAdder#
+			</isNotNull>		
+			<isNotNull property="csiRemark" prepend=",">
+				cs_invoice$suffix$.csi_remark = #csiRemark#
+			</isNotNull>		
+			<isNotNull property="csiCheckTime" prepend=",">
+				cs_invoice$suffix$.csi_check_time = #csiCheckTime#
+			</isNotNull>		
+			<isNotNull property="csiInvoiceTime" prepend=",">
+				cs_invoice$suffix$.csi_invoice_time = #csiInvoiceTime#
+			</isNotNull>		
+			<isNotNull property="csiUpdateTime" prepend=",">
+				cs_invoice$suffix$.csi_update_time = #csiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csiAddTime" prepend=",">
+				cs_invoice$suffix$.csi_add_time = #csiAddTime#
+			</isNotNull>		
+			<isNotNull property="csiStatus" prepend=",">
+				cs_invoice$suffix$.csi_status = #csiStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csi_id=#csiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个发票记录 -->
+	<delete id="deleteCsInvoiceById" parameterClass="java.util.HashMap">
+		delete from cs_invoice$suffix$ where csi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个发票记录 -->
+	<update id="removeCsInvoiceById" parameterClass="java.util.HashMap">
+		update cs_invoice$suffix$ set  cs_invoice$suffix$.csi_status=-1  where csi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新发票记录 -->
+	<update id="updateCsInvoiceBy"  parameterClass="java.util.HashMap">
+		update cs_invoice$suffix$ set		
+			csi_id=csi_id
+			<isNotNull property="V_csiId" prepend=",">
+				cs_invoice$suffix$.csi_id = #V_csiId#
+			</isNotNull>		
+			<isNotNull property="V_csiHost" prepend=",">
+				cs_invoice$suffix$.csi_host = #V_csiHost#
+			</isNotNull>		
+			<isNotNull property="V_csiTitle" prepend=",">
+				cs_invoice$suffix$.csi_title = #V_csiTitle#
+			</isNotNull>		
+			<isNotNull property="V_csiContent" prepend=",">
+				cs_invoice$suffix$.csi_content = #V_csiContent#
+			</isNotNull>		
+			<isNotNull property="V_csiType" prepend=",">
+				cs_invoice$suffix$.csi_type = #V_csiType#
+			</isNotNull>		
+			<isNotNull property="V_csiTariffNo" prepend=",">
+				cs_invoice$suffix$.csi_tariff_no = #V_csiTariffNo#
+			</isNotNull>		
+			<isNotNull property="V_csiMoney" prepend=",">
+				cs_invoice$suffix$.csi_money = #V_csiMoney#
+			</isNotNull>		
+			<isNotNull property="V_csiMember" prepend=",">
+				cs_invoice$suffix$.csi_member = #V_csiMember#
+			</isNotNull>		
+			<isNotNull property="V_csiSendType" prepend=",">
+				cs_invoice$suffix$.csi_send_type = #V_csiSendType#
+			</isNotNull>		
+			<isNotNull property="V_csiAddress" prepend=",">
+				cs_invoice$suffix$.csi_address = #V_csiAddress#
+			</isNotNull>		
+			<isNotNull property="V_csiChecker" prepend=",">
+				cs_invoice$suffix$.csi_checker = #V_csiChecker#
+			</isNotNull>		
+			<isNotNull property="V_csiEditor" prepend=",">
+				cs_invoice$suffix$.csi_editor = #V_csiEditor#
+			</isNotNull>		
+			<isNotNull property="V_csiAdder" prepend=",">
+				cs_invoice$suffix$.csi_adder = #V_csiAdder#
+			</isNotNull>		
+			<isNotNull property="V_csiRemark" prepend=",">
+				cs_invoice$suffix$.csi_remark = #V_csiRemark#
+			</isNotNull>		
+			<isNotNull property="V_csiCheckTime" prepend=",">
+				cs_invoice$suffix$.csi_check_time = #V_csiCheckTime#
+			</isNotNull>		
+			<isNotNull property="V_csiInvoiceTime" prepend=",">
+				cs_invoice$suffix$.csi_invoice_time = #V_csiInvoiceTime#
+			</isNotNull>		
+			<isNotNull property="V_csiUpdateTime" prepend=",">
+				cs_invoice$suffix$.csi_update_time = #V_csiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csiAddTime" prepend=",">
+				cs_invoice$suffix$.csi_add_time = #V_csiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csiStatus" prepend=",">
+				cs_invoice$suffix$.csi_status = #V_csiStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.csi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_invoice$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询-->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<isNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.csi_address=cs_address$CsAddress.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsAddress.on">
+				left join cs_address cs_address$CsAddress.suffix$ on cs_invoice$suffix$.$CsAddress.on$=cs_address$CsAddress.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_invoice$suffix$.csi_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsiMember"><!-- 调用一下CsiMember，把CsMember指向CsiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员地址]查询条件sql片段 -->
+		<isNotNull property="CsiAddress"><!-- 调用一下CsiAddress，把CsAddress指向CsiAddress --></isNotNull>
+		<isNotNull property="CsAddress">
+			<include refid="CsAddress_part.cs_address_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsInvoice_part.cs_invoice_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除发票记录 -->
+	<update id="deleteCsInvoiceBy"  parameterClass="java.util.HashMap">
+		delete from cs_invoice$suffix$ where 
+		cs_invoice$suffix$.csi_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsInvoice_part.cs_invoice_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

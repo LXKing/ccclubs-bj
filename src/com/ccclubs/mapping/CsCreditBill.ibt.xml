@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 信用账单之SQL映射 -->
+	<resultMap id="CsCreditBill" class="com.ccclubs.model.CsCreditBill">
+		<result property="cscbId" column="cscb_id"/>
+		<result property="cscbHost" column="cscb_host"/>
+		<result property="cscbTitle" column="cscb_title"/>
+		<result property="cscbMember" column="cscb_member"/>
+		<result property="cscbCreditCard" column="cscb_credit_card"/>
+		<result property="cscbOrder" column="cscb_order"/>
+		<result property="cscbViolat" column="cscb_violat"/>
+		<result property="cscbTrouble" column="cscb_trouble"/>
+		<result property="cscbValue" column="cscb_value"/>
+		<result property="cscbPayment" column="cscb_payment"/>
+		<result property="cscbRepayTime" column="cscb_repay_time"/>
+		<result property="cscbUpdateTime" column="cscb_update_time"/>
+		<result property="cscbAddTime" column="cscb_add_time"/>
+		<result property="cscbEditor" column="cscb_editor"/>
+		<result property="cscbRemark" column="cscb_remark"/>
+		<result property="cscbProcess" column="cscb_process"/>
+		<result property="cscbPaySerial" column="cscb_pay_serial"/>
+		<result property="cscbState" column="cscb_state"/>
+		<result property="cscbStatus" column="cscb_status"/>
+	</resultMap>
+		
+	<!-- 获取所有信用账单 -->
+	<select id="getCsCreditBillList" resultMap="CsCreditBill">
+		select cs_credit_bill$suffix$.* from cs_credit_bill$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.cscb_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询-->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.cscb_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.cscb_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询-->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<isNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.cscb_violat=cs_violat$CsViolat.suffix$.csv_id
+			</isNull>
+			<isNotNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.$CsViolat.on$=cs_violat$CsViolat.suffix$.csv_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询-->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<isNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.cscb_trouble=cs_trouble$CsTrouble.suffix$.cst_id
+			</isNull>
+			<isNotNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.$CsTrouble.on$=cs_trouble$CsTrouble.suffix$.cst_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_bill$suffix$.cscb_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询条件sql片段 -->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<include refid="CsViolat_part.cs_violat_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询条件sql片段 -->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<include refid="CsTrouble_part.cs_trouble_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditBill_part.cs_credit_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscb_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取信用账单分页 -->
+	<select id="getCsCreditBillPage" parameterClass="java.util.HashMap" resultMap="CsCreditBill">
+		select cs_credit_bill$suffix$.* from cs_credit_bill$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.cscb_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询 -->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.cscb_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.cscb_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询 -->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<isNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.cscb_violat=cs_violat$CsViolat.suffix$.csv_id
+			</isNull>
+			<isNotNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.$CsViolat.on$=cs_violat$CsViolat.suffix$.csv_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询 -->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<isNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.cscb_trouble=cs_trouble$CsTrouble.suffix$.cst_id
+			</isNull>
+			<isNotNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.$CsTrouble.on$=cs_trouble$CsTrouble.suffix$.cst_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_bill$suffix$.cscb_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询条件sql片段 -->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<include refid="CsViolat_part.cs_violat_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询条件sql片段 -->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<include refid="CsTrouble_part.cs_trouble_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditBill_part.cs_credit_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscb_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取信用账单总数 -->
+	<select id="getCsCreditBillEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_credit_bill$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.cscb_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.cscb_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.cscb_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<isNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.cscb_violat=cs_violat$CsViolat.suffix$.csv_id
+			</isNull>
+			<isNotNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.$CsViolat.on$=cs_violat$CsViolat.suffix$.csv_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<isNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.cscb_trouble=cs_trouble$CsTrouble.suffix$.cst_id
+			</isNull>
+			<isNotNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.$CsTrouble.on$=cs_trouble$CsTrouble.suffix$.cst_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_bill$suffix$.cscb_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询条件sql片段 -->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<include refid="CsViolat_part.cs_violat_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询条件sql片段 -->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<include refid="CsTrouble_part.cs_trouble_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditBill_part.cs_credit_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取信用账单 -->
+	<select id="getCsCreditBillById" parameterClass="java.util.HashMap" resultMap="CsCreditBill">
+		select cs_credit_bill$suffix$.* from cs_credit_bill$suffix$
+		where cscb_id=#id#
+	</select>
+	
+		
+	<!-- 保存信用账单 -->
+	<insert id="saveCsCreditBill"  parameterClass="com.ccclubs.model.CsCreditBill">
+		insert into cs_credit_bill$suffix$
+		(
+			cs_credit_bill$suffix$.cscb_host
+			,cs_credit_bill$suffix$.cscb_title
+			,cs_credit_bill$suffix$.cscb_member
+			,cs_credit_bill$suffix$.cscb_credit_card
+			,cs_credit_bill$suffix$.cscb_order
+			,cs_credit_bill$suffix$.cscb_violat
+			,cs_credit_bill$suffix$.cscb_trouble
+			,cs_credit_bill$suffix$.cscb_value
+			,cs_credit_bill$suffix$.cscb_payment
+			,cs_credit_bill$suffix$.cscb_repay_time
+			,cs_credit_bill$suffix$.cscb_update_time
+			,cs_credit_bill$suffix$.cscb_add_time
+			,cs_credit_bill$suffix$.cscb_editor
+			,cs_credit_bill$suffix$.cscb_remark
+			,cs_credit_bill$suffix$.cscb_process
+			,cs_credit_bill$suffix$.cscb_pay_serial
+			,cs_credit_bill$suffix$.cscb_state
+			,cs_credit_bill$suffix$.cscb_status
+		)
+		values(
+			<isNotNull property="cscbHost" prepend="">
+				#cscbHost#
+			</isNotNull>
+			<isNull property="cscbHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscbTitle" prepend=",">
+				#cscbTitle#
+			</isNotNull>
+			<isNull property="cscbTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbMember" prepend=",">
+				#cscbMember#
+			</isNotNull>
+			<isNull property="cscbMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbCreditCard" prepend=",">
+				#cscbCreditCard#
+			</isNotNull>
+			<isNull property="cscbCreditCard" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbOrder" prepend=",">
+				#cscbOrder#
+			</isNotNull>
+			<isNull property="cscbOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbViolat" prepend=",">
+				#cscbViolat#
+			</isNotNull>
+			<isNull property="cscbViolat" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbTrouble" prepend=",">
+				#cscbTrouble#
+			</isNotNull>
+			<isNull property="cscbTrouble" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbValue" prepend=",">
+				#cscbValue#
+			</isNotNull>
+			<isNull property="cscbValue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbPayment" prepend=",">
+				#cscbPayment#
+			</isNotNull>
+			<isNull property="cscbPayment" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbRepayTime" prepend=",">
+				#cscbRepayTime#
+			</isNotNull>
+			<isNull property="cscbRepayTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbUpdateTime" prepend=",">
+				#cscbUpdateTime#
+			</isNotNull>
+			<isNull property="cscbUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbAddTime" prepend=",">
+				#cscbAddTime#
+			</isNotNull>
+			<isNull property="cscbAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbEditor" prepend=",">
+				#cscbEditor#
+			</isNotNull>
+			<isNull property="cscbEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbRemark" prepend=",">
+				#cscbRemark#
+			</isNotNull>
+			<isNull property="cscbRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbProcess" prepend=",">
+				#cscbProcess#
+			</isNotNull>
+			<isNull property="cscbProcess" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbPaySerial" prepend=",">
+				#cscbPaySerial#
+			</isNotNull>
+			<isNull property="cscbPaySerial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbState" prepend=",">
+				#cscbState#
+			</isNotNull>
+			<isNull property="cscbState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscbStatus" prepend=",">
+				#cscbStatus#
+			</isNotNull>
+			<isNull property="cscbStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新信用账单 -->
+	<update id="updateCsCreditBill"  parameterClass="com.ccclubs.model.CsCreditBill">
+		update cs_credit_bill$suffix$ set
+			<isNotNull property="cscbHost" prepend="">
+				cs_credit_bill$suffix$.cscb_host = #cscbHost#
+			</isNotNull>
+			<isNull property="cscbHost" prepend="">
+				cs_credit_bill$suffix$.cscb_host = null
+			</isNull>				
+			<isNotNull property="cscbTitle" prepend=",">
+				cs_credit_bill$suffix$.cscb_title = #cscbTitle#
+			</isNotNull>
+			<isNull property="cscbTitle" prepend=",">
+				cs_credit_bill$suffix$.cscb_title = null
+			</isNull>				
+			<isNotNull property="cscbMember" prepend=",">
+				cs_credit_bill$suffix$.cscb_member = #cscbMember#
+			</isNotNull>
+			<isNull property="cscbMember" prepend=",">
+				cs_credit_bill$suffix$.cscb_member = null
+			</isNull>				
+			<isNotNull property="cscbCreditCard" prepend=",">
+				cs_credit_bill$suffix$.cscb_credit_card = #cscbCreditCard#
+			</isNotNull>
+			<isNull property="cscbCreditCard" prepend=",">
+				cs_credit_bill$suffix$.cscb_credit_card = null
+			</isNull>				
+			<isNotNull property="cscbOrder" prepend=",">
+				cs_credit_bill$suffix$.cscb_order = #cscbOrder#
+			</isNotNull>
+			<isNull property="cscbOrder" prepend=",">
+				cs_credit_bill$suffix$.cscb_order = null
+			</isNull>				
+			<isNotNull property="cscbViolat" prepend=",">
+				cs_credit_bill$suffix$.cscb_violat = #cscbViolat#
+			</isNotNull>
+			<isNull property="cscbViolat" prepend=",">
+				cs_credit_bill$suffix$.cscb_violat = null
+			</isNull>				
+			<isNotNull property="cscbTrouble" prepend=",">
+				cs_credit_bill$suffix$.cscb_trouble = #cscbTrouble#
+			</isNotNull>
+			<isNull property="cscbTrouble" prepend=",">
+				cs_credit_bill$suffix$.cscb_trouble = null
+			</isNull>				
+			<isNotNull property="cscbValue" prepend=",">
+				cs_credit_bill$suffix$.cscb_value = #cscbValue#
+			</isNotNull>
+			<isNull property="cscbValue" prepend=",">
+				cs_credit_bill$suffix$.cscb_value = null
+			</isNull>				
+			<isNotNull property="cscbPayment" prepend=",">
+				cs_credit_bill$suffix$.cscb_payment = #cscbPayment#
+			</isNotNull>
+			<isNull property="cscbPayment" prepend=",">
+				cs_credit_bill$suffix$.cscb_payment = null
+			</isNull>				
+			<isNotNull property="cscbRepayTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_repay_time = #cscbRepayTime#
+			</isNotNull>
+			<isNull property="cscbRepayTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_repay_time = null
+			</isNull>				
+			<isNotNull property="cscbUpdateTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_update_time = #cscbUpdateTime#
+			</isNotNull>
+			<isNull property="cscbUpdateTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_update_time = null
+			</isNull>				
+			<isNotNull property="cscbAddTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_add_time = #cscbAddTime#
+			</isNotNull>
+			<isNull property="cscbAddTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_add_time = null
+			</isNull>				
+			<isNotNull property="cscbEditor" prepend=",">
+				cs_credit_bill$suffix$.cscb_editor = #cscbEditor#
+			</isNotNull>
+			<isNull property="cscbEditor" prepend=",">
+				cs_credit_bill$suffix$.cscb_editor = null
+			</isNull>				
+			<isNotNull property="cscbRemark" prepend=",">
+				cs_credit_bill$suffix$.cscb_remark = #cscbRemark#
+			</isNotNull>
+			<isNull property="cscbRemark" prepend=",">
+				cs_credit_bill$suffix$.cscb_remark = null
+			</isNull>				
+			<isNotNull property="cscbProcess" prepend=",">
+				cs_credit_bill$suffix$.cscb_process = #cscbProcess#
+			</isNotNull>
+			<isNull property="cscbProcess" prepend=",">
+				cs_credit_bill$suffix$.cscb_process = null
+			</isNull>				
+			<isNotNull property="cscbPaySerial" prepend=",">
+				cs_credit_bill$suffix$.cscb_pay_serial = #cscbPaySerial#
+			</isNotNull>
+			<isNull property="cscbPaySerial" prepend=",">
+				cs_credit_bill$suffix$.cscb_pay_serial = null
+			</isNull>				
+			<isNotNull property="cscbState" prepend=",">
+				cs_credit_bill$suffix$.cscb_state = #cscbState#
+			</isNotNull>
+			<isNull property="cscbState" prepend=",">
+				cs_credit_bill$suffix$.cscb_state = null
+			</isNull>				
+			<isNotNull property="cscbStatus" prepend=",">
+				cs_credit_bill$suffix$.cscb_status = #cscbStatus#
+			</isNotNull>
+			<isNull property="cscbStatus" prepend=",">
+				cs_credit_bill$suffix$.cscb_status = null
+			</isNull>				
+		where
+			cscb_id=#cscbId#
+	</update>
+	
+	<!-- 更新信用账单非空字段 -->
+	<update id="updateCsCreditBill$NotNull"  parameterClass="com.ccclubs.model.CsCreditBill">
+		update cs_credit_bill$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscbHost" prepend=",">
+				cs_credit_bill$suffix$.cscb_host = #cscbHost#
+			</isNotNull>		
+			<isNotNull property="cscbTitle" prepend=",">
+				cs_credit_bill$suffix$.cscb_title = #cscbTitle#
+			</isNotNull>		
+			<isNotNull property="cscbMember" prepend=",">
+				cs_credit_bill$suffix$.cscb_member = #cscbMember#
+			</isNotNull>		
+			<isNotNull property="cscbCreditCard" prepend=",">
+				cs_credit_bill$suffix$.cscb_credit_card = #cscbCreditCard#
+			</isNotNull>		
+			<isNotNull property="cscbOrder" prepend=",">
+				cs_credit_bill$suffix$.cscb_order = #cscbOrder#
+			</isNotNull>		
+			<isNotNull property="cscbViolat" prepend=",">
+				cs_credit_bill$suffix$.cscb_violat = #cscbViolat#
+			</isNotNull>		
+			<isNotNull property="cscbTrouble" prepend=",">
+				cs_credit_bill$suffix$.cscb_trouble = #cscbTrouble#
+			</isNotNull>		
+			<isNotNull property="cscbValue" prepend=",">
+				cs_credit_bill$suffix$.cscb_value = #cscbValue#
+			</isNotNull>		
+			<isNotNull property="cscbPayment" prepend=",">
+				cs_credit_bill$suffix$.cscb_payment = #cscbPayment#
+			</isNotNull>		
+			<isNotNull property="cscbRepayTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_repay_time = #cscbRepayTime#
+			</isNotNull>		
+			<isNotNull property="cscbUpdateTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_update_time = #cscbUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscbAddTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_add_time = #cscbAddTime#
+			</isNotNull>		
+			<isNotNull property="cscbEditor" prepend=",">
+				cs_credit_bill$suffix$.cscb_editor = #cscbEditor#
+			</isNotNull>		
+			<isNotNull property="cscbRemark" prepend=",">
+				cs_credit_bill$suffix$.cscb_remark = #cscbRemark#
+			</isNotNull>		
+			<isNotNull property="cscbProcess" prepend=",">
+				cs_credit_bill$suffix$.cscb_process = #cscbProcess#
+			</isNotNull>		
+			<isNotNull property="cscbPaySerial" prepend=",">
+				cs_credit_bill$suffix$.cscb_pay_serial = #cscbPaySerial#
+			</isNotNull>		
+			<isNotNull property="cscbState" prepend=",">
+				cs_credit_bill$suffix$.cscb_state = #cscbState#
+			</isNotNull>		
+			<isNotNull property="cscbStatus" prepend=",">
+				cs_credit_bill$suffix$.cscb_status = #cscbStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscb_id=#cscbId#
+	</update>
+	
+
+	<!-- 根据ID删除一个信用账单 -->
+	<delete id="deleteCsCreditBillById" parameterClass="java.util.HashMap">
+		delete from cs_credit_bill$suffix$ where cscb_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个信用账单 -->
+	<update id="removeCsCreditBillById" parameterClass="java.util.HashMap">
+		update cs_credit_bill$suffix$ set  cs_credit_bill$suffix$.cscb_status=-1  where cscb_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新信用账单 -->
+	<update id="updateCsCreditBillBy"  parameterClass="java.util.HashMap">
+		update cs_credit_bill$suffix$ set		
+			cscb_id=cscb_id
+			<isNotNull property="V_cscbId" prepend=",">
+				cs_credit_bill$suffix$.cscb_id = #V_cscbId#
+			</isNotNull>		
+			<isNotNull property="V_cscbHost" prepend=",">
+				cs_credit_bill$suffix$.cscb_host = #V_cscbHost#
+			</isNotNull>		
+			<isNotNull property="V_cscbTitle" prepend=",">
+				cs_credit_bill$suffix$.cscb_title = #V_cscbTitle#
+			</isNotNull>		
+			<isNotNull property="V_cscbMember" prepend=",">
+				cs_credit_bill$suffix$.cscb_member = #V_cscbMember#
+			</isNotNull>		
+			<isNotNull property="V_cscbCreditCard" prepend=",">
+				cs_credit_bill$suffix$.cscb_credit_card = #V_cscbCreditCard#
+			</isNotNull>		
+			<isNotNull property="V_cscbOrder" prepend=",">
+				cs_credit_bill$suffix$.cscb_order = #V_cscbOrder#
+			</isNotNull>		
+			<isNotNull property="V_cscbViolat" prepend=",">
+				cs_credit_bill$suffix$.cscb_violat = #V_cscbViolat#
+			</isNotNull>		
+			<isNotNull property="V_cscbTrouble" prepend=",">
+				cs_credit_bill$suffix$.cscb_trouble = #V_cscbTrouble#
+			</isNotNull>		
+			<isNotNull property="V_cscbValue" prepend=",">
+				cs_credit_bill$suffix$.cscb_value = #V_cscbValue#
+			</isNotNull>		
+			<isNotNull property="V_cscbPayment" prepend=",">
+				cs_credit_bill$suffix$.cscb_payment = #V_cscbPayment#
+			</isNotNull>		
+			<isNotNull property="V_cscbRepayTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_repay_time = #V_cscbRepayTime#
+			</isNotNull>		
+			<isNotNull property="V_cscbUpdateTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_update_time = #V_cscbUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscbAddTime" prepend=",">
+				cs_credit_bill$suffix$.cscb_add_time = #V_cscbAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscbEditor" prepend=",">
+				cs_credit_bill$suffix$.cscb_editor = #V_cscbEditor#
+			</isNotNull>		
+			<isNotNull property="V_cscbRemark" prepend=",">
+				cs_credit_bill$suffix$.cscb_remark = #V_cscbRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscbProcess" prepend=",">
+				cs_credit_bill$suffix$.cscb_process = #V_cscbProcess#
+			</isNotNull>		
+			<isNotNull property="V_cscbPaySerial" prepend=",">
+				cs_credit_bill$suffix$.cscb_pay_serial = #V_cscbPaySerial#
+			</isNotNull>		
+			<isNotNull property="V_cscbState" prepend=",">
+				cs_credit_bill$suffix$.cscb_state = #V_cscbState#
+			</isNotNull>		
+			<isNotNull property="V_cscbStatus" prepend=",">
+				cs_credit_bill$suffix$.cscb_status = #V_cscbStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.cscb_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_bill$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询-->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.cscb_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_credit_bill$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.cscb_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_credit_bill$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询-->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<isNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.cscb_violat=cs_violat$CsViolat.suffix$.csv_id
+			</isNull>
+			<isNotNull property="CsViolat.on">
+				left join cs_violat cs_violat$CsViolat.suffix$ on cs_credit_bill$suffix$.$CsViolat.on$=cs_violat$CsViolat.suffix$.csv_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询-->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<isNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.cscb_trouble=cs_trouble$CsTrouble.suffix$.cst_id
+			</isNull>
+			<isNotNull property="CsTrouble.on">
+				left join cs_trouble cs_trouble$CsTrouble.suffix$ on cs_credit_bill$suffix$.$CsTrouble.on$=cs_trouble$CsTrouble.suffix$.cst_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_credit_bill$suffix$.cscb_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscbMember"><!-- 调用一下CscbMember，把CsMember指向CscbMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CscbCreditCard"><!-- 调用一下CscbCreditCard，把CsCreditCard指向CscbCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CscbOrder"><!-- 调用一下CscbOrder，把CsOrder指向CscbOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆违章]查询条件sql片段 -->
+		<isNotNull property="CscbViolat"><!-- 调用一下CscbViolat，把CsViolat指向CscbViolat --></isNotNull>
+		<isNotNull property="CsViolat">
+			<include refid="CsViolat_part.cs_violat_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆事故]查询条件sql片段 -->
+		<isNotNull property="CscbTrouble"><!-- 调用一下CscbTrouble，把CsTrouble指向CscbTrouble --></isNotNull>
+		<isNotNull property="CsTrouble">
+			<include refid="CsTrouble_part.cs_trouble_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCreditBill_part.cs_credit_bill_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除信用账单 -->
+	<update id="deleteCsCreditBillBy"  parameterClass="java.util.HashMap">
+		delete from cs_credit_bill$suffix$ where 
+		cs_credit_bill$suffix$.cscb_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCreditBill_part.cs_credit_bill_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

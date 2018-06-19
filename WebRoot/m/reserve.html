@@ -1,0 +1,218 @@
+<s:if test="#request.isAjax!='true'">
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>车纷享-订车</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/common.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content">
+			<div id="reserve-location" style="height: 46px !important;position: relative;" class="input-group input-row" >
+				<span class="media-object icon-reserve-location" style="margin-top: 5px;"></span>
+				<input id="areadot" style="width: 100%; padding-left: 40px; padding-top: 8px; margin-left: -40px;" onclick="selectarea()" type="search" readOnly="true" placeholder="点击选择网点" />
+				<div class="table-view-icon" style="display:block;bottom:15px;"></div>
+			</div>
+			<ul id="o_from_lst" class="addr-lst" style="display: black; padding: 5px 5px;"></ul>
+			<ul class="table-view reserve mt15" id="carlist">
+</s:if>
+
+			    <s:if test="#request.page.result.size()>0">
+					<s:iterator value="#request.page.result" id="item" status="i">
+					    <li class="table-view-cell media table_list_line">
+					    	<s:if test="#item.values.occupy=='occupy'||#item.values.xianxing==1">
+					    	<a class="navigate-right" data-value="${item.cscId}">
+					    	</s:if><s:else>
+					    	<a href="#" onclick="gotonext('${item.cscId}')" data-value="${item.cscId}">
+					    	</s:else>
+								<div class="reserve-panel">
+									<div class="reserve-des">
+										<div class="reserve-img media-object pull-left" style="max-height: 96px; width: 126px;">
+											<s:if test="#item.cscPreview!=''&&#item.cscPreview!=null">
+												<img style="width: 100%; position: relative;top:-30px;" src="${item.cscPreview}">
+											</s:if><s:else>
+												<img style="width: 100%;" src="${lz:or(item.cscPreview,item.$cscModel.cscmImage)}">
+											</s:else>
+											<span>${item.$cscModel.cscmName}</span>
+										</div>
+										<div class="media-body">
+											<p>
+												<span class="car-number">${item.cscCarNo}</span>
+											</p>
+											<p>
+												${lz:set("prices",(cc:prices(session.ccclubs_web_host.shId,item.$cscModel.cscmId,null)))}
+												<span class="car-price">${prices["租金.工作日一天|租金.每天"]}元/天</span><span class="text-split"></span>
+												<span class="car-price">${prices["租金.工作日白天小时|租金.白天小时|租金.每小时"]}元/时</span>
+											</p>
+											<p style="padding-top: 0.8rem">
+											    <s:if test="#item.$cscModel.cscmType==0">
+													<span class="ccc-desc-label blue">油量 ${item.values.oil_left} %</span>
+												</s:if>
+												<s:else>
+											    	${lz:set("dqxh", lz:query$("ccclubs_system","select css_endurance from cs_state where css_number = ?",item.cscNumber)[0].cssEndurance)}
+													<span class="ccc-desc-label blue">续航 ${dqxh} KM</span>
+											    </s:else>
+												<s:if test="#item.values.xianxing==1">
+												    <span class="ccc-desc-label red">今日限行</span>
+												</s:if>
+											</p>
+										</div>
+									</div>
+									<div class="reserve-model ">
+										<p>
+											<span class="media-object pull-left icon-reserve-location-small"></span><span class="outlet-name">${item.$cscOutlets.csoName}</span>
+											<span class="car-distance" data-lat='${item.cscLatitude}' data-lng='${item.cscLongitude}'>>10KM</span>
+										</p>
+									</div>
+								</div> </a>
+								<s:action name="reserve_timeline" executeResult="true" namespace="/m">
+									<s:param name="carid">${item.cscId}</s:param>
+									<s:param name="date">${date}</s:param>
+									<s:param name="currentstarttime">${startTime}</s:param>
+									<s:param name="currentfinishtime">${finishTime}</s:param>
+								</s:action>
+						</li>
+			        </s:iterator>
+			    </s:if>
+			    <s:else>
+			    	<s:if test="#request.baseOrderInfo.csoModel!=-1">
+						<div style="text-align: center;">没有找到符合要求的车辆～ 换个搜索条件，试试看 &raquo;</div>
+					</s:if>
+					<s:else>
+						<div style="text-align: center;">车辆临时下线，可能是洗车或者保养去了哦。过会儿再来吧。</div>
+					</s:else>
+			    </s:else>
+				<!-- 没有车辆查看附近车辆
+					<div class="area-not-car">
+						<p>对不起，该网店暂时没有可用车辆</p>
+						<div class="area-not-car-btn"><p>查看网点附近的可用车辆</p></div>
+					</div>
+				 -->
+<s:if test="#request.isAjax!='true'">
+			</ul>
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer">
+				<div id="ccc-overlay"></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+					</div>
+				</div>
+			</div>
+			<div style="display: none;text-align: center;" class="more-loading">
+				正在加载...
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<div id="tempdata" style="display: none;"></div>
+		<div id="iCenter"></div>
+		<input id="pagetotal" type="hidden" value="${page.total}" />
+		<input id="longitude" type="hidden" value="${baseOrderInfo.csoLongitude}" />
+		<input id="latitude" type="hidden" value="${baseOrderInfo.csoLatitude}" />
+		<input id="startTimeIndex" type="hidden" value="${startTimeIndex}" />
+		<input id="finishTimeIndex" type="hidden" value="${finishTimeIndex}" />
+		<input id="csoModel" type="hidden" value="${csoModel}" />
+		<input id="host" type="hidden" value="${host}" />
+		<!-- 区域异步加载 -->
+			<div id="ccc-area-box">
+				
+			</div>
+		<!-- <script type="text/javascript" src="js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script> -->
+		<script type="text/javascript" src="../js/jquery-1.10.1.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/reserve.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/ccclubs-date-utils.js?v=${lz:config('version')}"></script>
+		
+		<script type="text/javascript" src="js/ccclubs-order-util.js?v=${lz:config('version')}" ></script>
+		<script language="javascript" src="http://webapi.amap.com/maps?v=1.3&key=74273c110fdb45f1416484650b403bec"></script>
+		<script type="text/javascript" src="js/iscroll.js?v=${lz:config('version')}"></script>
+		<script>
+			$("#areadot").val(Cache.get('area_val').data+"-"+Cache.get('dot_val').data);
+		//点击选择地区
+			function selectarea(){
+				$("#ccc-area-box").show();
+				$("#ccc-area-box").html("");
+				$.get('area-dot.html', function(data) {
+					$('#ccc-area-box').html(data);
+				});
+			}
+			if (OrderInfoOperate.getCityValue() == null || OrderInfoOperate.getCityValue() == ""||OrderInfoOperate.getCityValue()==undefined||OrderInfoOperate.getCityValue()==1) {
+				OrderInfoOperate.setCity('杭州',1);
+			}
+			function selectResult(index) {
+				if (navigator.userAgent.indexOf("MSIE") > 0) {
+					document.getElementById(target).onpropertychange = null;
+					document.getElementById(target).onfocus = focus_callback;
+				}
+				var text = document.getElementById("divid" + (index + 1)).innerHTML.replace(/<[^>].*?>.*<\/[^>].*?>/g, "");
+				document.getElementById(target).value = text.replace('amp;', '');
+				document.getElementById(target + "_lst").style.display = "none";
+				$('#bar_to, #bar_pmob').show();
+				if (target == 'o_from') {
+					_latitude = $('#divid' + (index + 1)).attr('data-lat');
+					_longitude = $('#divid' + (index + 1)).attr('data-lon');
+					var _location=text.replace('amp;', '')
+					Cache.save('location','');	
+					Cache.save('location',_location);					
+					window.location.href = 'reserve.html?latitude='+_latitude+'&longitude='+_longitude+'&startTime='+OrderInfoOperate.getStartTime()+'&finishTime='+OrderInfoOperate.getFinishTime()+'&host='+Cache.get('host_value').data+'&carModel='+Cache.get('model_value').data+''+'&csoArea='+Cache.get('area_id').data+'&csoOutlets='+Cache.get('dot_id').data;
+				}
+			}
+			//选择网点确定事件
+			var area_id="";
+			var dot_id="";
+			function mineDot(){
+				//如果用户没有滑动区域时执行
+				if(area_id==""||area_id==null){
+					Cache.save('area_id', first_area_id);
+					Cache.save('area_val', first_area_name);
+				}else{
+					Cache.save('area_id', area_id);
+					Cache.save('area_val', area_val);
+				}
+				//如果用户没有滑动网点时执行
+				if(dot_id=='' || dot_id==null){
+					Cache.save('dot_id', "");
+					Cache.save('dot_val', "所有网点");
+				}else{
+					Cache.save('dot_id', dot_id);
+					Cache.save('dot_val', dot_val);
+				}
+				
+				$("#areadot").val(Cache.get('area_val').data+"-"+Cache.get('dot_val').data);
+				$("#ccc-area-box").hide();
+				var params = "?latitude="+Cache.get('latitude').data+"&longitude="+Cache.get('longitude').data;
+				var startTime = new Date(Cache.get('start_time').data).toStringL('F');
+				var finishTime = new Date(Cache.get('finish_time').data).toStringL('F');
+				startTime=Cache.get('start_time').data;
+				finishTime=Cache.get('finish_time').data;
+				
+				if( (isNull(startTime)!='空') && (isNull(finishTime)!='空') ){
+					params = params + "&startTime=" + startTime + "&finishTime=" + finishTime;
+				}
+				params = params + "&host=" + Cache.get('host_value').data + "&carModel=" + Cache.get('model_value').data +"&csoArea="+Cache.get('area_id').data+"&csoOutlets="+Cache.get('dot_id').data;
+				
+				location.href = 'reserve.html' + params;
+			}
+			function gotonext(carid){
+				var startTime = $('#startTimeIndex').val();
+				var finishTime = $('#finishTimeIndex').val();
+				location.href="checkout.html?carid="+carid+"&startTime="+startTime+"&finishTime="+finishTime;
+			}
+			
+		</script>
+	</body>
+
+</html>
+</s:if>

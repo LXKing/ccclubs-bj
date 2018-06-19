@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+
+	
+	<!-- 用车人员之SQL映射 -->
+	<resultMap id="CsUnitPerson" class="com.ccclubs.model.CsUnitPerson">
+		<result property="csupId" column="csup_id"/>
+		<result property="csupHost" column="csup_host"/>
+		<result property="csupInfo" column="csup_info"/>
+		<result property="csupName" column="csup_name"/>
+		<result property="csupGroup" column="csup_group"/>
+		<result property="csupMember" column="csup_member"/>
+		<result property="csupRemark" column="csup_remark"/>
+		<result property="csupMemo" column="csup_memo"/>
+		<result property="csupUpdateTime" column="csup_update_time"/>
+		<result property="csupAddTime" column="csup_add_time"/>
+		<result property="csupStatus" column="csup_status"/>
+		<result property="csupFlag" column="csup_flag"/>
+	</resultMap>
+		
+	<!-- 获取所有用车人员 -->
+	<select id="getCsUnitPersonList" resultMap="CsUnitPerson">
+		select cs_unit_person$suffix$.* from cs_unit_person$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.csup_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询-->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.csup_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询-->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.csup_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_person$suffix$.csup_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询条件sql片段 -->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询条件sql片段 -->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitPerson_part.cs_unit_person_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csup_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取用车人员分页 -->
+	<select id="getCsUnitPersonPage" parameterClass="java.util.HashMap" resultMap="CsUnitPerson">
+		select cs_unit_person$suffix$.* from cs_unit_person$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.csup_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询-->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.csup_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询-->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.csup_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_person$suffix$.csup_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询条件sql片段 -->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询条件sql片段 -->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitPerson_part.cs_unit_person_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csup_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取用车人员总数 -->
+	<select id="getCsUnitPersonEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_person$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.csup_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询-->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.csup_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询-->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.csup_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_person$suffix$.csup_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询条件sql片段 -->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询条件sql片段 -->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitPerson_part.cs_unit_person_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取用车人员 -->
+	<select id="getCsUnitPersonById" parameterClass="java.util.HashMap" resultMap="CsUnitPerson">
+		select cs_unit_person$suffix$.* from cs_unit_person$suffix$
+		where csup_id=#id#
+	</select>
+	
+		
+	<!-- 保存用车人员 -->
+	<insert id="saveCsUnitPerson"  parameterClass="com.ccclubs.model.CsUnitPerson">
+		insert into cs_unit_person$suffix$
+		(
+			cs_unit_person$suffix$.csup_host
+			,cs_unit_person$suffix$.csup_info
+			,cs_unit_person$suffix$.csup_name
+			,cs_unit_person$suffix$.csup_group
+			,cs_unit_person$suffix$.csup_member
+			,cs_unit_person$suffix$.csup_remark
+			,cs_unit_person$suffix$.csup_memo
+			,cs_unit_person$suffix$.csup_update_time
+			,cs_unit_person$suffix$.csup_add_time
+			,cs_unit_person$suffix$.csup_status
+			,cs_unit_person$suffix$.csup_flag
+		)
+		values(
+			<isNotNull property="csupHost" prepend="">
+				#csupHost#
+			</isNotNull>
+			<isNull property="csupHost" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="csupInfo" prepend=",">
+				#csupInfo#
+			</isNotNull>
+			<isNull property="csupInfo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupName" prepend=",">
+				#csupName#
+			</isNotNull>
+			<isNull property="csupName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupGroup" prepend=",">
+				#csupGroup#
+			</isNotNull>
+			<isNull property="csupGroup" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupMember" prepend=",">
+				#csupMember#
+			</isNotNull>
+			<isNull property="csupMember" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupRemark" prepend=",">
+				#csupRemark#
+			</isNotNull>
+			<isNull property="csupRemark" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupMemo" prepend=",">
+				#csupMemo#
+			</isNotNull>
+			<isNull property="csupMemo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupUpdateTime" prepend=",">
+				#csupUpdateTime#
+			</isNotNull>
+			<isNull property="csupUpdateTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupAddTime" prepend=",">
+				#csupAddTime#
+			</isNotNull>
+			<isNull property="csupAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupStatus" prepend=",">
+				#csupStatus#
+			</isNotNull>
+			<isNull property="csupStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csupFlag" prepend=",">
+				#csupFlag#
+			</isNotNull>
+			<isNull property="csupFlag" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新用车人员 -->
+	<update id="updateCsUnitPerson"  parameterClass="com.ccclubs.model.CsUnitPerson">
+		update cs_unit_person$suffix$ set
+			<isNotNull property="csupHost" prepend="">
+				cs_unit_person$suffix$.csup_host = #csupHost#
+			</isNotNull>
+			<isNull property="csupHost" prepend="">
+				cs_unit_person$suffix$.csup_host = null
+			</isNull>				
+			<isNotNull property="csupInfo" prepend=",">
+				cs_unit_person$suffix$.csup_info = #csupInfo#
+			</isNotNull>
+			<isNull property="csupInfo" prepend=",">
+				cs_unit_person$suffix$.csup_info = null
+			</isNull>				
+			<isNotNull property="csupName" prepend=",">
+				cs_unit_person$suffix$.csup_name = #csupName#
+			</isNotNull>
+			<isNull property="csupName" prepend=",">
+				cs_unit_person$suffix$.csup_name = null
+			</isNull>				
+			<isNotNull property="csupGroup" prepend=",">
+				cs_unit_person$suffix$.csup_group = #csupGroup#
+			</isNotNull>
+			<isNull property="csupGroup" prepend=",">
+				cs_unit_person$suffix$.csup_group = null
+			</isNull>				
+			<isNotNull property="csupMember" prepend=",">
+				cs_unit_person$suffix$.csup_member = #csupMember#
+			</isNotNull>
+			<isNull property="csupMember" prepend=",">
+				cs_unit_person$suffix$.csup_member = null
+			</isNull>				
+			<isNotNull property="csupRemark" prepend=",">
+				cs_unit_person$suffix$.csup_remark = #csupRemark#
+			</isNotNull>
+			<isNull property="csupRemark" prepend=",">
+				cs_unit_person$suffix$.csup_remark = null
+			</isNull>				
+			<isNotNull property="csupMemo" prepend=",">
+				cs_unit_person$suffix$.csup_memo = #csupMemo#
+			</isNotNull>
+			<isNull property="csupMemo" prepend=",">
+				cs_unit_person$suffix$.csup_memo = null
+			</isNull>				
+			<isNotNull property="csupUpdateTime" prepend=",">
+				cs_unit_person$suffix$.csup_update_time = #csupUpdateTime#
+			</isNotNull>
+			<isNull property="csupUpdateTime" prepend=",">
+				cs_unit_person$suffix$.csup_update_time = null
+			</isNull>				
+			<isNotNull property="csupAddTime" prepend=",">
+				cs_unit_person$suffix$.csup_add_time = #csupAddTime#
+			</isNotNull>
+			<isNull property="csupAddTime" prepend=",">
+				cs_unit_person$suffix$.csup_add_time = null
+			</isNull>				
+			<isNotNull property="csupStatus" prepend=",">
+				cs_unit_person$suffix$.csup_status = #csupStatus#
+			</isNotNull>
+			<isNull property="csupStatus" prepend=",">
+				cs_unit_person$suffix$.csup_status = null
+			</isNull>				
+			<isNotNull property="csupFlag" prepend=",">
+				cs_unit_person$suffix$.csup_flag = #csupFlag#
+			</isNotNull>
+			<isNull property="csupFlag" prepend=",">
+				cs_unit_person$suffix$.csup_flag = null
+			</isNull>				
+		where
+			csup_id=#csupId#
+	</update>
+	
+	<!-- 更新用车人员非空字段 -->
+	<update id="updateCsUnitPerson$NotNull"  parameterClass="com.ccclubs.model.CsUnitPerson">
+		update cs_unit_person$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csupHost" prepend=",">
+				cs_unit_person$suffix$.csup_host = #csupHost#
+			</isNotNull>		
+			<isNotNull property="csupInfo" prepend=",">
+				cs_unit_person$suffix$.csup_info = #csupInfo#
+			</isNotNull>		
+			<isNotNull property="csupName" prepend=",">
+				cs_unit_person$suffix$.csup_name = #csupName#
+			</isNotNull>		
+			<isNotNull property="csupGroup" prepend=",">
+				cs_unit_person$suffix$.csup_group = #csupGroup#
+			</isNotNull>		
+			<isNotNull property="csupMember" prepend=",">
+				cs_unit_person$suffix$.csup_member = #csupMember#
+			</isNotNull>		
+			<isNotNull property="csupRemark" prepend=",">
+				cs_unit_person$suffix$.csup_remark = #csupRemark#
+			</isNotNull>		
+			<isNotNull property="csupMemo" prepend=",">
+				cs_unit_person$suffix$.csup_memo = #csupMemo#
+			</isNotNull>		
+			<isNotNull property="csupUpdateTime" prepend=",">
+				cs_unit_person$suffix$.csup_update_time = #csupUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csupAddTime" prepend=",">
+				cs_unit_person$suffix$.csup_add_time = #csupAddTime#
+			</isNotNull>		
+			<isNotNull property="csupStatus" prepend=",">
+				cs_unit_person$suffix$.csup_status = #csupStatus#
+			</isNotNull>		
+			<isNotNull property="csupFlag" prepend=",">
+				cs_unit_person$suffix$.csup_flag = #csupFlag#
+			</isNotNull>		
+			</dynamic>
+		where
+			csup_id=#csupId#
+	</update>
+	
+
+	<!-- 根据ID删除一个用车人员 -->
+	<delete id="deleteCsUnitPersonById" parameterClass="java.util.HashMap">
+		delete from cs_unit_person$suffix$ where csup_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个用车人员 -->
+	<update id="removeCsUnitPersonById" parameterClass="java.util.HashMap">
+		update cs_unit_person$suffix$ set  cs_unit_person$suffix$.csup_status=-1  where csup_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新用车人员 -->
+	<update id="updateCsUnitPersonBy"  parameterClass="java.util.HashMap">
+		update cs_unit_person$suffix$ set		
+			csup_id=csup_id
+			<isNotNull property="V_csupId" prepend=",">
+				cs_unit_person$suffix$.csup_id = #V_csupId#
+			</isNotNull>		
+			<isNotNull property="V_csupHost" prepend=",">
+				cs_unit_person$suffix$.csup_host = #V_csupHost#
+			</isNotNull>		
+			<isNotNull property="V_csupInfo" prepend=",">
+				cs_unit_person$suffix$.csup_info = #V_csupInfo#
+			</isNotNull>		
+			<isNotNull property="V_csupName" prepend=",">
+				cs_unit_person$suffix$.csup_name = #V_csupName#
+			</isNotNull>		
+			<isNotNull property="V_csupGroup" prepend=",">
+				cs_unit_person$suffix$.csup_group = #V_csupGroup#
+			</isNotNull>		
+			<isNotNull property="V_csupMember" prepend=",">
+				cs_unit_person$suffix$.csup_member = #V_csupMember#
+			</isNotNull>		
+			<isNotNull property="V_csupRemark" prepend=",">
+				cs_unit_person$suffix$.csup_remark = #V_csupRemark#
+			</isNotNull>		
+			<isNotNull property="V_csupMemo" prepend=",">
+				cs_unit_person$suffix$.csup_memo = #V_csupMemo#
+			</isNotNull>		
+			<isNotNull property="V_csupUpdateTime" prepend=",">
+				cs_unit_person$suffix$.csup_update_time = #V_csupUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csupAddTime" prepend=",">
+				cs_unit_person$suffix$.csup_add_time = #V_csupAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csupStatus" prepend=",">
+				cs_unit_person$suffix$.csup_status = #V_csupStatus#
+			</isNotNull>		
+			<isNotNull property="V_csupFlag" prepend=",">
+				cs_unit_person$suffix$.csup_flag = #V_csupFlag#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.csup_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_person$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询-->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.csup_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_person$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询-->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.csup_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_person$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 1=1 		
+		and cs_unit_person$suffix$.csup_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsupInfo"><!-- 调用一下CsupInfo，把CsUnitInfo指向CsupInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[所属分组]查询条件sql片段 -->
+		<isNotNull property="CsupGroup"><!-- 调用一下CsupGroup，把CsUnitGroup指向CsupGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[帐号信息]查询条件sql片段 -->
+		<isNotNull property="CsupMember"><!-- 调用一下CsupMember，把CsMember指向CsupMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitPerson_part.cs_unit_person_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除用车人员 -->
+	<update id="deleteCsUnitPersonBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_person$suffix$ where 
+		cs_unit_person$suffix$.csup_status!=-1 and 
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitPerson_part.cs_unit_person_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

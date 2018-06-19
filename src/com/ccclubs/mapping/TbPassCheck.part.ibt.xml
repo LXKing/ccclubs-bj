@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="TbPassCheck_part">	
+	<!-- 上下班签到条件sql片段  -->
+	<sql id="tb_pass_check_dynamic">
+		<dynamic>
+			<isNotEmpty property="tbpcId" prepend="and">
+			    $tbpcIdNot$ tb_pass_check$suffix$.tbpc_id = #tbpcId#
+			</isNotEmpty>
+			<isNotNull property="tbpcIdNot" prepend="and">
+				<isEmpty property="tbpcId">
+				$tbpcIdNot$ tb_pass_check$suffix$.tbpc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_pass_check$suffix$.tbpc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="tbpcHost" prepend="and">
+			    $tbpcHostNot$ tb_pass_check$suffix$.tbpc_host = #tbpcHost#
+			</isNotEmpty>
+			<isNotNull property="tbpcHostNot" prepend="and">
+				<isEmpty property="tbpcHost">
+				$tbpcHostNot$ tb_pass_check$suffix$.tbpc_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="tbpcTitle" prepend="and">			    
+			    (<isNotNull property="tbpcTitleNot">
+			    tb_pass_check$suffix$.tbpc_title is null or length(tb_pass_check$suffix$.tbpc_title) &lt; 1 or
+			    </isNotNull>$tbpcTitleNot$ tb_pass_check$suffix$.tbpc_title like #tbpcTitle#)
+			</isNotEmpty>
+			<isNotNull property="tbpcTitleNot" prepend="and">
+				<isEmpty property="tbpcTitle">
+				$tbpcTitleNot$ (tb_pass_check$suffix$.tbpc_title is null or length(tb_pass_check$suffix$.tbpc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcEmployee" prepend="and">
+			    $tbpcEmployeeNot$ tb_pass_check$suffix$.tbpc_employee = #tbpcEmployee#
+			</isNotEmpty>
+			<isNotNull property="tbpcEmployeeNot" prepend="and">
+				<isEmpty property="tbpcEmployee">
+				$tbpcEmployeeNot$ tb_pass_check$suffix$.tbpc_employee is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcInPos" prepend="and">			    
+			    (<isNotNull property="tbpcInPosNot">
+			    tb_pass_check$suffix$.tbpc_in_pos is null or length(tb_pass_check$suffix$.tbpc_in_pos) &lt; 1 or
+			    </isNotNull>$tbpcInPosNot$ tb_pass_check$suffix$.tbpc_in_pos = #tbpcInPos#)
+			</isNotEmpty>
+			<isNotNull property="tbpcInPosNot" prepend="and">
+				<isEmpty property="tbpcInPos">
+				$tbpcInPosNot$ (tb_pass_check$suffix$.tbpc_in_pos is null or length(tb_pass_check$suffix$.tbpc_in_pos) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcInDistanceMin" prepend="and">
+			    $tbpcInDistanceNot$  ( tb_pass_check$suffix$.tbpc_in_distance &gt;= #tbpcInDistanceMin#
+			    <isEmpty property="tbpcInDistanceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpcInDistanceMax" prepend="and">
+				<isEmpty property="tbpcInDistanceMin">$tbpcInDistanceNot$   (</isEmpty>
+			    tb_pass_check$suffix$.tbpc_in_distance &lt;= #tbpcInDistanceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="tbpcInDistance" prepend="and">
+			    $tbpcInDistanceNot$ tb_pass_check$suffix$.tbpc_in_distance = #tbpcInDistance#
+			</isNotEmpty>
+			<isNotNull property="tbpcInDistanceNot" prepend="and">
+				<isEmpty property="tbpcInDistanceMax"><isEmpty property="tbpcInDistanceMin"><isEmpty property="tbpcInDistance">
+				$tbpcInDistanceNot$ tb_pass_check$suffix$.tbpc_in_distance is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="tbpcInTimeStart" prepend="and">
+			    $tbpcInTimeNot$   (tb_pass_check$suffix$.tbpc_in_time &gt;= #tbpcInTimeStart#
+			   <isEmpty property="tbpcInTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpcInTimeEnd" prepend="and">
+				<isEmpty property="tbpcInTimeStart">$tbpcInTimeNot$   (</isEmpty>
+			    tb_pass_check$suffix$.tbpc_in_time &lt;= #tbpcInTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="tbpcInTime" prepend="and">
+			    $tbpcInTimeNot$ tb_pass_check$suffix$.tbpc_in_time = #tbpcInTime#
+			</isNotEmpty>
+			<isNotNull property="tbpcInTimeNot" prepend="and">
+				<isEmpty property="tbpcInTimeStart"><isEmpty property="tbpcInTimeEnd"><isEmpty property="tbpcInTime">
+				$tbpcInTimeNot$ tb_pass_check$suffix$.tbpc_in_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcOutPos" prepend="and">			    
+			    (<isNotNull property="tbpcOutPosNot">
+			    tb_pass_check$suffix$.tbpc_out_pos is null or length(tb_pass_check$suffix$.tbpc_out_pos) &lt; 1 or
+			    </isNotNull>$tbpcOutPosNot$ tb_pass_check$suffix$.tbpc_out_pos = #tbpcOutPos#)
+			</isNotEmpty>
+			<isNotNull property="tbpcOutPosNot" prepend="and">
+				<isEmpty property="tbpcOutPos">
+				$tbpcOutPosNot$ (tb_pass_check$suffix$.tbpc_out_pos is null or length(tb_pass_check$suffix$.tbpc_out_pos) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcOutDistanceMin" prepend="and">
+			    $tbpcOutDistanceNot$  ( tb_pass_check$suffix$.tbpc_out_distance &gt;= #tbpcOutDistanceMin#
+			    <isEmpty property="tbpcOutDistanceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpcOutDistanceMax" prepend="and">
+				<isEmpty property="tbpcOutDistanceMin">$tbpcOutDistanceNot$   (</isEmpty>
+			    tb_pass_check$suffix$.tbpc_out_distance &lt;= #tbpcOutDistanceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="tbpcOutDistance" prepend="and">
+			    $tbpcOutDistanceNot$ tb_pass_check$suffix$.tbpc_out_distance = #tbpcOutDistance#
+			</isNotEmpty>
+			<isNotNull property="tbpcOutDistanceNot" prepend="and">
+				<isEmpty property="tbpcOutDistanceMax"><isEmpty property="tbpcOutDistanceMin"><isEmpty property="tbpcOutDistance">
+				$tbpcOutDistanceNot$ tb_pass_check$suffix$.tbpc_out_distance is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="tbpcOutTimeStart" prepend="and">
+			    $tbpcOutTimeNot$   (tb_pass_check$suffix$.tbpc_out_time &gt;= #tbpcOutTimeStart#
+			   <isEmpty property="tbpcOutTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpcOutTimeEnd" prepend="and">
+				<isEmpty property="tbpcOutTimeStart">$tbpcOutTimeNot$   (</isEmpty>
+			    tb_pass_check$suffix$.tbpc_out_time &lt;= #tbpcOutTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="tbpcOutTime" prepend="and">
+			    $tbpcOutTimeNot$ tb_pass_check$suffix$.tbpc_out_time = #tbpcOutTime#
+			</isNotEmpty>
+			<isNotNull property="tbpcOutTimeNot" prepend="and">
+				<isEmpty property="tbpcOutTimeStart"><isEmpty property="tbpcOutTimeEnd"><isEmpty property="tbpcOutTime">
+				$tbpcOutTimeNot$ tb_pass_check$suffix$.tbpc_out_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcTimeLongMin" prepend="and">
+			    $tbpcTimeLongNot$  ( tb_pass_check$suffix$.tbpc_time_long &gt;= #tbpcTimeLongMin#
+			    <isEmpty property="tbpcTimeLongMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpcTimeLongMax" prepend="and">
+				<isEmpty property="tbpcTimeLongMin">$tbpcTimeLongNot$   (</isEmpty>
+			    tb_pass_check$suffix$.tbpc_time_long &lt;= #tbpcTimeLongMax# )
+			</isNotEmpty>
+			<isNotEmpty property="tbpcTimeLong" prepend="and">
+			    $tbpcTimeLongNot$ tb_pass_check$suffix$.tbpc_time_long = #tbpcTimeLong#
+			</isNotEmpty>
+			<isNotNull property="tbpcTimeLongNot" prepend="and">
+				<isEmpty property="tbpcTimeLongMax"><isEmpty property="tbpcTimeLongMin"><isEmpty property="tbpcTimeLong">
+				$tbpcTimeLongNot$ tb_pass_check$suffix$.tbpc_time_long is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="tbpcRemark" prepend="and">			    
+			    (<isNotNull property="tbpcRemarkNot">
+			    tb_pass_check$suffix$.tbpc_remark is null or length(tb_pass_check$suffix$.tbpc_remark) &lt; 1 or
+			    </isNotNull>$tbpcRemarkNot$ tb_pass_check$suffix$.tbpc_remark like #tbpcRemark#)
+			</isNotEmpty>
+			<isNotNull property="tbpcRemarkNot" prepend="and">
+				<isEmpty property="tbpcRemark">
+				$tbpcRemarkNot$ (tb_pass_check$suffix$.tbpc_remark is null or length(tb_pass_check$suffix$.tbpc_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpcStatus" prepend="and">
+			    $tbpcStatusNot$ tb_pass_check$suffix$.tbpc_status = #tbpcStatus#
+			</isNotEmpty>
+			<isNotNull property="tbpcStatusNot" prepend="and">
+				<isEmpty property="tbpcStatus">
+				$tbpcStatusNot$ tb_pass_check$suffix$.tbpc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 上下班签到left join 条件sql片段 -->
+	<sql id="tb_pass_check_join">
+		<dynamic>
+			<isNotEmpty property="TbPassCheck.tbpcId" prepend="and">
+			    $TbPassCheck.tbpcIdNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_id = #TbPassCheck.tbpcId#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcIdNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcId">
+				$tbpcIdNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcHost" prepend="and">
+			    $TbPassCheck.tbpcHostNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_host = #TbPassCheck.tbpcHost#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcHostNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcHost">
+				$tbpcHostNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcTitle" prepend="and">
+				(<isNotNull property="TbPassCheck.tbpcTitleNot">
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_title is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_title) &lt; 1 or
+			    </isNotNull>$TbPassCheck.tbpcTitleNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_title like #TbPassCheck.tbpcTitle#)
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcTitleNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcTitle">
+				$tbpcTitleNot$ (tb_pass_check$TbPassCheck.suffix$.tbpc_title is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcEmployee" prepend="and">
+			    $TbPassCheck.tbpcEmployeeNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_employee = #TbPassCheck.tbpcEmployee#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcEmployeeNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcEmployee">
+				$tbpcEmployeeNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_employee is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcInPos" prepend="and">
+				(<isNotNull property="TbPassCheck.tbpcInPosNot">
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_in_pos is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_in_pos) &lt; 1 or
+			    </isNotNull>$TbPassCheck.tbpcInPosNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_in_pos = #TbPassCheck.tbpcInPos#)
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcInPosNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcInPos">
+				$tbpcInPosNot$ (tb_pass_check$TbPassCheck.suffix$.tbpc_in_pos is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_in_pos) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcInDistanceMin" prepend="and">
+			    $TbPassCheck.tbpcInDistanceNot$  ( tb_pass_check$TbPassCheck.suffix$.tbpc_in_distance &gt;= #TbPassCheck.tbpcInDistanceMin#
+			    <isEmpty property="TbPassCheck.tbpcInDistanceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcInDistanceMax" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcInDistanceMin">$TbPassCheck.tbpcInDistanceNot$   (</isEmpty>
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_in_distance &lt;= #TbPassCheck.tbpcInDistanceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcInDistance" prepend="and">
+			    $TbPassCheck.tbpcInDistanceNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_in_distance = #TbPassCheck.tbpcInDistance#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcInDistanceNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcInDistanceMax"><isEmpty property="TbPassCheck.tbpcInDistanceMin"><isEmpty property="TbPassCheck.tbpcInDistance">
+				$tbpcInDistanceNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_in_distance is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcInTimeStart" prepend="and">
+			    $TbPassCheck.tbpcInTimeNot$   (tb_pass_check$TbPassCheck.suffix$.tbpc_in_time &gt;= #TbPassCheck.tbpcInTimeStart#
+			   <isEmpty property="TbPassCheck.tbpcInTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcInTimeEnd" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcInTimeStart">$TbPassCheck.tbpcInTimeNot$   (</isEmpty>
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_in_time &lt;= #TbPassCheck.tbpcInTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcInTime" prepend="and">
+			    $TbPassCheck.tbpcInTimeNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_in_time = #TbPassCheck.tbpcInTime#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcInTimeNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcInTimeStart"><isEmpty property="TbPassCheck.tbpcInTimeEnd"><isEmpty property="TbPassCheck.tbpcInTime">
+				$tbpcInTimeNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_in_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcOutPos" prepend="and">
+				(<isNotNull property="TbPassCheck.tbpcOutPosNot">
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_out_pos is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_out_pos) &lt; 1 or
+			    </isNotNull>$TbPassCheck.tbpcOutPosNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_out_pos = #TbPassCheck.tbpcOutPos#)
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcOutPosNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcOutPos">
+				$tbpcOutPosNot$ (tb_pass_check$TbPassCheck.suffix$.tbpc_out_pos is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_out_pos) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcOutDistanceMin" prepend="and">
+			    $TbPassCheck.tbpcOutDistanceNot$  ( tb_pass_check$TbPassCheck.suffix$.tbpc_out_distance &gt;= #TbPassCheck.tbpcOutDistanceMin#
+			    <isEmpty property="TbPassCheck.tbpcOutDistanceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcOutDistanceMax" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcOutDistanceMin">$TbPassCheck.tbpcOutDistanceNot$   (</isEmpty>
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_out_distance &lt;= #TbPassCheck.tbpcOutDistanceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcOutDistance" prepend="and">
+			    $TbPassCheck.tbpcOutDistanceNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_out_distance = #TbPassCheck.tbpcOutDistance#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcOutDistanceNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcOutDistanceMax"><isEmpty property="TbPassCheck.tbpcOutDistanceMin"><isEmpty property="TbPassCheck.tbpcOutDistance">
+				$tbpcOutDistanceNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_out_distance is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcOutTimeStart" prepend="and">
+			    $TbPassCheck.tbpcOutTimeNot$   (tb_pass_check$TbPassCheck.suffix$.tbpc_out_time &gt;= #TbPassCheck.tbpcOutTimeStart#
+			   <isEmpty property="TbPassCheck.tbpcOutTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcOutTimeEnd" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcOutTimeStart">$TbPassCheck.tbpcOutTimeNot$   (</isEmpty>
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_out_time &lt;= #TbPassCheck.tbpcOutTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcOutTime" prepend="and">
+			    $TbPassCheck.tbpcOutTimeNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_out_time = #TbPassCheck.tbpcOutTime#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcOutTimeNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcOutTimeStart"><isEmpty property="TbPassCheck.tbpcOutTimeEnd"><isEmpty property="TbPassCheck.tbpcOutTime">
+				$tbpcOutTimeNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_out_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcTimeLongMin" prepend="and">
+			    $TbPassCheck.tbpcTimeLongNot$  ( tb_pass_check$TbPassCheck.suffix$.tbpc_time_long &gt;= #TbPassCheck.tbpcTimeLongMin#
+			    <isEmpty property="TbPassCheck.tbpcTimeLongMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcTimeLongMax" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcTimeLongMin">$TbPassCheck.tbpcTimeLongNot$   (</isEmpty>
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_time_long &lt;= #TbPassCheck.tbpcTimeLongMax# )
+			</isNotEmpty>
+			<isNotEmpty property="TbPassCheck.tbpcTimeLong" prepend="and">
+			    $TbPassCheck.tbpcTimeLongNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_time_long = #TbPassCheck.tbpcTimeLong#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcTimeLongNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcTimeLongMax"><isEmpty property="TbPassCheck.tbpcTimeLongMin"><isEmpty property="TbPassCheck.tbpcTimeLong">
+				$tbpcTimeLongNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_time_long is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcRemark" prepend="and">
+				(<isNotNull property="TbPassCheck.tbpcRemarkNot">
+			    tb_pass_check$TbPassCheck.suffix$.tbpc_remark is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_remark) &lt; 1 or
+			    </isNotNull>$TbPassCheck.tbpcRemarkNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_remark like #TbPassCheck.tbpcRemark#)
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcRemarkNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcRemark">
+				$tbpcRemarkNot$ (tb_pass_check$TbPassCheck.suffix$.tbpc_remark is null or length(tb_pass_check$TbPassCheck.suffix$.tbpc_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbPassCheck.tbpcStatus" prepend="and">
+			    $TbPassCheck.tbpcStatusNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_status = #TbPassCheck.tbpcStatus#
+			</isNotEmpty>
+			<isNotNull property="TbPassCheck.tbpcStatusNot" prepend="and">
+				<isEmpty property="TbPassCheck.tbpcStatus">
+				$tbpcStatusNot$ tb_pass_check$TbPassCheck.suffix$.tbpc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

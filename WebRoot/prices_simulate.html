@@ -1,0 +1,60 @@
+<div id="ccc-receipt">
+	<div class="ccc-receipt-top">
+		<div class="ccc-receipt-details">
+			<div class="time ccc-font-lato">
+				<p>
+					${lz:date(start,"yyyy-MM-dd , HH:mm")}
+				</p>
+				<p>
+					${lz:date(finish,"yyyy-MM-dd , HH:mm")}
+				</p>
+			</div>
+			<div class="summary">
+				<p>
+					${csCarModel.cscmName}，${csOutlets.csoName}
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="ccc-receipt-cont">
+		<!-- 租金 -->
+		<div class="ccc-receipt-item">
+			<a href="#" class="ccc-item-amount"><span class="sum">￥${lz:digit(price,2)}</span>租金 <span class="amount">· ${dur}</span> </a>
+			<!--				<p><span class="sum">￥46.62</span>4 x 工作日·白天小时</p>
+						<p><span class="sum">￥46.62</span>4 x 工作日·白天小时</p>
+						<p><span class="sum">￥46.62</span>4 x 工作日·白天小时</p>
+						<p><span class="sum">￥46.62</span>4 x 工作日·白天小时</p>
+						<p><span class="sum">￥46.62</span>4 x 工作日·白天小时</p>-->
+		</div>
+		<!-- 里程费 -->
+			<div class="ccc-receipt-item">
+				<s:if test="#request.csCarModel.cscmType!=0">
+					<a href="#" class="ccc-item-amount"><span class="sum">￥${lz:digit(predict,2)}</span>里程费 <span class="amount">· ${cc:toInt(fuel)}公里</span> </a>
+				</s:if>
+				<s:else>
+					<a href="#" class="ccc-item-amount"><span class="sum">￥${lz:digit(predict,2)}</span>里程费 <span class="amount">· ${cc:toInt(fuel)}公里${fuel >= 100&&fuel<300?'（阶梯价-9折）':''}${fuel >= 300&&fuel<500?'（阶梯价-85折）':''}${fuel >= 500&&fuel<1000?'（阶梯价-8折）':''}${fuel >= 1000?'（阶梯价-75折）':''}</span> </a>
+				</s:else>
+			</div>
+		<s:if test="#request.insureType>0">
+			<!-- 免责 -->
+			<div class="ccc-receipt-item">
+				<a href="#" class="ccc-item-amount"><span class="sum">￥${lz:digit(insure,2)}</span>千元免赔 <span class="amount">· ${insureProduct.cspName}</span> </a>
+			</div>
+		</s:if>
+	</div>
+	<div class="ccc-receipt-bottom">
+		<div class="ccc-receipt-amount">
+			<span class="balance">￥${lz:digit(total,2)}</span>
+			<span class="title">总金额</span>
+		</div>
+		</br>
+		<p class="ccc-buy-tips">
+			<s:if test="#request.csCarModel.cscmType!=0">
+				* 可以通过购买现金券（低至9.5折）
+			</s:if>
+			<s:else>
+				* 可以通过购买现金券（低至9.5折）
+			</s:else>
+		</p>
+	</div>
+</div>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 营销跟踪之SQL映射 -->
+	<resultMap id="CsMarketLog" class="com.ccclubs.model.CsMarketLog">
+		<result property="csmlId" column="csml_id"/>
+		<result property="csmlHost" column="csml_host"/>
+		<result property="csmlTitle" column="csml_title"/>
+		<result property="csmlPlan" column="csml_plan"/>
+		<result property="csmlProfile" column="csml_profile"/>
+		<result property="csmlUser" column="csml_user"/>
+		<result property="csmlUpdateTime" column="csml_update_time"/>
+		<result property="csmlAddTime" column="csml_add_time"/>
+		<result property="csmlStatus" column="csml_status"/>
+	</resultMap>
+		
+	<!-- 获取所有营销跟踪 -->
+	<select id="getCsMarketLogList" resultMap="CsMarketLog">
+		select cs_market_log$suffix$.* from cs_market_log$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.csml_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_market_log$suffix$.csml_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketLog_part.cs_market_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csml_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取营销跟踪分页 -->
+	<select id="getCsMarketLogPage" parameterClass="java.util.HashMap" resultMap="CsMarketLog">
+		select cs_market_log$suffix$.* from cs_market_log$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询 -->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.csml_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_market_log$suffix$.csml_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketLog_part.cs_market_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csml_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取营销跟踪总数 -->
+	<select id="getCsMarketLogEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_market_log$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.csml_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_market_log$suffix$.csml_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketLog_part.cs_market_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取营销跟踪 -->
+	<select id="getCsMarketLogById" parameterClass="java.util.HashMap" resultMap="CsMarketLog">
+		select cs_market_log$suffix$.* from cs_market_log$suffix$
+		where csml_id=#id#
+	</select>
+	
+		
+	<!-- 保存营销跟踪 -->
+	<insert id="saveCsMarketLog"  parameterClass="com.ccclubs.model.CsMarketLog">
+		insert into cs_market_log$suffix$
+		(
+			cs_market_log$suffix$.csml_host
+			,cs_market_log$suffix$.csml_title
+			,cs_market_log$suffix$.csml_plan
+			,cs_market_log$suffix$.csml_profile
+			,cs_market_log$suffix$.csml_user
+			,cs_market_log$suffix$.csml_update_time
+			,cs_market_log$suffix$.csml_add_time
+			,cs_market_log$suffix$.csml_status
+		)
+		values(
+			<isNotNull property="csmlHost" prepend="">
+				#csmlHost#
+			</isNotNull>
+			<isNull property="csmlHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmlTitle" prepend=",">
+				#csmlTitle#
+			</isNotNull>
+			<isNull property="csmlTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmlPlan" prepend=",">
+				#csmlPlan#
+			</isNotNull>
+			<isNull property="csmlPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmlProfile" prepend=",">
+				#csmlProfile#
+			</isNotNull>
+			<isNull property="csmlProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmlUser" prepend=",">
+				#csmlUser#
+			</isNotNull>
+			<isNull property="csmlUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmlUpdateTime" prepend=",">
+				#csmlUpdateTime#
+			</isNotNull>
+			<isNull property="csmlUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmlAddTime" prepend=",">
+				#csmlAddTime#
+			</isNotNull>
+			<isNull property="csmlAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmlStatus" prepend=",">
+				#csmlStatus#
+			</isNotNull>
+			<isNull property="csmlStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新营销跟踪 -->
+	<update id="updateCsMarketLog"  parameterClass="com.ccclubs.model.CsMarketLog">
+		update cs_market_log$suffix$ set
+			<isNotNull property="csmlHost" prepend="">
+				cs_market_log$suffix$.csml_host = #csmlHost#
+			</isNotNull>
+			<isNull property="csmlHost" prepend="">
+				cs_market_log$suffix$.csml_host = null
+			</isNull>				
+			<isNotNull property="csmlTitle" prepend=",">
+				cs_market_log$suffix$.csml_title = #csmlTitle#
+			</isNotNull>
+			<isNull property="csmlTitle" prepend=",">
+				cs_market_log$suffix$.csml_title = null
+			</isNull>				
+			<isNotNull property="csmlPlan" prepend=",">
+				cs_market_log$suffix$.csml_plan = #csmlPlan#
+			</isNotNull>
+			<isNull property="csmlPlan" prepend=",">
+				cs_market_log$suffix$.csml_plan = null
+			</isNull>				
+			<isNotNull property="csmlProfile" prepend=",">
+				cs_market_log$suffix$.csml_profile = #csmlProfile#
+			</isNotNull>
+			<isNull property="csmlProfile" prepend=",">
+				cs_market_log$suffix$.csml_profile = null
+			</isNull>				
+			<isNotNull property="csmlUser" prepend=",">
+				cs_market_log$suffix$.csml_user = #csmlUser#
+			</isNotNull>
+			<isNull property="csmlUser" prepend=",">
+				cs_market_log$suffix$.csml_user = null
+			</isNull>				
+			<isNotNull property="csmlUpdateTime" prepend=",">
+				cs_market_log$suffix$.csml_update_time = #csmlUpdateTime#
+			</isNotNull>
+			<isNull property="csmlUpdateTime" prepend=",">
+				cs_market_log$suffix$.csml_update_time = null
+			</isNull>				
+			<isNotNull property="csmlAddTime" prepend=",">
+				cs_market_log$suffix$.csml_add_time = #csmlAddTime#
+			</isNotNull>
+			<isNull property="csmlAddTime" prepend=",">
+				cs_market_log$suffix$.csml_add_time = null
+			</isNull>				
+			<isNotNull property="csmlStatus" prepend=",">
+				cs_market_log$suffix$.csml_status = #csmlStatus#
+			</isNotNull>
+			<isNull property="csmlStatus" prepend=",">
+				cs_market_log$suffix$.csml_status = null
+			</isNull>				
+		where
+			csml_id=#csmlId#
+	</update>
+	
+	<!-- 更新营销跟踪非空字段 -->
+	<update id="updateCsMarketLog$NotNull"  parameterClass="com.ccclubs.model.CsMarketLog">
+		update cs_market_log$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmlHost" prepend=",">
+				cs_market_log$suffix$.csml_host = #csmlHost#
+			</isNotNull>		
+			<isNotNull property="csmlTitle" prepend=",">
+				cs_market_log$suffix$.csml_title = #csmlTitle#
+			</isNotNull>		
+			<isNotNull property="csmlPlan" prepend=",">
+				cs_market_log$suffix$.csml_plan = #csmlPlan#
+			</isNotNull>		
+			<isNotNull property="csmlProfile" prepend=",">
+				cs_market_log$suffix$.csml_profile = #csmlProfile#
+			</isNotNull>		
+			<isNotNull property="csmlUser" prepend=",">
+				cs_market_log$suffix$.csml_user = #csmlUser#
+			</isNotNull>		
+			<isNotNull property="csmlUpdateTime" prepend=",">
+				cs_market_log$suffix$.csml_update_time = #csmlUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csmlAddTime" prepend=",">
+				cs_market_log$suffix$.csml_add_time = #csmlAddTime#
+			</isNotNull>		
+			<isNotNull property="csmlStatus" prepend=",">
+				cs_market_log$suffix$.csml_status = #csmlStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csml_id=#csmlId#
+	</update>
+	
+
+	<!-- 根据ID删除一个营销跟踪 -->
+	<delete id="deleteCsMarketLogById" parameterClass="java.util.HashMap">
+		delete from cs_market_log$suffix$ where csml_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个营销跟踪 -->
+	<update id="removeCsMarketLogById" parameterClass="java.util.HashMap">
+		update cs_market_log$suffix$ set  cs_market_log$suffix$.csml_status=-1  where csml_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新营销跟踪 -->
+	<update id="updateCsMarketLogBy"  parameterClass="java.util.HashMap">
+		update cs_market_log$suffix$ set		
+			csml_id=csml_id
+			<isNotNull property="V_csmlId" prepend=",">
+				cs_market_log$suffix$.csml_id = #V_csmlId#
+			</isNotNull>		
+			<isNotNull property="V_csmlHost" prepend=",">
+				cs_market_log$suffix$.csml_host = #V_csmlHost#
+			</isNotNull>		
+			<isNotNull property="V_csmlTitle" prepend=",">
+				cs_market_log$suffix$.csml_title = #V_csmlTitle#
+			</isNotNull>		
+			<isNotNull property="V_csmlPlan" prepend=",">
+				cs_market_log$suffix$.csml_plan = #V_csmlPlan#
+			</isNotNull>		
+			<isNotNull property="V_csmlProfile" prepend=",">
+				cs_market_log$suffix$.csml_profile = #V_csmlProfile#
+			</isNotNull>		
+			<isNotNull property="V_csmlUser" prepend=",">
+				cs_market_log$suffix$.csml_user = #V_csmlUser#
+			</isNotNull>		
+			<isNotNull property="V_csmlUpdateTime" prepend=",">
+				cs_market_log$suffix$.csml_update_time = #V_csmlUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csmlAddTime" prepend=",">
+				cs_market_log$suffix$.csml_add_time = #V_csmlAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmlStatus" prepend=",">
+				cs_market_log$suffix$.csml_status = #V_csmlStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.csml_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_log$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_market_log$suffix$.csml_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmlPlan"><!-- 调用一下CsmlPlan，把CsMarketPlan指向CsmlPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMarketLog_part.cs_market_log_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除营销跟踪 -->
+	<update id="deleteCsMarketLogBy"  parameterClass="java.util.HashMap">
+		delete from cs_market_log$suffix$ where 
+		cs_market_log$suffix$.csml_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMarketLog_part.cs_market_log_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

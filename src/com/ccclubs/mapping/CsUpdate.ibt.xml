@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- App更新之SQL映射 -->
+	<resultMap id="CsUpdate" class="com.ccclubs.model.CsUpdate">
+		<result property="csuId" column="csu_id"/>
+		<result property="csuName" column="csu_name"/>
+		<result property="csuVersion" column="csu_version"/>
+		<result property="csuType" column="csu_type"/>
+		<result property="csuFile" column="csu_file"/>
+		<result property="csuDescript" column="csu_descript"/>
+		<result property="csuUpdateTime" column="csu_update_time"/>
+		<result property="csuAddTime" column="csu_add_time"/>
+		<result property="csuStatus" column="csu_status"/>
+	</resultMap>
+		
+	<!-- 获取所有App更新 -->
+	<select id="getCsUpdateList" resultMap="CsUpdate">
+		select cs_update$suffix$.* from cs_update$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_update$suffix$.csu_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUpdate_part.cs_update_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csu_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取App更新分页 -->
+	<select id="getCsUpdatePage" parameterClass="java.util.HashMap" resultMap="CsUpdate">
+		select cs_update$suffix$.* from cs_update$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_update$suffix$.csu_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUpdate_part.cs_update_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csu_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取App更新总数 -->
+	<select id="getCsUpdateEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_update$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_update$suffix$.csu_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUpdate_part.cs_update_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取App更新 -->
+	<select id="getCsUpdateById" parameterClass="java.util.HashMap" resultMap="CsUpdate">
+		select cs_update$suffix$.* from cs_update$suffix$
+		where csu_id=#id#
+	</select>
+	
+		
+	<!-- 保存App更新 -->
+	<insert id="saveCsUpdate"  parameterClass="com.ccclubs.model.CsUpdate">
+		insert into cs_update$suffix$
+		(
+			cs_update$suffix$.csu_name
+			,cs_update$suffix$.csu_version
+			,cs_update$suffix$.csu_type
+			,cs_update$suffix$.csu_file
+			,cs_update$suffix$.csu_descript
+			,cs_update$suffix$.csu_update_time
+			,cs_update$suffix$.csu_add_time
+			,cs_update$suffix$.csu_status
+		)
+		values(
+			<isNotNull property="csuName" prepend="">
+				#csuName#
+			</isNotNull>
+			<isNull property="csuName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csuVersion" prepend=",">
+				#csuVersion#
+			</isNotNull>
+			<isNull property="csuVersion" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuType" prepend=",">
+				#csuType#
+			</isNotNull>
+			<isNull property="csuType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuFile" prepend=",">
+				#csuFile#
+			</isNotNull>
+			<isNull property="csuFile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuDescript" prepend=",">
+				#csuDescript#
+			</isNotNull>
+			<isNull property="csuDescript" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuUpdateTime" prepend=",">
+				#csuUpdateTime#
+			</isNotNull>
+			<isNull property="csuUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuAddTime" prepend=",">
+				#csuAddTime#
+			</isNotNull>
+			<isNull property="csuAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuStatus" prepend=",">
+				#csuStatus#
+			</isNotNull>
+			<isNull property="csuStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新App更新 -->
+	<update id="updateCsUpdate"  parameterClass="com.ccclubs.model.CsUpdate">
+		update cs_update$suffix$ set
+			<isNotNull property="csuName" prepend="">
+				cs_update$suffix$.csu_name = #csuName#
+			</isNotNull>
+			<isNull property="csuName" prepend="">
+				cs_update$suffix$.csu_name = null
+			</isNull>				
+			<isNotNull property="csuVersion" prepend=",">
+				cs_update$suffix$.csu_version = #csuVersion#
+			</isNotNull>
+			<isNull property="csuVersion" prepend=",">
+				cs_update$suffix$.csu_version = null
+			</isNull>				
+			<isNotNull property="csuType" prepend=",">
+				cs_update$suffix$.csu_type = #csuType#
+			</isNotNull>
+			<isNull property="csuType" prepend=",">
+				cs_update$suffix$.csu_type = null
+			</isNull>				
+			<isNotNull property="csuFile" prepend=",">
+				cs_update$suffix$.csu_file = #csuFile#
+			</isNotNull>
+			<isNull property="csuFile" prepend=",">
+				cs_update$suffix$.csu_file = null
+			</isNull>				
+			<isNotNull property="csuDescript" prepend=",">
+				cs_update$suffix$.csu_descript = #csuDescript#
+			</isNotNull>
+			<isNull property="csuDescript" prepend=",">
+				cs_update$suffix$.csu_descript = null
+			</isNull>				
+			<isNotNull property="csuUpdateTime" prepend=",">
+				cs_update$suffix$.csu_update_time = #csuUpdateTime#
+			</isNotNull>
+			<isNull property="csuUpdateTime" prepend=",">
+				cs_update$suffix$.csu_update_time = null
+			</isNull>				
+			<isNotNull property="csuAddTime" prepend=",">
+				cs_update$suffix$.csu_add_time = #csuAddTime#
+			</isNotNull>
+			<isNull property="csuAddTime" prepend=",">
+				cs_update$suffix$.csu_add_time = null
+			</isNull>				
+			<isNotNull property="csuStatus" prepend=",">
+				cs_update$suffix$.csu_status = #csuStatus#
+			</isNotNull>
+			<isNull property="csuStatus" prepend=",">
+				cs_update$suffix$.csu_status = null
+			</isNull>				
+		where
+			csu_id=#csuId#
+	</update>
+	
+	<!-- 更新App更新非空字段 -->
+	<update id="updateCsUpdate$NotNull"  parameterClass="com.ccclubs.model.CsUpdate">
+		update cs_update$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csuName" prepend=",">
+				cs_update$suffix$.csu_name = #csuName#
+			</isNotNull>		
+			<isNotNull property="csuVersion" prepend=",">
+				cs_update$suffix$.csu_version = #csuVersion#
+			</isNotNull>		
+			<isNotNull property="csuType" prepend=",">
+				cs_update$suffix$.csu_type = #csuType#
+			</isNotNull>		
+			<isNotNull property="csuFile" prepend=",">
+				cs_update$suffix$.csu_file = #csuFile#
+			</isNotNull>		
+			<isNotNull property="csuDescript" prepend=",">
+				cs_update$suffix$.csu_descript = #csuDescript#
+			</isNotNull>		
+			<isNotNull property="csuUpdateTime" prepend=",">
+				cs_update$suffix$.csu_update_time = #csuUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csuAddTime" prepend=",">
+				cs_update$suffix$.csu_add_time = #csuAddTime#
+			</isNotNull>		
+			<isNotNull property="csuStatus" prepend=",">
+				cs_update$suffix$.csu_status = #csuStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csu_id=#csuId#
+	</update>
+	
+
+	<!-- 根据ID删除一个App更新 -->
+	<delete id="deleteCsUpdateById" parameterClass="java.util.HashMap">
+		delete from cs_update$suffix$ where csu_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个App更新 -->
+	<update id="removeCsUpdateById" parameterClass="java.util.HashMap">
+		update cs_update$suffix$ set  cs_update$suffix$.csu_status=-1  where csu_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新App更新 -->
+	<update id="updateCsUpdateBy"  parameterClass="java.util.HashMap">
+		update cs_update$suffix$ set		
+			csu_id=csu_id
+			<isNotNull property="V_csuId" prepend=",">
+				cs_update$suffix$.csu_id = #V_csuId#
+			</isNotNull>		
+			<isNotNull property="V_csuName" prepend=",">
+				cs_update$suffix$.csu_name = #V_csuName#
+			</isNotNull>		
+			<isNotNull property="V_csuVersion" prepend=",">
+				cs_update$suffix$.csu_version = #V_csuVersion#
+			</isNotNull>		
+			<isNotNull property="V_csuType" prepend=",">
+				cs_update$suffix$.csu_type = #V_csuType#
+			</isNotNull>		
+			<isNotNull property="V_csuFile" prepend=",">
+				cs_update$suffix$.csu_file = #V_csuFile#
+			</isNotNull>		
+			<isNotNull property="V_csuDescript" prepend=",">
+				cs_update$suffix$.csu_descript = #V_csuDescript#
+			</isNotNull>		
+			<isNotNull property="V_csuUpdateTime" prepend=",">
+				cs_update$suffix$.csu_update_time = #V_csuUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csuAddTime" prepend=",">
+				cs_update$suffix$.csu_add_time = #V_csuAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csuStatus" prepend=",">
+				cs_update$suffix$.csu_status = #V_csuStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_update$suffix$.csu_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUpdate_part.cs_update_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除App更新 -->
+	<update id="deleteCsUpdateBy"  parameterClass="java.util.HashMap">
+		delete from cs_update$suffix$ where 
+		cs_update$suffix$.csu_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUpdate_part.cs_update_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,31 @@
+//远程统一接口修改说明
+RemoteService类中原dealRemoteCommend方法修改为转到redirectRemoteCommend方法，保证原有的调用不变化
+redirectRemoteCommend方法中统一调用{service.domain}/service/remote.invoke.do
+所以每个应用中的config.properties文件中应该添加service.domain参数
+
+新增service应用,提供远程调用处理和招行回调服务
+
+//招行充值接口说明
+cs_alipay_record表加csar_bank_type[bigint]
+cs_alipay_refund表加csar_bank_type[bigint]
+cs_alipay_log表加csal_bank_type[bigint]
+原来的几个CsAlipayXXXXX重新定义为“接口”，表名不变，加字段xxx_bank_type以区别来自哪个接口，目前实现支付宝、招行的充值
+招行手机充值时请调用CMBPayService类中的executeCMBPayMobileUrl方法获取招行的充值页面
+会员退款的业务逻辑已修改，后台财务操作流程发生变化，由原来的一笔全退改为多笔分批退
+CMBPayService类中，以下几个参数需要修改
+	//支付商户开户分行号
+	private final static String BranchID="0010";	
+	//支付商户号
+	private final static String CoNo="000818";
+	//支付密钥
+	private final static String payKey="abcCBA1234554321";
+	//退款密钥
+	private final static String refundKey="abcCBA1234554321";
+	//登录密钥
+	private final static String loginKey="abcCBA1234554321";
+
+
+
+//企业对账说明
+com.ccclubs.action.unit.BillThread为企业帐单生成线程，请保证该线程正常执行
+另外，专车订单结算后请把其关联的企业订单上的结算金额也改掉

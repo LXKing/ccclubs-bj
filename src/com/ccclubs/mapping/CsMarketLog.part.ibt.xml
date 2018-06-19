@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMarketLog_part">	
+	<!-- 营销跟踪条件sql片段  -->
+	<sql id="cs_market_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmlId" prepend="and">
+			    $csmlIdNot$ cs_market_log$suffix$.csml_id = #csmlId#
+			</isNotEmpty>
+			<isNotNull property="csmlIdNot" prepend="and">
+				<isEmpty property="csmlId">
+				$csmlIdNot$ cs_market_log$suffix$.csml_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_market_log$suffix$.csml_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csmlHost" prepend="and">
+			    $csmlHostNot$ cs_market_log$suffix$.csml_host = #csmlHost#
+			</isNotEmpty>
+			<isNotNull property="csmlHostNot" prepend="and">
+				<isEmpty property="csmlHost">
+				$csmlHostNot$ cs_market_log$suffix$.csml_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csmlTitle" prepend="and">			    
+			    (<isNotNull property="csmlTitleNot">
+			    cs_market_log$suffix$.csml_title is null or length(cs_market_log$suffix$.csml_title) &lt; 1 or
+			    </isNotNull>$csmlTitleNot$ cs_market_log$suffix$.csml_title like #csmlTitle#)
+			</isNotEmpty>
+			<isNotNull property="csmlTitleNot" prepend="and">
+				<isEmpty property="csmlTitle">
+				$csmlTitleNot$ (cs_market_log$suffix$.csml_title is null or length(cs_market_log$suffix$.csml_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmlPlan" prepend="and">
+			    $csmlPlanNot$ cs_market_log$suffix$.csml_plan = #csmlPlan#
+			</isNotEmpty>
+			<isNotNull property="csmlPlanNot" prepend="and">
+				<isEmpty property="csmlPlan">
+				$csmlPlanNot$ cs_market_log$suffix$.csml_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmlProfile" prepend="and">			    
+			    (<isNotNull property="csmlProfileNot">
+			    cs_market_log$suffix$.csml_profile is null or length(cs_market_log$suffix$.csml_profile) &lt; 1 or
+			    </isNotNull>$csmlProfileNot$ cs_market_log$suffix$.csml_profile like #csmlProfile#)
+			</isNotEmpty>
+			<isNotNull property="csmlProfileNot" prepend="and">
+				<isEmpty property="csmlProfile">
+				$csmlProfileNot$ (cs_market_log$suffix$.csml_profile is null or length(cs_market_log$suffix$.csml_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmlUser" prepend="and">
+			    $csmlUserNot$ cs_market_log$suffix$.csml_user = #csmlUser#
+			</isNotEmpty>
+			<isNotNull property="csmlUserNot" prepend="and">
+				<isEmpty property="csmlUser">
+				$csmlUserNot$ cs_market_log$suffix$.csml_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmlUpdateTimeStart" prepend="and">
+			    $csmlUpdateTimeNot$   (cs_market_log$suffix$.csml_update_time &gt;= #csmlUpdateTimeStart#
+			   <isEmpty property="csmlUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmlUpdateTimeEnd" prepend="and">
+				<isEmpty property="csmlUpdateTimeStart">$csmlUpdateTimeNot$   (</isEmpty>
+			    cs_market_log$suffix$.csml_update_time &lt;= #csmlUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmlUpdateTime" prepend="and">
+			    $csmlUpdateTimeNot$ cs_market_log$suffix$.csml_update_time = #csmlUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csmlUpdateTimeNot" prepend="and">
+				<isEmpty property="csmlUpdateTimeStart"><isEmpty property="csmlUpdateTimeEnd"><isEmpty property="csmlUpdateTime">
+				$csmlUpdateTimeNot$ cs_market_log$suffix$.csml_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmlAddTimeStart" prepend="and">
+			    $csmlAddTimeNot$   (cs_market_log$suffix$.csml_add_time &gt;= #csmlAddTimeStart#
+			   <isEmpty property="csmlAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmlAddTimeEnd" prepend="and">
+				<isEmpty property="csmlAddTimeStart">$csmlAddTimeNot$   (</isEmpty>
+			    cs_market_log$suffix$.csml_add_time &lt;= #csmlAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmlAddTime" prepend="and">
+			    $csmlAddTimeNot$ cs_market_log$suffix$.csml_add_time = #csmlAddTime#
+			</isNotEmpty>
+			<isNotNull property="csmlAddTimeNot" prepend="and">
+				<isEmpty property="csmlAddTimeStart"><isEmpty property="csmlAddTimeEnd"><isEmpty property="csmlAddTime">
+				$csmlAddTimeNot$ cs_market_log$suffix$.csml_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmlStatus" prepend="and">
+			    $csmlStatusNot$ cs_market_log$suffix$.csml_status = #csmlStatus#
+			</isNotEmpty>
+			<isNotNull property="csmlStatusNot" prepend="and">
+				<isEmpty property="csmlStatus">
+				$csmlStatusNot$ cs_market_log$suffix$.csml_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 营销跟踪left join 条件sql片段 -->
+	<sql id="cs_market_log_join">
+		<dynamic>
+			<isNotEmpty property="CsMarketLog.csmlId" prepend="and">
+			    $CsMarketLog.csmlIdNot$ cs_market_log$CsMarketLog.suffix$.csml_id = #CsMarketLog.csmlId#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlIdNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlId">
+				$csmlIdNot$ cs_market_log$CsMarketLog.suffix$.csml_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_market_log$CsMarketLog.suffix$.csml_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketLog.csmlHost" prepend="and">
+			    $CsMarketLog.csmlHostNot$ cs_market_log$CsMarketLog.suffix$.csml_host = #CsMarketLog.csmlHost#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlHostNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlHost">
+				$csmlHostNot$ cs_market_log$CsMarketLog.suffix$.csml_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlTitle" prepend="and">
+				(<isNotNull property="CsMarketLog.csmlTitleNot">
+			    cs_market_log$CsMarketLog.suffix$.csml_title is null or length(cs_market_log$CsMarketLog.suffix$.csml_title) &lt; 1 or
+			    </isNotNull>$CsMarketLog.csmlTitleNot$ cs_market_log$CsMarketLog.suffix$.csml_title like #CsMarketLog.csmlTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlTitleNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlTitle">
+				$csmlTitleNot$ (cs_market_log$CsMarketLog.suffix$.csml_title is null or length(cs_market_log$CsMarketLog.suffix$.csml_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlPlan" prepend="and">
+			    $CsMarketLog.csmlPlanNot$ cs_market_log$CsMarketLog.suffix$.csml_plan = #CsMarketLog.csmlPlan#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlPlanNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlPlan">
+				$csmlPlanNot$ cs_market_log$CsMarketLog.suffix$.csml_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlProfile" prepend="and">
+				(<isNotNull property="CsMarketLog.csmlProfileNot">
+			    cs_market_log$CsMarketLog.suffix$.csml_profile is null or length(cs_market_log$CsMarketLog.suffix$.csml_profile) &lt; 1 or
+			    </isNotNull>$CsMarketLog.csmlProfileNot$ cs_market_log$CsMarketLog.suffix$.csml_profile like #CsMarketLog.csmlProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlProfileNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlProfile">
+				$csmlProfileNot$ (cs_market_log$CsMarketLog.suffix$.csml_profile is null or length(cs_market_log$CsMarketLog.suffix$.csml_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlUser" prepend="and">
+			    $CsMarketLog.csmlUserNot$ cs_market_log$CsMarketLog.suffix$.csml_user = #CsMarketLog.csmlUser#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlUserNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlUser">
+				$csmlUserNot$ cs_market_log$CsMarketLog.suffix$.csml_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlUpdateTimeStart" prepend="and">
+			    $CsMarketLog.csmlUpdateTimeNot$   (cs_market_log$CsMarketLog.suffix$.csml_update_time &gt;= #CsMarketLog.csmlUpdateTimeStart#
+			   <isEmpty property="CsMarketLog.csmlUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketLog.csmlUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsMarketLog.csmlUpdateTimeStart">$CsMarketLog.csmlUpdateTimeNot$   (</isEmpty>
+			    cs_market_log$CsMarketLog.suffix$.csml_update_time &lt;= #CsMarketLog.csmlUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketLog.csmlUpdateTime" prepend="and">
+			    $CsMarketLog.csmlUpdateTimeNot$ cs_market_log$CsMarketLog.suffix$.csml_update_time = #CsMarketLog.csmlUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlUpdateTimeNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlUpdateTimeStart"><isEmpty property="CsMarketLog.csmlUpdateTimeEnd"><isEmpty property="CsMarketLog.csmlUpdateTime">
+				$csmlUpdateTimeNot$ cs_market_log$CsMarketLog.suffix$.csml_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlAddTimeStart" prepend="and">
+			    $CsMarketLog.csmlAddTimeNot$   (cs_market_log$CsMarketLog.suffix$.csml_add_time &gt;= #CsMarketLog.csmlAddTimeStart#
+			   <isEmpty property="CsMarketLog.csmlAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketLog.csmlAddTimeEnd" prepend="and">
+				<isEmpty property="CsMarketLog.csmlAddTimeStart">$CsMarketLog.csmlAddTimeNot$   (</isEmpty>
+			    cs_market_log$CsMarketLog.suffix$.csml_add_time &lt;= #CsMarketLog.csmlAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMarketLog.csmlAddTime" prepend="and">
+			    $CsMarketLog.csmlAddTimeNot$ cs_market_log$CsMarketLog.suffix$.csml_add_time = #CsMarketLog.csmlAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlAddTimeNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlAddTimeStart"><isEmpty property="CsMarketLog.csmlAddTimeEnd"><isEmpty property="CsMarketLog.csmlAddTime">
+				$csmlAddTimeNot$ cs_market_log$CsMarketLog.suffix$.csml_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMarketLog.csmlStatus" prepend="and">
+			    $CsMarketLog.csmlStatusNot$ cs_market_log$CsMarketLog.suffix$.csml_status = #CsMarketLog.csmlStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMarketLog.csmlStatusNot" prepend="and">
+				<isEmpty property="CsMarketLog.csmlStatus">
+				$csmlStatusNot$ cs_market_log$CsMarketLog.suffix$.csml_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

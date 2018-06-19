@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 企业车管之SQL映射 -->
+	<resultMap id="CsUnitUser" class="com.ccclubs.model.CsUnitUser">
+		<result property="csuuId" column="csuu_id"/>
+		<result property="csuuHost" column="csuu_host"/>
+		<result property="csuuUsername" column="csuu_username"/>
+		<result property="csuuPassword" column="csuu_password"/>
+		<result property="csuuUnitInfo" column="csuu_unit_info"/>
+		<result property="csuuIsRoot" column="csuu_is_root"/>
+		<result property="csuuLimit" column="csuu_limit"/>
+		<result property="csuuRealname" column="csuu_realname"/>
+		<result property="csuuMobile" column="csuu_mobile"/>
+		<result property="csuuAddTime" column="csuu_add_time"/>
+		<result property="csuuLastIp" column="csuu_last_ip"/>
+		<result property="csuuLastTime" column="csuu_last_time"/>
+		<result property="csuuStatus" column="csuu_status"/>
+	</resultMap>
+		
+	<!-- 获取所有企业车管 -->
+	<select id="getCsUnitUserList" resultMap="CsUnitUser">
+		select cs_unit_user$suffix$.* from cs_unit_user$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.csuu_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_user$suffix$.csuu_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitUser_part.cs_unit_user_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csuu_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取企业车管分页 -->
+	<select id="getCsUnitUserPage" parameterClass="java.util.HashMap" resultMap="CsUnitUser">
+		select cs_unit_user$suffix$.* from cs_unit_user$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询 -->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.csuu_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_user$suffix$.csuu_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitUser_part.cs_unit_user_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csuu_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取企业车管总数 -->
+	<select id="getCsUnitUserEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_user$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.csuu_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_user$suffix$.csuu_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitUser_part.cs_unit_user_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取企业车管 -->
+	<select id="getCsUnitUserById" parameterClass="java.util.HashMap" resultMap="CsUnitUser">
+		select cs_unit_user$suffix$.* from cs_unit_user$suffix$
+		where csuu_id=#id#
+	</select>
+	
+		
+	<!-- 保存企业车管 -->
+	<insert id="saveCsUnitUser"  parameterClass="com.ccclubs.model.CsUnitUser">
+		insert into cs_unit_user$suffix$
+		(
+			cs_unit_user$suffix$.csuu_host
+			,cs_unit_user$suffix$.csuu_username
+			,cs_unit_user$suffix$.csuu_password
+			,cs_unit_user$suffix$.csuu_unit_info
+			,cs_unit_user$suffix$.csuu_is_root
+			,cs_unit_user$suffix$.csuu_limit
+			,cs_unit_user$suffix$.csuu_realname
+			,cs_unit_user$suffix$.csuu_mobile
+			,cs_unit_user$suffix$.csuu_add_time
+			,cs_unit_user$suffix$.csuu_last_ip
+			,cs_unit_user$suffix$.csuu_last_time
+			,cs_unit_user$suffix$.csuu_status
+		)
+		values(
+			<isNotNull property="csuuHost" prepend="">
+				#csuuHost#
+			</isNotNull>
+			<isNull property="csuuHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csuuUsername" prepend=",">
+				#csuuUsername#
+			</isNotNull>
+			<isNull property="csuuUsername" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuPassword" prepend=",">
+				#csuuPassword#
+			</isNotNull>
+			<isNull property="csuuPassword" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuUnitInfo" prepend=",">
+				#csuuUnitInfo#
+			</isNotNull>
+			<isNull property="csuuUnitInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuIsRoot" prepend=",">
+				#csuuIsRoot#
+			</isNotNull>
+			<isNull property="csuuIsRoot" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuLimit" prepend=",">
+				#csuuLimit#
+			</isNotNull>
+			<isNull property="csuuLimit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuRealname" prepend=",">
+				#csuuRealname#
+			</isNotNull>
+			<isNull property="csuuRealname" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuMobile" prepend=",">
+				#csuuMobile#
+			</isNotNull>
+			<isNull property="csuuMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuAddTime" prepend=",">
+				#csuuAddTime#
+			</isNotNull>
+			<isNull property="csuuAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuLastIp" prepend=",">
+				#csuuLastIp#
+			</isNotNull>
+			<isNull property="csuuLastIp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuLastTime" prepend=",">
+				#csuuLastTime#
+			</isNotNull>
+			<isNull property="csuuLastTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuuStatus" prepend=",">
+				#csuuStatus#
+			</isNotNull>
+			<isNull property="csuuStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新企业车管 -->
+	<update id="updateCsUnitUser"  parameterClass="com.ccclubs.model.CsUnitUser">
+		update cs_unit_user$suffix$ set
+			<isNotNull property="csuuHost" prepend="">
+				cs_unit_user$suffix$.csuu_host = #csuuHost#
+			</isNotNull>
+			<isNull property="csuuHost" prepend="">
+				cs_unit_user$suffix$.csuu_host = null
+			</isNull>				
+			<isNotNull property="csuuUsername" prepend=",">
+				cs_unit_user$suffix$.csuu_username = #csuuUsername#
+			</isNotNull>
+			<isNull property="csuuUsername" prepend=",">
+				cs_unit_user$suffix$.csuu_username = null
+			</isNull>				
+			<isNotNull property="csuuPassword" prepend=",">
+				cs_unit_user$suffix$.csuu_password = #csuuPassword#
+			</isNotNull>
+			<isNull property="csuuPassword" prepend=",">
+				cs_unit_user$suffix$.csuu_password = null
+			</isNull>				
+			<isNotNull property="csuuUnitInfo" prepend=",">
+				cs_unit_user$suffix$.csuu_unit_info = #csuuUnitInfo#
+			</isNotNull>
+			<isNull property="csuuUnitInfo" prepend=",">
+				cs_unit_user$suffix$.csuu_unit_info = null
+			</isNull>				
+			<isNotNull property="csuuIsRoot" prepend=",">
+				cs_unit_user$suffix$.csuu_is_root = #csuuIsRoot#
+			</isNotNull>
+			<isNull property="csuuIsRoot" prepend=",">
+				cs_unit_user$suffix$.csuu_is_root = null
+			</isNull>				
+			<isNotNull property="csuuLimit" prepend=",">
+				cs_unit_user$suffix$.csuu_limit = #csuuLimit#
+			</isNotNull>
+			<isNull property="csuuLimit" prepend=",">
+				cs_unit_user$suffix$.csuu_limit = null
+			</isNull>				
+			<isNotNull property="csuuRealname" prepend=",">
+				cs_unit_user$suffix$.csuu_realname = #csuuRealname#
+			</isNotNull>
+			<isNull property="csuuRealname" prepend=",">
+				cs_unit_user$suffix$.csuu_realname = null
+			</isNull>				
+			<isNotNull property="csuuMobile" prepend=",">
+				cs_unit_user$suffix$.csuu_mobile = #csuuMobile#
+			</isNotNull>
+			<isNull property="csuuMobile" prepend=",">
+				cs_unit_user$suffix$.csuu_mobile = null
+			</isNull>				
+			<isNotNull property="csuuAddTime" prepend=",">
+				cs_unit_user$suffix$.csuu_add_time = #csuuAddTime#
+			</isNotNull>
+			<isNull property="csuuAddTime" prepend=",">
+				cs_unit_user$suffix$.csuu_add_time = null
+			</isNull>				
+			<isNotNull property="csuuLastIp" prepend=",">
+				cs_unit_user$suffix$.csuu_last_ip = #csuuLastIp#
+			</isNotNull>
+			<isNull property="csuuLastIp" prepend=",">
+				cs_unit_user$suffix$.csuu_last_ip = null
+			</isNull>				
+			<isNotNull property="csuuLastTime" prepend=",">
+				cs_unit_user$suffix$.csuu_last_time = #csuuLastTime#
+			</isNotNull>
+			<isNull property="csuuLastTime" prepend=",">
+				cs_unit_user$suffix$.csuu_last_time = null
+			</isNull>				
+			<isNotNull property="csuuStatus" prepend=",">
+				cs_unit_user$suffix$.csuu_status = #csuuStatus#
+			</isNotNull>
+			<isNull property="csuuStatus" prepend=",">
+				cs_unit_user$suffix$.csuu_status = null
+			</isNull>				
+		where
+			csuu_id=#csuuId#
+	</update>
+	
+	<!-- 更新企业车管非空字段 -->
+	<update id="updateCsUnitUser$NotNull"  parameterClass="com.ccclubs.model.CsUnitUser">
+		update cs_unit_user$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csuuHost" prepend=",">
+				cs_unit_user$suffix$.csuu_host = #csuuHost#
+			</isNotNull>		
+			<isNotNull property="csuuUsername" prepend=",">
+				cs_unit_user$suffix$.csuu_username = #csuuUsername#
+			</isNotNull>		
+			<isNotNull property="csuuPassword" prepend=",">
+				cs_unit_user$suffix$.csuu_password = #csuuPassword#
+			</isNotNull>		
+			<isNotNull property="csuuUnitInfo" prepend=",">
+				cs_unit_user$suffix$.csuu_unit_info = #csuuUnitInfo#
+			</isNotNull>		
+			<isNotNull property="csuuIsRoot" prepend=",">
+				cs_unit_user$suffix$.csuu_is_root = #csuuIsRoot#
+			</isNotNull>		
+			<isNotNull property="csuuLimit" prepend=",">
+				cs_unit_user$suffix$.csuu_limit = #csuuLimit#
+			</isNotNull>		
+			<isNotNull property="csuuRealname" prepend=",">
+				cs_unit_user$suffix$.csuu_realname = #csuuRealname#
+			</isNotNull>		
+			<isNotNull property="csuuMobile" prepend=",">
+				cs_unit_user$suffix$.csuu_mobile = #csuuMobile#
+			</isNotNull>		
+			<isNotNull property="csuuAddTime" prepend=",">
+				cs_unit_user$suffix$.csuu_add_time = #csuuAddTime#
+			</isNotNull>		
+			<isNotNull property="csuuLastIp" prepend=",">
+				cs_unit_user$suffix$.csuu_last_ip = #csuuLastIp#
+			</isNotNull>		
+			<isNotNull property="csuuLastTime" prepend=",">
+				cs_unit_user$suffix$.csuu_last_time = #csuuLastTime#
+			</isNotNull>		
+			<isNotNull property="csuuStatus" prepend=",">
+				cs_unit_user$suffix$.csuu_status = #csuuStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csuu_id=#csuuId#
+	</update>
+	
+
+	<!-- 根据ID删除一个企业车管 -->
+	<delete id="deleteCsUnitUserById" parameterClass="java.util.HashMap">
+		delete from cs_unit_user$suffix$ where csuu_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个企业车管 -->
+	<update id="removeCsUnitUserById" parameterClass="java.util.HashMap">
+		update cs_unit_user$suffix$ set  cs_unit_user$suffix$.csuu_status=-1  where csuu_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新企业车管 -->
+	<update id="updateCsUnitUserBy"  parameterClass="java.util.HashMap">
+		update cs_unit_user$suffix$ set		
+			csuu_id=csuu_id
+			<isNotNull property="V_csuuId" prepend=",">
+				cs_unit_user$suffix$.csuu_id = #V_csuuId#
+			</isNotNull>		
+			<isNotNull property="V_csuuHost" prepend=",">
+				cs_unit_user$suffix$.csuu_host = #V_csuuHost#
+			</isNotNull>		
+			<isNotNull property="V_csuuUsername" prepend=",">
+				cs_unit_user$suffix$.csuu_username = #V_csuuUsername#
+			</isNotNull>		
+			<isNotNull property="V_csuuPassword" prepend=",">
+				cs_unit_user$suffix$.csuu_password = #V_csuuPassword#
+			</isNotNull>		
+			<isNotNull property="V_csuuUnitInfo" prepend=",">
+				cs_unit_user$suffix$.csuu_unit_info = #V_csuuUnitInfo#
+			</isNotNull>		
+			<isNotNull property="V_csuuIsRoot" prepend=",">
+				cs_unit_user$suffix$.csuu_is_root = #V_csuuIsRoot#
+			</isNotNull>		
+			<isNotNull property="V_csuuLimit" prepend=",">
+				cs_unit_user$suffix$.csuu_limit = #V_csuuLimit#
+			</isNotNull>		
+			<isNotNull property="V_csuuRealname" prepend=",">
+				cs_unit_user$suffix$.csuu_realname = #V_csuuRealname#
+			</isNotNull>		
+			<isNotNull property="V_csuuMobile" prepend=",">
+				cs_unit_user$suffix$.csuu_mobile = #V_csuuMobile#
+			</isNotNull>		
+			<isNotNull property="V_csuuAddTime" prepend=",">
+				cs_unit_user$suffix$.csuu_add_time = #V_csuuAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csuuLastIp" prepend=",">
+				cs_unit_user$suffix$.csuu_last_ip = #V_csuuLastIp#
+			</isNotNull>		
+			<isNotNull property="V_csuuLastTime" prepend=",">
+				cs_unit_user$suffix$.csuu_last_time = #V_csuuLastTime#
+			</isNotNull>		
+			<isNotNull property="V_csuuStatus" prepend=",">
+				cs_unit_user$suffix$.csuu_status = #V_csuuStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.csuu_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_user$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_unit_user$suffix$.csuu_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuuUnitInfo"><!-- 调用一下CsuuUnitInfo，把CsUnitInfo指向CsuuUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitUser_part.cs_unit_user_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除企业车管 -->
+	<update id="deleteCsUnitUserBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_user$suffix$ where 
+		cs_unit_user$suffix$.csuu_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitUser_part.cs_unit_user_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

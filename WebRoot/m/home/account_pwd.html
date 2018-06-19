@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>密码修改</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<input class="input-dur" id="oldpass" type="text" placeholder="原密码">
+				<input class="input-dur" id="newpass" type="text" placeholder="新密码">
+				<input class="input-dur" id="newcpass" type="text" placeholder="确认新密码">
+			</form>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block" onclick="submit()">
+					确认修改
+				</button>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../../js/rsa/RSA.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../../js/rsa/BigInt.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../../js/rsa/Barrett.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../../js/rsa/CodeManage.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../../js/rsa/MyRSA.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function submit(){
+			var oldpass = $.trim($("#oldpass").val());
+			if(oldpass.length<=0||newpass.length<=0||newcpass.length<=0){
+				Toast.show("请输入密码");
+				return;
+			}
+			initMyRSA();
+			var url = "../ajax_checkPwd.html?pass=" + myRSA(oldpass);
+			$.get(url, function(data) {
+				switch (data) {
+					case "true":submitnew();break;
+					case "false":Toast.show("原密码输入错误，请确认您的原始密码");return;break;
+					case "101":location.href='.index.html';break;
+				}
+			});
+		}
+		function submitnew(){
+			var newpass = $.trim($('#newpass').val());
+			var newcpass = $.trim($('#newcpass').val());
+			if(newpass!=newcpass){
+				Toast.show("两次密码输入错误");
+				return;
+			}
+			initMyRSA();
+			var ajax = {
+				url: "account_resetPwd.html",
+				type: "POST",
+				data: {
+					txtPassWord: myRSA(newpass),
+					txtRePassWord: myRSA(newcpass)
+				},
+				async: true,
+				success: function(data) {
+					switch (data) {
+						case "100":
+							Toast.show("修改密码成功");
+							$('.input-dur').val("");
+							return;
+							break;
+						case "101":
+							location.href = '../login.html';
+							break;
+						case "102":
+							Toast.show("你还没有输入新密码！");return;
+							break;
+						case "106":
+							Toast.show("你输入密码格式有误！");return;
+							break;
+						case "107":
+							Toast.show("两次密码输入不一致！");return;
+							break;
+						case "9999":
+							Toast.show("系统错误,请稍候再试。");return;
+							break;
+						default:
+							Toast.show("未知的返回。");
+							return;
+					}
+				}
+			};
+			$.ajax(ajax);
+		}
+		</script>
+	</body>
+
+</html>

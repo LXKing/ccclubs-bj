@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 商品信息之SQL映射 -->
+	<resultMap id="CsItem" class="com.ccclubs.model.CsItem">
+		<result property="csiId" column="csi_id"/>
+		<result property="csiTitle" column="csi_title"/>
+		<result property="csiType" column="csi_type"/>
+		<result property="csiSort" column="csi_sort"/>
+		<result property="csiPrice" column="csi_price"/>
+		<result property="csiRebate" column="csi_rebate"/>
+		<result property="csiFlag" column="csi_flag"/>
+		<result property="csiDataString" column="csi_data_string"/>
+		<result property="csiDataNumber" column="csi_data_number"/>
+		<result property="csiDataDecimal" column="csi_data_decimal"/>
+		<result property="csiThumb" column="csi_thumb"/>
+		<result property="csiImages" column="csi_images"/>
+		<result property="csiDepict" column="csi_depict"/>
+		<result property="csiSale" column="csi_sale"/>
+		<result property="csiLevel" column="csi_level"/>
+		<result property="csiRemark" column="csi_remark"/>
+		<result property="csiUpdateTime" column="csi_update_time"/>
+		<result property="csiAddTime" column="csi_add_time"/>
+		<result property="csiStatus" column="csi_status"/>
+	</resultMap>
+		
+	<!-- 获取所有商品信息 -->
+	<select id="getCsItemList" resultMap="CsItem">
+		select cs_item$suffix$.* from cs_item$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_item$suffix$.csi_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsItem_part.cs_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取商品信息分页 -->
+	<select id="getCsItemPage" parameterClass="java.util.HashMap" resultMap="CsItem">
+		select cs_item$suffix$.* from cs_item$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_item$suffix$.csi_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsItem_part.cs_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取商品信息总数 -->
+	<select id="getCsItemEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_item$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_item$suffix$.csi_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsItem_part.cs_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取商品信息 -->
+	<select id="getCsItemById" parameterClass="java.util.HashMap" resultMap="CsItem">
+		select cs_item$suffix$.* from cs_item$suffix$
+		where csi_id=#id#
+	</select>
+	
+		
+	<!-- 保存商品信息 -->
+	<insert id="saveCsItem"  parameterClass="com.ccclubs.model.CsItem">
+		insert into cs_item$suffix$
+		(
+			cs_item$suffix$.csi_title
+			,cs_item$suffix$.csi_type
+			,cs_item$suffix$.csi_sort
+			,cs_item$suffix$.csi_price
+			,cs_item$suffix$.csi_rebate
+			,cs_item$suffix$.csi_flag
+			,cs_item$suffix$.csi_data_string
+			,cs_item$suffix$.csi_data_number
+			,cs_item$suffix$.csi_data_decimal
+			,cs_item$suffix$.csi_thumb
+			,cs_item$suffix$.csi_images
+			,cs_item$suffix$.csi_depict
+			,cs_item$suffix$.csi_sale
+			,cs_item$suffix$.csi_level
+			,cs_item$suffix$.csi_remark
+			,cs_item$suffix$.csi_update_time
+			,cs_item$suffix$.csi_add_time
+			,cs_item$suffix$.csi_status
+		)
+		values(
+			<isNotNull property="csiTitle" prepend="">
+				#csiTitle#
+			</isNotNull>
+			<isNull property="csiTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csiType" prepend=",">
+				#csiType#
+			</isNotNull>
+			<isNull property="csiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiSort" prepend=",">
+				#csiSort#
+			</isNotNull>
+			<isNull property="csiSort" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiPrice" prepend=",">
+				#csiPrice#
+			</isNotNull>
+			<isNull property="csiPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiRebate" prepend=",">
+				#csiRebate#
+			</isNotNull>
+			<isNull property="csiRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiFlag" prepend=",">
+				#csiFlag#
+			</isNotNull>
+			<isNull property="csiFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiDataString" prepend=",">
+				#csiDataString#
+			</isNotNull>
+			<isNull property="csiDataString" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiDataNumber" prepend=",">
+				#csiDataNumber#
+			</isNotNull>
+			<isNull property="csiDataNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiDataDecimal" prepend=",">
+				#csiDataDecimal#
+			</isNotNull>
+			<isNull property="csiDataDecimal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiThumb" prepend=",">
+				#csiThumb#
+			</isNotNull>
+			<isNull property="csiThumb" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiImages" prepend=",">
+				#csiImages#
+			</isNotNull>
+			<isNull property="csiImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiDepict" prepend=",">
+				#csiDepict#
+			</isNotNull>
+			<isNull property="csiDepict" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiSale" prepend=",">
+				#csiSale#
+			</isNotNull>
+			<isNull property="csiSale" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiLevel" prepend=",">
+				#csiLevel#
+			</isNotNull>
+			<isNull property="csiLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiRemark" prepend=",">
+				#csiRemark#
+			</isNotNull>
+			<isNull property="csiRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiUpdateTime" prepend=",">
+				#csiUpdateTime#
+			</isNotNull>
+			<isNull property="csiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiAddTime" prepend=",">
+				#csiAddTime#
+			</isNotNull>
+			<isNull property="csiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csiStatus" prepend=",">
+				#csiStatus#
+			</isNotNull>
+			<isNull property="csiStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新商品信息 -->
+	<update id="updateCsItem"  parameterClass="com.ccclubs.model.CsItem">
+		update cs_item$suffix$ set
+			<isNotNull property="csiTitle" prepend="">
+				cs_item$suffix$.csi_title = #csiTitle#
+			</isNotNull>
+			<isNull property="csiTitle" prepend="">
+				cs_item$suffix$.csi_title = null
+			</isNull>				
+			<isNotNull property="csiType" prepend=",">
+				cs_item$suffix$.csi_type = #csiType#
+			</isNotNull>
+			<isNull property="csiType" prepend=",">
+				cs_item$suffix$.csi_type = null
+			</isNull>				
+			<isNotNull property="csiSort" prepend=",">
+				cs_item$suffix$.csi_sort = #csiSort#
+			</isNotNull>
+			<isNull property="csiSort" prepend=",">
+				cs_item$suffix$.csi_sort = null
+			</isNull>				
+			<isNotNull property="csiPrice" prepend=",">
+				cs_item$suffix$.csi_price = #csiPrice#
+			</isNotNull>
+			<isNull property="csiPrice" prepend=",">
+				cs_item$suffix$.csi_price = null
+			</isNull>				
+			<isNotNull property="csiRebate" prepend=",">
+				cs_item$suffix$.csi_rebate = #csiRebate#
+			</isNotNull>
+			<isNull property="csiRebate" prepend=",">
+				cs_item$suffix$.csi_rebate = null
+			</isNull>				
+			<isNotNull property="csiFlag" prepend=",">
+				cs_item$suffix$.csi_flag = #csiFlag#
+			</isNotNull>
+			<isNull property="csiFlag" prepend=",">
+				cs_item$suffix$.csi_flag = null
+			</isNull>				
+			<isNotNull property="csiDataString" prepend=",">
+				cs_item$suffix$.csi_data_string = #csiDataString#
+			</isNotNull>
+			<isNull property="csiDataString" prepend=",">
+				cs_item$suffix$.csi_data_string = null
+			</isNull>				
+			<isNotNull property="csiDataNumber" prepend=",">
+				cs_item$suffix$.csi_data_number = #csiDataNumber#
+			</isNotNull>
+			<isNull property="csiDataNumber" prepend=",">
+				cs_item$suffix$.csi_data_number = null
+			</isNull>				
+			<isNotNull property="csiDataDecimal" prepend=",">
+				cs_item$suffix$.csi_data_decimal = #csiDataDecimal#
+			</isNotNull>
+			<isNull property="csiDataDecimal" prepend=",">
+				cs_item$suffix$.csi_data_decimal = null
+			</isNull>				
+			<isNotNull property="csiThumb" prepend=",">
+				cs_item$suffix$.csi_thumb = #csiThumb#
+			</isNotNull>
+			<isNull property="csiThumb" prepend=",">
+				cs_item$suffix$.csi_thumb = null
+			</isNull>				
+			<isNotNull property="csiImages" prepend=",">
+				cs_item$suffix$.csi_images = #csiImages#
+			</isNotNull>
+			<isNull property="csiImages" prepend=",">
+				cs_item$suffix$.csi_images = null
+			</isNull>				
+			<isNotNull property="csiDepict" prepend=",">
+				cs_item$suffix$.csi_depict = #csiDepict#
+			</isNotNull>
+			<isNull property="csiDepict" prepend=",">
+				cs_item$suffix$.csi_depict = null
+			</isNull>				
+			<isNotNull property="csiSale" prepend=",">
+				cs_item$suffix$.csi_sale = #csiSale#
+			</isNotNull>
+			<isNull property="csiSale" prepend=",">
+				cs_item$suffix$.csi_sale = null
+			</isNull>				
+			<isNotNull property="csiLevel" prepend=",">
+				cs_item$suffix$.csi_level = #csiLevel#
+			</isNotNull>
+			<isNull property="csiLevel" prepend=",">
+				cs_item$suffix$.csi_level = null
+			</isNull>				
+			<isNotNull property="csiRemark" prepend=",">
+				cs_item$suffix$.csi_remark = #csiRemark#
+			</isNotNull>
+			<isNull property="csiRemark" prepend=",">
+				cs_item$suffix$.csi_remark = null
+			</isNull>				
+			<isNotNull property="csiUpdateTime" prepend=",">
+				cs_item$suffix$.csi_update_time = #csiUpdateTime#
+			</isNotNull>
+			<isNull property="csiUpdateTime" prepend=",">
+				cs_item$suffix$.csi_update_time = null
+			</isNull>				
+			<isNotNull property="csiAddTime" prepend=",">
+				cs_item$suffix$.csi_add_time = #csiAddTime#
+			</isNotNull>
+			<isNull property="csiAddTime" prepend=",">
+				cs_item$suffix$.csi_add_time = null
+			</isNull>				
+			<isNotNull property="csiStatus" prepend=",">
+				cs_item$suffix$.csi_status = #csiStatus#
+			</isNotNull>
+			<isNull property="csiStatus" prepend=",">
+				cs_item$suffix$.csi_status = null
+			</isNull>				
+		where
+			csi_id=#csiId#
+	</update>
+	
+	<!-- 更新商品信息非空字段 -->
+	<update id="updateCsItem$NotNull"  parameterClass="com.ccclubs.model.CsItem">
+		update cs_item$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csiTitle" prepend=",">
+				cs_item$suffix$.csi_title = #csiTitle#
+			</isNotNull>		
+			<isNotNull property="csiType" prepend=",">
+				cs_item$suffix$.csi_type = #csiType#
+			</isNotNull>		
+			<isNotNull property="csiSort" prepend=",">
+				cs_item$suffix$.csi_sort = #csiSort#
+			</isNotNull>		
+			<isNotNull property="csiPrice" prepend=",">
+				cs_item$suffix$.csi_price = #csiPrice#
+			</isNotNull>		
+			<isNotNull property="csiRebate" prepend=",">
+				cs_item$suffix$.csi_rebate = #csiRebate#
+			</isNotNull>		
+			<isNotNull property="csiFlag" prepend=",">
+				cs_item$suffix$.csi_flag = #csiFlag#
+			</isNotNull>		
+			<isNotNull property="csiDataString" prepend=",">
+				cs_item$suffix$.csi_data_string = #csiDataString#
+			</isNotNull>		
+			<isNotNull property="csiDataNumber" prepend=",">
+				cs_item$suffix$.csi_data_number = #csiDataNumber#
+			</isNotNull>		
+			<isNotNull property="csiDataDecimal" prepend=",">
+				cs_item$suffix$.csi_data_decimal = #csiDataDecimal#
+			</isNotNull>		
+			<isNotNull property="csiThumb" prepend=",">
+				cs_item$suffix$.csi_thumb = #csiThumb#
+			</isNotNull>		
+			<isNotNull property="csiImages" prepend=",">
+				cs_item$suffix$.csi_images = #csiImages#
+			</isNotNull>		
+			<isNotNull property="csiDepict" prepend=",">
+				cs_item$suffix$.csi_depict = #csiDepict#
+			</isNotNull>		
+			<isNotNull property="csiSale" prepend=",">
+				cs_item$suffix$.csi_sale = #csiSale#
+			</isNotNull>		
+			<isNotNull property="csiLevel" prepend=",">
+				cs_item$suffix$.csi_level = #csiLevel#
+			</isNotNull>		
+			<isNotNull property="csiRemark" prepend=",">
+				cs_item$suffix$.csi_remark = #csiRemark#
+			</isNotNull>		
+			<isNotNull property="csiUpdateTime" prepend=",">
+				cs_item$suffix$.csi_update_time = #csiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csiAddTime" prepend=",">
+				cs_item$suffix$.csi_add_time = #csiAddTime#
+			</isNotNull>		
+			<isNotNull property="csiStatus" prepend=",">
+				cs_item$suffix$.csi_status = #csiStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csi_id=#csiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个商品信息 -->
+	<delete id="deleteCsItemById" parameterClass="java.util.HashMap">
+		delete from cs_item$suffix$ where csi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个商品信息 -->
+	<update id="removeCsItemById" parameterClass="java.util.HashMap">
+		update cs_item$suffix$ set  cs_item$suffix$.csi_status=-1  where csi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新商品信息 -->
+	<update id="updateCsItemBy"  parameterClass="java.util.HashMap">
+		update cs_item$suffix$ set		
+			csi_id=csi_id
+			<isNotNull property="V_csiId" prepend=",">
+				cs_item$suffix$.csi_id = #V_csiId#
+			</isNotNull>		
+			<isNotNull property="V_csiTitle" prepend=",">
+				cs_item$suffix$.csi_title = #V_csiTitle#
+			</isNotNull>		
+			<isNotNull property="V_csiType" prepend=",">
+				cs_item$suffix$.csi_type = #V_csiType#
+			</isNotNull>		
+			<isNotNull property="V_csiSort" prepend=",">
+				cs_item$suffix$.csi_sort = #V_csiSort#
+			</isNotNull>		
+			<isNotNull property="V_csiPrice" prepend=",">
+				cs_item$suffix$.csi_price = #V_csiPrice#
+			</isNotNull>		
+			<isNotNull property="V_csiRebate" prepend=",">
+				cs_item$suffix$.csi_rebate = #V_csiRebate#
+			</isNotNull>		
+			<isNotNull property="V_csiFlag" prepend=",">
+				cs_item$suffix$.csi_flag = #V_csiFlag#
+			</isNotNull>		
+			<isNotNull property="V_csiDataString" prepend=",">
+				cs_item$suffix$.csi_data_string = #V_csiDataString#
+			</isNotNull>		
+			<isNotNull property="V_csiDataNumber" prepend=",">
+				cs_item$suffix$.csi_data_number = #V_csiDataNumber#
+			</isNotNull>		
+			<isNotNull property="V_csiDataDecimal" prepend=",">
+				cs_item$suffix$.csi_data_decimal = #V_csiDataDecimal#
+			</isNotNull>		
+			<isNotNull property="V_csiThumb" prepend=",">
+				cs_item$suffix$.csi_thumb = #V_csiThumb#
+			</isNotNull>		
+			<isNotNull property="V_csiImages" prepend=",">
+				cs_item$suffix$.csi_images = #V_csiImages#
+			</isNotNull>		
+			<isNotNull property="V_csiDepict" prepend=",">
+				cs_item$suffix$.csi_depict = #V_csiDepict#
+			</isNotNull>		
+			<isNotNull property="V_csiSale" prepend=",">
+				cs_item$suffix$.csi_sale = #V_csiSale#
+			</isNotNull>		
+			<isNotNull property="V_csiLevel" prepend=",">
+				cs_item$suffix$.csi_level = #V_csiLevel#
+			</isNotNull>		
+			<isNotNull property="V_csiRemark" prepend=",">
+				cs_item$suffix$.csi_remark = #V_csiRemark#
+			</isNotNull>		
+			<isNotNull property="V_csiUpdateTime" prepend=",">
+				cs_item$suffix$.csi_update_time = #V_csiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csiAddTime" prepend=",">
+				cs_item$suffix$.csi_add_time = #V_csiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csiStatus" prepend=",">
+				cs_item$suffix$.csi_status = #V_csiStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_item$suffix$.csi_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsItem_part.cs_item_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除商品信息 -->
+	<update id="deleteCsItemBy"  parameterClass="java.util.HashMap">
+		delete from cs_item$suffix$ where 
+		cs_item$suffix$.csi_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsItem_part.cs_item_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

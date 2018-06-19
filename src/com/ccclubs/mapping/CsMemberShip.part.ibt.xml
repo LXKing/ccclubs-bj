@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMemberShip_part">	
+	<!-- 会员关系条件sql片段  -->
+	<sql id="cs_member_ship_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmsId" prepend="and">
+			    $csmsIdNot$ cs_member_ship$suffix$.csms_id = #csmsId#
+			</isNotEmpty>
+			<isNotNull property="csmsIdNot" prepend="and">
+				<isEmpty property="csmsId">
+				$csmsIdNot$ cs_member_ship$suffix$.csms_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_member_ship$suffix$.csms_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csmsHost" prepend="and">
+			    $csmsHostNot$ cs_member_ship$suffix$.csms_host = #csmsHost#
+			</isNotEmpty>
+			<isNotNull property="csmsHostNot" prepend="and">
+				<isEmpty property="csmsHost">
+				$csmsHostNot$ cs_member_ship$suffix$.csms_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csmsPayer" prepend="and">
+			    $csmsPayerNot$ cs_member_ship$suffix$.csms_payer = #csmsPayer#
+			</isNotEmpty>
+			<isNotNull property="csmsPayerNot" prepend="and">
+				<isEmpty property="csmsPayer">
+				$csmsPayerNot$ cs_member_ship$suffix$.csms_payer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmsTargeter" prepend="and">
+			    $csmsTargeterNot$ cs_member_ship$suffix$.csms_targeter = #csmsTargeter#
+			</isNotEmpty>
+			<isNotNull property="csmsTargeterNot" prepend="and">
+				<isEmpty property="csmsTargeter">
+				$csmsTargeterNot$ cs_member_ship$suffix$.csms_targeter is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmsAddTimeStart" prepend="and">
+			    $csmsAddTimeNot$   (cs_member_ship$suffix$.csms_add_time &gt;= #csmsAddTimeStart#
+			   <isEmpty property="csmsAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmsAddTimeEnd" prepend="and">
+				<isEmpty property="csmsAddTimeStart">$csmsAddTimeNot$   (</isEmpty>
+			    cs_member_ship$suffix$.csms_add_time &lt;= #csmsAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmsAddTime" prepend="and">
+			    $csmsAddTimeNot$ cs_member_ship$suffix$.csms_add_time = #csmsAddTime#
+			</isNotEmpty>
+			<isNotNull property="csmsAddTimeNot" prepend="and">
+				<isEmpty property="csmsAddTimeStart"><isEmpty property="csmsAddTimeEnd"><isEmpty property="csmsAddTime">
+				$csmsAddTimeNot$ cs_member_ship$suffix$.csms_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmsRemark" prepend="and">			    
+			    (<isNotNull property="csmsRemarkNot">
+			    cs_member_ship$suffix$.csms_remark is null or length(cs_member_ship$suffix$.csms_remark) &lt; 1 or
+			    </isNotNull>$csmsRemarkNot$ cs_member_ship$suffix$.csms_remark like #csmsRemark#)
+			</isNotEmpty>
+			<isNotNull property="csmsRemarkNot" prepend="and">
+				<isEmpty property="csmsRemark">
+				$csmsRemarkNot$ (cs_member_ship$suffix$.csms_remark is null or length(cs_member_ship$suffix$.csms_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmsStatus" prepend="and">
+			    $csmsStatusNot$ cs_member_ship$suffix$.csms_status = #csmsStatus#
+			</isNotEmpty>
+			<isNotNull property="csmsStatusNot" prepend="and">
+				<isEmpty property="csmsStatus">
+				$csmsStatusNot$ cs_member_ship$suffix$.csms_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员关系left join 条件sql片段 -->
+	<sql id="cs_member_ship_join">
+		<dynamic>
+			<isNotEmpty property="CsMemberShip.csmsId" prepend="and">
+			    $CsMemberShip.csmsIdNot$ cs_member_ship$CsMemberShip.suffix$.csms_id = #CsMemberShip.csmsId#
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsIdNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsId">
+				$csmsIdNot$ cs_member_ship$CsMemberShip.suffix$.csms_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_member_ship$CsMemberShip.suffix$.csms_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberShip.csmsHost" prepend="and">
+			    $CsMemberShip.csmsHostNot$ cs_member_ship$CsMemberShip.suffix$.csms_host = #CsMemberShip.csmsHost#
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsHostNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsHost">
+				$csmsHostNot$ cs_member_ship$CsMemberShip.suffix$.csms_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberShip.csmsPayer" prepend="and">
+			    $CsMemberShip.csmsPayerNot$ cs_member_ship$CsMemberShip.suffix$.csms_payer = #CsMemberShip.csmsPayer#
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsPayerNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsPayer">
+				$csmsPayerNot$ cs_member_ship$CsMemberShip.suffix$.csms_payer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberShip.csmsTargeter" prepend="and">
+			    $CsMemberShip.csmsTargeterNot$ cs_member_ship$CsMemberShip.suffix$.csms_targeter = #CsMemberShip.csmsTargeter#
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsTargeterNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsTargeter">
+				$csmsTargeterNot$ cs_member_ship$CsMemberShip.suffix$.csms_targeter is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberShip.csmsAddTimeStart" prepend="and">
+			    $CsMemberShip.csmsAddTimeNot$   (cs_member_ship$CsMemberShip.suffix$.csms_add_time &gt;= #CsMemberShip.csmsAddTimeStart#
+			   <isEmpty property="CsMemberShip.csmsAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberShip.csmsAddTimeEnd" prepend="and">
+				<isEmpty property="CsMemberShip.csmsAddTimeStart">$CsMemberShip.csmsAddTimeNot$   (</isEmpty>
+			    cs_member_ship$CsMemberShip.suffix$.csms_add_time &lt;= #CsMemberShip.csmsAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberShip.csmsAddTime" prepend="and">
+			    $CsMemberShip.csmsAddTimeNot$ cs_member_ship$CsMemberShip.suffix$.csms_add_time = #CsMemberShip.csmsAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsAddTimeNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsAddTimeStart"><isEmpty property="CsMemberShip.csmsAddTimeEnd"><isEmpty property="CsMemberShip.csmsAddTime">
+				$csmsAddTimeNot$ cs_member_ship$CsMemberShip.suffix$.csms_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberShip.csmsRemark" prepend="and">
+				(<isNotNull property="CsMemberShip.csmsRemarkNot">
+			    cs_member_ship$CsMemberShip.suffix$.csms_remark is null or length(cs_member_ship$CsMemberShip.suffix$.csms_remark) &lt; 1 or
+			    </isNotNull>$CsMemberShip.csmsRemarkNot$ cs_member_ship$CsMemberShip.suffix$.csms_remark like #CsMemberShip.csmsRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsRemarkNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsRemark">
+				$csmsRemarkNot$ (cs_member_ship$CsMemberShip.suffix$.csms_remark is null or length(cs_member_ship$CsMemberShip.suffix$.csms_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberShip.csmsStatus" prepend="and">
+			    $CsMemberShip.csmsStatusNot$ cs_member_ship$CsMemberShip.suffix$.csms_status = #CsMemberShip.csmsStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMemberShip.csmsStatusNot" prepend="and">
+				<isEmpty property="CsMemberShip.csmsStatus">
+				$csmsStatusNot$ cs_member_ship$CsMemberShip.suffix$.csms_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

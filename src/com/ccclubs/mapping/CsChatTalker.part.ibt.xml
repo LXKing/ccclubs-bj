@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsChatTalker_part">	
+	<!-- 在线访客条件sql片段  -->
+	<sql id="cs_chat_talker_dynamic">
+		<dynamic>
+			<isNotEmpty property="csctId" prepend="and">
+			    $csctIdNot$ cs_chat_talker$suffix$.csct_id = #csctId#
+			</isNotEmpty>
+			<isNotNull property="csctIdNot" prepend="and">
+				<isEmpty property="csctId">
+				$csctIdNot$ cs_chat_talker$suffix$.csct_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_chat_talker$suffix$.csct_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csctHost" prepend="and">
+			    $csctHostNot$ cs_chat_talker$suffix$.csct_host = #csctHost#
+			</isNotEmpty>
+			<isNotNull property="csctHostNot" prepend="and">
+				<isEmpty property="csctHost">
+				$csctHostNot$ cs_chat_talker$suffix$.csct_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csctName" prepend="and">			    
+			    (<isNotNull property="csctNameNot">
+			    cs_chat_talker$suffix$.csct_name is null or length(cs_chat_talker$suffix$.csct_name) &lt; 1 or
+			    </isNotNull>$csctNameNot$ cs_chat_talker$suffix$.csct_name = #csctName#)
+			</isNotEmpty>
+			<isNotNull property="csctNameNot" prepend="and">
+				<isEmpty property="csctName">
+				$csctNameNot$ (cs_chat_talker$suffix$.csct_name is null or length(cs_chat_talker$suffix$.csct_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctHeader" prepend="and">
+			    $csctHeaderNot$ cs_chat_talker$suffix$.csct_header = #csctHeader#
+			</isNotEmpty>
+			<isNotNull property="csctHeaderNot" prepend="and">
+				<isEmpty property="csctHeader">
+				$csctHeaderNot$ cs_chat_talker$suffix$.csct_header is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctSign" prepend="and">			    
+			    (<isNotNull property="csctSignNot">
+			    cs_chat_talker$suffix$.csct_sign is null or length(cs_chat_talker$suffix$.csct_sign) &lt; 1 or
+			    </isNotNull>$csctSignNot$ cs_chat_talker$suffix$.csct_sign = #csctSign#)
+			</isNotEmpty>
+			<isNotNull property="csctSignNot" prepend="and">
+				<isEmpty property="csctSign">
+				$csctSignNot$ (cs_chat_talker$suffix$.csct_sign is null or length(cs_chat_talker$suffix$.csct_sign) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctMember" prepend="and">
+			    $csctMemberNot$ cs_chat_talker$suffix$.csct_member = #csctMember#
+			</isNotEmpty>
+			<isNotNull property="csctMemberNot" prepend="and">
+				<isEmpty property="csctMember">
+				$csctMemberNot$ cs_chat_talker$suffix$.csct_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctFlag" prepend="and">			    
+			    (<isNotNull property="csctFlagNot">
+			    cs_chat_talker$suffix$.csct_flag is null or length(cs_chat_talker$suffix$.csct_flag) &lt; 1 or
+			    </isNotNull>$csctFlagNot$ cs_chat_talker$suffix$.csct_flag = #csctFlag#)
+			</isNotEmpty>
+			<isNotNull property="csctFlagNot" prepend="and">
+				<isEmpty property="csctFlag">
+				$csctFlagNot$ (cs_chat_talker$suffix$.csct_flag is null or length(cs_chat_talker$suffix$.csct_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctPlatform" prepend="and">
+			    $csctPlatformNot$ cs_chat_talker$suffix$.csct_platform = #csctPlatform#
+			</isNotEmpty>
+			<isNotNull property="csctPlatformNot" prepend="and">
+				<isEmpty property="csctPlatform">
+				$csctPlatformNot$ cs_chat_talker$suffix$.csct_platform is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctCountMin" prepend="and">
+			    $csctCountNot$  ( cs_chat_talker$suffix$.csct_count &gt;= #csctCountMin#
+			    <isEmpty property="csctCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csctCountMax" prepend="and">
+				<isEmpty property="csctCountMin">$csctCountNot$   (</isEmpty>
+			    cs_chat_talker$suffix$.csct_count &lt;= #csctCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csctCount" prepend="and">
+			    $csctCountNot$ cs_chat_talker$suffix$.csct_count = #csctCount#
+			</isNotEmpty>
+			<isNotNull property="csctCountNot" prepend="and">
+				<isEmpty property="csctCountMax"><isEmpty property="csctCountMin"><isEmpty property="csctCount">
+				$csctCountNot$ cs_chat_talker$suffix$.csct_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csctLastIp" prepend="and">			    
+			    (<isNotNull property="csctLastIpNot">
+			    cs_chat_talker$suffix$.csct_last_ip is null or length(cs_chat_talker$suffix$.csct_last_ip) &lt; 1 or
+			    </isNotNull>$csctLastIpNot$ cs_chat_talker$suffix$.csct_last_ip = #csctLastIp#)
+			</isNotEmpty>
+			<isNotNull property="csctLastIpNot" prepend="and">
+				<isEmpty property="csctLastIp">
+				$csctLastIpNot$ (cs_chat_talker$suffix$.csct_last_ip is null or length(cs_chat_talker$suffix$.csct_last_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctServicer" prepend="and">
+			    $csctServicerNot$ cs_chat_talker$suffix$.csct_servicer = #csctServicer#
+			</isNotEmpty>
+			<isNotNull property="csctServicerNot" prepend="and">
+				<isEmpty property="csctServicer">
+				$csctServicerNot$ cs_chat_talker$suffix$.csct_servicer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctLastTimeStart" prepend="and">
+			    $csctLastTimeNot$   (cs_chat_talker$suffix$.csct_last_time &gt;= #csctLastTimeStart#
+			   <isEmpty property="csctLastTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csctLastTimeEnd" prepend="and">
+				<isEmpty property="csctLastTimeStart">$csctLastTimeNot$   (</isEmpty>
+			    cs_chat_talker$suffix$.csct_last_time &lt;= #csctLastTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csctLastTime" prepend="and">
+			    $csctLastTimeNot$ cs_chat_talker$suffix$.csct_last_time = #csctLastTime#
+			</isNotEmpty>
+			<isNotNull property="csctLastTimeNot" prepend="and">
+				<isEmpty property="csctLastTimeStart"><isEmpty property="csctLastTimeEnd"><isEmpty property="csctLastTime">
+				$csctLastTimeNot$ cs_chat_talker$suffix$.csct_last_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctAddTimeStart" prepend="and">
+			    $csctAddTimeNot$   (cs_chat_talker$suffix$.csct_add_time &gt;= #csctAddTimeStart#
+			   <isEmpty property="csctAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csctAddTimeEnd" prepend="and">
+				<isEmpty property="csctAddTimeStart">$csctAddTimeNot$   (</isEmpty>
+			    cs_chat_talker$suffix$.csct_add_time &lt;= #csctAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csctAddTime" prepend="and">
+			    $csctAddTimeNot$ cs_chat_talker$suffix$.csct_add_time = #csctAddTime#
+			</isNotEmpty>
+			<isNotNull property="csctAddTimeNot" prepend="and">
+				<isEmpty property="csctAddTimeStart"><isEmpty property="csctAddTimeEnd"><isEmpty property="csctAddTime">
+				$csctAddTimeNot$ cs_chat_talker$suffix$.csct_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctRemark" prepend="and">			    
+			    (<isNotNull property="csctRemarkNot">
+			    cs_chat_talker$suffix$.csct_remark is null or length(cs_chat_talker$suffix$.csct_remark) &lt; 1 or
+			    </isNotNull>$csctRemarkNot$ cs_chat_talker$suffix$.csct_remark like #csctRemark#)
+			</isNotEmpty>
+			<isNotNull property="csctRemarkNot" prepend="and">
+				<isEmpty property="csctRemark">
+				$csctRemarkNot$ (cs_chat_talker$suffix$.csct_remark is null or length(cs_chat_talker$suffix$.csct_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctState" prepend="and">
+			    $csctStateNot$ cs_chat_talker$suffix$.csct_state = #csctState#
+			</isNotEmpty>
+			<isNotNull property="csctStateNot" prepend="and">
+				<isEmpty property="csctState">
+				$csctStateNot$ cs_chat_talker$suffix$.csct_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csctStatus" prepend="and">
+			    $csctStatusNot$ cs_chat_talker$suffix$.csct_status = #csctStatus#
+			</isNotEmpty>
+			<isNotNull property="csctStatusNot" prepend="and">
+				<isEmpty property="csctStatus">
+				$csctStatusNot$ cs_chat_talker$suffix$.csct_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 在线访客left join 条件sql片段 -->
+	<sql id="cs_chat_talker_join">
+		<dynamic>
+			<isNotEmpty property="CsChatTalker.csctId" prepend="and">
+			    $CsChatTalker.csctIdNot$ cs_chat_talker$CsChatTalker.suffix$.csct_id = #CsChatTalker.csctId#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctIdNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctId">
+				$csctIdNot$ cs_chat_talker$CsChatTalker.suffix$.csct_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_chat_talker$CsChatTalker.suffix$.csct_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctHost" prepend="and">
+			    $CsChatTalker.csctHostNot$ cs_chat_talker$CsChatTalker.suffix$.csct_host = #CsChatTalker.csctHost#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctHostNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctHost">
+				$csctHostNot$ cs_chat_talker$CsChatTalker.suffix$.csct_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctName" prepend="and">
+				(<isNotNull property="CsChatTalker.csctNameNot">
+			    cs_chat_talker$CsChatTalker.suffix$.csct_name is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_name) &lt; 1 or
+			    </isNotNull>$CsChatTalker.csctNameNot$ cs_chat_talker$CsChatTalker.suffix$.csct_name = #CsChatTalker.csctName#)
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctNameNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctName">
+				$csctNameNot$ (cs_chat_talker$CsChatTalker.suffix$.csct_name is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctHeader" prepend="and">
+			    $CsChatTalker.csctHeaderNot$ cs_chat_talker$CsChatTalker.suffix$.csct_header = #CsChatTalker.csctHeader#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctHeaderNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctHeader">
+				$csctHeaderNot$ cs_chat_talker$CsChatTalker.suffix$.csct_header is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctSign" prepend="and">
+				(<isNotNull property="CsChatTalker.csctSignNot">
+			    cs_chat_talker$CsChatTalker.suffix$.csct_sign is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_sign) &lt; 1 or
+			    </isNotNull>$CsChatTalker.csctSignNot$ cs_chat_talker$CsChatTalker.suffix$.csct_sign = #CsChatTalker.csctSign#)
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctSignNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctSign">
+				$csctSignNot$ (cs_chat_talker$CsChatTalker.suffix$.csct_sign is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_sign) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctMember" prepend="and">
+			    $CsChatTalker.csctMemberNot$ cs_chat_talker$CsChatTalker.suffix$.csct_member = #CsChatTalker.csctMember#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctMemberNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctMember">
+				$csctMemberNot$ cs_chat_talker$CsChatTalker.suffix$.csct_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctFlag" prepend="and">
+				(<isNotNull property="CsChatTalker.csctFlagNot">
+			    cs_chat_talker$CsChatTalker.suffix$.csct_flag is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_flag) &lt; 1 or
+			    </isNotNull>$CsChatTalker.csctFlagNot$ cs_chat_talker$CsChatTalker.suffix$.csct_flag = #CsChatTalker.csctFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctFlagNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctFlag">
+				$csctFlagNot$ (cs_chat_talker$CsChatTalker.suffix$.csct_flag is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctPlatform" prepend="and">
+			    $CsChatTalker.csctPlatformNot$ cs_chat_talker$CsChatTalker.suffix$.csct_platform = #CsChatTalker.csctPlatform#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctPlatformNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctPlatform">
+				$csctPlatformNot$ cs_chat_talker$CsChatTalker.suffix$.csct_platform is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctCountMin" prepend="and">
+			    $CsChatTalker.csctCountNot$  ( cs_chat_talker$CsChatTalker.suffix$.csct_count &gt;= #CsChatTalker.csctCountMin#
+			    <isEmpty property="CsChatTalker.csctCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctCountMax" prepend="and">
+				<isEmpty property="CsChatTalker.csctCountMin">$CsChatTalker.csctCountNot$   (</isEmpty>
+			    cs_chat_talker$CsChatTalker.suffix$.csct_count &lt;= #CsChatTalker.csctCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctCount" prepend="and">
+			    $CsChatTalker.csctCountNot$ cs_chat_talker$CsChatTalker.suffix$.csct_count = #CsChatTalker.csctCount#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctCountNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctCountMax"><isEmpty property="CsChatTalker.csctCountMin"><isEmpty property="CsChatTalker.csctCount">
+				$csctCountNot$ cs_chat_talker$CsChatTalker.suffix$.csct_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctLastIp" prepend="and">
+				(<isNotNull property="CsChatTalker.csctLastIpNot">
+			    cs_chat_talker$CsChatTalker.suffix$.csct_last_ip is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_last_ip) &lt; 1 or
+			    </isNotNull>$CsChatTalker.csctLastIpNot$ cs_chat_talker$CsChatTalker.suffix$.csct_last_ip = #CsChatTalker.csctLastIp#)
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctLastIpNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctLastIp">
+				$csctLastIpNot$ (cs_chat_talker$CsChatTalker.suffix$.csct_last_ip is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_last_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctServicer" prepend="and">
+			    $CsChatTalker.csctServicerNot$ cs_chat_talker$CsChatTalker.suffix$.csct_servicer = #CsChatTalker.csctServicer#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctServicerNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctServicer">
+				$csctServicerNot$ cs_chat_talker$CsChatTalker.suffix$.csct_servicer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctLastTimeStart" prepend="and">
+			    $CsChatTalker.csctLastTimeNot$   (cs_chat_talker$CsChatTalker.suffix$.csct_last_time &gt;= #CsChatTalker.csctLastTimeStart#
+			   <isEmpty property="CsChatTalker.csctLastTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctLastTimeEnd" prepend="and">
+				<isEmpty property="CsChatTalker.csctLastTimeStart">$CsChatTalker.csctLastTimeNot$   (</isEmpty>
+			    cs_chat_talker$CsChatTalker.suffix$.csct_last_time &lt;= #CsChatTalker.csctLastTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctLastTime" prepend="and">
+			    $CsChatTalker.csctLastTimeNot$ cs_chat_talker$CsChatTalker.suffix$.csct_last_time = #CsChatTalker.csctLastTime#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctLastTimeNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctLastTimeStart"><isEmpty property="CsChatTalker.csctLastTimeEnd"><isEmpty property="CsChatTalker.csctLastTime">
+				$csctLastTimeNot$ cs_chat_talker$CsChatTalker.suffix$.csct_last_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctAddTimeStart" prepend="and">
+			    $CsChatTalker.csctAddTimeNot$   (cs_chat_talker$CsChatTalker.suffix$.csct_add_time &gt;= #CsChatTalker.csctAddTimeStart#
+			   <isEmpty property="CsChatTalker.csctAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctAddTimeEnd" prepend="and">
+				<isEmpty property="CsChatTalker.csctAddTimeStart">$CsChatTalker.csctAddTimeNot$   (</isEmpty>
+			    cs_chat_talker$CsChatTalker.suffix$.csct_add_time &lt;= #CsChatTalker.csctAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChatTalker.csctAddTime" prepend="and">
+			    $CsChatTalker.csctAddTimeNot$ cs_chat_talker$CsChatTalker.suffix$.csct_add_time = #CsChatTalker.csctAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctAddTimeNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctAddTimeStart"><isEmpty property="CsChatTalker.csctAddTimeEnd"><isEmpty property="CsChatTalker.csctAddTime">
+				$csctAddTimeNot$ cs_chat_talker$CsChatTalker.suffix$.csct_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctRemark" prepend="and">
+				(<isNotNull property="CsChatTalker.csctRemarkNot">
+			    cs_chat_talker$CsChatTalker.suffix$.csct_remark is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_remark) &lt; 1 or
+			    </isNotNull>$CsChatTalker.csctRemarkNot$ cs_chat_talker$CsChatTalker.suffix$.csct_remark like #CsChatTalker.csctRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctRemarkNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctRemark">
+				$csctRemarkNot$ (cs_chat_talker$CsChatTalker.suffix$.csct_remark is null or length(cs_chat_talker$CsChatTalker.suffix$.csct_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctState" prepend="and">
+			    $CsChatTalker.csctStateNot$ cs_chat_talker$CsChatTalker.suffix$.csct_state = #CsChatTalker.csctState#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctStateNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctState">
+				$csctStateNot$ cs_chat_talker$CsChatTalker.suffix$.csct_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatTalker.csctStatus" prepend="and">
+			    $CsChatTalker.csctStatusNot$ cs_chat_talker$CsChatTalker.suffix$.csct_status = #CsChatTalker.csctStatus#
+			</isNotEmpty>
+			<isNotNull property="CsChatTalker.csctStatusNot" prepend="and">
+				<isEmpty property="CsChatTalker.csctStatus">
+				$csctStatusNot$ cs_chat_talker$CsChatTalker.suffix$.csct_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

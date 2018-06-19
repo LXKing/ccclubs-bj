@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRepair_part">	
+	<!-- 车辆维修条件sql片段  -->
+	<sql id="cs_repair_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrId" prepend="and">
+			    $csrIdNot$ cs_repair$suffix$.csr_id = #csrId#
+			</isNotEmpty>
+			<isNotNull property="csrIdNot" prepend="and">
+				<isEmpty property="csrId">
+				$csrIdNot$ cs_repair$suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_repair$suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csrHost" prepend="and">
+			    $csrHostNot$ cs_repair$suffix$.csr_host = #csrHost#
+			</isNotEmpty>
+			<isNotNull property="csrHostNot" prepend="and">
+				<isEmpty property="csrHost">
+				$csrHostNot$ cs_repair$suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csrProfile" prepend="and">			    
+			    (<isNotNull property="csrProfileNot">
+			    cs_repair$suffix$.csr_profile is null or length(cs_repair$suffix$.csr_profile) &lt; 1 or
+			    </isNotNull>$csrProfileNot$ cs_repair$suffix$.csr_profile like #csrProfile#)
+			</isNotEmpty>
+			<isNotNull property="csrProfileNot" prepend="and">
+				<isEmpty property="csrProfile">
+				$csrProfileNot$ (cs_repair$suffix$.csr_profile is null or length(cs_repair$suffix$.csr_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrCar" prepend="and">
+			    $csrCarNot$ cs_repair$suffix$.csr_car = #csrCar#
+			</isNotEmpty>
+			<isNotNull property="csrCarNot" prepend="and">
+				<isEmpty property="csrCar">
+				$csrCarNot$ cs_repair$suffix$.csr_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAdr" prepend="and">
+			    $csrAdrNot$ cs_repair$suffix$.csr_adr = #csrAdr#
+			</isNotEmpty>
+			<isNotNull property="csrAdrNot" prepend="and">
+				<isEmpty property="csrAdr">
+				$csrAdrNot$ cs_repair$suffix$.csr_adr is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrOrder" prepend="and">
+			    $csrOrderNot$ cs_repair$suffix$.csr_order = #csrOrder#
+			</isNotEmpty>
+			<isNotNull property="csrOrderNot" prepend="and">
+				<isEmpty property="csrOrder">
+				$csrOrderNot$ cs_repair$suffix$.csr_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrSender" prepend="and">
+			    $csrSenderNot$ cs_repair$suffix$.csr_sender = #csrSender#
+			</isNotEmpty>
+			<isNotNull property="csrSenderNot" prepend="and">
+				<isEmpty property="csrSender">
+				$csrSenderNot$ cs_repair$suffix$.csr_sender is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrInDateStart" prepend="and">
+			    $csrInDateNot$   (cs_repair$suffix$.csr_in_date &gt;= #csrInDateStart#
+			   <isEmpty property="csrInDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrInDateEnd" prepend="and">
+				<isEmpty property="csrInDateStart">$csrInDateNot$   (</isEmpty>
+			    cs_repair$suffix$.csr_in_date &lt;= #csrInDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrInDate" prepend="and">
+			    $csrInDateNot$ cs_repair$suffix$.csr_in_date = #csrInDate#
+			</isNotEmpty>
+			<isNotNull property="csrInDateNot" prepend="and">
+				<isEmpty property="csrInDateStart"><isEmpty property="csrInDateEnd"><isEmpty property="csrInDate">
+				$csrInDateNot$ cs_repair$suffix$.csr_in_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrOutDateStart" prepend="and">
+			    $csrOutDateNot$   (cs_repair$suffix$.csr_out_date &gt;= #csrOutDateStart#
+			   <isEmpty property="csrOutDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrOutDateEnd" prepend="and">
+				<isEmpty property="csrOutDateStart">$csrOutDateNot$   (</isEmpty>
+			    cs_repair$suffix$.csr_out_date &lt;= #csrOutDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrOutDate" prepend="and">
+			    $csrOutDateNot$ cs_repair$suffix$.csr_out_date = #csrOutDate#
+			</isNotEmpty>
+			<isNotNull property="csrOutDateNot" prepend="and">
+				<isEmpty property="csrOutDateStart"><isEmpty property="csrOutDateEnd"><isEmpty property="csrOutDate">
+				$csrOutDateNot$ cs_repair$suffix$.csr_out_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrDescript" prepend="and">			    
+			    (<isNotNull property="csrDescriptNot">
+			    cs_repair$suffix$.csr_descript is null or length(cs_repair$suffix$.csr_descript) &lt; 1 or
+			    </isNotNull>$csrDescriptNot$ cs_repair$suffix$.csr_descript like #csrDescript#)
+			</isNotEmpty>
+			<isNotNull property="csrDescriptNot" prepend="and">
+				<isEmpty property="csrDescript">
+				$csrDescriptNot$ (cs_repair$suffix$.csr_descript is null or length(cs_repair$suffix$.csr_descript) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRepairNo" prepend="and">			    
+			    (<isNotNull property="csrRepairNoNot">
+			    cs_repair$suffix$.csr_repair_no is null or length(cs_repair$suffix$.csr_repair_no) &lt; 1 or
+			    </isNotNull>$csrRepairNoNot$ cs_repair$suffix$.csr_repair_no like #csrRepairNo#)
+			</isNotEmpty>
+			<isNotNull property="csrRepairNoNot" prepend="and">
+				<isEmpty property="csrRepairNo">
+				$csrRepairNoNot$ (cs_repair$suffix$.csr_repair_no is null or length(cs_repair$suffix$.csr_repair_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrMoneyMin" prepend="and">
+			    $csrMoneyNot$  ( cs_repair$suffix$.csr_money &gt;= #csrMoneyMin#
+			    <isEmpty property="csrMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrMoneyMax" prepend="and">
+				<isEmpty property="csrMoneyMin">$csrMoneyNot$   (</isEmpty>
+			    cs_repair$suffix$.csr_money &lt;= #csrMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrMoney" prepend="and">
+			    $csrMoneyNot$ cs_repair$suffix$.csr_money = #csrMoney#
+			</isNotEmpty>
+			<isNotNull property="csrMoneyNot" prepend="and">
+				<isEmpty property="csrMoneyMax"><isEmpty property="csrMoneyMin"><isEmpty property="csrMoney">
+				$csrMoneyNot$ cs_repair$suffix$.csr_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrIsSettle" prepend="and">
+			    $csrIsSettleNot$ cs_repair$suffix$.csr_is_settle = #csrIsSettle#
+			</isNotEmpty>
+			<isNotNull property="csrIsSettleNot" prepend="and">
+				<isEmpty property="csrIsSettle">
+				$csrIsSettleNot$ cs_repair$suffix$.csr_is_settle is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrSettleTimeStart" prepend="and">
+			    $csrSettleTimeNot$   (cs_repair$suffix$.csr_settle_time &gt;= #csrSettleTimeStart#
+			   <isEmpty property="csrSettleTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrSettleTimeEnd" prepend="and">
+				<isEmpty property="csrSettleTimeStart">$csrSettleTimeNot$   (</isEmpty>
+			    cs_repair$suffix$.csr_settle_time &lt;= #csrSettleTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrSettleTime" prepend="and">
+			    $csrSettleTimeNot$ cs_repair$suffix$.csr_settle_time = #csrSettleTime#
+			</isNotEmpty>
+			<isNotNull property="csrSettleTimeNot" prepend="and">
+				<isEmpty property="csrSettleTimeStart"><isEmpty property="csrSettleTimeEnd"><isEmpty property="csrSettleTime">
+				$csrSettleTimeNot$ cs_repair$suffix$.csr_settle_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrEditor" prepend="and">
+			    $csrEditorNot$ cs_repair$suffix$.csr_editor = #csrEditor#
+			</isNotEmpty>
+			<isNotNull property="csrEditorNot" prepend="and">
+				<isEmpty property="csrEditor">
+				$csrEditorNot$ cs_repair$suffix$.csr_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAddTimeStart" prepend="and">
+			    $csrAddTimeNot$   (cs_repair$suffix$.csr_add_time &gt;= #csrAddTimeStart#
+			   <isEmpty property="csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTimeEnd" prepend="and">
+				<isEmpty property="csrAddTimeStart">$csrAddTimeNot$   (</isEmpty>
+			    cs_repair$suffix$.csr_add_time &lt;= #csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTime" prepend="and">
+			    $csrAddTimeNot$ cs_repair$suffix$.csr_add_time = #csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="csrAddTimeNot" prepend="and">
+				<isEmpty property="csrAddTimeStart"><isEmpty property="csrAddTimeEnd"><isEmpty property="csrAddTime">
+				$csrAddTimeNot$ cs_repair$suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrMemo" prepend="and">			    
+			    (<isNotNull property="csrMemoNot">
+			    cs_repair$suffix$.csr_memo is null or length(cs_repair$suffix$.csr_memo) &lt; 1 or
+			    </isNotNull>$csrMemoNot$ cs_repair$suffix$.csr_memo like #csrMemo#)
+			</isNotEmpty>
+			<isNotNull property="csrMemoNot" prepend="and">
+				<isEmpty property="csrMemo">
+				$csrMemoNot$ (cs_repair$suffix$.csr_memo is null or length(cs_repair$suffix$.csr_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrStatus" prepend="and">
+			    $csrStatusNot$ cs_repair$suffix$.csr_status = #csrStatus#
+			</isNotEmpty>
+			<isNotNull property="csrStatusNot" prepend="and">
+				<isEmpty property="csrStatus">
+				$csrStatusNot$ cs_repair$suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆维修left join 条件sql片段 -->
+	<sql id="cs_repair_join">
+		<dynamic>
+			<isNotEmpty property="CsRepair.csrId" prepend="and">
+			    $CsRepair.csrIdNot$ cs_repair$CsRepair.suffix$.csr_id = #CsRepair.csrId#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrIdNot" prepend="and">
+				<isEmpty property="CsRepair.csrId">
+				$csrIdNot$ cs_repair$CsRepair.suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_repair$CsRepair.suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrHost" prepend="and">
+			    $CsRepair.csrHostNot$ cs_repair$CsRepair.suffix$.csr_host = #CsRepair.csrHost#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrHostNot" prepend="and">
+				<isEmpty property="CsRepair.csrHost">
+				$csrHostNot$ cs_repair$CsRepair.suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrProfile" prepend="and">
+				(<isNotNull property="CsRepair.csrProfileNot">
+			    cs_repair$CsRepair.suffix$.csr_profile is null or length(cs_repair$CsRepair.suffix$.csr_profile) &lt; 1 or
+			    </isNotNull>$CsRepair.csrProfileNot$ cs_repair$CsRepair.suffix$.csr_profile like #CsRepair.csrProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrProfileNot" prepend="and">
+				<isEmpty property="CsRepair.csrProfile">
+				$csrProfileNot$ (cs_repair$CsRepair.suffix$.csr_profile is null or length(cs_repair$CsRepair.suffix$.csr_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrCar" prepend="and">
+			    $CsRepair.csrCarNot$ cs_repair$CsRepair.suffix$.csr_car = #CsRepair.csrCar#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrCarNot" prepend="and">
+				<isEmpty property="CsRepair.csrCar">
+				$csrCarNot$ cs_repair$CsRepair.suffix$.csr_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrAdr" prepend="and">
+			    $CsRepair.csrAdrNot$ cs_repair$CsRepair.suffix$.csr_adr = #CsRepair.csrAdr#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrAdrNot" prepend="and">
+				<isEmpty property="CsRepair.csrAdr">
+				$csrAdrNot$ cs_repair$CsRepair.suffix$.csr_adr is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrOrder" prepend="and">
+			    $CsRepair.csrOrderNot$ cs_repair$CsRepair.suffix$.csr_order = #CsRepair.csrOrder#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrOrderNot" prepend="and">
+				<isEmpty property="CsRepair.csrOrder">
+				$csrOrderNot$ cs_repair$CsRepair.suffix$.csr_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrSender" prepend="and">
+			    $CsRepair.csrSenderNot$ cs_repair$CsRepair.suffix$.csr_sender = #CsRepair.csrSender#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrSenderNot" prepend="and">
+				<isEmpty property="CsRepair.csrSender">
+				$csrSenderNot$ cs_repair$CsRepair.suffix$.csr_sender is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrInDateStart" prepend="and">
+			    $CsRepair.csrInDateNot$   (cs_repair$CsRepair.suffix$.csr_in_date &gt;= #CsRepair.csrInDateStart#
+			   <isEmpty property="CsRepair.csrInDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrInDateEnd" prepend="and">
+				<isEmpty property="CsRepair.csrInDateStart">$CsRepair.csrInDateNot$   (</isEmpty>
+			    cs_repair$CsRepair.suffix$.csr_in_date &lt;= #CsRepair.csrInDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrInDate" prepend="and">
+			    $CsRepair.csrInDateNot$ cs_repair$CsRepair.suffix$.csr_in_date = #CsRepair.csrInDate#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrInDateNot" prepend="and">
+				<isEmpty property="CsRepair.csrInDateStart"><isEmpty property="CsRepair.csrInDateEnd"><isEmpty property="CsRepair.csrInDate">
+				$csrInDateNot$ cs_repair$CsRepair.suffix$.csr_in_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrOutDateStart" prepend="and">
+			    $CsRepair.csrOutDateNot$   (cs_repair$CsRepair.suffix$.csr_out_date &gt;= #CsRepair.csrOutDateStart#
+			   <isEmpty property="CsRepair.csrOutDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrOutDateEnd" prepend="and">
+				<isEmpty property="CsRepair.csrOutDateStart">$CsRepair.csrOutDateNot$   (</isEmpty>
+			    cs_repair$CsRepair.suffix$.csr_out_date &lt;= #CsRepair.csrOutDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrOutDate" prepend="and">
+			    $CsRepair.csrOutDateNot$ cs_repair$CsRepair.suffix$.csr_out_date = #CsRepair.csrOutDate#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrOutDateNot" prepend="and">
+				<isEmpty property="CsRepair.csrOutDateStart"><isEmpty property="CsRepair.csrOutDateEnd"><isEmpty property="CsRepair.csrOutDate">
+				$csrOutDateNot$ cs_repair$CsRepair.suffix$.csr_out_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrDescript" prepend="and">
+				(<isNotNull property="CsRepair.csrDescriptNot">
+			    cs_repair$CsRepair.suffix$.csr_descript is null or length(cs_repair$CsRepair.suffix$.csr_descript) &lt; 1 or
+			    </isNotNull>$CsRepair.csrDescriptNot$ cs_repair$CsRepair.suffix$.csr_descript like #CsRepair.csrDescript#)
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrDescriptNot" prepend="and">
+				<isEmpty property="CsRepair.csrDescript">
+				$csrDescriptNot$ (cs_repair$CsRepair.suffix$.csr_descript is null or length(cs_repair$CsRepair.suffix$.csr_descript) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrRepairNo" prepend="and">
+				(<isNotNull property="CsRepair.csrRepairNoNot">
+			    cs_repair$CsRepair.suffix$.csr_repair_no is null or length(cs_repair$CsRepair.suffix$.csr_repair_no) &lt; 1 or
+			    </isNotNull>$CsRepair.csrRepairNoNot$ cs_repair$CsRepair.suffix$.csr_repair_no like #CsRepair.csrRepairNo#)
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrRepairNoNot" prepend="and">
+				<isEmpty property="CsRepair.csrRepairNo">
+				$csrRepairNoNot$ (cs_repair$CsRepair.suffix$.csr_repair_no is null or length(cs_repair$CsRepair.suffix$.csr_repair_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrMoneyMin" prepend="and">
+			    $CsRepair.csrMoneyNot$  ( cs_repair$CsRepair.suffix$.csr_money &gt;= #CsRepair.csrMoneyMin#
+			    <isEmpty property="CsRepair.csrMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrMoneyMax" prepend="and">
+				<isEmpty property="CsRepair.csrMoneyMin">$CsRepair.csrMoneyNot$   (</isEmpty>
+			    cs_repair$CsRepair.suffix$.csr_money &lt;= #CsRepair.csrMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrMoney" prepend="and">
+			    $CsRepair.csrMoneyNot$ cs_repair$CsRepair.suffix$.csr_money = #CsRepair.csrMoney#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrMoneyNot" prepend="and">
+				<isEmpty property="CsRepair.csrMoneyMax"><isEmpty property="CsRepair.csrMoneyMin"><isEmpty property="CsRepair.csrMoney">
+				$csrMoneyNot$ cs_repair$CsRepair.suffix$.csr_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrIsSettle" prepend="and">
+			    $CsRepair.csrIsSettleNot$ cs_repair$CsRepair.suffix$.csr_is_settle = #CsRepair.csrIsSettle#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrIsSettleNot" prepend="and">
+				<isEmpty property="CsRepair.csrIsSettle">
+				$csrIsSettleNot$ cs_repair$CsRepair.suffix$.csr_is_settle is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrSettleTimeStart" prepend="and">
+			    $CsRepair.csrSettleTimeNot$   (cs_repair$CsRepair.suffix$.csr_settle_time &gt;= #CsRepair.csrSettleTimeStart#
+			   <isEmpty property="CsRepair.csrSettleTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrSettleTimeEnd" prepend="and">
+				<isEmpty property="CsRepair.csrSettleTimeStart">$CsRepair.csrSettleTimeNot$   (</isEmpty>
+			    cs_repair$CsRepair.suffix$.csr_settle_time &lt;= #CsRepair.csrSettleTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrSettleTime" prepend="and">
+			    $CsRepair.csrSettleTimeNot$ cs_repair$CsRepair.suffix$.csr_settle_time = #CsRepair.csrSettleTime#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrSettleTimeNot" prepend="and">
+				<isEmpty property="CsRepair.csrSettleTimeStart"><isEmpty property="CsRepair.csrSettleTimeEnd"><isEmpty property="CsRepair.csrSettleTime">
+				$csrSettleTimeNot$ cs_repair$CsRepair.suffix$.csr_settle_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrEditor" prepend="and">
+			    $CsRepair.csrEditorNot$ cs_repair$CsRepair.suffix$.csr_editor = #CsRepair.csrEditor#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrEditorNot" prepend="and">
+				<isEmpty property="CsRepair.csrEditor">
+				$csrEditorNot$ cs_repair$CsRepair.suffix$.csr_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrAddTimeStart" prepend="and">
+			    $CsRepair.csrAddTimeNot$   (cs_repair$CsRepair.suffix$.csr_add_time &gt;= #CsRepair.csrAddTimeStart#
+			   <isEmpty property="CsRepair.csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrAddTimeEnd" prepend="and">
+				<isEmpty property="CsRepair.csrAddTimeStart">$CsRepair.csrAddTimeNot$   (</isEmpty>
+			    cs_repair$CsRepair.suffix$.csr_add_time &lt;= #CsRepair.csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRepair.csrAddTime" prepend="and">
+			    $CsRepair.csrAddTimeNot$ cs_repair$CsRepair.suffix$.csr_add_time = #CsRepair.csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrAddTimeNot" prepend="and">
+				<isEmpty property="CsRepair.csrAddTimeStart"><isEmpty property="CsRepair.csrAddTimeEnd"><isEmpty property="CsRepair.csrAddTime">
+				$csrAddTimeNot$ cs_repair$CsRepair.suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrMemo" prepend="and">
+				(<isNotNull property="CsRepair.csrMemoNot">
+			    cs_repair$CsRepair.suffix$.csr_memo is null or length(cs_repair$CsRepair.suffix$.csr_memo) &lt; 1 or
+			    </isNotNull>$CsRepair.csrMemoNot$ cs_repair$CsRepair.suffix$.csr_memo like #CsRepair.csrMemo#)
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrMemoNot" prepend="and">
+				<isEmpty property="CsRepair.csrMemo">
+				$csrMemoNot$ (cs_repair$CsRepair.suffix$.csr_memo is null or length(cs_repair$CsRepair.suffix$.csr_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepair.csrStatus" prepend="and">
+			    $CsRepair.csrStatusNot$ cs_repair$CsRepair.suffix$.csr_status = #CsRepair.csrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsRepair.csrStatusNot" prepend="and">
+				<isEmpty property="CsRepair.csrStatus">
+				$csrStatusNot$ cs_repair$CsRepair.suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

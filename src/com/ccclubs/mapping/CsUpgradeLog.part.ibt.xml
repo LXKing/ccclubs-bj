@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUpgradeLog_part">	
+	<!-- 升级日志条件sql片段  -->
+	<sql id="cs_upgrade_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="csulId" prepend="and">
+			    $csulIdNot$ cs_upgrade_log$suffix$.csul_id = #csulId#
+			</isNotEmpty>
+			<isNotNull property="csulIdNot" prepend="and">
+				<isEmpty property="csulId">
+				$csulIdNot$ cs_upgrade_log$suffix$.csul_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulTitle" prepend="and">			    
+			    (<isNotNull property="csulTitleNot">
+			    cs_upgrade_log$suffix$.csul_title is null or length(cs_upgrade_log$suffix$.csul_title) &lt; 1 or
+			    </isNotNull>$csulTitleNot$ cs_upgrade_log$suffix$.csul_title like #csulTitle#)
+			</isNotEmpty>
+			<isNotNull property="csulTitleNot" prepend="and">
+				<isEmpty property="csulTitle">
+				$csulTitleNot$ (cs_upgrade_log$suffix$.csul_title is null or length(cs_upgrade_log$suffix$.csul_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulType" prepend="and">
+			    $csulTypeNot$ cs_upgrade_log$suffix$.csul_type = #csulType#
+			</isNotEmpty>
+			<isNotNull property="csulTypeNot" prepend="and">
+				<isEmpty property="csulType">
+				$csulTypeNot$ cs_upgrade_log$suffix$.csul_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulDescribe" prepend="and">			    
+			    (<isNotNull property="csulDescribeNot">
+			    cs_upgrade_log$suffix$.csul_describe is null or length(cs_upgrade_log$suffix$.csul_describe) &lt; 1 or
+			    </isNotNull>$csulDescribeNot$ cs_upgrade_log$suffix$.csul_describe like #csulDescribe#)
+			</isNotEmpty>
+			<isNotNull property="csulDescribeNot" prepend="and">
+				<isEmpty property="csulDescribe">
+				$csulDescribeNot$ (cs_upgrade_log$suffix$.csul_describe is null or length(cs_upgrade_log$suffix$.csul_describe) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulOnTimeStart" prepend="and">
+			    $csulOnTimeNot$   (cs_upgrade_log$suffix$.csul_on_time &gt;= #csulOnTimeStart#
+			   <isEmpty property="csulOnTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csulOnTimeEnd" prepend="and">
+				<isEmpty property="csulOnTimeStart">$csulOnTimeNot$   (</isEmpty>
+			    cs_upgrade_log$suffix$.csul_on_time &lt;= #csulOnTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csulOnTime" prepend="and">
+			    $csulOnTimeNot$ cs_upgrade_log$suffix$.csul_on_time = #csulOnTime#
+			</isNotEmpty>
+			<isNotNull property="csulOnTimeNot" prepend="and">
+				<isEmpty property="csulOnTimeStart"><isEmpty property="csulOnTimeEnd"><isEmpty property="csulOnTime">
+				$csulOnTimeNot$ cs_upgrade_log$suffix$.csul_on_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulAdder" prepend="and">
+			    $csulAdderNot$ cs_upgrade_log$suffix$.csul_adder = #csulAdder#
+			</isNotEmpty>
+			<isNotNull property="csulAdderNot" prepend="and">
+				<isEmpty property="csulAdder">
+				$csulAdderNot$ cs_upgrade_log$suffix$.csul_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulUpdateTimeStart" prepend="and">
+			    $csulUpdateTimeNot$   (cs_upgrade_log$suffix$.csul_update_time &gt;= #csulUpdateTimeStart#
+			   <isEmpty property="csulUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csulUpdateTimeEnd" prepend="and">
+				<isEmpty property="csulUpdateTimeStart">$csulUpdateTimeNot$   (</isEmpty>
+			    cs_upgrade_log$suffix$.csul_update_time &lt;= #csulUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csulUpdateTime" prepend="and">
+			    $csulUpdateTimeNot$ cs_upgrade_log$suffix$.csul_update_time = #csulUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csulUpdateTimeNot" prepend="and">
+				<isEmpty property="csulUpdateTimeStart"><isEmpty property="csulUpdateTimeEnd"><isEmpty property="csulUpdateTime">
+				$csulUpdateTimeNot$ cs_upgrade_log$suffix$.csul_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulAddTimeStart" prepend="and">
+			    $csulAddTimeNot$   (cs_upgrade_log$suffix$.csul_add_time &gt;= #csulAddTimeStart#
+			   <isEmpty property="csulAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csulAddTimeEnd" prepend="and">
+				<isEmpty property="csulAddTimeStart">$csulAddTimeNot$   (</isEmpty>
+			    cs_upgrade_log$suffix$.csul_add_time &lt;= #csulAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csulAddTime" prepend="and">
+			    $csulAddTimeNot$ cs_upgrade_log$suffix$.csul_add_time = #csulAddTime#
+			</isNotEmpty>
+			<isNotNull property="csulAddTimeNot" prepend="and">
+				<isEmpty property="csulAddTimeStart"><isEmpty property="csulAddTimeEnd"><isEmpty property="csulAddTime">
+				$csulAddTimeNot$ cs_upgrade_log$suffix$.csul_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csulStatus" prepend="and">
+			    $csulStatusNot$ cs_upgrade_log$suffix$.csul_status = #csulStatus#
+			</isNotEmpty>
+			<isNotNull property="csulStatusNot" prepend="and">
+				<isEmpty property="csulStatus">
+				$csulStatusNot$ cs_upgrade_log$suffix$.csul_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 升级日志left join 条件sql片段 -->
+	<sql id="cs_upgrade_log_join">
+		<dynamic>
+			<isNotEmpty property="CsUpgradeLog.csulId" prepend="and">
+			    $CsUpgradeLog.csulIdNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_id = #CsUpgradeLog.csulId#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulIdNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulId">
+				$csulIdNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulTitle" prepend="and">
+				(<isNotNull property="CsUpgradeLog.csulTitleNot">
+			    cs_upgrade_log$CsUpgradeLog.suffix$.csul_title is null or length(cs_upgrade_log$CsUpgradeLog.suffix$.csul_title) &lt; 1 or
+			    </isNotNull>$CsUpgradeLog.csulTitleNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_title like #CsUpgradeLog.csulTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulTitleNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulTitle">
+				$csulTitleNot$ (cs_upgrade_log$CsUpgradeLog.suffix$.csul_title is null or length(cs_upgrade_log$CsUpgradeLog.suffix$.csul_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulType" prepend="and">
+			    $CsUpgradeLog.csulTypeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_type = #CsUpgradeLog.csulType#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulTypeNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulType">
+				$csulTypeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulDescribe" prepend="and">
+				(<isNotNull property="CsUpgradeLog.csulDescribeNot">
+			    cs_upgrade_log$CsUpgradeLog.suffix$.csul_describe is null or length(cs_upgrade_log$CsUpgradeLog.suffix$.csul_describe) &lt; 1 or
+			    </isNotNull>$CsUpgradeLog.csulDescribeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_describe like #CsUpgradeLog.csulDescribe#)
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulDescribeNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulDescribe">
+				$csulDescribeNot$ (cs_upgrade_log$CsUpgradeLog.suffix$.csul_describe is null or length(cs_upgrade_log$CsUpgradeLog.suffix$.csul_describe) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulOnTimeStart" prepend="and">
+			    $CsUpgradeLog.csulOnTimeNot$   (cs_upgrade_log$CsUpgradeLog.suffix$.csul_on_time &gt;= #CsUpgradeLog.csulOnTimeStart#
+			   <isEmpty property="CsUpgradeLog.csulOnTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUpgradeLog.csulOnTimeEnd" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulOnTimeStart">$CsUpgradeLog.csulOnTimeNot$   (</isEmpty>
+			    cs_upgrade_log$CsUpgradeLog.suffix$.csul_on_time &lt;= #CsUpgradeLog.csulOnTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUpgradeLog.csulOnTime" prepend="and">
+			    $CsUpgradeLog.csulOnTimeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_on_time = #CsUpgradeLog.csulOnTime#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulOnTimeNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulOnTimeStart"><isEmpty property="CsUpgradeLog.csulOnTimeEnd"><isEmpty property="CsUpgradeLog.csulOnTime">
+				$csulOnTimeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_on_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulAdder" prepend="and">
+			    $CsUpgradeLog.csulAdderNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_adder = #CsUpgradeLog.csulAdder#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulAdderNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulAdder">
+				$csulAdderNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulUpdateTimeStart" prepend="and">
+			    $CsUpgradeLog.csulUpdateTimeNot$   (cs_upgrade_log$CsUpgradeLog.suffix$.csul_update_time &gt;= #CsUpgradeLog.csulUpdateTimeStart#
+			   <isEmpty property="CsUpgradeLog.csulUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUpgradeLog.csulUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulUpdateTimeStart">$CsUpgradeLog.csulUpdateTimeNot$   (</isEmpty>
+			    cs_upgrade_log$CsUpgradeLog.suffix$.csul_update_time &lt;= #CsUpgradeLog.csulUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUpgradeLog.csulUpdateTime" prepend="and">
+			    $CsUpgradeLog.csulUpdateTimeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_update_time = #CsUpgradeLog.csulUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulUpdateTimeNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulUpdateTimeStart"><isEmpty property="CsUpgradeLog.csulUpdateTimeEnd"><isEmpty property="CsUpgradeLog.csulUpdateTime">
+				$csulUpdateTimeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulAddTimeStart" prepend="and">
+			    $CsUpgradeLog.csulAddTimeNot$   (cs_upgrade_log$CsUpgradeLog.suffix$.csul_add_time &gt;= #CsUpgradeLog.csulAddTimeStart#
+			   <isEmpty property="CsUpgradeLog.csulAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUpgradeLog.csulAddTimeEnd" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulAddTimeStart">$CsUpgradeLog.csulAddTimeNot$   (</isEmpty>
+			    cs_upgrade_log$CsUpgradeLog.suffix$.csul_add_time &lt;= #CsUpgradeLog.csulAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUpgradeLog.csulAddTime" prepend="and">
+			    $CsUpgradeLog.csulAddTimeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_add_time = #CsUpgradeLog.csulAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulAddTimeNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulAddTimeStart"><isEmpty property="CsUpgradeLog.csulAddTimeEnd"><isEmpty property="CsUpgradeLog.csulAddTime">
+				$csulAddTimeNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpgradeLog.csulStatus" prepend="and">
+			    $CsUpgradeLog.csulStatusNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_status = #CsUpgradeLog.csulStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUpgradeLog.csulStatusNot" prepend="and">
+				<isEmpty property="CsUpgradeLog.csulStatus">
+				$csulStatusNot$ cs_upgrade_log$CsUpgradeLog.suffix$.csul_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

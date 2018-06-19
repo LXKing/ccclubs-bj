@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 长单明细之SQL映射 -->
+	<resultMap id="CsLongOrderDetail" class="com.ccclubs.model.CsLongOrderDetail">
+		<result property="cslodId" column="cslod_id"/>
+		<result property="cslodHost" column="cslod_host"/>
+		<result property="cslodLongOrder" column="cslod_long_order"/>
+		<result property="cslodCar" column="cslod_car"/>
+		<result property="cslodPrice" column="cslod_price"/>
+		<result property="cslodSetKilo" column="cslod_set_kilo"/>
+		<result property="cslodRetKilo" column="cslod_ret_kilo"/>
+		<result property="cslodSetTime" column="cslod_set_time"/>
+		<result property="cslodRetTime" column="cslod_ret_time"/>
+		<result property="cslodUpdateTime" column="cslod_update_time"/>
+		<result property="cslodAddTime" column="cslod_add_time"/>
+		<result property="cslodEditor" column="cslod_editor"/>
+		<result property="cslodRemark" column="cslod_remark"/>
+		<result property="cslodStatus" column="cslod_status"/>
+	</resultMap>
+		
+	<!-- 获取所有长单明细 -->
+	<select id="getCsLongOrderDetailList" resultMap="CsLongOrderDetail">
+		select cs_long_order_detail$suffix$.* from cs_long_order_detail$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询-->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.cslod_long_order=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.cslod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order_detail$suffix$.cslod_status!=-1
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrderDetail_part.cs_long_order_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslod_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取长单明细分页 -->
+	<select id="getCsLongOrderDetailPage" parameterClass="java.util.HashMap" resultMap="CsLongOrderDetail">
+		select cs_long_order_detail$suffix$.* from cs_long_order_detail$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询 -->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.cslod_long_order=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.cslod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order_detail$suffix$.cslod_status!=-1
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrderDetail_part.cs_long_order_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslod_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取长单明细总数 -->
+	<select id="getCsLongOrderDetailEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_long_order_detail$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.cslod_long_order=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.cslod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order_detail$suffix$.cslod_status!=-1
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrderDetail_part.cs_long_order_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取长单明细 -->
+	<select id="getCsLongOrderDetailById" parameterClass="java.util.HashMap" resultMap="CsLongOrderDetail">
+		select cs_long_order_detail$suffix$.* from cs_long_order_detail$suffix$
+		where cslod_id=#id#
+	</select>
+	
+		
+	<!-- 保存长单明细 -->
+	<insert id="saveCsLongOrderDetail"  parameterClass="com.ccclubs.model.CsLongOrderDetail">
+		insert into cs_long_order_detail$suffix$
+		(
+			cs_long_order_detail$suffix$.cslod_host
+			,cs_long_order_detail$suffix$.cslod_long_order
+			,cs_long_order_detail$suffix$.cslod_car
+			,cs_long_order_detail$suffix$.cslod_price
+			,cs_long_order_detail$suffix$.cslod_set_kilo
+			,cs_long_order_detail$suffix$.cslod_ret_kilo
+			,cs_long_order_detail$suffix$.cslod_set_time
+			,cs_long_order_detail$suffix$.cslod_ret_time
+			,cs_long_order_detail$suffix$.cslod_update_time
+			,cs_long_order_detail$suffix$.cslod_add_time
+			,cs_long_order_detail$suffix$.cslod_editor
+			,cs_long_order_detail$suffix$.cslod_remark
+			,cs_long_order_detail$suffix$.cslod_status
+		)
+		values(
+			<isNotNull property="cslodHost" prepend="">
+				#cslodHost#
+			</isNotNull>
+			<isNull property="cslodHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cslodLongOrder" prepend=",">
+				#cslodLongOrder#
+			</isNotNull>
+			<isNull property="cslodLongOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodCar" prepend=",">
+				#cslodCar#
+			</isNotNull>
+			<isNull property="cslodCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodPrice" prepend=",">
+				#cslodPrice#
+			</isNotNull>
+			<isNull property="cslodPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodSetKilo" prepend=",">
+				#cslodSetKilo#
+			</isNotNull>
+			<isNull property="cslodSetKilo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodRetKilo" prepend=",">
+				#cslodRetKilo#
+			</isNotNull>
+			<isNull property="cslodRetKilo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodSetTime" prepend=",">
+				#cslodSetTime#
+			</isNotNull>
+			<isNull property="cslodSetTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodRetTime" prepend=",">
+				#cslodRetTime#
+			</isNotNull>
+			<isNull property="cslodRetTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodUpdateTime" prepend=",">
+				#cslodUpdateTime#
+			</isNotNull>
+			<isNull property="cslodUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodAddTime" prepend=",">
+				#cslodAddTime#
+			</isNotNull>
+			<isNull property="cslodAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodEditor" prepend=",">
+				#cslodEditor#
+			</isNotNull>
+			<isNull property="cslodEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodRemark" prepend=",">
+				#cslodRemark#
+			</isNotNull>
+			<isNull property="cslodRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslodStatus" prepend=",">
+				#cslodStatus#
+			</isNotNull>
+			<isNull property="cslodStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新长单明细 -->
+	<update id="updateCsLongOrderDetail"  parameterClass="com.ccclubs.model.CsLongOrderDetail">
+		update cs_long_order_detail$suffix$ set
+			<isNotNull property="cslodHost" prepend="">
+				cs_long_order_detail$suffix$.cslod_host = #cslodHost#
+			</isNotNull>
+			<isNull property="cslodHost" prepend="">
+				cs_long_order_detail$suffix$.cslod_host = null
+			</isNull>				
+			<isNotNull property="cslodLongOrder" prepend=",">
+				cs_long_order_detail$suffix$.cslod_long_order = #cslodLongOrder#
+			</isNotNull>
+			<isNull property="cslodLongOrder" prepend=",">
+				cs_long_order_detail$suffix$.cslod_long_order = null
+			</isNull>				
+			<isNotNull property="cslodCar" prepend=",">
+				cs_long_order_detail$suffix$.cslod_car = #cslodCar#
+			</isNotNull>
+			<isNull property="cslodCar" prepend=",">
+				cs_long_order_detail$suffix$.cslod_car = null
+			</isNull>				
+			<isNotNull property="cslodPrice" prepend=",">
+				cs_long_order_detail$suffix$.cslod_price = #cslodPrice#
+			</isNotNull>
+			<isNull property="cslodPrice" prepend=",">
+				cs_long_order_detail$suffix$.cslod_price = null
+			</isNull>				
+			<isNotNull property="cslodSetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_kilo = #cslodSetKilo#
+			</isNotNull>
+			<isNull property="cslodSetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_kilo = null
+			</isNull>				
+			<isNotNull property="cslodRetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_kilo = #cslodRetKilo#
+			</isNotNull>
+			<isNull property="cslodRetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_kilo = null
+			</isNull>				
+			<isNotNull property="cslodSetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_time = #cslodSetTime#
+			</isNotNull>
+			<isNull property="cslodSetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_time = null
+			</isNull>				
+			<isNotNull property="cslodRetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_time = #cslodRetTime#
+			</isNotNull>
+			<isNull property="cslodRetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_time = null
+			</isNull>				
+			<isNotNull property="cslodUpdateTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_update_time = #cslodUpdateTime#
+			</isNotNull>
+			<isNull property="cslodUpdateTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_update_time = null
+			</isNull>				
+			<isNotNull property="cslodAddTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_add_time = #cslodAddTime#
+			</isNotNull>
+			<isNull property="cslodAddTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_add_time = null
+			</isNull>				
+			<isNotNull property="cslodEditor" prepend=",">
+				cs_long_order_detail$suffix$.cslod_editor = #cslodEditor#
+			</isNotNull>
+			<isNull property="cslodEditor" prepend=",">
+				cs_long_order_detail$suffix$.cslod_editor = null
+			</isNull>				
+			<isNotNull property="cslodRemark" prepend=",">
+				cs_long_order_detail$suffix$.cslod_remark = #cslodRemark#
+			</isNotNull>
+			<isNull property="cslodRemark" prepend=",">
+				cs_long_order_detail$suffix$.cslod_remark = null
+			</isNull>				
+			<isNotNull property="cslodStatus" prepend=",">
+				cs_long_order_detail$suffix$.cslod_status = #cslodStatus#
+			</isNotNull>
+			<isNull property="cslodStatus" prepend=",">
+				cs_long_order_detail$suffix$.cslod_status = null
+			</isNull>				
+		where
+			cslod_id=#cslodId#
+	</update>
+	
+	<!-- 更新长单明细非空字段 -->
+	<update id="updateCsLongOrderDetail$NotNull"  parameterClass="com.ccclubs.model.CsLongOrderDetail">
+		update cs_long_order_detail$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cslodHost" prepend=",">
+				cs_long_order_detail$suffix$.cslod_host = #cslodHost#
+			</isNotNull>		
+			<isNotNull property="cslodLongOrder" prepend=",">
+				cs_long_order_detail$suffix$.cslod_long_order = #cslodLongOrder#
+			</isNotNull>		
+			<isNotNull property="cslodCar" prepend=",">
+				cs_long_order_detail$suffix$.cslod_car = #cslodCar#
+			</isNotNull>		
+			<isNotNull property="cslodPrice" prepend=",">
+				cs_long_order_detail$suffix$.cslod_price = #cslodPrice#
+			</isNotNull>		
+			<isNotNull property="cslodSetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_kilo = #cslodSetKilo#
+			</isNotNull>		
+			<isNotNull property="cslodRetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_kilo = #cslodRetKilo#
+			</isNotNull>		
+			<isNotNull property="cslodSetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_time = #cslodSetTime#
+			</isNotNull>		
+			<isNotNull property="cslodRetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_time = #cslodRetTime#
+			</isNotNull>		
+			<isNotNull property="cslodUpdateTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_update_time = #cslodUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cslodAddTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_add_time = #cslodAddTime#
+			</isNotNull>		
+			<isNotNull property="cslodEditor" prepend=",">
+				cs_long_order_detail$suffix$.cslod_editor = #cslodEditor#
+			</isNotNull>		
+			<isNotNull property="cslodRemark" prepend=",">
+				cs_long_order_detail$suffix$.cslod_remark = #cslodRemark#
+			</isNotNull>		
+			<isNotNull property="cslodStatus" prepend=",">
+				cs_long_order_detail$suffix$.cslod_status = #cslodStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cslod_id=#cslodId#
+	</update>
+	
+
+	<!-- 根据ID删除一个长单明细 -->
+	<delete id="deleteCsLongOrderDetailById" parameterClass="java.util.HashMap">
+		delete from cs_long_order_detail$suffix$ where cslod_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个长单明细 -->
+	<update id="removeCsLongOrderDetailById" parameterClass="java.util.HashMap">
+		update cs_long_order_detail$suffix$ set  cs_long_order_detail$suffix$.cslod_status=-1  where cslod_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新长单明细 -->
+	<update id="updateCsLongOrderDetailBy"  parameterClass="java.util.HashMap">
+		update cs_long_order_detail$suffix$ set		
+			cslod_id=cslod_id
+			<isNotNull property="V_cslodId" prepend=",">
+				cs_long_order_detail$suffix$.cslod_id = #V_cslodId#
+			</isNotNull>		
+			<isNotNull property="V_cslodHost" prepend=",">
+				cs_long_order_detail$suffix$.cslod_host = #V_cslodHost#
+			</isNotNull>		
+			<isNotNull property="V_cslodLongOrder" prepend=",">
+				cs_long_order_detail$suffix$.cslod_long_order = #V_cslodLongOrder#
+			</isNotNull>		
+			<isNotNull property="V_cslodCar" prepend=",">
+				cs_long_order_detail$suffix$.cslod_car = #V_cslodCar#
+			</isNotNull>		
+			<isNotNull property="V_cslodPrice" prepend=",">
+				cs_long_order_detail$suffix$.cslod_price = #V_cslodPrice#
+			</isNotNull>		
+			<isNotNull property="V_cslodSetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_kilo = #V_cslodSetKilo#
+			</isNotNull>		
+			<isNotNull property="V_cslodRetKilo" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_kilo = #V_cslodRetKilo#
+			</isNotNull>		
+			<isNotNull property="V_cslodSetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_set_time = #V_cslodSetTime#
+			</isNotNull>		
+			<isNotNull property="V_cslodRetTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_ret_time = #V_cslodRetTime#
+			</isNotNull>		
+			<isNotNull property="V_cslodUpdateTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_update_time = #V_cslodUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cslodAddTime" prepend=",">
+				cs_long_order_detail$suffix$.cslod_add_time = #V_cslodAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cslodEditor" prepend=",">
+				cs_long_order_detail$suffix$.cslod_editor = #V_cslodEditor#
+			</isNotNull>		
+			<isNotNull property="V_cslodRemark" prepend=",">
+				cs_long_order_detail$suffix$.cslod_remark = #V_cslodRemark#
+			</isNotNull>		
+			<isNotNull property="V_cslodStatus" prepend=",">
+				cs_long_order_detail$suffix$.cslod_status = #V_cslodStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询-->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.cslod_long_order=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_detail$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.cslod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_long_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_long_order_detail$suffix$.cslod_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslodLongOrder"><!-- 调用一下CslodLongOrder，把CsLongOrder指向CslodLongOrder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CslodCar"><!-- 调用一下CslodCar，把CsCar指向CslodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLongOrderDetail_part.cs_long_order_detail_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除长单明细 -->
+	<update id="deleteCsLongOrderDetailBy"  parameterClass="java.util.HashMap">
+		delete from cs_long_order_detail$suffix$ where 
+		cs_long_order_detail$suffix$.cslod_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLongOrderDetail_part.cs_long_order_detail_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

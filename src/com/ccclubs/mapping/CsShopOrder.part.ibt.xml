@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsShopOrder_part">	
+	<!-- 商城订单条件sql片段  -->
+	<sql id="cs_shop_order_dynamic">
+		<dynamic>
+			<isNotEmpty property="cssoId" prepend="and">
+			    $cssoIdNot$ cs_shop_order$suffix$.csso_id = #cssoId#
+			</isNotEmpty>
+			<isNotNull property="cssoIdNot" prepend="and">
+				<isEmpty property="cssoId">
+				$cssoIdNot$ cs_shop_order$suffix$.csso_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoMember" prepend="and">
+			    $cssoMemberNot$ cs_shop_order$suffix$.csso_member = #cssoMember#
+			</isNotEmpty>
+			<isNotNull property="cssoMemberNot" prepend="and">
+				<isEmpty property="cssoMember">
+				$cssoMemberNot$ cs_shop_order$suffix$.csso_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoMoneyMin" prepend="and">
+			    $cssoMoneyNot$  ( cs_shop_order$suffix$.csso_money &gt;= #cssoMoneyMin#
+			    <isEmpty property="cssoMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssoMoneyMax" prepend="and">
+				<isEmpty property="cssoMoneyMin">$cssoMoneyNot$   (</isEmpty>
+			    cs_shop_order$suffix$.csso_money &lt;= #cssoMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cssoMoney" prepend="and">
+			    $cssoMoneyNot$ cs_shop_order$suffix$.csso_money = #cssoMoney#
+			</isNotEmpty>
+			<isNotNull property="cssoMoneyNot" prepend="and">
+				<isEmpty property="cssoMoneyMax"><isEmpty property="cssoMoneyMin"><isEmpty property="cssoMoney">
+				$cssoMoneyNot$ cs_shop_order$suffix$.csso_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cssoRealPayMin" prepend="and">
+			    $cssoRealPayNot$  ( cs_shop_order$suffix$.csso_real_pay &gt;= #cssoRealPayMin#
+			    <isEmpty property="cssoRealPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssoRealPayMax" prepend="and">
+				<isEmpty property="cssoRealPayMin">$cssoRealPayNot$   (</isEmpty>
+			    cs_shop_order$suffix$.csso_real_pay &lt;= #cssoRealPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cssoRealPay" prepend="and">
+			    $cssoRealPayNot$ cs_shop_order$suffix$.csso_real_pay = #cssoRealPay#
+			</isNotEmpty>
+			<isNotNull property="cssoRealPayNot" prepend="and">
+				<isEmpty property="cssoRealPayMax"><isEmpty property="cssoRealPayMin"><isEmpty property="cssoRealPay">
+				$cssoRealPayNot$ cs_shop_order$suffix$.csso_real_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cssoEditor" prepend="and">
+			    $cssoEditorNot$ cs_shop_order$suffix$.csso_editor = #cssoEditor#
+			</isNotEmpty>
+			<isNotNull property="cssoEditorNot" prepend="and">
+				<isEmpty property="cssoEditor">
+				$cssoEditorNot$ cs_shop_order$suffix$.csso_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoMemo" prepend="and">			    
+			    (<isNotNull property="cssoMemoNot">
+			    cs_shop_order$suffix$.csso_memo is null or length(cs_shop_order$suffix$.csso_memo) &lt; 1 or
+			    </isNotNull>$cssoMemoNot$ cs_shop_order$suffix$.csso_memo like #cssoMemo#)
+			</isNotEmpty>
+			<isNotNull property="cssoMemoNot" prepend="and">
+				<isEmpty property="cssoMemo">
+				$cssoMemoNot$ (cs_shop_order$suffix$.csso_memo is null or length(cs_shop_order$suffix$.csso_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoData" prepend="and">			    
+			    (<isNotNull property="cssoDataNot">
+			    cs_shop_order$suffix$.csso_data is null or length(cs_shop_order$suffix$.csso_data) &lt; 1 or
+			    </isNotNull>$cssoDataNot$ cs_shop_order$suffix$.csso_data like #cssoData#)
+			</isNotEmpty>
+			<isNotNull property="cssoDataNot" prepend="and">
+				<isEmpty property="cssoData">
+				$cssoDataNot$ (cs_shop_order$suffix$.csso_data is null or length(cs_shop_order$suffix$.csso_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoUpdateTimeStart" prepend="and">
+			    $cssoUpdateTimeNot$   (cs_shop_order$suffix$.csso_update_time &gt;= #cssoUpdateTimeStart#
+			   <isEmpty property="cssoUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssoUpdateTimeEnd" prepend="and">
+				<isEmpty property="cssoUpdateTimeStart">$cssoUpdateTimeNot$   (</isEmpty>
+			    cs_shop_order$suffix$.csso_update_time &lt;= #cssoUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssoUpdateTime" prepend="and">
+			    $cssoUpdateTimeNot$ cs_shop_order$suffix$.csso_update_time = #cssoUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cssoUpdateTimeNot" prepend="and">
+				<isEmpty property="cssoUpdateTimeStart"><isEmpty property="cssoUpdateTimeEnd"><isEmpty property="cssoUpdateTime">
+				$cssoUpdateTimeNot$ cs_shop_order$suffix$.csso_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoAddTimeStart" prepend="and">
+			    $cssoAddTimeNot$   (cs_shop_order$suffix$.csso_add_time &gt;= #cssoAddTimeStart#
+			   <isEmpty property="cssoAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssoAddTimeEnd" prepend="and">
+				<isEmpty property="cssoAddTimeStart">$cssoAddTimeNot$   (</isEmpty>
+			    cs_shop_order$suffix$.csso_add_time &lt;= #cssoAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssoAddTime" prepend="and">
+			    $cssoAddTimeNot$ cs_shop_order$suffix$.csso_add_time = #cssoAddTime#
+			</isNotEmpty>
+			<isNotNull property="cssoAddTimeNot" prepend="and">
+				<isEmpty property="cssoAddTimeStart"><isEmpty property="cssoAddTimeEnd"><isEmpty property="cssoAddTime">
+				$cssoAddTimeNot$ cs_shop_order$suffix$.csso_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssoStatus" prepend="and">
+			    $cssoStatusNot$ cs_shop_order$suffix$.csso_status = #cssoStatus#
+			</isNotEmpty>
+			<isNotNull property="cssoStatusNot" prepend="and">
+				<isEmpty property="cssoStatus">
+				$cssoStatusNot$ cs_shop_order$suffix$.csso_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 商城订单left join 条件sql片段 -->
+	<sql id="cs_shop_order_join">
+		<dynamic>
+			<isNotEmpty property="CsShopOrder.cssoId" prepend="and">
+			    $CsShopOrder.cssoIdNot$ cs_shop_order$CsShopOrder.suffix$.csso_id = #CsShopOrder.cssoId#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoIdNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoId">
+				$cssoIdNot$ cs_shop_order$CsShopOrder.suffix$.csso_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoMember" prepend="and">
+			    $CsShopOrder.cssoMemberNot$ cs_shop_order$CsShopOrder.suffix$.csso_member = #CsShopOrder.cssoMember#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoMemberNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoMember">
+				$cssoMemberNot$ cs_shop_order$CsShopOrder.suffix$.csso_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoMoneyMin" prepend="and">
+			    $CsShopOrder.cssoMoneyNot$  ( cs_shop_order$CsShopOrder.suffix$.csso_money &gt;= #CsShopOrder.cssoMoneyMin#
+			    <isEmpty property="CsShopOrder.cssoMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoMoneyMax" prepend="and">
+				<isEmpty property="CsShopOrder.cssoMoneyMin">$CsShopOrder.cssoMoneyNot$   (</isEmpty>
+			    cs_shop_order$CsShopOrder.suffix$.csso_money &lt;= #CsShopOrder.cssoMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoMoney" prepend="and">
+			    $CsShopOrder.cssoMoneyNot$ cs_shop_order$CsShopOrder.suffix$.csso_money = #CsShopOrder.cssoMoney#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoMoneyNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoMoneyMax"><isEmpty property="CsShopOrder.cssoMoneyMin"><isEmpty property="CsShopOrder.cssoMoney">
+				$cssoMoneyNot$ cs_shop_order$CsShopOrder.suffix$.csso_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoRealPayMin" prepend="and">
+			    $CsShopOrder.cssoRealPayNot$  ( cs_shop_order$CsShopOrder.suffix$.csso_real_pay &gt;= #CsShopOrder.cssoRealPayMin#
+			    <isEmpty property="CsShopOrder.cssoRealPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoRealPayMax" prepend="and">
+				<isEmpty property="CsShopOrder.cssoRealPayMin">$CsShopOrder.cssoRealPayNot$   (</isEmpty>
+			    cs_shop_order$CsShopOrder.suffix$.csso_real_pay &lt;= #CsShopOrder.cssoRealPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoRealPay" prepend="and">
+			    $CsShopOrder.cssoRealPayNot$ cs_shop_order$CsShopOrder.suffix$.csso_real_pay = #CsShopOrder.cssoRealPay#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoRealPayNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoRealPayMax"><isEmpty property="CsShopOrder.cssoRealPayMin"><isEmpty property="CsShopOrder.cssoRealPay">
+				$cssoRealPayNot$ cs_shop_order$CsShopOrder.suffix$.csso_real_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoEditor" prepend="and">
+			    $CsShopOrder.cssoEditorNot$ cs_shop_order$CsShopOrder.suffix$.csso_editor = #CsShopOrder.cssoEditor#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoEditorNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoEditor">
+				$cssoEditorNot$ cs_shop_order$CsShopOrder.suffix$.csso_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoMemo" prepend="and">
+				(<isNotNull property="CsShopOrder.cssoMemoNot">
+			    cs_shop_order$CsShopOrder.suffix$.csso_memo is null or length(cs_shop_order$CsShopOrder.suffix$.csso_memo) &lt; 1 or
+			    </isNotNull>$CsShopOrder.cssoMemoNot$ cs_shop_order$CsShopOrder.suffix$.csso_memo like #CsShopOrder.cssoMemo#)
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoMemoNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoMemo">
+				$cssoMemoNot$ (cs_shop_order$CsShopOrder.suffix$.csso_memo is null or length(cs_shop_order$CsShopOrder.suffix$.csso_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoData" prepend="and">
+				(<isNotNull property="CsShopOrder.cssoDataNot">
+			    cs_shop_order$CsShopOrder.suffix$.csso_data is null or length(cs_shop_order$CsShopOrder.suffix$.csso_data) &lt; 1 or
+			    </isNotNull>$CsShopOrder.cssoDataNot$ cs_shop_order$CsShopOrder.suffix$.csso_data like #CsShopOrder.cssoData#)
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoDataNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoData">
+				$cssoDataNot$ (cs_shop_order$CsShopOrder.suffix$.csso_data is null or length(cs_shop_order$CsShopOrder.suffix$.csso_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoUpdateTimeStart" prepend="and">
+			    $CsShopOrder.cssoUpdateTimeNot$   (cs_shop_order$CsShopOrder.suffix$.csso_update_time &gt;= #CsShopOrder.cssoUpdateTimeStart#
+			   <isEmpty property="CsShopOrder.cssoUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsShopOrder.cssoUpdateTimeStart">$CsShopOrder.cssoUpdateTimeNot$   (</isEmpty>
+			    cs_shop_order$CsShopOrder.suffix$.csso_update_time &lt;= #CsShopOrder.cssoUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoUpdateTime" prepend="and">
+			    $CsShopOrder.cssoUpdateTimeNot$ cs_shop_order$CsShopOrder.suffix$.csso_update_time = #CsShopOrder.cssoUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoUpdateTimeNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoUpdateTimeStart"><isEmpty property="CsShopOrder.cssoUpdateTimeEnd"><isEmpty property="CsShopOrder.cssoUpdateTime">
+				$cssoUpdateTimeNot$ cs_shop_order$CsShopOrder.suffix$.csso_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoAddTimeStart" prepend="and">
+			    $CsShopOrder.cssoAddTimeNot$   (cs_shop_order$CsShopOrder.suffix$.csso_add_time &gt;= #CsShopOrder.cssoAddTimeStart#
+			   <isEmpty property="CsShopOrder.cssoAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoAddTimeEnd" prepend="and">
+				<isEmpty property="CsShopOrder.cssoAddTimeStart">$CsShopOrder.cssoAddTimeNot$   (</isEmpty>
+			    cs_shop_order$CsShopOrder.suffix$.csso_add_time &lt;= #CsShopOrder.cssoAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsShopOrder.cssoAddTime" prepend="and">
+			    $CsShopOrder.cssoAddTimeNot$ cs_shop_order$CsShopOrder.suffix$.csso_add_time = #CsShopOrder.cssoAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoAddTimeNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoAddTimeStart"><isEmpty property="CsShopOrder.cssoAddTimeEnd"><isEmpty property="CsShopOrder.cssoAddTime">
+				$cssoAddTimeNot$ cs_shop_order$CsShopOrder.suffix$.csso_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsShopOrder.cssoStatus" prepend="and">
+			    $CsShopOrder.cssoStatusNot$ cs_shop_order$CsShopOrder.suffix$.csso_status = #CsShopOrder.cssoStatus#
+			</isNotEmpty>
+			<isNotNull property="CsShopOrder.cssoStatusNot" prepend="and">
+				<isEmpty property="CsShopOrder.cssoStatus">
+				$cssoStatusNot$ cs_shop_order$CsShopOrder.suffix$.csso_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="TbProblem_part">	
+	<!-- 问题故障报修条件sql片段  -->
+	<sql id="tb_problem_dynamic">
+		<dynamic>
+			<isNotEmpty property="tbpId" prepend="and">
+			    $tbpIdNot$ tb_problem$suffix$.tbp_id = #tbpId#
+			</isNotEmpty>
+			<isNotNull property="tbpIdNot" prepend="and">
+				<isEmpty property="tbpId">
+				$tbpIdNot$ tb_problem$suffix$.tbp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_problem$suffix$.tbp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="tbpHost" prepend="and">
+			    $tbpHostNot$ tb_problem$suffix$.tbp_host = #tbpHost#
+			</isNotEmpty>
+			<isNotNull property="tbpHostNot" prepend="and">
+				<isEmpty property="tbpHost">
+				$tbpHostNot$ tb_problem$suffix$.tbp_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpProfile" prepend="and">			    
+			    (<isNotNull property="tbpProfileNot">
+			    tb_problem$suffix$.tbp_profile is null or length(tb_problem$suffix$.tbp_profile) &lt; 1 or
+			    </isNotNull>$tbpProfileNot$ tb_problem$suffix$.tbp_profile = #tbpProfile#)
+			</isNotEmpty>
+			<isNotNull property="tbpProfileNot" prepend="and">
+				<isEmpty property="tbpProfile">
+				$tbpProfileNot$ (tb_problem$suffix$.tbp_profile is null or length(tb_problem$suffix$.tbp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpTypeMin" prepend="and">
+			    $tbpTypeNot$  ( tb_problem$suffix$.tbp_type &gt;= #tbpTypeMin#
+			    <isEmpty property="tbpTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpTypeMax" prepend="and">
+				<isEmpty property="tbpTypeMin">$tbpTypeNot$   (</isEmpty>
+			    tb_problem$suffix$.tbp_type &lt;= #tbpTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="tbpType" prepend="and">
+			    $tbpTypeNot$ tb_problem$suffix$.tbp_type = #tbpType#
+			</isNotEmpty>
+			<isNotNull property="tbpTypeNot" prepend="and">
+				<isEmpty property="tbpTypeMax"><isEmpty property="tbpTypeMin"><isEmpty property="tbpType">
+				$tbpTypeNot$ tb_problem$suffix$.tbp_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpMember" prepend="and">
+			    $tbpMemberNot$ tb_problem$suffix$.tbp_member = #tbpMember#
+			</isNotEmpty>
+			<isNotNull property="tbpMemberNot" prepend="and">
+				<isEmpty property="tbpMember">
+				$tbpMemberNot$ tb_problem$suffix$.tbp_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpOrder" prepend="and">
+			    $tbpOrderNot$ tb_problem$suffix$.tbp_order = #tbpOrder#
+			</isNotEmpty>
+			<isNotNull property="tbpOrderNot" prepend="and">
+				<isEmpty property="tbpOrder">
+				$tbpOrderNot$ tb_problem$suffix$.tbp_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpRelate" prepend="and">			    
+			    (<isNotNull property="tbpRelateNot">
+			    tb_problem$suffix$.tbp_relate is null or length(tb_problem$suffix$.tbp_relate) &lt; 1 or
+			    </isNotNull>$tbpRelateNot$ tb_problem$suffix$.tbp_relate = #tbpRelate#)
+			</isNotEmpty>
+			<isNotNull property="tbpRelateNot" prepend="and">
+				<isEmpty property="tbpRelate">
+				$tbpRelateNot$ (tb_problem$suffix$.tbp_relate is null or length(tb_problem$suffix$.tbp_relate) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpAdder" prepend="and">
+			    $tbpAdderNot$ tb_problem$suffix$.tbp_adder = #tbpAdder#
+			</isNotEmpty>
+			<isNotNull property="tbpAdderNot" prepend="and">
+				<isEmpty property="tbpAdder">
+				$tbpAdderNot$ tb_problem$suffix$.tbp_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpEditor" prepend="and">
+			    $tbpEditorNot$ tb_problem$suffix$.tbp_editor = #tbpEditor#
+			</isNotEmpty>
+			<isNotNull property="tbpEditorNot" prepend="and">
+				<isEmpty property="tbpEditor">
+				$tbpEditorNot$ tb_problem$suffix$.tbp_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpDealer" prepend="and">
+			    $tbpDealerNot$ tb_problem$suffix$.tbp_dealer = #tbpDealer#
+			</isNotEmpty>
+			<isNotNull property="tbpDealerNot" prepend="and">
+				<isEmpty property="tbpDealer">
+				$tbpDealerNot$ tb_problem$suffix$.tbp_dealer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpResult" prepend="and">			    
+			    (<isNotNull property="tbpResultNot">
+			    tb_problem$suffix$.tbp_result is null or length(tb_problem$suffix$.tbp_result) &lt; 1 or
+			    </isNotNull>$tbpResultNot$ tb_problem$suffix$.tbp_result like #tbpResult#)
+			</isNotEmpty>
+			<isNotNull property="tbpResultNot" prepend="and">
+				<isEmpty property="tbpResult">
+				$tbpResultNot$ (tb_problem$suffix$.tbp_result is null or length(tb_problem$suffix$.tbp_result) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpRemark" prepend="and">			    
+			    (<isNotNull property="tbpRemarkNot">
+			    tb_problem$suffix$.tbp_remark is null or length(tb_problem$suffix$.tbp_remark) &lt; 1 or
+			    </isNotNull>$tbpRemarkNot$ tb_problem$suffix$.tbp_remark like #tbpRemark#)
+			</isNotEmpty>
+			<isNotNull property="tbpRemarkNot" prepend="and">
+				<isEmpty property="tbpRemark">
+				$tbpRemarkNot$ (tb_problem$suffix$.tbp_remark is null or length(tb_problem$suffix$.tbp_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpMemo" prepend="and">			    
+			    (<isNotNull property="tbpMemoNot">
+			    tb_problem$suffix$.tbp_memo is null or length(tb_problem$suffix$.tbp_memo) &lt; 1 or
+			    </isNotNull>$tbpMemoNot$ tb_problem$suffix$.tbp_memo like #tbpMemo#)
+			</isNotEmpty>
+			<isNotNull property="tbpMemoNot" prepend="and">
+				<isEmpty property="tbpMemo">
+				$tbpMemoNot$ (tb_problem$suffix$.tbp_memo is null or length(tb_problem$suffix$.tbp_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpData" prepend="and">			    
+			    (<isNotNull property="tbpDataNot">
+			    tb_problem$suffix$.tbp_data is null or length(tb_problem$suffix$.tbp_data) &lt; 1 or
+			    </isNotNull>$tbpDataNot$ tb_problem$suffix$.tbp_data like #tbpData#)
+			</isNotEmpty>
+			<isNotNull property="tbpDataNot" prepend="and">
+				<isEmpty property="tbpData">
+				$tbpDataNot$ (tb_problem$suffix$.tbp_data is null or length(tb_problem$suffix$.tbp_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpUpdateTimeStart" prepend="and">
+			    $tbpUpdateTimeNot$   (tb_problem$suffix$.tbp_update_time &gt;= #tbpUpdateTimeStart#
+			   <isEmpty property="tbpUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpUpdateTimeEnd" prepend="and">
+				<isEmpty property="tbpUpdateTimeStart">$tbpUpdateTimeNot$   (</isEmpty>
+			    tb_problem$suffix$.tbp_update_time &lt;= #tbpUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="tbpUpdateTime" prepend="and">
+			    $tbpUpdateTimeNot$ tb_problem$suffix$.tbp_update_time = #tbpUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="tbpUpdateTimeNot" prepend="and">
+				<isEmpty property="tbpUpdateTimeStart"><isEmpty property="tbpUpdateTimeEnd"><isEmpty property="tbpUpdateTime">
+				$tbpUpdateTimeNot$ tb_problem$suffix$.tbp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpAddTimeStart" prepend="and">
+			    $tbpAddTimeNot$   (tb_problem$suffix$.tbp_add_time &gt;= #tbpAddTimeStart#
+			   <isEmpty property="tbpAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpAddTimeEnd" prepend="and">
+				<isEmpty property="tbpAddTimeStart">$tbpAddTimeNot$   (</isEmpty>
+			    tb_problem$suffix$.tbp_add_time &lt;= #tbpAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="tbpAddTime" prepend="and">
+			    $tbpAddTimeNot$ tb_problem$suffix$.tbp_add_time = #tbpAddTime#
+			</isNotEmpty>
+			<isNotNull property="tbpAddTimeNot" prepend="and">
+				<isEmpty property="tbpAddTimeStart"><isEmpty property="tbpAddTimeEnd"><isEmpty property="tbpAddTime">
+				$tbpAddTimeNot$ tb_problem$suffix$.tbp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpStatusMin" prepend="and">
+			    $tbpStatusNot$  ( tb_problem$suffix$.tbp_status &gt;= #tbpStatusMin#
+			    <isEmpty property="tbpStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbpStatusMax" prepend="and">
+				<isEmpty property="tbpStatusMin">$tbpStatusNot$   (</isEmpty>
+			    tb_problem$suffix$.tbp_status &lt;= #tbpStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="tbpStatus" prepend="and">
+			    $tbpStatusNot$ tb_problem$suffix$.tbp_status = #tbpStatus#
+			</isNotEmpty>
+			<isNotNull property="tbpStatusNot" prepend="and">
+				<isEmpty property="tbpStatusMax"><isEmpty property="tbpStatusMin"><isEmpty property="tbpStatus">
+				$tbpStatusNot$ tb_problem$suffix$.tbp_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpOutlets" prepend="and">
+			    $tbpOutletsNot$ tb_problem$suffix$.tbp_outlets = #tbpOutlets#
+			</isNotEmpty>
+			<isNotNull property="tbpOutletsNot" prepend="and">
+				<isEmpty property="tbpOutlets">
+				$tbpOutletsNot$ tb_problem$suffix$.tbp_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbpSpecialData" prepend="and">			    
+			    (<isNotNull property="tbpSpecialDataNot">
+			    tb_problem$suffix$.tbp_special_data is null or length(tb_problem$suffix$.tbp_special_data) &lt; 1 or
+			    </isNotNull>$tbpSpecialDataNot$ tb_problem$suffix$.tbp_special_data = #tbpSpecialData#)
+			</isNotEmpty>
+			<isNotNull property="tbpSpecialDataNot" prepend="and">
+				<isEmpty property="tbpSpecialData">
+				$tbpSpecialDataNot$ (tb_problem$suffix$.tbp_special_data is null or length(tb_problem$suffix$.tbp_special_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 问题故障报修left join 条件sql片段 -->
+	<sql id="tb_problem_join">
+		<dynamic>
+			<isNotEmpty property="TbProblem.tbpId" prepend="and">
+			    $TbProblem.tbpIdNot$ tb_problem$TbProblem.suffix$.tbp_id = #TbProblem.tbpId#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpIdNot" prepend="and">
+				<isEmpty property="TbProblem.tbpId">
+				$tbpIdNot$ tb_problem$TbProblem.suffix$.tbp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_problem$TbProblem.suffix$.tbp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="TbProblem.tbpHost" prepend="and">
+			    $TbProblem.tbpHostNot$ tb_problem$TbProblem.suffix$.tbp_host = #TbProblem.tbpHost#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpHostNot" prepend="and">
+				<isEmpty property="TbProblem.tbpHost">
+				$tbpHostNot$ tb_problem$TbProblem.suffix$.tbp_host is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="TbProblem.tbpProfile" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpProfileNot">
+				    tb_problem$TbProblem.suffix$.tbp_profile is null or length(tb_problem$TbProblem.suffix$.tbp_profile) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpProfileNot$ tb_problem$TbProblem.suffix$.tbp_profile = #TbProblem.tbpProfile#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpProfileNot" prepend="and">
+					<isEmpty property="TbProblem.tbpProfile">
+					$tbpProfileNot$ (tb_problem$TbProblem.suffix$.tbp_profile is null or length(tb_problem$TbProblem.suffix$.tbp_profile) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="TbProblem.tbpTypeMin" prepend="and">
+			    $TbProblem.tbpTypeNot$  ( tb_problem$TbProblem.suffix$.tbp_type &gt;= #TbProblem.tbpTypeMin#
+			    <isEmpty property="TbProblem.tbpTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbProblem.tbpTypeMax" prepend="and">
+				<isEmpty property="TbProblem.tbpTypeMin">$TbProblem.tbpTypeNot$   (</isEmpty>
+			    tb_problem$TbProblem.suffix$.tbp_type &lt;= #TbProblem.tbpTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="TbProblem.tbpType" prepend="and">
+			    $TbProblem.tbpTypeNot$ tb_problem$TbProblem.suffix$.tbp_type = #TbProblem.tbpType#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpTypeNot" prepend="and">
+				<isEmpty property="TbProblem.tbpTypeMax"><isEmpty property="TbProblem.tbpTypeMin"><isEmpty property="TbProblem.tbpType">
+				$tbpTypeNot$ tb_problem$TbProblem.suffix$.tbp_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbProblem.tbpMember" prepend="and">
+			    $TbProblem.tbpMemberNot$ tb_problem$TbProblem.suffix$.tbp_member = #TbProblem.tbpMember#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpMemberNot" prepend="and">
+				<isEmpty property="TbProblem.tbpMember">
+				$tbpMemberNot$ tb_problem$TbProblem.suffix$.tbp_member is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="TbProblem.tbpOrder" prepend="and">
+			    $TbProblem.tbpOrderNot$ tb_problem$TbProblem.suffix$.tbp_order = #TbProblem.tbpOrder#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpOrderNot" prepend="and">
+				<isEmpty property="TbProblem.tbpOrder">
+				$tbpOrderNot$ tb_problem$TbProblem.suffix$.tbp_order is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="TbProblem.tbpRelate" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpRelateNot">
+				    tb_problem$TbProblem.suffix$.tbp_relate is null or length(tb_problem$TbProblem.suffix$.tbp_relate) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpRelateNot$ tb_problem$TbProblem.suffix$.tbp_relate = #TbProblem.tbpRelate#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpRelateNot" prepend="and">
+					<isEmpty property="TbProblem.tbpRelate">
+					$tbpRelateNot$ (tb_problem$TbProblem.suffix$.tbp_relate is null or length(tb_problem$TbProblem.suffix$.tbp_relate) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="TbProblem.tbpAdder" prepend="and">
+			    $TbProblem.tbpAdderNot$ tb_problem$TbProblem.suffix$.tbp_adder = #TbProblem.tbpAdder#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpAdderNot" prepend="and">
+				<isEmpty property="TbProblem.tbpAdder">
+				$tbpAdderNot$ tb_problem$TbProblem.suffix$.tbp_adder is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="TbProblem.tbpEditor" prepend="and">
+			    $TbProblem.tbpEditorNot$ tb_problem$TbProblem.suffix$.tbp_editor = #TbProblem.tbpEditor#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpEditorNot" prepend="and">
+				<isEmpty property="TbProblem.tbpEditor">
+				$tbpEditorNot$ tb_problem$TbProblem.suffix$.tbp_editor is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="TbProblem.tbpDealer" prepend="and">
+			    $TbProblem.tbpDealerNot$ tb_problem$TbProblem.suffix$.tbp_dealer = #TbProblem.tbpDealer#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpDealerNot" prepend="and">
+				<isEmpty property="TbProblem.tbpDealer">
+				$tbpDealerNot$ tb_problem$TbProblem.suffix$.tbp_dealer is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="TbProblem.tbpResult" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpResultNot">
+				    tb_problem$TbProblem.suffix$.tbp_result is null or length(tb_problem$TbProblem.suffix$.tbp_result) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpResultNot$ tb_problem$TbProblem.suffix$.tbp_result = #TbProblem.tbpResult#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpResultNot" prepend="and">
+					<isEmpty property="TbProblem.tbpResult">
+					$tbpResultNot$ (tb_problem$TbProblem.suffix$.tbp_result is null or length(tb_problem$TbProblem.suffix$.tbp_result) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="TbProblem.tbpRemark" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpRemarkNot">
+				    tb_problem$TbProblem.suffix$.tbp_remark is null or length(tb_problem$TbProblem.suffix$.tbp_remark) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpRemarkNot$ tb_problem$TbProblem.suffix$.tbp_remark = #TbProblem.tbpRemark#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpRemarkNot" prepend="and">
+					<isEmpty property="TbProblem.tbpRemark">
+					$tbpRemarkNot$ (tb_problem$TbProblem.suffix$.tbp_remark is null or length(tb_problem$TbProblem.suffix$.tbp_remark) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="TbProblem.tbpMemo" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpMemoNot">
+				    tb_problem$TbProblem.suffix$.tbp_memo is null or length(tb_problem$TbProblem.suffix$.tbp_memo) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpMemoNot$ tb_problem$TbProblem.suffix$.tbp_memo = #TbProblem.tbpMemo#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpMemoNot" prepend="and">
+					<isEmpty property="TbProblem.tbpMemo">
+					$tbpMemoNot$ (tb_problem$TbProblem.suffix$.tbp_memo is null or length(tb_problem$TbProblem.suffix$.tbp_memo) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="TbProblem.tbpData" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpDataNot">
+				    tb_problem$TbProblem.suffix$.tbp_data is null or length(tb_problem$TbProblem.suffix$.tbp_data) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpDataNot$ tb_problem$TbProblem.suffix$.tbp_data = #TbProblem.tbpData#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpDataNot" prepend="and">
+					<isEmpty property="TbProblem.tbpData">
+					$tbpDataNot$ (tb_problem$TbProblem.suffix$.tbp_data is null or length(tb_problem$TbProblem.suffix$.tbp_data) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="TbProblem.tbpUpdateTimeStart" prepend="and">
+				    $TbProblem.tbpUpdateTimeNot$   (tb_problem$TbProblem.suffix$.tbp_update_time &gt;= #TbProblem.tbpUpdateTimeStart#
+				   <isEmpty property="TbProblem.tbpUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="TbProblem.tbpUpdateTimeEnd" prepend="and">
+					<isEmpty property="TbProblem.tbpUpdateTimeStart">$TbProblem.tbpUpdateTimeNot$   (</isEmpty>
+				    tb_problem$TbProblem.suffix$.tbp_update_time &lt;= #TbProblem.tbpUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="TbProblem.tbpUpdateTime" prepend="and">
+				    $TbProblem.tbpUpdateTimeNot$ tb_problem$TbProblem.suffix$.tbp_update_time = #TbProblem.tbpUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpUpdateTimeNot" prepend="and">
+					<isEmpty property="TbProblem.tbpUpdateTimeStart"><isEmpty property="TbProblem.tbpUpdateTimeEnd"><isEmpty property="TbProblem.tbpUpdateTime">
+					$tbpUpdateTimeNot$ tb_problem$TbProblem.suffix$.tbp_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="TbProblem.tbpAddTimeStart" prepend="and">
+				    $TbProblem.tbpAddTimeNot$   (tb_problem$TbProblem.suffix$.tbp_add_time &gt;= #TbProblem.tbpAddTimeStart#
+				   <isEmpty property="TbProblem.tbpAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="TbProblem.tbpAddTimeEnd" prepend="and">
+					<isEmpty property="TbProblem.tbpAddTimeStart">$TbProblem.tbpAddTimeNot$   (</isEmpty>
+				    tb_problem$TbProblem.suffix$.tbp_add_time &lt;= #TbProblem.tbpAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="TbProblem.tbpAddTime" prepend="and">
+				    $TbProblem.tbpAddTimeNot$ tb_problem$TbProblem.suffix$.tbp_add_time = #TbProblem.tbpAddTime#
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpAddTimeNot" prepend="and">
+					<isEmpty property="TbProblem.tbpAddTimeStart"><isEmpty property="TbProblem.tbpAddTimeEnd"><isEmpty property="TbProblem.tbpAddTime">
+					$tbpAddTimeNot$ tb_problem$TbProblem.suffix$.tbp_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+			<isNotEmpty property="TbProblem.tbpStatusMin" prepend="and">
+			    $TbProblem.tbpStatusNot$  ( tb_problem$TbProblem.suffix$.tbp_status &gt;= #TbProblem.tbpStatusMin#
+			    <isEmpty property="TbProblem.tbpStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbProblem.tbpStatusMax" prepend="and">
+				<isEmpty property="TbProblem.tbpStatusMin">$TbProblem.tbpStatusNot$   (</isEmpty>
+			    tb_problem$TbProblem.suffix$.tbp_status &lt;= #TbProblem.tbpStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="TbProblem.tbpStatus" prepend="and">
+			    $TbProblem.tbpStatusNot$ tb_problem$TbProblem.suffix$.tbp_status = #TbProblem.tbpStatus#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpStatusNot" prepend="and">
+				<isEmpty property="TbProblem.tbpStatusMax"><isEmpty property="TbProblem.tbpStatusMin"><isEmpty property="TbProblem.tbpStatus">
+				$tbpStatusNot$ tb_problem$TbProblem.suffix$.tbp_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbProblem.tbpOutlets" prepend="and">
+			    $TbProblem.tbpOutletsNot$ tb_problem$TbProblem.suffix$.tbp_outlets = #TbProblem.tbpOutlets#
+			</isNotEmpty>
+			<isNotNull property="TbProblem.tbpOutletsNot" prepend="and">
+				<isEmpty property="TbProblem.tbpOutlets">
+				$tbpOutletsNot$ tb_problem$TbProblem.suffix$.tbp_outlets is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="TbProblem.tbpSpecialData" prepend="and">			    
+				    (<isNotNull property="TbProblem.tbpSpecialDataNot">
+				    tb_problem$TbProblem.suffix$.tbp_special_data is null or length(tb_problem$TbProblem.suffix$.tbp_special_data) &lt; 1 or
+				    </isNotNull>$TbProblem.tbpSpecialDataNot$ tb_problem$TbProblem.suffix$.tbp_special_data = #TbProblem.tbpSpecialData#)
+				</isNotEmpty>
+				<isNotNull property="TbProblem.tbpSpecialDataNot" prepend="and">
+					<isEmpty property="TbProblem.tbpSpecialData">
+					$tbpSpecialDataNot$ (tb_problem$TbProblem.suffix$.tbp_special_data is null or length(tb_problem$TbProblem.suffix$.tbp_special_data) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

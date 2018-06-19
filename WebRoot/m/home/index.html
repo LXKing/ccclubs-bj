@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>我的帐户</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-home.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+			<div class="home-banner">
+				<span class="head-exit" onclick="unbind();"></span>
+				<div class="head-wrap"></div>
+				<div class="head-img-wrap">
+					<!--  <img src="img/bg/head_empty.jpg" /> -->
+					<a href="account_info.html"><img alt="头像" title="用户头像" src="${cc:isNullOrEmpty(csMember.csmHeader)?'/weixin/images/renpic.jpg':csMember.csmHeader}" /></a>
+				</div>
+				<div class="head-text">
+					${csMember.csmName}
+					<!-- span class="icon icon-person"></span> -->
+				</div>
+			</div>
+			<nav id="product-list" class="bar-tab">
+			<a class="tab-item" href="account_money.html"> <span class="icon icon-money " style="background-size: 20rem 2.9rem;"></span> <span class="tab-label">余额</span> </a>
+			<a class="tab-item" href="account_coupon.html"> <span class="icon icon-coupon" style="background-size: 20rem 2.9rem;"></span> <span class="tab-label">现金券</span> </a>
+			<a class="tab-item" href="account_coin.html"> <span class="icon icon-coin" style="background-size: 18rem 3.2rem;"></span> <span class="tab-label">红包</span> </a>
+			<a class="tab-item" href="account_freehours.html"> <span class="icon icon-freehours"></span> <span class="tab-label">免费小时</span> </a>
+			<a class="tab-item" href="account_integral.html"> <span class="icon icon-integral"></span> <span class="tab-label">积分</span> </a>
+			</nav>
+
+			<ul class="table-view">
+				<!-- <li class="table-view-cell media">
+					<a class="navigate-right">
+						<div class="media-body">
+							会员等级
+						</div> <span class="badge">菜鸟</span> </a>
+				</li> -->
+				<li class="table-view-cell media table_list_line">
+					<a class="navigate-right" href="account_violat.html">
+						<div class="media-body">
+							我的违章
+						</div>
+						<s:if test="#request.weizhang!=0">
+							<span class="badge badge-negative">${weizhang}</span>
+						</s:if>
+						<div class="table-view-icon"></div>
+					</a>
+				</li>
+				<li class="table-view-cell media table_list_line" id="mianya">
+					<a class="navigate-right" href="account_credit.html" onclick="zhimaAuth()">
+						<div class="media-body">
+							免押金
+						</div>
+						<div class="table-view-icon"></div>
+					</a>
+				</li>
+				<!-- <li class="table-view-cell media table_list_line" id="mianya">
+					<a class="navigate-right" href="accountgrade.html">
+						<div class="media-body">
+							会员等级
+						</div>
+						<div class="table-view-icon"></div>
+					</a>
+				</li> ->
+				<!-- <li class="table-view-cell media">
+					<a class="navigate-right">
+						<div class="media-body">
+							常用地址
+						</div> <span class="badge badge-primary">2</span> </a>
+				</li> -->
+				<li class="table-view-cell media">
+					<a class="navigate-right" href="feedback.html">
+						<div class="media-body">
+							意见反馈
+						</div><!--  <span class="badge badge-positive">1</span>  --></a>
+				</li>
+			</ul>
+		</div>
+		<nav class="bar bar-tab">
+		<a class="tab-item nav_bottom_default" href="../index.html"> <span class="icon nav-icon nav-icon-plus"></span> <span class="tab-label">租车</span> </a>
+		<a class="tab-item nav_bottom_default" href="order_usecar.html"> <span class="icon nav-icon-share nav-icon"></span> <span class="tab-label">用车</span> </a>
+		<a class="tab-item nav_bottom_default" href="order.html"> <span class="icon nav-icon nav-icon-bars "></span> <span class="tab-label">订单</span> </a>
+		<a class="tab-item active" href="index.html"> <span class="icon nav-icon focus-icon-person"></span> <span class="tab-label">帐户</span> </a>
+		</nav>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		$(function(){
+			if(is_weixin()){
+				$('#mianya').css("display", "none");
+			}
+			else{
+				$('#mianya').css("display", "block");
+			}
+		});
+		function is_weixin(){
+		    var ua = navigator.userAgent.toLowerCase();
+		    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
+		function unbind(){
+			if(confirm("确定要退出登录吗？")){
+				localStorage.clear();
+				$.ajax({
+            		type: 'get',
+            		url: '${basePath}m/login_logout.html',
+            		data:{},
+            		dataType: 'json',
+            		success: function(data){
+            			if(data.state){
+            				window.location.href='${basePath}m/index.html';
+            			}else{
+            				Toast.show(data.message);
+                            return;
+            			}
+            		},
+            		error: function(xhr, type){
+            			Toast.show('通讯失败，请检查网络');
+                        return;
+            		}
+            	});
+			}
+		}
+		</script>
+	</body>
+
+</html>

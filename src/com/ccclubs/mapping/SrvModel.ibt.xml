@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 表单设计之SQL映射 -->
+	<resultMap id="SrvModel" class="com.ccclubs.model.SrvModel">
+		<result property="smId" column="sm_id"/>
+		<result property="smName" column="sm_name"/>
+		<result property="smAction" column="sm_action"/>
+		<result property="smNamespace" column="sm_namespace"/>
+		<result property="smDisplay" column="sm_display"/>
+		<result property="smFunctions" column="sm_functions"/>
+		<result property="smFields" column="sm_fields"/>
+		<result property="smEditor" column="sm_editor"/>
+		<result property="smUpdateTime" column="sm_update_time"/>
+		<result property="smAddTime" column="sm_add_time"/>
+		<result property="smStatus" column="sm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有表单设计 -->
+	<select id="getSrvModelList" resultMap="SrvModel">
+		select srv_model$suffix$.* from srv_model$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_model$suffix$.sm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvModel_part.srv_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取表单设计分页 -->
+	<select id="getSrvModelPage" parameterClass="java.util.HashMap" resultMap="SrvModel">
+		select srv_model$suffix$.* from srv_model$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_model$suffix$.sm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvModel_part.srv_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取表单设计总数 -->
+	<select id="getSrvModelEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_model$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_model$suffix$.sm_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvModel_part.srv_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取表单设计 -->
+	<select id="getSrvModelById" parameterClass="java.util.HashMap" resultMap="SrvModel">
+		select srv_model$suffix$.* from srv_model$suffix$
+		where sm_id=#id#
+	</select>
+	
+		
+	<!-- 保存表单设计 -->
+	<insert id="saveSrvModel"  parameterClass="com.ccclubs.model.SrvModel">
+		insert into srv_model$suffix$
+		(
+			srv_model$suffix$.sm_name
+			,srv_model$suffix$.sm_action
+			,srv_model$suffix$.sm_namespace
+			,srv_model$suffix$.sm_display
+			,srv_model$suffix$.sm_functions
+			,srv_model$suffix$.sm_fields
+			,srv_model$suffix$.sm_editor
+			,srv_model$suffix$.sm_update_time
+			,srv_model$suffix$.sm_add_time
+			,srv_model$suffix$.sm_status
+		)
+		values(
+			<isNotNull property="smName" prepend="">
+				#smName#
+			</isNotNull>
+			<isNull property="smName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="smAction" prepend=",">
+				#smAction#
+			</isNotNull>
+			<isNull property="smAction" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smNamespace" prepend=",">
+				#smNamespace#
+			</isNotNull>
+			<isNull property="smNamespace" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smDisplay" prepend=",">
+				#smDisplay#
+			</isNotNull>
+			<isNull property="smDisplay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smFunctions" prepend=",">
+				#smFunctions#
+			</isNotNull>
+			<isNull property="smFunctions" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smFields" prepend=",">
+				#smFields#
+			</isNotNull>
+			<isNull property="smFields" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smEditor" prepend=",">
+				#smEditor#
+			</isNotNull>
+			<isNull property="smEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smUpdateTime" prepend=",">
+				#smUpdateTime#
+			</isNotNull>
+			<isNull property="smUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smAddTime" prepend=",">
+				#smAddTime#
+			</isNotNull>
+			<isNull property="smAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="smStatus" prepend=",">
+				#smStatus#
+			</isNotNull>
+			<isNull property="smStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新表单设计 -->
+	<update id="updateSrvModel"  parameterClass="com.ccclubs.model.SrvModel">
+		update srv_model$suffix$ set
+			<isNotNull property="smName" prepend="">
+				srv_model$suffix$.sm_name = #smName#
+			</isNotNull>
+			<isNull property="smName" prepend="">
+				srv_model$suffix$.sm_name = null
+			</isNull>				
+			<isNotNull property="smAction" prepend=",">
+				srv_model$suffix$.sm_action = #smAction#
+			</isNotNull>
+			<isNull property="smAction" prepend=",">
+				srv_model$suffix$.sm_action = null
+			</isNull>				
+			<isNotNull property="smNamespace" prepend=",">
+				srv_model$suffix$.sm_namespace = #smNamespace#
+			</isNotNull>
+			<isNull property="smNamespace" prepend=",">
+				srv_model$suffix$.sm_namespace = null
+			</isNull>				
+			<isNotNull property="smDisplay" prepend=",">
+				srv_model$suffix$.sm_display = #smDisplay#
+			</isNotNull>
+			<isNull property="smDisplay" prepend=",">
+				srv_model$suffix$.sm_display = null
+			</isNull>				
+			<isNotNull property="smFunctions" prepend=",">
+				srv_model$suffix$.sm_functions = #smFunctions#
+			</isNotNull>
+			<isNull property="smFunctions" prepend=",">
+				srv_model$suffix$.sm_functions = null
+			</isNull>				
+			<isNotNull property="smFields" prepend=",">
+				srv_model$suffix$.sm_fields = #smFields#
+			</isNotNull>
+			<isNull property="smFields" prepend=",">
+				srv_model$suffix$.sm_fields = null
+			</isNull>				
+			<isNotNull property="smEditor" prepend=",">
+				srv_model$suffix$.sm_editor = #smEditor#
+			</isNotNull>
+			<isNull property="smEditor" prepend=",">
+				srv_model$suffix$.sm_editor = null
+			</isNull>				
+			<isNotNull property="smUpdateTime" prepend=",">
+				srv_model$suffix$.sm_update_time = #smUpdateTime#
+			</isNotNull>
+			<isNull property="smUpdateTime" prepend=",">
+				srv_model$suffix$.sm_update_time = null
+			</isNull>				
+			<isNotNull property="smAddTime" prepend=",">
+				srv_model$suffix$.sm_add_time = #smAddTime#
+			</isNotNull>
+			<isNull property="smAddTime" prepend=",">
+				srv_model$suffix$.sm_add_time = null
+			</isNull>				
+			<isNotNull property="smStatus" prepend=",">
+				srv_model$suffix$.sm_status = #smStatus#
+			</isNotNull>
+			<isNull property="smStatus" prepend=",">
+				srv_model$suffix$.sm_status = null
+			</isNull>				
+		where
+			sm_id=#smId#
+	</update>
+	
+	<!-- 更新表单设计非空字段 -->
+	<update id="updateSrvModel$NotNull"  parameterClass="com.ccclubs.model.SrvModel">
+		update srv_model$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="smName" prepend=",">
+				srv_model$suffix$.sm_name = #smName#
+			</isNotNull>		
+			<isNotNull property="smAction" prepend=",">
+				srv_model$suffix$.sm_action = #smAction#
+			</isNotNull>		
+			<isNotNull property="smNamespace" prepend=",">
+				srv_model$suffix$.sm_namespace = #smNamespace#
+			</isNotNull>		
+			<isNotNull property="smDisplay" prepend=",">
+				srv_model$suffix$.sm_display = #smDisplay#
+			</isNotNull>		
+			<isNotNull property="smFunctions" prepend=",">
+				srv_model$suffix$.sm_functions = #smFunctions#
+			</isNotNull>		
+			<isNotNull property="smFields" prepend=",">
+				srv_model$suffix$.sm_fields = #smFields#
+			</isNotNull>		
+			<isNotNull property="smEditor" prepend=",">
+				srv_model$suffix$.sm_editor = #smEditor#
+			</isNotNull>		
+			<isNotNull property="smUpdateTime" prepend=",">
+				srv_model$suffix$.sm_update_time = #smUpdateTime#
+			</isNotNull>		
+			<isNotNull property="smAddTime" prepend=",">
+				srv_model$suffix$.sm_add_time = #smAddTime#
+			</isNotNull>		
+			<isNotNull property="smStatus" prepend=",">
+				srv_model$suffix$.sm_status = #smStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sm_id=#smId#
+	</update>
+	
+
+	<!-- 根据ID删除一个表单设计 -->
+	<delete id="deleteSrvModelById" parameterClass="java.util.HashMap">
+		delete from srv_model$suffix$ where sm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个表单设计 -->
+	<update id="removeSrvModelById" parameterClass="java.util.HashMap">
+		update srv_model$suffix$ set  srv_model$suffix$.sm_status=-1  where sm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新表单设计 -->
+	<update id="updateSrvModelBy"  parameterClass="java.util.HashMap">
+		update srv_model$suffix$ set		
+			sm_id=sm_id
+			<isNotNull property="V_smId" prepend=",">
+				srv_model$suffix$.sm_id = #V_smId#
+			</isNotNull>		
+			<isNotNull property="V_smName" prepend=",">
+				srv_model$suffix$.sm_name = #V_smName#
+			</isNotNull>		
+			<isNotNull property="V_smAction" prepend=",">
+				srv_model$suffix$.sm_action = #V_smAction#
+			</isNotNull>		
+			<isNotNull property="V_smNamespace" prepend=",">
+				srv_model$suffix$.sm_namespace = #V_smNamespace#
+			</isNotNull>		
+			<isNotNull property="V_smDisplay" prepend=",">
+				srv_model$suffix$.sm_display = #V_smDisplay#
+			</isNotNull>		
+			<isNotNull property="V_smFunctions" prepend=",">
+				srv_model$suffix$.sm_functions = #V_smFunctions#
+			</isNotNull>		
+			<isNotNull property="V_smFields" prepend=",">
+				srv_model$suffix$.sm_fields = #V_smFields#
+			</isNotNull>		
+			<isNotNull property="V_smEditor" prepend=",">
+				srv_model$suffix$.sm_editor = #V_smEditor#
+			</isNotNull>		
+			<isNotNull property="V_smUpdateTime" prepend=",">
+				srv_model$suffix$.sm_update_time = #V_smUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_smAddTime" prepend=",">
+				srv_model$suffix$.sm_add_time = #V_smAddTime#
+			</isNotNull>		
+			<isNotNull property="V_smStatus" prepend=",">
+				srv_model$suffix$.sm_status = #V_smStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		srv_model$suffix$.sm_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvModel_part.srv_model_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除表单设计 -->
+	<update id="deleteSrvModelBy"  parameterClass="java.util.HashMap">
+		delete from srv_model$suffix$ where 
+		srv_model$suffix$.sm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvModel_part.srv_model_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

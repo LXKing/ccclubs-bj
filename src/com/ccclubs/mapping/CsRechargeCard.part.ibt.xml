@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRechargeCard_part">	
+	<!-- 充值卡条件sql片段  -->
+	<sql id="cs_recharge_card_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrcId" prepend="and">
+			    $csrcIdNot$ cs_recharge_card$suffix$.csrc_id = #csrcId#
+			</isNotEmpty>
+			<isNotNull property="csrcIdNot" prepend="and">
+				<isEmpty property="csrcId">
+				$csrcIdNot$ cs_recharge_card$suffix$.csrc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_recharge_card$suffix$.csrc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csrcHost" prepend="and">
+			    $csrcHostNot$ cs_recharge_card$suffix$.csrc_host = #csrcHost#
+			</isNotEmpty>
+			<isNotNull property="csrcHostNot" prepend="and">
+				<isEmpty property="csrcHost">
+				$csrcHostNot$ cs_recharge_card$suffix$.csrc_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csrcNumber" prepend="and">			    
+			    (<isNotNull property="csrcNumberNot">
+			    cs_recharge_card$suffix$.csrc_number is null or length(cs_recharge_card$suffix$.csrc_number) &lt; 1 or
+			    </isNotNull>$csrcNumberNot$ cs_recharge_card$suffix$.csrc_number = #csrcNumber#)
+			</isNotEmpty>
+			<isNotNull property="csrcNumberNot" prepend="and">
+				<isEmpty property="csrcNumber">
+				$csrcNumberNot$ (cs_recharge_card$suffix$.csrc_number is null or length(cs_recharge_card$suffix$.csrc_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcPassword" prepend="and">			    
+			    (<isNotNull property="csrcPasswordNot">
+			    cs_recharge_card$suffix$.csrc_password is null or length(cs_recharge_card$suffix$.csrc_password) &lt; 1 or
+			    </isNotNull>$csrcPasswordNot$ cs_recharge_card$suffix$.csrc_password = #csrcPassword#)
+			</isNotEmpty>
+			<isNotNull property="csrcPasswordNot" prepend="and">
+				<isEmpty property="csrcPassword">
+				$csrcPasswordNot$ (cs_recharge_card$suffix$.csrc_password is null or length(cs_recharge_card$suffix$.csrc_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcType" prepend="and">
+			    $csrcTypeNot$ cs_recharge_card$suffix$.csrc_type = #csrcType#
+			</isNotEmpty>
+			<isNotNull property="csrcTypeNot" prepend="and">
+				<isEmpty property="csrcType">
+				$csrcTypeNot$ cs_recharge_card$suffix$.csrc_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcDenominationMin" prepend="and">
+			    $csrcDenominationNot$  ( cs_recharge_card$suffix$.csrc_denomination &gt;= #csrcDenominationMin#
+			    <isEmpty property="csrcDenominationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrcDenominationMax" prepend="and">
+				<isEmpty property="csrcDenominationMin">$csrcDenominationNot$   (</isEmpty>
+			    cs_recharge_card$suffix$.csrc_denomination &lt;= #csrcDenominationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrcDenomination" prepend="and">
+			    $csrcDenominationNot$ cs_recharge_card$suffix$.csrc_denomination = #csrcDenomination#
+			</isNotEmpty>
+			<isNotNull property="csrcDenominationNot" prepend="and">
+				<isEmpty property="csrcDenominationMax"><isEmpty property="csrcDenominationMin"><isEmpty property="csrcDenomination">
+				$csrcDenominationNot$ cs_recharge_card$suffix$.csrc_denomination is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrcMethod" prepend="and">
+			    $csrcMethodNot$ cs_recharge_card$suffix$.csrc_method = #csrcMethod#
+			</isNotEmpty>
+			<isNotNull property="csrcMethodNot" prepend="and">
+				<isEmpty property="csrcMethod">
+				$csrcMethodNot$ cs_recharge_card$suffix$.csrc_method is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcValidity" prepend="and">
+			    $csrcValidityNot$ cs_recharge_card$suffix$.csrc_validity = #csrcValidity#
+			</isNotEmpty>
+			<isNotNull property="csrcValidityNot" prepend="and">
+				<isEmpty property="csrcValidity">
+				$csrcValidityNot$ cs_recharge_card$suffix$.csrc_validity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcValidityUtilStart" prepend="and">
+			    $csrcValidityUtilNot$   (cs_recharge_card$suffix$.csrc_validity_util &gt;= #csrcValidityUtilStart#
+			   <isEmpty property="csrcValidityUtilEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrcValidityUtilEnd" prepend="and">
+				<isEmpty property="csrcValidityUtilStart">$csrcValidityUtilNot$   (</isEmpty>
+			    cs_recharge_card$suffix$.csrc_validity_util &lt;= #csrcValidityUtilEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrcValidityUtil" prepend="and">
+			    $csrcValidityUtilNot$ cs_recharge_card$suffix$.csrc_validity_util = #csrcValidityUtil#
+			</isNotEmpty>
+			<isNotNull property="csrcValidityUtilNot" prepend="and">
+				<isEmpty property="csrcValidityUtilStart"><isEmpty property="csrcValidityUtilEnd"><isEmpty property="csrcValidityUtil">
+				$csrcValidityUtilNot$ cs_recharge_card$suffix$.csrc_validity_util is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcUtilStart" prepend="and">
+			    $csrcUtilNot$   (cs_recharge_card$suffix$.csrc_util &gt;= #csrcUtilStart#
+			   <isEmpty property="csrcUtilEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrcUtilEnd" prepend="and">
+				<isEmpty property="csrcUtilStart">$csrcUtilNot$   (</isEmpty>
+			    cs_recharge_card$suffix$.csrc_util &lt;= #csrcUtilEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrcUtil" prepend="and">
+			    $csrcUtilNot$ cs_recharge_card$suffix$.csrc_util = #csrcUtil#
+			</isNotEmpty>
+			<isNotNull property="csrcUtilNot" prepend="and">
+				<isEmpty property="csrcUtilStart"><isEmpty property="csrcUtilEnd"><isEmpty property="csrcUtil">
+				$csrcUtilNot$ cs_recharge_card$suffix$.csrc_util is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcMember" prepend="and">
+			    $csrcMemberNot$ cs_recharge_card$suffix$.csrc_member = #csrcMember#
+			</isNotEmpty>
+			<isNotNull property="csrcMemberNot" prepend="and">
+				<isEmpty property="csrcMember">
+				$csrcMemberNot$ cs_recharge_card$suffix$.csrc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcUseTimeStart" prepend="and">
+			    $csrcUseTimeNot$   (cs_recharge_card$suffix$.csrc_use_time &gt;= #csrcUseTimeStart#
+			   <isEmpty property="csrcUseTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrcUseTimeEnd" prepend="and">
+				<isEmpty property="csrcUseTimeStart">$csrcUseTimeNot$   (</isEmpty>
+			    cs_recharge_card$suffix$.csrc_use_time &lt;= #csrcUseTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrcUseTime" prepend="and">
+			    $csrcUseTimeNot$ cs_recharge_card$suffix$.csrc_use_time = #csrcUseTime#
+			</isNotEmpty>
+			<isNotNull property="csrcUseTimeNot" prepend="and">
+				<isEmpty property="csrcUseTimeStart"><isEmpty property="csrcUseTimeEnd"><isEmpty property="csrcUseTime">
+				$csrcUseTimeNot$ cs_recharge_card$suffix$.csrc_use_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcAddTimeStart" prepend="and">
+			    $csrcAddTimeNot$   (cs_recharge_card$suffix$.csrc_add_time &gt;= #csrcAddTimeStart#
+			   <isEmpty property="csrcAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrcAddTimeEnd" prepend="and">
+				<isEmpty property="csrcAddTimeStart">$csrcAddTimeNot$   (</isEmpty>
+			    cs_recharge_card$suffix$.csrc_add_time &lt;= #csrcAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrcAddTime" prepend="and">
+			    $csrcAddTimeNot$ cs_recharge_card$suffix$.csrc_add_time = #csrcAddTime#
+			</isNotEmpty>
+			<isNotNull property="csrcAddTimeNot" prepend="and">
+				<isEmpty property="csrcAddTimeStart"><isEmpty property="csrcAddTimeEnd"><isEmpty property="csrcAddTime">
+				$csrcAddTimeNot$ cs_recharge_card$suffix$.csrc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrcStatus" prepend="and">
+			    $csrcStatusNot$ cs_recharge_card$suffix$.csrc_status = #csrcStatus#
+			</isNotEmpty>
+			<isNotNull property="csrcStatusNot" prepend="and">
+				<isEmpty property="csrcStatus">
+				$csrcStatusNot$ cs_recharge_card$suffix$.csrc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 充值卡left join 条件sql片段 -->
+	<sql id="cs_recharge_card_join">
+		<dynamic>
+			<isNotEmpty property="CsRechargeCard.csrcId" prepend="and">
+			    $CsRechargeCard.csrcIdNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_id = #CsRechargeCard.csrcId#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcIdNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcId">
+				$csrcIdNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcHost" prepend="and">
+			    $CsRechargeCard.csrcHostNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_host = #CsRechargeCard.csrcHost#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcHostNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcHost">
+				$csrcHostNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcNumber" prepend="and">
+				(<isNotNull property="CsRechargeCard.csrcNumberNot">
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_number is null or length(cs_recharge_card$CsRechargeCard.suffix$.csrc_number) &lt; 1 or
+			    </isNotNull>$CsRechargeCard.csrcNumberNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_number = #CsRechargeCard.csrcNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcNumberNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcNumber">
+				$csrcNumberNot$ (cs_recharge_card$CsRechargeCard.suffix$.csrc_number is null or length(cs_recharge_card$CsRechargeCard.suffix$.csrc_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcPassword" prepend="and">
+				(<isNotNull property="CsRechargeCard.csrcPasswordNot">
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_password is null or length(cs_recharge_card$CsRechargeCard.suffix$.csrc_password) &lt; 1 or
+			    </isNotNull>$CsRechargeCard.csrcPasswordNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_password = #CsRechargeCard.csrcPassword#)
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcPasswordNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcPassword">
+				$csrcPasswordNot$ (cs_recharge_card$CsRechargeCard.suffix$.csrc_password is null or length(cs_recharge_card$CsRechargeCard.suffix$.csrc_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcType" prepend="and">
+			    $CsRechargeCard.csrcTypeNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_type = #CsRechargeCard.csrcType#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcTypeNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcType">
+				$csrcTypeNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcDenominationMin" prepend="and">
+			    $CsRechargeCard.csrcDenominationNot$  ( cs_recharge_card$CsRechargeCard.suffix$.csrc_denomination &gt;= #CsRechargeCard.csrcDenominationMin#
+			    <isEmpty property="CsRechargeCard.csrcDenominationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcDenominationMax" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcDenominationMin">$CsRechargeCard.csrcDenominationNot$   (</isEmpty>
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_denomination &lt;= #CsRechargeCard.csrcDenominationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcDenomination" prepend="and">
+			    $CsRechargeCard.csrcDenominationNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_denomination = #CsRechargeCard.csrcDenomination#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcDenominationNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcDenominationMax"><isEmpty property="CsRechargeCard.csrcDenominationMin"><isEmpty property="CsRechargeCard.csrcDenomination">
+				$csrcDenominationNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_denomination is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcMethod" prepend="and">
+			    $CsRechargeCard.csrcMethodNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_method = #CsRechargeCard.csrcMethod#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcMethodNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcMethod">
+				$csrcMethodNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_method is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcValidity" prepend="and">
+			    $CsRechargeCard.csrcValidityNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_validity = #CsRechargeCard.csrcValidity#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcValidityNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcValidity">
+				$csrcValidityNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_validity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcValidityUtilStart" prepend="and">
+			    $CsRechargeCard.csrcValidityUtilNot$   (cs_recharge_card$CsRechargeCard.suffix$.csrc_validity_util &gt;= #CsRechargeCard.csrcValidityUtilStart#
+			   <isEmpty property="CsRechargeCard.csrcValidityUtilEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcValidityUtilEnd" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcValidityUtilStart">$CsRechargeCard.csrcValidityUtilNot$   (</isEmpty>
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_validity_util &lt;= #CsRechargeCard.csrcValidityUtilEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcValidityUtil" prepend="and">
+			    $CsRechargeCard.csrcValidityUtilNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_validity_util = #CsRechargeCard.csrcValidityUtil#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcValidityUtilNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcValidityUtilStart"><isEmpty property="CsRechargeCard.csrcValidityUtilEnd"><isEmpty property="CsRechargeCard.csrcValidityUtil">
+				$csrcValidityUtilNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_validity_util is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcUtilStart" prepend="and">
+			    $CsRechargeCard.csrcUtilNot$   (cs_recharge_card$CsRechargeCard.suffix$.csrc_util &gt;= #CsRechargeCard.csrcUtilStart#
+			   <isEmpty property="CsRechargeCard.csrcUtilEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcUtilEnd" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcUtilStart">$CsRechargeCard.csrcUtilNot$   (</isEmpty>
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_util &lt;= #CsRechargeCard.csrcUtilEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcUtil" prepend="and">
+			    $CsRechargeCard.csrcUtilNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_util = #CsRechargeCard.csrcUtil#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcUtilNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcUtilStart"><isEmpty property="CsRechargeCard.csrcUtilEnd"><isEmpty property="CsRechargeCard.csrcUtil">
+				$csrcUtilNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_util is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcMember" prepend="and">
+			    $CsRechargeCard.csrcMemberNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_member = #CsRechargeCard.csrcMember#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcMemberNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcMember">
+				$csrcMemberNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcUseTimeStart" prepend="and">
+			    $CsRechargeCard.csrcUseTimeNot$   (cs_recharge_card$CsRechargeCard.suffix$.csrc_use_time &gt;= #CsRechargeCard.csrcUseTimeStart#
+			   <isEmpty property="CsRechargeCard.csrcUseTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcUseTimeEnd" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcUseTimeStart">$CsRechargeCard.csrcUseTimeNot$   (</isEmpty>
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_use_time &lt;= #CsRechargeCard.csrcUseTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcUseTime" prepend="and">
+			    $CsRechargeCard.csrcUseTimeNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_use_time = #CsRechargeCard.csrcUseTime#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcUseTimeNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcUseTimeStart"><isEmpty property="CsRechargeCard.csrcUseTimeEnd"><isEmpty property="CsRechargeCard.csrcUseTime">
+				$csrcUseTimeNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_use_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcAddTimeStart" prepend="and">
+			    $CsRechargeCard.csrcAddTimeNot$   (cs_recharge_card$CsRechargeCard.suffix$.csrc_add_time &gt;= #CsRechargeCard.csrcAddTimeStart#
+			   <isEmpty property="CsRechargeCard.csrcAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcAddTimeEnd" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcAddTimeStart">$CsRechargeCard.csrcAddTimeNot$   (</isEmpty>
+			    cs_recharge_card$CsRechargeCard.suffix$.csrc_add_time &lt;= #CsRechargeCard.csrcAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRechargeCard.csrcAddTime" prepend="and">
+			    $CsRechargeCard.csrcAddTimeNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_add_time = #CsRechargeCard.csrcAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcAddTimeNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcAddTimeStart"><isEmpty property="CsRechargeCard.csrcAddTimeEnd"><isEmpty property="CsRechargeCard.csrcAddTime">
+				$csrcAddTimeNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRechargeCard.csrcStatus" prepend="and">
+			    $CsRechargeCard.csrcStatusNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_status = #CsRechargeCard.csrcStatus#
+			</isNotEmpty>
+			<isNotNull property="CsRechargeCard.csrcStatusNot" prepend="and">
+				<isEmpty property="CsRechargeCard.csrcStatus">
+				$csrcStatusNot$ cs_recharge_card$CsRechargeCard.suffix$.csrc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

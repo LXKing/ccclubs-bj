@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 红包之SQL映射 -->
+	<resultMap id="CsCoin" class="com.ccclubs.model.CsCoin">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscHost" column="csc_host"/>
+		<result property="cscMember" column="csc_member"/>
+		<result property="cscCount" column="csc_count"/>
+		<result property="cscRemain" column="csc_remain"/>
+		<result property="cscValidity" column="csc_validity"/>
+		<result property="cscFlag" column="csc_flag"/>
+		<result property="cscEnd" column="csc_end"/>
+		<result property="cscSerial" column="csc_serial"/>
+		<result property="cscEditor" column="csc_editor"/>
+		<result property="cscUpdateTime" column="csc_update_time"/>
+		<result property="cscAddTime" column="csc_add_time"/>
+		<result property="cscRemark" column="csc_remark"/>
+		<result property="cscStatus" column="csc_status"/>
+		<result property="cscCoinSource" column="csc_coin_source"/>
+	</resultMap>
+		
+	<!-- 获取所有红包 -->
+	<select id="getCsCoinList" resultMap="CsCoin">
+		select cs_coin$suffix$.* from cs_coin$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询-->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.csc_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包来源]查询-->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<isNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.csc_coin_source=cs_coin_source$CsCoinSource.suffix$.cscs_id
+			</isNull>
+			<isNotNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.$CsCoinSource.on$=cs_coin_source$CsCoinSource.suffix$.cscs_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_coin$suffix$.csc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询条件sql片段 -->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<!-- 多对一外链接[红包来源]查询条件sql片段 -->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<include refid="CsCoinSource_part.cs_coin_source_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCoin_part.cs_coin_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取红包分页 -->
+	<select id="getCsCoinPage" parameterClass="java.util.HashMap" resultMap="CsCoin">
+		select cs_coin$suffix$.* from cs_coin$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询-->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.csc_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包来源]查询-->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<isNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.csc_coin_source=cs_coin_source$CsCoinSource.suffix$.cscs_id
+			</isNull>
+			<isNotNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.$CsCoinSource.on$=cs_coin_source$CsCoinSource.suffix$.cscs_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_coin$suffix$.csc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询条件sql片段 -->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<!-- 多对一外链接[红包来源]查询条件sql片段 -->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<include refid="CsCoinSource_part.cs_coin_source_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCoin_part.cs_coin_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取红包总数 -->
+	<select id="getCsCoinEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_coin$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询-->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.csc_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包来源]查询-->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<isNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.csc_coin_source=cs_coin_source$CsCoinSource.suffix$.cscs_id
+			</isNull>
+			<isNotNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.$CsCoinSource.on$=cs_coin_source$CsCoinSource.suffix$.cscs_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_coin$suffix$.csc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询条件sql片段 -->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<!-- 多对一外链接[红包来源]查询条件sql片段 -->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<include refid="CsCoinSource_part.cs_coin_source_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCoin_part.cs_coin_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取红包 -->
+	<select id="getCsCoinById" parameterClass="java.util.HashMap" resultMap="CsCoin">
+		select cs_coin$suffix$.* from cs_coin$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存红包 -->
+	<insert id="saveCsCoin"  parameterClass="com.ccclubs.model.CsCoin">
+		insert into cs_coin$suffix$
+		(
+			cs_coin$suffix$.csc_host
+			,cs_coin$suffix$.csc_member
+			,cs_coin$suffix$.csc_count
+			,cs_coin$suffix$.csc_remain
+			,cs_coin$suffix$.csc_validity
+			,cs_coin$suffix$.csc_flag
+			,cs_coin$suffix$.csc_end
+			,cs_coin$suffix$.csc_serial
+			,cs_coin$suffix$.csc_editor
+			,cs_coin$suffix$.csc_update_time
+			,cs_coin$suffix$.csc_add_time
+			,cs_coin$suffix$.csc_remark
+			,cs_coin$suffix$.csc_status
+			,cs_coin$suffix$.csc_coin_source
+		)
+		values(
+			<isNotNull property="cscHost" prepend="">
+				#cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscMember" prepend=",">
+				#cscMember#
+			</isNotNull>
+			<isNull property="cscMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscCount" prepend=",">
+				#cscCount#
+			</isNotNull>
+			<isNull property="cscCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscRemain" prepend=",">
+				#cscRemain#
+			</isNotNull>
+			<isNull property="cscRemain" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscValidity" prepend=",">
+				#cscValidity#
+			</isNotNull>
+			<isNull property="cscValidity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscFlag" prepend=",">
+				#cscFlag#
+			</isNotNull>
+			<isNull property="cscFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscEnd" prepend=",">
+				#cscEnd#
+			</isNotNull>
+			<isNull property="cscEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscSerial" prepend=",">
+				#cscSerial#
+			</isNotNull>
+			<isNull property="cscSerial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscEditor" prepend=",">
+				#cscEditor#
+			</isNotNull>
+			<isNull property="cscEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUpdateTime" prepend=",">
+				#cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddTime" prepend=",">
+				#cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscRemark" prepend=",">
+				#cscRemark#
+			</isNotNull>
+			<isNull property="cscRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscStatus" prepend=",">
+				#cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscCoinSource" prepend=",">
+				#cscCoinSource#
+			</isNotNull>
+			<isNull property="cscCoinSource" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新红包 -->
+	<update id="updateCsCoin"  parameterClass="com.ccclubs.model.CsCoin">
+		update cs_coin$suffix$ set
+			<isNotNull property="cscHost" prepend="">
+				cs_coin$suffix$.csc_host = #cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				cs_coin$suffix$.csc_host = null
+			</isNull>				
+			<isNotNull property="cscMember" prepend=",">
+				cs_coin$suffix$.csc_member = #cscMember#
+			</isNotNull>
+			<isNull property="cscMember" prepend=",">
+				cs_coin$suffix$.csc_member = null
+			</isNull>				
+			<isNotNull property="cscCount" prepend=",">
+				cs_coin$suffix$.csc_count = #cscCount#
+			</isNotNull>
+			<isNull property="cscCount" prepend=",">
+				cs_coin$suffix$.csc_count = null
+			</isNull>				
+			<isNotNull property="cscRemain" prepend=",">
+				cs_coin$suffix$.csc_remain = #cscRemain#
+			</isNotNull>
+			<isNull property="cscRemain" prepend=",">
+				cs_coin$suffix$.csc_remain = null
+			</isNull>				
+			<isNotNull property="cscValidity" prepend=",">
+				cs_coin$suffix$.csc_validity = #cscValidity#
+			</isNotNull>
+			<isNull property="cscValidity" prepend=",">
+				cs_coin$suffix$.csc_validity = null
+			</isNull>				
+			<isNotNull property="cscFlag" prepend=",">
+				cs_coin$suffix$.csc_flag = #cscFlag#
+			</isNotNull>
+			<isNull property="cscFlag" prepend=",">
+				cs_coin$suffix$.csc_flag = null
+			</isNull>				
+			<isNotNull property="cscEnd" prepend=",">
+				cs_coin$suffix$.csc_end = #cscEnd#
+			</isNotNull>
+			<isNull property="cscEnd" prepend=",">
+				cs_coin$suffix$.csc_end = null
+			</isNull>				
+			<isNotNull property="cscSerial" prepend=",">
+				cs_coin$suffix$.csc_serial = #cscSerial#
+			</isNotNull>
+			<isNull property="cscSerial" prepend=",">
+				cs_coin$suffix$.csc_serial = null
+			</isNull>				
+			<isNotNull property="cscEditor" prepend=",">
+				cs_coin$suffix$.csc_editor = #cscEditor#
+			</isNotNull>
+			<isNull property="cscEditor" prepend=",">
+				cs_coin$suffix$.csc_editor = null
+			</isNull>				
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_coin$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				cs_coin$suffix$.csc_update_time = null
+			</isNull>				
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_coin$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				cs_coin$suffix$.csc_add_time = null
+			</isNull>				
+			<isNotNull property="cscRemark" prepend=",">
+				cs_coin$suffix$.csc_remark = #cscRemark#
+			</isNotNull>
+			<isNull property="cscRemark" prepend=",">
+				cs_coin$suffix$.csc_remark = null
+			</isNull>				
+			<isNotNull property="cscStatus" prepend=",">
+				cs_coin$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				cs_coin$suffix$.csc_status = null
+			</isNull>				
+			<isNotNull property="cscCoinSource" prepend=",">
+				cs_coin$suffix$.csc_coin_source = #cscCoinSource#
+			</isNotNull>
+			<isNull property="cscCoinSource" prepend=",">
+				cs_coin$suffix$.csc_coin_source = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新红包非空字段 -->
+	<update id="updateCsCoin$NotNull"  parameterClass="com.ccclubs.model.CsCoin">
+		update cs_coin$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscHost" prepend=",">
+				cs_coin$suffix$.csc_host = #cscHost#
+			</isNotNull>		
+			<isNotNull property="cscMember" prepend=",">
+				cs_coin$suffix$.csc_member = #cscMember#
+			</isNotNull>		
+			<isNotNull property="cscCount" prepend=",">
+				cs_coin$suffix$.csc_count = #cscCount#
+			</isNotNull>		
+			<isNotNull property="cscRemain" prepend=",">
+				cs_coin$suffix$.csc_remain = #cscRemain#
+			</isNotNull>		
+			<isNotNull property="cscValidity" prepend=",">
+				cs_coin$suffix$.csc_validity = #cscValidity#
+			</isNotNull>		
+			<isNotNull property="cscFlag" prepend=",">
+				cs_coin$suffix$.csc_flag = #cscFlag#
+			</isNotNull>		
+			<isNotNull property="cscEnd" prepend=",">
+				cs_coin$suffix$.csc_end = #cscEnd#
+			</isNotNull>		
+			<isNotNull property="cscSerial" prepend=",">
+				cs_coin$suffix$.csc_serial = #cscSerial#
+			</isNotNull>		
+			<isNotNull property="cscEditor" prepend=",">
+				cs_coin$suffix$.csc_editor = #cscEditor#
+			</isNotNull>		
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_coin$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_coin$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>		
+			<isNotNull property="cscRemark" prepend=",">
+				cs_coin$suffix$.csc_remark = #cscRemark#
+			</isNotNull>		
+			<isNotNull property="cscStatus" prepend=",">
+				cs_coin$suffix$.csc_status = #cscStatus#
+			</isNotNull>		
+			<isNotNull property="cscCoinSource" prepend=",">
+				cs_coin$suffix$.csc_coin_source = #cscCoinSource#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个红包 -->
+	<delete id="deleteCsCoinById" parameterClass="java.util.HashMap">
+		delete from cs_coin$suffix$ where csc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个红包 -->
+	<update id="removeCsCoinById" parameterClass="java.util.HashMap">
+		update cs_coin$suffix$ set  cs_coin$suffix$.csc_status=-1  where csc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新红包 -->
+	<update id="updateCsCoinBy"  parameterClass="java.util.HashMap">
+		update cs_coin$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_coin$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscHost" prepend=",">
+				cs_coin$suffix$.csc_host = #V_cscHost#
+			</isNotNull>		
+			<isNotNull property="V_cscMember" prepend=",">
+				cs_coin$suffix$.csc_member = #V_cscMember#
+			</isNotNull>		
+			<isNotNull property="V_cscCount" prepend=",">
+				cs_coin$suffix$.csc_count = #V_cscCount#
+			</isNotNull>		
+			<isNotNull property="V_cscRemain" prepend=",">
+				cs_coin$suffix$.csc_remain = #V_cscRemain#
+			</isNotNull>		
+			<isNotNull property="V_cscValidity" prepend=",">
+				cs_coin$suffix$.csc_validity = #V_cscValidity#
+			</isNotNull>		
+			<isNotNull property="V_cscFlag" prepend=",">
+				cs_coin$suffix$.csc_flag = #V_cscFlag#
+			</isNotNull>		
+			<isNotNull property="V_cscEnd" prepend=",">
+				cs_coin$suffix$.csc_end = #V_cscEnd#
+			</isNotNull>		
+			<isNotNull property="V_cscSerial" prepend=",">
+				cs_coin$suffix$.csc_serial = #V_cscSerial#
+			</isNotNull>		
+			<isNotNull property="V_cscEditor" prepend=",">
+				cs_coin$suffix$.csc_editor = #V_cscEditor#
+			</isNotNull>		
+			<isNotNull property="V_cscUpdateTime" prepend=",">
+				cs_coin$suffix$.csc_update_time = #V_cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAddTime" prepend=",">
+				cs_coin$suffix$.csc_add_time = #V_cscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscRemark" prepend=",">
+				cs_coin$suffix$.csc_remark = #V_cscRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscStatus" prepend=",">
+				cs_coin$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscCoinSource" prepend=",">
+				cs_coin$suffix$.csc_coin_source = #V_cscCoinSource#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_coin$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询-->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.csc_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_coin$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包来源]查询-->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<isNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.csc_coin_source=cs_coin_source$CsCoinSource.suffix$.cscs_id
+			</isNull>
+			<isNotNull property="CsCoinSource.on">
+				left join cs_coin_source cs_coin_source$CsCoinSource.suffix$ on cs_coin$suffix$.$CsCoinSource.on$=cs_coin_source$CsCoinSource.suffix$.cscs_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where csc_id=#cscId# and cs_coin$suffix$.csc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[充值人员]查询条件sql片段 -->
+		<isNotNull property="CscEditor"><!-- 调用一下CscEditor，把SrvUser指向CscEditor --></isNotNull>
+		<!-- 多对一外链接[红包来源]查询条件sql片段 -->
+		<isNotNull property="CscCoinSource"><!-- 调用一下CscCoinSource，把CsCoinSource指向CscCoinSource --></isNotNull>
+		<isNotNull property="CsCoinSource">
+			<include refid="CsCoinSource_part.cs_coin_source_join"/>
+		</isNotNull>
+		
+		<dynamic>
+			<isNotEmpty property="confirm">
+				<isEqual property="confirm" compareValue="1">
+					<!-- 动态条件sql片段 -->
+					<include refid="CsCoin_part.cs_coin_dynamic"/>
+					
+					<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+					<isNotEmpty property="definex">
+					    and $definex$
+					</isNotEmpty>
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除红包 -->
+	<update id="deleteCsCoinBy"  parameterClass="java.util.HashMap">
+		delete from cs_coin$suffix$ where 
+		cs_coin$suffix$.csc_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCoin_part.cs_coin_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

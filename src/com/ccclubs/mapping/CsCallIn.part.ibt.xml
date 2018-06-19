@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCallIn_part">	
+	<!-- 客户来电条件sql片段  -->
+	<sql id="cs_call_in_dynamic">
+		<dynamic>
+			<isNotEmpty property="csciId" prepend="and">
+			    $csciIdNot$ cs_call_in$suffix$.csci_id = #csciId#
+			</isNotEmpty>
+			<isNotNull property="csciIdNot" prepend="and">
+				<isEmpty property="csciId">
+				$csciIdNot$ cs_call_in$suffix$.csci_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_call_in$suffix$.csci_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csciHost" prepend="and">
+			    $csciHostNot$ cs_call_in$suffix$.csci_host = #csciHost#
+			</isNotEmpty>
+			<isNotNull property="csciHostNot" prepend="and">
+				<isEmpty property="csciHost">
+				$csciHostNot$ cs_call_in$suffix$.csci_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csciNumber" prepend="and">			    
+			    (<isNotNull property="csciNumberNot">
+			    cs_call_in$suffix$.csci_number is null or length(cs_call_in$suffix$.csci_number) &lt; 1 or
+			    </isNotNull>$csciNumberNot$ cs_call_in$suffix$.csci_number = #csciNumber#)
+			</isNotEmpty>
+			<isNotNull property="csciNumberNot" prepend="and">
+				<isEmpty property="csciNumber">
+				$csciNumberNot$ (cs_call_in$suffix$.csci_number is null or length(cs_call_in$suffix$.csci_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciMember" prepend="and">
+			    $csciMemberNot$ cs_call_in$suffix$.csci_member = #csciMember#
+			</isNotEmpty>
+			<isNotNull property="csciMemberNot" prepend="and">
+				<isEmpty property="csciMember">
+				$csciMemberNot$ cs_call_in$suffix$.csci_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciName" prepend="and">			    
+			    (<isNotNull property="csciNameNot">
+			    cs_call_in$suffix$.csci_name is null or length(cs_call_in$suffix$.csci_name) &lt; 1 or
+			    </isNotNull>$csciNameNot$ cs_call_in$suffix$.csci_name = #csciName#)
+			</isNotEmpty>
+			<isNotNull property="csciNameNot" prepend="and">
+				<isEmpty property="csciName">
+				$csciNameNot$ (cs_call_in$suffix$.csci_name is null or length(cs_call_in$suffix$.csci_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciAnswer" prepend="and">
+			    $csciAnswerNot$ cs_call_in$suffix$.csci_answer = #csciAnswer#
+			</isNotEmpty>
+			<isNotNull property="csciAnswerNot" prepend="and">
+				<isEmpty property="csciAnswer">
+				$csciAnswerNot$ cs_call_in$suffix$.csci_answer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciHowLongMin" prepend="and">
+			    $csciHowLongNot$  ( cs_call_in$suffix$.csci_how_long &gt;= #csciHowLongMin#
+			    <isEmpty property="csciHowLongMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csciHowLongMax" prepend="and">
+				<isEmpty property="csciHowLongMin">$csciHowLongNot$   (</isEmpty>
+			    cs_call_in$suffix$.csci_how_long &lt;= #csciHowLongMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csciHowLong" prepend="and">
+			    $csciHowLongNot$ cs_call_in$suffix$.csci_how_long = #csciHowLong#
+			</isNotEmpty>
+			<isNotNull property="csciHowLongNot" prepend="and">
+				<isEmpty property="csciHowLongMax"><isEmpty property="csciHowLongMin"><isEmpty property="csciHowLong">
+				$csciHowLongNot$ cs_call_in$suffix$.csci_how_long is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csciUpdateTimeStart" prepend="and">
+			    $csciUpdateTimeNot$   (cs_call_in$suffix$.csci_update_time &gt;= #csciUpdateTimeStart#
+			   <isEmpty property="csciUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csciUpdateTimeEnd" prepend="and">
+				<isEmpty property="csciUpdateTimeStart">$csciUpdateTimeNot$   (</isEmpty>
+			    cs_call_in$suffix$.csci_update_time &lt;= #csciUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csciUpdateTime" prepend="and">
+			    $csciUpdateTimeNot$ cs_call_in$suffix$.csci_update_time = #csciUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csciUpdateTimeNot" prepend="and">
+				<isEmpty property="csciUpdateTimeStart"><isEmpty property="csciUpdateTimeEnd"><isEmpty property="csciUpdateTime">
+				$csciUpdateTimeNot$ cs_call_in$suffix$.csci_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciAddTimeStart" prepend="and">
+			    $csciAddTimeNot$   (cs_call_in$suffix$.csci_add_time &gt;= #csciAddTimeStart#
+			   <isEmpty property="csciAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csciAddTimeEnd" prepend="and">
+				<isEmpty property="csciAddTimeStart">$csciAddTimeNot$   (</isEmpty>
+			    cs_call_in$suffix$.csci_add_time &lt;= #csciAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csciAddTime" prepend="and">
+			    $csciAddTimeNot$ cs_call_in$suffix$.csci_add_time = #csciAddTime#
+			</isNotEmpty>
+			<isNotNull property="csciAddTimeNot" prepend="and">
+				<isEmpty property="csciAddTimeStart"><isEmpty property="csciAddTimeEnd"><isEmpty property="csciAddTime">
+				$csciAddTimeNot$ cs_call_in$suffix$.csci_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csciStatus" prepend="and">
+			    $csciStatusNot$ cs_call_in$suffix$.csci_status = #csciStatus#
+			</isNotEmpty>
+			<isNotNull property="csciStatusNot" prepend="and">
+				<isEmpty property="csciStatus">
+				$csciStatusNot$ cs_call_in$suffix$.csci_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 客户来电left join 条件sql片段 -->
+	<sql id="cs_call_in_join">
+		<dynamic>
+			<isNotEmpty property="CsCallIn.csciId" prepend="and">
+			    $CsCallIn.csciIdNot$ cs_call_in$CsCallIn.suffix$.csci_id = #CsCallIn.csciId#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciIdNot" prepend="and">
+				<isEmpty property="CsCallIn.csciId">
+				$csciIdNot$ cs_call_in$CsCallIn.suffix$.csci_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_call_in$CsCallIn.suffix$.csci_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciHost" prepend="and">
+			    $CsCallIn.csciHostNot$ cs_call_in$CsCallIn.suffix$.csci_host = #CsCallIn.csciHost#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciHostNot" prepend="and">
+				<isEmpty property="CsCallIn.csciHost">
+				$csciHostNot$ cs_call_in$CsCallIn.suffix$.csci_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciNumber" prepend="and">
+				(<isNotNull property="CsCallIn.csciNumberNot">
+			    cs_call_in$CsCallIn.suffix$.csci_number is null or length(cs_call_in$CsCallIn.suffix$.csci_number) &lt; 1 or
+			    </isNotNull>$CsCallIn.csciNumberNot$ cs_call_in$CsCallIn.suffix$.csci_number = #CsCallIn.csciNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciNumberNot" prepend="and">
+				<isEmpty property="CsCallIn.csciNumber">
+				$csciNumberNot$ (cs_call_in$CsCallIn.suffix$.csci_number is null or length(cs_call_in$CsCallIn.suffix$.csci_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciMember" prepend="and">
+			    $CsCallIn.csciMemberNot$ cs_call_in$CsCallIn.suffix$.csci_member = #CsCallIn.csciMember#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciMemberNot" prepend="and">
+				<isEmpty property="CsCallIn.csciMember">
+				$csciMemberNot$ cs_call_in$CsCallIn.suffix$.csci_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciName" prepend="and">
+				(<isNotNull property="CsCallIn.csciNameNot">
+			    cs_call_in$CsCallIn.suffix$.csci_name is null or length(cs_call_in$CsCallIn.suffix$.csci_name) &lt; 1 or
+			    </isNotNull>$CsCallIn.csciNameNot$ cs_call_in$CsCallIn.suffix$.csci_name = #CsCallIn.csciName#)
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciNameNot" prepend="and">
+				<isEmpty property="CsCallIn.csciName">
+				$csciNameNot$ (cs_call_in$CsCallIn.suffix$.csci_name is null or length(cs_call_in$CsCallIn.suffix$.csci_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciAnswer" prepend="and">
+			    $CsCallIn.csciAnswerNot$ cs_call_in$CsCallIn.suffix$.csci_answer = #CsCallIn.csciAnswer#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciAnswerNot" prepend="and">
+				<isEmpty property="CsCallIn.csciAnswer">
+				$csciAnswerNot$ cs_call_in$CsCallIn.suffix$.csci_answer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciHowLongMin" prepend="and">
+			    $CsCallIn.csciHowLongNot$  ( cs_call_in$CsCallIn.suffix$.csci_how_long &gt;= #CsCallIn.csciHowLongMin#
+			    <isEmpty property="CsCallIn.csciHowLongMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciHowLongMax" prepend="and">
+				<isEmpty property="CsCallIn.csciHowLongMin">$CsCallIn.csciHowLongNot$   (</isEmpty>
+			    cs_call_in$CsCallIn.suffix$.csci_how_long &lt;= #CsCallIn.csciHowLongMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciHowLong" prepend="and">
+			    $CsCallIn.csciHowLongNot$ cs_call_in$CsCallIn.suffix$.csci_how_long = #CsCallIn.csciHowLong#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciHowLongNot" prepend="and">
+				<isEmpty property="CsCallIn.csciHowLongMax"><isEmpty property="CsCallIn.csciHowLongMin"><isEmpty property="CsCallIn.csciHowLong">
+				$csciHowLongNot$ cs_call_in$CsCallIn.suffix$.csci_how_long is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciUpdateTimeStart" prepend="and">
+			    $CsCallIn.csciUpdateTimeNot$   (cs_call_in$CsCallIn.suffix$.csci_update_time &gt;= #CsCallIn.csciUpdateTimeStart#
+			   <isEmpty property="CsCallIn.csciUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsCallIn.csciUpdateTimeStart">$CsCallIn.csciUpdateTimeNot$   (</isEmpty>
+			    cs_call_in$CsCallIn.suffix$.csci_update_time &lt;= #CsCallIn.csciUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciUpdateTime" prepend="and">
+			    $CsCallIn.csciUpdateTimeNot$ cs_call_in$CsCallIn.suffix$.csci_update_time = #CsCallIn.csciUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciUpdateTimeNot" prepend="and">
+				<isEmpty property="CsCallIn.csciUpdateTimeStart"><isEmpty property="CsCallIn.csciUpdateTimeEnd"><isEmpty property="CsCallIn.csciUpdateTime">
+				$csciUpdateTimeNot$ cs_call_in$CsCallIn.suffix$.csci_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciAddTimeStart" prepend="and">
+			    $CsCallIn.csciAddTimeNot$   (cs_call_in$CsCallIn.suffix$.csci_add_time &gt;= #CsCallIn.csciAddTimeStart#
+			   <isEmpty property="CsCallIn.csciAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciAddTimeEnd" prepend="and">
+				<isEmpty property="CsCallIn.csciAddTimeStart">$CsCallIn.csciAddTimeNot$   (</isEmpty>
+			    cs_call_in$CsCallIn.suffix$.csci_add_time &lt;= #CsCallIn.csciAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCallIn.csciAddTime" prepend="and">
+			    $CsCallIn.csciAddTimeNot$ cs_call_in$CsCallIn.suffix$.csci_add_time = #CsCallIn.csciAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciAddTimeNot" prepend="and">
+				<isEmpty property="CsCallIn.csciAddTimeStart"><isEmpty property="CsCallIn.csciAddTimeEnd"><isEmpty property="CsCallIn.csciAddTime">
+				$csciAddTimeNot$ cs_call_in$CsCallIn.suffix$.csci_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCallIn.csciStatus" prepend="and">
+			    $CsCallIn.csciStatusNot$ cs_call_in$CsCallIn.suffix$.csci_status = #CsCallIn.csciStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCallIn.csciStatusNot" prepend="and">
+				<isEmpty property="CsCallIn.csciStatus">
+				$csciStatusNot$ cs_call_in$CsCallIn.suffix$.csci_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

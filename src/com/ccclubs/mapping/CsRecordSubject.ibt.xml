@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 消费科目之SQL映射 -->
+	<resultMap id="CsRecordSubject" class="com.ccclubs.model.CsRecordSubject">
+		<result property="csrsId" column="csrs_id"/>
+		<result property="csrsName" column="csrs_name"/>
+		<result property="csrsIsIncome" column="csrs_is_income"/>
+		<result property="csrsIsOperIn" column="csrs_is_oper_in"/>
+		<result property="csrsIsOperOut" column="csrs_is_oper_out"/>
+		<result property="csrsIsUserIn" column="csrs_is_user_in"/>
+		<result property="csrsIsUserOut" column="csrs_is_user_out"/>
+		<result property="csrsIsArtif" column="csrs_is_artif"/>
+		<result property="csrsIsOrder" column="csrs_is_order"/>
+		<result property="csrsIsInvoice" column="csrs_is_invoice"/>
+	</resultMap>
+		
+	<!-- 获取所有消费科目 -->
+	<select id="getCsRecordSubjectList" resultMap="CsRecordSubject">
+		select cs_record_subject$suffix$.* from cs_record_subject$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRecordSubject_part.cs_record_subject_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csrs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取消费科目分页 -->
+	<select id="getCsRecordSubjectPage" parameterClass="java.util.HashMap" resultMap="CsRecordSubject">
+		select cs_record_subject$suffix$.* from cs_record_subject$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRecordSubject_part.cs_record_subject_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csrs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取消费科目总数 -->
+	<select id="getCsRecordSubjectEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_record_subject$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRecordSubject_part.cs_record_subject_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取消费科目 -->
+	<select id="getCsRecordSubjectById" parameterClass="java.util.HashMap" resultMap="CsRecordSubject">
+		select cs_record_subject$suffix$.* from cs_record_subject$suffix$
+		where csrs_id=#id#
+	</select>
+	
+		
+	<!-- 保存消费科目 -->
+	<insert id="saveCsRecordSubject"  parameterClass="com.ccclubs.model.CsRecordSubject">
+		insert into cs_record_subject$suffix$
+		(
+			cs_record_subject$suffix$.csrs_name
+			,cs_record_subject$suffix$.csrs_is_income
+			,cs_record_subject$suffix$.csrs_is_oper_in
+			,cs_record_subject$suffix$.csrs_is_oper_out
+			,cs_record_subject$suffix$.csrs_is_user_in
+			,cs_record_subject$suffix$.csrs_is_user_out
+			,cs_record_subject$suffix$.csrs_is_artif
+			,cs_record_subject$suffix$.csrs_is_order
+			,cs_record_subject$suffix$.csrs_is_invoice
+		)
+		values(
+			<isNotNull property="csrsName" prepend="">
+				#csrsName#
+			</isNotNull>
+			<isNull property="csrsName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsIncome" prepend=",">
+				#csrsIsIncome#
+			</isNotNull>
+			<isNull property="csrsIsIncome" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsOperIn" prepend=",">
+				#csrsIsOperIn#
+			</isNotNull>
+			<isNull property="csrsIsOperIn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsOperOut" prepend=",">
+				#csrsIsOperOut#
+			</isNotNull>
+			<isNull property="csrsIsOperOut" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsUserIn" prepend=",">
+				#csrsIsUserIn#
+			</isNotNull>
+			<isNull property="csrsIsUserIn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsUserOut" prepend=",">
+				#csrsIsUserOut#
+			</isNotNull>
+			<isNull property="csrsIsUserOut" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsArtif" prepend=",">
+				#csrsIsArtif#
+			</isNotNull>
+			<isNull property="csrsIsArtif" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsOrder" prepend=",">
+				#csrsIsOrder#
+			</isNotNull>
+			<isNull property="csrsIsOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrsIsInvoice" prepend=",">
+				#csrsIsInvoice#
+			</isNotNull>
+			<isNull property="csrsIsInvoice" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新消费科目 -->
+	<update id="updateCsRecordSubject"  parameterClass="com.ccclubs.model.CsRecordSubject">
+		update cs_record_subject$suffix$ set
+			<isNotNull property="csrsName" prepend="">
+				cs_record_subject$suffix$.csrs_name = #csrsName#
+			</isNotNull>
+			<isNull property="csrsName" prepend="">
+				cs_record_subject$suffix$.csrs_name = null
+			</isNull>				
+			<isNotNull property="csrsIsIncome" prepend=",">
+				cs_record_subject$suffix$.csrs_is_income = #csrsIsIncome#
+			</isNotNull>
+			<isNull property="csrsIsIncome" prepend=",">
+				cs_record_subject$suffix$.csrs_is_income = null
+			</isNull>				
+			<isNotNull property="csrsIsOperIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_in = #csrsIsOperIn#
+			</isNotNull>
+			<isNull property="csrsIsOperIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_in = null
+			</isNull>				
+			<isNotNull property="csrsIsOperOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_out = #csrsIsOperOut#
+			</isNotNull>
+			<isNull property="csrsIsOperOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_out = null
+			</isNull>				
+			<isNotNull property="csrsIsUserIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_in = #csrsIsUserIn#
+			</isNotNull>
+			<isNull property="csrsIsUserIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_in = null
+			</isNull>				
+			<isNotNull property="csrsIsUserOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_out = #csrsIsUserOut#
+			</isNotNull>
+			<isNull property="csrsIsUserOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_out = null
+			</isNull>				
+			<isNotNull property="csrsIsArtif" prepend=",">
+				cs_record_subject$suffix$.csrs_is_artif = #csrsIsArtif#
+			</isNotNull>
+			<isNull property="csrsIsArtif" prepend=",">
+				cs_record_subject$suffix$.csrs_is_artif = null
+			</isNull>				
+			<isNotNull property="csrsIsOrder" prepend=",">
+				cs_record_subject$suffix$.csrs_is_order = #csrsIsOrder#
+			</isNotNull>
+			<isNull property="csrsIsOrder" prepend=",">
+				cs_record_subject$suffix$.csrs_is_order = null
+			</isNull>				
+			<isNotNull property="csrsIsInvoice" prepend=",">
+				cs_record_subject$suffix$.csrs_is_invoice = #csrsIsInvoice#
+			</isNotNull>
+			<isNull property="csrsIsInvoice" prepend=",">
+				cs_record_subject$suffix$.csrs_is_invoice = null
+			</isNull>				
+		where
+			csrs_id=#csrsId#
+	</update>
+	
+	<!-- 更新消费科目非空字段 -->
+	<update id="updateCsRecordSubject$NotNull"  parameterClass="com.ccclubs.model.CsRecordSubject">
+		update cs_record_subject$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrsName" prepend=",">
+				cs_record_subject$suffix$.csrs_name = #csrsName#
+			</isNotNull>		
+			<isNotNull property="csrsIsIncome" prepend=",">
+				cs_record_subject$suffix$.csrs_is_income = #csrsIsIncome#
+			</isNotNull>		
+			<isNotNull property="csrsIsOperIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_in = #csrsIsOperIn#
+			</isNotNull>		
+			<isNotNull property="csrsIsOperOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_out = #csrsIsOperOut#
+			</isNotNull>		
+			<isNotNull property="csrsIsUserIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_in = #csrsIsUserIn#
+			</isNotNull>		
+			<isNotNull property="csrsIsUserOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_out = #csrsIsUserOut#
+			</isNotNull>		
+			<isNotNull property="csrsIsArtif" prepend=",">
+				cs_record_subject$suffix$.csrs_is_artif = #csrsIsArtif#
+			</isNotNull>		
+			<isNotNull property="csrsIsOrder" prepend=",">
+				cs_record_subject$suffix$.csrs_is_order = #csrsIsOrder#
+			</isNotNull>		
+			<isNotNull property="csrsIsInvoice" prepend=",">
+				cs_record_subject$suffix$.csrs_is_invoice = #csrsIsInvoice#
+			</isNotNull>		
+			</dynamic>
+		where
+			csrs_id=#csrsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个消费科目 -->
+	<delete id="deleteCsRecordSubjectById" parameterClass="java.util.HashMap">
+		delete from cs_record_subject$suffix$ where csrs_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新消费科目 -->
+	<update id="updateCsRecordSubjectBy"  parameterClass="java.util.HashMap">
+		update cs_record_subject$suffix$ set		
+			csrs_id=csrs_id
+			<isNotNull property="V_csrsId" prepend=",">
+				cs_record_subject$suffix$.csrs_id = #V_csrsId#
+			</isNotNull>		
+			<isNotNull property="V_csrsName" prepend=",">
+				cs_record_subject$suffix$.csrs_name = #V_csrsName#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsIncome" prepend=",">
+				cs_record_subject$suffix$.csrs_is_income = #V_csrsIsIncome#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsOperIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_in = #V_csrsIsOperIn#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsOperOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_oper_out = #V_csrsIsOperOut#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsUserIn" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_in = #V_csrsIsUserIn#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsUserOut" prepend=",">
+				cs_record_subject$suffix$.csrs_is_user_out = #V_csrsIsUserOut#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsArtif" prepend=",">
+				cs_record_subject$suffix$.csrs_is_artif = #V_csrsIsArtif#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsOrder" prepend=",">
+				cs_record_subject$suffix$.csrs_is_order = #V_csrsIsOrder#
+			</isNotNull>		
+			<isNotNull property="V_csrsIsInvoice" prepend=",">
+				cs_record_subject$suffix$.csrs_is_invoice = #V_csrsIsInvoice#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRecordSubject_part.cs_record_subject_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除消费科目 -->
+	<update id="deleteCsRecordSubjectBy"  parameterClass="java.util.HashMap">
+		delete from cs_record_subject$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRecordSubject_part.cs_record_subject_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

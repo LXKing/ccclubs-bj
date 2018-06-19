@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMemberGroup_part">	
+	<!-- 会员组织条件sql片段  -->
+	<sql id="cs_member_group_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmgId" prepend="and">
+			    $csmgIdNot$ cs_member_group$suffix$.csmg_id = #csmgId#
+			</isNotEmpty>
+			<isNotNull property="csmgIdNot" prepend="and">
+				<isEmpty property="csmgId">
+				$csmgIdNot$ cs_member_group$suffix$.csmg_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_member_group$suffix$.csmg_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csmgHost" prepend="and">
+			    $csmgHostNot$ cs_member_group$suffix$.csmg_host = #csmgHost#
+			</isNotEmpty>
+			<isNotNull property="csmgHostNot" prepend="and">
+				<isEmpty property="csmgHost">
+				$csmgHostNot$ cs_member_group$suffix$.csmg_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csmgName" prepend="and">			    
+			    (<isNotNull property="csmgNameNot">
+			    cs_member_group$suffix$.csmg_name is null or length(cs_member_group$suffix$.csmg_name) &lt; 1 or
+			    </isNotNull>$csmgNameNot$ cs_member_group$suffix$.csmg_name like #csmgName#)
+			</isNotEmpty>
+			<isNotNull property="csmgNameNot" prepend="and">
+				<isEmpty property="csmgName">
+				$csmgNameNot$ (cs_member_group$suffix$.csmg_name is null or length(cs_member_group$suffix$.csmg_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmgPerson" prepend="and">			    
+			    (<isNotNull property="csmgPersonNot">
+			    cs_member_group$suffix$.csmg_person is null or length(cs_member_group$suffix$.csmg_person) &lt; 1 or
+			    </isNotNull>$csmgPersonNot$ cs_member_group$suffix$.csmg_person = #csmgPerson#)
+			</isNotEmpty>
+			<isNotNull property="csmgPersonNot" prepend="and">
+				<isEmpty property="csmgPerson">
+				$csmgPersonNot$ (cs_member_group$suffix$.csmg_person is null or length(cs_member_group$suffix$.csmg_person) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmgNumber" prepend="and">			    
+			    (<isNotNull property="csmgNumberNot">
+			    cs_member_group$suffix$.csmg_number is null or length(cs_member_group$suffix$.csmg_number) &lt; 1 or
+			    </isNotNull>$csmgNumberNot$ cs_member_group$suffix$.csmg_number = #csmgNumber#)
+			</isNotEmpty>
+			<isNotNull property="csmgNumberNot" prepend="and">
+				<isEmpty property="csmgNumber">
+				$csmgNumberNot$ (cs_member_group$suffix$.csmg_number is null or length(cs_member_group$suffix$.csmg_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmgFlag" prepend="and">			    
+			    (<isNotNull property="csmgFlagNot">
+			    cs_member_group$suffix$.csmg_flag is null or length(cs_member_group$suffix$.csmg_flag) &lt; 1 or
+			    </isNotNull>$csmgFlagNot$ cs_member_group$suffix$.csmg_flag = #csmgFlag#)
+			</isNotEmpty>
+			<isNotNull property="csmgFlagNot" prepend="and">
+				<isEmpty property="csmgFlag">
+				$csmgFlagNot$ (cs_member_group$suffix$.csmg_flag is null or length(cs_member_group$suffix$.csmg_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmgRebateMin" prepend="and">
+			    $csmgRebateNot$  ( cs_member_group$suffix$.csmg_rebate &gt;= #csmgRebateMin#
+			    <isEmpty property="csmgRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmgRebateMax" prepend="and">
+				<isEmpty property="csmgRebateMin">$csmgRebateNot$   (</isEmpty>
+			    cs_member_group$suffix$.csmg_rebate &lt;= #csmgRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmgRebate" prepend="and">
+			    $csmgRebateNot$ cs_member_group$suffix$.csmg_rebate = #csmgRebate#
+			</isNotEmpty>
+			<isNotNull property="csmgRebateNot" prepend="and">
+				<isEmpty property="csmgRebateMax"><isEmpty property="csmgRebateMin"><isEmpty property="csmgRebate">
+				$csmgRebateNot$ cs_member_group$suffix$.csmg_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmgRemark" prepend="and">			    
+			    (<isNotNull property="csmgRemarkNot">
+			    cs_member_group$suffix$.csmg_remark is null or length(cs_member_group$suffix$.csmg_remark) &lt; 1 or
+			    </isNotNull>$csmgRemarkNot$ cs_member_group$suffix$.csmg_remark like #csmgRemark#)
+			</isNotEmpty>
+			<isNotNull property="csmgRemarkNot" prepend="and">
+				<isEmpty property="csmgRemark">
+				$csmgRemarkNot$ (cs_member_group$suffix$.csmg_remark is null or length(cs_member_group$suffix$.csmg_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmgAddTimeStart" prepend="and">
+			    $csmgAddTimeNot$   (cs_member_group$suffix$.csmg_add_time &gt;= #csmgAddTimeStart#
+			   <isEmpty property="csmgAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmgAddTimeEnd" prepend="and">
+				<isEmpty property="csmgAddTimeStart">$csmgAddTimeNot$   (</isEmpty>
+			    cs_member_group$suffix$.csmg_add_time &lt;= #csmgAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmgAddTime" prepend="and">
+			    $csmgAddTimeNot$ cs_member_group$suffix$.csmg_add_time = #csmgAddTime#
+			</isNotEmpty>
+			<isNotNull property="csmgAddTimeNot" prepend="and">
+				<isEmpty property="csmgAddTimeStart"><isEmpty property="csmgAddTimeEnd"><isEmpty property="csmgAddTime">
+				$csmgAddTimeNot$ cs_member_group$suffix$.csmg_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmgStatus" prepend="and">
+			    $csmgStatusNot$ cs_member_group$suffix$.csmg_status = #csmgStatus#
+			</isNotEmpty>
+			<isNotNull property="csmgStatusNot" prepend="and">
+				<isEmpty property="csmgStatus">
+				$csmgStatusNot$ cs_member_group$suffix$.csmg_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员组织left join 条件sql片段 -->
+	<sql id="cs_member_group_join">
+		<dynamic>
+			<isNotEmpty property="CsMemberGroup.csmgId" prepend="and">
+			    $CsMemberGroup.csmgIdNot$ cs_member_group$CsMemberGroup.suffix$.csmg_id = #CsMemberGroup.csmgId#
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgIdNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgId">
+				$csmgIdNot$ cs_member_group$CsMemberGroup.suffix$.csmg_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_member_group$CsMemberGroup.suffix$.csmg_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberGroup.csmgHost" prepend="and">
+			    $CsMemberGroup.csmgHostNot$ cs_member_group$CsMemberGroup.suffix$.csmg_host = #CsMemberGroup.csmgHost#
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgHostNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgHost">
+				$csmgHostNot$ cs_member_group$CsMemberGroup.suffix$.csmg_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgName" prepend="and">
+				(<isNotNull property="CsMemberGroup.csmgNameNot">
+			    cs_member_group$CsMemberGroup.suffix$.csmg_name is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_name) &lt; 1 or
+			    </isNotNull>$CsMemberGroup.csmgNameNot$ cs_member_group$CsMemberGroup.suffix$.csmg_name like #CsMemberGroup.csmgName#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgNameNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgName">
+				$csmgNameNot$ (cs_member_group$CsMemberGroup.suffix$.csmg_name is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgPerson" prepend="and">
+				(<isNotNull property="CsMemberGroup.csmgPersonNot">
+			    cs_member_group$CsMemberGroup.suffix$.csmg_person is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_person) &lt; 1 or
+			    </isNotNull>$CsMemberGroup.csmgPersonNot$ cs_member_group$CsMemberGroup.suffix$.csmg_person = #CsMemberGroup.csmgPerson#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgPersonNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgPerson">
+				$csmgPersonNot$ (cs_member_group$CsMemberGroup.suffix$.csmg_person is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_person) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgNumber" prepend="and">
+				(<isNotNull property="CsMemberGroup.csmgNumberNot">
+			    cs_member_group$CsMemberGroup.suffix$.csmg_number is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_number) &lt; 1 or
+			    </isNotNull>$CsMemberGroup.csmgNumberNot$ cs_member_group$CsMemberGroup.suffix$.csmg_number = #CsMemberGroup.csmgNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgNumberNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgNumber">
+				$csmgNumberNot$ (cs_member_group$CsMemberGroup.suffix$.csmg_number is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgFlag" prepend="and">
+				(<isNotNull property="CsMemberGroup.csmgFlagNot">
+			    cs_member_group$CsMemberGroup.suffix$.csmg_flag is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_flag) &lt; 1 or
+			    </isNotNull>$CsMemberGroup.csmgFlagNot$ cs_member_group$CsMemberGroup.suffix$.csmg_flag = #CsMemberGroup.csmgFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgFlagNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgFlag">
+				$csmgFlagNot$ (cs_member_group$CsMemberGroup.suffix$.csmg_flag is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgRebateMin" prepend="and">
+			    $CsMemberGroup.csmgRebateNot$  ( cs_member_group$CsMemberGroup.suffix$.csmg_rebate &gt;= #CsMemberGroup.csmgRebateMin#
+			    <isEmpty property="CsMemberGroup.csmgRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberGroup.csmgRebateMax" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgRebateMin">$CsMemberGroup.csmgRebateNot$   (</isEmpty>
+			    cs_member_group$CsMemberGroup.suffix$.csmg_rebate &lt;= #CsMemberGroup.csmgRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberGroup.csmgRebate" prepend="and">
+			    $CsMemberGroup.csmgRebateNot$ cs_member_group$CsMemberGroup.suffix$.csmg_rebate = #CsMemberGroup.csmgRebate#
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgRebateNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgRebateMax"><isEmpty property="CsMemberGroup.csmgRebateMin"><isEmpty property="CsMemberGroup.csmgRebate">
+				$csmgRebateNot$ cs_member_group$CsMemberGroup.suffix$.csmg_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgRemark" prepend="and">
+				(<isNotNull property="CsMemberGroup.csmgRemarkNot">
+			    cs_member_group$CsMemberGroup.suffix$.csmg_remark is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_remark) &lt; 1 or
+			    </isNotNull>$CsMemberGroup.csmgRemarkNot$ cs_member_group$CsMemberGroup.suffix$.csmg_remark like #CsMemberGroup.csmgRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgRemarkNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgRemark">
+				$csmgRemarkNot$ (cs_member_group$CsMemberGroup.suffix$.csmg_remark is null or length(cs_member_group$CsMemberGroup.suffix$.csmg_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgAddTimeStart" prepend="and">
+			    $CsMemberGroup.csmgAddTimeNot$   (cs_member_group$CsMemberGroup.suffix$.csmg_add_time &gt;= #CsMemberGroup.csmgAddTimeStart#
+			   <isEmpty property="CsMemberGroup.csmgAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberGroup.csmgAddTimeEnd" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgAddTimeStart">$CsMemberGroup.csmgAddTimeNot$   (</isEmpty>
+			    cs_member_group$CsMemberGroup.suffix$.csmg_add_time &lt;= #CsMemberGroup.csmgAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMemberGroup.csmgAddTime" prepend="and">
+			    $CsMemberGroup.csmgAddTimeNot$ cs_member_group$CsMemberGroup.suffix$.csmg_add_time = #CsMemberGroup.csmgAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgAddTimeNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgAddTimeStart"><isEmpty property="CsMemberGroup.csmgAddTimeEnd"><isEmpty property="CsMemberGroup.csmgAddTime">
+				$csmgAddTimeNot$ cs_member_group$CsMemberGroup.suffix$.csmg_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMemberGroup.csmgStatus" prepend="and">
+			    $CsMemberGroup.csmgStatusNot$ cs_member_group$CsMemberGroup.suffix$.csmg_status = #CsMemberGroup.csmgStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMemberGroup.csmgStatusNot" prepend="and">
+				<isEmpty property="CsMemberGroup.csmgStatus">
+				$csmgStatusNot$ cs_member_group$CsMemberGroup.suffix$.csmg_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

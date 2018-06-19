@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsConfig_part">	
+	<!-- 系统配置(城市)条件sql片段  -->
+	<sql id="cs_config_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_config$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_config$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_config$suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscHost" prepend="and">
+			    $cscHostNot$ cs_config$suffix$.csc_host = #cscHost#
+			</isNotEmpty>
+			<isNotNull property="cscHostNot" prepend="and">
+				<isEmpty property="cscHost">
+				$cscHostNot$ cs_config$suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscLimitPowerMin" prepend="and">
+			    $cscLimitPowerNot$  ( cs_config$suffix$.csc_limit_power &gt;= #cscLimitPowerMin#
+			    <isEmpty property="cscLimitPowerMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscLimitPowerMax" prepend="and">
+				<isEmpty property="cscLimitPowerMin">$cscLimitPowerNot$   (</isEmpty>
+			    cs_config$suffix$.csc_limit_power &lt;= #cscLimitPowerMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscLimitPower" prepend="and">
+			    $cscLimitPowerNot$ cs_config$suffix$.csc_limit_power = #cscLimitPower#
+			</isNotEmpty>
+			<isNotNull property="cscLimitPowerNot" prepend="and">
+				<isEmpty property="cscLimitPowerMax"><isEmpty property="cscLimitPowerMin"><isEmpty property="cscLimitPower">
+				$cscLimitPowerNot$ cs_config$suffix$.csc_limit_power is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscFlags" prepend="and">			    
+			    (<isNotNull property="cscFlagsNot">
+			    cs_config$suffix$.csc_flags is null or length(cs_config$suffix$.csc_flags) &lt; 1 or
+			    </isNotNull>$cscFlagsNot$ cs_config$suffix$.csc_flags like #cscFlags#)
+			</isNotEmpty>
+			<isNotNull property="cscFlagsNot" prepend="and">
+				<isEmpty property="cscFlags">
+				$cscFlagsNot$ (cs_config$suffix$.csc_flags is null or length(cs_config$suffix$.csc_flags) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddress" prepend="and">			    
+			    (<isNotNull property="cscAddressNot">
+			    cs_config$suffix$.csc_address is null or length(cs_config$suffix$.csc_address) &lt; 1 or
+			    </isNotNull>$cscAddressNot$ cs_config$suffix$.csc_address = #cscAddress#)
+			</isNotEmpty>
+			<isNotNull property="cscAddressNot" prepend="and">
+				<isEmpty property="cscAddress">
+				$cscAddressNot$ (cs_config$suffix$.csc_address is null or length(cs_config$suffix$.csc_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscSvrNumber" prepend="and">			    
+			    (<isNotNull property="cscSvrNumberNot">
+			    cs_config$suffix$.csc_svr_number is null or length(cs_config$suffix$.csc_svr_number) &lt; 1 or
+			    </isNotNull>$cscSvrNumberNot$ cs_config$suffix$.csc_svr_number = #cscSvrNumber#)
+			</isNotEmpty>
+			<isNotNull property="cscSvrNumberNot" prepend="and">
+				<isEmpty property="cscSvrNumber">
+				$cscSvrNumberNot$ (cs_config$suffix$.csc_svr_number is null or length(cs_config$suffix$.csc_svr_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscSrvQqGroup" prepend="and">			    
+			    (<isNotNull property="cscSrvQqGroupNot">
+			    cs_config$suffix$.csc_srv_qq_group is null or length(cs_config$suffix$.csc_srv_qq_group) &lt; 1 or
+			    </isNotNull>$cscSrvQqGroupNot$ cs_config$suffix$.csc_srv_qq_group = #cscSrvQqGroup#)
+			</isNotEmpty>
+			<isNotNull property="cscSrvQqGroupNot" prepend="and">
+				<isEmpty property="cscSrvQqGroup">
+				$cscSrvQqGroupNot$ (cs_config$suffix$.csc_srv_qq_group is null or length(cs_config$suffix$.csc_srv_qq_group) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBanners" prepend="and">			    
+			    (<isNotNull property="cscBannersNot">
+			    cs_config$suffix$.csc_banners is null or length(cs_config$suffix$.csc_banners) &lt; 1 or
+			    </isNotNull>$cscBannersNot$ cs_config$suffix$.csc_banners like #cscBanners#)
+			</isNotEmpty>
+			<isNotNull property="cscBannersNot" prepend="and">
+				<isEmpty property="cscBanners">
+				$cscBannersNot$ (cs_config$suffix$.csc_banners is null or length(cs_config$suffix$.csc_banners) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统配置(城市)left join 条件sql片段 -->
+	<sql id="cs_config_join">
+		<dynamic>
+			<isNotEmpty property="CsConfig.cscId" prepend="and">
+			    $CsConfig.cscIdNot$ cs_config$CsConfig.suffix$.csc_id = #CsConfig.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscIdNot" prepend="and">
+				<isEmpty property="CsConfig.cscId">
+				$cscIdNot$ cs_config$CsConfig.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_config$CsConfig.suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsConfig.cscHost" prepend="and">
+			    $CsConfig.cscHostNot$ cs_config$CsConfig.suffix$.csc_host = #CsConfig.cscHost#
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscHostNot" prepend="and">
+				<isEmpty property="CsConfig.cscHost">
+				$cscHostNot$ cs_config$CsConfig.suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsConfig.cscLimitPowerMin" prepend="and">
+			    $CsConfig.cscLimitPowerNot$  ( cs_config$CsConfig.suffix$.csc_limit_power &gt;= #CsConfig.cscLimitPowerMin#
+			    <isEmpty property="CsConfig.cscLimitPowerMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsConfig.cscLimitPowerMax" prepend="and">
+				<isEmpty property="CsConfig.cscLimitPowerMin">$CsConfig.cscLimitPowerNot$   (</isEmpty>
+			    cs_config$CsConfig.suffix$.csc_limit_power &lt;= #CsConfig.cscLimitPowerMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsConfig.cscLimitPower" prepend="and">
+			    $CsConfig.cscLimitPowerNot$ cs_config$CsConfig.suffix$.csc_limit_power = #CsConfig.cscLimitPower#
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscLimitPowerNot" prepend="and">
+				<isEmpty property="CsConfig.cscLimitPowerMax"><isEmpty property="CsConfig.cscLimitPowerMin"><isEmpty property="CsConfig.cscLimitPower">
+				$cscLimitPowerNot$ cs_config$CsConfig.suffix$.csc_limit_power is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsConfig.cscFlags" prepend="and">
+				(<isNotNull property="CsConfig.cscFlagsNot">
+			    cs_config$CsConfig.suffix$.csc_flags is null or length(cs_config$CsConfig.suffix$.csc_flags) &lt; 1 or
+			    </isNotNull>$CsConfig.cscFlagsNot$ cs_config$CsConfig.suffix$.csc_flags like #CsConfig.cscFlags#)
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscFlagsNot" prepend="and">
+				<isEmpty property="CsConfig.cscFlags">
+				$cscFlagsNot$ (cs_config$CsConfig.suffix$.csc_flags is null or length(cs_config$CsConfig.suffix$.csc_flags) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsConfig.cscAddress" prepend="and">
+				(<isNotNull property="CsConfig.cscAddressNot">
+			    cs_config$CsConfig.suffix$.csc_address is null or length(cs_config$CsConfig.suffix$.csc_address) &lt; 1 or
+			    </isNotNull>$CsConfig.cscAddressNot$ cs_config$CsConfig.suffix$.csc_address = #CsConfig.cscAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscAddressNot" prepend="and">
+				<isEmpty property="CsConfig.cscAddress">
+				$cscAddressNot$ (cs_config$CsConfig.suffix$.csc_address is null or length(cs_config$CsConfig.suffix$.csc_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsConfig.cscSvrNumber" prepend="and">
+				(<isNotNull property="CsConfig.cscSvrNumberNot">
+			    cs_config$CsConfig.suffix$.csc_svr_number is null or length(cs_config$CsConfig.suffix$.csc_svr_number) &lt; 1 or
+			    </isNotNull>$CsConfig.cscSvrNumberNot$ cs_config$CsConfig.suffix$.csc_svr_number = #CsConfig.cscSvrNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscSvrNumberNot" prepend="and">
+				<isEmpty property="CsConfig.cscSvrNumber">
+				$cscSvrNumberNot$ (cs_config$CsConfig.suffix$.csc_svr_number is null or length(cs_config$CsConfig.suffix$.csc_svr_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsConfig.cscSrvQqGroup" prepend="and">
+				(<isNotNull property="CsConfig.cscSrvQqGroupNot">
+			    cs_config$CsConfig.suffix$.csc_srv_qq_group is null or length(cs_config$CsConfig.suffix$.csc_srv_qq_group) &lt; 1 or
+			    </isNotNull>$CsConfig.cscSrvQqGroupNot$ cs_config$CsConfig.suffix$.csc_srv_qq_group = #CsConfig.cscSrvQqGroup#)
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscSrvQqGroupNot" prepend="and">
+				<isEmpty property="CsConfig.cscSrvQqGroup">
+				$cscSrvQqGroupNot$ (cs_config$CsConfig.suffix$.csc_srv_qq_group is null or length(cs_config$CsConfig.suffix$.csc_srv_qq_group) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsConfig.cscBanners" prepend="and">
+				(<isNotNull property="CsConfig.cscBannersNot">
+			    cs_config$CsConfig.suffix$.csc_banners is null or length(cs_config$CsConfig.suffix$.csc_banners) &lt; 1 or
+			    </isNotNull>$CsConfig.cscBannersNot$ cs_config$CsConfig.suffix$.csc_banners like #CsConfig.cscBanners#)
+			</isNotEmpty>
+			<isNotNull property="CsConfig.cscBannersNot" prepend="and">
+				<isEmpty property="CsConfig.cscBanners">
+				$cscBannersNot$ (cs_config$CsConfig.suffix$.csc_banners is null or length(cs_config$CsConfig.suffix$.csc_banners) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

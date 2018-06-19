@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>车纷享 - 开放平台</title>
+		<link rel="stylesheet" href="${basePath}api/css/style.css" type="text/css" />
+	</head>
+	<body>
+	
+		<%@ include file="/api/header.html"%>
+		
+		<div id="bd">
+			<div class="div">
+				<div class="title">
+					<span>文档中心</span>
+				</div>
+			</div>
+			
+			<div class="div">
+				<div class="catalog">
+					<ul>
+						<li>
+							<p class="p1">
+								<span></span>
+								<a href="#0">开发文档</a>
+							</p>
+							<ul>
+								<li>
+									<p class="p2">
+										<span></span>
+										<a href="#1">必要条件</a>
+									</p>
+								</li>
+								<li>
+									<p class="p2">
+										<span></span>
+										<a href="#2">环境介绍</a>
+									</p>
+								</li>
+								<li>
+									<p class="p2">
+										<span></span>
+										<a href="#3">调用说明</a>
+									</p>
+								</li>
+								<li>
+									<p class="p2">
+										<span></span>
+										<a href="#4">用户授权</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+						<li></li>
+						<li></li>
+						<li></li>
+					</ul>
+				</div>
+				<div class="artcile">
+					
+					
+					
+<h1 id="0"><strong>开放平台简介</strong></h1>
+<div>开放平台（ Open Platform）是基于车纷享系统业务的开放平台，提供外部合作伙伴参与服务车纷享用户的各类原数据，例如API、账号体系、数据安全等。是大车纷享基础服务的重要开放途径，将推动汽车租赁管理、合作、创新、进化，并最终促成新汽车共享文明生态圈。我们的使命是把车纷享的车辆、用户、订单、管理等一系列基础服务，开放给有需要的合作商、开发者。</div>
+
+<h1 id="1"><strong>必要条件</strong></h1>
+<div>任何数据接入者都必须具备一定的互联网应用开发能力，必须了解http、网络程序开发相关语言、JSON格式数据等相关概念。<br />
+任何数据接入者都必须得到车纷享的授权，并得到车纷享分配的开放平台接入帐号。</div>
+
+<h1 id="2"><strong>环境介绍</strong></h1>
+<div>测试环境：http://test.api.ccclubs.com/invoke.do<br />
+正式环境：http://api.ccclubs.com/invoke.do</div>
+
+
+<h1 id="3"><strong>调用说明</strong></h1>
+<div> 调用API ，必须传入系统参数和应用参数。系统参数详细介绍如下；应用参数则根据不同API 具体入参，更多请参考API 文档。<br />
+  <h2 id="ss2"><strong>1、系统参数</strong></h2>
+  <table class='grid' width="100%" border="0" cellspacing="1" cellpadding="10">
+  <tr>
+    <td width="80">名称</td>
+    <td width="80">类型</td>
+    <td width="80">是否必须</td>
+    <td>描述</td>
+  </tr>
+  <tr>
+    <td width="80">method</td>
+    <td>string</td>
+    <td>是</td>
+    <td>API接口名称，同时调用多个接口，多个接口之间用半角逗号分开</td>
+  </tr>
+  <tr>
+    <td width="80">timestamp</td>
+    <td>string</td>
+    <td>是</td>
+    <td>时间戳，格式为yyyy-mm-dd HH:mm:ss，例如：2015-01-01 13:52:03。API服务端允许客户端请求时间误差为10分钟。</td>
+  </tr>
+  <tr>
+    <td width="80">appid</td>
+    <td>string</td>
+    <td>是</td>
+    <td>车纷享分配给接入者的接入帐号</td>
+  </tr>
+  <tr>
+    <td width="80">token</td>
+    <td>string</td>
+    <td>否</td>
+    <td>当某些接口需要授权时需要传入用户的token,不需要时传空</td>
+  </tr>
+  <tr>
+    <td>params</td>
+    <td>string</td>
+    <td>是</td>
+    <td>应用参数集，根据method对应不同的接口，拼成{key:value,...}格式的json串，多个接口同时调用时拼成[{key:value,...},{key:value,...},...]格式的json串(注意与接口位置对齐)</td>
+  </tr>
+  <tr>
+    <td>sign</td>
+    <td>string</td>
+    <td>是</td>
+    <td>对 API 调用参数（除sign外）进行 md5 加密获得。具体方法参考开放平台参数签名</td>
+  </tr>
+</table>
+
+<h2 id="ss2"><strong>2、应用参数</strong></h2>
+  请参考API文档说明
+  
+  <h2 id="ss2"><strong>3、签名sign</strong></h2>
+ 调用API 时需要对请求参数进行签名验证，开放平台服务器也会对该请求参数进行验证是否合法的。方法如下：<br/>
+
+      根据参数名称（除签名和图片）将所有请求参数按照字母先后顺序排序:key + value .... key + value<br/>
+      例如：将foo=1,bar=2,baz=3 排序为bar=2,baz=3,foo=1，参数名和参数值链接后，得到拼装字符串bar2baz3foo1<br/>
+
+      系统只支持MD5加密方式:<br/>
+      md5：将secret 拼接到参数字符串头、尾进行md5加密后，再转化成大写，格式是：byte2hex(md5(secretkey1value1key2value2...secret))<br/>
+     
+      注：hex为自定义方法，JAVA中MD5是对字节数组加密，加密结果是16字节，我们需要的是32位的大写字符串<br/>
+  
+ 
+ <h1 id="4"><strong>用户授权</strong></h1>
+<div>所有与车纷享会员相关的数据必须得到相关的车纷享会员的授权，授权方式为调用车纷享授权登录页让会员登录后同意授权后才能获取相关的业务数据</div>
+
+<!-- 测试平台授权地址：http://test.api.ccclubs.com/oauth.do<br /> -->
+正式环境授权地址：http://api.ccclubs.com/oauth.do<br />
+<h2 id="ss2"><strong>调用授权地址时需要传入以下参数</strong></h2>
+  <table class='grid' width="100%" border="0" cellspacing="1" cellpadding="10">
+  <tr>
+    <td width="80">名称</td>
+    <td width="80">类型</td>
+    <td width="80">是否必须</td>
+    <td>描述</td>
+  </tr>
+  <tr>
+    <td width="80">appid</td>
+    <td>string</td>
+    <td>是</td>
+    <td>车纷享分配给接入者的接入帐号</td>
+  </tr>
+  <tr>
+    <td width="80">timestamp</td>
+    <td>string</td>
+    <td>是</td>
+    <td>时间戳，格式为yyyy-mm-dd HH:mm:ss，例如：2015-01-01 13:52:03。API服务端允许客户端请求时间误差为10分钟。</td>
+  </tr>
+  <tr>
+    <td width="80">direct</td>
+    <td>string</td>
+    <td>否</td>
+    <td>授权成功后回调的你方地址，回调后会携带token参数，请自行保存，一个月有效，如果未带direct参数，则系统登录成功后会跳到oauth.success.html，应用程序可通过获取该地址上的token参数得到token</td>
+  </tr>
+  <tr>
+    <td>ticket</td>
+    <td>string</td>
+    <td>否</td>
+    <td>三方凭证，如果你的应用是APP，请调用浏览器打开开放平台的授权地址让用户进行授权，ticket参数为你的应用为该用户分配的标识（比如手机应用可以设备号或SIM卡号作为标识，PC应用可以以cpu序列等相关唯一的凭证标识），用户授权成功后，你的应用根据此三方凭证标识获取token</td>
+  </tr>
+  <tr>
+    <td>sign</td>
+    <td>string</td>
+    <td>是</td>
+    <td>对 API 调用参数（除sign外）进行 md5 加密获得。具体方法参考上面的开放平台参数签名</td>
+  </tr>
+</table>
+<h2 id="ss2"><strong>授权过程示意图</strong></h2>
+<center><img src="mind.png"/></center>
+</div>
+					
+					
+					
+					
+				</div>
+			</div>
+		
+		</div>
+		
+		<%@ include file="/api/footer.html"%>
+	</body>
+</html>

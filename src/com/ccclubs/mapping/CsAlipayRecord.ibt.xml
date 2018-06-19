@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 接口充值之SQL映射 -->
+	<resultMap id="CsAlipayRecord" class="com.ccclubs.model.CsAlipayRecord">
+		<result property="csarId" column="csar_id"/>
+		<result property="csarHost" column="csar_host"/>
+		<result property="csarBankType" column="csar_bank_type"/>
+		<result property="csarTradeNo" column="csar_trade_no"/>
+		<result property="csarMember" column="csar_member"/>
+		<result property="csarRealName" column="csar_real_name"/>
+		<result property="csarAmount" column="csar_amount"/>
+		<result property="csarBuyItem" column="csar_buy_item"/>
+		<result property="csarBuyCount" column="csar_buy_count"/>
+		<result property="csarRefund" column="csar_refund"/>
+		<result property="csarPayMethod" column="csar_pay_method"/>
+		<result property="csarBlank" column="csar_blank"/>
+		<result property="csarAlipayNo" column="csar_alipay_no"/>
+		<result property="csarBuyerAccount" column="csar_buyer_account"/>
+		<result property="csarClientId" column="csar_client_id"/>
+		<result property="csarThirdBack" column="csar_third_back"/>
+		<result property="csarUpdateTime" column="csar_update_time"/>
+		<result property="csarAddTime" column="csar_add_time"/>
+		<result property="csarStatus" column="csar_status"/>
+	</resultMap>
+		
+	<!-- 获取所有接口充值 -->
+	<select id="getCsAlipayRecordList" resultMap="CsAlipayRecord">
+		select cs_alipay_record$suffix$.* from cs_alipay_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询-->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.csar_buy_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询-->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.csar_client_id=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_alipay_record$suffix$.csar_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAlipayRecord_part.cs_alipay_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csar_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取接口充值分页 -->
+	<select id="getCsAlipayRecordPage" parameterClass="java.util.HashMap" resultMap="CsAlipayRecord">
+		select cs_alipay_record$suffix$.* from cs_alipay_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询 -->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.csar_buy_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询 -->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.csar_client_id=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_alipay_record$suffix$.csar_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAlipayRecord_part.cs_alipay_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csar_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取接口充值总数 -->
+	<select id="getCsAlipayRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_alipay_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.csar_buy_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.csar_client_id=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_alipay_record$suffix$.csar_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAlipayRecord_part.cs_alipay_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取接口充值 -->
+	<select id="getCsAlipayRecordById" parameterClass="java.util.HashMap" resultMap="CsAlipayRecord">
+		select cs_alipay_record$suffix$.* from cs_alipay_record$suffix$
+		where csar_id=#id#
+	</select>
+	
+		
+	<!-- 保存接口充值 -->
+	<insert id="saveCsAlipayRecord"  parameterClass="com.ccclubs.model.CsAlipayRecord">
+		insert into cs_alipay_record$suffix$
+		(
+			cs_alipay_record$suffix$.csar_host
+			,cs_alipay_record$suffix$.csar_bank_type
+			,cs_alipay_record$suffix$.csar_trade_no
+			,cs_alipay_record$suffix$.csar_member
+			,cs_alipay_record$suffix$.csar_real_name
+			,cs_alipay_record$suffix$.csar_amount
+			,cs_alipay_record$suffix$.csar_buy_item
+			,cs_alipay_record$suffix$.csar_buy_count
+			,cs_alipay_record$suffix$.csar_refund
+			,cs_alipay_record$suffix$.csar_pay_method
+			,cs_alipay_record$suffix$.csar_blank
+			,cs_alipay_record$suffix$.csar_alipay_no
+			,cs_alipay_record$suffix$.csar_buyer_account
+			,cs_alipay_record$suffix$.csar_client_id
+			,cs_alipay_record$suffix$.csar_third_back
+			,cs_alipay_record$suffix$.csar_update_time
+			,cs_alipay_record$suffix$.csar_add_time
+			,cs_alipay_record$suffix$.csar_status
+		)
+		values(
+			<isNotNull property="csarHost" prepend="">
+				#csarHost#
+			</isNotNull>
+			<isNull property="csarHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csarBankType" prepend=",">
+				#csarBankType#
+			</isNotNull>
+			<isNull property="csarBankType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarTradeNo" prepend=",">
+				#csarTradeNo#
+			</isNotNull>
+			<isNull property="csarTradeNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarMember" prepend=",">
+				#csarMember#
+			</isNotNull>
+			<isNull property="csarMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarRealName" prepend=",">
+				#csarRealName#
+			</isNotNull>
+			<isNull property="csarRealName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarAmount" prepend=",">
+				#csarAmount#
+			</isNotNull>
+			<isNull property="csarAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarBuyItem" prepend=",">
+				#csarBuyItem#
+			</isNotNull>
+			<isNull property="csarBuyItem" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarBuyCount" prepend=",">
+				#csarBuyCount#
+			</isNotNull>
+			<isNull property="csarBuyCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarRefund" prepend=",">
+				#csarRefund#
+			</isNotNull>
+			<isNull property="csarRefund" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarPayMethod" prepend=",">
+				#csarPayMethod#
+			</isNotNull>
+			<isNull property="csarPayMethod" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarBlank" prepend=",">
+				#csarBlank#
+			</isNotNull>
+			<isNull property="csarBlank" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarAlipayNo" prepend=",">
+				#csarAlipayNo#
+			</isNotNull>
+			<isNull property="csarAlipayNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarBuyerAccount" prepend=",">
+				#csarBuyerAccount#
+			</isNotNull>
+			<isNull property="csarBuyerAccount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarClientId" prepend=",">
+				#csarClientId#
+			</isNotNull>
+			<isNull property="csarClientId" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarThirdBack" prepend=",">
+				#csarThirdBack#
+			</isNotNull>
+			<isNull property="csarThirdBack" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarUpdateTime" prepend=",">
+				#csarUpdateTime#
+			</isNotNull>
+			<isNull property="csarUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarAddTime" prepend=",">
+				#csarAddTime#
+			</isNotNull>
+			<isNull property="csarAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarStatus" prepend=",">
+				#csarStatus#
+			</isNotNull>
+			<isNull property="csarStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新接口充值 -->
+	<update id="updateCsAlipayRecord"  parameterClass="com.ccclubs.model.CsAlipayRecord">
+		update cs_alipay_record$suffix$ set
+			<isNotNull property="csarHost" prepend="">
+				cs_alipay_record$suffix$.csar_host = #csarHost#
+			</isNotNull>
+			<isNull property="csarHost" prepend="">
+				cs_alipay_record$suffix$.csar_host = null
+			</isNull>				
+			<isNotNull property="csarBankType" prepend=",">
+				cs_alipay_record$suffix$.csar_bank_type = #csarBankType#
+			</isNotNull>
+			<isNull property="csarBankType" prepend=",">
+				cs_alipay_record$suffix$.csar_bank_type = null
+			</isNull>				
+			<isNotNull property="csarTradeNo" prepend=",">
+				cs_alipay_record$suffix$.csar_trade_no = #csarTradeNo#
+			</isNotNull>
+			<isNull property="csarTradeNo" prepend=",">
+				cs_alipay_record$suffix$.csar_trade_no = null
+			</isNull>				
+			<isNotNull property="csarMember" prepend=",">
+				cs_alipay_record$suffix$.csar_member = #csarMember#
+			</isNotNull>
+			<isNull property="csarMember" prepend=",">
+				cs_alipay_record$suffix$.csar_member = null
+			</isNull>				
+			<isNotNull property="csarRealName" prepend=",">
+				cs_alipay_record$suffix$.csar_real_name = #csarRealName#
+			</isNotNull>
+			<isNull property="csarRealName" prepend=",">
+				cs_alipay_record$suffix$.csar_real_name = null
+			</isNull>				
+			<isNotNull property="csarAmount" prepend=",">
+				cs_alipay_record$suffix$.csar_amount = #csarAmount#
+			</isNotNull>
+			<isNull property="csarAmount" prepend=",">
+				cs_alipay_record$suffix$.csar_amount = null
+			</isNull>				
+			<isNotNull property="csarBuyItem" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_item = #csarBuyItem#
+			</isNotNull>
+			<isNull property="csarBuyItem" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_item = null
+			</isNull>				
+			<isNotNull property="csarBuyCount" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_count = #csarBuyCount#
+			</isNotNull>
+			<isNull property="csarBuyCount" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_count = null
+			</isNull>				
+			<isNotNull property="csarRefund" prepend=",">
+				cs_alipay_record$suffix$.csar_refund = #csarRefund#
+			</isNotNull>
+			<isNull property="csarRefund" prepend=",">
+				cs_alipay_record$suffix$.csar_refund = null
+			</isNull>				
+			<isNotNull property="csarPayMethod" prepend=",">
+				cs_alipay_record$suffix$.csar_pay_method = #csarPayMethod#
+			</isNotNull>
+			<isNull property="csarPayMethod" prepend=",">
+				cs_alipay_record$suffix$.csar_pay_method = null
+			</isNull>				
+			<isNotNull property="csarBlank" prepend=",">
+				cs_alipay_record$suffix$.csar_blank = #csarBlank#
+			</isNotNull>
+			<isNull property="csarBlank" prepend=",">
+				cs_alipay_record$suffix$.csar_blank = null
+			</isNull>				
+			<isNotNull property="csarAlipayNo" prepend=",">
+				cs_alipay_record$suffix$.csar_alipay_no = #csarAlipayNo#
+			</isNotNull>
+			<isNull property="csarAlipayNo" prepend=",">
+				cs_alipay_record$suffix$.csar_alipay_no = null
+			</isNull>				
+			<isNotNull property="csarBuyerAccount" prepend=",">
+				cs_alipay_record$suffix$.csar_buyer_account = #csarBuyerAccount#
+			</isNotNull>
+			<isNull property="csarBuyerAccount" prepend=",">
+				cs_alipay_record$suffix$.csar_buyer_account = null
+			</isNull>				
+			<isNotNull property="csarClientId" prepend=",">
+				cs_alipay_record$suffix$.csar_client_id = #csarClientId#
+			</isNotNull>
+			<isNull property="csarClientId" prepend=",">
+				cs_alipay_record$suffix$.csar_client_id = null
+			</isNull>				
+			<isNotNull property="csarThirdBack" prepend=",">
+				cs_alipay_record$suffix$.csar_third_back = #csarThirdBack#
+			</isNotNull>
+			<isNull property="csarThirdBack" prepend=",">
+				cs_alipay_record$suffix$.csar_third_back = null
+			</isNull>				
+			<isNotNull property="csarUpdateTime" prepend=",">
+				cs_alipay_record$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotNull>
+			<isNull property="csarUpdateTime" prepend=",">
+				cs_alipay_record$suffix$.csar_update_time = null
+			</isNull>				
+			<isNotNull property="csarAddTime" prepend=",">
+				cs_alipay_record$suffix$.csar_add_time = #csarAddTime#
+			</isNotNull>
+			<isNull property="csarAddTime" prepend=",">
+				cs_alipay_record$suffix$.csar_add_time = null
+			</isNull>				
+			<isNotNull property="csarStatus" prepend=",">
+				cs_alipay_record$suffix$.csar_status = #csarStatus#
+			</isNotNull>
+			<isNull property="csarStatus" prepend=",">
+				cs_alipay_record$suffix$.csar_status = null
+			</isNull>				
+		where
+			csar_id=#csarId#
+	</update>
+	
+	<!-- 更新接口充值非空字段 -->
+	<update id="updateCsAlipayRecord$NotNull"  parameterClass="com.ccclubs.model.CsAlipayRecord">
+		update cs_alipay_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csarHost" prepend=",">
+				cs_alipay_record$suffix$.csar_host = #csarHost#
+			</isNotNull>		
+			<isNotNull property="csarBankType" prepend=",">
+				cs_alipay_record$suffix$.csar_bank_type = #csarBankType#
+			</isNotNull>		
+			<isNotNull property="csarTradeNo" prepend=",">
+				cs_alipay_record$suffix$.csar_trade_no = #csarTradeNo#
+			</isNotNull>		
+			<isNotNull property="csarMember" prepend=",">
+				cs_alipay_record$suffix$.csar_member = #csarMember#
+			</isNotNull>		
+			<isNotNull property="csarRealName" prepend=",">
+				cs_alipay_record$suffix$.csar_real_name = #csarRealName#
+			</isNotNull>		
+			<isNotNull property="csarAmount" prepend=",">
+				cs_alipay_record$suffix$.csar_amount = #csarAmount#
+			</isNotNull>		
+			<isNotNull property="csarBuyItem" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_item = #csarBuyItem#
+			</isNotNull>		
+			<isNotNull property="csarBuyCount" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_count = #csarBuyCount#
+			</isNotNull>		
+			<isNotNull property="csarRefund" prepend=",">
+				cs_alipay_record$suffix$.csar_refund = #csarRefund#
+			</isNotNull>		
+			<isNotNull property="csarPayMethod" prepend=",">
+				cs_alipay_record$suffix$.csar_pay_method = #csarPayMethod#
+			</isNotNull>		
+			<isNotNull property="csarBlank" prepend=",">
+				cs_alipay_record$suffix$.csar_blank = #csarBlank#
+			</isNotNull>		
+			<isNotNull property="csarAlipayNo" prepend=",">
+				cs_alipay_record$suffix$.csar_alipay_no = #csarAlipayNo#
+			</isNotNull>		
+			<isNotNull property="csarBuyerAccount" prepend=",">
+				cs_alipay_record$suffix$.csar_buyer_account = #csarBuyerAccount#
+			</isNotNull>		
+			<isNotNull property="csarClientId" prepend=",">
+				cs_alipay_record$suffix$.csar_client_id = #csarClientId#
+			</isNotNull>		
+			<isNotNull property="csarThirdBack" prepend=",">
+				cs_alipay_record$suffix$.csar_third_back = #csarThirdBack#
+			</isNotNull>		
+			<isNotNull property="csarUpdateTime" prepend=",">
+				cs_alipay_record$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csarAddTime" prepend=",">
+				cs_alipay_record$suffix$.csar_add_time = #csarAddTime#
+			</isNotNull>		
+			<isNotNull property="csarStatus" prepend=",">
+				cs_alipay_record$suffix$.csar_status = #csarStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csar_id=#csarId#
+	</update>
+	
+
+	<!-- 根据ID删除一个接口充值 -->
+	<delete id="deleteCsAlipayRecordById" parameterClass="java.util.HashMap">
+		delete from cs_alipay_record$suffix$ where csar_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个接口充值 -->
+	<update id="removeCsAlipayRecordById" parameterClass="java.util.HashMap">
+		update cs_alipay_record$suffix$ set  cs_alipay_record$suffix$.csar_status=-1  where csar_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新接口充值 -->
+	<update id="updateCsAlipayRecordBy"  parameterClass="java.util.HashMap">
+		update cs_alipay_record$suffix$ set		
+			csar_id=csar_id
+			<isNotNull property="V_csarId" prepend=",">
+				cs_alipay_record$suffix$.csar_id = #V_csarId#
+			</isNotNull>		
+			<isNotNull property="V_csarHost" prepend=",">
+				cs_alipay_record$suffix$.csar_host = #V_csarHost#
+			</isNotNull>		
+			<isNotNull property="V_csarBankType" prepend=",">
+				cs_alipay_record$suffix$.csar_bank_type = #V_csarBankType#
+			</isNotNull>		
+			<isNotNull property="V_csarTradeNo" prepend=",">
+				cs_alipay_record$suffix$.csar_trade_no = #V_csarTradeNo#
+			</isNotNull>		
+			<isNotNull property="V_csarMember" prepend=",">
+				cs_alipay_record$suffix$.csar_member = #V_csarMember#
+			</isNotNull>		
+			<isNotNull property="V_csarRealName" prepend=",">
+				cs_alipay_record$suffix$.csar_real_name = #V_csarRealName#
+			</isNotNull>		
+			<isNotNull property="V_csarAmount" prepend=",">
+				cs_alipay_record$suffix$.csar_amount = #V_csarAmount#
+			</isNotNull>		
+			<isNotNull property="V_csarBuyItem" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_item = #V_csarBuyItem#
+			</isNotNull>		
+			<isNotNull property="V_csarBuyCount" prepend=",">
+				cs_alipay_record$suffix$.csar_buy_count = #V_csarBuyCount#
+			</isNotNull>		
+			<isNotNull property="V_csarRefund" prepend=",">
+				cs_alipay_record$suffix$.csar_refund = #V_csarRefund#
+			</isNotNull>		
+			<isNotNull property="V_csarPayMethod" prepend=",">
+				cs_alipay_record$suffix$.csar_pay_method = #V_csarPayMethod#
+			</isNotNull>		
+			<isNotNull property="V_csarBlank" prepend=",">
+				cs_alipay_record$suffix$.csar_blank = #V_csarBlank#
+			</isNotNull>		
+			<isNotNull property="V_csarAlipayNo" prepend=",">
+				cs_alipay_record$suffix$.csar_alipay_no = #V_csarAlipayNo#
+			</isNotNull>		
+			<isNotNull property="V_csarBuyerAccount" prepend=",">
+				cs_alipay_record$suffix$.csar_buyer_account = #V_csarBuyerAccount#
+			</isNotNull>		
+			<isNotNull property="V_csarClientId" prepend=",">
+				cs_alipay_record$suffix$.csar_client_id = #V_csarClientId#
+			</isNotNull>		
+			<isNotNull property="V_csarThirdBack" prepend=",">
+				cs_alipay_record$suffix$.csar_third_back = #V_csarThirdBack#
+			</isNotNull>		
+			<isNotNull property="V_csarUpdateTime" prepend=",">
+				cs_alipay_record$suffix$.csar_update_time = #V_csarUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csarAddTime" prepend=",">
+				cs_alipay_record$suffix$.csar_add_time = #V_csarAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csarStatus" prepend=",">
+				cs_alipay_record$suffix$.csar_status = #V_csarStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_alipay_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询-->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.csar_buy_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_alipay_record$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询-->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.csar_client_id=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on cs_alipay_record$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_alipay_record$suffix$.csar_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsarBuyItem"><!-- 调用一下CsarBuyItem，把CsItem指向CsarBuyItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="CsarClientId"><!-- 调用一下CsarClientId，把SrvApiClient指向CsarClientId --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsAlipayRecord_part.cs_alipay_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除接口充值 -->
+	<update id="deleteCsAlipayRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_alipay_record$suffix$ where 
+		cs_alipay_record$suffix$.csar_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsAlipayRecord_part.cs_alipay_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

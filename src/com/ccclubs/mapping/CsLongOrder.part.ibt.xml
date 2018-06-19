@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsLongOrder_part">	
+	<!-- 长租订单条件sql片段  -->
+	<sql id="cs_long_order_dynamic">
+		<dynamic>
+			<isNotEmpty property="csloId" prepend="and">
+			    $csloIdNot$ cs_long_order$suffix$.cslo_id = #csloId#
+			</isNotEmpty>
+			<isNotNull property="csloIdNot" prepend="and">
+				<isEmpty property="csloId">
+				$csloIdNot$ cs_long_order$suffix$.cslo_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_long_order$suffix$.cslo_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csloHost" prepend="and">
+			    $csloHostNot$ cs_long_order$suffix$.cslo_host = #csloHost#
+			</isNotEmpty>
+			<isNotNull property="csloHostNot" prepend="and">
+				<isEmpty property="csloHost">
+				$csloHostNot$ cs_long_order$suffix$.cslo_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csloPackNo" prepend="and">			    
+			    (<isNotNull property="csloPackNoNot">
+			    cs_long_order$suffix$.cslo_pack_no is null or length(cs_long_order$suffix$.cslo_pack_no) &lt; 1 or
+			    </isNotNull>$csloPackNoNot$ cs_long_order$suffix$.cslo_pack_no = #csloPackNo#)
+			</isNotEmpty>
+			<isNotNull property="csloPackNoNot" prepend="and">
+				<isEmpty property="csloPackNo">
+				$csloPackNoNot$ (cs_long_order$suffix$.cslo_pack_no is null or length(cs_long_order$suffix$.cslo_pack_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloMember" prepend="and">
+			    $csloMemberNot$ cs_long_order$suffix$.cslo_member = #csloMember#
+			</isNotEmpty>
+			<isNotNull property="csloMemberNot" prepend="and">
+				<isEmpty property="csloMember">
+				$csloMemberNot$ cs_long_order$suffix$.cslo_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloPackProfile" prepend="and">			    
+			    (<isNotNull property="csloPackProfileNot">
+			    cs_long_order$suffix$.cslo_pack_profile is null or length(cs_long_order$suffix$.cslo_pack_profile) &lt; 1 or
+			    </isNotNull>$csloPackProfileNot$ cs_long_order$suffix$.cslo_pack_profile like #csloPackProfile#)
+			</isNotEmpty>
+			<isNotNull property="csloPackProfileNot" prepend="and">
+				<isEmpty property="csloPackProfile">
+				$csloPackProfileNot$ (cs_long_order$suffix$.cslo_pack_profile is null or length(cs_long_order$suffix$.cslo_pack_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloPackImage" prepend="and">
+			    $csloPackImageNot$ cs_long_order$suffix$.cslo_pack_image = #csloPackImage#
+			</isNotEmpty>
+			<isNotNull property="csloPackImageNot" prepend="and">
+				<isEmpty property="csloPackImage">
+				$csloPackImageNot$ cs_long_order$suffix$.cslo_pack_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloCountMin" prepend="and">
+			    $csloCountNot$  ( cs_long_order$suffix$.cslo_count &gt;= #csloCountMin#
+			    <isEmpty property="csloCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloCountMax" prepend="and">
+				<isEmpty property="csloCountMin">$csloCountNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_count &lt;= #csloCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csloCount" prepend="and">
+			    $csloCountNot$ cs_long_order$suffix$.cslo_count = #csloCount#
+			</isNotEmpty>
+			<isNotNull property="csloCountNot" prepend="and">
+				<isEmpty property="csloCountMax"><isEmpty property="csloCountMin"><isEmpty property="csloCount">
+				$csloCountNot$ cs_long_order$suffix$.cslo_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csloLeaseTermMin" prepend="and">
+			    $csloLeaseTermNot$  ( cs_long_order$suffix$.cslo_lease_term &gt;= #csloLeaseTermMin#
+			    <isEmpty property="csloLeaseTermMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloLeaseTermMax" prepend="and">
+				<isEmpty property="csloLeaseTermMin">$csloLeaseTermNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_lease_term &lt;= #csloLeaseTermMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csloLeaseTerm" prepend="and">
+			    $csloLeaseTermNot$ cs_long_order$suffix$.cslo_lease_term = #csloLeaseTerm#
+			</isNotEmpty>
+			<isNotNull property="csloLeaseTermNot" prepend="and">
+				<isEmpty property="csloLeaseTermMax"><isEmpty property="csloLeaseTermMin"><isEmpty property="csloLeaseTerm">
+				$csloLeaseTermNot$ cs_long_order$suffix$.cslo_lease_term is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csloDepositMin" prepend="and">
+			    $csloDepositNot$  ( cs_long_order$suffix$.cslo_deposit &gt;= #csloDepositMin#
+			    <isEmpty property="csloDepositMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloDepositMax" prepend="and">
+				<isEmpty property="csloDepositMin">$csloDepositNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_deposit &lt;= #csloDepositMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csloDeposit" prepend="and">
+			    $csloDepositNot$ cs_long_order$suffix$.cslo_deposit = #csloDeposit#
+			</isNotEmpty>
+			<isNotNull property="csloDepositNot" prepend="and">
+				<isEmpty property="csloDepositMax"><isEmpty property="csloDepositMin"><isEmpty property="csloDeposit">
+				$csloDepositNot$ cs_long_order$suffix$.cslo_deposit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csloPayCycle" prepend="and">
+			    $csloPayCycleNot$ cs_long_order$suffix$.cslo_pay_cycle = #csloPayCycle#
+			</isNotEmpty>
+			<isNotNull property="csloPayCycleNot" prepend="and">
+				<isEmpty property="csloPayCycle">
+				$csloPayCycleNot$ cs_long_order$suffix$.cslo_pay_cycle is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloNeedPayMin" prepend="and">
+			    $csloNeedPayNot$  ( cs_long_order$suffix$.cslo_need_pay &gt;= #csloNeedPayMin#
+			    <isEmpty property="csloNeedPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloNeedPayMax" prepend="and">
+				<isEmpty property="csloNeedPayMin">$csloNeedPayNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_need_pay &lt;= #csloNeedPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csloNeedPay" prepend="and">
+			    $csloNeedPayNot$ cs_long_order$suffix$.cslo_need_pay = #csloNeedPay#
+			</isNotEmpty>
+			<isNotNull property="csloNeedPayNot" prepend="and">
+				<isEmpty property="csloNeedPayMax"><isEmpty property="csloNeedPayMin"><isEmpty property="csloNeedPay">
+				$csloNeedPayNot$ cs_long_order$suffix$.cslo_need_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csloRealPayMin" prepend="and">
+			    $csloRealPayNot$  ( cs_long_order$suffix$.cslo_real_pay &gt;= #csloRealPayMin#
+			    <isEmpty property="csloRealPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloRealPayMax" prepend="and">
+				<isEmpty property="csloRealPayMin">$csloRealPayNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_real_pay &lt;= #csloRealPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csloRealPay" prepend="and">
+			    $csloRealPayNot$ cs_long_order$suffix$.cslo_real_pay = #csloRealPay#
+			</isNotEmpty>
+			<isNotNull property="csloRealPayNot" prepend="and">
+				<isEmpty property="csloRealPayMax"><isEmpty property="csloRealPayMin"><isEmpty property="csloRealPay">
+				$csloRealPayNot$ cs_long_order$suffix$.cslo_real_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csloPactTimeStart" prepend="and">
+			    $csloPactTimeNot$   (cs_long_order$suffix$.cslo_pact_time &gt;= #csloPactTimeStart#
+			   <isEmpty property="csloPactTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloPactTimeEnd" prepend="and">
+				<isEmpty property="csloPactTimeStart">$csloPactTimeNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_pact_time &lt;= #csloPactTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csloPactTime" prepend="and">
+			    $csloPactTimeNot$ cs_long_order$suffix$.cslo_pact_time = #csloPactTime#
+			</isNotEmpty>
+			<isNotNull property="csloPactTimeNot" prepend="and">
+				<isEmpty property="csloPactTimeStart"><isEmpty property="csloPactTimeEnd"><isEmpty property="csloPactTime">
+				$csloPactTimeNot$ cs_long_order$suffix$.cslo_pact_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloStartTimeStart" prepend="and">
+			    $csloStartTimeNot$   (cs_long_order$suffix$.cslo_start_time &gt;= #csloStartTimeStart#
+			   <isEmpty property="csloStartTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloStartTimeEnd" prepend="and">
+				<isEmpty property="csloStartTimeStart">$csloStartTimeNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_start_time &lt;= #csloStartTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csloStartTime" prepend="and">
+			    $csloStartTimeNot$ cs_long_order$suffix$.cslo_start_time = #csloStartTime#
+			</isNotEmpty>
+			<isNotNull property="csloStartTimeNot" prepend="and">
+				<isEmpty property="csloStartTimeStart"><isEmpty property="csloStartTimeEnd"><isEmpty property="csloStartTime">
+				$csloStartTimeNot$ cs_long_order$suffix$.cslo_start_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloFinishTimeStart" prepend="and">
+			    $csloFinishTimeNot$   (cs_long_order$suffix$.cslo_finish_time &gt;= #csloFinishTimeStart#
+			   <isEmpty property="csloFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloFinishTimeEnd" prepend="and">
+				<isEmpty property="csloFinishTimeStart">$csloFinishTimeNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_finish_time &lt;= #csloFinishTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csloFinishTime" prepend="and">
+			    $csloFinishTimeNot$ cs_long_order$suffix$.cslo_finish_time = #csloFinishTime#
+			</isNotEmpty>
+			<isNotNull property="csloFinishTimeNot" prepend="and">
+				<isEmpty property="csloFinishTimeStart"><isEmpty property="csloFinishTimeEnd"><isEmpty property="csloFinishTime">
+				$csloFinishTimeNot$ cs_long_order$suffix$.cslo_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloUpdateTimeStart" prepend="and">
+			    $csloUpdateTimeNot$   (cs_long_order$suffix$.cslo_update_time &gt;= #csloUpdateTimeStart#
+			   <isEmpty property="csloUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloUpdateTimeEnd" prepend="and">
+				<isEmpty property="csloUpdateTimeStart">$csloUpdateTimeNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_update_time &lt;= #csloUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csloUpdateTime" prepend="and">
+			    $csloUpdateTimeNot$ cs_long_order$suffix$.cslo_update_time = #csloUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csloUpdateTimeNot" prepend="and">
+				<isEmpty property="csloUpdateTimeStart"><isEmpty property="csloUpdateTimeEnd"><isEmpty property="csloUpdateTime">
+				$csloUpdateTimeNot$ cs_long_order$suffix$.cslo_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloAddTimeStart" prepend="and">
+			    $csloAddTimeNot$   (cs_long_order$suffix$.cslo_add_time &gt;= #csloAddTimeStart#
+			   <isEmpty property="csloAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csloAddTimeEnd" prepend="and">
+				<isEmpty property="csloAddTimeStart">$csloAddTimeNot$   (</isEmpty>
+			    cs_long_order$suffix$.cslo_add_time &lt;= #csloAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csloAddTime" prepend="and">
+			    $csloAddTimeNot$ cs_long_order$suffix$.cslo_add_time = #csloAddTime#
+			</isNotEmpty>
+			<isNotNull property="csloAddTimeNot" prepend="and">
+				<isEmpty property="csloAddTimeStart"><isEmpty property="csloAddTimeEnd"><isEmpty property="csloAddTime">
+				$csloAddTimeNot$ cs_long_order$suffix$.cslo_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloSerial" prepend="and">			    
+			    (<isNotNull property="csloSerialNot">
+			    cs_long_order$suffix$.cslo_serial is null or length(cs_long_order$suffix$.cslo_serial) &lt; 1 or
+			    </isNotNull>$csloSerialNot$ cs_long_order$suffix$.cslo_serial = #csloSerial#)
+			</isNotEmpty>
+			<isNotNull property="csloSerialNot" prepend="and">
+				<isEmpty property="csloSerial">
+				$csloSerialNot$ (cs_long_order$suffix$.cslo_serial is null or length(cs_long_order$suffix$.cslo_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloRemark" prepend="and">			    
+			    (<isNotNull property="csloRemarkNot">
+			    cs_long_order$suffix$.cslo_remark is null or length(cs_long_order$suffix$.cslo_remark) &lt; 1 or
+			    </isNotNull>$csloRemarkNot$ cs_long_order$suffix$.cslo_remark like #csloRemark#)
+			</isNotEmpty>
+			<isNotNull property="csloRemarkNot" prepend="and">
+				<isEmpty property="csloRemark">
+				$csloRemarkNot$ (cs_long_order$suffix$.cslo_remark is null or length(cs_long_order$suffix$.cslo_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloEditor" prepend="and">
+			    $csloEditorNot$ cs_long_order$suffix$.cslo_editor = #csloEditor#
+			</isNotEmpty>
+			<isNotNull property="csloEditorNot" prepend="and">
+				<isEmpty property="csloEditor">
+				$csloEditorNot$ cs_long_order$suffix$.cslo_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloError" prepend="and">			    
+			    (<isNotNull property="csloErrorNot">
+			    cs_long_order$suffix$.cslo_error is null or length(cs_long_order$suffix$.cslo_error) &lt; 1 or
+			    </isNotNull>$csloErrorNot$ cs_long_order$suffix$.cslo_error = #csloError#)
+			</isNotEmpty>
+			<isNotNull property="csloErrorNot" prepend="and">
+				<isEmpty property="csloError">
+				$csloErrorNot$ (cs_long_order$suffix$.cslo_error is null or length(cs_long_order$suffix$.cslo_error) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csloStatus" prepend="and">
+			    $csloStatusNot$ cs_long_order$suffix$.cslo_status = #csloStatus#
+			</isNotEmpty>
+			<isNotNull property="csloStatusNot" prepend="and">
+				<isEmpty property="csloStatus">
+				$csloStatusNot$ cs_long_order$suffix$.cslo_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 长租订单left join 条件sql片段 -->
+	<sql id="cs_long_order_join">
+		<dynamic>
+			<isNotEmpty property="CsLongOrder.csloId" prepend="and">
+			    $CsLongOrder.csloIdNot$ cs_long_order$CsLongOrder.suffix$.cslo_id = #CsLongOrder.csloId#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloIdNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloId">
+				$csloIdNot$ cs_long_order$CsLongOrder.suffix$.cslo_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_long_order$CsLongOrder.suffix$.cslo_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloHost" prepend="and">
+			    $CsLongOrder.csloHostNot$ cs_long_order$CsLongOrder.suffix$.cslo_host = #CsLongOrder.csloHost#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloHostNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloHost">
+				$csloHostNot$ cs_long_order$CsLongOrder.suffix$.cslo_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloPackNo" prepend="and">
+				(<isNotNull property="CsLongOrder.csloPackNoNot">
+			    cs_long_order$CsLongOrder.suffix$.cslo_pack_no is null or length(cs_long_order$CsLongOrder.suffix$.cslo_pack_no) &lt; 1 or
+			    </isNotNull>$CsLongOrder.csloPackNoNot$ cs_long_order$CsLongOrder.suffix$.cslo_pack_no = #CsLongOrder.csloPackNo#)
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloPackNoNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloPackNo">
+				$csloPackNoNot$ (cs_long_order$CsLongOrder.suffix$.cslo_pack_no is null or length(cs_long_order$CsLongOrder.suffix$.cslo_pack_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloMember" prepend="and">
+			    $CsLongOrder.csloMemberNot$ cs_long_order$CsLongOrder.suffix$.cslo_member = #CsLongOrder.csloMember#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloMemberNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloMember">
+				$csloMemberNot$ cs_long_order$CsLongOrder.suffix$.cslo_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloPackProfile" prepend="and">
+				(<isNotNull property="CsLongOrder.csloPackProfileNot">
+			    cs_long_order$CsLongOrder.suffix$.cslo_pack_profile is null or length(cs_long_order$CsLongOrder.suffix$.cslo_pack_profile) &lt; 1 or
+			    </isNotNull>$CsLongOrder.csloPackProfileNot$ cs_long_order$CsLongOrder.suffix$.cslo_pack_profile like #CsLongOrder.csloPackProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloPackProfileNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloPackProfile">
+				$csloPackProfileNot$ (cs_long_order$CsLongOrder.suffix$.cslo_pack_profile is null or length(cs_long_order$CsLongOrder.suffix$.cslo_pack_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloPackImage" prepend="and">
+			    $CsLongOrder.csloPackImageNot$ cs_long_order$CsLongOrder.suffix$.cslo_pack_image = #CsLongOrder.csloPackImage#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloPackImageNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloPackImage">
+				$csloPackImageNot$ cs_long_order$CsLongOrder.suffix$.cslo_pack_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloCountMin" prepend="and">
+			    $CsLongOrder.csloCountNot$  ( cs_long_order$CsLongOrder.suffix$.cslo_count &gt;= #CsLongOrder.csloCountMin#
+			    <isEmpty property="CsLongOrder.csloCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloCountMax" prepend="and">
+				<isEmpty property="CsLongOrder.csloCountMin">$CsLongOrder.csloCountNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_count &lt;= #CsLongOrder.csloCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloCount" prepend="and">
+			    $CsLongOrder.csloCountNot$ cs_long_order$CsLongOrder.suffix$.cslo_count = #CsLongOrder.csloCount#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloCountNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloCountMax"><isEmpty property="CsLongOrder.csloCountMin"><isEmpty property="CsLongOrder.csloCount">
+				$csloCountNot$ cs_long_order$CsLongOrder.suffix$.cslo_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloLeaseTermMin" prepend="and">
+			    $CsLongOrder.csloLeaseTermNot$  ( cs_long_order$CsLongOrder.suffix$.cslo_lease_term &gt;= #CsLongOrder.csloLeaseTermMin#
+			    <isEmpty property="CsLongOrder.csloLeaseTermMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloLeaseTermMax" prepend="and">
+				<isEmpty property="CsLongOrder.csloLeaseTermMin">$CsLongOrder.csloLeaseTermNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_lease_term &lt;= #CsLongOrder.csloLeaseTermMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloLeaseTerm" prepend="and">
+			    $CsLongOrder.csloLeaseTermNot$ cs_long_order$CsLongOrder.suffix$.cslo_lease_term = #CsLongOrder.csloLeaseTerm#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloLeaseTermNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloLeaseTermMax"><isEmpty property="CsLongOrder.csloLeaseTermMin"><isEmpty property="CsLongOrder.csloLeaseTerm">
+				$csloLeaseTermNot$ cs_long_order$CsLongOrder.suffix$.cslo_lease_term is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloDepositMin" prepend="and">
+			    $CsLongOrder.csloDepositNot$  ( cs_long_order$CsLongOrder.suffix$.cslo_deposit &gt;= #CsLongOrder.csloDepositMin#
+			    <isEmpty property="CsLongOrder.csloDepositMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloDepositMax" prepend="and">
+				<isEmpty property="CsLongOrder.csloDepositMin">$CsLongOrder.csloDepositNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_deposit &lt;= #CsLongOrder.csloDepositMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloDeposit" prepend="and">
+			    $CsLongOrder.csloDepositNot$ cs_long_order$CsLongOrder.suffix$.cslo_deposit = #CsLongOrder.csloDeposit#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloDepositNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloDepositMax"><isEmpty property="CsLongOrder.csloDepositMin"><isEmpty property="CsLongOrder.csloDeposit">
+				$csloDepositNot$ cs_long_order$CsLongOrder.suffix$.cslo_deposit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloPayCycle" prepend="and">
+			    $CsLongOrder.csloPayCycleNot$ cs_long_order$CsLongOrder.suffix$.cslo_pay_cycle = #CsLongOrder.csloPayCycle#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloPayCycleNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloPayCycle">
+				$csloPayCycleNot$ cs_long_order$CsLongOrder.suffix$.cslo_pay_cycle is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloNeedPayMin" prepend="and">
+			    $CsLongOrder.csloNeedPayNot$  ( cs_long_order$CsLongOrder.suffix$.cslo_need_pay &gt;= #CsLongOrder.csloNeedPayMin#
+			    <isEmpty property="CsLongOrder.csloNeedPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloNeedPayMax" prepend="and">
+				<isEmpty property="CsLongOrder.csloNeedPayMin">$CsLongOrder.csloNeedPayNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_need_pay &lt;= #CsLongOrder.csloNeedPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloNeedPay" prepend="and">
+			    $CsLongOrder.csloNeedPayNot$ cs_long_order$CsLongOrder.suffix$.cslo_need_pay = #CsLongOrder.csloNeedPay#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloNeedPayNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloNeedPayMax"><isEmpty property="CsLongOrder.csloNeedPayMin"><isEmpty property="CsLongOrder.csloNeedPay">
+				$csloNeedPayNot$ cs_long_order$CsLongOrder.suffix$.cslo_need_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloRealPayMin" prepend="and">
+			    $CsLongOrder.csloRealPayNot$  ( cs_long_order$CsLongOrder.suffix$.cslo_real_pay &gt;= #CsLongOrder.csloRealPayMin#
+			    <isEmpty property="CsLongOrder.csloRealPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloRealPayMax" prepend="and">
+				<isEmpty property="CsLongOrder.csloRealPayMin">$CsLongOrder.csloRealPayNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_real_pay &lt;= #CsLongOrder.csloRealPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloRealPay" prepend="and">
+			    $CsLongOrder.csloRealPayNot$ cs_long_order$CsLongOrder.suffix$.cslo_real_pay = #CsLongOrder.csloRealPay#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloRealPayNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloRealPayMax"><isEmpty property="CsLongOrder.csloRealPayMin"><isEmpty property="CsLongOrder.csloRealPay">
+				$csloRealPayNot$ cs_long_order$CsLongOrder.suffix$.cslo_real_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloPactTimeStart" prepend="and">
+			    $CsLongOrder.csloPactTimeNot$   (cs_long_order$CsLongOrder.suffix$.cslo_pact_time &gt;= #CsLongOrder.csloPactTimeStart#
+			   <isEmpty property="CsLongOrder.csloPactTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloPactTimeEnd" prepend="and">
+				<isEmpty property="CsLongOrder.csloPactTimeStart">$CsLongOrder.csloPactTimeNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_pact_time &lt;= #CsLongOrder.csloPactTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloPactTime" prepend="and">
+			    $CsLongOrder.csloPactTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_pact_time = #CsLongOrder.csloPactTime#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloPactTimeNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloPactTimeStart"><isEmpty property="CsLongOrder.csloPactTimeEnd"><isEmpty property="CsLongOrder.csloPactTime">
+				$csloPactTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_pact_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloStartTimeStart" prepend="and">
+			    $CsLongOrder.csloStartTimeNot$   (cs_long_order$CsLongOrder.suffix$.cslo_start_time &gt;= #CsLongOrder.csloStartTimeStart#
+			   <isEmpty property="CsLongOrder.csloStartTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloStartTimeEnd" prepend="and">
+				<isEmpty property="CsLongOrder.csloStartTimeStart">$CsLongOrder.csloStartTimeNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_start_time &lt;= #CsLongOrder.csloStartTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloStartTime" prepend="and">
+			    $CsLongOrder.csloStartTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_start_time = #CsLongOrder.csloStartTime#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloStartTimeNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloStartTimeStart"><isEmpty property="CsLongOrder.csloStartTimeEnd"><isEmpty property="CsLongOrder.csloStartTime">
+				$csloStartTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_start_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloFinishTimeStart" prepend="and">
+			    $CsLongOrder.csloFinishTimeNot$   (cs_long_order$CsLongOrder.suffix$.cslo_finish_time &gt;= #CsLongOrder.csloFinishTimeStart#
+			   <isEmpty property="CsLongOrder.csloFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloFinishTimeEnd" prepend="and">
+				<isEmpty property="CsLongOrder.csloFinishTimeStart">$CsLongOrder.csloFinishTimeNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_finish_time &lt;= #CsLongOrder.csloFinishTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloFinishTime" prepend="and">
+			    $CsLongOrder.csloFinishTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_finish_time = #CsLongOrder.csloFinishTime#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloFinishTimeNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloFinishTimeStart"><isEmpty property="CsLongOrder.csloFinishTimeEnd"><isEmpty property="CsLongOrder.csloFinishTime">
+				$csloFinishTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloUpdateTimeStart" prepend="and">
+			    $CsLongOrder.csloUpdateTimeNot$   (cs_long_order$CsLongOrder.suffix$.cslo_update_time &gt;= #CsLongOrder.csloUpdateTimeStart#
+			   <isEmpty property="CsLongOrder.csloUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsLongOrder.csloUpdateTimeStart">$CsLongOrder.csloUpdateTimeNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_update_time &lt;= #CsLongOrder.csloUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloUpdateTime" prepend="and">
+			    $CsLongOrder.csloUpdateTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_update_time = #CsLongOrder.csloUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloUpdateTimeNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloUpdateTimeStart"><isEmpty property="CsLongOrder.csloUpdateTimeEnd"><isEmpty property="CsLongOrder.csloUpdateTime">
+				$csloUpdateTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloAddTimeStart" prepend="and">
+			    $CsLongOrder.csloAddTimeNot$   (cs_long_order$CsLongOrder.suffix$.cslo_add_time &gt;= #CsLongOrder.csloAddTimeStart#
+			   <isEmpty property="CsLongOrder.csloAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloAddTimeEnd" prepend="and">
+				<isEmpty property="CsLongOrder.csloAddTimeStart">$CsLongOrder.csloAddTimeNot$   (</isEmpty>
+			    cs_long_order$CsLongOrder.suffix$.cslo_add_time &lt;= #CsLongOrder.csloAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLongOrder.csloAddTime" prepend="and">
+			    $CsLongOrder.csloAddTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_add_time = #CsLongOrder.csloAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloAddTimeNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloAddTimeStart"><isEmpty property="CsLongOrder.csloAddTimeEnd"><isEmpty property="CsLongOrder.csloAddTime">
+				$csloAddTimeNot$ cs_long_order$CsLongOrder.suffix$.cslo_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloSerial" prepend="and">
+				(<isNotNull property="CsLongOrder.csloSerialNot">
+			    cs_long_order$CsLongOrder.suffix$.cslo_serial is null or length(cs_long_order$CsLongOrder.suffix$.cslo_serial) &lt; 1 or
+			    </isNotNull>$CsLongOrder.csloSerialNot$ cs_long_order$CsLongOrder.suffix$.cslo_serial = #CsLongOrder.csloSerial#)
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloSerialNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloSerial">
+				$csloSerialNot$ (cs_long_order$CsLongOrder.suffix$.cslo_serial is null or length(cs_long_order$CsLongOrder.suffix$.cslo_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloRemark" prepend="and">
+				(<isNotNull property="CsLongOrder.csloRemarkNot">
+			    cs_long_order$CsLongOrder.suffix$.cslo_remark is null or length(cs_long_order$CsLongOrder.suffix$.cslo_remark) &lt; 1 or
+			    </isNotNull>$CsLongOrder.csloRemarkNot$ cs_long_order$CsLongOrder.suffix$.cslo_remark like #CsLongOrder.csloRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloRemarkNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloRemark">
+				$csloRemarkNot$ (cs_long_order$CsLongOrder.suffix$.cslo_remark is null or length(cs_long_order$CsLongOrder.suffix$.cslo_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloEditor" prepend="and">
+			    $CsLongOrder.csloEditorNot$ cs_long_order$CsLongOrder.suffix$.cslo_editor = #CsLongOrder.csloEditor#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloEditorNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloEditor">
+				$csloEditorNot$ cs_long_order$CsLongOrder.suffix$.cslo_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloError" prepend="and">
+				(<isNotNull property="CsLongOrder.csloErrorNot">
+			    cs_long_order$CsLongOrder.suffix$.cslo_error is null or length(cs_long_order$CsLongOrder.suffix$.cslo_error) &lt; 1 or
+			    </isNotNull>$CsLongOrder.csloErrorNot$ cs_long_order$CsLongOrder.suffix$.cslo_error = #CsLongOrder.csloError#)
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloErrorNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloError">
+				$csloErrorNot$ (cs_long_order$CsLongOrder.suffix$.cslo_error is null or length(cs_long_order$CsLongOrder.suffix$.cslo_error) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLongOrder.csloStatus" prepend="and">
+			    $CsLongOrder.csloStatusNot$ cs_long_order$CsLongOrder.suffix$.cslo_status = #CsLongOrder.csloStatus#
+			</isNotEmpty>
+			<isNotNull property="CsLongOrder.csloStatusNot" prepend="and">
+				<isEmpty property="CsLongOrder.csloStatus">
+				$csloStatusNot$ cs_long_order$CsLongOrder.suffix$.cslo_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

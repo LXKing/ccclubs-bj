@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>重置登录密码${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.account.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/bg1.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-global-cont">
+			<%@ include file="/include/nav.html"%>
+
+			<div id="ccc-container" class="ccc-grid-780 ccc-cont-shadow ccc-account">
+				<header>
+				<div class="ccc-acc-guide ccc-forgot-guide ccc-step2">
+					<div class="ccc-acc-step1"></div>
+					<div class="ccc-acc-step2"></div>
+					<div class="ccc-acc-step3"></div>
+					<em></em>
+					<i></i>
+				</div>
+				</header>
+				<div class="ccc-main ccc-acc-form">
+					<h2 class="ccc-margin-t">
+						设置你的新密码
+						<span>请创建安全且易于记忆的密码</span>
+					</h2>
+					<div class="ccc-form-divider"></div>
+					<div class="ccc-form-item">
+						<label for="accPwd" class="ccc-label">
+							新密码
+						</label>
+						<input type="password" id="accPwd" maxlength="20" tabindex="1" placeholder="输入你的新密码" class="ccc-input ccc-password" />
+						<div class="ccc-acc-tooltip" id="tips-pwd"></div>
+					</div>
+					<div class="ccc-form-item">
+						<label for="accPwdConf" class="ccc-label">
+							确认密码
+						</label>
+						<input type="password" id="accPwdConf" maxlength="20" tabindex="2" placeholder="再次输入你的密码" class="ccc-input ccc-password" />
+						<div class="ccc-acc-tooltip single" id="tips-repwd"></div>
+					</div>
+				</div>
+				<footer>
+				<div class="ccc-acc-opt">
+					<input type="submit" value="下一步" id="nextstep" class="ccc-button-next" />
+				</div>
+				</footer>
+			</div>
+
+			<footer id="ccc-footer">
+			</footer>
+		</div>
+		<div id="ccc-global-tips"><i></i><span>正在加载...</span></div>
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script type="text/javascript" src="/js/rsa/RSA.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/BigInt.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/Barrett.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/CodeManage.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/MyRSA.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+        $(document).ready(function() {
+        	var msg3="6-20位数字，大小写字母，或常用字符作为密码";
+        	var msg4="密码设置不符合要求，请重新输入";
+        	var msg5="请再次输入登录密码";
+        	var msg6="两次密码输入不一致";
+        	
+             $('#accPwd').focus(function() {
+             	$('#accPwd').removeClass('error');
+             	$('#tips-pwd').removeClass('error');
+            	$('#tips-pwd').removeClass('correct');
+                $('#tips-pwd').addClass('explain');
+                $('#tips-pwd').css("display", "block");
+             	$('#tips-pwd').html("<span class=\"ccc-text\">"+msg3+"</span><i></i><em></em><b></b>");
+             }).blur(function() {
+             			$('#tips-pwd').removeClass('explain');
+             			var value = $.trim($("#accPwd").val());
+             		    var reg = /^[a-zA-Z0-9!@#$%*()_+]{6,20}$/;
+             			if(reg.test(value)){
+             				$('#tips-pwd').addClass('correct');
+		             		$('#tips-pwd').html('');
+		             		return;
+             			}else{
+             				$('#accPwd').addClass('error');
+             				$('#tips-pwd').addClass('error');
+		             		$('#tips-pwd').html("<span class=\"ccc-text\">"+msg4+"</span><i></i><em></em><b></b>");
+		             		return;
+             			}
+             });
+             
+             $('#accPwdConf').focus(function() {
+             	$('#accPwdConf').removeClass('error');
+             	$('#tips-repwd').removeClass('error');
+            	$('#tips-repwd').removeClass('correct');
+                $('#tips-repwd').addClass('explain');
+                $('#tips-repwd').css("display", "block");
+             	$('#tips-repwd').html("<span class=\"ccc-text\">"+msg5+"</span><i></i><em></em><b></b>");
+             }).blur(function() {
+		             	$('#tips-repwd').removeClass('explain');
+		             	var valuepwd = $.trim($("#accPwd").val());
+		             	var valuerepwd = $.trim($("#accPwdConf").val());
+		             	var reg = /^[a-zA-Z0-9!@#$%*()_+]{6,20}$/;
+             			if(reg.test(valuerepwd)){
+             				if(valuepwd == valuerepwd)
+			             	{
+			             		if(valuerepwd.length)
+			             		$('#tips-repwd').addClass('correct');
+			             		$('#tips-repwd').html("");
+			             		return;
+			             	}else{
+			             		$('#accPwdConf').addClass('error');
+			             		$('#tips-repwd').addClass('error');
+			             		$('#tips-repwd').html("<span class=\"ccc-text\">"+msg6+"</span><i></i><em></em><b></b>");
+			             		return;
+			             	}
+             			}else{
+			             		$('#accPwdConf').addClass('error');
+			             		$('#tips-repwd').addClass('error');
+			             		$('#tips-repwd').html("<span class=\"ccc-text\">"+msg4+"</span><i></i><em></em><b></b>");
+			             		return;
+		             	}
+             });
+
+            $('#nextstep').click(function(){
+            	if($('#tips-pwd').hasClass('correct')&&$('#tips-repwd').hasClass('correct')){
+            			initMyRSA();
+            			var ajax = {
+							url: "/my/account_resetPwd.html",
+							type: "POST",
+							data: {
+								txtPassWord: myRSA($.trim($("#accPwd").val())),
+								txtRePassWord: myRSA($.trim($("#accPwdConf").val()))
+							},
+							async: true,
+							success: function(data) {
+								switch (data) {
+									case "100":
+										showTips("重置密码成功。","succ",2,function(){
+												location.href = '/my/account_resetsucc.html';
+											});
+										break;
+									case "101":
+										location.href = '/login.html?from=/my/account_resetpass.html';
+										break
+									case "102":
+										showTips("你还没有输入新密码！","error",2);
+										break;
+									case "106":
+										showTips("你输入密码格式有误！","error",2);
+										break;
+									case "107":
+										showTips("两次密码输入不一致！","error",2);
+										break;
+									case "9999":
+										showTips("系统错误,请稍候再试。","error",2);
+										break;
+									default:
+										showTips("未知的返回。","error",2);
+										return;
+								}
+							}
+						}
+						$.ajax(ajax);
+            		}else{
+            			if(!$('#tips-repwd').hasClass('correct')&&!$('#tips-repwd').hasClass('error')){$('#accPwdConf').focus();}
+            			if(!$('#tips-pwd').hasClass('correct')&&!$('#tips-pwd').hasClass('error')){$('#accPwd').focus();}
+            			$('#checkcode').addClass('error');
+            			$('#tips-code').removeClass('correct');
+		            	$('#tips-code').addClass('error');
+                		$('#tips-code').html("<span class=\"ccc-text\">"+msg8+"</span><i></i><em></em><b></b>");
+            		}
+            });
+      });
+    </script>
+	</body>
+</html>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 表单查询之SQL映射 -->
+	<resultMap id="SrvQuery" class="com.ccclubs.model.SrvQuery">
+		<result property="sqId" column="sq_id"/>
+		<result property="sqName" column="sq_name"/>
+		<result property="sqIcon" column="sq_icon"/>
+		<result property="sqPath" column="sq_path"/>
+		<result property="sqParams" column="sq_params"/>
+		<result property="sqEditor" column="sq_editor"/>
+		<result property="sqUpdateTime" column="sq_update_time"/>
+		<result property="sqAddTime" column="sq_add_time"/>
+		<result property="sqStatus" column="sq_status"/>
+	</resultMap>
+		
+	<!-- 获取所有表单查询 -->
+	<select id="getSrvQueryList" resultMap="SrvQuery">
+		select srv_query$suffix$.* from srv_query$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_query$suffix$.sq_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvQuery_part.srv_query_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sq_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取表单查询分页 -->
+	<select id="getSrvQueryPage" parameterClass="java.util.HashMap" resultMap="SrvQuery">
+		select srv_query$suffix$.* from srv_query$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_query$suffix$.sq_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvQuery_part.srv_query_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sq_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取表单查询总数 -->
+	<select id="getSrvQueryEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_query$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_query$suffix$.sq_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvQuery_part.srv_query_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取表单查询 -->
+	<select id="getSrvQueryById" parameterClass="java.util.HashMap" resultMap="SrvQuery">
+		select srv_query$suffix$.* from srv_query$suffix$
+		where sq_id=#id#
+	</select>
+	
+		
+	<!-- 保存表单查询 -->
+	<insert id="saveSrvQuery"  parameterClass="com.ccclubs.model.SrvQuery">
+		insert into srv_query$suffix$
+		(
+			srv_query$suffix$.sq_name
+			,srv_query$suffix$.sq_icon
+			,srv_query$suffix$.sq_path
+			,srv_query$suffix$.sq_params
+			,srv_query$suffix$.sq_editor
+			,srv_query$suffix$.sq_update_time
+			,srv_query$suffix$.sq_add_time
+			,srv_query$suffix$.sq_status
+		)
+		values(
+			<isNotNull property="sqName" prepend="">
+				#sqName#
+			</isNotNull>
+			<isNull property="sqName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="sqIcon" prepend=",">
+				#sqIcon#
+			</isNotNull>
+			<isNull property="sqIcon" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sqPath" prepend=",">
+				#sqPath#
+			</isNotNull>
+			<isNull property="sqPath" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sqParams" prepend=",">
+				#sqParams#
+			</isNotNull>
+			<isNull property="sqParams" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sqEditor" prepend=",">
+				#sqEditor#
+			</isNotNull>
+			<isNull property="sqEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sqUpdateTime" prepend=",">
+				#sqUpdateTime#
+			</isNotNull>
+			<isNull property="sqUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sqAddTime" prepend=",">
+				#sqAddTime#
+			</isNotNull>
+			<isNull property="sqAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sqStatus" prepend=",">
+				#sqStatus#
+			</isNotNull>
+			<isNull property="sqStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新表单查询 -->
+	<update id="updateSrvQuery"  parameterClass="com.ccclubs.model.SrvQuery">
+		update srv_query$suffix$ set
+			<isNotNull property="sqName" prepend="">
+				srv_query$suffix$.sq_name = #sqName#
+			</isNotNull>
+			<isNull property="sqName" prepend="">
+				srv_query$suffix$.sq_name = null
+			</isNull>				
+			<isNotNull property="sqIcon" prepend=",">
+				srv_query$suffix$.sq_icon = #sqIcon#
+			</isNotNull>
+			<isNull property="sqIcon" prepend=",">
+				srv_query$suffix$.sq_icon = null
+			</isNull>				
+			<isNotNull property="sqPath" prepend=",">
+				srv_query$suffix$.sq_path = #sqPath#
+			</isNotNull>
+			<isNull property="sqPath" prepend=",">
+				srv_query$suffix$.sq_path = null
+			</isNull>				
+			<isNotNull property="sqParams" prepend=",">
+				srv_query$suffix$.sq_params = #sqParams#
+			</isNotNull>
+			<isNull property="sqParams" prepend=",">
+				srv_query$suffix$.sq_params = null
+			</isNull>				
+			<isNotNull property="sqEditor" prepend=",">
+				srv_query$suffix$.sq_editor = #sqEditor#
+			</isNotNull>
+			<isNull property="sqEditor" prepend=",">
+				srv_query$suffix$.sq_editor = null
+			</isNull>				
+			<isNotNull property="sqUpdateTime" prepend=",">
+				srv_query$suffix$.sq_update_time = #sqUpdateTime#
+			</isNotNull>
+			<isNull property="sqUpdateTime" prepend=",">
+				srv_query$suffix$.sq_update_time = null
+			</isNull>				
+			<isNotNull property="sqAddTime" prepend=",">
+				srv_query$suffix$.sq_add_time = #sqAddTime#
+			</isNotNull>
+			<isNull property="sqAddTime" prepend=",">
+				srv_query$suffix$.sq_add_time = null
+			</isNull>				
+			<isNotNull property="sqStatus" prepend=",">
+				srv_query$suffix$.sq_status = #sqStatus#
+			</isNotNull>
+			<isNull property="sqStatus" prepend=",">
+				srv_query$suffix$.sq_status = null
+			</isNull>				
+		where
+			sq_id=#sqId#
+	</update>
+	
+	<!-- 更新表单查询非空字段 -->
+	<update id="updateSrvQuery$NotNull"  parameterClass="com.ccclubs.model.SrvQuery">
+		update srv_query$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="sqName" prepend=",">
+				srv_query$suffix$.sq_name = #sqName#
+			</isNotNull>		
+			<isNotNull property="sqIcon" prepend=",">
+				srv_query$suffix$.sq_icon = #sqIcon#
+			</isNotNull>		
+			<isNotNull property="sqPath" prepend=",">
+				srv_query$suffix$.sq_path = #sqPath#
+			</isNotNull>		
+			<isNotNull property="sqParams" prepend=",">
+				srv_query$suffix$.sq_params = #sqParams#
+			</isNotNull>		
+			<isNotNull property="sqEditor" prepend=",">
+				srv_query$suffix$.sq_editor = #sqEditor#
+			</isNotNull>		
+			<isNotNull property="sqUpdateTime" prepend=",">
+				srv_query$suffix$.sq_update_time = #sqUpdateTime#
+			</isNotNull>		
+			<isNotNull property="sqAddTime" prepend=",">
+				srv_query$suffix$.sq_add_time = #sqAddTime#
+			</isNotNull>		
+			<isNotNull property="sqStatus" prepend=",">
+				srv_query$suffix$.sq_status = #sqStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sq_id=#sqId#
+	</update>
+	
+
+	<!-- 根据ID删除一个表单查询 -->
+	<delete id="deleteSrvQueryById" parameterClass="java.util.HashMap">
+		delete from srv_query$suffix$ where sq_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个表单查询 -->
+	<update id="removeSrvQueryById" parameterClass="java.util.HashMap">
+		update srv_query$suffix$ set  srv_query$suffix$.sq_status=-1  where sq_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新表单查询 -->
+	<update id="updateSrvQueryBy"  parameterClass="java.util.HashMap">
+		update srv_query$suffix$ set		
+			sq_id=sq_id
+			<isNotNull property="V_sqId" prepend=",">
+				srv_query$suffix$.sq_id = #V_sqId#
+			</isNotNull>		
+			<isNotNull property="V_sqName" prepend=",">
+				srv_query$suffix$.sq_name = #V_sqName#
+			</isNotNull>		
+			<isNotNull property="V_sqIcon" prepend=",">
+				srv_query$suffix$.sq_icon = #V_sqIcon#
+			</isNotNull>		
+			<isNotNull property="V_sqPath" prepend=",">
+				srv_query$suffix$.sq_path = #V_sqPath#
+			</isNotNull>		
+			<isNotNull property="V_sqParams" prepend=",">
+				srv_query$suffix$.sq_params = #V_sqParams#
+			</isNotNull>		
+			<isNotNull property="V_sqEditor" prepend=",">
+				srv_query$suffix$.sq_editor = #V_sqEditor#
+			</isNotNull>		
+			<isNotNull property="V_sqUpdateTime" prepend=",">
+				srv_query$suffix$.sq_update_time = #V_sqUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_sqAddTime" prepend=",">
+				srv_query$suffix$.sq_add_time = #V_sqAddTime#
+			</isNotNull>		
+			<isNotNull property="V_sqStatus" prepend=",">
+				srv_query$suffix$.sq_status = #V_sqStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		srv_query$suffix$.sq_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvQuery_part.srv_query_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除表单查询 -->
+	<update id="deleteSrvQueryBy"  parameterClass="java.util.HashMap">
+		delete from srv_query$suffix$ where 
+		srv_query$suffix$.sq_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvQuery_part.srv_query_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

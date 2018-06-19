@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 短信发送之SQL映射 -->
+	<resultMap id="CsSmsMt" class="com.ccclubs.model.CsSmsMt">
+		<result property="cssmId" column="cssm_id"/>
+		<result property="cssmHost" column="cssm_host"/>
+		<result property="cssmType" column="cssm_type"/>
+		<result property="cssmMobile" column="cssm_mobile"/>
+		<result property="cssmContent" column="cssm_content"/>
+		<result property="cssmEditor" column="cssm_editor"/>
+		<result property="cssmChannel" column="cssm_channel"/>
+		<result property="cssmUpdateTime" column="cssm_update_time"/>
+		<result property="cssmAddTime" column="cssm_add_time"/>
+		<result property="cssmRemark" column="cssm_remark"/>
+		<result property="cssmStatus" column="cssm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有短信发送 -->
+	<select id="getCsSmsMtList" resultMap="CsSmsMt">
+		select cs_sms_mt$suffix$.* from cs_sms_mt$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_sms_mt$suffix$.cssm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSmsMt_part.cs_sms_mt_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取短信发送分页 -->
+	<select id="getCsSmsMtPage" parameterClass="java.util.HashMap" resultMap="CsSmsMt">
+		select cs_sms_mt$suffix$.* from cs_sms_mt$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_sms_mt$suffix$.cssm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSmsMt_part.cs_sms_mt_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取短信发送总数 -->
+	<select id="getCsSmsMtEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_sms_mt$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_sms_mt$suffix$.cssm_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSmsMt_part.cs_sms_mt_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取短信发送 -->
+	<select id="getCsSmsMtById" parameterClass="java.util.HashMap" resultMap="CsSmsMt">
+		select cs_sms_mt$suffix$.* from cs_sms_mt$suffix$
+		where cssm_id=#id#
+	</select>
+	
+		
+	<!-- 保存短信发送 -->
+	<insert id="saveCsSmsMt"  parameterClass="com.ccclubs.model.CsSmsMt">
+		insert into cs_sms_mt$suffix$
+		(
+			cs_sms_mt$suffix$.cssm_host
+			,cs_sms_mt$suffix$.cssm_type
+			,cs_sms_mt$suffix$.cssm_mobile
+			,cs_sms_mt$suffix$.cssm_content
+			,cs_sms_mt$suffix$.cssm_editor
+			,cs_sms_mt$suffix$.cssm_channel
+			,cs_sms_mt$suffix$.cssm_update_time
+			,cs_sms_mt$suffix$.cssm_add_time
+			,cs_sms_mt$suffix$.cssm_remark
+			,cs_sms_mt$suffix$.cssm_status
+		)
+		values(
+			<isNotNull property="cssmHost" prepend="">
+				#cssmHost#
+			</isNotNull>
+			<isNull property="cssmHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssmType" prepend=",">
+				#cssmType#
+			</isNotNull>
+			<isNull property="cssmType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmMobile" prepend=",">
+				#cssmMobile#
+			</isNotNull>
+			<isNull property="cssmMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmContent" prepend=",">
+				#cssmContent#
+			</isNotNull>
+			<isNull property="cssmContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmEditor" prepend=",">
+				#cssmEditor#
+			</isNotNull>
+			<isNull property="cssmEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmChannel" prepend=",">
+				#cssmChannel#
+			</isNotNull>
+			<isNull property="cssmChannel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmUpdateTime" prepend=",">
+				#cssmUpdateTime#
+			</isNotNull>
+			<isNull property="cssmUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmAddTime" prepend=",">
+				#cssmAddTime#
+			</isNotNull>
+			<isNull property="cssmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmRemark" prepend=",">
+				#cssmRemark#
+			</isNotNull>
+			<isNull property="cssmRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmStatus" prepend=",">
+				#cssmStatus#
+			</isNotNull>
+			<isNull property="cssmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新短信发送 -->
+	<update id="updateCsSmsMt"  parameterClass="com.ccclubs.model.CsSmsMt">
+		update cs_sms_mt$suffix$ set
+			<isNotNull property="cssmHost" prepend="">
+				cs_sms_mt$suffix$.cssm_host = #cssmHost#
+			</isNotNull>
+			<isNull property="cssmHost" prepend="">
+				cs_sms_mt$suffix$.cssm_host = null
+			</isNull>				
+			<isNotNull property="cssmType" prepend=",">
+				cs_sms_mt$suffix$.cssm_type = #cssmType#
+			</isNotNull>
+			<isNull property="cssmType" prepend=",">
+				cs_sms_mt$suffix$.cssm_type = null
+			</isNull>				
+			<isNotNull property="cssmMobile" prepend=",">
+				cs_sms_mt$suffix$.cssm_mobile = #cssmMobile#
+			</isNotNull>
+			<isNull property="cssmMobile" prepend=",">
+				cs_sms_mt$suffix$.cssm_mobile = null
+			</isNull>				
+			<isNotNull property="cssmContent" prepend=",">
+				cs_sms_mt$suffix$.cssm_content = #cssmContent#
+			</isNotNull>
+			<isNull property="cssmContent" prepend=",">
+				cs_sms_mt$suffix$.cssm_content = null
+			</isNull>				
+			<isNotNull property="cssmEditor" prepend=",">
+				cs_sms_mt$suffix$.cssm_editor = #cssmEditor#
+			</isNotNull>
+			<isNull property="cssmEditor" prepend=",">
+				cs_sms_mt$suffix$.cssm_editor = null
+			</isNull>				
+			<isNotNull property="cssmChannel" prepend=",">
+				cs_sms_mt$suffix$.cssm_channel = #cssmChannel#
+			</isNotNull>
+			<isNull property="cssmChannel" prepend=",">
+				cs_sms_mt$suffix$.cssm_channel = null
+			</isNull>				
+			<isNotNull property="cssmUpdateTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_update_time = #cssmUpdateTime#
+			</isNotNull>
+			<isNull property="cssmUpdateTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_update_time = null
+			</isNull>				
+			<isNotNull property="cssmAddTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_add_time = #cssmAddTime#
+			</isNotNull>
+			<isNull property="cssmAddTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_add_time = null
+			</isNull>				
+			<isNotNull property="cssmRemark" prepend=",">
+				cs_sms_mt$suffix$.cssm_remark = #cssmRemark#
+			</isNotNull>
+			<isNull property="cssmRemark" prepend=",">
+				cs_sms_mt$suffix$.cssm_remark = null
+			</isNull>				
+			<isNotNull property="cssmStatus" prepend=",">
+				cs_sms_mt$suffix$.cssm_status = #cssmStatus#
+			</isNotNull>
+			<isNull property="cssmStatus" prepend=",">
+				cs_sms_mt$suffix$.cssm_status = null
+			</isNull>				
+		where
+			cssm_id=#cssmId#
+	</update>
+	
+	<!-- 更新短信发送非空字段 -->
+	<update id="updateCsSmsMt$NotNull"  parameterClass="com.ccclubs.model.CsSmsMt">
+		update cs_sms_mt$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssmHost" prepend=",">
+				cs_sms_mt$suffix$.cssm_host = #cssmHost#
+			</isNotNull>		
+			<isNotNull property="cssmType" prepend=",">
+				cs_sms_mt$suffix$.cssm_type = #cssmType#
+			</isNotNull>		
+			<isNotNull property="cssmMobile" prepend=",">
+				cs_sms_mt$suffix$.cssm_mobile = #cssmMobile#
+			</isNotNull>		
+			<isNotNull property="cssmContent" prepend=",">
+				cs_sms_mt$suffix$.cssm_content = #cssmContent#
+			</isNotNull>		
+			<isNotNull property="cssmEditor" prepend=",">
+				cs_sms_mt$suffix$.cssm_editor = #cssmEditor#
+			</isNotNull>		
+			<isNotNull property="cssmChannel" prepend=",">
+				cs_sms_mt$suffix$.cssm_channel = #cssmChannel#
+			</isNotNull>		
+			<isNotNull property="cssmUpdateTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_update_time = #cssmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cssmAddTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_add_time = #cssmAddTime#
+			</isNotNull>		
+			<isNotNull property="cssmRemark" prepend=",">
+				cs_sms_mt$suffix$.cssm_remark = #cssmRemark#
+			</isNotNull>		
+			<isNotNull property="cssmStatus" prepend=",">
+				cs_sms_mt$suffix$.cssm_status = #cssmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cssm_id=#cssmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个短信发送 -->
+	<delete id="deleteCsSmsMtById" parameterClass="java.util.HashMap">
+		delete from cs_sms_mt$suffix$ where cssm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个短信发送 -->
+	<update id="removeCsSmsMtById" parameterClass="java.util.HashMap">
+		update cs_sms_mt$suffix$ set  cs_sms_mt$suffix$.cssm_status=-1  where cssm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新短信发送 -->
+	<update id="updateCsSmsMtBy"  parameterClass="java.util.HashMap">
+		update cs_sms_mt$suffix$ set		
+			cssm_id=cssm_id
+			<isNotNull property="V_cssmId" prepend=",">
+				cs_sms_mt$suffix$.cssm_id = #V_cssmId#
+			</isNotNull>		
+			<isNotNull property="V_cssmHost" prepend=",">
+				cs_sms_mt$suffix$.cssm_host = #V_cssmHost#
+			</isNotNull>		
+			<isNotNull property="V_cssmType" prepend=",">
+				cs_sms_mt$suffix$.cssm_type = #V_cssmType#
+			</isNotNull>		
+			<isNotNull property="V_cssmMobile" prepend=",">
+				cs_sms_mt$suffix$.cssm_mobile = #V_cssmMobile#
+			</isNotNull>		
+			<isNotNull property="V_cssmContent" prepend=",">
+				cs_sms_mt$suffix$.cssm_content = #V_cssmContent#
+			</isNotNull>		
+			<isNotNull property="V_cssmEditor" prepend=",">
+				cs_sms_mt$suffix$.cssm_editor = #V_cssmEditor#
+			</isNotNull>		
+			<isNotNull property="V_cssmChannel" prepend=",">
+				cs_sms_mt$suffix$.cssm_channel = #V_cssmChannel#
+			</isNotNull>		
+			<isNotNull property="V_cssmUpdateTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_update_time = #V_cssmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cssmAddTime" prepend=",">
+				cs_sms_mt$suffix$.cssm_add_time = #V_cssmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssmRemark" prepend=",">
+				cs_sms_mt$suffix$.cssm_remark = #V_cssmRemark#
+			</isNotNull>		
+			<isNotNull property="V_cssmStatus" prepend=",">
+				cs_sms_mt$suffix$.cssm_status = #V_cssmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_sms_mt$suffix$.cssm_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsSmsMt_part.cs_sms_mt_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除短信发送 -->
+	<update id="deleteCsSmsMtBy"  parameterClass="java.util.HashMap">
+		delete from cs_sms_mt$suffix$ where 
+		cs_sms_mt$suffix$.cssm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsSmsMt_part.cs_sms_mt_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

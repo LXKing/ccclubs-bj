@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUseRecord_part">	
+	<!-- 惠免记录条件sql片段  -->
+	<sql id="cs_use_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csurId" prepend="and">
+			    $csurIdNot$ cs_use_record$suffix$.csur_id = #csurId#
+			</isNotEmpty>
+			<isNotNull property="csurIdNot" prepend="and">
+				<isEmpty property="csurId">
+				$csurIdNot$ cs_use_record$suffix$.csur_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_use_record$suffix$.csur_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csurHost" prepend="and">
+			    $csurHostNot$ cs_use_record$suffix$.csur_host = #csurHost#
+			</isNotEmpty>
+			<isNotNull property="csurHostNot" prepend="and">
+				<isEmpty property="csurHost">
+				$csurHostNot$ cs_use_record$suffix$.csur_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csurProfile" prepend="and">			    
+			    (<isNotNull property="csurProfileNot">
+			    cs_use_record$suffix$.csur_profile is null or length(cs_use_record$suffix$.csur_profile) &lt; 1 or
+			    </isNotNull>$csurProfileNot$ cs_use_record$suffix$.csur_profile like #csurProfile#)
+			</isNotEmpty>
+			<isNotNull property="csurProfileNot" prepend="and">
+				<isEmpty property="csurProfile">
+				$csurProfileNot$ (cs_use_record$suffix$.csur_profile is null or length(cs_use_record$suffix$.csur_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csurMember" prepend="and">
+			    $csurMemberNot$ cs_use_record$suffix$.csur_member = #csurMember#
+			</isNotEmpty>
+			<isNotNull property="csurMemberNot" prepend="and">
+				<isEmpty property="csurMember">
+				$csurMemberNot$ cs_use_record$suffix$.csur_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csurFreeHour" prepend="and">
+			    $csurFreeHourNot$ cs_use_record$suffix$.csur_free_hour = #csurFreeHour#
+			</isNotEmpty>
+			<isNotNull property="csurFreeHourNot" prepend="and">
+				<isEmpty property="csurFreeHour">
+				$csurFreeHourNot$ cs_use_record$suffix$.csur_free_hour is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csurCoin" prepend="and">
+			    $csurCoinNot$ cs_use_record$suffix$.csur_coin = #csurCoin#
+			</isNotEmpty>
+			<isNotNull property="csurCoinNot" prepend="and">
+				<isEmpty property="csurCoin">
+				$csurCoinNot$ cs_use_record$suffix$.csur_coin is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csurGift" prepend="and">
+			    $csurGiftNot$ cs_use_record$suffix$.csur_gift = #csurGift#
+			</isNotEmpty>
+			<isNotNull property="csurGiftNot" prepend="and">
+				<isEmpty property="csurGift">
+				$csurGiftNot$ cs_use_record$suffix$.csur_gift is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csurOrder" prepend="and">
+			    $csurOrderNot$ cs_use_record$suffix$.csur_order = #csurOrder#
+			</isNotEmpty>
+			<isNotNull property="csurOrderNot" prepend="and">
+				<isEmpty property="csurOrder">
+				$csurOrderNot$ cs_use_record$suffix$.csur_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csurCountMin" prepend="and">
+			    $csurCountNot$  ( cs_use_record$suffix$.csur_count &gt;= #csurCountMin#
+			    <isEmpty property="csurCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csurCountMax" prepend="and">
+				<isEmpty property="csurCountMin">$csurCountNot$   (</isEmpty>
+			    cs_use_record$suffix$.csur_count &lt;= #csurCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csurCount" prepend="and">
+			    $csurCountNot$ cs_use_record$suffix$.csur_count = #csurCount#
+			</isNotEmpty>
+			<isNotNull property="csurCountNot" prepend="and">
+				<isEmpty property="csurCountMax"><isEmpty property="csurCountMin"><isEmpty property="csurCount">
+				$csurCountNot$ cs_use_record$suffix$.csur_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csurAddTimeStart" prepend="and">
+			    $csurAddTimeNot$   (cs_use_record$suffix$.csur_add_time &gt;= #csurAddTimeStart#
+			   <isEmpty property="csurAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csurAddTimeEnd" prepend="and">
+				<isEmpty property="csurAddTimeStart">$csurAddTimeNot$   (</isEmpty>
+			    cs_use_record$suffix$.csur_add_time &lt;= #csurAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csurAddTime" prepend="and">
+			    $csurAddTimeNot$ cs_use_record$suffix$.csur_add_time = #csurAddTime#
+			</isNotEmpty>
+			<isNotNull property="csurAddTimeNot" prepend="and">
+				<isEmpty property="csurAddTimeStart"><isEmpty property="csurAddTimeEnd"><isEmpty property="csurAddTime">
+				$csurAddTimeNot$ cs_use_record$suffix$.csur_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 惠免记录left join 条件sql片段 -->
+	<sql id="cs_use_record_join">
+		<dynamic>
+			<isNotEmpty property="CsUseRecord.csurId" prepend="and">
+			    $CsUseRecord.csurIdNot$ cs_use_record$CsUseRecord.suffix$.csur_id = #CsUseRecord.csurId#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurIdNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurId">
+				$csurIdNot$ cs_use_record$CsUseRecord.suffix$.csur_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_use_record$CsUseRecord.suffix$.csur_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUseRecord.csurHost" prepend="and">
+			    $CsUseRecord.csurHostNot$ cs_use_record$CsUseRecord.suffix$.csur_host = #CsUseRecord.csurHost#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurHostNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurHost">
+				$csurHostNot$ cs_use_record$CsUseRecord.suffix$.csur_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurProfile" prepend="and">
+				(<isNotNull property="CsUseRecord.csurProfileNot">
+			    cs_use_record$CsUseRecord.suffix$.csur_profile is null or length(cs_use_record$CsUseRecord.suffix$.csur_profile) &lt; 1 or
+			    </isNotNull>$CsUseRecord.csurProfileNot$ cs_use_record$CsUseRecord.suffix$.csur_profile like #CsUseRecord.csurProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurProfileNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurProfile">
+				$csurProfileNot$ (cs_use_record$CsUseRecord.suffix$.csur_profile is null or length(cs_use_record$CsUseRecord.suffix$.csur_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurMember" prepend="and">
+			    $CsUseRecord.csurMemberNot$ cs_use_record$CsUseRecord.suffix$.csur_member = #CsUseRecord.csurMember#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurMemberNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurMember">
+				$csurMemberNot$ cs_use_record$CsUseRecord.suffix$.csur_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurFreeHour" prepend="and">
+			    $CsUseRecord.csurFreeHourNot$ cs_use_record$CsUseRecord.suffix$.csur_free_hour = #CsUseRecord.csurFreeHour#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurFreeHourNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurFreeHour">
+				$csurFreeHourNot$ cs_use_record$CsUseRecord.suffix$.csur_free_hour is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurCoin" prepend="and">
+			    $CsUseRecord.csurCoinNot$ cs_use_record$CsUseRecord.suffix$.csur_coin = #CsUseRecord.csurCoin#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurCoinNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurCoin">
+				$csurCoinNot$ cs_use_record$CsUseRecord.suffix$.csur_coin is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurGift" prepend="and">
+			    $CsUseRecord.csurGiftNot$ cs_use_record$CsUseRecord.suffix$.csur_gift = #CsUseRecord.csurGift#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurGiftNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurGift">
+				$csurGiftNot$ cs_use_record$CsUseRecord.suffix$.csur_gift is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurOrder" prepend="and">
+			    $CsUseRecord.csurOrderNot$ cs_use_record$CsUseRecord.suffix$.csur_order = #CsUseRecord.csurOrder#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurOrderNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurOrder">
+				$csurOrderNot$ cs_use_record$CsUseRecord.suffix$.csur_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurCountMin" prepend="and">
+			    $CsUseRecord.csurCountNot$  ( cs_use_record$CsUseRecord.suffix$.csur_count &gt;= #CsUseRecord.csurCountMin#
+			    <isEmpty property="CsUseRecord.csurCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUseRecord.csurCountMax" prepend="and">
+				<isEmpty property="CsUseRecord.csurCountMin">$CsUseRecord.csurCountNot$   (</isEmpty>
+			    cs_use_record$CsUseRecord.suffix$.csur_count &lt;= #CsUseRecord.csurCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUseRecord.csurCount" prepend="and">
+			    $CsUseRecord.csurCountNot$ cs_use_record$CsUseRecord.suffix$.csur_count = #CsUseRecord.csurCount#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurCountNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurCountMax"><isEmpty property="CsUseRecord.csurCountMin"><isEmpty property="CsUseRecord.csurCount">
+				$csurCountNot$ cs_use_record$CsUseRecord.suffix$.csur_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUseRecord.csurAddTimeStart" prepend="and">
+			    $CsUseRecord.csurAddTimeNot$   (cs_use_record$CsUseRecord.suffix$.csur_add_time &gt;= #CsUseRecord.csurAddTimeStart#
+			   <isEmpty property="CsUseRecord.csurAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUseRecord.csurAddTimeEnd" prepend="and">
+				<isEmpty property="CsUseRecord.csurAddTimeStart">$CsUseRecord.csurAddTimeNot$   (</isEmpty>
+			    cs_use_record$CsUseRecord.suffix$.csur_add_time &lt;= #CsUseRecord.csurAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUseRecord.csurAddTime" prepend="and">
+			    $CsUseRecord.csurAddTimeNot$ cs_use_record$CsUseRecord.suffix$.csur_add_time = #CsUseRecord.csurAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUseRecord.csurAddTimeNot" prepend="and">
+				<isEmpty property="CsUseRecord.csurAddTimeStart"><isEmpty property="CsUseRecord.csurAddTimeEnd"><isEmpty property="CsUseRecord.csurAddTime">
+				$csurAddTimeNot$ cs_use_record$CsUseRecord.suffix$.csur_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

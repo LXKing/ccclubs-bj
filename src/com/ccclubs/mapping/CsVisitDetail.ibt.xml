@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 访问详情之SQL映射 -->
+	<resultMap id="CsVisitDetail" class="com.ccclubs.model.CsVisitDetail">
+		<result property="csvdId" column="csvd_id"/>
+		<result property="csvdHost" column="csvd_host"/>
+		<result property="csvdPlatform" column="csvd_platform"/>
+		<result property="csvdChannel" column="csvd_channel"/>
+		<result property="csvdPlan" column="csvd_plan"/>
+		<result property="csvdActivity" column="csvd_activity"/>
+		<result property="csvdPv" column="csvd_pv"/>
+		<result property="csvdUv" column="csvd_uv"/>
+		<result property="csvdIp" column="csvd_ip"/>
+		<result property="csvdAddTime" column="csvd_add_time"/>
+		<result property="csvdStatus" column="csvd_status"/>
+	</resultMap>
+		
+	<!-- 获取所有访问详情 -->
+	<select id="getCsVisitDetailList" resultMap="CsVisitDetail">
+		select cs_visit_detail$suffix$.* from cs_visit_detail$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_visit_detail$suffix$.csvd_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsVisitDetail_part.cs_visit_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csvd_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取访问详情分页 -->
+	<select id="getCsVisitDetailPage" parameterClass="java.util.HashMap" resultMap="CsVisitDetail">
+		select cs_visit_detail$suffix$.* from cs_visit_detail$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_visit_detail$suffix$.csvd_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsVisitDetail_part.cs_visit_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csvd_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取访问详情总数 -->
+	<select id="getCsVisitDetailEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_visit_detail$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_visit_detail$suffix$.csvd_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsVisitDetail_part.cs_visit_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取访问详情 -->
+	<select id="getCsVisitDetailById" parameterClass="java.util.HashMap" resultMap="CsVisitDetail">
+		select cs_visit_detail$suffix$.* from cs_visit_detail$suffix$
+		where csvd_id=#id#
+	</select>
+	
+		
+	<!-- 保存访问详情 -->
+	<insert id="saveCsVisitDetail"  parameterClass="com.ccclubs.model.CsVisitDetail">
+		insert into cs_visit_detail$suffix$
+		(
+			cs_visit_detail$suffix$.csvd_host
+			,cs_visit_detail$suffix$.csvd_platform
+			,cs_visit_detail$suffix$.csvd_channel
+			,cs_visit_detail$suffix$.csvd_plan
+			,cs_visit_detail$suffix$.csvd_activity
+			,cs_visit_detail$suffix$.csvd_pv
+			,cs_visit_detail$suffix$.csvd_uv
+			,cs_visit_detail$suffix$.csvd_ip
+			,cs_visit_detail$suffix$.csvd_add_time
+			,cs_visit_detail$suffix$.csvd_status
+		)
+		values(
+			<isNotNull property="csvdHost" prepend="">
+				#csvdHost#
+			</isNotNull>
+			<isNull property="csvdHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csvdPlatform" prepend=",">
+				#csvdPlatform#
+			</isNotNull>
+			<isNull property="csvdPlatform" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdChannel" prepend=",">
+				#csvdChannel#
+			</isNotNull>
+			<isNull property="csvdChannel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdPlan" prepend=",">
+				#csvdPlan#
+			</isNotNull>
+			<isNull property="csvdPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdActivity" prepend=",">
+				#csvdActivity#
+			</isNotNull>
+			<isNull property="csvdActivity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdPv" prepend=",">
+				#csvdPv#
+			</isNotNull>
+			<isNull property="csvdPv" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdUv" prepend=",">
+				#csvdUv#
+			</isNotNull>
+			<isNull property="csvdUv" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdIp" prepend=",">
+				#csvdIp#
+			</isNotNull>
+			<isNull property="csvdIp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdAddTime" prepend=",">
+				#csvdAddTime#
+			</isNotNull>
+			<isNull property="csvdAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvdStatus" prepend=",">
+				#csvdStatus#
+			</isNotNull>
+			<isNull property="csvdStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新访问详情 -->
+	<update id="updateCsVisitDetail"  parameterClass="com.ccclubs.model.CsVisitDetail">
+		update cs_visit_detail$suffix$ set
+			<isNotNull property="csvdHost" prepend="">
+				cs_visit_detail$suffix$.csvd_host = #csvdHost#
+			</isNotNull>
+			<isNull property="csvdHost" prepend="">
+				cs_visit_detail$suffix$.csvd_host = null
+			</isNull>				
+			<isNotNull property="csvdPlatform" prepend=",">
+				cs_visit_detail$suffix$.csvd_platform = #csvdPlatform#
+			</isNotNull>
+			<isNull property="csvdPlatform" prepend=",">
+				cs_visit_detail$suffix$.csvd_platform = null
+			</isNull>				
+			<isNotNull property="csvdChannel" prepend=",">
+				cs_visit_detail$suffix$.csvd_channel = #csvdChannel#
+			</isNotNull>
+			<isNull property="csvdChannel" prepend=",">
+				cs_visit_detail$suffix$.csvd_channel = null
+			</isNull>				
+			<isNotNull property="csvdPlan" prepend=",">
+				cs_visit_detail$suffix$.csvd_plan = #csvdPlan#
+			</isNotNull>
+			<isNull property="csvdPlan" prepend=",">
+				cs_visit_detail$suffix$.csvd_plan = null
+			</isNull>				
+			<isNotNull property="csvdActivity" prepend=",">
+				cs_visit_detail$suffix$.csvd_activity = #csvdActivity#
+			</isNotNull>
+			<isNull property="csvdActivity" prepend=",">
+				cs_visit_detail$suffix$.csvd_activity = null
+			</isNull>				
+			<isNotNull property="csvdPv" prepend=",">
+				cs_visit_detail$suffix$.csvd_pv = #csvdPv#
+			</isNotNull>
+			<isNull property="csvdPv" prepend=",">
+				cs_visit_detail$suffix$.csvd_pv = null
+			</isNull>				
+			<isNotNull property="csvdUv" prepend=",">
+				cs_visit_detail$suffix$.csvd_uv = #csvdUv#
+			</isNotNull>
+			<isNull property="csvdUv" prepend=",">
+				cs_visit_detail$suffix$.csvd_uv = null
+			</isNull>				
+			<isNotNull property="csvdIp" prepend=",">
+				cs_visit_detail$suffix$.csvd_ip = #csvdIp#
+			</isNotNull>
+			<isNull property="csvdIp" prepend=",">
+				cs_visit_detail$suffix$.csvd_ip = null
+			</isNull>				
+			<isNotNull property="csvdAddTime" prepend=",">
+				cs_visit_detail$suffix$.csvd_add_time = #csvdAddTime#
+			</isNotNull>
+			<isNull property="csvdAddTime" prepend=",">
+				cs_visit_detail$suffix$.csvd_add_time = null
+			</isNull>				
+			<isNotNull property="csvdStatus" prepend=",">
+				cs_visit_detail$suffix$.csvd_status = #csvdStatus#
+			</isNotNull>
+			<isNull property="csvdStatus" prepend=",">
+				cs_visit_detail$suffix$.csvd_status = null
+			</isNull>				
+		where
+			csvd_id=#csvdId#
+	</update>
+	
+	<!-- 更新访问详情非空字段 -->
+	<update id="updateCsVisitDetail$NotNull"  parameterClass="com.ccclubs.model.CsVisitDetail">
+		update cs_visit_detail$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csvdHost" prepend=",">
+				cs_visit_detail$suffix$.csvd_host = #csvdHost#
+			</isNotNull>		
+			<isNotNull property="csvdPlatform" prepend=",">
+				cs_visit_detail$suffix$.csvd_platform = #csvdPlatform#
+			</isNotNull>		
+			<isNotNull property="csvdChannel" prepend=",">
+				cs_visit_detail$suffix$.csvd_channel = #csvdChannel#
+			</isNotNull>		
+			<isNotNull property="csvdPlan" prepend=",">
+				cs_visit_detail$suffix$.csvd_plan = #csvdPlan#
+			</isNotNull>		
+			<isNotNull property="csvdActivity" prepend=",">
+				cs_visit_detail$suffix$.csvd_activity = #csvdActivity#
+			</isNotNull>		
+			<isNotNull property="csvdPv" prepend=",">
+				cs_visit_detail$suffix$.csvd_pv = #csvdPv#
+			</isNotNull>		
+			<isNotNull property="csvdUv" prepend=",">
+				cs_visit_detail$suffix$.csvd_uv = #csvdUv#
+			</isNotNull>		
+			<isNotNull property="csvdIp" prepend=",">
+				cs_visit_detail$suffix$.csvd_ip = #csvdIp#
+			</isNotNull>		
+			<isNotNull property="csvdAddTime" prepend=",">
+				cs_visit_detail$suffix$.csvd_add_time = #csvdAddTime#
+			</isNotNull>		
+			<isNotNull property="csvdStatus" prepend=",">
+				cs_visit_detail$suffix$.csvd_status = #csvdStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csvd_id=#csvdId#
+	</update>
+	
+
+	<!-- 根据ID删除一个访问详情 -->
+	<delete id="deleteCsVisitDetailById" parameterClass="java.util.HashMap">
+		delete from cs_visit_detail$suffix$ where csvd_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个访问详情 -->
+	<update id="removeCsVisitDetailById" parameterClass="java.util.HashMap">
+		update cs_visit_detail$suffix$ set  cs_visit_detail$suffix$.csvd_status=-1  where csvd_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新访问详情 -->
+	<update id="updateCsVisitDetailBy"  parameterClass="java.util.HashMap">
+		update cs_visit_detail$suffix$ set		
+			csvd_id=csvd_id
+			<isNotNull property="V_csvdId" prepend=",">
+				cs_visit_detail$suffix$.csvd_id = #V_csvdId#
+			</isNotNull>		
+			<isNotNull property="V_csvdHost" prepend=",">
+				cs_visit_detail$suffix$.csvd_host = #V_csvdHost#
+			</isNotNull>		
+			<isNotNull property="V_csvdPlatform" prepend=",">
+				cs_visit_detail$suffix$.csvd_platform = #V_csvdPlatform#
+			</isNotNull>		
+			<isNotNull property="V_csvdChannel" prepend=",">
+				cs_visit_detail$suffix$.csvd_channel = #V_csvdChannel#
+			</isNotNull>		
+			<isNotNull property="V_csvdPlan" prepend=",">
+				cs_visit_detail$suffix$.csvd_plan = #V_csvdPlan#
+			</isNotNull>		
+			<isNotNull property="V_csvdActivity" prepend=",">
+				cs_visit_detail$suffix$.csvd_activity = #V_csvdActivity#
+			</isNotNull>		
+			<isNotNull property="V_csvdPv" prepend=",">
+				cs_visit_detail$suffix$.csvd_pv = #V_csvdPv#
+			</isNotNull>		
+			<isNotNull property="V_csvdUv" prepend=",">
+				cs_visit_detail$suffix$.csvd_uv = #V_csvdUv#
+			</isNotNull>		
+			<isNotNull property="V_csvdIp" prepend=",">
+				cs_visit_detail$suffix$.csvd_ip = #V_csvdIp#
+			</isNotNull>		
+			<isNotNull property="V_csvdAddTime" prepend=",">
+				cs_visit_detail$suffix$.csvd_add_time = #V_csvdAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csvdStatus" prepend=",">
+				cs_visit_detail$suffix$.csvd_status = #V_csvdStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_visit_detail$suffix$.csvd_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsVisitDetail_part.cs_visit_detail_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除访问详情 -->
+	<update id="deleteCsVisitDetailBy"  parameterClass="java.util.HashMap">
+		delete from cs_visit_detail$suffix$ where 
+		cs_visit_detail$suffix$.csvd_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsVisitDetail_part.cs_visit_detail_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

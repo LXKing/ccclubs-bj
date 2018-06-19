@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUserPack_part">	
+	<!-- 用户套餐条件sql片段  -->
+	<sql id="cs_user_pack_dynamic">
+		<dynamic>
+			<isNotEmpty property="csupId" prepend="and">
+			    $csupIdNot$ cs_user_pack$suffix$.csup_id = #csupId#
+			</isNotEmpty>
+			<isNotNull property="csupIdNot" prepend="and">
+				<isEmpty property="csupId">
+				$csupIdNot$ cs_user_pack$suffix$.csup_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_user_pack$suffix$.csup_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csupHost" prepend="and">
+			    $csupHostNot$ cs_user_pack$suffix$.csup_host = #csupHost#
+			</isNotEmpty>
+			<isNotNull property="csupHostNot" prepend="and">
+				<isEmpty property="csupHost">
+				$csupHostNot$ cs_user_pack$suffix$.csup_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csupPack" prepend="and">
+			    $csupPackNot$ cs_user_pack$suffix$.csup_pack = #csupPack#
+			</isNotEmpty>
+			<isNotNull property="csupPackNot" prepend="and">
+				<isEmpty property="csupPack">
+				$csupPackNot$ cs_user_pack$suffix$.csup_pack is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupMember" prepend="and">
+			    $csupMemberNot$ cs_user_pack$suffix$.csup_member = #csupMember#
+			</isNotEmpty>
+			<isNotNull property="csupMemberNot" prepend="and">
+				<isEmpty property="csupMember">
+				$csupMemberNot$ cs_user_pack$suffix$.csup_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupRemark" prepend="and">			    
+			    (<isNotNull property="csupRemarkNot">
+			    cs_user_pack$suffix$.csup_remark is null or length(cs_user_pack$suffix$.csup_remark) &lt; 1 or
+			    </isNotNull>$csupRemarkNot$ cs_user_pack$suffix$.csup_remark like #csupRemark#)
+			</isNotEmpty>
+			<isNotNull property="csupRemarkNot" prepend="and">
+				<isEmpty property="csupRemark">
+				$csupRemarkNot$ (cs_user_pack$suffix$.csup_remark is null or length(cs_user_pack$suffix$.csup_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupUntilTimeStart" prepend="and">
+			    $csupUntilTimeNot$   (cs_user_pack$suffix$.csup_until_time &gt;= #csupUntilTimeStart#
+			   <isEmpty property="csupUntilTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csupUntilTimeEnd" prepend="and">
+				<isEmpty property="csupUntilTimeStart">$csupUntilTimeNot$   (</isEmpty>
+			    cs_user_pack$suffix$.csup_until_time &lt;= #csupUntilTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csupUntilTime" prepend="and">
+			    $csupUntilTimeNot$ cs_user_pack$suffix$.csup_until_time = #csupUntilTime#
+			</isNotEmpty>
+			<isNotNull property="csupUntilTimeNot" prepend="and">
+				<isEmpty property="csupUntilTimeStart"><isEmpty property="csupUntilTimeEnd"><isEmpty property="csupUntilTime">
+				$csupUntilTimeNot$ cs_user_pack$suffix$.csup_until_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupUpdateTimeStart" prepend="and">
+			    $csupUpdateTimeNot$   (cs_user_pack$suffix$.csup_update_time &gt;= #csupUpdateTimeStart#
+			   <isEmpty property="csupUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csupUpdateTimeEnd" prepend="and">
+				<isEmpty property="csupUpdateTimeStart">$csupUpdateTimeNot$   (</isEmpty>
+			    cs_user_pack$suffix$.csup_update_time &lt;= #csupUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csupUpdateTime" prepend="and">
+			    $csupUpdateTimeNot$ cs_user_pack$suffix$.csup_update_time = #csupUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csupUpdateTimeNot" prepend="and">
+				<isEmpty property="csupUpdateTimeStart"><isEmpty property="csupUpdateTimeEnd"><isEmpty property="csupUpdateTime">
+				$csupUpdateTimeNot$ cs_user_pack$suffix$.csup_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupAddTimeStart" prepend="and">
+			    $csupAddTimeNot$   (cs_user_pack$suffix$.csup_add_time &gt;= #csupAddTimeStart#
+			   <isEmpty property="csupAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csupAddTimeEnd" prepend="and">
+				<isEmpty property="csupAddTimeStart">$csupAddTimeNot$   (</isEmpty>
+			    cs_user_pack$suffix$.csup_add_time &lt;= #csupAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csupAddTime" prepend="and">
+			    $csupAddTimeNot$ cs_user_pack$suffix$.csup_add_time = #csupAddTime#
+			</isNotEmpty>
+			<isNotNull property="csupAddTimeNot" prepend="and">
+				<isEmpty property="csupAddTimeStart"><isEmpty property="csupAddTimeEnd"><isEmpty property="csupAddTime">
+				$csupAddTimeNot$ cs_user_pack$suffix$.csup_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupState" prepend="and">
+			    $csupStateNot$ cs_user_pack$suffix$.csup_state = #csupState#
+			</isNotEmpty>
+			<isNotNull property="csupStateNot" prepend="and">
+				<isEmpty property="csupState">
+				$csupStateNot$ cs_user_pack$suffix$.csup_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csupStatus" prepend="and">
+			    $csupStatusNot$ cs_user_pack$suffix$.csup_status = #csupStatus#
+			</isNotEmpty>
+			<isNotNull property="csupStatusNot" prepend="and">
+				<isEmpty property="csupStatus">
+				$csupStatusNot$ cs_user_pack$suffix$.csup_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 用户套餐left join 条件sql片段 -->
+	<sql id="cs_user_pack_join">
+		<dynamic>
+			<isNotEmpty property="CsUserPack.csupId" prepend="and">
+			    $CsUserPack.csupIdNot$ cs_user_pack$CsUserPack.suffix$.csup_id = #CsUserPack.csupId#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupIdNot" prepend="and">
+				<isEmpty property="CsUserPack.csupId">
+				$csupIdNot$ cs_user_pack$CsUserPack.suffix$.csup_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_user_pack$CsUserPack.suffix$.csup_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupHost" prepend="and">
+			    $CsUserPack.csupHostNot$ cs_user_pack$CsUserPack.suffix$.csup_host = #CsUserPack.csupHost#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupHostNot" prepend="and">
+				<isEmpty property="CsUserPack.csupHost">
+				$csupHostNot$ cs_user_pack$CsUserPack.suffix$.csup_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupPack" prepend="and">
+			    $CsUserPack.csupPackNot$ cs_user_pack$CsUserPack.suffix$.csup_pack = #CsUserPack.csupPack#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupPackNot" prepend="and">
+				<isEmpty property="CsUserPack.csupPack">
+				$csupPackNot$ cs_user_pack$CsUserPack.suffix$.csup_pack is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupMember" prepend="and">
+			    $CsUserPack.csupMemberNot$ cs_user_pack$CsUserPack.suffix$.csup_member = #CsUserPack.csupMember#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupMemberNot" prepend="and">
+				<isEmpty property="CsUserPack.csupMember">
+				$csupMemberNot$ cs_user_pack$CsUserPack.suffix$.csup_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupRemark" prepend="and">
+				(<isNotNull property="CsUserPack.csupRemarkNot">
+			    cs_user_pack$CsUserPack.suffix$.csup_remark is null or length(cs_user_pack$CsUserPack.suffix$.csup_remark) &lt; 1 or
+			    </isNotNull>$CsUserPack.csupRemarkNot$ cs_user_pack$CsUserPack.suffix$.csup_remark like #CsUserPack.csupRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupRemarkNot" prepend="and">
+				<isEmpty property="CsUserPack.csupRemark">
+				$csupRemarkNot$ (cs_user_pack$CsUserPack.suffix$.csup_remark is null or length(cs_user_pack$CsUserPack.suffix$.csup_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupUntilTimeStart" prepend="and">
+			    $CsUserPack.csupUntilTimeNot$   (cs_user_pack$CsUserPack.suffix$.csup_until_time &gt;= #CsUserPack.csupUntilTimeStart#
+			   <isEmpty property="CsUserPack.csupUntilTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupUntilTimeEnd" prepend="and">
+				<isEmpty property="CsUserPack.csupUntilTimeStart">$CsUserPack.csupUntilTimeNot$   (</isEmpty>
+			    cs_user_pack$CsUserPack.suffix$.csup_until_time &lt;= #CsUserPack.csupUntilTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupUntilTime" prepend="and">
+			    $CsUserPack.csupUntilTimeNot$ cs_user_pack$CsUserPack.suffix$.csup_until_time = #CsUserPack.csupUntilTime#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupUntilTimeNot" prepend="and">
+				<isEmpty property="CsUserPack.csupUntilTimeStart"><isEmpty property="CsUserPack.csupUntilTimeEnd"><isEmpty property="CsUserPack.csupUntilTime">
+				$csupUntilTimeNot$ cs_user_pack$CsUserPack.suffix$.csup_until_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupUpdateTimeStart" prepend="and">
+			    $CsUserPack.csupUpdateTimeNot$   (cs_user_pack$CsUserPack.suffix$.csup_update_time &gt;= #CsUserPack.csupUpdateTimeStart#
+			   <isEmpty property="CsUserPack.csupUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsUserPack.csupUpdateTimeStart">$CsUserPack.csupUpdateTimeNot$   (</isEmpty>
+			    cs_user_pack$CsUserPack.suffix$.csup_update_time &lt;= #CsUserPack.csupUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupUpdateTime" prepend="and">
+			    $CsUserPack.csupUpdateTimeNot$ cs_user_pack$CsUserPack.suffix$.csup_update_time = #CsUserPack.csupUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupUpdateTimeNot" prepend="and">
+				<isEmpty property="CsUserPack.csupUpdateTimeStart"><isEmpty property="CsUserPack.csupUpdateTimeEnd"><isEmpty property="CsUserPack.csupUpdateTime">
+				$csupUpdateTimeNot$ cs_user_pack$CsUserPack.suffix$.csup_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupAddTimeStart" prepend="and">
+			    $CsUserPack.csupAddTimeNot$   (cs_user_pack$CsUserPack.suffix$.csup_add_time &gt;= #CsUserPack.csupAddTimeStart#
+			   <isEmpty property="CsUserPack.csupAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupAddTimeEnd" prepend="and">
+				<isEmpty property="CsUserPack.csupAddTimeStart">$CsUserPack.csupAddTimeNot$   (</isEmpty>
+			    cs_user_pack$CsUserPack.suffix$.csup_add_time &lt;= #CsUserPack.csupAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUserPack.csupAddTime" prepend="and">
+			    $CsUserPack.csupAddTimeNot$ cs_user_pack$CsUserPack.suffix$.csup_add_time = #CsUserPack.csupAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupAddTimeNot" prepend="and">
+				<isEmpty property="CsUserPack.csupAddTimeStart"><isEmpty property="CsUserPack.csupAddTimeEnd"><isEmpty property="CsUserPack.csupAddTime">
+				$csupAddTimeNot$ cs_user_pack$CsUserPack.suffix$.csup_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupState" prepend="and">
+			    $CsUserPack.csupStateNot$ cs_user_pack$CsUserPack.suffix$.csup_state = #CsUserPack.csupState#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupStateNot" prepend="and">
+				<isEmpty property="CsUserPack.csupState">
+				$csupStateNot$ cs_user_pack$CsUserPack.suffix$.csup_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUserPack.csupStatus" prepend="and">
+			    $CsUserPack.csupStatusNot$ cs_user_pack$CsUserPack.suffix$.csup_status = #CsUserPack.csupStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUserPack.csupStatusNot" prepend="and">
+				<isEmpty property="CsUserPack.csupStatus">
+				$csupStatusNot$ cs_user_pack$CsUserPack.suffix$.csup_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

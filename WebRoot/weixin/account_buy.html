@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 购买现金券</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/main.css?v=123123">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="account_coupon.html">返回</a>
+					</div>
+					<div class="showtitle">
+						购买现金券
+					</div>
+				</div>
+			</div>
+			<div class="refundgoldbox">
+				<dl>
+					<dt>
+						<img src="images/refud_icon5.png">
+					</dt>
+					<dd>
+						现金券可以在车纷享租车过程中当现金使 用，支付任何费用，但不能兑现和退换。
+						<br>
+						<a href="#">系统优先使用充值帐户余额购买现金券。</a>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<img src="images/refud_icon2.png">
+					</dt>
+					<dd>
+						客服热线：0571-88190338
+					</dd>
+				</dl>
+			</div>
+			<div class="refundgold2box">
+				<ul>
+					<s:iterator value="#request.list" id="item" status="i">
+						<li>
+							<a href="javascript:;" onclick="checkin(this,'',${item.csiId})"><img src="${csItem.csiId==item.csiId?'images/goldon.png':'images/gold.png'}">${item.csiTitle}元<strong>(${cc:toInt(item.csiRebate*100)}折，现价${cc:toInt(item.csiPrice*item.csiRebate)}元)</strong> </a>
+						</li>
+					</s:iterator>
+					<!--<a href="javascript:void(0)" onclick="checkin(this,'none',${item.csiId})"><img src=".csiId==item.csiId?'images/goldon.png':'images/gold.png'}">.csiTitle}<strong>(送.csiDataNumber}，每月限送1次)</strong> </a>
+							 -->
+				</ul>
+				<div id="num" class="goldnum">
+					<span>数量：</span>
+					<div class="goldnumbox">
+						<a id="purNumMinus" href="javascript:;" class="left">-</a>
+						<input type="text" value="1" name="textfield" id="purNum">
+						<a id="purNumPlus" href="javascript:;" class="right">+</a>
+					</div>
+				</div>
+			</div>
+			<div class="okbuybtn">
+				<a href="javascript:;" onclick="submit()">立即购买</a>
+			</div>
+		</div>
+		<input type="hidden" id="csiId" value="${csItem.csiId}">
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script>
+		function submit(){
+			if($('#csiId').val()==''){
+				alert('请选择您需要购买的现金券金额。')
+			}else{
+				var csiId = $('#csiId').val();
+				var purNum = $('#purNum').val();
+				location.href = 'account_buyCoupon.html?t='+new Date().getTime()+'&csiId='+csiId+'&purNum='+purNum;
+			}
+		}
+		function checkin(obj,dis,id){
+			$("#csiId").val(id);
+		
+			$(".refundgold2box img").attr("src","images/gold.png");
+			$("#num").css('display',dis);
+			if(dis=='none'){
+				$('#purNum').val('1');
+			}
+			obj.getElementsByTagName("img")[0].src="images/goldon.png";
+		}
+		
+		$(document).on('click','#purNumPlus',function(){
+					var num = parseInt($('#purNum').val());
+					if (num==99) return;
+					$('#purNum').val(num+1);
+				});
+				
+				$(document).on('click','#purNumMinus',function(){
+					var num = parseInt($('#purNum').val());
+					if (num==1) return;
+					$('#purNum').val(num-1);
+				});
+		
+		</script>
+	</body>
+</html>

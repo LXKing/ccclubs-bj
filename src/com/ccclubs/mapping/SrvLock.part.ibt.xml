@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvLock_part">	
+	<!-- 事务锁条件sql片段  -->
+	<sql id="srv_lock_dynamic">
+		<dynamic>
+			<isNotEmpty property="slId" prepend="and">
+			    $slIdNot$ srv_lock$suffix$.sl_id = #slId#
+			</isNotEmpty>
+			<isNotNull property="slIdNot" prepend="and">
+				<isEmpty property="slId">
+				$slIdNot$ srv_lock$suffix$.sl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="slProfile" prepend="and">			    
+			    (<isNotNull property="slProfileNot">
+			    srv_lock$suffix$.sl_profile is null or length(srv_lock$suffix$.sl_profile) &lt; 1 or
+			    </isNotNull>$slProfileNot$ srv_lock$suffix$.sl_profile like #slProfile#)
+			</isNotEmpty>
+			<isNotNull property="slProfileNot" prepend="and">
+				<isEmpty property="slProfile">
+				$slProfileNot$ (srv_lock$suffix$.sl_profile is null or length(srv_lock$suffix$.sl_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="slType" prepend="and">			    
+			    (<isNotNull property="slTypeNot">
+			    srv_lock$suffix$.sl_type is null or length(srv_lock$suffix$.sl_type) &lt; 1 or
+			    </isNotNull>$slTypeNot$ srv_lock$suffix$.sl_type = #slType#)
+			</isNotEmpty>
+			<isNotNull property="slTypeNot" prepend="and">
+				<isEmpty property="slType">
+				$slTypeNot$ (srv_lock$suffix$.sl_type is null or length(srv_lock$suffix$.sl_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="slTimeStart" prepend="and">
+			    $slTimeNot$   (srv_lock$suffix$.sl_time &gt;= #slTimeStart#
+			   <isEmpty property="slTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="slTimeEnd" prepend="and">
+				<isEmpty property="slTimeStart">$slTimeNot$   (</isEmpty>
+			    srv_lock$suffix$.sl_time &lt;= #slTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="slTime" prepend="and">
+			    $slTimeNot$ srv_lock$suffix$.sl_time = #slTime#
+			</isNotEmpty>
+			<isNotNull property="slTimeNot" prepend="and">
+				<isEmpty property="slTimeStart"><isEmpty property="slTimeEnd"><isEmpty property="slTime">
+				$slTimeNot$ srv_lock$suffix$.sl_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 事务锁left join 条件sql片段 -->
+	<sql id="srv_lock_join">
+		<dynamic>
+			<isNotEmpty property="SrvLock.slId" prepend="and">
+			    $SrvLock.slIdNot$ srv_lock$SrvLock.suffix$.sl_id = #SrvLock.slId#
+			</isNotEmpty>
+			<isNotNull property="SrvLock.slIdNot" prepend="and">
+				<isEmpty property="SrvLock.slId">
+				$slIdNot$ srv_lock$SrvLock.suffix$.sl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvLock.slProfile" prepend="and">
+				(<isNotNull property="SrvLock.slProfileNot">
+			    srv_lock$SrvLock.suffix$.sl_profile is null or length(srv_lock$SrvLock.suffix$.sl_profile) &lt; 1 or
+			    </isNotNull>$SrvLock.slProfileNot$ srv_lock$SrvLock.suffix$.sl_profile like #SrvLock.slProfile#)
+			</isNotEmpty>
+			<isNotNull property="SrvLock.slProfileNot" prepend="and">
+				<isEmpty property="SrvLock.slProfile">
+				$slProfileNot$ (srv_lock$SrvLock.suffix$.sl_profile is null or length(srv_lock$SrvLock.suffix$.sl_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvLock.slType" prepend="and">
+				(<isNotNull property="SrvLock.slTypeNot">
+			    srv_lock$SrvLock.suffix$.sl_type is null or length(srv_lock$SrvLock.suffix$.sl_type) &lt; 1 or
+			    </isNotNull>$SrvLock.slTypeNot$ srv_lock$SrvLock.suffix$.sl_type = #SrvLock.slType#)
+			</isNotEmpty>
+			<isNotNull property="SrvLock.slTypeNot" prepend="and">
+				<isEmpty property="SrvLock.slType">
+				$slTypeNot$ (srv_lock$SrvLock.suffix$.sl_type is null or length(srv_lock$SrvLock.suffix$.sl_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvLock.slTimeStart" prepend="and">
+			    $SrvLock.slTimeNot$   (srv_lock$SrvLock.suffix$.sl_time &gt;= #SrvLock.slTimeStart#
+			   <isEmpty property="SrvLock.slTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvLock.slTimeEnd" prepend="and">
+				<isEmpty property="SrvLock.slTimeStart">$SrvLock.slTimeNot$   (</isEmpty>
+			    srv_lock$SrvLock.suffix$.sl_time &lt;= #SrvLock.slTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvLock.slTime" prepend="and">
+			    $SrvLock.slTimeNot$ srv_lock$SrvLock.suffix$.sl_time = #SrvLock.slTime#
+			</isNotEmpty>
+			<isNotNull property="SrvLock.slTimeNot" prepend="and">
+				<isEmpty property="SrvLock.slTimeStart"><isEmpty property="SrvLock.slTimeEnd"><isEmpty property="SrvLock.slTime">
+				$slTimeNot$ srv_lock$SrvLock.suffix$.sl_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

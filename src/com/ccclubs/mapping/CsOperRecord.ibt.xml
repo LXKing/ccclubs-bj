@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 收支记录之SQL映射 -->
+	<resultMap id="CsOperRecord" class="com.ccclubs.model.CsOperRecord">
+		<result property="csorId" column="csor_id"/>
+		<result property="csorHost" column="csor_host"/>
+		<result property="csorTitle" column="csor_title"/>
+		<result property="csorMoneyType" column="csor_money_type"/>
+		<result property="csorRecordType" column="csor_record_type"/>
+		<result property="csorIn" column="csor_in"/>
+		<result property="csorOut" column="csor_out"/>
+		<result property="csorRecord" column="csor_record"/>
+		<result property="csorMember" column="csor_member"/>
+		<result property="csorOrder" column="csor_order"/>
+		<result property="csorObject" column="csor_object"/>
+		<result property="csorDateTime" column="csor_date_time"/>
+		<result property="csorCashNo" column="csor_cash_no"/>
+		<result property="csorAdder" column="csor_adder"/>
+		<result property="csorStatus" column="csor_status"/>
+	</resultMap>
+		
+	<!-- 获取所有收支记录 -->
+	<select id="getCsOperRecordList" resultMap="CsOperRecord">
+		select cs_oper_record$suffix$.* from cs_oper_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询-->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.csor_record_type=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询-->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<isNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.csor_record=cs_record$CsRecord.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.$CsRecord.on$=cs_record$CsRecord.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.csor_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.csor_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询-->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<isNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.csor_cash_no=cs_cash_record$CsCashRecord.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.$CsCashRecord.on$=cs_cash_record$CsCashRecord.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_oper_record$suffix$.csor_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询条件sql片段 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<include refid="CsRecord_part.cs_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询条件sql片段 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<include refid="CsCashRecord_part.cs_cash_record_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOperRecord_part.cs_oper_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csor_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	<!-- 统计收支记录 -->
+	<select id="getCsOperRecordStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_oper_record$suffix$		
+		<!-- 多对一外链接[消费科目]查询 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.csor_record_type=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<isNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.csor_record=cs_record$CsRecord.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.$CsRecord.on$=cs_record$CsRecord.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.csor_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.csor_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<isNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.csor_cash_no=cs_cash_record$CsCashRecord.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.$CsCashRecord.on$=cs_cash_record$CsCashRecord.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_oper_record$suffix$.csor_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询条件sql片段 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<include refid="CsRecord_part.cs_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询条件sql片段 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<include refid="CsCashRecord_part.cs_cash_record_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOperRecord_part.cs_oper_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取收支记录分页 -->
+	<select id="getCsOperRecordPage" parameterClass="java.util.HashMap" resultMap="CsOperRecord">
+		select cs_oper_record$suffix$.* from cs_oper_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.csor_record_type=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<isNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.csor_record=cs_record$CsRecord.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.$CsRecord.on$=cs_record$CsRecord.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.csor_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.csor_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<isNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.csor_cash_no=cs_cash_record$CsCashRecord.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.$CsCashRecord.on$=cs_cash_record$CsCashRecord.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_oper_record$suffix$.csor_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询条件sql片段 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<include refid="CsRecord_part.cs_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询条件sql片段 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<include refid="CsCashRecord_part.cs_cash_record_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOperRecord_part.cs_oper_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csor_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取收支记录总数 -->
+	<select id="getCsOperRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_oper_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.csor_record_type=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<isNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.csor_record=cs_record$CsRecord.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.$CsRecord.on$=cs_record$CsRecord.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.csor_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.csor_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<isNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.csor_cash_no=cs_cash_record$CsCashRecord.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.$CsCashRecord.on$=cs_cash_record$CsCashRecord.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_oper_record$suffix$.csor_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询条件sql片段 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<include refid="CsRecord_part.cs_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询条件sql片段 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<include refid="CsCashRecord_part.cs_cash_record_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOperRecord_part.cs_oper_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取收支记录 -->
+	<select id="getCsOperRecordById" parameterClass="java.util.HashMap" resultMap="CsOperRecord">
+		select cs_oper_record$suffix$.* from cs_oper_record$suffix$
+		where csor_id=#id#
+	</select>
+	
+		
+	<!-- 保存收支记录 -->
+	<insert id="saveCsOperRecord"  parameterClass="com.ccclubs.model.CsOperRecord">
+		insert into cs_oper_record$suffix$
+		(
+			cs_oper_record$suffix$.csor_host
+			,cs_oper_record$suffix$.csor_title
+			,cs_oper_record$suffix$.csor_money_type
+			,cs_oper_record$suffix$.csor_record_type
+			,cs_oper_record$suffix$.csor_in
+			,cs_oper_record$suffix$.csor_out
+			,cs_oper_record$suffix$.csor_record
+			,cs_oper_record$suffix$.csor_member
+			,cs_oper_record$suffix$.csor_order
+			,cs_oper_record$suffix$.csor_object
+			,cs_oper_record$suffix$.csor_date_time
+			,cs_oper_record$suffix$.csor_cash_no
+			,cs_oper_record$suffix$.csor_adder
+			,cs_oper_record$suffix$.csor_status
+		)
+		values(
+			<isNotNull property="csorHost" prepend="">
+				#csorHost#
+			</isNotNull>
+			<isNull property="csorHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csorTitle" prepend=",">
+				#csorTitle#
+			</isNotNull>
+			<isNull property="csorTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorMoneyType" prepend=",">
+				#csorMoneyType#
+			</isNotNull>
+			<isNull property="csorMoneyType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorRecordType" prepend=",">
+				#csorRecordType#
+			</isNotNull>
+			<isNull property="csorRecordType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorIn" prepend=",">
+				#csorIn#
+			</isNotNull>
+			<isNull property="csorIn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorOut" prepend=",">
+				#csorOut#
+			</isNotNull>
+			<isNull property="csorOut" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorRecord" prepend=",">
+				#csorRecord#
+			</isNotNull>
+			<isNull property="csorRecord" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorMember" prepend=",">
+				#csorMember#
+			</isNotNull>
+			<isNull property="csorMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorOrder" prepend=",">
+				#csorOrder#
+			</isNotNull>
+			<isNull property="csorOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorObject" prepend=",">
+				#csorObject#
+			</isNotNull>
+			<isNull property="csorObject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorDateTime" prepend=",">
+				#csorDateTime#
+			</isNotNull>
+			<isNull property="csorDateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorCashNo" prepend=",">
+				#csorCashNo#
+			</isNotNull>
+			<isNull property="csorCashNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorAdder" prepend=",">
+				#csorAdder#
+			</isNotNull>
+			<isNull property="csorAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csorStatus" prepend=",">
+				#csorStatus#
+			</isNotNull>
+			<isNull property="csorStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新收支记录 -->
+	<update id="updateCsOperRecord"  parameterClass="com.ccclubs.model.CsOperRecord">
+		update cs_oper_record$suffix$ set
+			<isNotNull property="csorHost" prepend="">
+				cs_oper_record$suffix$.csor_host = #csorHost#
+			</isNotNull>
+			<isNull property="csorHost" prepend="">
+				cs_oper_record$suffix$.csor_host = null
+			</isNull>				
+			<isNotNull property="csorTitle" prepend=",">
+				cs_oper_record$suffix$.csor_title = #csorTitle#
+			</isNotNull>
+			<isNull property="csorTitle" prepend=",">
+				cs_oper_record$suffix$.csor_title = null
+			</isNull>				
+			<isNotNull property="csorMoneyType" prepend=",">
+				cs_oper_record$suffix$.csor_money_type = #csorMoneyType#
+			</isNotNull>
+			<isNull property="csorMoneyType" prepend=",">
+				cs_oper_record$suffix$.csor_money_type = null
+			</isNull>				
+			<isNotNull property="csorRecordType" prepend=",">
+				cs_oper_record$suffix$.csor_record_type = #csorRecordType#
+			</isNotNull>
+			<isNull property="csorRecordType" prepend=",">
+				cs_oper_record$suffix$.csor_record_type = null
+			</isNull>				
+			<isNotNull property="csorIn" prepend=",">
+				cs_oper_record$suffix$.csor_in = #csorIn#
+			</isNotNull>
+			<isNull property="csorIn" prepend=",">
+				cs_oper_record$suffix$.csor_in = null
+			</isNull>				
+			<isNotNull property="csorOut" prepend=",">
+				cs_oper_record$suffix$.csor_out = #csorOut#
+			</isNotNull>
+			<isNull property="csorOut" prepend=",">
+				cs_oper_record$suffix$.csor_out = null
+			</isNull>				
+			<isNotNull property="csorRecord" prepend=",">
+				cs_oper_record$suffix$.csor_record = #csorRecord#
+			</isNotNull>
+			<isNull property="csorRecord" prepend=",">
+				cs_oper_record$suffix$.csor_record = null
+			</isNull>				
+			<isNotNull property="csorMember" prepend=",">
+				cs_oper_record$suffix$.csor_member = #csorMember#
+			</isNotNull>
+			<isNull property="csorMember" prepend=",">
+				cs_oper_record$suffix$.csor_member = null
+			</isNull>				
+			<isNotNull property="csorOrder" prepend=",">
+				cs_oper_record$suffix$.csor_order = #csorOrder#
+			</isNotNull>
+			<isNull property="csorOrder" prepend=",">
+				cs_oper_record$suffix$.csor_order = null
+			</isNull>				
+			<isNotNull property="csorObject" prepend=",">
+				cs_oper_record$suffix$.csor_object = #csorObject#
+			</isNotNull>
+			<isNull property="csorObject" prepend=",">
+				cs_oper_record$suffix$.csor_object = null
+			</isNull>				
+			<isNotNull property="csorDateTime" prepend=",">
+				cs_oper_record$suffix$.csor_date_time = #csorDateTime#
+			</isNotNull>
+			<isNull property="csorDateTime" prepend=",">
+				cs_oper_record$suffix$.csor_date_time = null
+			</isNull>				
+			<isNotNull property="csorCashNo" prepend=",">
+				cs_oper_record$suffix$.csor_cash_no = #csorCashNo#
+			</isNotNull>
+			<isNull property="csorCashNo" prepend=",">
+				cs_oper_record$suffix$.csor_cash_no = null
+			</isNull>				
+			<isNotNull property="csorAdder" prepend=",">
+				cs_oper_record$suffix$.csor_adder = #csorAdder#
+			</isNotNull>
+			<isNull property="csorAdder" prepend=",">
+				cs_oper_record$suffix$.csor_adder = null
+			</isNull>				
+			<isNotNull property="csorStatus" prepend=",">
+				cs_oper_record$suffix$.csor_status = #csorStatus#
+			</isNotNull>
+			<isNull property="csorStatus" prepend=",">
+				cs_oper_record$suffix$.csor_status = null
+			</isNull>				
+		where
+			csor_id=#csorId#
+	</update>
+	
+	<!-- 更新收支记录非空字段 -->
+	<update id="updateCsOperRecord$NotNull"  parameterClass="com.ccclubs.model.CsOperRecord">
+		update cs_oper_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csorHost" prepend=",">
+				cs_oper_record$suffix$.csor_host = #csorHost#
+			</isNotNull>		
+			<isNotNull property="csorTitle" prepend=",">
+				cs_oper_record$suffix$.csor_title = #csorTitle#
+			</isNotNull>		
+			<isNotNull property="csorMoneyType" prepend=",">
+				cs_oper_record$suffix$.csor_money_type = #csorMoneyType#
+			</isNotNull>		
+			<isNotNull property="csorRecordType" prepend=",">
+				cs_oper_record$suffix$.csor_record_type = #csorRecordType#
+			</isNotNull>		
+			<isNotNull property="csorIn" prepend=",">
+				cs_oper_record$suffix$.csor_in = #csorIn#
+			</isNotNull>		
+			<isNotNull property="csorOut" prepend=",">
+				cs_oper_record$suffix$.csor_out = #csorOut#
+			</isNotNull>		
+			<isNotNull property="csorRecord" prepend=",">
+				cs_oper_record$suffix$.csor_record = #csorRecord#
+			</isNotNull>		
+			<isNotNull property="csorMember" prepend=",">
+				cs_oper_record$suffix$.csor_member = #csorMember#
+			</isNotNull>		
+			<isNotNull property="csorOrder" prepend=",">
+				cs_oper_record$suffix$.csor_order = #csorOrder#
+			</isNotNull>		
+			<isNotNull property="csorObject" prepend=",">
+				cs_oper_record$suffix$.csor_object = #csorObject#
+			</isNotNull>		
+			<isNotNull property="csorDateTime" prepend=",">
+				cs_oper_record$suffix$.csor_date_time = #csorDateTime#
+			</isNotNull>		
+			<isNotNull property="csorCashNo" prepend=",">
+				cs_oper_record$suffix$.csor_cash_no = #csorCashNo#
+			</isNotNull>		
+			<isNotNull property="csorAdder" prepend=",">
+				cs_oper_record$suffix$.csor_adder = #csorAdder#
+			</isNotNull>		
+			<isNotNull property="csorStatus" prepend=",">
+				cs_oper_record$suffix$.csor_status = #csorStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csor_id=#csorId#
+	</update>
+	
+
+	<!-- 根据ID删除一个收支记录 -->
+	<delete id="deleteCsOperRecordById" parameterClass="java.util.HashMap">
+		delete from cs_oper_record$suffix$ where csor_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个收支记录 -->
+	<update id="removeCsOperRecordById" parameterClass="java.util.HashMap">
+		update cs_oper_record$suffix$ set  cs_oper_record$suffix$.csor_status=-1  where csor_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新收支记录 -->
+	<update id="updateCsOperRecordBy"  parameterClass="java.util.HashMap">
+		update cs_oper_record$suffix$ set		
+			csor_id=csor_id
+			<isNotNull property="V_csorId" prepend=",">
+				cs_oper_record$suffix$.csor_id = #V_csorId#
+			</isNotNull>		
+			<isNotNull property="V_csorHost" prepend=",">
+				cs_oper_record$suffix$.csor_host = #V_csorHost#
+			</isNotNull>		
+			<isNotNull property="V_csorTitle" prepend=",">
+				cs_oper_record$suffix$.csor_title = #V_csorTitle#
+			</isNotNull>		
+			<isNotNull property="V_csorMoneyType" prepend=",">
+				cs_oper_record$suffix$.csor_money_type = #V_csorMoneyType#
+			</isNotNull>		
+			<isNotNull property="V_csorRecordType" prepend=",">
+				cs_oper_record$suffix$.csor_record_type = #V_csorRecordType#
+			</isNotNull>		
+			<isNotNull property="V_csorIn" prepend=",">
+				cs_oper_record$suffix$.csor_in = #V_csorIn#
+			</isNotNull>		
+			<isNotNull property="V_csorOut" prepend=",">
+				cs_oper_record$suffix$.csor_out = #V_csorOut#
+			</isNotNull>		
+			<isNotNull property="V_csorRecord" prepend=",">
+				cs_oper_record$suffix$.csor_record = #V_csorRecord#
+			</isNotNull>		
+			<isNotNull property="V_csorMember" prepend=",">
+				cs_oper_record$suffix$.csor_member = #V_csorMember#
+			</isNotNull>		
+			<isNotNull property="V_csorOrder" prepend=",">
+				cs_oper_record$suffix$.csor_order = #V_csorOrder#
+			</isNotNull>		
+			<isNotNull property="V_csorObject" prepend=",">
+				cs_oper_record$suffix$.csor_object = #V_csorObject#
+			</isNotNull>		
+			<isNotNull property="V_csorDateTime" prepend=",">
+				cs_oper_record$suffix$.csor_date_time = #V_csorDateTime#
+			</isNotNull>		
+			<isNotNull property="V_csorCashNo" prepend=",">
+				cs_oper_record$suffix$.csor_cash_no = #V_csorCashNo#
+			</isNotNull>		
+			<isNotNull property="V_csorAdder" prepend=",">
+				cs_oper_record$suffix$.csor_adder = #V_csorAdder#
+			</isNotNull>		
+			<isNotNull property="V_csorStatus" prepend=",">
+				cs_oper_record$suffix$.csor_status = #V_csorStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询-->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.csor_record_type=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_oper_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询-->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<isNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.csor_record=cs_record$CsRecord.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRecord.on">
+				left join cs_record cs_record$CsRecord.suffix$ on cs_oper_record$suffix$.$CsRecord.on$=cs_record$CsRecord.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.csor_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_oper_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.csor_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_oper_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询-->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<isNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.csor_cash_no=cs_cash_record$CsCashRecord.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCashRecord.on">
+				left join cs_cash_record cs_cash_record$CsCashRecord.suffix$ on cs_oper_record$suffix$.$CsCashRecord.on$=cs_cash_record$CsCashRecord.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_oper_record$suffix$.csor_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsorRecordType"><!-- 调用一下CsorRecordType，把CsRecordSubject指向CsorRecordType --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费记录]查询条件sql片段 -->
+		<isNotNull property="CsorRecord"><!-- 调用一下CsorRecord，把CsRecord指向CsorRecord --></isNotNull>
+		<isNotNull property="CsRecord">
+			<include refid="CsRecord_part.cs_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsorMember"><!-- 调用一下CsorMember，把CsMember指向CsorMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsorOrder"><!-- 调用一下CsorOrder，把CsOrder指向CsorOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[提现记录]查询条件sql片段 -->
+		<isNotNull property="CsorCashNo"><!-- 调用一下CsorCashNo，把CsCashRecord指向CsorCashNo --></isNotNull>
+		<isNotNull property="CsCashRecord">
+			<include refid="CsCashRecord_part.cs_cash_record_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOperRecord_part.cs_oper_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除收支记录 -->
+	<update id="deleteCsOperRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_oper_record$suffix$ where 
+		cs_oper_record$suffix$.csor_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOperRecord_part.cs_oper_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

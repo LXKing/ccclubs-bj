@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+	<!-- 充电站之SQL映射 -->
+	<resultMap id="CsChargeStation" class="com.ccclubs.model.CsChargeStation">
+		<result property="cscsId" column="cscs_id"/>
+		<result property="cscsStaCode" column="cscs_sta_code"/>
+		<result property="cscsStaName" column="cscs_sta_name"/>
+		<result property="cscsType" column="cscs_type"/>
+		<result property="cscsOpState" column="cscs_op_state"/>
+		<result property="cscsProvince" column="cscs_province"/>
+		<result property="cscsCity" column="cscs_city"/>
+		<result property="cscsArea" column="cscs_area"/>
+		<result property="cscsAddress" column="cscs_address"/>
+		<result property="cscsLng" column="cscs_lng"/>
+		<result property="cscsLat" column="cscs_lat"/>
+		<result property="cscsPrice" column="cscs_price"/>
+		<result property="cscsProvider" column="cscs_provider"/>
+		<result property="cscsData" column="cscs_data"/>
+		<result property="cscsAddTime" column="cscs_add_time"/>
+		<result property="cscsUpdateTime" column="cscs_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有充电站 -->
+	<select id="getCsChargeStationList" resultMap="CsChargeStation">
+		select cs_charge_station$suffix$.* from cs_charge_station$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargeStation_part.cs_charge_station_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取充电站分页 -->
+	<select id="getCsChargeStationPage" parameterClass="java.util.HashMap" resultMap="CsChargeStation">
+		select cs_charge_station$suffix$.* from cs_charge_station$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargeStation_part.cs_charge_station_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取充电站总数 -->
+	<select id="getCsChargeStationEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_charge_station$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargeStation_part.cs_charge_station_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取充电站 -->
+	<select id="getCsChargeStationById" parameterClass="java.util.HashMap" resultMap="CsChargeStation">
+		select cs_charge_station$suffix$.* from cs_charge_station$suffix$
+		where cscs_id=#id#
+	</select>
+	
+		
+	<!-- 保存充电站 -->
+	<insert id="saveCsChargeStation"  parameterClass="com.ccclubs.model.CsChargeStation">
+		insert into cs_charge_station$suffix$
+		(
+			cs_charge_station$suffix$.cscs_sta_code
+			,cs_charge_station$suffix$.cscs_sta_name
+			,cs_charge_station$suffix$.cscs_type
+			,cs_charge_station$suffix$.cscs_op_state
+			,cs_charge_station$suffix$.cscs_province
+			,cs_charge_station$suffix$.cscs_city
+			,cs_charge_station$suffix$.cscs_area
+			,cs_charge_station$suffix$.cscs_address
+			,cs_charge_station$suffix$.cscs_lng
+			,cs_charge_station$suffix$.cscs_lat
+			,cs_charge_station$suffix$.cscs_price
+			,cs_charge_station$suffix$.cscs_provider
+			,cs_charge_station$suffix$.cscs_data
+			,cs_charge_station$suffix$.cscs_add_time
+			,cs_charge_station$suffix$.cscs_update_time
+		)
+		values(
+			<isNotNull property="cscsStaCode" prepend="">
+				#cscsStaCode#
+			</isNotNull>
+			<isNull property="cscsStaCode" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="cscsStaName" prepend=",">
+				#cscsStaName#
+			</isNotNull>
+			<isNull property="cscsStaName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsType" prepend=",">
+				#cscsType#
+			</isNotNull>
+			<isNull property="cscsType" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsOpState" prepend=",">
+				#cscsOpState#
+			</isNotNull>
+			<isNull property="cscsOpState" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsProvince" prepend=",">
+				#cscsProvince#
+			</isNotNull>
+			<isNull property="cscsProvince" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsCity" prepend=",">
+				#cscsCity#
+			</isNotNull>
+			<isNull property="cscsCity" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsArea" prepend=",">
+				#cscsArea#
+			</isNotNull>
+			<isNull property="cscsArea" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsAddress" prepend=",">
+				#cscsAddress#
+			</isNotNull>
+			<isNull property="cscsAddress" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsLng" prepend=",">
+				#cscsLng#
+			</isNotNull>
+			<isNull property="cscsLng" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsLat" prepend=",">
+				#cscsLat#
+			</isNotNull>
+			<isNull property="cscsLat" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsPrice" prepend=",">
+				#cscsPrice#
+			</isNotNull>
+			<isNull property="cscsPrice" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsProvider" prepend=",">
+				#cscsProvider#
+			</isNotNull>
+			<isNull property="cscsProvider" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsData" prepend=",">
+				#cscsData#
+			</isNotNull>
+			<isNull property="cscsData" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsAddTime" prepend=",">
+				#cscsAddTime#
+			</isNotNull>
+			<isNull property="cscsAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				#cscsUpdateTime#
+			</isNotNull>
+			<isNull property="cscsUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新充电站 -->
+	<update id="updateCsChargeStation"  parameterClass="com.ccclubs.model.CsChargeStation">
+		update cs_charge_station$suffix$ set
+			<isNotNull property="cscsStaCode" prepend="">
+				cs_charge_station$suffix$.cscs_sta_code = #cscsStaCode#
+			</isNotNull>
+			<isNull property="cscsStaCode" prepend="">
+				cs_charge_station$suffix$.cscs_sta_code = null
+			</isNull>				
+			<isNotNull property="cscsStaName" prepend=",">
+				cs_charge_station$suffix$.cscs_sta_name = #cscsStaName#
+			</isNotNull>
+			<isNull property="cscsStaName" prepend=",">
+				cs_charge_station$suffix$.cscs_sta_name = null
+			</isNull>				
+			<isNotNull property="cscsType" prepend=",">
+				cs_charge_station$suffix$.cscs_type = #cscsType#
+			</isNotNull>
+			<isNull property="cscsType" prepend=",">
+				cs_charge_station$suffix$.cscs_type = null
+			</isNull>				
+			<isNotNull property="cscsOpState" prepend=",">
+				cs_charge_station$suffix$.cscs_op_state = #cscsOpState#
+			</isNotNull>
+			<isNull property="cscsOpState" prepend=",">
+				cs_charge_station$suffix$.cscs_op_state = null
+			</isNull>				
+			<isNotNull property="cscsProvince" prepend=",">
+				cs_charge_station$suffix$.cscs_province = #cscsProvince#
+			</isNotNull>
+			<isNull property="cscsProvince" prepend=",">
+				cs_charge_station$suffix$.cscs_province = null
+			</isNull>				
+			<isNotNull property="cscsCity" prepend=",">
+				cs_charge_station$suffix$.cscs_city = #cscsCity#
+			</isNotNull>
+			<isNull property="cscsCity" prepend=",">
+				cs_charge_station$suffix$.cscs_city = null
+			</isNull>				
+			<isNotNull property="cscsArea" prepend=",">
+				cs_charge_station$suffix$.cscs_area = #cscsArea#
+			</isNotNull>
+			<isNull property="cscsArea" prepend=",">
+				cs_charge_station$suffix$.cscs_area = null
+			</isNull>				
+			<isNotNull property="cscsAddress" prepend=",">
+				cs_charge_station$suffix$.cscs_address = #cscsAddress#
+			</isNotNull>
+			<isNull property="cscsAddress" prepend=",">
+				cs_charge_station$suffix$.cscs_address = null
+			</isNull>				
+			<isNotNull property="cscsLng" prepend=",">
+				cs_charge_station$suffix$.cscs_lng = #cscsLng#
+			</isNotNull>
+			<isNull property="cscsLng" prepend=",">
+				cs_charge_station$suffix$.cscs_lng = null
+			</isNull>				
+			<isNotNull property="cscsLat" prepend=",">
+				cs_charge_station$suffix$.cscs_lat = #cscsLat#
+			</isNotNull>
+			<isNull property="cscsLat" prepend=",">
+				cs_charge_station$suffix$.cscs_lat = null
+			</isNull>				
+			<isNotNull property="cscsPrice" prepend=",">
+				cs_charge_station$suffix$.cscs_price = #cscsPrice#
+			</isNotNull>
+			<isNull property="cscsPrice" prepend=",">
+				cs_charge_station$suffix$.cscs_price = null
+			</isNull>				
+			<isNotNull property="cscsProvider" prepend=",">
+				cs_charge_station$suffix$.cscs_provider = #cscsProvider#
+			</isNotNull>
+			<isNull property="cscsProvider" prepend=",">
+				cs_charge_station$suffix$.cscs_provider = null
+			</isNull>				
+			<isNotNull property="cscsData" prepend=",">
+				cs_charge_station$suffix$.cscs_data = #cscsData#
+			</isNotNull>
+			<isNull property="cscsData" prepend=",">
+				cs_charge_station$suffix$.cscs_data = null
+			</isNull>				
+			<isNotNull property="cscsAddTime" prepend=",">
+				cs_charge_station$suffix$.cscs_add_time = #cscsAddTime#
+			</isNotNull>
+			<isNull property="cscsAddTime" prepend=",">
+				cs_charge_station$suffix$.cscs_add_time = null
+			</isNull>				
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				cs_charge_station$suffix$.cscs_update_time = #cscsUpdateTime#
+			</isNotNull>
+			<isNull property="cscsUpdateTime" prepend=",">
+				cs_charge_station$suffix$.cscs_update_time = null
+			</isNull>				
+		where
+			cscs_id=#cscsId#
+	</update>
+	
+	<!-- 更新充电站非空字段 -->
+	<update id="updateCsChargeStation$NotNull"  parameterClass="com.ccclubs.model.CsChargeStation">
+		update cs_charge_station$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscsStaCode" prepend=",">
+				cs_charge_station$suffix$.cscs_sta_code = #cscsStaCode#
+			</isNotNull>		
+			<isNotNull property="cscsStaName" prepend=",">
+				cs_charge_station$suffix$.cscs_sta_name = #cscsStaName#
+			</isNotNull>		
+			<isNotNull property="cscsType" prepend=",">
+				cs_charge_station$suffix$.cscs_type = #cscsType#
+			</isNotNull>		
+			<isNotNull property="cscsOpState" prepend=",">
+				cs_charge_station$suffix$.cscs_op_state = #cscsOpState#
+			</isNotNull>		
+			<isNotNull property="cscsProvince" prepend=",">
+				cs_charge_station$suffix$.cscs_province = #cscsProvince#
+			</isNotNull>		
+			<isNotNull property="cscsCity" prepend=",">
+				cs_charge_station$suffix$.cscs_city = #cscsCity#
+			</isNotNull>		
+			<isNotNull property="cscsArea" prepend=",">
+				cs_charge_station$suffix$.cscs_area = #cscsArea#
+			</isNotNull>		
+			<isNotNull property="cscsAddress" prepend=",">
+				cs_charge_station$suffix$.cscs_address = #cscsAddress#
+			</isNotNull>		
+			<isNotNull property="cscsLng" prepend=",">
+				cs_charge_station$suffix$.cscs_lng = #cscsLng#
+			</isNotNull>		
+			<isNotNull property="cscsLat" prepend=",">
+				cs_charge_station$suffix$.cscs_lat = #cscsLat#
+			</isNotNull>		
+			<isNotNull property="cscsPrice" prepend=",">
+				cs_charge_station$suffix$.cscs_price = #cscsPrice#
+			</isNotNull>		
+			<isNotNull property="cscsProvider" prepend=",">
+				cs_charge_station$suffix$.cscs_provider = #cscsProvider#
+			</isNotNull>		
+			<isNotNull property="cscsData" prepend=",">
+				cs_charge_station$suffix$.cscs_data = #cscsData#
+			</isNotNull>		
+			<isNotNull property="cscsAddTime" prepend=",">
+				cs_charge_station$suffix$.cscs_add_time = #cscsAddTime#
+			</isNotNull>		
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				cs_charge_station$suffix$.cscs_update_time = #cscsUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscs_id=#cscsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个充电站 -->
+	<delete id="deleteCsChargeStationById" parameterClass="java.util.HashMap">
+		delete from cs_charge_station$suffix$ where cscs_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新充电站 -->
+	<update id="updateCsChargeStationBy"  parameterClass="java.util.HashMap">
+		update cs_charge_station$suffix$ set		
+			cscs_id=cscs_id
+			<isNotNull property="V_cscsId" prepend=",">
+				cs_charge_station$suffix$.cscs_id = #V_cscsId#
+			</isNotNull>		
+			<isNotNull property="V_cscsStaCode" prepend=",">
+				cs_charge_station$suffix$.cscs_sta_code = #V_cscsStaCode#
+			</isNotNull>		
+			<isNotNull property="V_cscsStaName" prepend=",">
+				cs_charge_station$suffix$.cscs_sta_name = #V_cscsStaName#
+			</isNotNull>		
+			<isNotNull property="V_cscsType" prepend=",">
+				cs_charge_station$suffix$.cscs_type = #V_cscsType#
+			</isNotNull>		
+			<isNotNull property="V_cscsOpState" prepend=",">
+				cs_charge_station$suffix$.cscs_op_state = #V_cscsOpState#
+			</isNotNull>		
+			<isNotNull property="V_cscsProvince" prepend=",">
+				cs_charge_station$suffix$.cscs_province = #V_cscsProvince#
+			</isNotNull>		
+			<isNotNull property="V_cscsCity" prepend=",">
+				cs_charge_station$suffix$.cscs_city = #V_cscsCity#
+			</isNotNull>		
+			<isNotNull property="V_cscsArea" prepend=",">
+				cs_charge_station$suffix$.cscs_area = #V_cscsArea#
+			</isNotNull>		
+			<isNotNull property="V_cscsAddress" prepend=",">
+				cs_charge_station$suffix$.cscs_address = #V_cscsAddress#
+			</isNotNull>		
+			<isNotNull property="V_cscsLng" prepend=",">
+				cs_charge_station$suffix$.cscs_lng = #V_cscsLng#
+			</isNotNull>		
+			<isNotNull property="V_cscsLat" prepend=",">
+				cs_charge_station$suffix$.cscs_lat = #V_cscsLat#
+			</isNotNull>		
+			<isNotNull property="V_cscsPrice" prepend=",">
+				cs_charge_station$suffix$.cscs_price = #V_cscsPrice#
+			</isNotNull>		
+			<isNotNull property="V_cscsProvider" prepend=",">
+				cs_charge_station$suffix$.cscs_provider = #V_cscsProvider#
+			</isNotNull>		
+			<isNotNull property="V_cscsData" prepend=",">
+				cs_charge_station$suffix$.cscs_data = #V_cscsData#
+			</isNotNull>		
+			<isNotNull property="V_cscsAddTime" prepend=",">
+				cs_charge_station$suffix$.cscs_add_time = #V_cscsAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsUpdateTime" prepend=",">
+				cs_charge_station$suffix$.cscs_update_time = #V_cscsUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChargeStation_part.cs_charge_station_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除充电站 -->
+	<update id="deleteCsChargeStationBy"  parameterClass="java.util.HashMap">
+		delete from cs_charge_station$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChargeStation_part.cs_charge_station_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

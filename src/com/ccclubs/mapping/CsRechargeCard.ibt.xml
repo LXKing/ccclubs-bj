@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 充值卡之SQL映射 -->
+	<resultMap id="CsRechargeCard" class="com.ccclubs.model.CsRechargeCard">
+		<result property="csrcId" column="csrc_id"/>
+		<result property="csrcHost" column="csrc_host"/>
+		<result property="csrcNumber" column="csrc_number"/>
+		<result property="csrcPassword" column="csrc_password"/>
+		<result property="csrcType" column="csrc_type"/>
+		<result property="csrcDenomination" column="csrc_denomination"/>
+		<result property="csrcMethod" column="csrc_method"/>
+		<result property="csrcValidity" column="csrc_validity"/>
+		<result property="csrcValidityUtil" column="csrc_validity_util"/>
+		<result property="csrcUtil" column="csrc_util"/>
+		<result property="csrcMember" column="csrc_member"/>
+		<result property="csrcUseTime" column="csrc_use_time"/>
+		<result property="csrcAddTime" column="csrc_add_time"/>
+		<result property="csrcStatus" column="csrc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有充值卡 -->
+	<select id="getCsRechargeCardList" resultMap="CsRechargeCard">
+		select cs_recharge_card$suffix$.* from cs_recharge_card$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.csrc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_recharge_card$suffix$.csrc_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRechargeCard_part.cs_recharge_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csrc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取充值卡分页 -->
+	<select id="getCsRechargeCardPage" parameterClass="java.util.HashMap" resultMap="CsRechargeCard">
+		select cs_recharge_card$suffix$.* from cs_recharge_card$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.csrc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_recharge_card$suffix$.csrc_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRechargeCard_part.cs_recharge_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csrc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取充值卡总数 -->
+	<select id="getCsRechargeCardEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_recharge_card$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.csrc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_recharge_card$suffix$.csrc_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRechargeCard_part.cs_recharge_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取充值卡 -->
+	<select id="getCsRechargeCardById" parameterClass="java.util.HashMap" resultMap="CsRechargeCard">
+		select cs_recharge_card$suffix$.* from cs_recharge_card$suffix$
+		where csrc_id=#id#
+	</select>
+	
+		
+	<!-- 保存充值卡 -->
+	<insert id="saveCsRechargeCard"  parameterClass="com.ccclubs.model.CsRechargeCard">
+		insert into cs_recharge_card$suffix$
+		(
+			cs_recharge_card$suffix$.csrc_host
+			,cs_recharge_card$suffix$.csrc_number
+			,cs_recharge_card$suffix$.csrc_password
+			,cs_recharge_card$suffix$.csrc_type
+			,cs_recharge_card$suffix$.csrc_denomination
+			,cs_recharge_card$suffix$.csrc_method
+			,cs_recharge_card$suffix$.csrc_validity
+			,cs_recharge_card$suffix$.csrc_validity_util
+			,cs_recharge_card$suffix$.csrc_util
+			,cs_recharge_card$suffix$.csrc_member
+			,cs_recharge_card$suffix$.csrc_use_time
+			,cs_recharge_card$suffix$.csrc_add_time
+			,cs_recharge_card$suffix$.csrc_status
+		)
+		values(
+			<isNotNull property="csrcHost" prepend="">
+				#csrcHost#
+			</isNotNull>
+			<isNull property="csrcHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrcNumber" prepend=",">
+				#csrcNumber#
+			</isNotNull>
+			<isNull property="csrcNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcPassword" prepend=",">
+				#csrcPassword#
+			</isNotNull>
+			<isNull property="csrcPassword" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcType" prepend=",">
+				#csrcType#
+			</isNotNull>
+			<isNull property="csrcType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcDenomination" prepend=",">
+				#csrcDenomination#
+			</isNotNull>
+			<isNull property="csrcDenomination" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcMethod" prepend=",">
+				#csrcMethod#
+			</isNotNull>
+			<isNull property="csrcMethod" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcValidity" prepend=",">
+				#csrcValidity#
+			</isNotNull>
+			<isNull property="csrcValidity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcValidityUtil" prepend=",">
+				#csrcValidityUtil#
+			</isNotNull>
+			<isNull property="csrcValidityUtil" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcUtil" prepend=",">
+				#csrcUtil#
+			</isNotNull>
+			<isNull property="csrcUtil" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcMember" prepend=",">
+				#csrcMember#
+			</isNotNull>
+			<isNull property="csrcMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcUseTime" prepend=",">
+				#csrcUseTime#
+			</isNotNull>
+			<isNull property="csrcUseTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcAddTime" prepend=",">
+				#csrcAddTime#
+			</isNotNull>
+			<isNull property="csrcAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrcStatus" prepend=",">
+				#csrcStatus#
+			</isNotNull>
+			<isNull property="csrcStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新充值卡 -->
+	<update id="updateCsRechargeCard"  parameterClass="com.ccclubs.model.CsRechargeCard">
+		update cs_recharge_card$suffix$ set
+			<isNotNull property="csrcHost" prepend="">
+				cs_recharge_card$suffix$.csrc_host = #csrcHost#
+			</isNotNull>
+			<isNull property="csrcHost" prepend="">
+				cs_recharge_card$suffix$.csrc_host = null
+			</isNull>				
+			<isNotNull property="csrcNumber" prepend=",">
+				cs_recharge_card$suffix$.csrc_number = #csrcNumber#
+			</isNotNull>
+			<isNull property="csrcNumber" prepend=",">
+				cs_recharge_card$suffix$.csrc_number = null
+			</isNull>				
+			<isNotNull property="csrcPassword" prepend=",">
+				cs_recharge_card$suffix$.csrc_password = #csrcPassword#
+			</isNotNull>
+			<isNull property="csrcPassword" prepend=",">
+				cs_recharge_card$suffix$.csrc_password = null
+			</isNull>				
+			<isNotNull property="csrcType" prepend=",">
+				cs_recharge_card$suffix$.csrc_type = #csrcType#
+			</isNotNull>
+			<isNull property="csrcType" prepend=",">
+				cs_recharge_card$suffix$.csrc_type = null
+			</isNull>				
+			<isNotNull property="csrcDenomination" prepend=",">
+				cs_recharge_card$suffix$.csrc_denomination = #csrcDenomination#
+			</isNotNull>
+			<isNull property="csrcDenomination" prepend=",">
+				cs_recharge_card$suffix$.csrc_denomination = null
+			</isNull>				
+			<isNotNull property="csrcMethod" prepend=",">
+				cs_recharge_card$suffix$.csrc_method = #csrcMethod#
+			</isNotNull>
+			<isNull property="csrcMethod" prepend=",">
+				cs_recharge_card$suffix$.csrc_method = null
+			</isNull>				
+			<isNotNull property="csrcValidity" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity = #csrcValidity#
+			</isNotNull>
+			<isNull property="csrcValidity" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity = null
+			</isNull>				
+			<isNotNull property="csrcValidityUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity_util = #csrcValidityUtil#
+			</isNotNull>
+			<isNull property="csrcValidityUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity_util = null
+			</isNull>				
+			<isNotNull property="csrcUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_util = #csrcUtil#
+			</isNotNull>
+			<isNull property="csrcUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_util = null
+			</isNull>				
+			<isNotNull property="csrcMember" prepend=",">
+				cs_recharge_card$suffix$.csrc_member = #csrcMember#
+			</isNotNull>
+			<isNull property="csrcMember" prepend=",">
+				cs_recharge_card$suffix$.csrc_member = null
+			</isNull>				
+			<isNotNull property="csrcUseTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_use_time = #csrcUseTime#
+			</isNotNull>
+			<isNull property="csrcUseTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_use_time = null
+			</isNull>				
+			<isNotNull property="csrcAddTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_add_time = #csrcAddTime#
+			</isNotNull>
+			<isNull property="csrcAddTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_add_time = null
+			</isNull>				
+			<isNotNull property="csrcStatus" prepend=",">
+				cs_recharge_card$suffix$.csrc_status = #csrcStatus#
+			</isNotNull>
+			<isNull property="csrcStatus" prepend=",">
+				cs_recharge_card$suffix$.csrc_status = null
+			</isNull>				
+		where
+			csrc_id=#csrcId#
+	</update>
+	
+	<!-- 更新充值卡非空字段 -->
+	<update id="updateCsRechargeCard$NotNull"  parameterClass="com.ccclubs.model.CsRechargeCard">
+		update cs_recharge_card$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrcHost" prepend=",">
+				cs_recharge_card$suffix$.csrc_host = #csrcHost#
+			</isNotNull>		
+			<isNotNull property="csrcNumber" prepend=",">
+				cs_recharge_card$suffix$.csrc_number = #csrcNumber#
+			</isNotNull>		
+			<isNotNull property="csrcPassword" prepend=",">
+				cs_recharge_card$suffix$.csrc_password = #csrcPassword#
+			</isNotNull>		
+			<isNotNull property="csrcType" prepend=",">
+				cs_recharge_card$suffix$.csrc_type = #csrcType#
+			</isNotNull>		
+			<isNotNull property="csrcDenomination" prepend=",">
+				cs_recharge_card$suffix$.csrc_denomination = #csrcDenomination#
+			</isNotNull>		
+			<isNotNull property="csrcMethod" prepend=",">
+				cs_recharge_card$suffix$.csrc_method = #csrcMethod#
+			</isNotNull>		
+			<isNotNull property="csrcValidity" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity = #csrcValidity#
+			</isNotNull>		
+			<isNotNull property="csrcValidityUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity_util = #csrcValidityUtil#
+			</isNotNull>		
+			<isNotNull property="csrcUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_util = #csrcUtil#
+			</isNotNull>		
+			<isNotNull property="csrcMember" prepend=",">
+				cs_recharge_card$suffix$.csrc_member = #csrcMember#
+			</isNotNull>		
+			<isNotNull property="csrcUseTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_use_time = #csrcUseTime#
+			</isNotNull>		
+			<isNotNull property="csrcAddTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_add_time = #csrcAddTime#
+			</isNotNull>		
+			<isNotNull property="csrcStatus" prepend=",">
+				cs_recharge_card$suffix$.csrc_status = #csrcStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csrc_id=#csrcId#
+	</update>
+	
+
+	<!-- 根据ID删除一个充值卡 -->
+	<delete id="deleteCsRechargeCardById" parameterClass="java.util.HashMap">
+		delete from cs_recharge_card$suffix$ where csrc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个充值卡 -->
+	<update id="removeCsRechargeCardById" parameterClass="java.util.HashMap">
+		update cs_recharge_card$suffix$ set  cs_recharge_card$suffix$.csrc_status=-1  where csrc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新充值卡 -->
+	<update id="updateCsRechargeCardBy"  parameterClass="java.util.HashMap">
+		update cs_recharge_card$suffix$ set		
+			csrc_id=csrc_id
+			<isNotNull property="V_csrcId" prepend=",">
+				cs_recharge_card$suffix$.csrc_id = #V_csrcId#
+			</isNotNull>		
+			<isNotNull property="V_csrcHost" prepend=",">
+				cs_recharge_card$suffix$.csrc_host = #V_csrcHost#
+			</isNotNull>		
+			<isNotNull property="V_csrcNumber" prepend=",">
+				cs_recharge_card$suffix$.csrc_number = #V_csrcNumber#
+			</isNotNull>		
+			<isNotNull property="V_csrcPassword" prepend=",">
+				cs_recharge_card$suffix$.csrc_password = #V_csrcPassword#
+			</isNotNull>		
+			<isNotNull property="V_csrcType" prepend=",">
+				cs_recharge_card$suffix$.csrc_type = #V_csrcType#
+			</isNotNull>		
+			<isNotNull property="V_csrcDenomination" prepend=",">
+				cs_recharge_card$suffix$.csrc_denomination = #V_csrcDenomination#
+			</isNotNull>		
+			<isNotNull property="V_csrcMethod" prepend=",">
+				cs_recharge_card$suffix$.csrc_method = #V_csrcMethod#
+			</isNotNull>		
+			<isNotNull property="V_csrcValidity" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity = #V_csrcValidity#
+			</isNotNull>		
+			<isNotNull property="V_csrcValidityUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_validity_util = #V_csrcValidityUtil#
+			</isNotNull>		
+			<isNotNull property="V_csrcUtil" prepend=",">
+				cs_recharge_card$suffix$.csrc_util = #V_csrcUtil#
+			</isNotNull>		
+			<isNotNull property="V_csrcMember" prepend=",">
+				cs_recharge_card$suffix$.csrc_member = #V_csrcMember#
+			</isNotNull>		
+			<isNotNull property="V_csrcUseTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_use_time = #V_csrcUseTime#
+			</isNotNull>		
+			<isNotNull property="V_csrcAddTime" prepend=",">
+				cs_recharge_card$suffix$.csrc_add_time = #V_csrcAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csrcStatus" prepend=",">
+				cs_recharge_card$suffix$.csrc_status = #V_csrcStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.csrc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_recharge_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_recharge_card$suffix$.csrc_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrcMember"><!-- 调用一下CsrcMember，把CsMember指向CsrcMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRechargeCard_part.cs_recharge_card_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除充值卡 -->
+	<update id="deleteCsRechargeCardBy"  parameterClass="java.util.HashMap">
+		delete from cs_recharge_card$suffix$ where 
+		cs_recharge_card$suffix$.csrc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRechargeCard_part.cs_recharge_card_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

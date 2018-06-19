@@ -1,0 +1,2082 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员帐号之SQL映射 -->
+	<resultMap id="CsMember" class="com.ccclubs.model.CsMember">
+		<result property="csmId" column="csm_id"/>
+		<result property="csmHost" column="csm_host"/>
+		<result property="csmUsername" column="csm_username"/>
+		<result property="csmPassword" column="csm_password"/>
+		<result property="csmGroup" column="csm_group"/>
+		<result property="csmMoney" column="csm_money"/>
+		<result property="csmCoupon" column="csm_coupon"/>
+		<result property="csmIntegral" column="csm_integral"/>
+		<result property="csmGrow" column="csm_grow"/>
+		<result property="csmGrade" column="csm_grade"/>
+		<result property="csmRebate" column="csm_rebate"/>
+		<result property="csmNotRevenue" column="csm_not_revenue"/>
+		<result property="csmWeixinFlag" column="csm_weixin_flag"/>
+		<result property="csmAlipayFlag" column="csm_alipay_flag"/>
+		<result property="csmHeader" column="csm_header"/>
+		<result property="csmEmail" column="csm_email"/>
+		<result property="csmMobile" column="csm_mobile"/>
+		<result property="csmEvcard" column="csm_evcard"/>
+		<result property="csmExpress" column="csm_express"/>
+		<result property="csmTemp" column="csm_temp"/>
+		<result property="csmName" column="csm_name"/>
+		<result property="csmInfo" column="csm_info"/>
+		<result property="csmOutlets" column="csm_outlets"/>
+		<result property="csmIsVip" column="csm_is_vip"/>
+		<result property="csmVipStart" column="csm_vip_start"/>
+		<result property="csmVipEnd" column="csm_vip_end"/>
+		<result property="csmUpdateTime" column="csm_update_time"/>
+		<result property="csmAddTime" column="csm_add_time"/>
+		<result property="csmLastTime" column="csm_last_time"/>
+		<result property="csmLastIp" column="csm_last_ip"/>
+		<result property="csmLoginS" column="csm_login_s"/>
+		<result property="csmFirstUse" column="csm_first_use"/>
+		<result property="csmLastUse" column="csm_last_use"/>
+		<result property="csmAllRecharge" column="csm_all_recharge"/>
+		<result property="csmAllOrderS" column="csm_all_order_s"/>
+		<result property="csmAllUseTime" column="csm_all_use_time"/>
+		<result property="csmAllViolatS" column="csm_all_violat_s"/>
+		<result property="csmUnViolatS" column="csm_un_violat_s"/>
+		<result property="csmAllTroubleS" column="csm_all_trouble_s"/>
+		<result property="csmFirstRecharge" column="csm_first_recharge"/>
+		<result property="csmRefundTime" column="csm_refund_time"/>
+		<result property="csmRegistIp" column="csm_regist_ip"/>
+		<result property="csmAdder" column="csm_adder"/>
+		<result property="csmTracker" column="csm_tracker"/>
+		<result property="csmRefer" column="csm_refer"/>
+		<result property="csmReferType" column="csm_refer_type"/>
+		<result property="csmFrom" column="csm_from"/>
+		<result property="csmSrc" column="csm_src"/>
+		<result property="csmChannel" column="csm_channel"/>
+		<result property="csmMarketPlan" column="csm_market_plan"/>
+		<result property="csmActivity" column="csm_activity"/>
+		<result property="csmSaler" column="csm_saler"/>
+		<result property="csmMarket" column="csm_market"/>
+		<result property="csmTag" column="csm_tag"/>
+		<result property="csmMark" column="csm_mark"/>
+		<result property="csmVisitFlag" column="csm_visit_flag"/>
+		<result property="csmMask" column="csm_mask"/>
+		<result property="csmRemark" column="csm_remark"/>
+		<result property="csmVMobile" column="csm_v_mobile"/>
+		<result property="csmVEmail" column="csm_v_email"/>
+		<result property="csmVReal" column="csm_v_real"/>
+		<result property="csmVDrive" column="csm_v_drive"/>
+		<result property="csmStatus" column="csm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员帐号 -->
+	<select id="getCsMemberList" resultMap="CsMember">
+		select cs_member$suffix$.* from cs_member$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员组织]查询-->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<isNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.csm_group=cs_member_group$CsMemberGroup.suffix$.csmg_id
+			</isNull>
+			<isNotNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.$CsMemberGroup.on$=cs_member_group$CsMemberGroup.suffix$.csmg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询-->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<isNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.csm_evcard=cs_ev_card$CsEvCard.suffix$.csec_id
+			</isNull>
+			<isNotNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.$CsEvCard.on$=cs_ev_card$CsEvCard.suffix$.csec_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询-->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<isNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.csm_info=cs_member_info$CsMemberInfo.suffix$.csmi_id
+			</isNull>
+			<isNotNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.$CsMemberInfo.on$=cs_member_info$CsMemberInfo.suffix$.csmi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.csm_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.csm_refer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.csm_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.csm_market_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.csm_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员组织]查询条件sql片段 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<include refid="CsMemberGroup_part.cs_member_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询条件sql片段 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<include refid="CsEvCard_part.cs_ev_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询条件sql片段 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<include refid="CsMemberInfo_part.cs_member_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMember_part.cs_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	<!-- 统计会员帐号 -->
+	<select id="getCsMemberStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_member$suffix$		
+		<!-- 多对一外链接[会员组织]查询 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<isNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.csm_group=cs_member_group$CsMemberGroup.suffix$.csmg_id
+			</isNull>
+			<isNotNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.$CsMemberGroup.on$=cs_member_group$CsMemberGroup.suffix$.csmg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<isNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.csm_evcard=cs_ev_card$CsEvCard.suffix$.csec_id
+			</isNull>
+			<isNotNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.$CsEvCard.on$=cs_ev_card$CsEvCard.suffix$.csec_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<isNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.csm_info=cs_member_info$CsMemberInfo.suffix$.csmi_id
+			</isNull>
+			<isNotNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.$CsMemberInfo.on$=cs_member_info$CsMemberInfo.suffix$.csmi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.csm_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.csm_refer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.csm_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.csm_market_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.csm_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员组织]查询条件sql片段 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<include refid="CsMemberGroup_part.cs_member_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询条件sql片段 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<include refid="CsEvCard_part.cs_ev_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询条件sql片段 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<include refid="CsMemberInfo_part.cs_member_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMember_part.cs_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员帐号分页 -->
+	<select id="getCsMemberPage" parameterClass="java.util.HashMap" resultMap="CsMember">
+		select cs_member$suffix$.* from cs_member$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员组织]查询 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<isNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.csm_group=cs_member_group$CsMemberGroup.suffix$.csmg_id
+			</isNull>
+			<isNotNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.$CsMemberGroup.on$=cs_member_group$CsMemberGroup.suffix$.csmg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<isNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.csm_evcard=cs_ev_card$CsEvCard.suffix$.csec_id
+			</isNull>
+			<isNotNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.$CsEvCard.on$=cs_ev_card$CsEvCard.suffix$.csec_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<isNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.csm_info=cs_member_info$CsMemberInfo.suffix$.csmi_id
+			</isNull>
+			<isNotNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.$CsMemberInfo.on$=cs_member_info$CsMemberInfo.suffix$.csmi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.csm_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.csm_refer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.csm_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.csm_market_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.csm_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员组织]查询条件sql片段 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<include refid="CsMemberGroup_part.cs_member_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询条件sql片段 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<include refid="CsEvCard_part.cs_ev_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询条件sql片段 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<include refid="CsMemberInfo_part.cs_member_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMember_part.cs_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员帐号总数 -->
+	<select id="getCsMemberEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_member$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员组织]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<isNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.csm_group=cs_member_group$CsMemberGroup.suffix$.csmg_id
+			</isNull>
+			<isNotNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.$CsMemberGroup.on$=cs_member_group$CsMemberGroup.suffix$.csmg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<isNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.csm_evcard=cs_ev_card$CsEvCard.suffix$.csec_id
+			</isNull>
+			<isNotNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.$CsEvCard.on$=cs_ev_card$CsEvCard.suffix$.csec_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<isNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.csm_info=cs_member_info$CsMemberInfo.suffix$.csmi_id
+			</isNull>
+			<isNotNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.$CsMemberInfo.on$=cs_member_info$CsMemberInfo.suffix$.csmi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.csm_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.csm_refer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.csm_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.csm_market_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.csm_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member$suffix$.csm_status!=-1
+		<!-- 多对一外链接[会员组织]查询条件sql片段 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<include refid="CsMemberGroup_part.cs_member_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询条件sql片段 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<include refid="CsEvCard_part.cs_ev_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询条件sql片段 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<include refid="CsMemberInfo_part.cs_member_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMember_part.cs_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员帐号 -->
+	<select id="getCsMemberById" parameterClass="java.util.HashMap" resultMap="CsMember">
+		select cs_member$suffix$.* from cs_member$suffix$
+		where csm_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员帐号 -->
+	<insert id="saveCsMember"  parameterClass="com.ccclubs.model.CsMember">
+		insert into cs_member$suffix$
+		(
+			cs_member$suffix$.csm_host
+			,cs_member$suffix$.csm_username
+			,cs_member$suffix$.csm_password
+			,cs_member$suffix$.csm_group
+			,cs_member$suffix$.csm_money
+			,cs_member$suffix$.csm_coupon
+			,cs_member$suffix$.csm_integral
+			,cs_member$suffix$.csm_grow
+			,cs_member$suffix$.csm_grade
+			,cs_member$suffix$.csm_rebate
+			,cs_member$suffix$.csm_not_revenue
+			,cs_member$suffix$.csm_weixin_flag
+			,cs_member$suffix$.csm_alipay_flag
+			,cs_member$suffix$.csm_header
+			,cs_member$suffix$.csm_email
+			,cs_member$suffix$.csm_mobile
+			,cs_member$suffix$.csm_evcard
+			,cs_member$suffix$.csm_express
+			,cs_member$suffix$.csm_temp
+			,cs_member$suffix$.csm_name
+			,cs_member$suffix$.csm_info
+			,cs_member$suffix$.csm_outlets
+			,cs_member$suffix$.csm_is_vip
+			,cs_member$suffix$.csm_vip_start
+			,cs_member$suffix$.csm_vip_end
+			,cs_member$suffix$.csm_update_time
+			,cs_member$suffix$.csm_add_time
+			,cs_member$suffix$.csm_last_time
+			,cs_member$suffix$.csm_last_ip
+			,cs_member$suffix$.csm_login_s
+			,cs_member$suffix$.csm_first_use
+			,cs_member$suffix$.csm_last_use
+			,cs_member$suffix$.csm_all_recharge
+			,cs_member$suffix$.csm_all_order_s
+			,cs_member$suffix$.csm_all_use_time
+			,cs_member$suffix$.csm_all_violat_s
+			,cs_member$suffix$.csm_un_violat_s
+			,cs_member$suffix$.csm_all_trouble_s
+			,cs_member$suffix$.csm_first_recharge
+			,cs_member$suffix$.csm_refund_time
+			,cs_member$suffix$.csm_regist_ip
+			,cs_member$suffix$.csm_adder
+			,cs_member$suffix$.csm_tracker
+			,cs_member$suffix$.csm_refer
+			,cs_member$suffix$.csm_refer_type
+			,cs_member$suffix$.csm_from
+			,cs_member$suffix$.csm_src
+			,cs_member$suffix$.csm_channel
+			,cs_member$suffix$.csm_market_plan
+			,cs_member$suffix$.csm_activity
+			,cs_member$suffix$.csm_saler
+			,cs_member$suffix$.csm_market
+			,cs_member$suffix$.csm_tag
+			,cs_member$suffix$.csm_mark
+			,cs_member$suffix$.csm_visit_flag
+			,cs_member$suffix$.csm_mask
+			,cs_member$suffix$.csm_remark
+			,cs_member$suffix$.csm_v_mobile
+			,cs_member$suffix$.csm_v_email
+			,cs_member$suffix$.csm_v_real
+			,cs_member$suffix$.csm_v_drive
+			,cs_member$suffix$.csm_status
+		)
+		values(
+			<isNotNull property="csmHost" prepend="">
+				#csmHost#
+			</isNotNull>
+			<isNull property="csmHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmUsername" prepend=",">
+				#csmUsername#
+			</isNotNull>
+			<isNull property="csmUsername" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmPassword" prepend=",">
+				#csmPassword#
+			</isNotNull>
+			<isNull property="csmPassword" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmGroup" prepend=",">
+				#csmGroup#
+			</isNotNull>
+			<isNull property="csmGroup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmMoney" prepend=",">
+				#csmMoney#
+			</isNotNull>
+			<isNull property="csmMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmCoupon" prepend=",">
+				#csmCoupon#
+			</isNotNull>
+			<isNull property="csmCoupon" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmIntegral" prepend=",">
+				#csmIntegral#
+			</isNotNull>
+			<isNull property="csmIntegral" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmGrow" prepend=",">
+				#csmGrow#
+			</isNotNull>
+			<isNull property="csmGrow" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmGrade" prepend=",">
+				#csmGrade#
+			</isNotNull>
+			<isNull property="csmGrade" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRebate" prepend=",">
+				#csmRebate#
+			</isNotNull>
+			<isNull property="csmRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmNotRevenue" prepend=",">
+				#csmNotRevenue#
+			</isNotNull>
+			<isNull property="csmNotRevenue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmWeixinFlag" prepend=",">
+				#csmWeixinFlag#
+			</isNotNull>
+			<isNull property="csmWeixinFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAlipayFlag" prepend=",">
+				#csmAlipayFlag#
+			</isNotNull>
+			<isNull property="csmAlipayFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmHeader" prepend=",">
+				#csmHeader#
+			</isNotNull>
+			<isNull property="csmHeader" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmEmail" prepend=",">
+				#csmEmail#
+			</isNotNull>
+			<isNull property="csmEmail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmMobile" prepend=",">
+				#csmMobile#
+			</isNotNull>
+			<isNull property="csmMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmEvcard" prepend=",">
+				#csmEvcard#
+			</isNotNull>
+			<isNull property="csmEvcard" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmExpress" prepend=",">
+				#csmExpress#
+			</isNotNull>
+			<isNull property="csmExpress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmTemp" prepend=",">
+				#csmTemp#
+			</isNotNull>
+			<isNull property="csmTemp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmName" prepend=",">
+				#csmName#
+			</isNotNull>
+			<isNull property="csmName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmInfo" prepend=",">
+				#csmInfo#
+			</isNotNull>
+			<isNull property="csmInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmOutlets" prepend=",">
+				#csmOutlets#
+			</isNotNull>
+			<isNull property="csmOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmIsVip" prepend=",">
+				#csmIsVip#
+			</isNotNull>
+			<isNull property="csmIsVip" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVipStart" prepend=",">
+				#csmVipStart#
+			</isNotNull>
+			<isNull property="csmVipStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVipEnd" prepend=",">
+				#csmVipEnd#
+			</isNotNull>
+			<isNull property="csmVipEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmUpdateTime" prepend=",">
+				#csmUpdateTime#
+			</isNotNull>
+			<isNull property="csmUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAddTime" prepend=",">
+				#csmAddTime#
+			</isNotNull>
+			<isNull property="csmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmLastTime" prepend=",">
+				#csmLastTime#
+			</isNotNull>
+			<isNull property="csmLastTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmLastIp" prepend=",">
+				#csmLastIp#
+			</isNotNull>
+			<isNull property="csmLastIp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmLoginS" prepend=",">
+				#csmLoginS#
+			</isNotNull>
+			<isNull property="csmLoginS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmFirstUse" prepend=",">
+				#csmFirstUse#
+			</isNotNull>
+			<isNull property="csmFirstUse" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmLastUse" prepend=",">
+				#csmLastUse#
+			</isNotNull>
+			<isNull property="csmLastUse" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAllRecharge" prepend=",">
+				#csmAllRecharge#
+			</isNotNull>
+			<isNull property="csmAllRecharge" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAllOrderS" prepend=",">
+				#csmAllOrderS#
+			</isNotNull>
+			<isNull property="csmAllOrderS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAllUseTime" prepend=",">
+				#csmAllUseTime#
+			</isNotNull>
+			<isNull property="csmAllUseTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAllViolatS" prepend=",">
+				#csmAllViolatS#
+			</isNotNull>
+			<isNull property="csmAllViolatS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmUnViolatS" prepend=",">
+				#csmUnViolatS#
+			</isNotNull>
+			<isNull property="csmUnViolatS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAllTroubleS" prepend=",">
+				#csmAllTroubleS#
+			</isNotNull>
+			<isNull property="csmAllTroubleS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmFirstRecharge" prepend=",">
+				#csmFirstRecharge#
+			</isNotNull>
+			<isNull property="csmFirstRecharge" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRefundTime" prepend=",">
+				#csmRefundTime#
+			</isNotNull>
+			<isNull property="csmRefundTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRegistIp" prepend=",">
+				#csmRegistIp#
+			</isNotNull>
+			<isNull property="csmRegistIp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAdder" prepend=",">
+				#csmAdder#
+			</isNotNull>
+			<isNull property="csmAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmTracker" prepend=",">
+				#csmTracker#
+			</isNotNull>
+			<isNull property="csmTracker" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRefer" prepend=",">
+				#csmRefer#
+			</isNotNull>
+			<isNull property="csmRefer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmReferType" prepend=",">
+				#csmReferType#
+			</isNotNull>
+			<isNull property="csmReferType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmFrom" prepend=",">
+				#csmFrom#
+			</isNotNull>
+			<isNull property="csmFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmSrc" prepend=",">
+				#csmSrc#
+			</isNotNull>
+			<isNull property="csmSrc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmChannel" prepend=",">
+				#csmChannel#
+			</isNotNull>
+			<isNull property="csmChannel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmMarketPlan" prepend=",">
+				#csmMarketPlan#
+			</isNotNull>
+			<isNull property="csmMarketPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmActivity" prepend=",">
+				#csmActivity#
+			</isNotNull>
+			<isNull property="csmActivity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmSaler" prepend=",">
+				#csmSaler#
+			</isNotNull>
+			<isNull property="csmSaler" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmMarket" prepend=",">
+				#csmMarket#
+			</isNotNull>
+			<isNull property="csmMarket" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmTag" prepend=",">
+				#csmTag#
+			</isNotNull>
+			<isNull property="csmTag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmMark" prepend=",">
+				#csmMark#
+			</isNotNull>
+			<isNull property="csmMark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVisitFlag" prepend=",">
+				#csmVisitFlag#
+			</isNotNull>
+			<isNull property="csmVisitFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmMask" prepend=",">
+				#csmMask#
+			</isNotNull>
+			<isNull property="csmMask" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRemark" prepend=",">
+				#csmRemark#
+			</isNotNull>
+			<isNull property="csmRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVMobile" prepend=",">
+				#csmVMobile#
+			</isNotNull>
+			<isNull property="csmVMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVEmail" prepend=",">
+				#csmVEmail#
+			</isNotNull>
+			<isNull property="csmVEmail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVReal" prepend=",">
+				#csmVReal#
+			</isNotNull>
+			<isNull property="csmVReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmVDrive" prepend=",">
+				#csmVDrive#
+			</isNotNull>
+			<isNull property="csmVDrive" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmStatus" prepend=",">
+				#csmStatus#
+			</isNotNull>
+			<isNull property="csmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员帐号 -->
+	<update id="updateCsMember"  parameterClass="com.ccclubs.model.CsMember">
+		update cs_member$suffix$ set
+			<isNotNull property="csmHost" prepend="">
+				cs_member$suffix$.csm_host = #csmHost#
+			</isNotNull>
+			<isNull property="csmHost" prepend="">
+				cs_member$suffix$.csm_host = null
+			</isNull>				
+			<isNotNull property="csmUsername" prepend=",">
+				cs_member$suffix$.csm_username = #csmUsername#
+			</isNotNull>
+			<isNull property="csmUsername" prepend=",">
+				cs_member$suffix$.csm_username = null
+			</isNull>				
+			<isNotNull property="csmPassword" prepend=",">
+				cs_member$suffix$.csm_password = #csmPassword#
+			</isNotNull>
+			<isNull property="csmPassword" prepend=",">
+				cs_member$suffix$.csm_password = null
+			</isNull>				
+			<isNotNull property="csmGroup" prepend=",">
+				cs_member$suffix$.csm_group = #csmGroup#
+			</isNotNull>
+			<isNull property="csmGroup" prepend=",">
+				cs_member$suffix$.csm_group = null
+			</isNull>				
+			<isNotNull property="csmMoney" prepend=",">
+				cs_member$suffix$.csm_money = #csmMoney#
+			</isNotNull>
+			<isNull property="csmMoney" prepend=",">
+				cs_member$suffix$.csm_money = null
+			</isNull>				
+			<isNotNull property="csmCoupon" prepend=",">
+				cs_member$suffix$.csm_coupon = #csmCoupon#
+			</isNotNull>
+			<isNull property="csmCoupon" prepend=",">
+				cs_member$suffix$.csm_coupon = null
+			</isNull>				
+			<isNotNull property="csmIntegral" prepend=",">
+				cs_member$suffix$.csm_integral = #csmIntegral#
+			</isNotNull>
+			<isNull property="csmIntegral" prepend=",">
+				cs_member$suffix$.csm_integral = null
+			</isNull>				
+			<isNotNull property="csmGrow" prepend=",">
+				cs_member$suffix$.csm_grow = #csmGrow#
+			</isNotNull>
+			<isNull property="csmGrow" prepend=",">
+				cs_member$suffix$.csm_grow = null
+			</isNull>				
+			<isNotNull property="csmGrade" prepend=",">
+				cs_member$suffix$.csm_grade = #csmGrade#
+			</isNotNull>
+			<isNull property="csmGrade" prepend=",">
+				cs_member$suffix$.csm_grade = null
+			</isNull>				
+			<isNotNull property="csmRebate" prepend=",">
+				cs_member$suffix$.csm_rebate = #csmRebate#
+			</isNotNull>
+			<isNull property="csmRebate" prepend=",">
+				cs_member$suffix$.csm_rebate = null
+			</isNull>				
+			<isNotNull property="csmNotRevenue" prepend=",">
+				cs_member$suffix$.csm_not_revenue = #csmNotRevenue#
+			</isNotNull>
+			<isNull property="csmNotRevenue" prepend=",">
+				cs_member$suffix$.csm_not_revenue = null
+			</isNull>				
+			<isNotNull property="csmWeixinFlag" prepend=",">
+				cs_member$suffix$.csm_weixin_flag = #csmWeixinFlag#
+			</isNotNull>
+			<isNull property="csmWeixinFlag" prepend=",">
+				cs_member$suffix$.csm_weixin_flag = null
+			</isNull>				
+			<isNotNull property="csmAlipayFlag" prepend=",">
+				cs_member$suffix$.csm_alipay_flag = #csmAlipayFlag#
+			</isNotNull>
+			<isNull property="csmAlipayFlag" prepend=",">
+				cs_member$suffix$.csm_alipay_flag = null
+			</isNull>				
+			<isNotNull property="csmHeader" prepend=",">
+				cs_member$suffix$.csm_header = #csmHeader#
+			</isNotNull>
+			<isNull property="csmHeader" prepend=",">
+				cs_member$suffix$.csm_header = null
+			</isNull>				
+			<isNotNull property="csmEmail" prepend=",">
+				cs_member$suffix$.csm_email = #csmEmail#
+			</isNotNull>
+			<isNull property="csmEmail" prepend=",">
+				cs_member$suffix$.csm_email = null
+			</isNull>				
+			<isNotNull property="csmMobile" prepend=",">
+				cs_member$suffix$.csm_mobile = #csmMobile#
+			</isNotNull>
+			<isNull property="csmMobile" prepend=",">
+				cs_member$suffix$.csm_mobile = null
+			</isNull>				
+			<isNotNull property="csmEvcard" prepend=",">
+				cs_member$suffix$.csm_evcard = #csmEvcard#
+			</isNotNull>
+			<isNull property="csmEvcard" prepend=",">
+				cs_member$suffix$.csm_evcard = null
+			</isNull>				
+			<isNotNull property="csmExpress" prepend=",">
+				cs_member$suffix$.csm_express = #csmExpress#
+			</isNotNull>
+			<isNull property="csmExpress" prepend=",">
+				cs_member$suffix$.csm_express = null
+			</isNull>				
+			<isNotNull property="csmTemp" prepend=",">
+				cs_member$suffix$.csm_temp = #csmTemp#
+			</isNotNull>
+			<isNull property="csmTemp" prepend=",">
+				cs_member$suffix$.csm_temp = null
+			</isNull>				
+			<isNotNull property="csmName" prepend=",">
+				cs_member$suffix$.csm_name = #csmName#
+			</isNotNull>
+			<isNull property="csmName" prepend=",">
+				cs_member$suffix$.csm_name = null
+			</isNull>				
+			<isNotNull property="csmInfo" prepend=",">
+				cs_member$suffix$.csm_info = #csmInfo#
+			</isNotNull>
+			<isNull property="csmInfo" prepend=",">
+				cs_member$suffix$.csm_info = null
+			</isNull>				
+			<isNotNull property="csmOutlets" prepend=",">
+				cs_member$suffix$.csm_outlets = #csmOutlets#
+			</isNotNull>
+			<isNull property="csmOutlets" prepend=",">
+				cs_member$suffix$.csm_outlets = null
+			</isNull>				
+			<isNotNull property="csmIsVip" prepend=",">
+				cs_member$suffix$.csm_is_vip = #csmIsVip#
+			</isNotNull>
+			<isNull property="csmIsVip" prepend=",">
+				cs_member$suffix$.csm_is_vip = null
+			</isNull>				
+			<isNotNull property="csmVipStart" prepend=",">
+				cs_member$suffix$.csm_vip_start = #csmVipStart#
+			</isNotNull>
+			<isNull property="csmVipStart" prepend=",">
+				cs_member$suffix$.csm_vip_start = null
+			</isNull>				
+			<isNotNull property="csmVipEnd" prepend=",">
+				cs_member$suffix$.csm_vip_end = #csmVipEnd#
+			</isNotNull>
+			<isNull property="csmVipEnd" prepend=",">
+				cs_member$suffix$.csm_vip_end = null
+			</isNull>				
+			<isNotNull property="csmUpdateTime" prepend=",">
+				cs_member$suffix$.csm_update_time = #csmUpdateTime#
+			</isNotNull>
+			<isNull property="csmUpdateTime" prepend=",">
+				cs_member$suffix$.csm_update_time = null
+			</isNull>				
+			<isNotNull property="csmAddTime" prepend=",">
+				cs_member$suffix$.csm_add_time = #csmAddTime#
+			</isNotNull>
+			<isNull property="csmAddTime" prepend=",">
+				cs_member$suffix$.csm_add_time = null
+			</isNull>				
+			<isNotNull property="csmLastTime" prepend=",">
+				cs_member$suffix$.csm_last_time = #csmLastTime#
+			</isNotNull>
+			<isNull property="csmLastTime" prepend=",">
+				cs_member$suffix$.csm_last_time = null
+			</isNull>				
+			<isNotNull property="csmLastIp" prepend=",">
+				cs_member$suffix$.csm_last_ip = #csmLastIp#
+			</isNotNull>
+			<isNull property="csmLastIp" prepend=",">
+				cs_member$suffix$.csm_last_ip = null
+			</isNull>				
+			<isNotNull property="csmLoginS" prepend=",">
+				cs_member$suffix$.csm_login_s = #csmLoginS#
+			</isNotNull>
+			<isNull property="csmLoginS" prepend=",">
+				cs_member$suffix$.csm_login_s = null
+			</isNull>				
+			<isNotNull property="csmFirstUse" prepend=",">
+				cs_member$suffix$.csm_first_use = #csmFirstUse#
+			</isNotNull>
+			<isNull property="csmFirstUse" prepend=",">
+				cs_member$suffix$.csm_first_use = null
+			</isNull>				
+			<isNotNull property="csmLastUse" prepend=",">
+				cs_member$suffix$.csm_last_use = #csmLastUse#
+			</isNotNull>
+			<isNull property="csmLastUse" prepend=",">
+				cs_member$suffix$.csm_last_use = null
+			</isNull>				
+			<isNotNull property="csmAllRecharge" prepend=",">
+				cs_member$suffix$.csm_all_recharge = #csmAllRecharge#
+			</isNotNull>
+			<isNull property="csmAllRecharge" prepend=",">
+				cs_member$suffix$.csm_all_recharge = null
+			</isNull>				
+			<isNotNull property="csmAllOrderS" prepend=",">
+				cs_member$suffix$.csm_all_order_s = #csmAllOrderS#
+			</isNotNull>
+			<isNull property="csmAllOrderS" prepend=",">
+				cs_member$suffix$.csm_all_order_s = null
+			</isNull>				
+			<isNotNull property="csmAllUseTime" prepend=",">
+				cs_member$suffix$.csm_all_use_time = #csmAllUseTime#
+			</isNotNull>
+			<isNull property="csmAllUseTime" prepend=",">
+				cs_member$suffix$.csm_all_use_time = null
+			</isNull>				
+			<isNotNull property="csmAllViolatS" prepend=",">
+				cs_member$suffix$.csm_all_violat_s = #csmAllViolatS#
+			</isNotNull>
+			<isNull property="csmAllViolatS" prepend=",">
+				cs_member$suffix$.csm_all_violat_s = null
+			</isNull>				
+			<isNotNull property="csmUnViolatS" prepend=",">
+				cs_member$suffix$.csm_un_violat_s = #csmUnViolatS#
+			</isNotNull>
+			<isNull property="csmUnViolatS" prepend=",">
+				cs_member$suffix$.csm_un_violat_s = null
+			</isNull>				
+			<isNotNull property="csmAllTroubleS" prepend=",">
+				cs_member$suffix$.csm_all_trouble_s = #csmAllTroubleS#
+			</isNotNull>
+			<isNull property="csmAllTroubleS" prepend=",">
+				cs_member$suffix$.csm_all_trouble_s = null
+			</isNull>				
+			<isNotNull property="csmFirstRecharge" prepend=",">
+				cs_member$suffix$.csm_first_recharge = #csmFirstRecharge#
+			</isNotNull>
+			<isNull property="csmFirstRecharge" prepend=",">
+				cs_member$suffix$.csm_first_recharge = null
+			</isNull>				
+			<isNotNull property="csmRefundTime" prepend=",">
+				cs_member$suffix$.csm_refund_time = #csmRefundTime#
+			</isNotNull>
+			<isNull property="csmRefundTime" prepend=",">
+				cs_member$suffix$.csm_refund_time = null
+			</isNull>				
+			<isNotNull property="csmRegistIp" prepend=",">
+				cs_member$suffix$.csm_regist_ip = #csmRegistIp#
+			</isNotNull>
+			<isNull property="csmRegistIp" prepend=",">
+				cs_member$suffix$.csm_regist_ip = null
+			</isNull>				
+			<isNotNull property="csmAdder" prepend=",">
+				cs_member$suffix$.csm_adder = #csmAdder#
+			</isNotNull>
+			<isNull property="csmAdder" prepend=",">
+				cs_member$suffix$.csm_adder = null
+			</isNull>				
+			<isNotNull property="csmTracker" prepend=",">
+				cs_member$suffix$.csm_tracker = #csmTracker#
+			</isNotNull>
+			<isNull property="csmTracker" prepend=",">
+				cs_member$suffix$.csm_tracker = null
+			</isNull>				
+			<isNotNull property="csmRefer" prepend=",">
+				cs_member$suffix$.csm_refer = #csmRefer#
+			</isNotNull>
+			<isNull property="csmRefer" prepend=",">
+				cs_member$suffix$.csm_refer = null
+			</isNull>				
+			<isNotNull property="csmReferType" prepend=",">
+				cs_member$suffix$.csm_refer_type = #csmReferType#
+			</isNotNull>
+			<isNull property="csmReferType" prepend=",">
+				cs_member$suffix$.csm_refer_type = null
+			</isNull>				
+			<isNotNull property="csmFrom" prepend=",">
+				cs_member$suffix$.csm_from = #csmFrom#
+			</isNotNull>
+			<isNull property="csmFrom" prepend=",">
+				cs_member$suffix$.csm_from = null
+			</isNull>				
+			<isNotNull property="csmSrc" prepend=",">
+				cs_member$suffix$.csm_src = #csmSrc#
+			</isNotNull>
+			<isNull property="csmSrc" prepend=",">
+				cs_member$suffix$.csm_src = null
+			</isNull>				
+			<isNotNull property="csmChannel" prepend=",">
+				cs_member$suffix$.csm_channel = #csmChannel#
+			</isNotNull>
+			<isNull property="csmChannel" prepend=",">
+				cs_member$suffix$.csm_channel = null
+			</isNull>				
+			<isNotNull property="csmMarketPlan" prepend=",">
+				cs_member$suffix$.csm_market_plan = #csmMarketPlan#
+			</isNotNull>
+			<isNull property="csmMarketPlan" prepend=",">
+				cs_member$suffix$.csm_market_plan = null
+			</isNull>				
+			<isNotNull property="csmActivity" prepend=",">
+				cs_member$suffix$.csm_activity = #csmActivity#
+			</isNotNull>
+			<isNull property="csmActivity" prepend=",">
+				cs_member$suffix$.csm_activity = null
+			</isNull>				
+			<isNotNull property="csmSaler" prepend=",">
+				cs_member$suffix$.csm_saler = #csmSaler#
+			</isNotNull>
+			<isNull property="csmSaler" prepend=",">
+				cs_member$suffix$.csm_saler = null
+			</isNull>				
+			<isNotNull property="csmMarket" prepend=",">
+				cs_member$suffix$.csm_market = #csmMarket#
+			</isNotNull>
+			<isNull property="csmMarket" prepend=",">
+				cs_member$suffix$.csm_market = null
+			</isNull>				
+			<isNotNull property="csmTag" prepend=",">
+				cs_member$suffix$.csm_tag = #csmTag#
+			</isNotNull>
+			<isNull property="csmTag" prepend=",">
+				cs_member$suffix$.csm_tag = null
+			</isNull>				
+			<isNotNull property="csmMark" prepend=",">
+				cs_member$suffix$.csm_mark = #csmMark#
+			</isNotNull>
+			<isNull property="csmMark" prepend=",">
+				cs_member$suffix$.csm_mark = null
+			</isNull>				
+			<isNotNull property="csmVisitFlag" prepend=",">
+				cs_member$suffix$.csm_visit_flag = #csmVisitFlag#
+			</isNotNull>
+			<isNull property="csmVisitFlag" prepend=",">
+				cs_member$suffix$.csm_visit_flag = null
+			</isNull>				
+			<isNotNull property="csmMask" prepend=",">
+				cs_member$suffix$.csm_mask = #csmMask#
+			</isNotNull>
+			<isNull property="csmMask" prepend=",">
+				cs_member$suffix$.csm_mask = null
+			</isNull>				
+			<isNotNull property="csmRemark" prepend=",">
+				cs_member$suffix$.csm_remark = #csmRemark#
+			</isNotNull>
+			<isNull property="csmRemark" prepend=",">
+				cs_member$suffix$.csm_remark = null
+			</isNull>				
+			<isNotNull property="csmVMobile" prepend=",">
+				cs_member$suffix$.csm_v_mobile = #csmVMobile#
+			</isNotNull>
+			<isNull property="csmVMobile" prepend=",">
+				cs_member$suffix$.csm_v_mobile = null
+			</isNull>				
+			<isNotNull property="csmVEmail" prepend=",">
+				cs_member$suffix$.csm_v_email = #csmVEmail#
+			</isNotNull>
+			<isNull property="csmVEmail" prepend=",">
+				cs_member$suffix$.csm_v_email = null
+			</isNull>				
+			<isNotNull property="csmVReal" prepend=",">
+				cs_member$suffix$.csm_v_real = #csmVReal#
+			</isNotNull>
+			<isNull property="csmVReal" prepend=",">
+				cs_member$suffix$.csm_v_real = null
+			</isNull>				
+			<isNotNull property="csmVDrive" prepend=",">
+				cs_member$suffix$.csm_v_drive = #csmVDrive#
+			</isNotNull>
+			<isNull property="csmVDrive" prepend=",">
+				cs_member$suffix$.csm_v_drive = null
+			</isNull>				
+			<isNotNull property="csmStatus" prepend=",">
+				cs_member$suffix$.csm_status = #csmStatus#
+			</isNotNull>
+			<isNull property="csmStatus" prepend=",">
+				cs_member$suffix$.csm_status = null
+			</isNull>				
+		where
+			csm_id=#csmId#
+	</update>
+	
+	<!-- 更新会员帐号非空字段 -->
+	<update id="updateCsMember$NotNull"  parameterClass="com.ccclubs.model.CsMember">
+		update cs_member$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmHost" prepend=",">
+				cs_member$suffix$.csm_host = #csmHost#
+			</isNotNull>		
+			<isNotNull property="csmUsername" prepend=",">
+				cs_member$suffix$.csm_username = #csmUsername#
+			</isNotNull>		
+			<isNotNull property="csmPassword" prepend=",">
+				cs_member$suffix$.csm_password = #csmPassword#
+			</isNotNull>		
+			<isNotNull property="csmGroup" prepend=",">
+				cs_member$suffix$.csm_group = #csmGroup#
+			</isNotNull>		
+			<isNotNull property="csmMoney" prepend=",">
+				cs_member$suffix$.csm_money = #csmMoney#
+			</isNotNull>		
+			<isNotNull property="csmCoupon" prepend=",">
+				cs_member$suffix$.csm_coupon = #csmCoupon#
+			</isNotNull>		
+			<isNotNull property="csmIntegral" prepend=",">
+				cs_member$suffix$.csm_integral = #csmIntegral#
+			</isNotNull>		
+			<isNotNull property="csmGrow" prepend=",">
+				cs_member$suffix$.csm_grow = #csmGrow#
+			</isNotNull>		
+			<isNotNull property="csmGrade" prepend=",">
+				cs_member$suffix$.csm_grade = #csmGrade#
+			</isNotNull>		
+			<isNotNull property="csmRebate" prepend=",">
+				cs_member$suffix$.csm_rebate = #csmRebate#
+			</isNotNull>		
+			<isNotNull property="csmNotRevenue" prepend=",">
+				cs_member$suffix$.csm_not_revenue = #csmNotRevenue#
+			</isNotNull>		
+			<isNotNull property="csmWeixinFlag" prepend=",">
+				cs_member$suffix$.csm_weixin_flag = #csmWeixinFlag#
+			</isNotNull>		
+			<isNotNull property="csmAlipayFlag" prepend=",">
+				cs_member$suffix$.csm_alipay_flag = #csmAlipayFlag#
+			</isNotNull>		
+			<isNotNull property="csmHeader" prepend=",">
+				cs_member$suffix$.csm_header = #csmHeader#
+			</isNotNull>		
+			<isNotNull property="csmEmail" prepend=",">
+				cs_member$suffix$.csm_email = #csmEmail#
+			</isNotNull>		
+			<isNotNull property="csmMobile" prepend=",">
+				cs_member$suffix$.csm_mobile = #csmMobile#
+			</isNotNull>		
+			<isNotNull property="csmEvcard" prepend=",">
+				cs_member$suffix$.csm_evcard = #csmEvcard#
+			</isNotNull>		
+			<isNotNull property="csmExpress" prepend=",">
+				cs_member$suffix$.csm_express = #csmExpress#
+			</isNotNull>		
+			<isNotNull property="csmTemp" prepend=",">
+				cs_member$suffix$.csm_temp = #csmTemp#
+			</isNotNull>		
+			<isNotNull property="csmName" prepend=",">
+				cs_member$suffix$.csm_name = #csmName#
+			</isNotNull>		
+			<isNotNull property="csmInfo" prepend=",">
+				cs_member$suffix$.csm_info = #csmInfo#
+			</isNotNull>		
+			<isNotNull property="csmOutlets" prepend=",">
+				cs_member$suffix$.csm_outlets = #csmOutlets#
+			</isNotNull>		
+			<isNotNull property="csmIsVip" prepend=",">
+				cs_member$suffix$.csm_is_vip = #csmIsVip#
+			</isNotNull>		
+			<isNotNull property="csmVipStart" prepend=",">
+				cs_member$suffix$.csm_vip_start = #csmVipStart#
+			</isNotNull>		
+			<isNotNull property="csmVipEnd" prepend=",">
+				cs_member$suffix$.csm_vip_end = #csmVipEnd#
+			</isNotNull>		
+			<isNotNull property="csmUpdateTime" prepend=",">
+				cs_member$suffix$.csm_update_time = #csmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csmAddTime" prepend=",">
+				cs_member$suffix$.csm_add_time = #csmAddTime#
+			</isNotNull>		
+			<isNotNull property="csmLastTime" prepend=",">
+				cs_member$suffix$.csm_last_time = #csmLastTime#
+			</isNotNull>		
+			<isNotNull property="csmLastIp" prepend=",">
+				cs_member$suffix$.csm_last_ip = #csmLastIp#
+			</isNotNull>		
+			<isNotNull property="csmLoginS" prepend=",">
+				cs_member$suffix$.csm_login_s = #csmLoginS#
+			</isNotNull>		
+			<isNotNull property="csmFirstUse" prepend=",">
+				cs_member$suffix$.csm_first_use = #csmFirstUse#
+			</isNotNull>		
+			<isNotNull property="csmLastUse" prepend=",">
+				cs_member$suffix$.csm_last_use = #csmLastUse#
+			</isNotNull>		
+			<isNotNull property="csmAllRecharge" prepend=",">
+				cs_member$suffix$.csm_all_recharge = #csmAllRecharge#
+			</isNotNull>		
+			<isNotNull property="csmAllOrderS" prepend=",">
+				cs_member$suffix$.csm_all_order_s = #csmAllOrderS#
+			</isNotNull>		
+			<isNotNull property="csmAllUseTime" prepend=",">
+				cs_member$suffix$.csm_all_use_time = #csmAllUseTime#
+			</isNotNull>		
+			<isNotNull property="csmAllViolatS" prepend=",">
+				cs_member$suffix$.csm_all_violat_s = #csmAllViolatS#
+			</isNotNull>		
+			<isNotNull property="csmUnViolatS" prepend=",">
+				cs_member$suffix$.csm_un_violat_s = #csmUnViolatS#
+			</isNotNull>		
+			<isNotNull property="csmAllTroubleS" prepend=",">
+				cs_member$suffix$.csm_all_trouble_s = #csmAllTroubleS#
+			</isNotNull>		
+			<isNotNull property="csmFirstRecharge" prepend=",">
+				cs_member$suffix$.csm_first_recharge = #csmFirstRecharge#
+			</isNotNull>		
+			<isNotNull property="csmRefundTime" prepend=",">
+				cs_member$suffix$.csm_refund_time = #csmRefundTime#
+			</isNotNull>		
+			<isNotNull property="csmRegistIp" prepend=",">
+				cs_member$suffix$.csm_regist_ip = #csmRegistIp#
+			</isNotNull>		
+			<isNotNull property="csmAdder" prepend=",">
+				cs_member$suffix$.csm_adder = #csmAdder#
+			</isNotNull>		
+			<isNotNull property="csmTracker" prepend=",">
+				cs_member$suffix$.csm_tracker = #csmTracker#
+			</isNotNull>		
+			<isNotNull property="csmRefer" prepend=",">
+				cs_member$suffix$.csm_refer = #csmRefer#
+			</isNotNull>		
+			<isNotNull property="csmReferType" prepend=",">
+				cs_member$suffix$.csm_refer_type = #csmReferType#
+			</isNotNull>		
+			<isNotNull property="csmFrom" prepend=",">
+				cs_member$suffix$.csm_from = #csmFrom#
+			</isNotNull>		
+			<isNotNull property="csmSrc" prepend=",">
+				cs_member$suffix$.csm_src = #csmSrc#
+			</isNotNull>		
+			<isNotNull property="csmChannel" prepend=",">
+				cs_member$suffix$.csm_channel = #csmChannel#
+			</isNotNull>		
+			<isNotNull property="csmMarketPlan" prepend=",">
+				cs_member$suffix$.csm_market_plan = #csmMarketPlan#
+			</isNotNull>		
+			<isNotNull property="csmActivity" prepend=",">
+				cs_member$suffix$.csm_activity = #csmActivity#
+			</isNotNull>		
+			<isNotNull property="csmSaler" prepend=",">
+				cs_member$suffix$.csm_saler = #csmSaler#
+			</isNotNull>		
+			<isNotNull property="csmMarket" prepend=",">
+				cs_member$suffix$.csm_market = #csmMarket#
+			</isNotNull>		
+			<isNotNull property="csmTag" prepend=",">
+				cs_member$suffix$.csm_tag = #csmTag#
+			</isNotNull>		
+			<isNotNull property="csmMark" prepend=",">
+				cs_member$suffix$.csm_mark = #csmMark#
+			</isNotNull>		
+			<isNotNull property="csmVisitFlag" prepend=",">
+				cs_member$suffix$.csm_visit_flag = #csmVisitFlag#
+			</isNotNull>		
+			<isNotNull property="csmMask" prepend=",">
+				cs_member$suffix$.csm_mask = #csmMask#
+			</isNotNull>		
+			<isNotNull property="csmRemark" prepend=",">
+				cs_member$suffix$.csm_remark = #csmRemark#
+			</isNotNull>		
+			<isNotNull property="csmVMobile" prepend=",">
+				cs_member$suffix$.csm_v_mobile = #csmVMobile#
+			</isNotNull>		
+			<isNotNull property="csmVEmail" prepend=",">
+				cs_member$suffix$.csm_v_email = #csmVEmail#
+			</isNotNull>		
+			<isNotNull property="csmVReal" prepend=",">
+				cs_member$suffix$.csm_v_real = #csmVReal#
+			</isNotNull>		
+			<isNotNull property="csmVDrive" prepend=",">
+				cs_member$suffix$.csm_v_drive = #csmVDrive#
+			</isNotNull>		
+			<isNotNull property="csmStatus" prepend=",">
+				cs_member$suffix$.csm_status = #csmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csm_id=#csmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员帐号 -->
+	<delete id="deleteCsMemberById" parameterClass="java.util.HashMap">
+		delete from cs_member$suffix$ where csm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员帐号 -->
+	<update id="removeCsMemberById" parameterClass="java.util.HashMap">
+		update cs_member$suffix$ set  cs_member$suffix$.csm_status=-1  where csm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员帐号 -->
+	<update id="updateCsMemberBy"  parameterClass="java.util.HashMap">
+		update cs_member$suffix$ set		
+			csm_id=csm_id
+			<isNotNull property="V_csmId" prepend=",">
+				cs_member$suffix$.csm_id = #V_csmId#
+			</isNotNull>		
+			<isNotNull property="V_csmHost" prepend=",">
+				cs_member$suffix$.csm_host = #V_csmHost#
+			</isNotNull>		
+			<isNotNull property="V_csmUsername" prepend=",">
+				cs_member$suffix$.csm_username = #V_csmUsername#
+			</isNotNull>		
+			<isNotNull property="V_csmPassword" prepend=",">
+				cs_member$suffix$.csm_password = #V_csmPassword#
+			</isNotNull>		
+			<isNotNull property="V_csmGroup" prepend=",">
+				cs_member$suffix$.csm_group = #V_csmGroup#
+			</isNotNull>		
+			<isNotNull property="V_csmMoney" prepend=",">
+				cs_member$suffix$.csm_money = #V_csmMoney#
+			</isNotNull>		
+			<isNotNull property="V_csmCoupon" prepend=",">
+				cs_member$suffix$.csm_coupon = #V_csmCoupon#
+			</isNotNull>		
+			<isNotNull property="V_csmIntegral" prepend=",">
+				cs_member$suffix$.csm_integral = #V_csmIntegral#
+			</isNotNull>		
+			<isNotNull property="V_csmGrow" prepend=",">
+				cs_member$suffix$.csm_grow = #V_csmGrow#
+			</isNotNull>		
+			<isNotNull property="V_csmGrade" prepend=",">
+				cs_member$suffix$.csm_grade = #V_csmGrade#
+			</isNotNull>		
+			<isNotNull property="V_csmRebate" prepend=",">
+				cs_member$suffix$.csm_rebate = #V_csmRebate#
+			</isNotNull>		
+			<isNotNull property="V_csmNotRevenue" prepend=",">
+				cs_member$suffix$.csm_not_revenue = #V_csmNotRevenue#
+			</isNotNull>		
+			<isNotNull property="V_csmWeixinFlag" prepend=",">
+				cs_member$suffix$.csm_weixin_flag = #V_csmWeixinFlag#
+			</isNotNull>		
+			<isNotNull property="V_csmAlipayFlag" prepend=",">
+				cs_member$suffix$.csm_alipay_flag = #V_csmAlipayFlag#
+			</isNotNull>		
+			<isNotNull property="V_csmHeader" prepend=",">
+				cs_member$suffix$.csm_header = #V_csmHeader#
+			</isNotNull>		
+			<isNotNull property="V_csmEmail" prepend=",">
+				cs_member$suffix$.csm_email = #V_csmEmail#
+			</isNotNull>		
+			<isNotNull property="V_csmMobile" prepend=",">
+				cs_member$suffix$.csm_mobile = #V_csmMobile#
+			</isNotNull>		
+			<isNotNull property="V_csmEvcard" prepend=",">
+				cs_member$suffix$.csm_evcard = #V_csmEvcard#
+			</isNotNull>		
+			<isNotNull property="V_csmExpress" prepend=",">
+				cs_member$suffix$.csm_express = #V_csmExpress#
+			</isNotNull>		
+			<isNotNull property="V_csmTemp" prepend=",">
+				cs_member$suffix$.csm_temp = #V_csmTemp#
+			</isNotNull>		
+			<isNotNull property="V_csmName" prepend=",">
+				cs_member$suffix$.csm_name = #V_csmName#
+			</isNotNull>		
+			<isNotNull property="V_csmInfo" prepend=",">
+				cs_member$suffix$.csm_info = #V_csmInfo#
+			</isNotNull>		
+			<isNotNull property="V_csmOutlets" prepend=",">
+				cs_member$suffix$.csm_outlets = #V_csmOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csmIsVip" prepend=",">
+				cs_member$suffix$.csm_is_vip = #V_csmIsVip#
+			</isNotNull>		
+			<isNotNull property="V_csmVipStart" prepend=",">
+				cs_member$suffix$.csm_vip_start = #V_csmVipStart#
+			</isNotNull>		
+			<isNotNull property="V_csmVipEnd" prepend=",">
+				cs_member$suffix$.csm_vip_end = #V_csmVipEnd#
+			</isNotNull>		
+			<isNotNull property="V_csmUpdateTime" prepend=",">
+				cs_member$suffix$.csm_update_time = #V_csmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csmAddTime" prepend=",">
+				cs_member$suffix$.csm_add_time = #V_csmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmLastTime" prepend=",">
+				cs_member$suffix$.csm_last_time = #V_csmLastTime#
+			</isNotNull>		
+			<isNotNull property="V_csmLastIp" prepend=",">
+				cs_member$suffix$.csm_last_ip = #V_csmLastIp#
+			</isNotNull>		
+			<isNotNull property="V_csmLoginS" prepend=",">
+				cs_member$suffix$.csm_login_s = #V_csmLoginS#
+			</isNotNull>		
+			<isNotNull property="V_csmFirstUse" prepend=",">
+				cs_member$suffix$.csm_first_use = #V_csmFirstUse#
+			</isNotNull>		
+			<isNotNull property="V_csmLastUse" prepend=",">
+				cs_member$suffix$.csm_last_use = #V_csmLastUse#
+			</isNotNull>		
+			<isNotNull property="V_csmAllRecharge" prepend=",">
+				cs_member$suffix$.csm_all_recharge = #V_csmAllRecharge#
+			</isNotNull>		
+			<isNotNull property="V_csmAllOrderS" prepend=",">
+				cs_member$suffix$.csm_all_order_s = #V_csmAllOrderS#
+			</isNotNull>		
+			<isNotNull property="V_csmAllUseTime" prepend=",">
+				cs_member$suffix$.csm_all_use_time = #V_csmAllUseTime#
+			</isNotNull>		
+			<isNotNull property="V_csmAllViolatS" prepend=",">
+				cs_member$suffix$.csm_all_violat_s = #V_csmAllViolatS#
+			</isNotNull>		
+			<isNotNull property="V_csmUnViolatS" prepend=",">
+				cs_member$suffix$.csm_un_violat_s = #V_csmUnViolatS#
+			</isNotNull>		
+			<isNotNull property="V_csmAllTroubleS" prepend=",">
+				cs_member$suffix$.csm_all_trouble_s = #V_csmAllTroubleS#
+			</isNotNull>		
+			<isNotNull property="V_csmFirstRecharge" prepend=",">
+				cs_member$suffix$.csm_first_recharge = #V_csmFirstRecharge#
+			</isNotNull>		
+			<isNotNull property="V_csmRefundTime" prepend=",">
+				cs_member$suffix$.csm_refund_time = #V_csmRefundTime#
+			</isNotNull>		
+			<isNotNull property="V_csmRegistIp" prepend=",">
+				cs_member$suffix$.csm_regist_ip = #V_csmRegistIp#
+			</isNotNull>		
+			<isNotNull property="V_csmAdder" prepend=",">
+				cs_member$suffix$.csm_adder = #V_csmAdder#
+			</isNotNull>		
+			<isNotNull property="V_csmTracker" prepend=",">
+				cs_member$suffix$.csm_tracker = #V_csmTracker#
+			</isNotNull>		
+			<isNotNull property="V_csmRefer" prepend=",">
+				cs_member$suffix$.csm_refer = #V_csmRefer#
+			</isNotNull>		
+			<isNotNull property="V_csmReferType" prepend=",">
+				cs_member$suffix$.csm_refer_type = #V_csmReferType#
+			</isNotNull>		
+			<isNotNull property="V_csmFrom" prepend=",">
+				cs_member$suffix$.csm_from = #V_csmFrom#
+			</isNotNull>		
+			<isNotNull property="V_csmSrc" prepend=",">
+				cs_member$suffix$.csm_src = #V_csmSrc#
+			</isNotNull>		
+			<isNotNull property="V_csmChannel" prepend=",">
+				cs_member$suffix$.csm_channel = #V_csmChannel#
+			</isNotNull>		
+			<isNotNull property="V_csmMarketPlan" prepend=",">
+				cs_member$suffix$.csm_market_plan = #V_csmMarketPlan#
+			</isNotNull>		
+			<isNotNull property="V_csmActivity" prepend=",">
+				cs_member$suffix$.csm_activity = #V_csmActivity#
+			</isNotNull>		
+			<isNotNull property="V_csmSaler" prepend=",">
+				cs_member$suffix$.csm_saler = #V_csmSaler#
+			</isNotNull>		
+			<isNotNull property="V_csmMarket" prepend=",">
+				cs_member$suffix$.csm_market = #V_csmMarket#
+			</isNotNull>		
+			<isNotNull property="V_csmTag" prepend=",">
+				cs_member$suffix$.csm_tag = #V_csmTag#
+			</isNotNull>		
+			<isNotNull property="V_csmMark" prepend=",">
+				cs_member$suffix$.csm_mark = #V_csmMark#
+			</isNotNull>		
+			<isNotNull property="V_csmVisitFlag" prepend=",">
+				cs_member$suffix$.csm_visit_flag = #V_csmVisitFlag#
+			</isNotNull>		
+			<isNotNull property="V_csmMask" prepend=",">
+				cs_member$suffix$.csm_mask = #V_csmMask#
+			</isNotNull>		
+			<isNotNull property="V_csmRemark" prepend=",">
+				cs_member$suffix$.csm_remark = #V_csmRemark#
+			</isNotNull>		
+			<isNotNull property="V_csmVMobile" prepend=",">
+				cs_member$suffix$.csm_v_mobile = #V_csmVMobile#
+			</isNotNull>		
+			<isNotNull property="V_csmVEmail" prepend=",">
+				cs_member$suffix$.csm_v_email = #V_csmVEmail#
+			</isNotNull>		
+			<isNotNull property="V_csmVReal" prepend=",">
+				cs_member$suffix$.csm_v_real = #V_csmVReal#
+			</isNotNull>		
+			<isNotNull property="V_csmVDrive" prepend=",">
+				cs_member$suffix$.csm_v_drive = #V_csmVDrive#
+			</isNotNull>		
+			<isNotNull property="V_csmStatus" prepend=",">
+				cs_member$suffix$.csm_status = #V_csmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员组织]查询-->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<isNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.csm_group=cs_member_group$CsMemberGroup.suffix$.csmg_id
+			</isNull>
+			<isNotNull property="CsMemberGroup.on">
+				left join cs_member_group cs_member_group$CsMemberGroup.suffix$ on cs_member$suffix$.$CsMemberGroup.on$=cs_member_group$CsMemberGroup.suffix$.csmg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询-->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<isNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.csm_evcard=cs_ev_card$CsEvCard.suffix$.csec_id
+			</isNull>
+			<isNotNull property="CsEvCard.on">
+				left join cs_ev_card cs_ev_card$CsEvCard.suffix$ on cs_member$suffix$.$CsEvCard.on$=cs_ev_card$CsEvCard.suffix$.csec_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询-->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<isNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.csm_info=cs_member_info$CsMemberInfo.suffix$.csmi_id
+			</isNull>
+			<isNotNull property="CsMemberInfo.on">
+				left join cs_member_info cs_member_info$CsMemberInfo.suffix$ on cs_member$suffix$.$CsMemberInfo.on$=cs_member_info$CsMemberInfo.suffix$.csmi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.csm_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_member$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.csm_refer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.csm_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_member$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.csm_market_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_member$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.csm_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_member$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_member$suffix$.csm_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员组织]查询条件sql片段 -->
+		<isNotNull property="CsmGroup"><!-- 调用一下CsmGroup，把CsMemberGroup指向CsmGroup --></isNotNull>
+		<isNotNull property="CsMemberGroup">
+			<include refid="CsMemberGroup_part.cs_member_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员卡]查询条件sql片段 -->
+		<isNotNull property="CsmEvcard"><!-- 调用一下CsmEvcard，把CsEvCard指向CsmEvcard --></isNotNull>
+		<isNotNull property="CsEvCard">
+			<include refid="CsEvCard_part.cs_ev_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员信息]查询条件sql片段 -->
+		<isNotNull property="CsmInfo"><!-- 调用一下CsmInfo，把CsMemberInfo指向CsmInfo --></isNotNull>
+		<isNotNull property="CsMemberInfo">
+			<include refid="CsMemberInfo_part.cs_member_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsmOutlets"><!-- 调用一下CsmOutlets，把CsOutlets指向CsmOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmRefer"><!-- 调用一下CsmRefer，把CsMember指向CsmRefer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsmChannel"><!-- 调用一下CsmChannel，把CsChannel指向CsmChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmMarketPlan"><!-- 调用一下CsmMarketPlan，把CsMarketPlan指向CsmMarketPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsmActivity"><!-- 调用一下CsmActivity，把CsActivity指向CsmActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMember_part.cs_member_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员帐号 -->
+	<update id="deleteCsMemberBy"  parameterClass="java.util.HashMap">
+		delete from cs_member$suffix$ where 
+		cs_member$suffix$.csm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMember_part.cs_member_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

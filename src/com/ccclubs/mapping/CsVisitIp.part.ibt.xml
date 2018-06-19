@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsVisitIp_part">	
+	<!-- 独立IP访问条件sql片段  -->
+	<sql id="cs_visit_ip_dynamic">
+		<dynamic>
+			<isNotEmpty property="csviId" prepend="and">
+			    $csviIdNot$ cs_visit_ip$suffix$.csvi_id = #csviId#
+			</isNotEmpty>
+			<isNotNull property="csviIdNot" prepend="and">
+				<isEmpty property="csviId">
+				$csviIdNot$ cs_visit_ip$suffix$.csvi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_visit_ip$suffix$.csvi_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csviHost" prepend="and">
+			    $csviHostNot$ cs_visit_ip$suffix$.csvi_host = #csviHost#
+			</isNotEmpty>
+			<isNotNull property="csviHostNot" prepend="and">
+				<isEmpty property="csviHost">
+				$csviHostNot$ cs_visit_ip$suffix$.csvi_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csviAddress" prepend="and">			    
+			    (<isNotNull property="csviAddressNot">
+			    cs_visit_ip$suffix$.csvi_address is null or length(cs_visit_ip$suffix$.csvi_address) &lt; 1 or
+			    </isNotNull>$csviAddressNot$ cs_visit_ip$suffix$.csvi_address = #csviAddress#)
+			</isNotEmpty>
+			<isNotNull property="csviAddressNot" prepend="and">
+				<isEmpty property="csviAddress">
+				$csviAddressNot$ (cs_visit_ip$suffix$.csvi_address is null or length(cs_visit_ip$suffix$.csvi_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csviChannel" prepend="and">
+			    $csviChannelNot$ cs_visit_ip$suffix$.csvi_channel = #csviChannel#
+			</isNotEmpty>
+			<isNotNull property="csviChannelNot" prepend="and">
+				<isEmpty property="csviChannel">
+				$csviChannelNot$ cs_visit_ip$suffix$.csvi_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csviPlan" prepend="and">
+			    $csviPlanNot$ cs_visit_ip$suffix$.csvi_plan = #csviPlan#
+			</isNotEmpty>
+			<isNotNull property="csviPlanNot" prepend="and">
+				<isEmpty property="csviPlan">
+				$csviPlanNot$ cs_visit_ip$suffix$.csvi_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csviActivity" prepend="and">
+			    $csviActivityNot$ cs_visit_ip$suffix$.csvi_activity = #csviActivity#
+			</isNotEmpty>
+			<isNotNull property="csviActivityNot" prepend="and">
+				<isEmpty property="csviActivity">
+				$csviActivityNot$ cs_visit_ip$suffix$.csvi_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csviUrlFrom" prepend="and">			    
+			    (<isNotNull property="csviUrlFromNot">
+			    cs_visit_ip$suffix$.csvi_url_from is null or length(cs_visit_ip$suffix$.csvi_url_from) &lt; 1 or
+			    </isNotNull>$csviUrlFromNot$ cs_visit_ip$suffix$.csvi_url_from like #csviUrlFrom#)
+			</isNotEmpty>
+			<isNotNull property="csviUrlFromNot" prepend="and">
+				<isEmpty property="csviUrlFrom">
+				$csviUrlFromNot$ (cs_visit_ip$suffix$.csvi_url_from is null or length(cs_visit_ip$suffix$.csvi_url_from) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csviUrlTo" prepend="and">			    
+			    (<isNotNull property="csviUrlToNot">
+			    cs_visit_ip$suffix$.csvi_url_to is null or length(cs_visit_ip$suffix$.csvi_url_to) &lt; 1 or
+			    </isNotNull>$csviUrlToNot$ cs_visit_ip$suffix$.csvi_url_to like #csviUrlTo#)
+			</isNotEmpty>
+			<isNotNull property="csviUrlToNot" prepend="and">
+				<isEmpty property="csviUrlTo">
+				$csviUrlToNot$ (cs_visit_ip$suffix$.csvi_url_to is null or length(cs_visit_ip$suffix$.csvi_url_to) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csviAddTimeStart" prepend="and">
+			    $csviAddTimeNot$   (cs_visit_ip$suffix$.csvi_add_time &gt;= #csviAddTimeStart#
+			   <isEmpty property="csviAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csviAddTimeEnd" prepend="and">
+				<isEmpty property="csviAddTimeStart">$csviAddTimeNot$   (</isEmpty>
+			    cs_visit_ip$suffix$.csvi_add_time &lt;= #csviAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csviAddTime" prepend="and">
+			    $csviAddTimeNot$ cs_visit_ip$suffix$.csvi_add_time = #csviAddTime#
+			</isNotEmpty>
+			<isNotNull property="csviAddTimeNot" prepend="and">
+				<isEmpty property="csviAddTimeStart"><isEmpty property="csviAddTimeEnd"><isEmpty property="csviAddTime">
+				$csviAddTimeNot$ cs_visit_ip$suffix$.csvi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 独立IP访问left join 条件sql片段 -->
+	<sql id="cs_visit_ip_join">
+		<dynamic>
+			<isNotEmpty property="CsVisitIp.csviId" prepend="and">
+			    $CsVisitIp.csviIdNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_id = #CsVisitIp.csviId#
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviIdNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviId">
+				$csviIdNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_visit_ip$CsVisitIp.suffix$.csvi_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitIp.csviHost" prepend="and">
+			    $CsVisitIp.csviHostNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_host = #CsVisitIp.csviHost#
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviHostNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviHost">
+				$csviHostNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviAddress" prepend="and">
+				(<isNotNull property="CsVisitIp.csviAddressNot">
+			    cs_visit_ip$CsVisitIp.suffix$.csvi_address is null or length(cs_visit_ip$CsVisitIp.suffix$.csvi_address) &lt; 1 or
+			    </isNotNull>$CsVisitIp.csviAddressNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_address = #CsVisitIp.csviAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviAddressNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviAddress">
+				$csviAddressNot$ (cs_visit_ip$CsVisitIp.suffix$.csvi_address is null or length(cs_visit_ip$CsVisitIp.suffix$.csvi_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviChannel" prepend="and">
+			    $CsVisitIp.csviChannelNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_channel = #CsVisitIp.csviChannel#
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviChannelNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviChannel">
+				$csviChannelNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviPlan" prepend="and">
+			    $CsVisitIp.csviPlanNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_plan = #CsVisitIp.csviPlan#
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviPlanNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviPlan">
+				$csviPlanNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviActivity" prepend="and">
+			    $CsVisitIp.csviActivityNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_activity = #CsVisitIp.csviActivity#
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviActivityNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviActivity">
+				$csviActivityNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviUrlFrom" prepend="and">
+				(<isNotNull property="CsVisitIp.csviUrlFromNot">
+			    cs_visit_ip$CsVisitIp.suffix$.csvi_url_from is null or length(cs_visit_ip$CsVisitIp.suffix$.csvi_url_from) &lt; 1 or
+			    </isNotNull>$CsVisitIp.csviUrlFromNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_url_from like #CsVisitIp.csviUrlFrom#)
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviUrlFromNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviUrlFrom">
+				$csviUrlFromNot$ (cs_visit_ip$CsVisitIp.suffix$.csvi_url_from is null or length(cs_visit_ip$CsVisitIp.suffix$.csvi_url_from) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviUrlTo" prepend="and">
+				(<isNotNull property="CsVisitIp.csviUrlToNot">
+			    cs_visit_ip$CsVisitIp.suffix$.csvi_url_to is null or length(cs_visit_ip$CsVisitIp.suffix$.csvi_url_to) &lt; 1 or
+			    </isNotNull>$CsVisitIp.csviUrlToNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_url_to like #CsVisitIp.csviUrlTo#)
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviUrlToNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviUrlTo">
+				$csviUrlToNot$ (cs_visit_ip$CsVisitIp.suffix$.csvi_url_to is null or length(cs_visit_ip$CsVisitIp.suffix$.csvi_url_to) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitIp.csviAddTimeStart" prepend="and">
+			    $CsVisitIp.csviAddTimeNot$   (cs_visit_ip$CsVisitIp.suffix$.csvi_add_time &gt;= #CsVisitIp.csviAddTimeStart#
+			   <isEmpty property="CsVisitIp.csviAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitIp.csviAddTimeEnd" prepend="and">
+				<isEmpty property="CsVisitIp.csviAddTimeStart">$CsVisitIp.csviAddTimeNot$   (</isEmpty>
+			    cs_visit_ip$CsVisitIp.suffix$.csvi_add_time &lt;= #CsVisitIp.csviAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitIp.csviAddTime" prepend="and">
+			    $CsVisitIp.csviAddTimeNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_add_time = #CsVisitIp.csviAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsVisitIp.csviAddTimeNot" prepend="and">
+				<isEmpty property="CsVisitIp.csviAddTimeStart"><isEmpty property="CsVisitIp.csviAddTimeEnd"><isEmpty property="CsVisitIp.csviAddTime">
+				$csviAddTimeNot$ cs_visit_ip$CsVisitIp.suffix$.csvi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

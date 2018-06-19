@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 提现记录之SQL映射 -->
+	<resultMap id="CsCashRecord" class="com.ccclubs.model.CsCashRecord">
+		<result property="cscrId" column="cscr_id"/>
+		<result property="cscrHost" column="cscr_host"/>
+		<result property="cscrTradeNo" column="cscr_trade_no"/>
+		<result property="cscrAmmount" column="cscr_ammount"/>
+		<result property="cscrTitle" column="cscr_title"/>
+		<result property="cscrVoucher" column="cscr_voucher"/>
+		<result property="cscrImage" column="cscr_image"/>
+		<result property="cscrAdder" column="cscr_adder"/>
+		<result property="cscrChecker" column="cscr_checker"/>
+		<result property="cscrRemark" column="cscr_remark"/>
+		<result property="cscrUpdateTime" column="cscr_update_time"/>
+		<result property="cscrAddTime" column="cscr_add_time"/>
+		<result property="cscrStatus" column="cscr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有提现记录 -->
+	<select id="getCsCashRecordList" resultMap="CsCashRecord">
+		select cs_cash_record$suffix$.* from cs_cash_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_cash_record$suffix$.cscr_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCashRecord_part.cs_cash_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取提现记录分页 -->
+	<select id="getCsCashRecordPage" parameterClass="java.util.HashMap" resultMap="CsCashRecord">
+		select cs_cash_record$suffix$.* from cs_cash_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_cash_record$suffix$.cscr_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCashRecord_part.cs_cash_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取提现记录总数 -->
+	<select id="getCsCashRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_cash_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_cash_record$suffix$.cscr_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCashRecord_part.cs_cash_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取提现记录 -->
+	<select id="getCsCashRecordById" parameterClass="java.util.HashMap" resultMap="CsCashRecord">
+		select cs_cash_record$suffix$.* from cs_cash_record$suffix$
+		where cscr_id=#id#
+	</select>
+	
+		
+	<!-- 保存提现记录 -->
+	<insert id="saveCsCashRecord"  parameterClass="com.ccclubs.model.CsCashRecord">
+		insert into cs_cash_record$suffix$
+		(
+			cs_cash_record$suffix$.cscr_host
+			,cs_cash_record$suffix$.cscr_trade_no
+			,cs_cash_record$suffix$.cscr_ammount
+			,cs_cash_record$suffix$.cscr_title
+			,cs_cash_record$suffix$.cscr_voucher
+			,cs_cash_record$suffix$.cscr_image
+			,cs_cash_record$suffix$.cscr_adder
+			,cs_cash_record$suffix$.cscr_checker
+			,cs_cash_record$suffix$.cscr_remark
+			,cs_cash_record$suffix$.cscr_update_time
+			,cs_cash_record$suffix$.cscr_add_time
+			,cs_cash_record$suffix$.cscr_status
+		)
+		values(
+			<isNotNull property="cscrHost" prepend="">
+				#cscrHost#
+			</isNotNull>
+			<isNull property="cscrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscrTradeNo" prepend=",">
+				#cscrTradeNo#
+			</isNotNull>
+			<isNull property="cscrTradeNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrAmmount" prepend=",">
+				#cscrAmmount#
+			</isNotNull>
+			<isNull property="cscrAmmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrTitle" prepend=",">
+				#cscrTitle#
+			</isNotNull>
+			<isNull property="cscrTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrVoucher" prepend=",">
+				#cscrVoucher#
+			</isNotNull>
+			<isNull property="cscrVoucher" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrImage" prepend=",">
+				#cscrImage#
+			</isNotNull>
+			<isNull property="cscrImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrAdder" prepend=",">
+				#cscrAdder#
+			</isNotNull>
+			<isNull property="cscrAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrChecker" prepend=",">
+				#cscrChecker#
+			</isNotNull>
+			<isNull property="cscrChecker" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrRemark" prepend=",">
+				#cscrRemark#
+			</isNotNull>
+			<isNull property="cscrRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				#cscrUpdateTime#
+			</isNotNull>
+			<isNull property="cscrUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrAddTime" prepend=",">
+				#cscrAddTime#
+			</isNotNull>
+			<isNull property="cscrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscrStatus" prepend=",">
+				#cscrStatus#
+			</isNotNull>
+			<isNull property="cscrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新提现记录 -->
+	<update id="updateCsCashRecord"  parameterClass="com.ccclubs.model.CsCashRecord">
+		update cs_cash_record$suffix$ set
+			<isNotNull property="cscrHost" prepend="">
+				cs_cash_record$suffix$.cscr_host = #cscrHost#
+			</isNotNull>
+			<isNull property="cscrHost" prepend="">
+				cs_cash_record$suffix$.cscr_host = null
+			</isNull>				
+			<isNotNull property="cscrTradeNo" prepend=",">
+				cs_cash_record$suffix$.cscr_trade_no = #cscrTradeNo#
+			</isNotNull>
+			<isNull property="cscrTradeNo" prepend=",">
+				cs_cash_record$suffix$.cscr_trade_no = null
+			</isNull>				
+			<isNotNull property="cscrAmmount" prepend=",">
+				cs_cash_record$suffix$.cscr_ammount = #cscrAmmount#
+			</isNotNull>
+			<isNull property="cscrAmmount" prepend=",">
+				cs_cash_record$suffix$.cscr_ammount = null
+			</isNull>				
+			<isNotNull property="cscrTitle" prepend=",">
+				cs_cash_record$suffix$.cscr_title = #cscrTitle#
+			</isNotNull>
+			<isNull property="cscrTitle" prepend=",">
+				cs_cash_record$suffix$.cscr_title = null
+			</isNull>				
+			<isNotNull property="cscrVoucher" prepend=",">
+				cs_cash_record$suffix$.cscr_voucher = #cscrVoucher#
+			</isNotNull>
+			<isNull property="cscrVoucher" prepend=",">
+				cs_cash_record$suffix$.cscr_voucher = null
+			</isNull>				
+			<isNotNull property="cscrImage" prepend=",">
+				cs_cash_record$suffix$.cscr_image = #cscrImage#
+			</isNotNull>
+			<isNull property="cscrImage" prepend=",">
+				cs_cash_record$suffix$.cscr_image = null
+			</isNull>				
+			<isNotNull property="cscrAdder" prepend=",">
+				cs_cash_record$suffix$.cscr_adder = #cscrAdder#
+			</isNotNull>
+			<isNull property="cscrAdder" prepend=",">
+				cs_cash_record$suffix$.cscr_adder = null
+			</isNull>				
+			<isNotNull property="cscrChecker" prepend=",">
+				cs_cash_record$suffix$.cscr_checker = #cscrChecker#
+			</isNotNull>
+			<isNull property="cscrChecker" prepend=",">
+				cs_cash_record$suffix$.cscr_checker = null
+			</isNull>				
+			<isNotNull property="cscrRemark" prepend=",">
+				cs_cash_record$suffix$.cscr_remark = #cscrRemark#
+			</isNotNull>
+			<isNull property="cscrRemark" prepend=",">
+				cs_cash_record$suffix$.cscr_remark = null
+			</isNull>				
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				cs_cash_record$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotNull>
+			<isNull property="cscrUpdateTime" prepend=",">
+				cs_cash_record$suffix$.cscr_update_time = null
+			</isNull>				
+			<isNotNull property="cscrAddTime" prepend=",">
+				cs_cash_record$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotNull>
+			<isNull property="cscrAddTime" prepend=",">
+				cs_cash_record$suffix$.cscr_add_time = null
+			</isNull>				
+			<isNotNull property="cscrStatus" prepend=",">
+				cs_cash_record$suffix$.cscr_status = #cscrStatus#
+			</isNotNull>
+			<isNull property="cscrStatus" prepend=",">
+				cs_cash_record$suffix$.cscr_status = null
+			</isNull>				
+		where
+			cscr_id=#cscrId#
+	</update>
+	
+	<!-- 更新提现记录非空字段 -->
+	<update id="updateCsCashRecord$NotNull"  parameterClass="com.ccclubs.model.CsCashRecord">
+		update cs_cash_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscrHost" prepend=",">
+				cs_cash_record$suffix$.cscr_host = #cscrHost#
+			</isNotNull>		
+			<isNotNull property="cscrTradeNo" prepend=",">
+				cs_cash_record$suffix$.cscr_trade_no = #cscrTradeNo#
+			</isNotNull>		
+			<isNotNull property="cscrAmmount" prepend=",">
+				cs_cash_record$suffix$.cscr_ammount = #cscrAmmount#
+			</isNotNull>		
+			<isNotNull property="cscrTitle" prepend=",">
+				cs_cash_record$suffix$.cscr_title = #cscrTitle#
+			</isNotNull>		
+			<isNotNull property="cscrVoucher" prepend=",">
+				cs_cash_record$suffix$.cscr_voucher = #cscrVoucher#
+			</isNotNull>		
+			<isNotNull property="cscrImage" prepend=",">
+				cs_cash_record$suffix$.cscr_image = #cscrImage#
+			</isNotNull>		
+			<isNotNull property="cscrAdder" prepend=",">
+				cs_cash_record$suffix$.cscr_adder = #cscrAdder#
+			</isNotNull>		
+			<isNotNull property="cscrChecker" prepend=",">
+				cs_cash_record$suffix$.cscr_checker = #cscrChecker#
+			</isNotNull>		
+			<isNotNull property="cscrRemark" prepend=",">
+				cs_cash_record$suffix$.cscr_remark = #cscrRemark#
+			</isNotNull>		
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				cs_cash_record$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscrAddTime" prepend=",">
+				cs_cash_record$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotNull>		
+			<isNotNull property="cscrStatus" prepend=",">
+				cs_cash_record$suffix$.cscr_status = #cscrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscr_id=#cscrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个提现记录 -->
+	<delete id="deleteCsCashRecordById" parameterClass="java.util.HashMap">
+		delete from cs_cash_record$suffix$ where cscr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个提现记录 -->
+	<update id="removeCsCashRecordById" parameterClass="java.util.HashMap">
+		update cs_cash_record$suffix$ set  cs_cash_record$suffix$.cscr_status=-1  where cscr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新提现记录 -->
+	<update id="updateCsCashRecordBy"  parameterClass="java.util.HashMap">
+		update cs_cash_record$suffix$ set		
+			cscr_id=cscr_id
+			<isNotNull property="V_cscrId" prepend=",">
+				cs_cash_record$suffix$.cscr_id = #V_cscrId#
+			</isNotNull>		
+			<isNotNull property="V_cscrHost" prepend=",">
+				cs_cash_record$suffix$.cscr_host = #V_cscrHost#
+			</isNotNull>		
+			<isNotNull property="V_cscrTradeNo" prepend=",">
+				cs_cash_record$suffix$.cscr_trade_no = #V_cscrTradeNo#
+			</isNotNull>		
+			<isNotNull property="V_cscrAmmount" prepend=",">
+				cs_cash_record$suffix$.cscr_ammount = #V_cscrAmmount#
+			</isNotNull>		
+			<isNotNull property="V_cscrTitle" prepend=",">
+				cs_cash_record$suffix$.cscr_title = #V_cscrTitle#
+			</isNotNull>		
+			<isNotNull property="V_cscrVoucher" prepend=",">
+				cs_cash_record$suffix$.cscr_voucher = #V_cscrVoucher#
+			</isNotNull>		
+			<isNotNull property="V_cscrImage" prepend=",">
+				cs_cash_record$suffix$.cscr_image = #V_cscrImage#
+			</isNotNull>		
+			<isNotNull property="V_cscrAdder" prepend=",">
+				cs_cash_record$suffix$.cscr_adder = #V_cscrAdder#
+			</isNotNull>		
+			<isNotNull property="V_cscrChecker" prepend=",">
+				cs_cash_record$suffix$.cscr_checker = #V_cscrChecker#
+			</isNotNull>		
+			<isNotNull property="V_cscrRemark" prepend=",">
+				cs_cash_record$suffix$.cscr_remark = #V_cscrRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscrUpdateTime" prepend=",">
+				cs_cash_record$suffix$.cscr_update_time = #V_cscrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscrAddTime" prepend=",">
+				cs_cash_record$suffix$.cscr_add_time = #V_cscrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscrStatus" prepend=",">
+				cs_cash_record$suffix$.cscr_status = #V_cscrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_cash_record$suffix$.cscr_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCashRecord_part.cs_cash_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除提现记录 -->
+	<update id="deleteCsCashRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_cash_record$suffix$ where 
+		cs_cash_record$suffix$.cscr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCashRecord_part.cs_cash_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

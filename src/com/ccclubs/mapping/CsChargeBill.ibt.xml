@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+
+	
+	<!-- 充电订单之SQL映射 -->
+	<resultMap id="CsChargeBill" class="com.ccclubs.model.CsChargeBill">
+		<result property="cscbId" column="cscb_id"/>
+		<result property="cscbSerialnumber" column="cscb_serialnumber"/>
+		<result property="cscbStation" column="cscb_station"/>
+		<result property="cscbPileCode" column="cscb_pile_code"/>
+		<result property="cscbCarno" column="cscb_carno"/>
+		<result property="cscbCustId" column="cscb_cust_id"/>
+		<result property="cscbCustName" column="cscb_cust_name"/>
+		<result property="cscbCustCardno" column="cscb_cust_cardno"/>
+		<result property="cscbStartEnergy" column="cscb_start_energy"/>
+		<result property="cscbFinishEnergy" column="cscb_finish_energy"/>
+		<result property="cscbStartTime" column="cscb_start_time"/>
+		<result property="cscbFinishTime" column="cscb_finish_time"/>
+		<result property="cscbTotalPower" column="cscb_total_power"/>
+		<result property="cscbTotalElecfee" column="cscb_total_elecfee"/>
+		<result property="cscbStatus" column="cscb_status"/>
+		<result property="cscbProvider" column="cscb_provider"/>
+		<result property="cscbData" column="cscb_data"/>
+		<result property="cscbAddTime" column="cscb_add_time"/>
+		<result property="cscbUpdateTime" column="cscb_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有充电订单 -->
+	<select id="getCsChargeBillList" resultMap="CsChargeBill">
+		select cs_charge_bill$suffix$.* from cs_charge_bill$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_charge_bill$suffix$.cscb_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargeBill_part.cs_charge_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscb_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取充电订单分页 -->
+	<select id="getCsChargeBillPage" parameterClass="java.util.HashMap" resultMap="CsChargeBill">
+		select cs_charge_bill$suffix$.* from cs_charge_bill$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_charge_bill$suffix$.cscb_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargeBill_part.cs_charge_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscb_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取充电订单总数 -->
+	<select id="getCsChargeBillEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_charge_bill$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_charge_bill$suffix$.cscb_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargeBill_part.cs_charge_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取充电订单 -->
+	<select id="getCsChargeBillById" parameterClass="java.util.HashMap" resultMap="CsChargeBill">
+		select cs_charge_bill$suffix$.* from cs_charge_bill$suffix$
+		where cscb_id=#id#
+	</select>
+	
+		
+	<!-- 保存充电订单 -->
+	<insert id="saveCsChargeBill"  parameterClass="com.ccclubs.model.CsChargeBill">
+		insert into cs_charge_bill$suffix$
+		(
+			cs_charge_bill$suffix$.cscb_serialnumber
+			,cs_charge_bill$suffix$.cscb_station
+			,cs_charge_bill$suffix$.cscb_pile_code
+			,cs_charge_bill$suffix$.cscb_carno
+			,cs_charge_bill$suffix$.cscb_cust_id
+			,cs_charge_bill$suffix$.cscb_cust_name
+			,cs_charge_bill$suffix$.cscb_cust_cardno
+			,cs_charge_bill$suffix$.cscb_start_energy
+			,cs_charge_bill$suffix$.cscb_finish_energy
+			,cs_charge_bill$suffix$.cscb_start_time
+			,cs_charge_bill$suffix$.cscb_finish_time
+			,cs_charge_bill$suffix$.cscb_total_power
+			,cs_charge_bill$suffix$.cscb_total_elecfee
+			,cs_charge_bill$suffix$.cscb_status
+			,cs_charge_bill$suffix$.cscb_provider
+			,cs_charge_bill$suffix$.cscb_data
+			,cs_charge_bill$suffix$.cscb_add_time
+			,cs_charge_bill$suffix$.cscb_update_time
+		)
+		values(
+			<isNotNull property="cscbSerialnumber" prepend="">
+				#cscbSerialnumber#
+			</isNotNull>
+			<isNull property="cscbSerialnumber" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="cscbStation" prepend=",">
+				#cscbStation#
+			</isNotNull>
+			<isNull property="cscbStation" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbPileCode" prepend=",">
+				#cscbPileCode#
+			</isNotNull>
+			<isNull property="cscbPileCode" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbCarno" prepend=",">
+				#cscbCarno#
+			</isNotNull>
+			<isNull property="cscbCarno" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbCustId" prepend=",">
+				#cscbCustId#
+			</isNotNull>
+			<isNull property="cscbCustId" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbCustName" prepend=",">
+				#cscbCustName#
+			</isNotNull>
+			<isNull property="cscbCustName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbCustCardno" prepend=",">
+				#cscbCustCardno#
+			</isNotNull>
+			<isNull property="cscbCustCardno" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbStartEnergy" prepend=",">
+				#cscbStartEnergy#
+			</isNotNull>
+			<isNull property="cscbStartEnergy" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbFinishEnergy" prepend=",">
+				#cscbFinishEnergy#
+			</isNotNull>
+			<isNull property="cscbFinishEnergy" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbStartTime" prepend=",">
+				#cscbStartTime#
+			</isNotNull>
+			<isNull property="cscbStartTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbFinishTime" prepend=",">
+				#cscbFinishTime#
+			</isNotNull>
+			<isNull property="cscbFinishTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbTotalPower" prepend=",">
+				#cscbTotalPower#
+			</isNotNull>
+			<isNull property="cscbTotalPower" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbTotalElecfee" prepend=",">
+				#cscbTotalElecfee#
+			</isNotNull>
+			<isNull property="cscbTotalElecfee" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbStatus" prepend=",">
+				#cscbStatus#
+			</isNotNull>
+			<isNull property="cscbStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbProvider" prepend=",">
+				#cscbProvider#
+			</isNotNull>
+			<isNull property="cscbProvider" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbData" prepend=",">
+				#cscbData#
+			</isNotNull>
+			<isNull property="cscbData" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbAddTime" prepend=",">
+				#cscbAddTime#
+			</isNotNull>
+			<isNull property="cscbAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscbUpdateTime" prepend=",">
+				#cscbUpdateTime#
+			</isNotNull>
+			<isNull property="cscbUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新充电订单 -->
+	<update id="updateCsChargeBill"  parameterClass="com.ccclubs.model.CsChargeBill">
+		update cs_charge_bill$suffix$ set
+			<isNotNull property="cscbSerialnumber" prepend="">
+				cs_charge_bill$suffix$.cscb_serialnumber = #cscbSerialnumber#
+			</isNotNull>
+			<isNull property="cscbSerialnumber" prepend="">
+				cs_charge_bill$suffix$.cscb_serialnumber = null
+			</isNull>				
+			<isNotNull property="cscbStation" prepend=",">
+				cs_charge_bill$suffix$.cscb_station = #cscbStation#
+			</isNotNull>
+			<isNull property="cscbStation" prepend=",">
+				cs_charge_bill$suffix$.cscb_station = null
+			</isNull>				
+			<isNotNull property="cscbPileCode" prepend=",">
+				cs_charge_bill$suffix$.cscb_pile_code = #cscbPileCode#
+			</isNotNull>
+			<isNull property="cscbPileCode" prepend=",">
+				cs_charge_bill$suffix$.cscb_pile_code = null
+			</isNull>				
+			<isNotNull property="cscbCarno" prepend=",">
+				cs_charge_bill$suffix$.cscb_carno = #cscbCarno#
+			</isNotNull>
+			<isNull property="cscbCarno" prepend=",">
+				cs_charge_bill$suffix$.cscb_carno = null
+			</isNull>				
+			<isNotNull property="cscbCustId" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_id = #cscbCustId#
+			</isNotNull>
+			<isNull property="cscbCustId" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_id = null
+			</isNull>				
+			<isNotNull property="cscbCustName" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_name = #cscbCustName#
+			</isNotNull>
+			<isNull property="cscbCustName" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_name = null
+			</isNull>				
+			<isNotNull property="cscbCustCardno" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_cardno = #cscbCustCardno#
+			</isNotNull>
+			<isNull property="cscbCustCardno" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_cardno = null
+			</isNull>				
+			<isNotNull property="cscbStartEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_energy = #cscbStartEnergy#
+			</isNotNull>
+			<isNull property="cscbStartEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_energy = null
+			</isNull>				
+			<isNotNull property="cscbFinishEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_energy = #cscbFinishEnergy#
+			</isNotNull>
+			<isNull property="cscbFinishEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_energy = null
+			</isNull>				
+			<isNotNull property="cscbStartTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_time = #cscbStartTime#
+			</isNotNull>
+			<isNull property="cscbStartTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_time = null
+			</isNull>				
+			<isNotNull property="cscbFinishTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_time = #cscbFinishTime#
+			</isNotNull>
+			<isNull property="cscbFinishTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_time = null
+			</isNull>				
+			<isNotNull property="cscbTotalPower" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_power = #cscbTotalPower#
+			</isNotNull>
+			<isNull property="cscbTotalPower" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_power = null
+			</isNull>				
+			<isNotNull property="cscbTotalElecfee" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_elecfee = #cscbTotalElecfee#
+			</isNotNull>
+			<isNull property="cscbTotalElecfee" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_elecfee = null
+			</isNull>				
+			<isNotNull property="cscbStatus" prepend=",">
+				cs_charge_bill$suffix$.cscb_status = #cscbStatus#
+			</isNotNull>
+			<isNull property="cscbStatus" prepend=",">
+				cs_charge_bill$suffix$.cscb_status = null
+			</isNull>				
+			<isNotNull property="cscbProvider" prepend=",">
+				cs_charge_bill$suffix$.cscb_provider = #cscbProvider#
+			</isNotNull>
+			<isNull property="cscbProvider" prepend=",">
+				cs_charge_bill$suffix$.cscb_provider = null
+			</isNull>				
+			<isNotNull property="cscbData" prepend=",">
+				cs_charge_bill$suffix$.cscb_data = #cscbData#
+			</isNotNull>
+			<isNull property="cscbData" prepend=",">
+				cs_charge_bill$suffix$.cscb_data = null
+			</isNull>				
+			<isNotNull property="cscbAddTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_add_time = #cscbAddTime#
+			</isNotNull>
+			<isNull property="cscbAddTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_add_time = null
+			</isNull>				
+			<isNotNull property="cscbUpdateTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_update_time = #cscbUpdateTime#
+			</isNotNull>
+			<isNull property="cscbUpdateTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_update_time = null
+			</isNull>				
+		where
+			cscb_id=#cscbId#
+	</update>
+	
+	<!-- 更新充电订单非空字段 -->
+	<update id="updateCsChargeBill$NotNull"  parameterClass="com.ccclubs.model.CsChargeBill">
+		update cs_charge_bill$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscbSerialnumber" prepend=",">
+				cs_charge_bill$suffix$.cscb_serialnumber = #cscbSerialnumber#
+			</isNotNull>		
+			<isNotNull property="cscbStation" prepend=",">
+				cs_charge_bill$suffix$.cscb_station = #cscbStation#
+			</isNotNull>		
+			<isNotNull property="cscbPileCode" prepend=",">
+				cs_charge_bill$suffix$.cscb_pile_code = #cscbPileCode#
+			</isNotNull>		
+			<isNotNull property="cscbCarno" prepend=",">
+				cs_charge_bill$suffix$.cscb_carno = #cscbCarno#
+			</isNotNull>		
+			<isNotNull property="cscbCustId" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_id = #cscbCustId#
+			</isNotNull>		
+			<isNotNull property="cscbCustName" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_name = #cscbCustName#
+			</isNotNull>		
+			<isNotNull property="cscbCustCardno" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_cardno = #cscbCustCardno#
+			</isNotNull>		
+			<isNotNull property="cscbStartEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_energy = #cscbStartEnergy#
+			</isNotNull>		
+			<isNotNull property="cscbFinishEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_energy = #cscbFinishEnergy#
+			</isNotNull>		
+			<isNotNull property="cscbStartTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_time = #cscbStartTime#
+			</isNotNull>		
+			<isNotNull property="cscbFinishTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_time = #cscbFinishTime#
+			</isNotNull>		
+			<isNotNull property="cscbTotalPower" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_power = #cscbTotalPower#
+			</isNotNull>		
+			<isNotNull property="cscbTotalElecfee" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_elecfee = #cscbTotalElecfee#
+			</isNotNull>		
+			<isNotNull property="cscbStatus" prepend=",">
+				cs_charge_bill$suffix$.cscb_status = #cscbStatus#
+			</isNotNull>		
+			<isNotNull property="cscbProvider" prepend=",">
+				cs_charge_bill$suffix$.cscb_provider = #cscbProvider#
+			</isNotNull>		
+			<isNotNull property="cscbData" prepend=",">
+				cs_charge_bill$suffix$.cscb_data = #cscbData#
+			</isNotNull>		
+			<isNotNull property="cscbAddTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_add_time = #cscbAddTime#
+			</isNotNull>		
+			<isNotNull property="cscbUpdateTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_update_time = #cscbUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscb_id=#cscbId#
+	</update>
+	
+
+	<!-- 根据ID删除一个充电订单 -->
+	<delete id="deleteCsChargeBillById" parameterClass="java.util.HashMap">
+		delete from cs_charge_bill$suffix$ where cscb_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个充电订单 -->
+	<update id="removeCsChargeBillById" parameterClass="java.util.HashMap">
+		update cs_charge_bill$suffix$ set  cs_charge_bill$suffix$.cscb_status=-1  where cscb_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新充电订单 -->
+	<update id="updateCsChargeBillBy"  parameterClass="java.util.HashMap">
+		update cs_charge_bill$suffix$ set		
+			cscb_id=cscb_id
+			<isNotNull property="V_cscbId" prepend=",">
+				cs_charge_bill$suffix$.cscb_id = #V_cscbId#
+			</isNotNull>		
+			<isNotNull property="V_cscbSerialnumber" prepend=",">
+				cs_charge_bill$suffix$.cscb_serialnumber = #V_cscbSerialnumber#
+			</isNotNull>		
+			<isNotNull property="V_cscbStation" prepend=",">
+				cs_charge_bill$suffix$.cscb_station = #V_cscbStation#
+			</isNotNull>		
+			<isNotNull property="V_cscbPileCode" prepend=",">
+				cs_charge_bill$suffix$.cscb_pile_code = #V_cscbPileCode#
+			</isNotNull>		
+			<isNotNull property="V_cscbCarno" prepend=",">
+				cs_charge_bill$suffix$.cscb_carno = #V_cscbCarno#
+			</isNotNull>		
+			<isNotNull property="V_cscbCustId" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_id = #V_cscbCustId#
+			</isNotNull>		
+			<isNotNull property="V_cscbCustName" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_name = #V_cscbCustName#
+			</isNotNull>		
+			<isNotNull property="V_cscbCustCardno" prepend=",">
+				cs_charge_bill$suffix$.cscb_cust_cardno = #V_cscbCustCardno#
+			</isNotNull>		
+			<isNotNull property="V_cscbStartEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_energy = #V_cscbStartEnergy#
+			</isNotNull>		
+			<isNotNull property="V_cscbFinishEnergy" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_energy = #V_cscbFinishEnergy#
+			</isNotNull>		
+			<isNotNull property="V_cscbStartTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_start_time = #V_cscbStartTime#
+			</isNotNull>		
+			<isNotNull property="V_cscbFinishTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_finish_time = #V_cscbFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_cscbTotalPower" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_power = #V_cscbTotalPower#
+			</isNotNull>		
+			<isNotNull property="V_cscbTotalElecfee" prepend=",">
+				cs_charge_bill$suffix$.cscb_total_elecfee = #V_cscbTotalElecfee#
+			</isNotNull>		
+			<isNotNull property="V_cscbStatus" prepend=",">
+				cs_charge_bill$suffix$.cscb_status = #V_cscbStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscbProvider" prepend=",">
+				cs_charge_bill$suffix$.cscb_provider = #V_cscbProvider#
+			</isNotNull>		
+			<isNotNull property="V_cscbData" prepend=",">
+				cs_charge_bill$suffix$.cscb_data = #V_cscbData#
+			</isNotNull>		
+			<isNotNull property="V_cscbAddTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_add_time = #V_cscbAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscbUpdateTime" prepend=",">
+				cs_charge_bill$suffix$.cscb_update_time = #V_cscbUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 1=1 		
+		and cs_charge_bill$suffix$.cscb_status!=-1
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChargeBill_part.cs_charge_bill_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除充电订单 -->
+	<update id="deleteCsChargeBillBy"  parameterClass="java.util.HashMap">
+		delete from cs_charge_bill$suffix$ where 
+		cs_charge_bill$suffix$.cscb_status!=-1 and 
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChargeBill_part.cs_charge_bill_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

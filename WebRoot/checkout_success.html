@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>下单成功${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.result.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/sunshine-road.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-global-cont">
+			<%@ include file="/include/nav.html"%>
+
+			<div id="ccc-container" class="ccc-grid-960">
+
+				<div class="ccc-paper ccc-result">
+					<div class="ccc-result-cont ccc-clearfix">
+						<div class="ccc-header-linear-bg"></div>
+						<div class="ccc-parking-map-cont">
+							<div class="ccc-parking-map-loader">
+								<i></i>正在加载...
+							</div>
+							<div id="ccc-parking-map" class="ccc-parking-map"></div>
+							<div id="ccc-parking-map-trigger" class="ccc-parking-map-trigger"></div>
+							<div class="ccc-parking-card">
+								<div class="ccc-parking-card-inner">
+									<div class="ccc-title">
+										${csOrder.$csoOutlets.csoName}
+										<em></em>
+									</div>
+									<div class="ccc-notes address">
+										<strong>地址：</strong> ${csOrder.$csoOutlets.csoAddress}
+									</div>
+									<div class="ccc-notes space">
+										<strong>停车位：</strong> ${csOrder.$csoOutlets.csoSpace}
+									</div>
+									<div class="ccc-notes opening">
+										<strong>开放时间：</strong> ${csOrder.$csoOutlets.csoDoorTime}
+									</div>
+									<s:if test="#request.csOrder.$csoOutlets.csoDetails!=''&&#request.csOrder.$csoOutlets.csoDetails!=null">
+										<div class="ccc-notes pass omega">
+											<strong>通行证：</strong> ${csOrder.$csoOutlets.csoDetails}
+										</div>
+									</s:if>
+									<a href="javascript:;" id="cardClose" class="ccc-parking-card-close">关闭</a>
+								</div>
+							</div>
+						</div>
+						<div class="ccc-result-left">
+							<p class="ccc-result-tips">
+								<i></i>下单成功， 订单授权码：
+								<span class="ccc-font-lato ccc-pin">${csOrder.csoCode}</span>
+								<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;车牌号码：
+								<span class="ccc-font-lato ccc-pin">${car.cscCarNo}</span>
+							</p>
+							<div class="ccc-help-tips ccc-order-else-tips">
+								<i></i>
+								<p>
+									1、你可以提前15分钟取车，以便核对车上物品熟悉车况；
+								</p>
+								<p>
+									2、你延时5分钟以内不收费，超出将按延时费用标准收取。
+								</p>
+							</div>
+						</div>
+						<div class="ccc-cont-wrap ccc-clearfix">
+							<a href="javascript:;" id="textTrigger" class="ccc-parking-desc-trigger">查看<strong>${csOrder.$csoOutlets.csoName}</strong>网点详细信息 &raquo;</a>
+							<div class="ccc-drive-helps">
+								第一次使用 ${csOrder.$csoModel.cscmName} ？
+								<a href="/help.html?src=checkout_succ#help_use" target="_blank">查看 ${csOrder.$csoModel.cscmName} 的使用帮助 &raquo;</a>
+							</div>
+						</div>
+						<div class="ccc-car-ftr ccc-clearfix">
+							<img src="/images/icons/divider-top.png" class="ccc-my-divider">
+							<ol class="ccc-car-ftr-list">
+								<!--  <li class="st-${csOrder.$csoModel.cscmSeatS} alpha">
+									<i></i>${csOrder.$csoModel.cscmSeatS}座
+								</li>-->
+								<li>
+									车纷享提供：
+								</li>
+								<s:if test="#csOrder.csoModel == 1006">
+									<li class="ca">
+										<i></i>炭包
+									</li>
+								</s:if>
+								<li class="pw">
+									<i></i>USB车载电源
+								</li>
+								<s:if test="#csOrder.$csoOutlets.csoDetails!=''&&#csOrder.$csoOutlets.csoDetails!=null">
+									<li class="pp" title="${item.$csoOutlets.csoDetails}">
+										<i></i>通行证
+									</li>
+								</s:if>
+								<li class="dl">
+									<i></i>行驶证
+								</li>
+								<s:if test="#csOrder.$cscModel.cscmType==0">
+									<li class="gc">
+										<i></i>中石化油卡
+									</li>
+								</s:if>
+								<li class="in">
+									<i></i>帮助手册
+								</li>
+							</ol>
+							<img src="images/icons/simple-divider.png" class="ccc-my-divider">
+						</div>
+					</div>
+					<div class="ccc-result-divider">
+						<em></em>
+						<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+					</div>
+					<div class="ccc-result-opt">
+						<a href="/my/order_details.html?order=${csOrder.csoId}" class="ccc-btn-trans">查看订单详情</a>
+						<a href="/" class="ccc-btn-trans">车纷享首页</a>
+						<div class="jiathis_style_24x24 bshare-custom icon-medium ">
+							<a class="jiathis_button_tsina" title="新浪微博"></a>
+							<a class="jiathis_button_tqq" title="腾讯微博"></a>
+							<a class="jiathis_button_renren" title="人人网"></a>
+							<a class="jiathis_button_douban" title="豆瓣"></a>
+							<a class="jiathis_button_qzone" title="QQ空间"></a>
+							<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+							<a class="jiathis_counter_style"></a>
+						</div>
+						<a class="bshareDiv" onclick="javascript:return false;"></a>
+					</div>
+				</div>
+
+			</div>
+
+			<footer id="ccc-footer">
+			</footer>
+
+		</div>
+
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script type="text/javascript" src="http://map.qq.com/api/js?v=2.exp&key=0e2941f1708f3eb3d19c029c3802521b"></script>
+		<!-- JiaThis Button BEGIN -->
+
+		<script type="text/javascript">
+	        var jiathis_config = {
+	            url: "http://www.ccclubs.com",
+	            title: "赶紧来体验 #车纷享#吧",
+	            summary: "恭喜，下单成功！——@车纷享，分时自助租车，杭州市民的楼下私家车！分享 纷享租车系统 给您小伙伴们，一起享受租车，享受出行吧！",
+	            //pic: "http://www.ccclubs.com/invite.ashx?evnetno=" + $("#evnetno").val(),
+	            data_track_clickback: true,
+	            ralateuid: {
+	                "tsina": "2473316430"
+	            }
+	        }
+    	</script>
+
+		<script type="text/javascript" src="http://v2.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+		<!-- JiaThis Button END -->
+		<script>
+		var cccMapCont = document.getElementById('ccc-parking-map');
+		var cccCenter = new qq.maps.LatLng(${csOrder.$csoOutlets.csoLatitude}+0.0003,${csOrder.$csoOutlets.csoLongitude}-0.0012);
+		var widePinCenter = new qq.maps.LatLng(${csOrder.$csoOutlets.csoLatitude}+0.0003,${csOrder.$csoOutlets.csoLongitude}+0.0056);
+		var cccMapOptions = {
+			center: cccCenter,
+			zoom: 15,
+			minZoom: 10,
+			mapTypeId: qq.maps.MapTypeId.ROADMAP,
+			streetViewControl: false,
+			mapTypeControl: false,
+			panControl: false,
+			zoomControl: false
+		};
+		var cccBigger = new qq.maps.Size(654, 160);
+		var cccMap = new qq.maps.Map(cccMapCont, cccMapOptions);
+		var markerImg = 'images/icons/marker-sprites@2x.png';
+		var markerSize = new qq.maps.Size(34, 40);
+		var markerScaledSize = new qq.maps.Size(74, 141);
+		var markerShadow = new qq.maps.MarkerImage(
+			'images/icons/marker-sprites@2x.png',
+			new qq.maps.Size(39, 33), //size
+			new qq.maps.Point(35, 7), //origin
+			new qq.maps.Point(7, 33), //anchor
+			new qq.maps.Size(74, 141) //scaled size
+		);
+		var cccMarker = new qq.maps.Marker ({
+			position: new qq.maps.LatLng(${csOrder.$csoOutlets.csoLatitude},${csOrder.$csoOutlets.csoLongitude}),
+			icon: new qq.maps.MarkerImage(
+				markerImg,
+				markerSize,
+				new qq.maps.Point(0, 0),
+				new qq.maps.Point(7, 33),
+				markerScaledSize
+			),
+			animation: qq.maps.MarkerAnimation.DROP,
+			shadow: markerShadow,
+			title: '${csOrder.$csoOutlets.csoName}',
+			map: cccMap
+		});
+		
+		$('#ccc-parking-map').click(function() {
+			if ($(this).parent().hasClass('wide') || $(this).parent().is(':animated')) {
+				return false;
+			} else {
+				$(this).parent().stop().animate({width:834},300).animate({height:288,top:20},200).queue(function() {
+					$(this).addClass('wide');
+					mapResize(widePinCenter);
+				});
+			}
+		});
+		$('#ccc-parking-map-trigger').click(function() {
+			$(this).parent().stop().animate({width:350,height:105,top:64},200).queue(function() {
+				$(this).removeClass('wide');
+				mapResize(cccCenter);
+				cccMap.setZoom(15);
+			});
+		});
+		
+		$('#textTrigger').click(function() {
+			$('#ccc-parking-map').trigger('click');
+			return false;
+		});
+		
+		$('#cardClose').click(function() {
+			$('#ccc-parking-map-trigger').trigger('click');
+			return false;
+		});
+		
+		function mapResize(type) {
+			qq.maps.event.trigger(cccMap,'resize');
+			cccMap.panTo(type);
+		//	infowindow.close();
+		}
+	</script>
+	</body>
+</html>

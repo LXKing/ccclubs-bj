@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 修改密码</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="account.html">返回</a>
+					</div>
+					<div class="showtitle">
+						修改密码
+					</div>
+				</div>
+			</div>
+			<div class="ordersbox">
+				<div class="phonenum" >
+					<input class="normal" style="padding: 10px 25px;" id="accName" maxlength="20" type="password" placeholder="请输入您的当前密码">
+				</div>
+				<div class="error" style="display: none;" id="pwd">
+				</div>
+				<div class="loginbox">
+					<div class="loginname">
+						<input type="password" id="txtPwd" class="setpwd" maxlength="20" placeholder="密码，6-20位数字、字母或下划线">
+					</div>
+					<div class="loginpw">
+						<input type="password" id="txtRePwd" class="setpwd" maxlength="20" placeholder="确认密码，6-20位数字、字母或下划线">
+					</div>
+				</div>
+				<div class="error">
+					<b>密码由6-20位英文字母、数字或符号组成</b>
+					<p id="pwd-error" style="display: none;">
+						您两次输入的密码不正确
+					</p>
+				</div>
+				<div class="okbuybtn">
+					<a href="javascript:;" onclick="setpwd();">提交</a>
+				</div>
+			</div>
+		</div>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			function setpwd(){
+				$('#pwd-error').css("display", "none");
+				$('#pwd').css("display", "none");
+				var regPwd = /^[a-zA-Z0-9!@#$%*()_+]{6,20}$/;
+				if($.trim($("#accName").val())==""){
+					var msg = "密码不能为空。";
+						$('#pwd').css("display", "block");
+						$('#pwd').html(msg);
+						return;
+				}
+				
+				if($.trim($("#txtPwd").val())==""){
+					var msg = "密码不能为空。";
+						$('#pwd-error').css("display", "block");
+						$('#pwd-error').html(msg);
+						return;
+				}
+             	if(!regPwd.test($.trim($("#txtPwd").val())))
+             		{
+             			var msg = "密码格式不正确，请输入6到20位有效密码。";
+						$('#pwd-error').css("display", "block");
+						$('#pwd-error').html(msg);
+						return;
+					}
+             	if(!regPwd.test($.trim($("#txtRePwd").val())))
+             		{
+						var msg = "密码格式错误，密码由6-20位英文字母、数字或符号组成";
+						$('#pwd-error').css("display", "block");
+						$('#pwd-error').html(msg);
+						return;
+					}
+				if($.trim($("#txtPwd").val())!=$.trim($("#txtRePwd").val()))
+					{
+						var msg = "您两次输入的密码不一致。";
+						$('#pwd-error').css("display", "block");
+						$('#pwd-error').html(msg);
+						return;
+					}
+				$.ajax({
+							url: '${basePath}weixin/account_modifypassword.html',
+							type: "POST",
+							data: {
+								accName:$.trim($("#accName").val()),
+								txtPassWord:$.trim($("#txtPwd").val()),
+								txtRePassWord:$.trim($("#txtRePwd").val())
+							},
+							async: false,
+							success: function(data) {
+								switch (data) {
+									case "100":
+										location.href = 'account.html';
+										break;
+									case "101":
+										location.href = '/weixin/403.html';
+										break;
+									case "102":
+										var msg = "未输入密码。";
+										$('#pwd-error').css("display", "block");
+										$('#pwd-error').html(msg);
+										break;
+									case "103":
+										var msg = "密码格式错误，密码由6-20位英文字母、数字或符号组成。";
+										$('#pwd-error').css("display", "block");
+										$('#pwd-error').html(msg);
+										break;
+									case "104":
+										var msg = "您两次输入的密码不一致。";
+										$('#pwd-error').css("display", "block");
+										$('#pwd-error').html(msg);
+										break;
+									case "105":
+										var msg = "当前密码有误。";
+										$('#pwd').css("display", "block");
+										$('#pwd').html(msg);
+										break;
+									case "9999":
+										alert("系统错误,请稍候再试");
+										break;
+									default:
+										alert("未知的返回"); 
+										return;
+								}
+						 }
+					});
+			}
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

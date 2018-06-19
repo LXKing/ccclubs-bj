@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 找回密码</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="login.html">返回</a>
+					</div>
+					<div class="showtitle">
+						找回密码
+					</div>
+				</div>
+			</div>
+			<div class="phonenum">
+				<input class="normal" id="accName" maxlength="11" type="tel" placeholder="请输入您的手机号">
+			</div>
+			<div class="error" style="display: none;" id="tips-name">
+				您输入的手机号不正确
+			</div>
+			<div class="yzmnum">
+				<input class="normal" maxlength="4" type="tel" id="checkcode" placeholder="请填写校验码">
+				<a href="javascript:;" onclick="getCheckCode();" id="ccc-resend-msg">获取校验码</a>
+			</div>
+			<div class="error" style="display: none;" id="tips-code">
+				您输入的校验码不正确
+			</div>
+			<div class="okbuybtn">
+				<a href="javascript:;" id="save-btn" onclick="submit();">下一步</a>
+			</div>
+		</div>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			function submit() {
+				$('.error').css("display", "none");
+			
+				var regMobile = /^(1[3|4|5|8][0-9])\d{8}$/;
+				var phone = $.trim($("#accName").val());
+             	if(!regMobile.test(phone))
+					{
+						var msg = "您输入的手机号码不正确。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg);
+						return;
+					}
+			  	var code = $.trim($("#checkcode").val());
+			  	if(code==""){
+			  		var msg = "您尚未输入校验码。";
+					$('#tips-code').css("display", "block");
+					$('#tips-code').html(msg);
+			  	}
+            	
+				$.ajax({
+							url: '${basePath}weixin/account_forgotCheck.html',
+							type: "GET",
+							data: {
+								txtMobile: phone,
+								txtCode:code
+							},
+							async: false,
+							success: function(data) {
+								switch (data) {
+									case "100":
+										location.href = 'account_forgotset.html';
+										break;
+									case "101":
+										var msg = "未输入手机号码。";
+										$('#tips-name').css("display", "block");
+										$('#tips-name').html(msg);
+										break;
+									case "102":
+										var msg = "您尚未输入校验码。";
+										$('#tips-code').css("display", "block");
+										$('#tips-code').html(msg);
+										break;
+									case "103":
+										var msg = "您输入的手机号码不正确。";
+										$('#tips-name').css("display", "block");
+										$('#tips-name').html(msg);
+										break;
+									case "104":
+										var msg = "该手机号码尚未注册，请更换其他号码。";
+										$('#tips-name').css("display", "block");
+										$('#tips-name').html(msg);
+										break;
+									case "105":
+										var msg = "您输入的校验码不正确。";
+										$('#tips-code').css("display", "block");
+										$('#tips-code').html(msg);
+										break;
+									case "109":
+										location.href = '/weixin/403.html';
+										break;
+									case "9999":
+										alert("系统错误,请稍候再试");
+										break;
+									default:
+										alert("未知的返回"); 
+										return;
+								}
+						 }
+					});
+			}
+			
+			function getCheckCode() {
+				$('.error').css("display", "none");
+				
+				var regMobile = /^(1[3|4|5|8][0-9])\d{8}$/;
+				 var phone = $.trim($("#accName").val());
+             	if(!regMobile.test(phone))
+					{
+						var msg = "手机号格式不正确。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg);
+						return;
+					}
+					
+				var url = "account_exist.html?txtMobile=" + phone+"&t=" + new Date().getTime();
+                $.get(url, function(data) {
+                    switch(data)
+                    {
+                    	case "true":
+		            	var msg = "该手机号码尚未注册，请更换其他号码。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg); 
+                    	break;
+                    	case "false":
+                    	var msg = "手机号格式不正确。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg);
+                    	break;
+                    	case "used":
+                    	var url0 = "account_sms.html?type=1&t=" + new Date().getTime();
+				            $.get(url0,{mobile:phone},function(data) {
+				                if (data == "success") {
+				                    	var btn = $('#ccc-resend-msg');
+							            	  btn.attr("onclick", "return false");
+				            			      btn.addClass('off');
+							            var time = 59;
+							            var timer = setInterval(function() {
+							                btn.text(time + "秒后 重新获取校验码");
+							                --time;
+							                if (time == 0) {
+							                    clearInterval(timer);
+							                    btn.text("重新获取校验码");
+												btn.removeClass('off');
+								                btn.attr("onclick", "getCheckCode()");
+							                }
+							            }, 1000);
+				                }
+				            });
+                    	break;
+                    }
+                });
+	        }
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

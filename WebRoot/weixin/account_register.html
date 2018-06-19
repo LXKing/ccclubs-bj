@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 用户注册</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+		<script type="text/javascript">
+	       var host = window.location.host;
+	       if (host.indexOf('weixin.ccclubs.com') > -1) {
+	            window.location.href = "http://m.ccclubs.com/";
+	       }
+	    </script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="login.html">返回</a>
+					</div>
+					<div class="showtitle">
+						用户注册
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="phonenum">
+			<input class="normal" id="accName" maxlength="11" type="tel" placeholder="请输入您的手机号,默认密码为手机后六位">
+		</div>
+		<div class="phonenum">
+			<select class="select" id="regCity" name="regCity" style="width: 100%; line-height: 34px; height: 34px; overflow: hidden;">
+				<s:iterator value="#request.hostList" id="item" status="i">
+					<option value="${item.shId}" ${item.shId==selHostId?"selected":""}>
+						${item.shName}
+					</option>
+				</s:iterator>
+			</select>
+		</div>
+		<div class="error" style="display: none;" id="tips-name">
+			您输入的手机号不正确
+		</div>
+		<div class="yzmnum">
+			<input class="normal" maxlength="4" type="tel" id="checkcode" placeholder="请填写校验码">
+			<a href="javascript:;" onclick="getCheckCode();" id="ccc-resend-msg">获取校验码</a>
+		</div>
+		<div class="error" style="display: none;" id="tips-code">
+			您输入的校验码不正确
+		</div>
+		<div class="okbuybtn">
+			<a href="javascript:;" id="save-btn" onclick="submit();">注册</a>
+		</div>
+		<div class="reglogintx">
+			<input type="checkbox" id="iAgree" checked>
+			<label for="iAgree">
+				我同意
+				<a href="../terms.html"> 车纷享用户协议</a>
+			</label>
+		</div>
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript">
+			$("document").ready(function(){
+				$("#iAgree").click(function(){
+					var btn = $('#save-btn');
+					var ischecked = document.getElementById("iAgree").checked;
+					if(ischecked){
+						btn.removeClass('off');
+						btn.attr("onclick", "submit()");
+					}else{
+						btn.addClass('off');
+						btn.attr("onclick", "return false");
+					}
+				});
+			});
+		
+			function submit() {
+				$('.error').css("display", "none");
+			
+				var regMobile = /^(1[0-9]|15[0|3|6|7|8|9]|18[8|9])|(17[0-9]{9})\d{8}$/;
+				var phone = $.trim($("#accName").val());
+				var regCity = $("#regCity").val();
+             	if(!regMobile.test(phone)){
+					var msg = "您输入的手机号码不正确。";
+					$('#tips-name').css("display", "block");
+					$('#tips-name').html(msg);
+					return;
+				}
+			  	var code = $.trim($("#checkcode").val());
+			  	if(code==""){
+			  		var msg = "您尚未输入校验码。";
+					$('#tips-code').css("display", "block");
+					$('#tips-code').html(msg);
+			  	}
+			    var ischecked = document.getElementById("iAgree").checked;
+         		if(!ischecked){
+         			alert("请先同意车纷享用户协议");
+         			return;
+        		}
+            	// 需要禁用按钮 
+            	var btn = $('#save-btn');
+            	
+				$.ajax({
+					url: '${basePath}weixin/account_saveAccount.html',
+					type: "GET",
+					data: {
+						txtMobile: phone,
+						txtCode:code,
+						txtCity:regCity
+					},
+					async: false,
+					beforeSend: function(XMLHttpRequest){
+							btn.attr("onclick", "return false");
+				            btn.addClass('off');
+				            btn.text("正在注册。。。");
+					},
+					success: function(data) {
+						switch (data) {
+							case "100":
+								location.href = '${basePath}weixin/account_setname.html';
+								break;
+							case "101":
+								var msg = "您输入的手机号码不正确。";
+								$('#tips-name').css("display", "block");
+								$('#tips-name').html(msg);
+								break;
+							case "102":
+								var msg = "您尚未输入校验码。";
+								$('#tips-code').css("display", "block");
+								$('#tips-code').html(msg);
+								break;
+							case "103":
+								var msg = "您输入的手机号码不正确。";
+								$('#tips-name').css("display", "block");
+								$('#tips-name').html(msg);
+								break;
+							case "104":
+								var msg = "该手机号码已经被注册，请更换其他号码。";
+								$('#tips-name').css("display", "block");
+								$('#tips-name').html(msg);
+								break;
+							case "105":
+								var msg = "您输入的校验码不正确。";
+								$('#tips-code').css("display", "block");
+								$('#tips-code').html(msg);
+								break;
+							case "109":
+								location.href = '/weixin/403.html';
+								break;
+							case "9999":
+								alert("系统错误,请稍候再试");
+								break;
+							default:
+								alert("未知的返回"); 
+								return;
+						}
+					 },
+					 complete: function(XMLHttpRequest, textStatus){
+						btn.text("注册");
+						btn.removeClass('off');
+			            btn.attr("onclick", "submit()");
+					}
+				});
+			}
+			
+			function getCheckCode() {
+				$('.error').css("display", "none");
+				
+				var regMobile = /^(1[0-9]|15[0|3|6|7|8|9]|18[8|9])|(17[0-9]{9})\d{8}$/;
+				var phone = $.trim($("#accName").val());
+             	if(!regMobile.test(phone))
+					{
+						var msg = "手机号格式不正确。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg);
+						return;
+					}
+				//
+				
+				var url = "account_exist.html?txtMobile=" + phone+"&t=" + new Date().getTime();
+                $.get(url, function(data) {
+                    switch(data)
+                    {
+                    	case "true":
+		            	 var url0 = "account_sms.html?type=0&t=" + new Date().getTime();
+				            $.get(url0,{mobile:phone},function(data) {
+				                if (data == "success") {
+				                    	var btn = $('#ccc-resend-msg');
+							            	  btn.attr("onclick", "return false");
+				            			      btn.addClass('off');
+							            var time = 59;
+							            var timer = setInterval(function() {
+							                btn.text(time + "秒后 重新获取校验码");
+							                --time;
+							                if (time == 0) {
+							                    clearInterval(timer);
+							                    btn.text("重新获取校验码");
+												btn.removeClass('off');
+								                btn.attr("onclick", "getCheckCode()");
+							                }
+							            }, 1000);
+				                }
+				            });
+                    	break;
+                    	case "false":
+                    	var msg = "手机号格式不正确。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg);
+                    	break;
+                    	case "used":
+                    	var msg = "该手机号码已经被注册，请更换其他号码。";
+						$('#tips-name').css("display", "block");
+						$('#tips-name').html(msg);
+                    	break;
+                    }
+                });
+				
+				//
+	           
+	        }
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

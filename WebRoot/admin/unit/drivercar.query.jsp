@@ -1,0 +1,285 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="lz" uri="http://www.lazy3q.com/web/lazy3q.tld" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="get" uri="/get-tags" %>
+			 	
+			 ${before$csdcId}
+			 
+			 ${lz:set("注释","*****************编号字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcId" : (lz:join(relateObject,"$csdcId")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcId"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcId || #request.defines['csdcId']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcId":relateObject}" id="form-dl-csdcId">
+					<dt>编　　号：</dt>
+					<dd>
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcIdYesNot=="not"?"checked-not":""}${data.csdcIdYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcIdYesNot}"/>
+			  	    	<input onkeyup="this.value=this.value.replace(/[^\d]/g,'')" type="text" class="input"  maxlength="12" size="16" name="${NAME}" id="${NAME}"  value="${data.csdcId}"/>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************编号字段的查询代码结束*****************")}
+			
+			
+			${after$csdcId}
+			 	
+			 ${before$csdcHost}
+			 
+			 ${lz:set("注释","*****************城市字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcHost" : (lz:join(relateObject,"$csdcHost")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcHost"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcHost || #request.defines['csdcHost']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcHost":relateObject}" id="form-dl-csdcHost">
+					<dt>城　　市：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcHostYesNot=="not"?"checked-not":""}${data.csdcHostYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcHostYesNot}"/>
+			 			<select class="combox"  action="${basePath}${proname}/permissions/host_query.do?size=-1" id="${NAME}" name="${NAME}">
+				 				<option selected value="${data.csdcHost}">
+				 					${get:SrvHost(data.csdcHost).shName}
+				 				</option>
+				 		</select>
+				 		<a class="lookup" href="javascript:void(0);" onclick="if($.trim($('#${NAME}').val())==''){return;};window.href('${basePath}${proname}/permissions/host_details.do?id='+$('#${NAME}').val(),{ctrl:{editable:false,visible:true}})"></a>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************城市字段的查询代码结束*****************")}
+			
+			${before$csdcOutlets}
+			 
+			 ${lz:set("注释","*****************指定网点字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcOutlets" : (lz:join(relateObject,"$csdcOutlets")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcOutlets"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcOutlets || #request.defines['csdcOutlets']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcOutlets":relateObject}" id="form-dl-csdcOutlets">
+					<dt>指定网点：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcOutletsYesNot=="not"?"checked-not":""}${data.csdcOutletsYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcOutletsYesNot}"/>
+			 			<select class="combox"  action="${basePath}${proname}/object/outlets_tree.do?parent={param}&host={csoHost}&csoHost={csuiHost}" id="${NAME}" name="${NAME}">
+				 				<option selected value="${csdcOutlets}">
+				 					${get:CsOutlets(csdcOutlets).csoName}
+				 				</option>
+				 		</select>
+				 		<a class="lookup" href="javascript:void(0);" onclick="if($.trim($('#${NAME}').val())==''){return;};window.href('${basePath}${proname}/object/outlets_details.do?id='+$('#${NAME}').val(),{ctrl:{editable:false,visible:true}})"></a>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************指定网点字段的查询代码结束*****************")}
+			<s:if test="#request.relateObject==null && #request.defines['csdcOutlets']>0">
+				${lz:set("注释","****当指定网点字段有关联对象，并且用户勾选了显示其字段的话，把相关的查询字段也显示出来****")}
+			  	${lz:set("relateObject","csdcOutlets")}
+			  	<input type="hidden" name="csdcOutlets$on" id="CsOutlets$on" value="true"/>
+			  	<jsp:include page="/admin/object/outlets.query.jsp"/>
+			  	${lz:set("relateObject",null)}
+			</s:if>
+			
+			
+			${after$csdcOutlets}
+			 	
+			 ${before$csdName}
+			 
+			 ${lz:set("注释","*****************姓名字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdName" : (lz:join(relateObject,"$csdName")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdName"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdName || #request.defines['csdName']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdName":relateObject}" id="form-dl-csdName">
+					<dt>姓　　名：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${csdNameYesNot=="not"?"checked-not":""}${data.csdNameYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${csdNameYesNot}"/>
+			 			<input type="text" class="input" size="16"  maxlength="32" name="${NAME}" id="${NAME}"  value="${csdName}"/>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************姓名字段的查询代码结束*****************")}
+			
+			
+			${after$csdName}
+			 	
+			
+			 	
+			 ${before$csdMobile}
+			 
+			 ${lz:set("注释","*****************手机号字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdMobile" : (lz:join(relateObject,"$csdMobile")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdMobile"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdMobile || #request.defines['csdMobile']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdMobile":relateObject}" id="form-dl-csdMobile">
+					<dt>手机号：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${csdMobileYesNot=="not"?"checked-not":""}${data.csdMobileYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${csdMobileYesNot}"/>
+		 	 			<input type="text" class="input" size="16"  maxlength="32" name="${NAME}" id="${NAME}"  value="${csdMobile}"/>
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************手机号查询代码结束*****************")}
+			
+			
+			
+			${after$csdMobile}
+			 	
+			
+			
+			${before$cscrCarNo}
+			 
+			 ${lz:set("注释","*****************车牌号字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "cscrCarNo" : (lz:join(relateObject,"$cscrCarNo")))}
+			 ${lz:set("cname",lz:join(relateObject,".cscrCarNo"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.cscrCarNo || #request.defines['cscrCarNo']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdMobile":relateObject}" id="form-dl-csdMobile">
+					<dt>车牌号：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${cscrCarNoYesNot=="not"?"checked-not":""}${data.cscrCarNoYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${csdMobileYesNot}"/>
+		 	 			<input type="text" class="input" size="16"  maxlength="32" name="${NAME}" id="${NAME}"  value="${cscrCarNo}"/>
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************车牌号查询代码结束*****************")}
+			
+			
+			
+			${after$cscrCarNo}
+			 	
+			
+			 	
+			 ${before$csdcState}
+			 
+			 ${lz:set("注释","*****************业务状态状态的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcState" : (lz:join(relateObject,"$csdcState")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcState"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcState || #request.defines['csdcState']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcState":relateObject}" id="form-dl-csdcState">
+					<dt>业务状态：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcStateYesNot=="not"?"checked-not":""}${data.csdcStateYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcStateYesNot}"/>
+			 			<select id="${NAME}" name="${NAME}" >
+			 			<option value="">全部</option>
+							<option value="0" ${data.csdcState==0?"selected":""}>空闲</option>
+							<option value="1" ${data.csdcState==1?"selected":""}>出车</option>
+			 		</select>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************业务状态的查询代码结束*****************")}
+			
+			
+			${after$csdcState}
+			 	
+			 ${before$csdcStatus}
+			 
+			 ${lz:set("注释","*****************数据状态的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcStatus" : (lz:join(relateObject,"$csdcStatus")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcStatus"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcStatus || #request.defines['csdcStatus']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcStatus":relateObject}" id="form-dl-csdcStatus">
+					<dt>数据状态：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcStatusYesNot=="not"?"checked-not":""}${data.csdcStatusYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcStatusYesNot}"/>
+			 		<select id="${NAME}" name="${NAME}" >
+			 			<option value="">全部</option>
+							<option value="1" ${data.csdcStatus==1?"selected":""}>正常</option>
+							<option value="0" ${data.csdcStatus==0?"selected":""}>禁用</option>
+			 		</select>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************数据状态字段的查询代码结束*****************")}
+			
+			
+			${after$csdcStatus}
+			
+			
+			 ${before$csdcUpdateTime}
+			 
+			 ${lz:set("注释","*****************修改时间字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcUpdateTime" : (lz:join(relateObject,"$csdcUpdateTime")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcUpdateTime"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcUpdateTime || #request.defines['csdcUpdateTime']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcUpdateTime":relateObject}" id="form-dl-csdcUpdateTime">
+					<dt>修改时间：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcUpdateTimeYesNot=="not"?"checked-not":""}${data.csdcUpdateTimeYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcUpdateTimeYesNot}"/>
+			 			<input type="datetime" class="input" ref="${NAME}" name="${NAME}Exp" id="${NAME}Exp" start="${lz:date(data.csdcUpdateTimeStart,"yyyy-MM-dd HH:mm:ss")}" end="${lz:date(data.csdcUpdateTimeEnd,"yyyy-MM-dd HH:mm:ss")}" exp="${data.csdcUpdateTimeExp}">
+			 		<!--
+			 			<input onchange="void(0);" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" type="text" class="input" size="14" maxlength="19" name="${NAME}Start" id="${NAME}Start"  value="${lz:date(data.csdcUpdateTimeStart,"yyyy-MM-dd HH:mm:ss")}"/>
+						起</dd></dl><dl class="query-item"><dt>修改时间：</dt><dd>
+						<input onchange="void(0);" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" type="text" class="input" size="14" maxlength="19" name="${NAME}End" id="${NAME}End"  value="${lz:date(data.csdcUpdateTimeEnd,"yyyy-MM-dd HH:mm:ss")}"/>
+						止
+					-->
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************修改时间字段的查询代码结束*****************")}
+			
+			
+			${after$csdcUpdateTime}
+			 	
+			 ${before$csdcAddTime}
+			 
+			 ${lz:set("注释","*****************添加时间字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "csdcAddTime" : (lz:join(relateObject,"$csdcAddTime")))}
+			 ${lz:set("cname",lz:join(relateObject,".csdcAddTime"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.csdcAddTime || #request.defines['csdcAddTime']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"csdcAddTime":relateObject}" id="form-dl-csdcAddTime">
+					<dt>添加时间：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.csdcAddTimeYesNot=="not"?"checked-not":""}${data.csdcAddTimeYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.csdcAddTimeYesNot}"/>
+			 			<input type="datetime" class="input" ref="${NAME}" name="${NAME}Exp" id="${NAME}Exp" start="${lz:date(data.csdcAddTimeStart,"yyyy-MM-dd HH:mm:ss")}" end="${lz:date(data.csdcAddTimeEnd,"yyyy-MM-dd HH:mm:ss")}" exp="${data.csdcAddTimeExp}">
+			 		<!--
+			 			<input onchange="void(0);" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" type="text" class="input" size="14" maxlength="19" name="${NAME}Start" id="${NAME}Start"  value="${lz:date(data.csdcAddTimeStart,"yyyy-MM-dd HH:mm:ss")}"/>
+						起</dd></dl><dl class="query-item"><dt>添加时间：</dt><dd>
+						<input onchange="void(0);" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" type="text" class="input" size="14" maxlength="19" name="${NAME}End" id="${NAME}End"  value="${lz:date(data.csdcAddTimeEnd,"yyyy-MM-dd HH:mm:ss")}"/>
+						止
+					-->
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************添加时间字段的查询代码结束*****************")}
+			
+			
+			${after$csdcAddTime}

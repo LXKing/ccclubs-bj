@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 规则之SQL映射 -->
+	<resultMap id="CsRule" class="com.ccclubs.model.CsRule">
+		<result property="csrId" column="csr_id"/>
+		<result property="csrName" column="csr_name"/>
+		<result property="csrExpression" column="csr_expression"/>
+		<result property="csrPriority" column="csr_priority"/>
+		<result property="csrMeas" column="csr_meas"/>
+		<result property="csrProfile" column="csr_profile"/>
+		<result property="csrStatus" column="csr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有规则 -->
+	<select id="getCsRuleList" resultMap="CsRule">
+		select cs_rule$suffix$.* from cs_rule$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_rule$suffix$.csr_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRule_part.cs_rule_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取规则分页 -->
+	<select id="getCsRulePage" parameterClass="java.util.HashMap" resultMap="CsRule">
+		select cs_rule$suffix$.* from cs_rule$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_rule$suffix$.csr_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRule_part.cs_rule_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取规则总数 -->
+	<select id="getCsRuleEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_rule$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_rule$suffix$.csr_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRule_part.cs_rule_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取规则 -->
+	<select id="getCsRuleById" parameterClass="java.util.HashMap" resultMap="CsRule">
+		select cs_rule$suffix$.* from cs_rule$suffix$
+		where csr_id=#id#
+	</select>
+	
+		
+	<!-- 保存规则 -->
+	<insert id="saveCsRule"  parameterClass="com.ccclubs.model.CsRule">
+		insert into cs_rule$suffix$
+		(
+			cs_rule$suffix$.csr_name
+			,cs_rule$suffix$.csr_expression
+			,cs_rule$suffix$.csr_priority
+			,cs_rule$suffix$.csr_meas
+			,cs_rule$suffix$.csr_profile
+			,cs_rule$suffix$.csr_status
+		)
+		values(
+			<isNotNull property="csrName" prepend="">
+				#csrName#
+			</isNotNull>
+			<isNull property="csrName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrExpression" prepend=",">
+				#csrExpression#
+			</isNotNull>
+			<isNull property="csrExpression" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrPriority" prepend=",">
+				#csrPriority#
+			</isNotNull>
+			<isNull property="csrPriority" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrMeas" prepend=",">
+				#csrMeas#
+			</isNotNull>
+			<isNull property="csrMeas" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrProfile" prepend=",">
+				#csrProfile#
+			</isNotNull>
+			<isNull property="csrProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrStatus" prepend=",">
+				#csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新规则 -->
+	<update id="updateCsRule"  parameterClass="com.ccclubs.model.CsRule">
+		update cs_rule$suffix$ set
+			<isNotNull property="csrName" prepend="">
+				cs_rule$suffix$.csr_name = #csrName#
+			</isNotNull>
+			<isNull property="csrName" prepend="">
+				cs_rule$suffix$.csr_name = null
+			</isNull>				
+			<isNotNull property="csrExpression" prepend=",">
+				cs_rule$suffix$.csr_expression = #csrExpression#
+			</isNotNull>
+			<isNull property="csrExpression" prepend=",">
+				cs_rule$suffix$.csr_expression = null
+			</isNull>				
+			<isNotNull property="csrPriority" prepend=",">
+				cs_rule$suffix$.csr_priority = #csrPriority#
+			</isNotNull>
+			<isNull property="csrPriority" prepend=",">
+				cs_rule$suffix$.csr_priority = null
+			</isNull>				
+			<isNotNull property="csrMeas" prepend=",">
+				cs_rule$suffix$.csr_meas = #csrMeas#
+			</isNotNull>
+			<isNull property="csrMeas" prepend=",">
+				cs_rule$suffix$.csr_meas = null
+			</isNull>				
+			<isNotNull property="csrProfile" prepend=",">
+				cs_rule$suffix$.csr_profile = #csrProfile#
+			</isNotNull>
+			<isNull property="csrProfile" prepend=",">
+				cs_rule$suffix$.csr_profile = null
+			</isNull>				
+			<isNotNull property="csrStatus" prepend=",">
+				cs_rule$suffix$.csr_status = #csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				cs_rule$suffix$.csr_status = null
+			</isNull>				
+		where
+			csr_id=#csrId#
+	</update>
+	
+	<!-- 更新规则非空字段 -->
+	<update id="updateCsRule$NotNull"  parameterClass="com.ccclubs.model.CsRule">
+		update cs_rule$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrName" prepend=",">
+				cs_rule$suffix$.csr_name = #csrName#
+			</isNotNull>		
+			<isNotNull property="csrExpression" prepend=",">
+				cs_rule$suffix$.csr_expression = #csrExpression#
+			</isNotNull>		
+			<isNotNull property="csrPriority" prepend=",">
+				cs_rule$suffix$.csr_priority = #csrPriority#
+			</isNotNull>		
+			<isNotNull property="csrMeas" prepend=",">
+				cs_rule$suffix$.csr_meas = #csrMeas#
+			</isNotNull>		
+			<isNotNull property="csrProfile" prepend=",">
+				cs_rule$suffix$.csr_profile = #csrProfile#
+			</isNotNull>		
+			<isNotNull property="csrStatus" prepend=",">
+				cs_rule$suffix$.csr_status = #csrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csr_id=#csrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个规则 -->
+	<delete id="deleteCsRuleById" parameterClass="java.util.HashMap">
+		delete from cs_rule$suffix$ where csr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个规则 -->
+	<update id="removeCsRuleById" parameterClass="java.util.HashMap">
+		update cs_rule$suffix$ set  cs_rule$suffix$.csr_status=-1  where csr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新规则 -->
+	<update id="updateCsRuleBy"  parameterClass="java.util.HashMap">
+		update cs_rule$suffix$ set		
+			csr_id=csr_id
+			<isNotNull property="V_csrId" prepend=",">
+				cs_rule$suffix$.csr_id = #V_csrId#
+			</isNotNull>		
+			<isNotNull property="V_csrName" prepend=",">
+				cs_rule$suffix$.csr_name = #V_csrName#
+			</isNotNull>		
+			<isNotNull property="V_csrExpression" prepend=",">
+				cs_rule$suffix$.csr_expression = #V_csrExpression#
+			</isNotNull>		
+			<isNotNull property="V_csrPriority" prepend=",">
+				cs_rule$suffix$.csr_priority = #V_csrPriority#
+			</isNotNull>		
+			<isNotNull property="V_csrMeas" prepend=",">
+				cs_rule$suffix$.csr_meas = #V_csrMeas#
+			</isNotNull>		
+			<isNotNull property="V_csrProfile" prepend=",">
+				cs_rule$suffix$.csr_profile = #V_csrProfile#
+			</isNotNull>		
+			<isNotNull property="V_csrStatus" prepend=",">
+				cs_rule$suffix$.csr_status = #V_csrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_rule$suffix$.csr_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRule_part.cs_rule_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除规则 -->
+	<update id="deleteCsRuleBy"  parameterClass="java.util.HashMap">
+		delete from cs_rule$suffix$ where 
+		cs_rule$suffix$.csr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRule_part.cs_rule_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

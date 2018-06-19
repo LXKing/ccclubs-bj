@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="TbSaleQuote_part">	
+	<!-- 跟单报价条件sql片段  -->
+	<sql id="tb_sale_quote_dynamic">
+		<dynamic>
+			<isNotEmpty property="tbsqId" prepend="and">
+			    $tbsqIdNot$ tb_sale_quote$suffix$.tbsq_id = #tbsqId#
+			</isNotEmpty>
+			<isNotNull property="tbsqIdNot" prepend="and">
+				<isEmpty property="tbsqId">
+				$tbsqIdNot$ tb_sale_quote$suffix$.tbsq_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_sale_quote$suffix$.tbsq_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="tbsqHost" prepend="and">
+			    $tbsqHostNot$ tb_sale_quote$suffix$.tbsq_host = #tbsqHost#
+			</isNotEmpty>
+			<isNotNull property="tbsqHostNot" prepend="and">
+				<isEmpty property="tbsqHost">
+				$tbsqHostNot$ tb_sale_quote$suffix$.tbsq_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="tbsqTitle" prepend="and">			    
+			    (<isNotNull property="tbsqTitleNot">
+			    tb_sale_quote$suffix$.tbsq_title is null or length(tb_sale_quote$suffix$.tbsq_title) &lt; 1 or
+			    </isNotNull>$tbsqTitleNot$ tb_sale_quote$suffix$.tbsq_title like #tbsqTitle#)
+			</isNotEmpty>
+			<isNotNull property="tbsqTitleNot" prepend="and">
+				<isEmpty property="tbsqTitle">
+				$tbsqTitleNot$ (tb_sale_quote$suffix$.tbsq_title is null or length(tb_sale_quote$suffix$.tbsq_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqOpport" prepend="and">
+			    $tbsqOpportNot$ tb_sale_quote$suffix$.tbsq_opport = #tbsqOpport#
+			</isNotEmpty>
+			<isNotNull property="tbsqOpportNot" prepend="and">
+				<isEmpty property="tbsqOpport">
+				$tbsqOpportNot$ tb_sale_quote$suffix$.tbsq_opport is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqDetail" prepend="and">			    
+			    (<isNotNull property="tbsqDetailNot">
+			    tb_sale_quote$suffix$.tbsq_detail is null or length(tb_sale_quote$suffix$.tbsq_detail) &lt; 1 or
+			    </isNotNull>$tbsqDetailNot$ tb_sale_quote$suffix$.tbsq_detail like #tbsqDetail#)
+			</isNotEmpty>
+			<isNotNull property="tbsqDetailNot" prepend="and">
+				<isEmpty property="tbsqDetail">
+				$tbsqDetailNot$ (tb_sale_quote$suffix$.tbsq_detail is null or length(tb_sale_quote$suffix$.tbsq_detail) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqFile" prepend="and">			    
+			    (<isNotNull property="tbsqFileNot">
+			    tb_sale_quote$suffix$.tbsq_file is null or length(tb_sale_quote$suffix$.tbsq_file) &lt; 1 or
+			    </isNotNull>$tbsqFileNot$ tb_sale_quote$suffix$.tbsq_file like #tbsqFile#)
+			</isNotEmpty>
+			<isNotNull property="tbsqFileNot" prepend="and">
+				<isEmpty property="tbsqFile">
+				$tbsqFileNot$ (tb_sale_quote$suffix$.tbsq_file is null or length(tb_sale_quote$suffix$.tbsq_file) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqOnwer" prepend="and">
+			    $tbsqOnwerNot$ tb_sale_quote$suffix$.tbsq_onwer = #tbsqOnwer#
+			</isNotEmpty>
+			<isNotNull property="tbsqOnwerNot" prepend="and">
+				<isEmpty property="tbsqOnwer">
+				$tbsqOnwerNot$ tb_sale_quote$suffix$.tbsq_onwer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="FAMILY" prepend="and">
+			    tb_sale_quote$suffix$.tbsq_onwer = #tbsqOnwer#
+			</isNotEmpty>
+			<isNotEmpty property="tbsqAdder" prepend="and">
+			    $tbsqAdderNot$ tb_sale_quote$suffix$.tbsq_adder = #tbsqAdder#
+			</isNotEmpty>
+			<isNotNull property="tbsqAdderNot" prepend="and">
+				<isEmpty property="tbsqAdder">
+				$tbsqAdderNot$ tb_sale_quote$suffix$.tbsq_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqEditor" prepend="and">
+			    $tbsqEditorNot$ tb_sale_quote$suffix$.tbsq_editor = #tbsqEditor#
+			</isNotEmpty>
+			<isNotNull property="tbsqEditorNot" prepend="and">
+				<isEmpty property="tbsqEditor">
+				$tbsqEditorNot$ tb_sale_quote$suffix$.tbsq_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqUpdateTimeStart" prepend="and">
+			    $tbsqUpdateTimeNot$   (tb_sale_quote$suffix$.tbsq_update_time &gt;= #tbsqUpdateTimeStart#
+			   <isEmpty property="tbsqUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbsqUpdateTimeEnd" prepend="and">
+				<isEmpty property="tbsqUpdateTimeStart">$tbsqUpdateTimeNot$   (</isEmpty>
+			    tb_sale_quote$suffix$.tbsq_update_time &lt;= #tbsqUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="tbsqUpdateTime" prepend="and">
+			    $tbsqUpdateTimeNot$ tb_sale_quote$suffix$.tbsq_update_time = #tbsqUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="tbsqUpdateTimeNot" prepend="and">
+				<isEmpty property="tbsqUpdateTimeStart"><isEmpty property="tbsqUpdateTimeEnd"><isEmpty property="tbsqUpdateTime">
+				$tbsqUpdateTimeNot$ tb_sale_quote$suffix$.tbsq_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqAddTimeStart" prepend="and">
+			    $tbsqAddTimeNot$   (tb_sale_quote$suffix$.tbsq_add_time &gt;= #tbsqAddTimeStart#
+			   <isEmpty property="tbsqAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbsqAddTimeEnd" prepend="and">
+				<isEmpty property="tbsqAddTimeStart">$tbsqAddTimeNot$   (</isEmpty>
+			    tb_sale_quote$suffix$.tbsq_add_time &lt;= #tbsqAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="tbsqAddTime" prepend="and">
+			    $tbsqAddTimeNot$ tb_sale_quote$suffix$.tbsq_add_time = #tbsqAddTime#
+			</isNotEmpty>
+			<isNotNull property="tbsqAddTimeNot" prepend="and">
+				<isEmpty property="tbsqAddTimeStart"><isEmpty property="tbsqAddTimeEnd"><isEmpty property="tbsqAddTime">
+				$tbsqAddTimeNot$ tb_sale_quote$suffix$.tbsq_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsqStatus" prepend="and">
+			    $tbsqStatusNot$ tb_sale_quote$suffix$.tbsq_status = #tbsqStatus#
+			</isNotEmpty>
+			<isNotNull property="tbsqStatusNot" prepend="and">
+				<isEmpty property="tbsqStatus">
+				$tbsqStatusNot$ tb_sale_quote$suffix$.tbsq_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 跟单报价left join 条件sql片段 -->
+	<sql id="tb_sale_quote_join">
+		<dynamic>
+			<isNotEmpty property="TbSaleQuote.tbsqId" prepend="and">
+			    $TbSaleQuote.tbsqIdNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_id = #TbSaleQuote.tbsqId#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqIdNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqId">
+				$tbsqIdNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_sale_quote$TbSaleQuote.suffix$.tbsq_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="TbSaleQuote.tbsqHost" prepend="and">
+			    $TbSaleQuote.tbsqHostNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_host = #TbSaleQuote.tbsqHost#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqHostNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqHost">
+				$tbsqHostNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqTitle" prepend="and">
+				(<isNotNull property="TbSaleQuote.tbsqTitleNot">
+			    tb_sale_quote$TbSaleQuote.suffix$.tbsq_title is null or length(tb_sale_quote$TbSaleQuote.suffix$.tbsq_title) &lt; 1 or
+			    </isNotNull>$TbSaleQuote.tbsqTitleNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_title like #TbSaleQuote.tbsqTitle#)
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqTitleNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqTitle">
+				$tbsqTitleNot$ (tb_sale_quote$TbSaleQuote.suffix$.tbsq_title is null or length(tb_sale_quote$TbSaleQuote.suffix$.tbsq_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqOpport" prepend="and">
+			    $TbSaleQuote.tbsqOpportNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_opport = #TbSaleQuote.tbsqOpport#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqOpportNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqOpport">
+				$tbsqOpportNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_opport is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqDetail" prepend="and">
+				(<isNotNull property="TbSaleQuote.tbsqDetailNot">
+			    tb_sale_quote$TbSaleQuote.suffix$.tbsq_detail is null or length(tb_sale_quote$TbSaleQuote.suffix$.tbsq_detail) &lt; 1 or
+			    </isNotNull>$TbSaleQuote.tbsqDetailNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_detail like #TbSaleQuote.tbsqDetail#)
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqDetailNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqDetail">
+				$tbsqDetailNot$ (tb_sale_quote$TbSaleQuote.suffix$.tbsq_detail is null or length(tb_sale_quote$TbSaleQuote.suffix$.tbsq_detail) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqFile" prepend="and">
+				(<isNotNull property="TbSaleQuote.tbsqFileNot">
+			    tb_sale_quote$TbSaleQuote.suffix$.tbsq_file is null or length(tb_sale_quote$TbSaleQuote.suffix$.tbsq_file) &lt; 1 or
+			    </isNotNull>$TbSaleQuote.tbsqFileNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_file like #TbSaleQuote.tbsqFile#)
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqFileNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqFile">
+				$tbsqFileNot$ (tb_sale_quote$TbSaleQuote.suffix$.tbsq_file is null or length(tb_sale_quote$TbSaleQuote.suffix$.tbsq_file) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqOnwer" prepend="and">
+			    $TbSaleQuote.tbsqOnwerNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_onwer = #TbSaleQuote.tbsqOnwer#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqOnwerNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqOnwer">
+				$tbsqOnwerNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_onwer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="FAMILY" prepend="and">
+			    tb_sale_quote$suffix$.tbsq_onwer = #tbsqOnwer#
+			</isNotEmpty>
+			<isNotEmpty property="TbSaleQuote.tbsqAdder" prepend="and">
+			    $TbSaleQuote.tbsqAdderNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_adder = #TbSaleQuote.tbsqAdder#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqAdderNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqAdder">
+				$tbsqAdderNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqEditor" prepend="and">
+			    $TbSaleQuote.tbsqEditorNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_editor = #TbSaleQuote.tbsqEditor#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqEditorNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqEditor">
+				$tbsqEditorNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqUpdateTimeStart" prepend="and">
+			    $TbSaleQuote.tbsqUpdateTimeNot$   (tb_sale_quote$TbSaleQuote.suffix$.tbsq_update_time &gt;= #TbSaleQuote.tbsqUpdateTimeStart#
+			   <isEmpty property="TbSaleQuote.tbsqUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbSaleQuote.tbsqUpdateTimeEnd" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqUpdateTimeStart">$TbSaleQuote.tbsqUpdateTimeNot$   (</isEmpty>
+			    tb_sale_quote$TbSaleQuote.suffix$.tbsq_update_time &lt;= #TbSaleQuote.tbsqUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="TbSaleQuote.tbsqUpdateTime" prepend="and">
+			    $TbSaleQuote.tbsqUpdateTimeNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_update_time = #TbSaleQuote.tbsqUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqUpdateTimeNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqUpdateTimeStart"><isEmpty property="TbSaleQuote.tbsqUpdateTimeEnd"><isEmpty property="TbSaleQuote.tbsqUpdateTime">
+				$tbsqUpdateTimeNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqAddTimeStart" prepend="and">
+			    $TbSaleQuote.tbsqAddTimeNot$   (tb_sale_quote$TbSaleQuote.suffix$.tbsq_add_time &gt;= #TbSaleQuote.tbsqAddTimeStart#
+			   <isEmpty property="TbSaleQuote.tbsqAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbSaleQuote.tbsqAddTimeEnd" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqAddTimeStart">$TbSaleQuote.tbsqAddTimeNot$   (</isEmpty>
+			    tb_sale_quote$TbSaleQuote.suffix$.tbsq_add_time &lt;= #TbSaleQuote.tbsqAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="TbSaleQuote.tbsqAddTime" prepend="and">
+			    $TbSaleQuote.tbsqAddTimeNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_add_time = #TbSaleQuote.tbsqAddTime#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqAddTimeNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqAddTimeStart"><isEmpty property="TbSaleQuote.tbsqAddTimeEnd"><isEmpty property="TbSaleQuote.tbsqAddTime">
+				$tbsqAddTimeNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSaleQuote.tbsqStatus" prepend="and">
+			    $TbSaleQuote.tbsqStatusNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_status = #TbSaleQuote.tbsqStatus#
+			</isNotEmpty>
+			<isNotNull property="TbSaleQuote.tbsqStatusNot" prepend="and">
+				<isEmpty property="TbSaleQuote.tbsqStatus">
+				$tbsqStatusNot$ tb_sale_quote$TbSaleQuote.suffix$.tbsq_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

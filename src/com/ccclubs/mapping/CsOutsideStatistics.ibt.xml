@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+	<!-- 车辆违章之SQL映射 -->
+ 	<resultMap id="csOutsideStatistics" class="com.ccclubs.model.CsOutsideStatistics">
+		<result property="csosId" column="csos_id"/>
+		<result property="csosUser" column="csos_user"/>
+		
+		<result property="csosCar" column="csos_car"/>
+		<result property="csosArea" column="csos_area"/>
+		
+		<result property="csosHost" column="csos_host"/>
+		
+		<result property="csosOutlets" column="csos_outlets"/>
+		<result property="csosProperty" column="csos_property"/>
+		
+		<result property="csosOpenDoorCount" column="csos_open_door_count"/>
+		
+		<result property="csosCloseDoorCount" column="csos_close_door_count"/>
+		<result property="csosStartCount" column="csos_start_count"/>
+		
+		<result property="csosWhistleCount" column="csos_whistle_count"/>
+		<result property="csosOpenDoorTime" column="csos_open_door_time"/>
+		
+		<result property="csosCloseDoorTime" column="csos_close_door_time"/>
+		<result property="csosAddTime" column="csos_add_time"/>
+		
+		<result property="csosUpdateTime" column="csos_update_time"/>
+		<result property="csosFinishTime" column="csos_finish_time"/>
+		
+		<result property="csosStatus" column="csos_status"/>
+		<result property="csosCarLocation" column="csos_car_location"/>
+		
+		<result property="csosMemberLocation" column="csos_member_location"/>
+		<result property="csosDistance" column="csos_distance"/> 
+		<result property="csosWorkTime" column="csos_work_time"/> 
+	</resultMap>
+	
+	
+	
+	
+	<!-- 获取车辆上线记录分页 -->
+	<select id="getCsOutsideStatisticsOnPage" parameterClass="java.util.HashMap" resultMap="csOutsideStatistics">
+		select cs_outside_statistics$suffix$.* from cs_outside_statistics$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		
+		<!--  多对一外链接[产品]查询,同张表只能外链接一次-->
+		<!--调用一下csosUser，把SrvUser指向csosUser  -->
+		<isNotNull property="csosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.csos_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+<!-- 		多对一外链接[计费方式]查询,同张表只能外链接一次-->	
+ 		<isNotNull property="CsosCar"></isNotNull><!-- 调用一下"CsosCar"，把CsCar指向"CsosCar" -->
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.csos_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+<!-- 		多对一外链接[规则]查询,同张表只能外链接一次
+ -->		
+		<isNotNull property="CsosHost"></isNotNull><!-- 调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvHost">
+			<isNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.csos_host=srv_host$SrvHost.suffix$.sh_id
+			</isNull>
+			<isNotNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.$SrvHost.on$=srv_host$SrvHost.suffix$.sh_id			
+			</isNotNull>
+		</isNotNull>
+<!-- 		多对一外链接[规则]查询,同张表只能外链接一次
+ -->	
+		<isNotNull property="csosProperty"></isNotNull><!-- csos_property srv_property调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.csos_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvHost.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>		
+		
+		
+			where 1=1 
+		and cs_outside_statistics$suffix$.csos_status!=-1
+<!-- 		多对一外链接[产品]查询条件sql片段
+ -->
+ 		<isNotNull property="CsosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		
+	<!--	
+		多对一外链接[计费方式]查询条件sql片段
+	-->	
+		<isNotNull property="CsosCar"></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		
+<!-- 		多对一外链接[规则]查询条件sql片段
+ -->		
+ 		<isNotNull property="CsosHost"></isNotNull>
+		<isNotNull property="SrvHost">
+			<include refid="SrvHost_part.srv_host_join"/>
+		</isNotNull>
+			
+		<isNotNull property="CsosOutlets"></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>	
+		
+		<isNotNull property="CsosProperty"></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>	
+			
+				
+		<!-- 动态条件sql片段 -->
+		 <include refid="CsOutsideStatistics_part.cs_outsideStatistics_dynamic"/>
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csos_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	
+	<!-- 获取车辆整备总数 -->
+	 <select id="getCsOutsideStatisticsEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_outside_statistics$suffix$ 
+		
+<!-- 		自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!--  多对一外链接[产品]查询,同张表只能外链接一次-->
+		<!--调用一下csosUser，把SrvUser指向csosUser  -->
+		<isNotNull property="csosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.csos_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+<!-- 		多对一外链接[计费方式]查询,同张表只能外链接一次-->	
+ 		<isNotNull property="CsosCar"></isNotNull><!-- 调用一下"CsosCar"，把CsCar指向"CsosCar" -->
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.csos_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+<!-- 		多对一外链接[规则]查询,同张表只能外链接一次
+ -->		
+		<isNotNull property="CsosHost"></isNotNull><!-- 调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvHost">
+			<isNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.csos_host=srv_host$SrvHost.suffix$.sh_id
+			</isNull>
+			<isNotNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.$SrvHost.on$=srv_host$SrvHost.suffix$.sh_id			
+			</isNotNull>
+		</isNotNull>
+<!-- 		多对一外链接[规则]查询,同张表只能外链接一次
+ -->	
+		<isNotNull property="csosProperty"></isNotNull><!-- csos_property srv_property调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.csos_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvHost.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>		
+		
+	 	where 1=1 
+		and cs_outside_statistics$suffix$.csos_status!=-1
+<!-- 		多对一外链接[产品]查询条件sql片段
+ -->
+ 		<isNotNull property="CsosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		
+		
+		
+	<!--	
+		多对一外链接[计费方式]查询条件sql片段
+	-->	
+		<isNotNull property="CsosCar"></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		
+<!-- 		多对一外链接[规则]查询条件sql片段
+ -->		
+ 		<isNotNull property="CsosHost"></isNotNull>
+		<isNotNull property="SrvHost">
+			<include refid="SrvHost_part.srv_host_join"/>
+		</isNotNull>
+			
+			
+			
+		<isNotNull property="CsosOutlets"></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>	
+		
+		<isNotNull property="CsosProperty"></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>	
+			
+				
+		<!-- 动态条件sql片段 -->
+		 <include refid="CsOutsideStatistics_part.cs_outsideStatistics_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	
+	<!-- 获取分页数据 -->
+	<select id="getCsOutsideStatisticsPage" parameterClass="java.util.HashMap" resultMap="csOutsideStatistics">
+		select cs_outside_statistics$suffix$.* from cs_outside_statistics$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="csosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.csos_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询,同张表只能外链接一次-->	
+ 		<isNotNull property="CsosCar"></isNotNull><!-- 调用一下"CsosCar"，把CsCar指向"CsosCar" -->
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.csos_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次-->
+		<isNotNull property="csosOutlets"></isNotNull><!-- csos_property srv_property调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_outside_statistics$suffix$.csos_outlets=CsOutlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_outside_statistics$suffix$.$CsOutlets.on$=CsOutlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>	
+		
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次-->	
+		<isNotNull property="CsosHost"></isNotNull><!-- 调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvHost">
+			<isNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.csos_host=srv_host$SrvHost.suffix$.sh_id
+			</isNull>
+			<isNotNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.$SrvHost.on$=srv_host$SrvHost.suffix$.sh_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次-->
+		<isNotNull property="csosProperty"></isNotNull><!-- csos_property srv_property调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.csos_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>	
+		
+			
+				
+		where 1=1  
+		and cs_outside_statistics$suffix$.csos_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		
+		
+		
+		<!-- 		多对一外链接[产品]查询条件sql片段
+ -->
+ 		<isNotNull property="CsosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		
+		
+		
+	<!--	
+		多对一外链接[计费方式]查询条件sql片段
+	-->	
+		<isNotNull property="CsosCar"></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		
+<!-- 		多对一外链接[规则]查询条件sql片段
+ -->		
+ 		<isNotNull property="CsosHost"></isNotNull>
+		<isNotNull property="SrvHost">
+			<include refid="SrvHost_part.srv_host_join"/>
+		</isNotNull>
+			
+			
+			
+		<isNotNull property="CsosOutlets"></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>	
+		
+		<isNotNull property="CsosProperty"></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>	
+			
+		<!-- 动态条件sql片段 -->
+		 <include refid="CsOutsideStatistics_part.cs_outsideStatistics_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csos_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	
+	
+	
+	
+	
+	<!-- 统计车辆整备-->
+	<select id="getCsOutsideStatisticsStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_outside_statistics$suffix$		
+		
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="csosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.csos_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_outside_statistics$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询,同张表只能外链接一次-->	
+ 		<isNotNull property="CsosCar"></isNotNull><!-- 调用一下"CsosCar"，把CsCar指向"CsosCar" -->
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.csos_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_statistics$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次-->	
+		<isNotNull property="CsosHost"></isNotNull><!-- 调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvHost">
+			<isNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.csos_host=srv_host$SrvHost.suffix$.sh_id
+			</isNull>
+			<isNotNull property="SrvHost.on">
+				left join srv_host srv_host$SrvHost.suffix$ on cs_outside_statistics$suffix$.$SrvHost.on$=srv_host$SrvHost.suffix$.sh_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次-->
+		<isNotNull property="csosProperty"></isNotNull><!-- csos_property srv_property调用一下CsosHost，把CsRule指向CsosHost -->
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.csos_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_outside_statistics$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>		
+						
+				
+		where 1=1 
+		and cs_outside_statistics$suffix$.csos_status!=-1
+		<!-- 		多对一外链接[产品]查询条件sql片段
+ -->
+ 		<isNotNull property="CsosUser"></isNotNull>
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		
+	<!--	
+		多对一外链接[计费方式]查询条件sql片段
+	-->	
+		<isNotNull property="CsosCar"></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		
+<!-- 		多对一外链接[规则]查询条件sql片段
+ -->		
+ 		<isNotNull property="CsosHost"></isNotNull>
+		<isNotNull property="SrvHost">
+			<include refid="SrvHost_part.srv_host_join"/>
+		</isNotNull>
+			
+			
+			
+		<isNotNull property="CsosOutlets"></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>	
+		
+		<isNotNull property="CsosProperty"></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>	
+			
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutsideStatistics_part.cs_outsideStatistics_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 根据ID取数据 -->
+	<select id="getCsOutsideStatisticsById" parameterClass="java.util.HashMap" resultMap="csOutsideStatistics">
+		select cs_outside_statistics$suffix$.* from cs_outside_statistics$suffix$
+		where csos_id=#id#
+	</select>
+	
+	<!-- 获取所有系统参数 -->
+	 <select id="getCsOutsideStatisticsList" resultMap="csOutsideStatistics">
+		select cs_outside_statistics$suffix$.* from cs_outside_statistics$suffix$
+		
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		where 1=1 
+ 		 <include refid="CsOutsideStatistics_part.cs_outsideStatistics_dynamic"/>
+		
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+	
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		
+		<isNull property="asc">
+			<isNull property="desc">order by csos_id desc
+			</isNull>
+		</isNull>
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>   
+	
+	<insert id="saveCsOutsideStatistics"  parameterClass="com.ccclubs.model.CsOutsideStatistics">
+		insert into cs_outside_statistics$suffix$
+		(
+			cs_outside_statistics$suffix$.csos_user
+			,cs_outside_statistics$suffix$.csos_car
+			,cs_outside_statistics$suffix$.csos_area
+			,cs_outside_statistics$suffix$.csos_host
+			,cs_outside_statistics$suffix$.csos_outlets
+			,cs_outside_statistics$suffix$.csos_property
+			,cs_outside_statistics$suffix$.csos_open_door_count
+			,cs_outside_statistics$suffix$.csos_close_door_count
+			,cs_outside_statistics$suffix$.csos_start_count
+			,cs_outside_statistics$suffix$.csos_whistle_count
+			,cs_outside_statistics$suffix$.csos_open_door_time
+			,cs_outside_statistics$suffix$.csos_close_door_time
+			,cs_outside_statistics$suffix$.csos_add_time
+			,cs_outside_statistics$suffix$.csos_update_time
+			,cs_outside_statistics$suffix$.csos_finish_time
+			,cs_outside_statistics$suffix$.csos_status
+			,cs_outside_statistics$suffix$.csos_car_location
+			,cs_outside_statistics$suffix$.csos_member_location
+			,cs_outside_statistics$suffix$.csos_distance
+			,cs_outside_statistics$suffix$.csos_work_time
+			
+			
+		)
+		values(
+			<isNotNull property="csosUser" prepend="">
+				#csosUser#
+			</isNotNull>
+			<isNull property="csosUser" prepend="">
+				null
+			</isNull>
+			
+			<isNotNull property="csosCar" prepend=",">
+				#csosCar#
+			</isNotNull>
+			<isNull property="csosCar" prepend=",">
+				null
+			</isNull>	
+			
+			
+			<isNotNull property="csosArea" prepend=",">
+				#csosArea#
+			</isNotNull>
+			<isNull property="csosArea" prepend=",">
+				null
+			</isNull>	
+			
+			
+					
+			<isNotNull property="csosHost" prepend=",">
+				#csosHost#
+			</isNotNull>
+			<isNull property="csosHost" prepend=",">
+				null
+			</isNull>	
+					
+			<isNotNull property="csosOutlets" prepend=",">
+				#csosOutlets#
+			</isNotNull>
+			<isNull property="csosOutlets" prepend=",">
+				null
+			</isNull>	
+					
+			<isNotNull property="csosProperty" prepend=",">
+				#csosProperty#
+			</isNotNull>
+			<isNull property="csosProperty" prepend=",">
+				null
+			</isNull>	
+			
+			<isNotNull property="csosOpenDoorCount" prepend=",">
+				#csosOpenDoorCount#
+			</isNotNull>
+			<isNull property="csosOpenDoorCount" prepend=",">
+				null
+			</isNull>			
+			
+			<isNotNull property="csosCloseDoorCount" prepend=",">
+				#csosCloseDoorCount#
+			</isNotNull>
+			<isNull property="csosCloseDoorCount" prepend=",">
+				null
+			</isNull>	
+			
+			<isNotNull property="csosStartCount" prepend=",">
+				#csosStartCount#
+			</isNotNull>
+			<isNull property="csosStartCount" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosWhistleCount" prepend=",">
+				#csosWhistleCount#
+			</isNotNull>
+			<isNull property="csosWhistleCount" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosOpenDoorTime" prepend=",">
+				#csosOpenDoorTime#
+			</isNotNull>
+			<isNull property="csosOpenDoorTime" prepend=",">
+				null
+			</isNull>	
+			
+			<isNotNull property="csosCloseDoorTime" prepend=",">
+				#csosCloseDoorTime#
+			</isNotNull>
+			<isNull property="csosCloseDoorTime" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosAddTime" prepend=",">
+				#csosAddTime#
+			</isNotNull>
+			<isNull property="csosAddTime" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosUpdateTime" prepend=",">
+				#csosUpdateTime#
+			</isNotNull>
+			<isNull property="csosUpdateTime" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosFinishTime" prepend=",">
+				#csosFinishTime#
+			</isNotNull>
+			<isNull property="csosFinishTime" prepend=",">
+				null
+			</isNull>		
+			
+			
+			<isNotNull property="csosStatus" prepend=",">
+				#csosStatus#
+			</isNotNull>
+			<isNull property="csosStatus" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosCarLocation" prepend=",">
+				#csosCarLocation#
+			</isNotNull>
+			<isNull property="csosCarLocation" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosMemberLocation" prepend=",">
+				#csosMemberLocation#
+			</isNotNull>
+			<isNull property="csosMemberLocation" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosDistance" prepend=",">
+				#csosDistance#
+			</isNotNull>
+			<isNull property="csosDistance" prepend=",">
+				null
+			</isNull>		
+			
+			<isNotNull property="csosWorkTime" prepend=",">
+				#csosWorkTime#
+			</isNotNull>
+			<isNull property="csosWorkTime" prepend=",">
+				null
+			</isNull>		
+				
+				
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新 -->
+	 <update id="updateCsOutsideStatistics$NotNull"  parameterClass="com.ccclubs.model.CsOutsideStatistics">
+		update  cs_outside_statistics$suffix$   
+			<dynamic prepend="set">
+			<isNotNull property="csosOpenDoorCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_open_door_count = #csosOpenDoorCount#
+			</isNotNull>
+						
+			<isNotNull property="csosCloseDoorCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_close_door_count = #csosCloseDoorCount#
+			</isNotNull>
+						
+			<isNotNull property="csosStartCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_start_count = #csosStartCount#
+			</isNotNull>
+			
+			<isNotNull property="csosWhistleCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_whistle_count = #csosWhistleCount#
+			</isNotNull>
+					
+			<isNotNull property="csosOpenDoorTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_open_door_time = #csosOpenDoorTime#
+			</isNotNull>
+						
+			<isNotNull property="csosCloseDoorTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_close_door_time = #csosCloseDoorTime#
+			</isNotNull>
+				
+			<isNotNull property="csosUpdateTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_update_time = #csosUpdateTime#
+			</isNotNull>
+			
+			<isNotNull property="csosFinishTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_finish_time = #csosFinishTime#
+			</isNotNull>
+			
+			<isNotNull property="csosWorkTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_work_time = #csosWorkTime#
+			</isNotNull>
+			
+			<isNotNull property="csosStatus" prepend=",">
+				cs_outside_statistics$suffix$.csos_status = #csosStatus#
+			</isNotNull>
+			</dynamic>	
+		where
+			csos_id=#csosId#
+	</update>
+	
+	
+	<!-- 更新商品 -->
+	<update id="updateCsOutsideStatistics"  parameterClass="com.ccclubs.model.CsOutsideStatistics">
+		update cs_outside_statistics$suffix$ set
+			<isNotNull property="csosOpenDoorCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_open_door_count = #csosOpenDoorCount#
+			</isNotNull>
+			<isNull property="csosOpenDoorCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_open_door_count = null
+			</isNull>	
+			
+						
+			<isNotNull property="csosCloseDoorCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_close_door_count = #csosCloseDoorCount#
+			</isNotNull>
+			<isNull property="csosCloseDoorCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_close_door_count = null
+			</isNull>	
+						
+			<isNotNull property="csosStartCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_start_count = #csosStartCount#
+			</isNotNull>
+			<isNull property="csosStartCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_start_count = null
+			</isNull>		
+			
+					
+			<isNotNull property="csosWhistleCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_whistle_count = #csosWhistleCount#
+			</isNotNull>
+			<isNull property="csosWhistleCount" prepend=",">
+				cs_outside_statistics$suffix$.csos_whistle_count = null
+			</isNull>		
+			
+					
+			<isNotNull property="csosOpenDoorTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_open_door_time = #csosOpenDoorTime#
+			</isNotNull>
+			<isNull property="csosOpenDoorTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_open_door_time = null
+			</isNull>	
+			
+						
+			<isNotNull property="csosCloseDoorTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_close_door_time = #csosCloseDoorTime#
+			</isNotNull>
+			<isNull property="csosCloseDoorTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_close_door_time = null
+			</isNull>			
+				
+			<isNotNull property="csosUpdateTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_update_time = #csosUpdateTime#
+			</isNotNull>
+			<isNull property="csosUpdateTime" prepend=",">
+				cs_outside_statistics$suffix$.csos_update_time = null
+			</isNull>		
+			
+		where
+			csos_id=#csosId#
+	</update>
+	
+	
+	
+	<!-- 根据ID删除数据 -->
+	<delete id="deleteCsOutsideStatisticsById" parameterClass="java.util.HashMap">
+		delete from cs_outside_statistics$suffix$ where csos_id=#id#
+	</delete>
+	
+	<!-- 根据ID逻辑删除一个客户关怀 -->
+	<update id="removeCsOutsideStatisticsById" parameterClass="java.util.HashMap">
+		update cs_outside_statistics$suffix$ set  cs_outside_statistics$suffix$.csos_status=-1  where csos_id=#id#
+	</update>
+	
+	
+</sqlMap>

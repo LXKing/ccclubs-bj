@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsEvent_part">	
+	<!-- 系统事件条件sql片段  -->
+	<sql id="cs_event_dynamic">
+		<dynamic>
+			<isNotEmpty property="cseId" prepend="and">
+			    $cseIdNot$ cs_event$suffix$.cse_id = #cseId#
+			</isNotEmpty>
+			<isNotNull property="cseIdNot" prepend="and">
+				<isEmpty property="cseId">
+				$cseIdNot$ cs_event$suffix$.cse_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseContent" prepend="and">			    
+			    (<isNotNull property="cseContentNot">
+			    cs_event$suffix$.cse_content is null or length(cs_event$suffix$.cse_content) &lt; 1 or
+			    </isNotNull>$cseContentNot$ cs_event$suffix$.cse_content like #cseContent#)
+			</isNotEmpty>
+			<isNotNull property="cseContentNot" prepend="and">
+				<isEmpty property="cseContent">
+				$cseContentNot$ (cs_event$suffix$.cse_content is null or length(cs_event$suffix$.cse_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseType" prepend="and">
+			    $cseTypeNot$ cs_event$suffix$.cse_type = #cseType#
+			</isNotEmpty>
+			<isNotNull property="cseTypeNot" prepend="and">
+				<isEmpty property="cseType">
+				$cseTypeNot$ cs_event$suffix$.cse_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseDataId" prepend="and">
+			    $cseDataIdNot$ cs_event$suffix$.cse_data_id = #cseDataId#
+			</isNotEmpty>
+			<isNotNull property="cseDataIdNot" prepend="and">
+				<isEmpty property="cseDataId">
+				$cseDataIdNot$ cs_event$suffix$.cse_data_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseUpdateTimeStart" prepend="and">
+			    $cseUpdateTimeNot$   (cs_event$suffix$.cse_update_time &gt;= #cseUpdateTimeStart#
+			   <isEmpty property="cseUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cseUpdateTimeEnd" prepend="and">
+				<isEmpty property="cseUpdateTimeStart">$cseUpdateTimeNot$   (</isEmpty>
+			    cs_event$suffix$.cse_update_time &lt;= #cseUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cseUpdateTime" prepend="and">
+			    $cseUpdateTimeNot$ cs_event$suffix$.cse_update_time = #cseUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cseUpdateTimeNot" prepend="and">
+				<isEmpty property="cseUpdateTimeStart"><isEmpty property="cseUpdateTimeEnd"><isEmpty property="cseUpdateTime">
+				$cseUpdateTimeNot$ cs_event$suffix$.cse_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseAddTimeStart" prepend="and">
+			    $cseAddTimeNot$   (cs_event$suffix$.cse_add_time &gt;= #cseAddTimeStart#
+			   <isEmpty property="cseAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cseAddTimeEnd" prepend="and">
+				<isEmpty property="cseAddTimeStart">$cseAddTimeNot$   (</isEmpty>
+			    cs_event$suffix$.cse_add_time &lt;= #cseAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cseAddTime" prepend="and">
+			    $cseAddTimeNot$ cs_event$suffix$.cse_add_time = #cseAddTime#
+			</isNotEmpty>
+			<isNotNull property="cseAddTimeNot" prepend="and">
+				<isEmpty property="cseAddTimeStart"><isEmpty property="cseAddTimeEnd"><isEmpty property="cseAddTime">
+				$cseAddTimeNot$ cs_event$suffix$.cse_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseStatus" prepend="and">
+			    $cseStatusNot$ cs_event$suffix$.cse_status = #cseStatus#
+			</isNotEmpty>
+			<isNotNull property="cseStatusNot" prepend="and">
+				<isEmpty property="cseStatus">
+				$cseStatusNot$ cs_event$suffix$.cse_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统事件left join 条件sql片段 -->
+	<sql id="cs_event_join">
+		<dynamic>
+			<isNotEmpty property="CsEvent.cseId" prepend="and">
+			    $CsEvent.cseIdNot$ cs_event$CsEvent.suffix$.cse_id = #CsEvent.cseId#
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseIdNot" prepend="and">
+				<isEmpty property="CsEvent.cseId">
+				$cseIdNot$ cs_event$CsEvent.suffix$.cse_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvent.cseContent" prepend="and">
+				(<isNotNull property="CsEvent.cseContentNot">
+			    cs_event$CsEvent.suffix$.cse_content is null or length(cs_event$CsEvent.suffix$.cse_content) &lt; 1 or
+			    </isNotNull>$CsEvent.cseContentNot$ cs_event$CsEvent.suffix$.cse_content like #CsEvent.cseContent#)
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseContentNot" prepend="and">
+				<isEmpty property="CsEvent.cseContent">
+				$cseContentNot$ (cs_event$CsEvent.suffix$.cse_content is null or length(cs_event$CsEvent.suffix$.cse_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvent.cseType" prepend="and">
+			    $CsEvent.cseTypeNot$ cs_event$CsEvent.suffix$.cse_type = #CsEvent.cseType#
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseTypeNot" prepend="and">
+				<isEmpty property="CsEvent.cseType">
+				$cseTypeNot$ cs_event$CsEvent.suffix$.cse_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvent.cseDataId" prepend="and">
+			    $CsEvent.cseDataIdNot$ cs_event$CsEvent.suffix$.cse_data_id = #CsEvent.cseDataId#
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseDataIdNot" prepend="and">
+				<isEmpty property="CsEvent.cseDataId">
+				$cseDataIdNot$ cs_event$CsEvent.suffix$.cse_data_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvent.cseUpdateTimeStart" prepend="and">
+			    $CsEvent.cseUpdateTimeNot$   (cs_event$CsEvent.suffix$.cse_update_time &gt;= #CsEvent.cseUpdateTimeStart#
+			   <isEmpty property="CsEvent.cseUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEvent.cseUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsEvent.cseUpdateTimeStart">$CsEvent.cseUpdateTimeNot$   (</isEmpty>
+			    cs_event$CsEvent.suffix$.cse_update_time &lt;= #CsEvent.cseUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEvent.cseUpdateTime" prepend="and">
+			    $CsEvent.cseUpdateTimeNot$ cs_event$CsEvent.suffix$.cse_update_time = #CsEvent.cseUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseUpdateTimeNot" prepend="and">
+				<isEmpty property="CsEvent.cseUpdateTimeStart"><isEmpty property="CsEvent.cseUpdateTimeEnd"><isEmpty property="CsEvent.cseUpdateTime">
+				$cseUpdateTimeNot$ cs_event$CsEvent.suffix$.cse_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvent.cseAddTimeStart" prepend="and">
+			    $CsEvent.cseAddTimeNot$   (cs_event$CsEvent.suffix$.cse_add_time &gt;= #CsEvent.cseAddTimeStart#
+			   <isEmpty property="CsEvent.cseAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEvent.cseAddTimeEnd" prepend="and">
+				<isEmpty property="CsEvent.cseAddTimeStart">$CsEvent.cseAddTimeNot$   (</isEmpty>
+			    cs_event$CsEvent.suffix$.cse_add_time &lt;= #CsEvent.cseAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEvent.cseAddTime" prepend="and">
+			    $CsEvent.cseAddTimeNot$ cs_event$CsEvent.suffix$.cse_add_time = #CsEvent.cseAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseAddTimeNot" prepend="and">
+				<isEmpty property="CsEvent.cseAddTimeStart"><isEmpty property="CsEvent.cseAddTimeEnd"><isEmpty property="CsEvent.cseAddTime">
+				$cseAddTimeNot$ cs_event$CsEvent.suffix$.cse_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvent.cseStatus" prepend="and">
+			    $CsEvent.cseStatusNot$ cs_event$CsEvent.suffix$.cse_status = #CsEvent.cseStatus#
+			</isNotEmpty>
+			<isNotNull property="CsEvent.cseStatusNot" prepend="and">
+				<isEmpty property="CsEvent.cseStatus">
+				$cseStatusNot$ cs_event$CsEvent.suffix$.cse_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

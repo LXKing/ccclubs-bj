@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 长租订单之SQL映射 -->
+	<resultMap id="CsLongOrder" class="com.ccclubs.model.CsLongOrder">
+		<result property="csloId" column="cslo_id"/>
+		<result property="csloHost" column="cslo_host"/>
+		<result property="csloPackNo" column="cslo_pack_no"/>
+		<result property="csloMember" column="cslo_member"/>
+		<result property="csloPackProfile" column="cslo_pack_profile"/>
+		<result property="csloPackImage" column="cslo_pack_image"/>
+		<result property="csloCount" column="cslo_count"/>
+		<result property="csloLeaseTerm" column="cslo_lease_term"/>
+		<result property="csloDeposit" column="cslo_deposit"/>
+		<result property="csloPayCycle" column="cslo_pay_cycle"/>
+		<result property="csloNeedPay" column="cslo_need_pay"/>
+		<result property="csloRealPay" column="cslo_real_pay"/>
+		<result property="csloPactTime" column="cslo_pact_time"/>
+		<result property="csloStartTime" column="cslo_start_time"/>
+		<result property="csloFinishTime" column="cslo_finish_time"/>
+		<result property="csloUpdateTime" column="cslo_update_time"/>
+		<result property="csloAddTime" column="cslo_add_time"/>
+		<result property="csloSerial" column="cslo_serial"/>
+		<result property="csloRemark" column="cslo_remark"/>
+		<result property="csloEditor" column="cslo_editor"/>
+		<result property="csloError" column="cslo_error"/>
+		<result property="csloStatus" column="cslo_status"/>
+	</resultMap>
+		
+	<!-- 获取所有长租订单 -->
+	<select id="getCsLongOrderList" resultMap="CsLongOrder">
+		select cs_long_order$suffix$.* from cs_long_order$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.cslo_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order$suffix$.cslo_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrder_part.cs_long_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslo_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取长租订单分页 -->
+	<select id="getCsLongOrderPage" parameterClass="java.util.HashMap" resultMap="CsLongOrder">
+		select cs_long_order$suffix$.* from cs_long_order$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.cslo_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order$suffix$.cslo_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrder_part.cs_long_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslo_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取长租订单总数 -->
+	<select id="getCsLongOrderEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_long_order$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.cslo_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order$suffix$.cslo_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrder_part.cs_long_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取长租订单 -->
+	<select id="getCsLongOrderById" parameterClass="java.util.HashMap" resultMap="CsLongOrder">
+		select cs_long_order$suffix$.* from cs_long_order$suffix$
+		where cslo_id=#id#
+	</select>
+	
+		
+	<!-- 保存长租订单 -->
+	<insert id="saveCsLongOrder"  parameterClass="com.ccclubs.model.CsLongOrder">
+		insert into cs_long_order$suffix$
+		(
+			cs_long_order$suffix$.cslo_host
+			,cs_long_order$suffix$.cslo_pack_no
+			,cs_long_order$suffix$.cslo_member
+			,cs_long_order$suffix$.cslo_pack_profile
+			,cs_long_order$suffix$.cslo_pack_image
+			,cs_long_order$suffix$.cslo_count
+			,cs_long_order$suffix$.cslo_lease_term
+			,cs_long_order$suffix$.cslo_deposit
+			,cs_long_order$suffix$.cslo_pay_cycle
+			,cs_long_order$suffix$.cslo_need_pay
+			,cs_long_order$suffix$.cslo_real_pay
+			,cs_long_order$suffix$.cslo_pact_time
+			,cs_long_order$suffix$.cslo_start_time
+			,cs_long_order$suffix$.cslo_finish_time
+			,cs_long_order$suffix$.cslo_update_time
+			,cs_long_order$suffix$.cslo_add_time
+			,cs_long_order$suffix$.cslo_serial
+			,cs_long_order$suffix$.cslo_remark
+			,cs_long_order$suffix$.cslo_editor
+			,cs_long_order$suffix$.cslo_error
+			,cs_long_order$suffix$.cslo_status
+		)
+		values(
+			<isNotNull property="csloHost" prepend="">
+				#csloHost#
+			</isNotNull>
+			<isNull property="csloHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csloPackNo" prepend=",">
+				#csloPackNo#
+			</isNotNull>
+			<isNull property="csloPackNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloMember" prepend=",">
+				#csloMember#
+			</isNotNull>
+			<isNull property="csloMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloPackProfile" prepend=",">
+				#csloPackProfile#
+			</isNotNull>
+			<isNull property="csloPackProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloPackImage" prepend=",">
+				#csloPackImage#
+			</isNotNull>
+			<isNull property="csloPackImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloCount" prepend=",">
+				#csloCount#
+			</isNotNull>
+			<isNull property="csloCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloLeaseTerm" prepend=",">
+				#csloLeaseTerm#
+			</isNotNull>
+			<isNull property="csloLeaseTerm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloDeposit" prepend=",">
+				#csloDeposit#
+			</isNotNull>
+			<isNull property="csloDeposit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloPayCycle" prepend=",">
+				#csloPayCycle#
+			</isNotNull>
+			<isNull property="csloPayCycle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloNeedPay" prepend=",">
+				#csloNeedPay#
+			</isNotNull>
+			<isNull property="csloNeedPay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloRealPay" prepend=",">
+				#csloRealPay#
+			</isNotNull>
+			<isNull property="csloRealPay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloPactTime" prepend=",">
+				#csloPactTime#
+			</isNotNull>
+			<isNull property="csloPactTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloStartTime" prepend=",">
+				#csloStartTime#
+			</isNotNull>
+			<isNull property="csloStartTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloFinishTime" prepend=",">
+				#csloFinishTime#
+			</isNotNull>
+			<isNull property="csloFinishTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloUpdateTime" prepend=",">
+				#csloUpdateTime#
+			</isNotNull>
+			<isNull property="csloUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloAddTime" prepend=",">
+				#csloAddTime#
+			</isNotNull>
+			<isNull property="csloAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloSerial" prepend=",">
+				#csloSerial#
+			</isNotNull>
+			<isNull property="csloSerial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloRemark" prepend=",">
+				#csloRemark#
+			</isNotNull>
+			<isNull property="csloRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloEditor" prepend=",">
+				#csloEditor#
+			</isNotNull>
+			<isNull property="csloEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloError" prepend=",">
+				#csloError#
+			</isNotNull>
+			<isNull property="csloError" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csloStatus" prepend=",">
+				#csloStatus#
+			</isNotNull>
+			<isNull property="csloStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新长租订单 -->
+	<update id="updateCsLongOrder"  parameterClass="com.ccclubs.model.CsLongOrder">
+		update cs_long_order$suffix$ set
+			<isNotNull property="csloHost" prepend="">
+				cs_long_order$suffix$.cslo_host = #csloHost#
+			</isNotNull>
+			<isNull property="csloHost" prepend="">
+				cs_long_order$suffix$.cslo_host = null
+			</isNull>				
+			<isNotNull property="csloPackNo" prepend=",">
+				cs_long_order$suffix$.cslo_pack_no = #csloPackNo#
+			</isNotNull>
+			<isNull property="csloPackNo" prepend=",">
+				cs_long_order$suffix$.cslo_pack_no = null
+			</isNull>				
+			<isNotNull property="csloMember" prepend=",">
+				cs_long_order$suffix$.cslo_member = #csloMember#
+			</isNotNull>
+			<isNull property="csloMember" prepend=",">
+				cs_long_order$suffix$.cslo_member = null
+			</isNull>				
+			<isNotNull property="csloPackProfile" prepend=",">
+				cs_long_order$suffix$.cslo_pack_profile = #csloPackProfile#
+			</isNotNull>
+			<isNull property="csloPackProfile" prepend=",">
+				cs_long_order$suffix$.cslo_pack_profile = null
+			</isNull>				
+			<isNotNull property="csloPackImage" prepend=",">
+				cs_long_order$suffix$.cslo_pack_image = #csloPackImage#
+			</isNotNull>
+			<isNull property="csloPackImage" prepend=",">
+				cs_long_order$suffix$.cslo_pack_image = null
+			</isNull>				
+			<isNotNull property="csloCount" prepend=",">
+				cs_long_order$suffix$.cslo_count = #csloCount#
+			</isNotNull>
+			<isNull property="csloCount" prepend=",">
+				cs_long_order$suffix$.cslo_count = null
+			</isNull>				
+			<isNotNull property="csloLeaseTerm" prepend=",">
+				cs_long_order$suffix$.cslo_lease_term = #csloLeaseTerm#
+			</isNotNull>
+			<isNull property="csloLeaseTerm" prepend=",">
+				cs_long_order$suffix$.cslo_lease_term = null
+			</isNull>				
+			<isNotNull property="csloDeposit" prepend=",">
+				cs_long_order$suffix$.cslo_deposit = #csloDeposit#
+			</isNotNull>
+			<isNull property="csloDeposit" prepend=",">
+				cs_long_order$suffix$.cslo_deposit = null
+			</isNull>				
+			<isNotNull property="csloPayCycle" prepend=",">
+				cs_long_order$suffix$.cslo_pay_cycle = #csloPayCycle#
+			</isNotNull>
+			<isNull property="csloPayCycle" prepend=",">
+				cs_long_order$suffix$.cslo_pay_cycle = null
+			</isNull>				
+			<isNotNull property="csloNeedPay" prepend=",">
+				cs_long_order$suffix$.cslo_need_pay = #csloNeedPay#
+			</isNotNull>
+			<isNull property="csloNeedPay" prepend=",">
+				cs_long_order$suffix$.cslo_need_pay = null
+			</isNull>				
+			<isNotNull property="csloRealPay" prepend=",">
+				cs_long_order$suffix$.cslo_real_pay = #csloRealPay#
+			</isNotNull>
+			<isNull property="csloRealPay" prepend=",">
+				cs_long_order$suffix$.cslo_real_pay = null
+			</isNull>				
+			<isNotNull property="csloPactTime" prepend=",">
+				cs_long_order$suffix$.cslo_pact_time = #csloPactTime#
+			</isNotNull>
+			<isNull property="csloPactTime" prepend=",">
+				cs_long_order$suffix$.cslo_pact_time = null
+			</isNull>				
+			<isNotNull property="csloStartTime" prepend=",">
+				cs_long_order$suffix$.cslo_start_time = #csloStartTime#
+			</isNotNull>
+			<isNull property="csloStartTime" prepend=",">
+				cs_long_order$suffix$.cslo_start_time = null
+			</isNull>				
+			<isNotNull property="csloFinishTime" prepend=",">
+				cs_long_order$suffix$.cslo_finish_time = #csloFinishTime#
+			</isNotNull>
+			<isNull property="csloFinishTime" prepend=",">
+				cs_long_order$suffix$.cslo_finish_time = null
+			</isNull>				
+			<isNotNull property="csloUpdateTime" prepend=",">
+				cs_long_order$suffix$.cslo_update_time = #csloUpdateTime#
+			</isNotNull>
+			<isNull property="csloUpdateTime" prepend=",">
+				cs_long_order$suffix$.cslo_update_time = null
+			</isNull>				
+			<isNotNull property="csloAddTime" prepend=",">
+				cs_long_order$suffix$.cslo_add_time = #csloAddTime#
+			</isNotNull>
+			<isNull property="csloAddTime" prepend=",">
+				cs_long_order$suffix$.cslo_add_time = null
+			</isNull>				
+			<isNotNull property="csloSerial" prepend=",">
+				cs_long_order$suffix$.cslo_serial = #csloSerial#
+			</isNotNull>
+			<isNull property="csloSerial" prepend=",">
+				cs_long_order$suffix$.cslo_serial = null
+			</isNull>				
+			<isNotNull property="csloRemark" prepend=",">
+				cs_long_order$suffix$.cslo_remark = #csloRemark#
+			</isNotNull>
+			<isNull property="csloRemark" prepend=",">
+				cs_long_order$suffix$.cslo_remark = null
+			</isNull>				
+			<isNotNull property="csloEditor" prepend=",">
+				cs_long_order$suffix$.cslo_editor = #csloEditor#
+			</isNotNull>
+			<isNull property="csloEditor" prepend=",">
+				cs_long_order$suffix$.cslo_editor = null
+			</isNull>				
+			<isNotNull property="csloError" prepend=",">
+				cs_long_order$suffix$.cslo_error = #csloError#
+			</isNotNull>
+			<isNull property="csloError" prepend=",">
+				cs_long_order$suffix$.cslo_error = null
+			</isNull>				
+			<isNotNull property="csloStatus" prepend=",">
+				cs_long_order$suffix$.cslo_status = #csloStatus#
+			</isNotNull>
+			<isNull property="csloStatus" prepend=",">
+				cs_long_order$suffix$.cslo_status = null
+			</isNull>				
+		where
+			cslo_id=#csloId#
+	</update>
+	
+	<!-- 更新长租订单非空字段 -->
+	<update id="updateCsLongOrder$NotNull"  parameterClass="com.ccclubs.model.CsLongOrder">
+		update cs_long_order$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csloHost" prepend=",">
+				cs_long_order$suffix$.cslo_host = #csloHost#
+			</isNotNull>		
+			<isNotNull property="csloPackNo" prepend=",">
+				cs_long_order$suffix$.cslo_pack_no = #csloPackNo#
+			</isNotNull>		
+			<isNotNull property="csloMember" prepend=",">
+				cs_long_order$suffix$.cslo_member = #csloMember#
+			</isNotNull>		
+			<isNotNull property="csloPackProfile" prepend=",">
+				cs_long_order$suffix$.cslo_pack_profile = #csloPackProfile#
+			</isNotNull>		
+			<isNotNull property="csloPackImage" prepend=",">
+				cs_long_order$suffix$.cslo_pack_image = #csloPackImage#
+			</isNotNull>		
+			<isNotNull property="csloCount" prepend=",">
+				cs_long_order$suffix$.cslo_count = #csloCount#
+			</isNotNull>		
+			<isNotNull property="csloLeaseTerm" prepend=",">
+				cs_long_order$suffix$.cslo_lease_term = #csloLeaseTerm#
+			</isNotNull>		
+			<isNotNull property="csloDeposit" prepend=",">
+				cs_long_order$suffix$.cslo_deposit = #csloDeposit#
+			</isNotNull>		
+			<isNotNull property="csloPayCycle" prepend=",">
+				cs_long_order$suffix$.cslo_pay_cycle = #csloPayCycle#
+			</isNotNull>		
+			<isNotNull property="csloNeedPay" prepend=",">
+				cs_long_order$suffix$.cslo_need_pay = #csloNeedPay#
+			</isNotNull>		
+			<isNotNull property="csloRealPay" prepend=",">
+				cs_long_order$suffix$.cslo_real_pay = #csloRealPay#
+			</isNotNull>		
+			<isNotNull property="csloPactTime" prepend=",">
+				cs_long_order$suffix$.cslo_pact_time = #csloPactTime#
+			</isNotNull>		
+			<isNotNull property="csloStartTime" prepend=",">
+				cs_long_order$suffix$.cslo_start_time = #csloStartTime#
+			</isNotNull>		
+			<isNotNull property="csloFinishTime" prepend=",">
+				cs_long_order$suffix$.cslo_finish_time = #csloFinishTime#
+			</isNotNull>		
+			<isNotNull property="csloUpdateTime" prepend=",">
+				cs_long_order$suffix$.cslo_update_time = #csloUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csloAddTime" prepend=",">
+				cs_long_order$suffix$.cslo_add_time = #csloAddTime#
+			</isNotNull>		
+			<isNotNull property="csloSerial" prepend=",">
+				cs_long_order$suffix$.cslo_serial = #csloSerial#
+			</isNotNull>		
+			<isNotNull property="csloRemark" prepend=",">
+				cs_long_order$suffix$.cslo_remark = #csloRemark#
+			</isNotNull>		
+			<isNotNull property="csloEditor" prepend=",">
+				cs_long_order$suffix$.cslo_editor = #csloEditor#
+			</isNotNull>		
+			<isNotNull property="csloError" prepend=",">
+				cs_long_order$suffix$.cslo_error = #csloError#
+			</isNotNull>		
+			<isNotNull property="csloStatus" prepend=",">
+				cs_long_order$suffix$.cslo_status = #csloStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cslo_id=#csloId#
+	</update>
+	
+
+	<!-- 根据ID删除一个长租订单 -->
+	<delete id="deleteCsLongOrderById" parameterClass="java.util.HashMap">
+		delete from cs_long_order$suffix$ where cslo_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个长租订单 -->
+	<update id="removeCsLongOrderById" parameterClass="java.util.HashMap">
+		update cs_long_order$suffix$ set  cs_long_order$suffix$.cslo_status=-1  where cslo_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新长租订单 -->
+	<update id="updateCsLongOrderBy"  parameterClass="java.util.HashMap">
+		update cs_long_order$suffix$ set		
+			cslo_id=cslo_id
+			<isNotNull property="V_csloId" prepend=",">
+				cs_long_order$suffix$.cslo_id = #V_csloId#
+			</isNotNull>		
+			<isNotNull property="V_csloHost" prepend=",">
+				cs_long_order$suffix$.cslo_host = #V_csloHost#
+			</isNotNull>		
+			<isNotNull property="V_csloPackNo" prepend=",">
+				cs_long_order$suffix$.cslo_pack_no = #V_csloPackNo#
+			</isNotNull>		
+			<isNotNull property="V_csloMember" prepend=",">
+				cs_long_order$suffix$.cslo_member = #V_csloMember#
+			</isNotNull>		
+			<isNotNull property="V_csloPackProfile" prepend=",">
+				cs_long_order$suffix$.cslo_pack_profile = #V_csloPackProfile#
+			</isNotNull>		
+			<isNotNull property="V_csloPackImage" prepend=",">
+				cs_long_order$suffix$.cslo_pack_image = #V_csloPackImage#
+			</isNotNull>		
+			<isNotNull property="V_csloCount" prepend=",">
+				cs_long_order$suffix$.cslo_count = #V_csloCount#
+			</isNotNull>		
+			<isNotNull property="V_csloLeaseTerm" prepend=",">
+				cs_long_order$suffix$.cslo_lease_term = #V_csloLeaseTerm#
+			</isNotNull>		
+			<isNotNull property="V_csloDeposit" prepend=",">
+				cs_long_order$suffix$.cslo_deposit = #V_csloDeposit#
+			</isNotNull>		
+			<isNotNull property="V_csloPayCycle" prepend=",">
+				cs_long_order$suffix$.cslo_pay_cycle = #V_csloPayCycle#
+			</isNotNull>		
+			<isNotNull property="V_csloNeedPay" prepend=",">
+				cs_long_order$suffix$.cslo_need_pay = #V_csloNeedPay#
+			</isNotNull>		
+			<isNotNull property="V_csloRealPay" prepend=",">
+				cs_long_order$suffix$.cslo_real_pay = #V_csloRealPay#
+			</isNotNull>		
+			<isNotNull property="V_csloPactTime" prepend=",">
+				cs_long_order$suffix$.cslo_pact_time = #V_csloPactTime#
+			</isNotNull>		
+			<isNotNull property="V_csloStartTime" prepend=",">
+				cs_long_order$suffix$.cslo_start_time = #V_csloStartTime#
+			</isNotNull>		
+			<isNotNull property="V_csloFinishTime" prepend=",">
+				cs_long_order$suffix$.cslo_finish_time = #V_csloFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_csloUpdateTime" prepend=",">
+				cs_long_order$suffix$.cslo_update_time = #V_csloUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csloAddTime" prepend=",">
+				cs_long_order$suffix$.cslo_add_time = #V_csloAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csloSerial" prepend=",">
+				cs_long_order$suffix$.cslo_serial = #V_csloSerial#
+			</isNotNull>		
+			<isNotNull property="V_csloRemark" prepend=",">
+				cs_long_order$suffix$.cslo_remark = #V_csloRemark#
+			</isNotNull>		
+			<isNotNull property="V_csloEditor" prepend=",">
+				cs_long_order$suffix$.cslo_editor = #V_csloEditor#
+			</isNotNull>		
+			<isNotNull property="V_csloError" prepend=",">
+				cs_long_order$suffix$.cslo_error = #V_csloError#
+			</isNotNull>		
+			<isNotNull property="V_csloStatus" prepend=",">
+				cs_long_order$suffix$.cslo_status = #V_csloStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.cslo_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_long_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_long_order$suffix$.cslo_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsloMember"><!-- 调用一下CsloMember，把CsMember指向CsloMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLongOrder_part.cs_long_order_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除长租订单 -->
+	<update id="deleteCsLongOrderBy"  parameterClass="java.util.HashMap">
+		delete from cs_long_order$suffix$ where 
+		cs_long_order$suffix$.cslo_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLongOrder_part.cs_long_order_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

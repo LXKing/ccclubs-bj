@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsScheduling_part">	
+	<!-- 车辆调度条件sql片段  -->
+	<sql id="cs_scheduling_dynamic">
+		<dynamic>
+			<isNotEmpty property="cssId" prepend="and">
+			    $cssIdNot$ cs_scheduling$suffix$.css_id = #cssId#
+			</isNotEmpty>
+			<isNotNull property="cssIdNot" prepend="and">
+				<isEmpty property="cssId">
+				$cssIdNot$ cs_scheduling$suffix$.css_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_scheduling$suffix$.css_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cssHost" prepend="and">
+			    $cssHostNot$ cs_scheduling$suffix$.css_host = #cssHost#
+			</isNotEmpty>
+			<isNotNull property="cssHostNot" prepend="and">
+				<isEmpty property="cssHost">
+				$cssHostNot$ cs_scheduling$suffix$.css_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cssOutlets" prepend="and">
+			    $cssOutletsNot$ cs_scheduling$suffix$.css_outlets = #cssOutlets#
+			</isNotEmpty>
+			<isNotNull property="cssOutletsNot" prepend="and">
+				<isEmpty property="cssOutlets">
+				$cssOutletsNot$ cs_scheduling$suffix$.css_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssCar" prepend="and">
+			    $cssCarNot$ cs_scheduling$suffix$.css_car = #cssCar#
+			</isNotEmpty>
+			<isNotNull property="cssCarNot" prepend="and">
+				<isEmpty property="cssCar">
+				$cssCarNot$ cs_scheduling$suffix$.css_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssTimeStart" prepend="and">
+			    $cssTimeNot$   (cs_scheduling$suffix$.css_time &gt;= #cssTimeStart#
+			   <isEmpty property="cssTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssTimeEnd" prepend="and">
+				<isEmpty property="cssTimeStart">$cssTimeNot$   (</isEmpty>
+			    cs_scheduling$suffix$.css_time &lt;= #cssTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssTime" prepend="and">
+			    $cssTimeNot$ cs_scheduling$suffix$.css_time = #cssTime#
+			</isNotEmpty>
+			<isNotNull property="cssTimeNot" prepend="and">
+				<isEmpty property="cssTimeStart"><isEmpty property="cssTimeEnd"><isEmpty property="cssTime">
+				$cssTimeNot$ cs_scheduling$suffix$.css_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssType" prepend="and">
+			    $cssTypeNot$ cs_scheduling$suffix$.css_type = #cssType#
+			</isNotEmpty>
+			<isNotNull property="cssTypeNot" prepend="and">
+				<isEmpty property="cssType">
+				$cssTypeNot$ cs_scheduling$suffix$.css_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssDir" prepend="and">
+			    $cssDirNot$ cs_scheduling$suffix$.css_dir = #cssDir#
+			</isNotEmpty>
+			<isNotNull property="cssDirNot" prepend="and">
+				<isEmpty property="cssDir">
+				$cssDirNot$ cs_scheduling$suffix$.css_dir is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssExplain" prepend="and">			    
+			    (<isNotNull property="cssExplainNot">
+			    cs_scheduling$suffix$.css_explain is null or length(cs_scheduling$suffix$.css_explain) &lt; 1 or
+			    </isNotNull>$cssExplainNot$ cs_scheduling$suffix$.css_explain like #cssExplain#)
+			</isNotEmpty>
+			<isNotNull property="cssExplainNot" prepend="and">
+				<isEmpty property="cssExplain">
+				$cssExplainNot$ (cs_scheduling$suffix$.css_explain is null or length(cs_scheduling$suffix$.css_explain) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssOrder" prepend="and">
+			    $cssOrderNot$ cs_scheduling$suffix$.css_order = #cssOrder#
+			</isNotEmpty>
+			<isNotNull property="cssOrderNot" prepend="and">
+				<isEmpty property="cssOrder">
+				$cssOrderNot$ cs_scheduling$suffix$.css_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssOperator" prepend="and">
+			    $cssOperatorNot$ cs_scheduling$suffix$.css_operator = #cssOperator#
+			</isNotEmpty>
+			<isNotNull property="cssOperatorNot" prepend="and">
+				<isEmpty property="cssOperator">
+				$cssOperatorNot$ cs_scheduling$suffix$.css_operator is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssStatus" prepend="and">
+			    $cssStatusNot$ cs_scheduling$suffix$.css_status = #cssStatus#
+			</isNotEmpty>
+			<isNotNull property="cssStatusNot" prepend="and">
+				<isEmpty property="cssStatus">
+				$cssStatusNot$ cs_scheduling$suffix$.css_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆调度left join 条件sql片段 -->
+	<sql id="cs_scheduling_join">
+		<dynamic>
+			<isNotEmpty property="CsScheduling.cssId" prepend="and">
+			    $CsScheduling.cssIdNot$ cs_scheduling$CsScheduling.suffix$.css_id = #CsScheduling.cssId#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssIdNot" prepend="and">
+				<isEmpty property="CsScheduling.cssId">
+				$cssIdNot$ cs_scheduling$CsScheduling.suffix$.css_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_scheduling$CsScheduling.suffix$.css_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsScheduling.cssHost" prepend="and">
+			    $CsScheduling.cssHostNot$ cs_scheduling$CsScheduling.suffix$.css_host = #CsScheduling.cssHost#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssHostNot" prepend="and">
+				<isEmpty property="CsScheduling.cssHost">
+				$cssHostNot$ cs_scheduling$CsScheduling.suffix$.css_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssOutlets" prepend="and">
+			    $CsScheduling.cssOutletsNot$ cs_scheduling$CsScheduling.suffix$.css_outlets = #CsScheduling.cssOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssOutletsNot" prepend="and">
+				<isEmpty property="CsScheduling.cssOutlets">
+				$cssOutletsNot$ cs_scheduling$CsScheduling.suffix$.css_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssCar" prepend="and">
+			    $CsScheduling.cssCarNot$ cs_scheduling$CsScheduling.suffix$.css_car = #CsScheduling.cssCar#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssCarNot" prepend="and">
+				<isEmpty property="CsScheduling.cssCar">
+				$cssCarNot$ cs_scheduling$CsScheduling.suffix$.css_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssTimeStart" prepend="and">
+			    $CsScheduling.cssTimeNot$   (cs_scheduling$CsScheduling.suffix$.css_time &gt;= #CsScheduling.cssTimeStart#
+			   <isEmpty property="CsScheduling.cssTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsScheduling.cssTimeEnd" prepend="and">
+				<isEmpty property="CsScheduling.cssTimeStart">$CsScheduling.cssTimeNot$   (</isEmpty>
+			    cs_scheduling$CsScheduling.suffix$.css_time &lt;= #CsScheduling.cssTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsScheduling.cssTime" prepend="and">
+			    $CsScheduling.cssTimeNot$ cs_scheduling$CsScheduling.suffix$.css_time = #CsScheduling.cssTime#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssTimeNot" prepend="and">
+				<isEmpty property="CsScheduling.cssTimeStart"><isEmpty property="CsScheduling.cssTimeEnd"><isEmpty property="CsScheduling.cssTime">
+				$cssTimeNot$ cs_scheduling$CsScheduling.suffix$.css_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssType" prepend="and">
+			    $CsScheduling.cssTypeNot$ cs_scheduling$CsScheduling.suffix$.css_type = #CsScheduling.cssType#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssTypeNot" prepend="and">
+				<isEmpty property="CsScheduling.cssType">
+				$cssTypeNot$ cs_scheduling$CsScheduling.suffix$.css_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssDir" prepend="and">
+			    $CsScheduling.cssDirNot$ cs_scheduling$CsScheduling.suffix$.css_dir = #CsScheduling.cssDir#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssDirNot" prepend="and">
+				<isEmpty property="CsScheduling.cssDir">
+				$cssDirNot$ cs_scheduling$CsScheduling.suffix$.css_dir is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssExplain" prepend="and">
+				(<isNotNull property="CsScheduling.cssExplainNot">
+			    cs_scheduling$CsScheduling.suffix$.css_explain is null or length(cs_scheduling$CsScheduling.suffix$.css_explain) &lt; 1 or
+			    </isNotNull>$CsScheduling.cssExplainNot$ cs_scheduling$CsScheduling.suffix$.css_explain like #CsScheduling.cssExplain#)
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssExplainNot" prepend="and">
+				<isEmpty property="CsScheduling.cssExplain">
+				$cssExplainNot$ (cs_scheduling$CsScheduling.suffix$.css_explain is null or length(cs_scheduling$CsScheduling.suffix$.css_explain) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssOrder" prepend="and">
+			    $CsScheduling.cssOrderNot$ cs_scheduling$CsScheduling.suffix$.css_order = #CsScheduling.cssOrder#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssOrderNot" prepend="and">
+				<isEmpty property="CsScheduling.cssOrder">
+				$cssOrderNot$ cs_scheduling$CsScheduling.suffix$.css_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssOperator" prepend="and">
+			    $CsScheduling.cssOperatorNot$ cs_scheduling$CsScheduling.suffix$.css_operator = #CsScheduling.cssOperator#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssOperatorNot" prepend="and">
+				<isEmpty property="CsScheduling.cssOperator">
+				$cssOperatorNot$ cs_scheduling$CsScheduling.suffix$.css_operator is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsScheduling.cssStatus" prepend="and">
+			    $CsScheduling.cssStatusNot$ cs_scheduling$CsScheduling.suffix$.css_status = #CsScheduling.cssStatus#
+			</isNotEmpty>
+			<isNotNull property="CsScheduling.cssStatusNot" prepend="and">
+				<isEmpty property="CsScheduling.cssStatus">
+				$cssStatusNot$ cs_scheduling$CsScheduling.suffix$.css_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

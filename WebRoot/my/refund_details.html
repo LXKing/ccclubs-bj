@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>查看退款状态${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.result.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/sunshine-road.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-global-cont">
+			<%@ include file="/include/nav.html"%>
+
+			<div id="ccc-container" class="ccc-grid-780">
+
+				<div class="ccc-paper ccc-refund">
+					<s:if test="#request.csRefund!=null">
+						<div class="ccc-result-cont ccc-clearfix">
+							<div class="ccc-header-linear-bg"></div>
+							<p class="ccc-result-tips">
+								<i></i>申请退款已提交， 等待工作人员处理
+							</p>
+							<div class="ccc-result-divider extended">
+								<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+							</div>
+							<div class="ccc-resultstep ccc-clearfix ccc-resultstep-three">
+								<ul>
+									<li class="ccc-resultstep-item ccc-resultstep-first ccc-resultstep-finish">
+										<div class="ccc-resulstep-txt">
+											<span class="tit">退款申请</span>
+											<span class="desc ccc-font-lato">${lz:date(csRefund.csrAddTime,"MM月dd日 HH:mm")} </span>
+										</div>
+										<div class="ccc-resultstep-icon">
+										</div>
+									</li>
+									<li class="ccc-resultstep-item ccc-resultstep-current">
+										<div class="ccc-resulstep-txt">
+											<span class="tit">工作人员处理</span>
+											<span class="desc ccc-font-lato">${lz:date(csRefund.csrCheckTime,"MM月dd日 08:45")}</span>
+										</div>
+										<div class="ccc-resultstep-icon"></div>
+									</li>
+									<li class="ccc-resultstep-item ccc-resultstep-last">
+										<div class="ccc-resulstep-txt">
+											<span class="tit">退款成功</span>
+											<span class="desc ccc-font-lato">${lz:date(csRefund.csrEndTime,"MM月dd日 23:59")} 前</span>
+										</div>
+										<div class="ccc-resultstep-icon"></div>
+									</li>
+								</ul>
+							</div>
+							<s:if test="!#request.nodetails">
+								<div class="ccc-result-divider extended margin">
+									<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+								</div>
+								<p class="ccc-refund-tips">
+									* 你的退款将通过以下渠道退还给你，请注意查收，支付宝可能还需要1-3个工作日才能处理完成。
+								</p>
+								<table class="ccc-refund-table" width="100%">
+									<colgroup>
+										<col width="172">
+										<col width="130">
+										<col width="">
+										<col width="">
+										<col width="112">
+									</colgroup>
+									<thead>
+										<tr>
+											<th class="number">
+												支付宝交易号
+											</th>
+											<th class="time">
+												充值时间
+											</th>
+											<th class="recAmount">
+												充值金额
+											</th>
+											<th class="type">
+												充值方式
+											</th>
+											<th class="ablAmount">
+												预计退还金额
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<s:iterator value="#request.refundsList" id="item" status="i">
+											<s:if test="#i.modulus(2) == 1">
+												<tr>
+											</s:if>
+											<s:else>
+												<tr class="split">
+											</s:else>
+											<td class="number">
+												${item.csarAlipayNo}
+											</td>
+											<td class="time">
+												${lz:date(item.csarAddTime,'yyyy-MM-dd , HH:mm')}
+											</td>
+											<td class="recAmount">
+												${lz:digit(item.csarAmount,2)}
+											</td>
+											<td class="type">
+												<s:if test="#item.csarPayMethod.equals('directPay')">
+													<p>
+														支付宝
+													</p>
+													<p>
+														${cc:emailConvert2Star(item.csarBuyerAccount)}
+													</p>
+												</s:if>
+												<s:if test="#item.csarPayMethod.equals('bankPay')">
+														${cc:convertBank(item.csarBlank)}
+												</s:if>
+											</td>
+											<td class="ablAmount">
+												${lz:digit(item.csarRefund,2)}
+											</td>
+											</tr>
+										</s:iterator>
+									</tbody>
+								</table>
+								<div class="ccc-refund-total">
+									<em></em><span>总计：</span><span class="ccc-num ccc-font-lato">${lz:digit(member.csmMoney,2)}</span>
+								</div>
+							</s:if>
+						</div>
+					</s:if>
+					<s:else>
+						<div class="ccc-result-cont ccc-clearfix">
+							<div class="ccc-header-linear-bg"></div>
+							<p class="ccc-result-tips error">
+								<i></i>亲，你没有退款记录哦～
+							</p>
+							<div class="ccc-result-divider extended">
+								<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+							</div>
+							<div class="ccc-guidance">
+								<div class="ccc-title">
+									你可以在车纷享：
+								</div>
+								<ul>
+									<li class="ccc-guidance-item">
+										<a href="/my/discount.html" title="购买现金券">
+											<div class="ccc-title">
+												购买现金券
+											</div> <img src="/images/illustrations/coupon.png" /> </a>
+									</li>
+									<li class="ccc-guidance-item">
+										<a href="/my/discount.html" title="购买超值套餐">
+											<div class="ccc-title">
+												购买超值套餐
+											</div> <img src="/images/illustrations/packages.png" /> </a>
+									</li>
+									<li class="ccc-guidance-item">
+										<a href="/reserve.html" title="预订车辆">
+											<div class="ccc-title">
+												预订车辆
+											</div> <img src="/images/illustrations/reserve.png" /> </a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</s:else>
+					<div class="ccc-result-divider">
+						<em></em>
+						<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+					</div>
+					<div class="ccc-result-opt">
+						<a href="/my/index.html" class="ccc-btn-trans">返回个人中心</a>
+						<a href="/" class="ccc-btn-trans">车纷享首页</a>
+					</div>
+				</div>
+
+			</div>
+
+			<footer id="ccc-footer">
+			</footer>
+
+		</div>
+
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+
+	</body>
+</html>

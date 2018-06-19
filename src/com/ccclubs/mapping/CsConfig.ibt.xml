@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统配置(城市)之SQL映射 -->
+	<resultMap id="CsConfig" class="com.ccclubs.model.CsConfig">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscHost" column="csc_host"/>
+		<result property="cscLimitPower" column="csc_limit_power"/>
+		<result property="cscFlags" column="csc_flags"/>
+		<result property="cscAddress" column="csc_address"/>
+		<result property="cscSvrNumber" column="csc_svr_number"/>
+		<result property="cscSrvQqGroup" column="csc_srv_qq_group"/>
+		<result property="cscBanners" column="csc_banners"/>
+	</resultMap>
+		
+	<!-- 获取所有系统配置(城市) -->
+	<select id="getCsConfigList" resultMap="CsConfig">
+		select cs_config$suffix$.* from cs_config$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsConfig_part.cs_config_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统配置(城市)分页 -->
+	<select id="getCsConfigPage" parameterClass="java.util.HashMap" resultMap="CsConfig">
+		select cs_config$suffix$.* from cs_config$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsConfig_part.cs_config_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统配置(城市)总数 -->
+	<select id="getCsConfigEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_config$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsConfig_part.cs_config_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统配置(城市) -->
+	<select id="getCsConfigById" parameterClass="java.util.HashMap" resultMap="CsConfig">
+		select cs_config$suffix$.* from cs_config$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统配置(城市) -->
+	<insert id="saveCsConfig"  parameterClass="com.ccclubs.model.CsConfig">
+		insert into cs_config$suffix$
+		(
+			cs_config$suffix$.csc_host
+			,cs_config$suffix$.csc_limit_power
+			,cs_config$suffix$.csc_flags
+			,cs_config$suffix$.csc_address
+			,cs_config$suffix$.csc_svr_number
+			,cs_config$suffix$.csc_srv_qq_group
+			,cs_config$suffix$.csc_banners
+		)
+		values(
+			<isNotNull property="cscHost" prepend="">
+				#cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscLimitPower" prepend=",">
+				#cscLimitPower#
+			</isNotNull>
+			<isNull property="cscLimitPower" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscFlags" prepend=",">
+				#cscFlags#
+			</isNotNull>
+			<isNull property="cscFlags" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddress" prepend=",">
+				#cscAddress#
+			</isNotNull>
+			<isNull property="cscAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscSvrNumber" prepend=",">
+				#cscSvrNumber#
+			</isNotNull>
+			<isNull property="cscSvrNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscSrvQqGroup" prepend=",">
+				#cscSrvQqGroup#
+			</isNotNull>
+			<isNull property="cscSrvQqGroup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBanners" prepend=",">
+				#cscBanners#
+			</isNotNull>
+			<isNull property="cscBanners" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统配置(城市) -->
+	<update id="updateCsConfig"  parameterClass="com.ccclubs.model.CsConfig">
+		update cs_config$suffix$ set
+			<isNotNull property="cscHost" prepend="">
+				cs_config$suffix$.csc_host = #cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				cs_config$suffix$.csc_host = null
+			</isNull>				
+			<isNotNull property="cscLimitPower" prepend=",">
+				cs_config$suffix$.csc_limit_power = #cscLimitPower#
+			</isNotNull>
+			<isNull property="cscLimitPower" prepend=",">
+				cs_config$suffix$.csc_limit_power = null
+			</isNull>				
+			<isNotNull property="cscFlags" prepend=",">
+				cs_config$suffix$.csc_flags = #cscFlags#
+			</isNotNull>
+			<isNull property="cscFlags" prepend=",">
+				cs_config$suffix$.csc_flags = null
+			</isNull>				
+			<isNotNull property="cscAddress" prepend=",">
+				cs_config$suffix$.csc_address = #cscAddress#
+			</isNotNull>
+			<isNull property="cscAddress" prepend=",">
+				cs_config$suffix$.csc_address = null
+			</isNull>				
+			<isNotNull property="cscSvrNumber" prepend=",">
+				cs_config$suffix$.csc_svr_number = #cscSvrNumber#
+			</isNotNull>
+			<isNull property="cscSvrNumber" prepend=",">
+				cs_config$suffix$.csc_svr_number = null
+			</isNull>				
+			<isNotNull property="cscSrvQqGroup" prepend=",">
+				cs_config$suffix$.csc_srv_qq_group = #cscSrvQqGroup#
+			</isNotNull>
+			<isNull property="cscSrvQqGroup" prepend=",">
+				cs_config$suffix$.csc_srv_qq_group = null
+			</isNull>				
+			<isNotNull property="cscBanners" prepend=",">
+				cs_config$suffix$.csc_banners = #cscBanners#
+			</isNotNull>
+			<isNull property="cscBanners" prepend=",">
+				cs_config$suffix$.csc_banners = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新系统配置(城市)非空字段 -->
+	<update id="updateCsConfig$NotNull"  parameterClass="com.ccclubs.model.CsConfig">
+		update cs_config$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscHost" prepend=",">
+				cs_config$suffix$.csc_host = #cscHost#
+			</isNotNull>		
+			<isNotNull property="cscLimitPower" prepend=",">
+				cs_config$suffix$.csc_limit_power = #cscLimitPower#
+			</isNotNull>		
+			<isNotNull property="cscFlags" prepend=",">
+				cs_config$suffix$.csc_flags = #cscFlags#
+			</isNotNull>		
+			<isNotNull property="cscAddress" prepend=",">
+				cs_config$suffix$.csc_address = #cscAddress#
+			</isNotNull>		
+			<isNotNull property="cscSvrNumber" prepend=",">
+				cs_config$suffix$.csc_svr_number = #cscSvrNumber#
+			</isNotNull>		
+			<isNotNull property="cscSrvQqGroup" prepend=",">
+				cs_config$suffix$.csc_srv_qq_group = #cscSrvQqGroup#
+			</isNotNull>		
+			<isNotNull property="cscBanners" prepend=",">
+				cs_config$suffix$.csc_banners = #cscBanners#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统配置(城市) -->
+	<delete id="deleteCsConfigById" parameterClass="java.util.HashMap">
+		delete from cs_config$suffix$ where csc_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新系统配置(城市) -->
+	<update id="updateCsConfigBy"  parameterClass="java.util.HashMap">
+		update cs_config$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_config$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscHost" prepend=",">
+				cs_config$suffix$.csc_host = #V_cscHost#
+			</isNotNull>		
+			<isNotNull property="V_cscLimitPower" prepend=",">
+				cs_config$suffix$.csc_limit_power = #V_cscLimitPower#
+			</isNotNull>		
+			<isNotNull property="V_cscFlags" prepend=",">
+				cs_config$suffix$.csc_flags = #V_cscFlags#
+			</isNotNull>		
+			<isNotNull property="V_cscAddress" prepend=",">
+				cs_config$suffix$.csc_address = #V_cscAddress#
+			</isNotNull>		
+			<isNotNull property="V_cscSvrNumber" prepend=",">
+				cs_config$suffix$.csc_svr_number = #V_cscSvrNumber#
+			</isNotNull>		
+			<isNotNull property="V_cscSrvQqGroup" prepend=",">
+				cs_config$suffix$.csc_srv_qq_group = #V_cscSrvQqGroup#
+			</isNotNull>		
+			<isNotNull property="V_cscBanners" prepend=",">
+				cs_config$suffix$.csc_banners = #V_cscBanners#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsConfig_part.cs_config_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统配置(城市) -->
+	<update id="deleteCsConfigBy"  parameterClass="java.util.HashMap">
+		delete from cs_config$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsConfig_part.cs_config_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 独立IP访问之SQL映射 -->
+	<resultMap id="CsVisitIp" class="com.ccclubs.model.CsVisitIp">
+		<result property="csviId" column="csvi_id"/>
+		<result property="csviHost" column="csvi_host"/>
+		<result property="csviAddress" column="csvi_address"/>
+		<result property="csviChannel" column="csvi_channel"/>
+		<result property="csviPlan" column="csvi_plan"/>
+		<result property="csviActivity" column="csvi_activity"/>
+		<result property="csviUrlFrom" column="csvi_url_from"/>
+		<result property="csviUrlTo" column="csvi_url_to"/>
+		<result property="csviAddTime" column="csvi_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有独立IP访问 -->
+	<select id="getCsVisitIpList" resultMap="CsVisitIp">
+		select cs_visit_ip$suffix$.* from cs_visit_ip$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.csvi_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.csvi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.csvi_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsVisitIp_part.cs_visit_ip_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csvi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取独立IP访问分页 -->
+	<select id="getCsVisitIpPage" parameterClass="java.util.HashMap" resultMap="CsVisitIp">
+		select cs_visit_ip$suffix$.* from cs_visit_ip$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询 -->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.csvi_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询 -->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.csvi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询 -->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.csvi_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsVisitIp_part.cs_visit_ip_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csvi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取独立IP访问总数 -->
+	<select id="getCsVisitIpEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_visit_ip$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.csvi_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.csvi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.csvi_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsVisitIp_part.cs_visit_ip_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取独立IP访问 -->
+	<select id="getCsVisitIpById" parameterClass="java.util.HashMap" resultMap="CsVisitIp">
+		select cs_visit_ip$suffix$.* from cs_visit_ip$suffix$
+		where csvi_id=#id#
+	</select>
+	
+		
+	<!-- 保存独立IP访问 -->
+	<insert id="saveCsVisitIp"  parameterClass="com.ccclubs.model.CsVisitIp">
+		insert into cs_visit_ip$suffix$
+		(
+			cs_visit_ip$suffix$.csvi_host
+			,cs_visit_ip$suffix$.csvi_address
+			,cs_visit_ip$suffix$.csvi_channel
+			,cs_visit_ip$suffix$.csvi_plan
+			,cs_visit_ip$suffix$.csvi_activity
+			,cs_visit_ip$suffix$.csvi_url_from
+			,cs_visit_ip$suffix$.csvi_url_to
+			,cs_visit_ip$suffix$.csvi_add_time
+		)
+		values(
+			<isNotNull property="csviHost" prepend="">
+				#csviHost#
+			</isNotNull>
+			<isNull property="csviHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csviAddress" prepend=",">
+				#csviAddress#
+			</isNotNull>
+			<isNull property="csviAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csviChannel" prepend=",">
+				#csviChannel#
+			</isNotNull>
+			<isNull property="csviChannel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csviPlan" prepend=",">
+				#csviPlan#
+			</isNotNull>
+			<isNull property="csviPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csviActivity" prepend=",">
+				#csviActivity#
+			</isNotNull>
+			<isNull property="csviActivity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csviUrlFrom" prepend=",">
+				#csviUrlFrom#
+			</isNotNull>
+			<isNull property="csviUrlFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csviUrlTo" prepend=",">
+				#csviUrlTo#
+			</isNotNull>
+			<isNull property="csviUrlTo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csviAddTime" prepend=",">
+				#csviAddTime#
+			</isNotNull>
+			<isNull property="csviAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新独立IP访问 -->
+	<update id="updateCsVisitIp"  parameterClass="com.ccclubs.model.CsVisitIp">
+		update cs_visit_ip$suffix$ set
+			<isNotNull property="csviHost" prepend="">
+				cs_visit_ip$suffix$.csvi_host = #csviHost#
+			</isNotNull>
+			<isNull property="csviHost" prepend="">
+				cs_visit_ip$suffix$.csvi_host = null
+			</isNull>				
+			<isNotNull property="csviAddress" prepend=",">
+				cs_visit_ip$suffix$.csvi_address = #csviAddress#
+			</isNotNull>
+			<isNull property="csviAddress" prepend=",">
+				cs_visit_ip$suffix$.csvi_address = null
+			</isNull>				
+			<isNotNull property="csviChannel" prepend=",">
+				cs_visit_ip$suffix$.csvi_channel = #csviChannel#
+			</isNotNull>
+			<isNull property="csviChannel" prepend=",">
+				cs_visit_ip$suffix$.csvi_channel = null
+			</isNull>				
+			<isNotNull property="csviPlan" prepend=",">
+				cs_visit_ip$suffix$.csvi_plan = #csviPlan#
+			</isNotNull>
+			<isNull property="csviPlan" prepend=",">
+				cs_visit_ip$suffix$.csvi_plan = null
+			</isNull>				
+			<isNotNull property="csviActivity" prepend=",">
+				cs_visit_ip$suffix$.csvi_activity = #csviActivity#
+			</isNotNull>
+			<isNull property="csviActivity" prepend=",">
+				cs_visit_ip$suffix$.csvi_activity = null
+			</isNull>				
+			<isNotNull property="csviUrlFrom" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_from = #csviUrlFrom#
+			</isNotNull>
+			<isNull property="csviUrlFrom" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_from = null
+			</isNull>				
+			<isNotNull property="csviUrlTo" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_to = #csviUrlTo#
+			</isNotNull>
+			<isNull property="csviUrlTo" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_to = null
+			</isNull>				
+			<isNotNull property="csviAddTime" prepend=",">
+				cs_visit_ip$suffix$.csvi_add_time = #csviAddTime#
+			</isNotNull>
+			<isNull property="csviAddTime" prepend=",">
+				cs_visit_ip$suffix$.csvi_add_time = null
+			</isNull>				
+		where
+			csvi_id=#csviId#
+	</update>
+	
+	<!-- 更新独立IP访问非空字段 -->
+	<update id="updateCsVisitIp$NotNull"  parameterClass="com.ccclubs.model.CsVisitIp">
+		update cs_visit_ip$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csviHost" prepend=",">
+				cs_visit_ip$suffix$.csvi_host = #csviHost#
+			</isNotNull>		
+			<isNotNull property="csviAddress" prepend=",">
+				cs_visit_ip$suffix$.csvi_address = #csviAddress#
+			</isNotNull>		
+			<isNotNull property="csviChannel" prepend=",">
+				cs_visit_ip$suffix$.csvi_channel = #csviChannel#
+			</isNotNull>		
+			<isNotNull property="csviPlan" prepend=",">
+				cs_visit_ip$suffix$.csvi_plan = #csviPlan#
+			</isNotNull>		
+			<isNotNull property="csviActivity" prepend=",">
+				cs_visit_ip$suffix$.csvi_activity = #csviActivity#
+			</isNotNull>		
+			<isNotNull property="csviUrlFrom" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_from = #csviUrlFrom#
+			</isNotNull>		
+			<isNotNull property="csviUrlTo" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_to = #csviUrlTo#
+			</isNotNull>		
+			<isNotNull property="csviAddTime" prepend=",">
+				cs_visit_ip$suffix$.csvi_add_time = #csviAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csvi_id=#csviId#
+	</update>
+	
+
+	<!-- 根据ID删除一个独立IP访问 -->
+	<delete id="deleteCsVisitIpById" parameterClass="java.util.HashMap">
+		delete from cs_visit_ip$suffix$ where csvi_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新独立IP访问 -->
+	<update id="updateCsVisitIpBy"  parameterClass="java.util.HashMap">
+		update cs_visit_ip$suffix$ set		
+			csvi_id=csvi_id
+			<isNotNull property="V_csviId" prepend=",">
+				cs_visit_ip$suffix$.csvi_id = #V_csviId#
+			</isNotNull>		
+			<isNotNull property="V_csviHost" prepend=",">
+				cs_visit_ip$suffix$.csvi_host = #V_csviHost#
+			</isNotNull>		
+			<isNotNull property="V_csviAddress" prepend=",">
+				cs_visit_ip$suffix$.csvi_address = #V_csviAddress#
+			</isNotNull>		
+			<isNotNull property="V_csviChannel" prepend=",">
+				cs_visit_ip$suffix$.csvi_channel = #V_csviChannel#
+			</isNotNull>		
+			<isNotNull property="V_csviPlan" prepend=",">
+				cs_visit_ip$suffix$.csvi_plan = #V_csviPlan#
+			</isNotNull>		
+			<isNotNull property="V_csviActivity" prepend=",">
+				cs_visit_ip$suffix$.csvi_activity = #V_csviActivity#
+			</isNotNull>		
+			<isNotNull property="V_csviUrlFrom" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_from = #V_csviUrlFrom#
+			</isNotNull>		
+			<isNotNull property="V_csviUrlTo" prepend=",">
+				cs_visit_ip$suffix$.csvi_url_to = #V_csviUrlTo#
+			</isNotNull>		
+			<isNotNull property="V_csviAddTime" prepend=",">
+				cs_visit_ip$suffix$.csvi_add_time = #V_csviAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.csvi_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_visit_ip$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.csvi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_visit_ip$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.csvi_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_visit_ip$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsviChannel"><!-- 调用一下CsviChannel，把CsChannel指向CsviChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsviPlan"><!-- 调用一下CsviPlan，把CsMarketPlan指向CsviPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsviActivity"><!-- 调用一下CsviActivity，把CsActivity指向CsviActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsVisitIp_part.cs_visit_ip_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除独立IP访问 -->
+	<update id="deleteCsVisitIpBy"  parameterClass="java.util.HashMap">
+		delete from cs_visit_ip$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsVisitIp_part.cs_visit_ip_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

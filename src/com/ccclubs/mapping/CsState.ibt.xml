@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆当前状态之SQL映射 -->
+	<resultMap id="CsState" class="com.ccclubs.model.CsState">
+		<result property="cssId" column="css_id"/>
+		<result property="cssHost" column="css_host"/>
+		<result property="cssNumber" column="css_number"/>
+		<result property="cssCar" column="css_car"/>
+		<result property="cssAddTime" column="css_add_time"/>
+		<result property="cssCurrentTime" column="css_current_time"/>
+		<result property="cssRented" column="css_rented"/>
+		<result property="cssWarn" column="css_warn"/>
+		<result property="cssRfid" column="css_rfid"/>
+		<result property="cssRfidDte" column="css_rfid_dte"/>
+		<result property="cssObdMile" column="css_obd_mile"/>
+		<result property="cssEngineT" column="css_engine_t"/>
+		<result property="cssMileage" column="css_mileage"/>
+		<result property="cssSpeed" column="css_speed"/>
+		<result property="cssMotor" column="css_motor"/>
+		<result property="cssOil" column="css_oil"/>
+		<result property="cssPower" column="css_power"/>
+		<result property="cssEvBattery" column="css_ev_battery"/>
+		<result property="cssCharging" column="css_charging"/>
+		<result property="cssFuelMileage" column="css_fuel_mileage"/>
+		<result property="cssElectricMileage" column="css_electric_mileage"/>
+		<result property="cssEndurance" column="css_endurance"/>
+		<result property="cssTemperature" column="css_temperature"/>
+		<result property="cssCsq" column="css_csq"/>
+		<result property="cssPowerConsumption" column="css_power_consumption"/>
+		<result property="cssLongitude" column="css_longitude"/>
+		<result property="cssLatitude" column="css_latitude"/>
+		<result property="cssOrder" column="css_order"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆当前状态 -->
+	<select id="getCsStateList" resultMap="CsState">
+		select cs_state$suffix$.* from cs_state$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsState_part.cs_state_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by css_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆当前状态分页 -->
+	<select id="getCsStatePage" parameterClass="java.util.HashMap" resultMap="CsState">
+		select cs_state$suffix$.* from cs_state$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsState_part.cs_state_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by css_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆当前状态总数 -->
+	<select id="getCsStateEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_state$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsState_part.cs_state_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆当前状态 -->
+	<select id="getCsStateById" parameterClass="java.util.HashMap" resultMap="CsState">
+		select cs_state$suffix$.* from cs_state$suffix$
+		where css_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆当前状态 -->
+	<insert id="saveCsState"  parameterClass="com.ccclubs.model.CsState">
+		insert into cs_state$suffix$
+		(
+			cs_state$suffix$.css_host
+			,cs_state$suffix$.css_number
+			,cs_state$suffix$.css_car
+			,cs_state$suffix$.css_add_time
+			,cs_state$suffix$.css_current_time
+			,cs_state$suffix$.css_rented
+			,cs_state$suffix$.css_warn
+			,cs_state$suffix$.css_rfid
+			,cs_state$suffix$.css_rfid_dte
+			,cs_state$suffix$.css_obd_mile
+			,cs_state$suffix$.css_engine_t
+			,cs_state$suffix$.css_mileage
+			,cs_state$suffix$.css_speed
+			,cs_state$suffix$.css_motor
+			,cs_state$suffix$.css_oil
+			,cs_state$suffix$.css_power
+			,cs_state$suffix$.css_ev_battery
+			,cs_state$suffix$.css_charging
+			,cs_state$suffix$.css_fuel_mileage
+			,cs_state$suffix$.css_electric_mileage
+			,cs_state$suffix$.css_endurance
+			,cs_state$suffix$.css_temperature
+			,cs_state$suffix$.css_csq
+			,cs_state$suffix$.css_power_consumption
+			,cs_state$suffix$.css_longitude
+			,cs_state$suffix$.css_latitude
+			,cs_state$suffix$.css_order
+		)
+		values(
+			<isNotNull property="cssHost" prepend="">
+				#cssHost#
+			</isNotNull>
+			<isNull property="cssHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssNumber" prepend=",">
+				#cssNumber#
+			</isNotNull>
+			<isNull property="cssNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssCar" prepend=",">
+				#cssCar#
+			</isNotNull>
+			<isNull property="cssCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssAddTime" prepend=",">
+				#cssAddTime#
+			</isNotNull>
+			<isNull property="cssAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssCurrentTime" prepend=",">
+				#cssCurrentTime#
+			</isNotNull>
+			<isNull property="cssCurrentTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssRented" prepend=",">
+				#cssRented#
+			</isNotNull>
+			<isNull property="cssRented" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssWarn" prepend=",">
+				#cssWarn#
+			</isNotNull>
+			<isNull property="cssWarn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssRfid" prepend=",">
+				#cssRfid#
+			</isNotNull>
+			<isNull property="cssRfid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssRfidDte" prepend=",">
+				#cssRfidDte#
+			</isNotNull>
+			<isNull property="cssRfidDte" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssObdMile" prepend=",">
+				#cssObdMile#
+			</isNotNull>
+			<isNull property="cssObdMile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssEngineT" prepend=",">
+				#cssEngineT#
+			</isNotNull>
+			<isNull property="cssEngineT" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssMileage" prepend=",">
+				#cssMileage#
+			</isNotNull>
+			<isNull property="cssMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssSpeed" prepend=",">
+				#cssSpeed#
+			</isNotNull>
+			<isNull property="cssSpeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssMotor" prepend=",">
+				#cssMotor#
+			</isNotNull>
+			<isNull property="cssMotor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssOil" prepend=",">
+				#cssOil#
+			</isNotNull>
+			<isNull property="cssOil" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssPower" prepend=",">
+				#cssPower#
+			</isNotNull>
+			<isNull property="cssPower" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssEvBattery" prepend=",">
+				#cssEvBattery#
+			</isNotNull>
+			<isNull property="cssEvBattery" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssCharging" prepend=",">
+				#cssCharging#
+			</isNotNull>
+			<isNull property="cssCharging" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssFuelMileage" prepend=",">
+				#cssFuelMileage#
+			</isNotNull>
+			<isNull property="cssFuelMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssElectricMileage" prepend=",">
+				#cssElectricMileage#
+			</isNotNull>
+			<isNull property="cssElectricMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssEndurance" prepend=",">
+				#cssEndurance#
+			</isNotNull>
+			<isNull property="cssEndurance" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssTemperature" prepend=",">
+				#cssTemperature#
+			</isNotNull>
+			<isNull property="cssTemperature" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssCsq" prepend=",">
+				#cssCsq#
+			</isNotNull>
+			<isNull property="cssCsq" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssPowerConsumption" prepend=",">
+				#cssPowerConsumption#
+			</isNotNull>
+			<isNull property="cssPowerConsumption" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssLongitude" prepend=",">
+				#cssLongitude#
+			</isNotNull>
+			<isNull property="cssLongitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssLatitude" prepend=",">
+				#cssLatitude#
+			</isNotNull>
+			<isNull property="cssLatitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssOrder" prepend=",">
+				#cssOrder#
+			</isNotNull>
+			<isNull property="cssOrder" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆当前状态 -->
+	<update id="updateCsState"  parameterClass="com.ccclubs.model.CsState">
+		update cs_state$suffix$ set
+			<isNotNull property="cssHost" prepend="">
+				cs_state$suffix$.css_host = #cssHost#
+			</isNotNull>
+			<isNull property="cssHost" prepend="">
+				cs_state$suffix$.css_host = null
+			</isNull>				
+			<isNotNull property="cssNumber" prepend=",">
+				cs_state$suffix$.css_number = #cssNumber#
+			</isNotNull>
+			<isNull property="cssNumber" prepend=",">
+				cs_state$suffix$.css_number = null
+			</isNull>				
+			<isNotNull property="cssCar" prepend=",">
+				cs_state$suffix$.css_car = #cssCar#
+			</isNotNull>
+			<isNull property="cssCar" prepend=",">
+				cs_state$suffix$.css_car = null
+			</isNull>				
+			<isNotNull property="cssAddTime" prepend=",">
+				cs_state$suffix$.css_add_time = #cssAddTime#
+			</isNotNull>
+			<isNull property="cssAddTime" prepend=",">
+				cs_state$suffix$.css_add_time = null
+			</isNull>				
+			<isNotNull property="cssCurrentTime" prepend=",">
+				cs_state$suffix$.css_current_time = #cssCurrentTime#
+			</isNotNull>
+			<isNull property="cssCurrentTime" prepend=",">
+				cs_state$suffix$.css_current_time = null
+			</isNull>				
+			<isNotNull property="cssRented" prepend=",">
+				cs_state$suffix$.css_rented = #cssRented#
+			</isNotNull>
+			<isNull property="cssRented" prepend=",">
+				cs_state$suffix$.css_rented = null
+			</isNull>				
+			<isNotNull property="cssWarn" prepend=",">
+				cs_state$suffix$.css_warn = #cssWarn#
+			</isNotNull>
+			<isNull property="cssWarn" prepend=",">
+				cs_state$suffix$.css_warn = null
+			</isNull>				
+			<isNotNull property="cssRfid" prepend=",">
+				cs_state$suffix$.css_rfid = #cssRfid#
+			</isNotNull>
+			<isNull property="cssRfid" prepend=",">
+				cs_state$suffix$.css_rfid = null
+			</isNull>				
+			<isNotNull property="cssRfidDte" prepend=",">
+				cs_state$suffix$.css_rfid_dte = #cssRfidDte#
+			</isNotNull>
+			<isNull property="cssRfidDte" prepend=",">
+				cs_state$suffix$.css_rfid_dte = null
+			</isNull>				
+			<isNotNull property="cssObdMile" prepend=",">
+				cs_state$suffix$.css_obd_mile = #cssObdMile#
+			</isNotNull>
+			<isNull property="cssObdMile" prepend=",">
+				cs_state$suffix$.css_obd_mile = null
+			</isNull>				
+			<isNotNull property="cssEngineT" prepend=",">
+				cs_state$suffix$.css_engine_t = #cssEngineT#
+			</isNotNull>
+			<isNull property="cssEngineT" prepend=",">
+				cs_state$suffix$.css_engine_t = null
+			</isNull>				
+			<isNotNull property="cssMileage" prepend=",">
+				cs_state$suffix$.css_mileage = #cssMileage#
+			</isNotNull>
+			<isNull property="cssMileage" prepend=",">
+				cs_state$suffix$.css_mileage = null
+			</isNull>				
+			<isNotNull property="cssSpeed" prepend=",">
+				cs_state$suffix$.css_speed = #cssSpeed#
+			</isNotNull>
+			<isNull property="cssSpeed" prepend=",">
+				cs_state$suffix$.css_speed = null
+			</isNull>				
+			<isNotNull property="cssMotor" prepend=",">
+				cs_state$suffix$.css_motor = #cssMotor#
+			</isNotNull>
+			<isNull property="cssMotor" prepend=",">
+				cs_state$suffix$.css_motor = null
+			</isNull>				
+			<isNotNull property="cssOil" prepend=",">
+				cs_state$suffix$.css_oil = #cssOil#
+			</isNotNull>
+			<isNull property="cssOil" prepend=",">
+				cs_state$suffix$.css_oil = null
+			</isNull>				
+			<isNotNull property="cssPower" prepend=",">
+				cs_state$suffix$.css_power = #cssPower#
+			</isNotNull>
+			<isNull property="cssPower" prepend=",">
+				cs_state$suffix$.css_power = null
+			</isNull>				
+			<isNotNull property="cssEvBattery" prepend=",">
+				cs_state$suffix$.css_ev_battery = #cssEvBattery#
+			</isNotNull>
+			<isNull property="cssEvBattery" prepend=",">
+				cs_state$suffix$.css_ev_battery = null
+			</isNull>				
+			<isNotNull property="cssCharging" prepend=",">
+				cs_state$suffix$.css_charging = #cssCharging#
+			</isNotNull>
+			<isNull property="cssCharging" prepend=",">
+				cs_state$suffix$.css_charging = null
+			</isNull>				
+			<isNotNull property="cssFuelMileage" prepend=",">
+				cs_state$suffix$.css_fuel_mileage = #cssFuelMileage#
+			</isNotNull>
+			<isNull property="cssFuelMileage" prepend=",">
+				cs_state$suffix$.css_fuel_mileage = null
+			</isNull>				
+			<isNotNull property="cssElectricMileage" prepend=",">
+				cs_state$suffix$.css_electric_mileage = #cssElectricMileage#
+			</isNotNull>
+			<isNull property="cssElectricMileage" prepend=",">
+				cs_state$suffix$.css_electric_mileage = null
+			</isNull>				
+			<isNotNull property="cssEndurance" prepend=",">
+				cs_state$suffix$.css_endurance = #cssEndurance#
+			</isNotNull>
+			<isNull property="cssEndurance" prepend=",">
+				cs_state$suffix$.css_endurance = null
+			</isNull>				
+			<isNotNull property="cssTemperature" prepend=",">
+				cs_state$suffix$.css_temperature = #cssTemperature#
+			</isNotNull>
+			<isNull property="cssTemperature" prepend=",">
+				cs_state$suffix$.css_temperature = null
+			</isNull>				
+			<isNotNull property="cssCsq" prepend=",">
+				cs_state$suffix$.css_csq = #cssCsq#
+			</isNotNull>
+			<isNull property="cssCsq" prepend=",">
+				cs_state$suffix$.css_csq = null
+			</isNull>				
+			<isNotNull property="cssPowerConsumption" prepend=",">
+				cs_state$suffix$.css_power_consumption = #cssPowerConsumption#
+			</isNotNull>
+			<isNull property="cssPowerConsumption" prepend=",">
+				cs_state$suffix$.css_power_consumption = null
+			</isNull>				
+			<isNotNull property="cssLongitude" prepend=",">
+				cs_state$suffix$.css_longitude = #cssLongitude#
+			</isNotNull>
+			<isNull property="cssLongitude" prepend=",">
+				cs_state$suffix$.css_longitude = null
+			</isNull>				
+			<isNotNull property="cssLatitude" prepend=",">
+				cs_state$suffix$.css_latitude = #cssLatitude#
+			</isNotNull>
+			<isNull property="cssLatitude" prepend=",">
+				cs_state$suffix$.css_latitude = null
+			</isNull>				
+			<isNotNull property="cssOrder" prepend=",">
+				cs_state$suffix$.css_order = #cssOrder#
+			</isNotNull>
+			<isNull property="cssOrder" prepend=",">
+				cs_state$suffix$.css_order = null
+			</isNull>				
+		where
+			css_id=#cssId#
+	</update>
+	
+	<!-- 更新车辆当前状态非空字段 -->
+	<update id="updateCsState$NotNull"  parameterClass="com.ccclubs.model.CsState">
+		update cs_state$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssHost" prepend=",">
+				cs_state$suffix$.css_host = #cssHost#
+			</isNotNull>		
+			<isNotNull property="cssNumber" prepend=",">
+				cs_state$suffix$.css_number = #cssNumber#
+			</isNotNull>		
+			<isNotNull property="cssCar" prepend=",">
+				cs_state$suffix$.css_car = #cssCar#
+			</isNotNull>		
+			<isNotNull property="cssAddTime" prepend=",">
+				cs_state$suffix$.css_add_time = #cssAddTime#
+			</isNotNull>		
+			<isNotNull property="cssCurrentTime" prepend=",">
+				cs_state$suffix$.css_current_time = #cssCurrentTime#
+			</isNotNull>		
+			<isNotNull property="cssRented" prepend=",">
+				cs_state$suffix$.css_rented = #cssRented#
+			</isNotNull>		
+			<isNotNull property="cssWarn" prepend=",">
+				cs_state$suffix$.css_warn = #cssWarn#
+			</isNotNull>		
+			<isNotNull property="cssRfid" prepend=",">
+				cs_state$suffix$.css_rfid = #cssRfid#
+			</isNotNull>		
+			<isNotNull property="cssRfidDte" prepend=",">
+				cs_state$suffix$.css_rfid_dte = #cssRfidDte#
+			</isNotNull>		
+			<isNotNull property="cssObdMile" prepend=",">
+				cs_state$suffix$.css_obd_mile = #cssObdMile#
+			</isNotNull>		
+			<isNotNull property="cssEngineT" prepend=",">
+				cs_state$suffix$.css_engine_t = #cssEngineT#
+			</isNotNull>		
+			<isNotNull property="cssMileage" prepend=",">
+				cs_state$suffix$.css_mileage = #cssMileage#
+			</isNotNull>		
+			<isNotNull property="cssSpeed" prepend=",">
+				cs_state$suffix$.css_speed = #cssSpeed#
+			</isNotNull>		
+			<isNotNull property="cssMotor" prepend=",">
+				cs_state$suffix$.css_motor = #cssMotor#
+			</isNotNull>		
+			<isNotNull property="cssOil" prepend=",">
+				cs_state$suffix$.css_oil = #cssOil#
+			</isNotNull>		
+			<isNotNull property="cssPower" prepend=",">
+				cs_state$suffix$.css_power = #cssPower#
+			</isNotNull>		
+			<isNotNull property="cssEvBattery" prepend=",">
+				cs_state$suffix$.css_ev_battery = #cssEvBattery#
+			</isNotNull>		
+			<isNotNull property="cssCharging" prepend=",">
+				cs_state$suffix$.css_charging = #cssCharging#
+			</isNotNull>		
+			<isNotNull property="cssFuelMileage" prepend=",">
+				cs_state$suffix$.css_fuel_mileage = #cssFuelMileage#
+			</isNotNull>		
+			<isNotNull property="cssElectricMileage" prepend=",">
+				cs_state$suffix$.css_electric_mileage = #cssElectricMileage#
+			</isNotNull>		
+			<isNotNull property="cssEndurance" prepend=",">
+				cs_state$suffix$.css_endurance = #cssEndurance#
+			</isNotNull>		
+			<isNotNull property="cssTemperature" prepend=",">
+				cs_state$suffix$.css_temperature = #cssTemperature#
+			</isNotNull>		
+			<isNotNull property="cssCsq" prepend=",">
+				cs_state$suffix$.css_csq = #cssCsq#
+			</isNotNull>		
+			<isNotNull property="cssPowerConsumption" prepend=",">
+				cs_state$suffix$.css_power_consumption = #cssPowerConsumption#
+			</isNotNull>		
+			<isNotNull property="cssLongitude" prepend=",">
+				cs_state$suffix$.css_longitude = #cssLongitude#
+			</isNotNull>		
+			<isNotNull property="cssLatitude" prepend=",">
+				cs_state$suffix$.css_latitude = #cssLatitude#
+			</isNotNull>		
+			<isNotNull property="cssOrder" prepend=",">
+				cs_state$suffix$.css_order = #cssOrder#
+			</isNotNull>		
+			</dynamic>
+		where
+			css_id=#cssId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆当前状态 -->
+	<delete id="deleteCsStateById" parameterClass="java.util.HashMap">
+		delete from cs_state$suffix$ where css_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新车辆当前状态 -->
+	<update id="updateCsStateBy"  parameterClass="java.util.HashMap">
+		update cs_state$suffix$ set		
+			css_id=css_id
+			<isNotNull property="V_cssId" prepend=",">
+				cs_state$suffix$.css_id = #V_cssId#
+			</isNotNull>		
+			<isNotNull property="V_cssHost" prepend=",">
+				cs_state$suffix$.css_host = #V_cssHost#
+			</isNotNull>		
+			<isNotNull property="V_cssNumber" prepend=",">
+				cs_state$suffix$.css_number = #V_cssNumber#
+			</isNotNull>		
+			<isNotNull property="V_cssCar" prepend=",">
+				cs_state$suffix$.css_car = #V_cssCar#
+			</isNotNull>		
+			<isNotNull property="V_cssAddTime" prepend=",">
+				cs_state$suffix$.css_add_time = #V_cssAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssCurrentTime" prepend=",">
+				cs_state$suffix$.css_current_time = #V_cssCurrentTime#
+			</isNotNull>		
+			<isNotNull property="V_cssRented" prepend=",">
+				cs_state$suffix$.css_rented = #V_cssRented#
+			</isNotNull>		
+			<isNotNull property="V_cssWarn" prepend=",">
+				cs_state$suffix$.css_warn = #V_cssWarn#
+			</isNotNull>		
+			<isNotNull property="V_cssRfid" prepend=",">
+				cs_state$suffix$.css_rfid = #V_cssRfid#
+			</isNotNull>		
+			<isNotNull property="V_cssRfidDte" prepend=",">
+				cs_state$suffix$.css_rfid_dte = #V_cssRfidDte#
+			</isNotNull>		
+			<isNotNull property="V_cssObdMile" prepend=",">
+				cs_state$suffix$.css_obd_mile = #V_cssObdMile#
+			</isNotNull>		
+			<isNotNull property="V_cssEngineT" prepend=",">
+				cs_state$suffix$.css_engine_t = #V_cssEngineT#
+			</isNotNull>		
+			<isNotNull property="V_cssMileage" prepend=",">
+				cs_state$suffix$.css_mileage = #V_cssMileage#
+			</isNotNull>		
+			<isNotNull property="V_cssSpeed" prepend=",">
+				cs_state$suffix$.css_speed = #V_cssSpeed#
+			</isNotNull>		
+			<isNotNull property="V_cssMotor" prepend=",">
+				cs_state$suffix$.css_motor = #V_cssMotor#
+			</isNotNull>		
+			<isNotNull property="V_cssOil" prepend=",">
+				cs_state$suffix$.css_oil = #V_cssOil#
+			</isNotNull>		
+			<isNotNull property="V_cssPower" prepend=",">
+				cs_state$suffix$.css_power = #V_cssPower#
+			</isNotNull>		
+			<isNotNull property="V_cssEvBattery" prepend=",">
+				cs_state$suffix$.css_ev_battery = #V_cssEvBattery#
+			</isNotNull>		
+			<isNotNull property="V_cssCharging" prepend=",">
+				cs_state$suffix$.css_charging = #V_cssCharging#
+			</isNotNull>		
+			<isNotNull property="V_cssFuelMileage" prepend=",">
+				cs_state$suffix$.css_fuel_mileage = #V_cssFuelMileage#
+			</isNotNull>		
+			<isNotNull property="V_cssElectricMileage" prepend=",">
+				cs_state$suffix$.css_electric_mileage = #V_cssElectricMileage#
+			</isNotNull>		
+			<isNotNull property="V_cssEndurance" prepend=",">
+				cs_state$suffix$.css_endurance = #V_cssEndurance#
+			</isNotNull>		
+			<isNotNull property="V_cssTemperature" prepend=",">
+				cs_state$suffix$.css_temperature = #V_cssTemperature#
+			</isNotNull>		
+			<isNotNull property="V_cssCsq" prepend=",">
+				cs_state$suffix$.css_csq = #V_cssCsq#
+			</isNotNull>		
+			<isNotNull property="V_cssPowerConsumption" prepend=",">
+				cs_state$suffix$.css_power_consumption = #V_cssPowerConsumption#
+			</isNotNull>		
+			<isNotNull property="V_cssLongitude" prepend=",">
+				cs_state$suffix$.css_longitude = #V_cssLongitude#
+			</isNotNull>		
+			<isNotNull property="V_cssLatitude" prepend=",">
+				cs_state$suffix$.css_latitude = #V_cssLatitude#
+			</isNotNull>		
+			<isNotNull property="V_cssOrder" prepend=",">
+				cs_state$suffix$.css_order = #V_cssOrder#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.css_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_state$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.css_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_state$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CssCar"><!-- 调用一下CssCar，把CsCar指向CssCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CssOrder"><!-- 调用一下CssOrder，把CsOrder指向CssOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsState_part.cs_state_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆当前状态 -->
+	<update id="deleteCsStateBy"  parameterClass="java.util.HashMap">
+		delete from cs_state$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsState_part.cs_state_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 成长分类型之SQL映射 -->
+	<resultMap id="CsGrowType" class="com.ccclubs.model.CsGrowType">
+		<result property="csgtId" column="csgt_id"/>
+		<result property="csgtName" column="csgt_name"/>
+		<result property="csgtIsArtif" column="csgt_is_artif"/>
+		<result property="csgtIsOrder" column="csgt_is_order"/>
+		<result property="csgtValue" column="csgt_value"/>
+		<result property="csgtProfile" column="csgt_profile"/>
+		<result property="csgtStatus" column="csgt_status"/>
+	</resultMap>
+		
+	<!-- 获取所有成长分类型 -->
+	<select id="getCsGrowTypeList" resultMap="CsGrowType">
+		select cs_grow_type$suffix$.* from cs_grow_type$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_grow_type$suffix$.csgt_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGrowType_part.cs_grow_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csgt_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取成长分类型分页 -->
+	<select id="getCsGrowTypePage" parameterClass="java.util.HashMap" resultMap="CsGrowType">
+		select cs_grow_type$suffix$.* from cs_grow_type$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_grow_type$suffix$.csgt_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGrowType_part.cs_grow_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csgt_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取成长分类型总数 -->
+	<select id="getCsGrowTypeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_grow_type$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_grow_type$suffix$.csgt_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGrowType_part.cs_grow_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取成长分类型 -->
+	<select id="getCsGrowTypeById" parameterClass="java.util.HashMap" resultMap="CsGrowType">
+		select cs_grow_type$suffix$.* from cs_grow_type$suffix$
+		where csgt_id=#id#
+	</select>
+	
+		
+	<!-- 保存成长分类型 -->
+	<insert id="saveCsGrowType"  parameterClass="com.ccclubs.model.CsGrowType">
+		insert into cs_grow_type$suffix$
+		(
+			cs_grow_type$suffix$.csgt_name
+			,cs_grow_type$suffix$.csgt_is_artif
+			,cs_grow_type$suffix$.csgt_is_order
+			,cs_grow_type$suffix$.csgt_value
+			,cs_grow_type$suffix$.csgt_profile
+			,cs_grow_type$suffix$.csgt_status
+		)
+		values(
+			<isNotNull property="csgtName" prepend="">
+				#csgtName#
+			</isNotNull>
+			<isNull property="csgtName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csgtIsArtif" prepend=",">
+				#csgtIsArtif#
+			</isNotNull>
+			<isNull property="csgtIsArtif" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgtIsOrder" prepend=",">
+				#csgtIsOrder#
+			</isNotNull>
+			<isNull property="csgtIsOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgtValue" prepend=",">
+				#csgtValue#
+			</isNotNull>
+			<isNull property="csgtValue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgtProfile" prepend=",">
+				#csgtProfile#
+			</isNotNull>
+			<isNull property="csgtProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgtStatus" prepend=",">
+				#csgtStatus#
+			</isNotNull>
+			<isNull property="csgtStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新成长分类型 -->
+	<update id="updateCsGrowType"  parameterClass="com.ccclubs.model.CsGrowType">
+		update cs_grow_type$suffix$ set
+			<isNotNull property="csgtName" prepend="">
+				cs_grow_type$suffix$.csgt_name = #csgtName#
+			</isNotNull>
+			<isNull property="csgtName" prepend="">
+				cs_grow_type$suffix$.csgt_name = null
+			</isNull>				
+			<isNotNull property="csgtIsArtif" prepend=",">
+				cs_grow_type$suffix$.csgt_is_artif = #csgtIsArtif#
+			</isNotNull>
+			<isNull property="csgtIsArtif" prepend=",">
+				cs_grow_type$suffix$.csgt_is_artif = null
+			</isNull>				
+			<isNotNull property="csgtIsOrder" prepend=",">
+				cs_grow_type$suffix$.csgt_is_order = #csgtIsOrder#
+			</isNotNull>
+			<isNull property="csgtIsOrder" prepend=",">
+				cs_grow_type$suffix$.csgt_is_order = null
+			</isNull>				
+			<isNotNull property="csgtValue" prepend=",">
+				cs_grow_type$suffix$.csgt_value = #csgtValue#
+			</isNotNull>
+			<isNull property="csgtValue" prepend=",">
+				cs_grow_type$suffix$.csgt_value = null
+			</isNull>				
+			<isNotNull property="csgtProfile" prepend=",">
+				cs_grow_type$suffix$.csgt_profile = #csgtProfile#
+			</isNotNull>
+			<isNull property="csgtProfile" prepend=",">
+				cs_grow_type$suffix$.csgt_profile = null
+			</isNull>				
+			<isNotNull property="csgtStatus" prepend=",">
+				cs_grow_type$suffix$.csgt_status = #csgtStatus#
+			</isNotNull>
+			<isNull property="csgtStatus" prepend=",">
+				cs_grow_type$suffix$.csgt_status = null
+			</isNull>				
+		where
+			csgt_id=#csgtId#
+	</update>
+	
+	<!-- 更新成长分类型非空字段 -->
+	<update id="updateCsGrowType$NotNull"  parameterClass="com.ccclubs.model.CsGrowType">
+		update cs_grow_type$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csgtName" prepend=",">
+				cs_grow_type$suffix$.csgt_name = #csgtName#
+			</isNotNull>		
+			<isNotNull property="csgtIsArtif" prepend=",">
+				cs_grow_type$suffix$.csgt_is_artif = #csgtIsArtif#
+			</isNotNull>		
+			<isNotNull property="csgtIsOrder" prepend=",">
+				cs_grow_type$suffix$.csgt_is_order = #csgtIsOrder#
+			</isNotNull>		
+			<isNotNull property="csgtValue" prepend=",">
+				cs_grow_type$suffix$.csgt_value = #csgtValue#
+			</isNotNull>		
+			<isNotNull property="csgtProfile" prepend=",">
+				cs_grow_type$suffix$.csgt_profile = #csgtProfile#
+			</isNotNull>		
+			<isNotNull property="csgtStatus" prepend=",">
+				cs_grow_type$suffix$.csgt_status = #csgtStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csgt_id=#csgtId#
+	</update>
+	
+
+	<!-- 根据ID删除一个成长分类型 -->
+	<delete id="deleteCsGrowTypeById" parameterClass="java.util.HashMap">
+		delete from cs_grow_type$suffix$ where csgt_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个成长分类型 -->
+	<update id="removeCsGrowTypeById" parameterClass="java.util.HashMap">
+		update cs_grow_type$suffix$ set  cs_grow_type$suffix$.csgt_status=-1  where csgt_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新成长分类型 -->
+	<update id="updateCsGrowTypeBy"  parameterClass="java.util.HashMap">
+		update cs_grow_type$suffix$ set		
+			csgt_id=csgt_id
+			<isNotNull property="V_csgtId" prepend=",">
+				cs_grow_type$suffix$.csgt_id = #V_csgtId#
+			</isNotNull>		
+			<isNotNull property="V_csgtName" prepend=",">
+				cs_grow_type$suffix$.csgt_name = #V_csgtName#
+			</isNotNull>		
+			<isNotNull property="V_csgtIsArtif" prepend=",">
+				cs_grow_type$suffix$.csgt_is_artif = #V_csgtIsArtif#
+			</isNotNull>		
+			<isNotNull property="V_csgtIsOrder" prepend=",">
+				cs_grow_type$suffix$.csgt_is_order = #V_csgtIsOrder#
+			</isNotNull>		
+			<isNotNull property="V_csgtValue" prepend=",">
+				cs_grow_type$suffix$.csgt_value = #V_csgtValue#
+			</isNotNull>		
+			<isNotNull property="V_csgtProfile" prepend=",">
+				cs_grow_type$suffix$.csgt_profile = #V_csgtProfile#
+			</isNotNull>		
+			<isNotNull property="V_csgtStatus" prepend=",">
+				cs_grow_type$suffix$.csgt_status = #V_csgtStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_grow_type$suffix$.csgt_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsGrowType_part.cs_grow_type_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除成长分类型 -->
+	<update id="deleteCsGrowTypeBy"  parameterClass="java.util.HashMap">
+		delete from cs_grow_type$suffix$ where 
+		cs_grow_type$suffix$.csgt_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsGrowType_part.cs_grow_type_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

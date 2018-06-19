@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 微信上行之SQL映射 -->
+	<resultMap id="CsWxMo" class="com.ccclubs.model.CsWxMo">
+		<result property="cswmId" column="cswm_id"/>
+		<result property="cswmHost" column="cswm_host"/>
+		<result property="cswmPlatform" column="cswm_platform"/>
+		<result property="cswmOpenid" column="cswm_openid"/>
+		<result property="cswmMember" column="cswm_member"/>
+		<result property="cswmMsgType" column="cswm_msg_type"/>
+		<result property="cswmContentType" column="cswm_content_type"/>
+		<result property="cswmContent" column="cswm_content"/>
+		<result property="cswmAddTime" column="cswm_add_time"/>
+		<result property="cswmMask" column="cswm_mask"/>
+		<result property="cswmStatus" column="cswm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有微信上行 -->
+	<select id="getCsWxMoList" resultMap="CsWxMo">
+		select cs_wx_mo$suffix$.* from cs_wx_mo$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.cswm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_wx_mo$suffix$.cswm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxMo_part.cs_wx_mo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取微信上行分页 -->
+	<select id="getCsWxMoPage" parameterClass="java.util.HashMap" resultMap="CsWxMo">
+		select cs_wx_mo$suffix$.* from cs_wx_mo$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.cswm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_wx_mo$suffix$.cswm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxMo_part.cs_wx_mo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cswm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取微信上行总数 -->
+	<select id="getCsWxMoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_wx_mo$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.cswm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_wx_mo$suffix$.cswm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsWxMo_part.cs_wx_mo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取微信上行 -->
+	<select id="getCsWxMoById" parameterClass="java.util.HashMap" resultMap="CsWxMo">
+		select cs_wx_mo$suffix$.* from cs_wx_mo$suffix$
+		where cswm_id=#id#
+	</select>
+	
+		
+	<!-- 保存微信上行 -->
+	<insert id="saveCsWxMo"  parameterClass="com.ccclubs.model.CsWxMo">
+		insert into cs_wx_mo$suffix$
+		(
+			cs_wx_mo$suffix$.cswm_host
+			,cs_wx_mo$suffix$.cswm_platform
+			,cs_wx_mo$suffix$.cswm_openid
+			,cs_wx_mo$suffix$.cswm_member
+			,cs_wx_mo$suffix$.cswm_msg_type
+			,cs_wx_mo$suffix$.cswm_content_type
+			,cs_wx_mo$suffix$.cswm_content
+			,cs_wx_mo$suffix$.cswm_add_time
+			,cs_wx_mo$suffix$.cswm_mask
+			,cs_wx_mo$suffix$.cswm_status
+		)
+		values(
+			<isNotNull property="cswmHost" prepend="">
+				#cswmHost#
+			</isNotNull>
+			<isNull property="cswmHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cswmPlatform" prepend=",">
+				#cswmPlatform#
+			</isNotNull>
+			<isNull property="cswmPlatform" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmOpenid" prepend=",">
+				#cswmOpenid#
+			</isNotNull>
+			<isNull property="cswmOpenid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmMember" prepend=",">
+				#cswmMember#
+			</isNotNull>
+			<isNull property="cswmMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmMsgType" prepend=",">
+				#cswmMsgType#
+			</isNotNull>
+			<isNull property="cswmMsgType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmContentType" prepend=",">
+				#cswmContentType#
+			</isNotNull>
+			<isNull property="cswmContentType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmContent" prepend=",">
+				#cswmContent#
+			</isNotNull>
+			<isNull property="cswmContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmAddTime" prepend=",">
+				#cswmAddTime#
+			</isNotNull>
+			<isNull property="cswmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmMask" prepend=",">
+				#cswmMask#
+			</isNotNull>
+			<isNull property="cswmMask" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cswmStatus" prepend=",">
+				#cswmStatus#
+			</isNotNull>
+			<isNull property="cswmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新微信上行 -->
+	<update id="updateCsWxMo"  parameterClass="com.ccclubs.model.CsWxMo">
+		update cs_wx_mo$suffix$ set
+			<isNotNull property="cswmHost" prepend="">
+				cs_wx_mo$suffix$.cswm_host = #cswmHost#
+			</isNotNull>
+			<isNull property="cswmHost" prepend="">
+				cs_wx_mo$suffix$.cswm_host = null
+			</isNull>				
+			<isNotNull property="cswmPlatform" prepend=",">
+				cs_wx_mo$suffix$.cswm_platform = #cswmPlatform#
+			</isNotNull>
+			<isNull property="cswmPlatform" prepend=",">
+				cs_wx_mo$suffix$.cswm_platform = null
+			</isNull>				
+			<isNotNull property="cswmOpenid" prepend=",">
+				cs_wx_mo$suffix$.cswm_openid = #cswmOpenid#
+			</isNotNull>
+			<isNull property="cswmOpenid" prepend=",">
+				cs_wx_mo$suffix$.cswm_openid = null
+			</isNull>				
+			<isNotNull property="cswmMember" prepend=",">
+				cs_wx_mo$suffix$.cswm_member = #cswmMember#
+			</isNotNull>
+			<isNull property="cswmMember" prepend=",">
+				cs_wx_mo$suffix$.cswm_member = null
+			</isNull>				
+			<isNotNull property="cswmMsgType" prepend=",">
+				cs_wx_mo$suffix$.cswm_msg_type = #cswmMsgType#
+			</isNotNull>
+			<isNull property="cswmMsgType" prepend=",">
+				cs_wx_mo$suffix$.cswm_msg_type = null
+			</isNull>				
+			<isNotNull property="cswmContentType" prepend=",">
+				cs_wx_mo$suffix$.cswm_content_type = #cswmContentType#
+			</isNotNull>
+			<isNull property="cswmContentType" prepend=",">
+				cs_wx_mo$suffix$.cswm_content_type = null
+			</isNull>				
+			<isNotNull property="cswmContent" prepend=",">
+				cs_wx_mo$suffix$.cswm_content = #cswmContent#
+			</isNotNull>
+			<isNull property="cswmContent" prepend=",">
+				cs_wx_mo$suffix$.cswm_content = null
+			</isNull>				
+			<isNotNull property="cswmAddTime" prepend=",">
+				cs_wx_mo$suffix$.cswm_add_time = #cswmAddTime#
+			</isNotNull>
+			<isNull property="cswmAddTime" prepend=",">
+				cs_wx_mo$suffix$.cswm_add_time = null
+			</isNull>				
+			<isNotNull property="cswmMask" prepend=",">
+				cs_wx_mo$suffix$.cswm_mask = #cswmMask#
+			</isNotNull>
+			<isNull property="cswmMask" prepend=",">
+				cs_wx_mo$suffix$.cswm_mask = null
+			</isNull>				
+			<isNotNull property="cswmStatus" prepend=",">
+				cs_wx_mo$suffix$.cswm_status = #cswmStatus#
+			</isNotNull>
+			<isNull property="cswmStatus" prepend=",">
+				cs_wx_mo$suffix$.cswm_status = null
+			</isNull>				
+		where
+			cswm_id=#cswmId#
+	</update>
+	
+	<!-- 更新微信上行非空字段 -->
+	<update id="updateCsWxMo$NotNull"  parameterClass="com.ccclubs.model.CsWxMo">
+		update cs_wx_mo$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cswmHost" prepend=",">
+				cs_wx_mo$suffix$.cswm_host = #cswmHost#
+			</isNotNull>		
+			<isNotNull property="cswmPlatform" prepend=",">
+				cs_wx_mo$suffix$.cswm_platform = #cswmPlatform#
+			</isNotNull>		
+			<isNotNull property="cswmOpenid" prepend=",">
+				cs_wx_mo$suffix$.cswm_openid = #cswmOpenid#
+			</isNotNull>		
+			<isNotNull property="cswmMember" prepend=",">
+				cs_wx_mo$suffix$.cswm_member = #cswmMember#
+			</isNotNull>		
+			<isNotNull property="cswmMsgType" prepend=",">
+				cs_wx_mo$suffix$.cswm_msg_type = #cswmMsgType#
+			</isNotNull>		
+			<isNotNull property="cswmContentType" prepend=",">
+				cs_wx_mo$suffix$.cswm_content_type = #cswmContentType#
+			</isNotNull>		
+			<isNotNull property="cswmContent" prepend=",">
+				cs_wx_mo$suffix$.cswm_content = #cswmContent#
+			</isNotNull>		
+			<isNotNull property="cswmAddTime" prepend=",">
+				cs_wx_mo$suffix$.cswm_add_time = #cswmAddTime#
+			</isNotNull>		
+			<isNotNull property="cswmMask" prepend=",">
+				cs_wx_mo$suffix$.cswm_mask = #cswmMask#
+			</isNotNull>		
+			<isNotNull property="cswmStatus" prepend=",">
+				cs_wx_mo$suffix$.cswm_status = #cswmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cswm_id=#cswmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个微信上行 -->
+	<delete id="deleteCsWxMoById" parameterClass="java.util.HashMap">
+		delete from cs_wx_mo$suffix$ where cswm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个微信上行 -->
+	<update id="removeCsWxMoById" parameterClass="java.util.HashMap">
+		update cs_wx_mo$suffix$ set  cs_wx_mo$suffix$.cswm_status=-1  where cswm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新微信上行 -->
+	<update id="updateCsWxMoBy"  parameterClass="java.util.HashMap">
+		update cs_wx_mo$suffix$ set		
+			cswm_id=cswm_id
+			<isNotNull property="V_cswmId" prepend=",">
+				cs_wx_mo$suffix$.cswm_id = #V_cswmId#
+			</isNotNull>		
+			<isNotNull property="V_cswmHost" prepend=",">
+				cs_wx_mo$suffix$.cswm_host = #V_cswmHost#
+			</isNotNull>		
+			<isNotNull property="V_cswmPlatform" prepend=",">
+				cs_wx_mo$suffix$.cswm_platform = #V_cswmPlatform#
+			</isNotNull>		
+			<isNotNull property="V_cswmOpenid" prepend=",">
+				cs_wx_mo$suffix$.cswm_openid = #V_cswmOpenid#
+			</isNotNull>		
+			<isNotNull property="V_cswmMember" prepend=",">
+				cs_wx_mo$suffix$.cswm_member = #V_cswmMember#
+			</isNotNull>		
+			<isNotNull property="V_cswmMsgType" prepend=",">
+				cs_wx_mo$suffix$.cswm_msg_type = #V_cswmMsgType#
+			</isNotNull>		
+			<isNotNull property="V_cswmContentType" prepend=",">
+				cs_wx_mo$suffix$.cswm_content_type = #V_cswmContentType#
+			</isNotNull>		
+			<isNotNull property="V_cswmContent" prepend=",">
+				cs_wx_mo$suffix$.cswm_content = #V_cswmContent#
+			</isNotNull>		
+			<isNotNull property="V_cswmAddTime" prepend=",">
+				cs_wx_mo$suffix$.cswm_add_time = #V_cswmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cswmMask" prepend=",">
+				cs_wx_mo$suffix$.cswm_mask = #V_cswmMask#
+			</isNotNull>		
+			<isNotNull property="V_cswmStatus" prepend=",">
+				cs_wx_mo$suffix$.cswm_status = #V_cswmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.cswm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_wx_mo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_wx_mo$suffix$.cswm_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CswmMember"><!-- 调用一下CswmMember，把CsMember指向CswmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsWxMo_part.cs_wx_mo_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除微信上行 -->
+	<update id="deleteCsWxMoBy"  parameterClass="java.util.HashMap">
+		delete from cs_wx_mo$suffix$ where 
+		cs_wx_mo$suffix$.cswm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsWxMo_part.cs_wx_mo_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

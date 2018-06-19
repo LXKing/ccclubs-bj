@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 抽奖活动之SQL映射 -->
+	<resultMap id="CsLucky" class="com.ccclubs.model.CsLucky">
+		<result property="cslId" column="csl_id"/>
+		<result property="cslName" column="csl_name"/>
+		<result property="cslFlag" column="csl_flag"/>
+		<result property="cslType" column="csl_type"/>
+		<result property="cslStart" column="csl_start"/>
+		<result property="cslFinish" column="csl_finish"/>
+		<result property="cslPrice" column="csl_price"/>
+		<result property="cslEditor" column="csl_editor"/>
+		<result property="cslUpdateTime" column="csl_update_time"/>
+		<result property="cslAddTime" column="csl_add_time"/>
+		<result property="cslStatus" column="csl_status"/>
+	</resultMap>
+		
+	<!-- 获取所有抽奖活动 -->
+	<select id="getCsLuckyList" resultMap="CsLucky">
+		select cs_lucky$suffix$.* from cs_lucky$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_lucky$suffix$.csl_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLucky_part.cs_lucky_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csl_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取抽奖活动分页 -->
+	<select id="getCsLuckyPage" parameterClass="java.util.HashMap" resultMap="CsLucky">
+		select cs_lucky$suffix$.* from cs_lucky$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_lucky$suffix$.csl_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLucky_part.cs_lucky_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csl_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取抽奖活动总数 -->
+	<select id="getCsLuckyEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_lucky$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_lucky$suffix$.csl_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLucky_part.cs_lucky_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取抽奖活动 -->
+	<select id="getCsLuckyById" parameterClass="java.util.HashMap" resultMap="CsLucky">
+		select cs_lucky$suffix$.* from cs_lucky$suffix$
+		where csl_id=#id#
+	</select>
+	
+		
+	<!-- 保存抽奖活动 -->
+	<insert id="saveCsLucky"  parameterClass="com.ccclubs.model.CsLucky">
+		insert into cs_lucky$suffix$
+		(
+			cs_lucky$suffix$.csl_name
+			,cs_lucky$suffix$.csl_flag
+			,cs_lucky$suffix$.csl_type
+			,cs_lucky$suffix$.csl_start
+			,cs_lucky$suffix$.csl_finish
+			,cs_lucky$suffix$.csl_price
+			,cs_lucky$suffix$.csl_editor
+			,cs_lucky$suffix$.csl_update_time
+			,cs_lucky$suffix$.csl_add_time
+			,cs_lucky$suffix$.csl_status
+		)
+		values(
+			<isNotNull property="cslName" prepend="">
+				#cslName#
+			</isNotNull>
+			<isNull property="cslName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cslFlag" prepend=",">
+				#cslFlag#
+			</isNotNull>
+			<isNull property="cslFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslType" prepend=",">
+				#cslType#
+			</isNotNull>
+			<isNull property="cslType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslStart" prepend=",">
+				#cslStart#
+			</isNotNull>
+			<isNull property="cslStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslFinish" prepend=",">
+				#cslFinish#
+			</isNotNull>
+			<isNull property="cslFinish" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslPrice" prepend=",">
+				#cslPrice#
+			</isNotNull>
+			<isNull property="cslPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslEditor" prepend=",">
+				#cslEditor#
+			</isNotNull>
+			<isNull property="cslEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslUpdateTime" prepend=",">
+				#cslUpdateTime#
+			</isNotNull>
+			<isNull property="cslUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslAddTime" prepend=",">
+				#cslAddTime#
+			</isNotNull>
+			<isNull property="cslAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslStatus" prepend=",">
+				#cslStatus#
+			</isNotNull>
+			<isNull property="cslStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新抽奖活动 -->
+	<update id="updateCsLucky"  parameterClass="com.ccclubs.model.CsLucky">
+		update cs_lucky$suffix$ set
+			<isNotNull property="cslName" prepend="">
+				cs_lucky$suffix$.csl_name = #cslName#
+			</isNotNull>
+			<isNull property="cslName" prepend="">
+				cs_lucky$suffix$.csl_name = null
+			</isNull>				
+			<isNotNull property="cslFlag" prepend=",">
+				cs_lucky$suffix$.csl_flag = #cslFlag#
+			</isNotNull>
+			<isNull property="cslFlag" prepend=",">
+				cs_lucky$suffix$.csl_flag = null
+			</isNull>				
+			<isNotNull property="cslType" prepend=",">
+				cs_lucky$suffix$.csl_type = #cslType#
+			</isNotNull>
+			<isNull property="cslType" prepend=",">
+				cs_lucky$suffix$.csl_type = null
+			</isNull>				
+			<isNotNull property="cslStart" prepend=",">
+				cs_lucky$suffix$.csl_start = #cslStart#
+			</isNotNull>
+			<isNull property="cslStart" prepend=",">
+				cs_lucky$suffix$.csl_start = null
+			</isNull>				
+			<isNotNull property="cslFinish" prepend=",">
+				cs_lucky$suffix$.csl_finish = #cslFinish#
+			</isNotNull>
+			<isNull property="cslFinish" prepend=",">
+				cs_lucky$suffix$.csl_finish = null
+			</isNull>				
+			<isNotNull property="cslPrice" prepend=",">
+				cs_lucky$suffix$.csl_price = #cslPrice#
+			</isNotNull>
+			<isNull property="cslPrice" prepend=",">
+				cs_lucky$suffix$.csl_price = null
+			</isNull>				
+			<isNotNull property="cslEditor" prepend=",">
+				cs_lucky$suffix$.csl_editor = #cslEditor#
+			</isNotNull>
+			<isNull property="cslEditor" prepend=",">
+				cs_lucky$suffix$.csl_editor = null
+			</isNull>				
+			<isNotNull property="cslUpdateTime" prepend=",">
+				cs_lucky$suffix$.csl_update_time = #cslUpdateTime#
+			</isNotNull>
+			<isNull property="cslUpdateTime" prepend=",">
+				cs_lucky$suffix$.csl_update_time = null
+			</isNull>				
+			<isNotNull property="cslAddTime" prepend=",">
+				cs_lucky$suffix$.csl_add_time = #cslAddTime#
+			</isNotNull>
+			<isNull property="cslAddTime" prepend=",">
+				cs_lucky$suffix$.csl_add_time = null
+			</isNull>				
+			<isNotNull property="cslStatus" prepend=",">
+				cs_lucky$suffix$.csl_status = #cslStatus#
+			</isNotNull>
+			<isNull property="cslStatus" prepend=",">
+				cs_lucky$suffix$.csl_status = null
+			</isNull>				
+		where
+			csl_id=#cslId#
+	</update>
+	
+	<!-- 更新抽奖活动非空字段 -->
+	<update id="updateCsLucky$NotNull"  parameterClass="com.ccclubs.model.CsLucky">
+		update cs_lucky$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cslName" prepend=",">
+				cs_lucky$suffix$.csl_name = #cslName#
+			</isNotNull>		
+			<isNotNull property="cslFlag" prepend=",">
+				cs_lucky$suffix$.csl_flag = #cslFlag#
+			</isNotNull>		
+			<isNotNull property="cslType" prepend=",">
+				cs_lucky$suffix$.csl_type = #cslType#
+			</isNotNull>		
+			<isNotNull property="cslStart" prepend=",">
+				cs_lucky$suffix$.csl_start = #cslStart#
+			</isNotNull>		
+			<isNotNull property="cslFinish" prepend=",">
+				cs_lucky$suffix$.csl_finish = #cslFinish#
+			</isNotNull>		
+			<isNotNull property="cslPrice" prepend=",">
+				cs_lucky$suffix$.csl_price = #cslPrice#
+			</isNotNull>		
+			<isNotNull property="cslEditor" prepend=",">
+				cs_lucky$suffix$.csl_editor = #cslEditor#
+			</isNotNull>		
+			<isNotNull property="cslUpdateTime" prepend=",">
+				cs_lucky$suffix$.csl_update_time = #cslUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cslAddTime" prepend=",">
+				cs_lucky$suffix$.csl_add_time = #cslAddTime#
+			</isNotNull>		
+			<isNotNull property="cslStatus" prepend=",">
+				cs_lucky$suffix$.csl_status = #cslStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csl_id=#cslId#
+	</update>
+	
+
+	<!-- 根据ID删除一个抽奖活动 -->
+	<delete id="deleteCsLuckyById" parameterClass="java.util.HashMap">
+		delete from cs_lucky$suffix$ where csl_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个抽奖活动 -->
+	<update id="removeCsLuckyById" parameterClass="java.util.HashMap">
+		update cs_lucky$suffix$ set  cs_lucky$suffix$.csl_status=-1  where csl_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新抽奖活动 -->
+	<update id="updateCsLuckyBy"  parameterClass="java.util.HashMap">
+		update cs_lucky$suffix$ set		
+			csl_id=csl_id
+			<isNotNull property="V_cslId" prepend=",">
+				cs_lucky$suffix$.csl_id = #V_cslId#
+			</isNotNull>		
+			<isNotNull property="V_cslName" prepend=",">
+				cs_lucky$suffix$.csl_name = #V_cslName#
+			</isNotNull>		
+			<isNotNull property="V_cslFlag" prepend=",">
+				cs_lucky$suffix$.csl_flag = #V_cslFlag#
+			</isNotNull>		
+			<isNotNull property="V_cslType" prepend=",">
+				cs_lucky$suffix$.csl_type = #V_cslType#
+			</isNotNull>		
+			<isNotNull property="V_cslStart" prepend=",">
+				cs_lucky$suffix$.csl_start = #V_cslStart#
+			</isNotNull>		
+			<isNotNull property="V_cslFinish" prepend=",">
+				cs_lucky$suffix$.csl_finish = #V_cslFinish#
+			</isNotNull>		
+			<isNotNull property="V_cslPrice" prepend=",">
+				cs_lucky$suffix$.csl_price = #V_cslPrice#
+			</isNotNull>		
+			<isNotNull property="V_cslEditor" prepend=",">
+				cs_lucky$suffix$.csl_editor = #V_cslEditor#
+			</isNotNull>		
+			<isNotNull property="V_cslUpdateTime" prepend=",">
+				cs_lucky$suffix$.csl_update_time = #V_cslUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cslAddTime" prepend=",">
+				cs_lucky$suffix$.csl_add_time = #V_cslAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cslStatus" prepend=",">
+				cs_lucky$suffix$.csl_status = #V_cslStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_lucky$suffix$.csl_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLucky_part.cs_lucky_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除抽奖活动 -->
+	<update id="deleteCsLuckyBy"  parameterClass="java.util.HashMap">
+		delete from cs_lucky$suffix$ where 
+		cs_lucky$suffix$.csl_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLucky_part.cs_lucky_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

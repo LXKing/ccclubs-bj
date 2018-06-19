@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 会员汇总项之SQL映射 -->
+	<resultMap id="CsMemberSummary" class="com.ccclubs.model.CsMemberSummary">
+		<result property="csmsId" column="csms_id"/>
+		<result property="csmsMember" column="csms_member"/>
+		<result property="csmsOrdTotal" column="csms_ord_total"/>
+		<result property="csmsUnitordTotal" column="csms_unitord_total"/>
+		<result property="csmsOrdTimelong" column="csms_ord_timelong"/>
+		<result property="csmsUnitordTimelong" column="csms_unitord_timelong"/>
+		<result property="csmsOrdMileages" column="csms_ord_mileages"/>
+		<result property="csmsUnitordMileages" column="csms_unitord_mileages"/>
+		<result property="csmsOrdAmount" column="csms_ord_amount"/>
+		<result property="csmsUnitordAmount" column="csms_unitord_amount"/>
+		<result property="csmsAddtime" column="csms_addtime"/>
+		<result property="csmsUpdatetime" column="csms_updatetime"/>
+	</resultMap>
+		
+	<!-- 获取所有会员汇总项 -->
+	<select id="getCsMemberSummaryList" resultMap="CsMemberSummary">
+		select cs_member_summary$suffix$.* from cs_member_summary$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.csms_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!--  and cs_member_summary$suffix$.csms_status!=-1 -->
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberSummary_part.cs_member_summary_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csms_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员汇总项分页 -->
+	<select id="getCsMemberSummaryPage" parameterClass="java.util.HashMap" resultMap="CsMemberSummary">
+		select cs_member_summary$suffix$.* from cs_member_summary$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.csms_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!--  and cs_member_summary$suffix$.csms_status!=-1 -->
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberSummary_part.cs_member_summary_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csms_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员汇总项总数 -->
+	<select id="getCsMemberSummaryEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_member_summary$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.csms_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- and cs_member_summary$suffix$.csms_status!=-1 -->
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberSummary_part.cs_member_summary_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员汇总项 -->
+	<select id="getCsMemberSummaryById" parameterClass="java.util.HashMap" resultMap="CsMemberSummary">
+		select cs_member_summary$suffix$.* from cs_member_summary$suffix$
+		where csms_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员汇总项 -->
+	<insert id="saveCsMemberSummary"  parameterClass="com.ccclubs.model.CsMemberSummary">
+		insert into cs_member_summary$suffix$
+		(
+			cs_member_summary$suffix$.csms_member
+			,cs_member_summary$suffix$.csms_ord_total
+			,cs_member_summary$suffix$.csms_unitord_total
+			,cs_member_summary$suffix$.csms_ord_timelong
+			,cs_member_summary$suffix$.csms_unitord_timelong
+			,cs_member_summary$suffix$.csms_ord_mileages
+			,cs_member_summary$suffix$.csms_unitord_mileages
+			,cs_member_summary$suffix$.csms_ord_amount
+			,cs_member_summary$suffix$.csms_unitord_amount
+			,cs_member_summary$suffix$.csms_addtime
+			,cs_member_summary$suffix$.csms_updatetime
+		)
+		values(
+			<isNotNull property="csmsMember" prepend="">
+				#csmsMember#
+			</isNotNull>
+			<isNull property="csmsMember" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmsOrdTotal" prepend=",">
+				#csmsOrdTotal#
+			</isNotNull>
+			<isNull property="csmsOrdTotal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsUnitordTotal" prepend=",">
+				#csmsUnitordTotal#
+			</isNotNull>
+			<isNull property="csmsUnitordTotal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsOrdTimelong" prepend=",">
+				#csmsOrdTimelong#
+			</isNotNull>
+			<isNull property="csmsOrdTimelong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsUnitordTimelong" prepend=",">
+				#csmsUnitordTimelong#
+			</isNotNull>
+			<isNull property="csmsUnitordTimelong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsOrdMileages" prepend=",">
+				#csmsOrdMileages#
+			</isNotNull>
+			<isNull property="csmsOrdMileages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsUnitordMileages" prepend=",">
+				#csmsUnitordMileages#
+			</isNotNull>
+			<isNull property="csmsUnitordMileages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsOrdAmount" prepend=",">
+				#csmsOrdAmount#
+			</isNotNull>
+			<isNull property="csmsOrdAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsUnitordAmount" prepend=",">
+				#csmsUnitordAmount#
+			</isNotNull>
+			<isNull property="csmsUnitordAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsAddtime" prepend=",">
+				#csmsAddtime#
+			</isNotNull>
+			<isNull property="csmsAddtime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsUpdatetime" prepend=",">
+				#csmsUpdatetime#
+			</isNotNull>
+			<isNull property="csmsUpdatetime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员汇总项 -->
+	<update id="updateCsMemberSummary"  parameterClass="com.ccclubs.model.CsMemberSummary">
+		update cs_member_summary$suffix$ set
+			<isNotNull property="csmsMember" prepend="">
+				cs_member_summary$suffix$.csms_member = #csmsMember#
+			</isNotNull>
+			<isNull property="csmsMember" prepend="">
+				cs_member_summary$suffix$.csms_member = null
+			</isNull>				
+			<isNotNull property="csmsOrdTotal" prepend=",">
+				cs_member_summary$suffix$.csms_ord_total = #csmsOrdTotal#
+			</isNotNull>
+			<isNull property="csmsOrdTotal" prepend=",">
+				cs_member_summary$suffix$.csms_ord_total = null
+			</isNull>				
+			<isNotNull property="csmsUnitordTotal" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_total = #csmsUnitordTotal#
+			</isNotNull>
+			<isNull property="csmsUnitordTotal" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_total = null
+			</isNull>				
+			<isNotNull property="csmsOrdTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_ord_timelong = #csmsOrdTimelong#
+			</isNotNull>
+			<isNull property="csmsOrdTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_ord_timelong = null
+			</isNull>				
+			<isNotNull property="csmsUnitordTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_timelong = #csmsUnitordTimelong#
+			</isNotNull>
+			<isNull property="csmsUnitordTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_timelong = null
+			</isNull>				
+			<isNotNull property="csmsOrdMileages" prepend=",">
+				cs_member_summary$suffix$.csms_ord_mileages = #csmsOrdMileages#
+			</isNotNull>
+			<isNull property="csmsOrdMileages" prepend=",">
+				cs_member_summary$suffix$.csms_ord_mileages = null
+			</isNull>				
+			<isNotNull property="csmsUnitordMileages" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_mileages = #csmsUnitordMileages#
+			</isNotNull>
+			<isNull property="csmsUnitordMileages" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_mileages = null
+			</isNull>				
+			<isNotNull property="csmsOrdAmount" prepend=",">
+				cs_member_summary$suffix$.csms_ord_amount = #csmsOrdAmount#
+			</isNotNull>
+			<isNull property="csmsOrdAmount" prepend=",">
+				cs_member_summary$suffix$.csms_ord_amount = null
+			</isNull>				
+			<isNotNull property="csmsUnitordAmount" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_amount = #csmsUnitordAmount#
+			</isNotNull>
+			<isNull property="csmsUnitordAmount" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_amount = null
+			</isNull>				
+			<isNotNull property="csmsAddtime" prepend=",">
+				cs_member_summary$suffix$.csms_addtime = #csmsAddtime#
+			</isNotNull>
+			<isNull property="csmsAddtime" prepend=",">
+				cs_member_summary$suffix$.csms_addtime = null
+			</isNull>				
+			<isNotNull property="csmsUpdatetime" prepend=",">
+				cs_member_summary$suffix$.csms_updatetime = #csmsUpdatetime#
+			</isNotNull>
+			<isNull property="csmsUpdatetime" prepend=",">
+				cs_member_summary$suffix$.csms_updatetime = null
+			</isNull>				
+		where
+			csms_id=#csmsId#
+	</update>
+	
+	<!-- 更新会员汇总项非空字段 -->
+	<update id="updateCsMemberSummary$NotNull"  parameterClass="com.ccclubs.model.CsMemberSummary">
+		update cs_member_summary$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmsMember" prepend=",">
+				cs_member_summary$suffix$.csms_member = #csmsMember#
+			</isNotNull>		
+			<isNotNull property="csmsOrdTotal" prepend=",">
+				cs_member_summary$suffix$.csms_ord_total = #csmsOrdTotal#
+			</isNotNull>		
+			<isNotNull property="csmsUnitordTotal" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_total = #csmsUnitordTotal#
+			</isNotNull>		
+			<isNotNull property="csmsOrdTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_ord_timelong = #csmsOrdTimelong#
+			</isNotNull>		
+			<isNotNull property="csmsUnitordTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_timelong = #csmsUnitordTimelong#
+			</isNotNull>		
+			<isNotNull property="csmsOrdMileages" prepend=",">
+				cs_member_summary$suffix$.csms_ord_mileages = #csmsOrdMileages#
+			</isNotNull>		
+			<isNotNull property="csmsUnitordMileages" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_mileages = #csmsUnitordMileages#
+			</isNotNull>		
+			<isNotNull property="csmsOrdAmount" prepend=",">
+				cs_member_summary$suffix$.csms_ord_amount = #csmsOrdAmount#
+			</isNotNull>		
+			<isNotNull property="csmsUnitordAmount" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_amount = #csmsUnitordAmount#
+			</isNotNull>		
+			<isNotNull property="csmsAddtime" prepend=",">
+				cs_member_summary$suffix$.csms_addtime = #csmsAddtime#
+			</isNotNull>		
+			<isNotNull property="csmsUpdatetime" prepend=",">
+				cs_member_summary$suffix$.csms_updatetime = #csmsUpdatetime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csms_id=#csmsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员汇总项 -->
+	<delete id="deleteCsMemberSummaryById" parameterClass="java.util.HashMap">
+		delete from cs_member_summary$suffix$ where csms_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员汇总项 -->
+	<update id="removeCsMemberSummaryById" parameterClass="java.util.HashMap">
+		update cs_member_summary$suffix$ set  cs_member_summary$suffix$.csms_status=-1  where csms_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员汇总项 -->
+	<update id="updateCsMemberSummaryBy"  parameterClass="java.util.HashMap">
+		update cs_member_summary$suffix$ set		
+			csms_id=csms_id
+			<isNotNull property="V_csmsId" prepend=",">
+				cs_member_summary$suffix$.csms_id = #V_csmsId#
+			</isNotNull>		
+			<isNotNull property="V_csmsMember" prepend=",">
+				cs_member_summary$suffix$.csms_member = #V_csmsMember#
+			</isNotNull>		
+			<isNotNull property="V_csmsOrdTotal" prepend=",">
+				cs_member_summary$suffix$.csms_ord_total = #V_csmsOrdTotal#
+			</isNotNull>		
+			<isNotNull property="V_csmsUnitordTotal" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_total = #V_csmsUnitordTotal#
+			</isNotNull>		
+			<isNotNull property="V_csmsOrdTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_ord_timelong = #V_csmsOrdTimelong#
+			</isNotNull>		
+			<isNotNull property="V_csmsUnitordTimelong" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_timelong = #V_csmsUnitordTimelong#
+			</isNotNull>		
+			<isNotNull property="V_csmsOrdMileages" prepend=",">
+				cs_member_summary$suffix$.csms_ord_mileages = #V_csmsOrdMileages#
+			</isNotNull>		
+			<isNotNull property="V_csmsUnitordMileages" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_mileages = #V_csmsUnitordMileages#
+			</isNotNull>		
+			<isNotNull property="V_csmsOrdAmount" prepend=",">
+				cs_member_summary$suffix$.csms_ord_amount = #V_csmsOrdAmount#
+			</isNotNull>		
+			<isNotNull property="V_csmsUnitordAmount" prepend=",">
+				cs_member_summary$suffix$.csms_unitord_amount = #V_csmsUnitordAmount#
+			</isNotNull>		
+			<isNotNull property="V_csmsAddtime" prepend=",">
+				cs_member_summary$suffix$.csms_addtime = #V_csmsAddtime#
+			</isNotNull>		
+			<isNotNull property="V_csmsUpdatetime" prepend=",">
+				cs_member_summary$suffix$.csms_updatetime = #V_csmsUpdatetime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.csms_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_summary$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+			<!-- and cs_member_summary$suffix$.csms_status!=-1
+ and -->	
+		1=1 		
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsmsMember"><!-- 调用一下CsmsMember，把CsMember指向CsmsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMemberSummary_part.cs_member_summary_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员汇总项 -->
+	<update id="deleteCsMemberSummaryBy"  parameterClass="java.util.HashMap">
+		delete from cs_member_summary$suffix$ where 
+		
+		<!-- cs_member_summary$suffix$.csms_status!=-1  --> 1=1
+		and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMemberSummary_part.cs_member_summary_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

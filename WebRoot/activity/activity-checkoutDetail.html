@@ -1,0 +1,310 @@
+<div class="ccc-paper ccc-order-paper">
+	<div class="ccc-header-linear-bg"></div>
+	<div class="ccc-order-list">
+		<div class="ccc-order-table-linear-bg"></div>
+		<table class="ccc-order-list-table" width="100%" id="detail">
+			<colgroup>
+				<col width="35%">
+				<col width="">
+				<col width="">
+				<col width="15%">
+				<col width="">
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="item">
+						产品列表
+					</th>
+					<th class="price">
+						单价（元）
+					</th>
+					<th class="amount">
+						计数
+					</th>
+					<th class="discount">
+						优惠
+					</th>
+					<th class="sum">
+						小计（元）
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<s:iterator value="#request.orderInfo.details" id="item" status="i">
+					<s:if test="#i.modulus(2) == 1">
+						<tr>
+					</s:if>
+					<s:else>
+						<tr class="split">
+					</s:else>
+					<td class="item">
+						<p>
+							${item.$csodGoods.csgName}
+						</p>
+						<p class="ccc-time">
+							(${lz:date(item.csodStart,"MM-dd , HH:mm")} ~ ${lz:date(item.csodEnd,"MM-dd , HH:mm")})
+						</p>
+					</td>
+					<td class="price">
+						<s:if test="#item.csodRebate<1 ">
+							<p class="ccc-price-original">
+								${lz:digit(item.csodPrice,2)}
+							</p>
+						</s:if>
+						<p class="ccc-price-now">
+							${lz:digit(item.csodPriceReal*item.csodRebate,2)}
+						</p>
+					</td>
+					<td class="amount">
+						<p>
+							<s:if test="#item.$csodGoods.csgName.contains('公里')">
+							${cc:toInt(item.csodCount)}公里
+						</s:if>
+							<s:else>
+							${cc:getTimeDesc(item.csodStart,item.csodEnd)}
+						</s:else>
+						</p>
+					</td>
+					<td class="discount">
+						<s:if test="#item.csodRemark.contains('车辆折扣')">
+							<p>
+								宣传车
+							</p>
+						</s:if>
+						<s:if test="#item.csodRemark.contains('会员折扣')">
+							<p>
+								会员折扣
+								<span class="ccc-together" title="风雨同舟，一路有你，专享租金优惠"></span>
+							</p>
+						</s:if>
+						<s:if test="#item.csodRebate<1">
+						<p>
+								（${lz:digit(item.csodRebate*10,1)}折）
+							</p>
+						</s:if>
+						<s:if test="#item.csodRemark.contains('免费小时')">
+							<p>
+								使用${item.csodCount - item.csodCountReal}个免费小时
+							</p>
+						</s:if>
+						<s:if test="#item.csodRemark.contains('套餐')">
+							<p>
+								使用春节套餐
+							</p>
+						</s:if>
+						<s:if test="#item.csodRemark.equals('基础价格')">
+							<p>
+								基础价格
+							</p>
+						</s:if>
+					</td>
+					<td class="sum">
+						<p>
+							${lz:digit(item.csodTotalReal,2)}
+						</p>
+						<s:if test="#item.$csodProduct.cspFlag.equals('MILEAGE')||#item.$csodProduct.cspFlag.equals('KILOM')">
+							<span class="tag" title="按照15公里/小时，200公里/天预估，还车时按实际行驶公里数结算"></span>
+						</s:if>
+						<s:if test="#item.$csodProduct.cspFlag.equals('INSURE')&&#request.insureType==4">
+							<span class="tag" title="按照15公里/小时，200公里/天预估，还车时按实际行驶公里数结算"></span>
+						</s:if>
+					</td>
+					</tr>
+				</s:iterator>
+			</tbody>
+		</table>
+		<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+	</div>
+</div>
+<div id="ccc-float-bar">
+	<div class="ccc-float-bar-inner ccc-clearfix">
+		<div class="ccc-order-opt">
+			<div class="ccc-switch-item ${insureType==0 ? "":"full"}">
+				<div class="ccc-switcher ${insureType==0 ? "":"on"}">
+					<label for="nonRes" id="nonResLable"></label>
+					<input id="nonRes" type="checkbox" ${insureType==0 ? "":"checked"} />
+				</div>
+				<span class="ccc-switch-label">千元免赔</span><i id="ccc-nonres-help" class="ccc-help">[?]</i>
+				<div class="ccc-switch-param">
+					<select id="nonResSel" style="width: 100px">
+						<s:iterator value="#request.insureTypes" id="item" status="i">
+							<option ${insureType==item.cspId? "selected":""} value="${item.cspId}">
+								<s:if test="#i.modulus(2) == 1">
+									按小时购买
+								</s:if>
+								<s:else>按公里购买</s:else>
+							</option>
+						</s:iterator>
+					</select>
+				</div>
+			</div>
+			<input type="hidden" id="isFreehour" value=${isfreehour} />
+			<div class="ccc-switch-item ${isfreehour ? 'full' : ''}" style="display: none;">
+				<div class="ccc-switcher ${isfreehour  ? 'on' : ''}">
+					<label for="freeHours" id="freeHoursLable"></label>
+					<input id="freeHours" type="checkbox" ${isfreehour ? "checked":""} />
+				</div>
+				<span class="ccc-switch-label">使用免费小时</span>
+				<div class="ccc-switch-param">
+					<input type="text" maxlength="5" value="${freehour==-1?'':lz:digit(freehour,2)}" id="fhAmount" class="ccc-input">
+					小时
+					<span class="ccc-switch-param-tips">（本次可用${lz:digit(maxhours,2)}小时）</span>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" value="${maxhours}" id="maxHours">
+		<div class="ccc-order-expense">
+			<div class="ccc-order-total">
+				<sup>
+					￥
+				</sup>
+				<strong>${lz:digit(orderInfo.price,2)}</strong>
+			</div>
+			<p>
+				请确保账户可用余额
+				<span class="ccc-font-lato">≥ ￥${lz:digit(orderInfo.price+1500,2)}<i id="ccc-expense-help" class="ccc-help">[?]</i> </span>
+			</p>
+			<!--  <s:if test="#session.ccclubs_web_login !=null">
+				<p>
+					当前帐户总资产：￥${lz:digit(money,2)}
+					<s:if test="#request.member.csmMoney !=#request.money">(冻结￥${lz:digit(member.csmMoney + member.csmCoupon -money,2)})</s:if>
+				</p>
+			</s:if>-->
+			<div id="ccc-expense-tips" class="ccc-help-tips">
+				<i></i>预计消费总计(￥
+				<span class="ccc-font-lato">${lz:digit(orderInfo.price,2)}</span>) + 租车保证金(￥
+				<span class="ccc-font-lato">1500.00</span>)
+			</div>
+		</div>
+	</div>
+	<button id="ccc-order-submit" onclick="submit()"></button>
+</div>
+<div id="ccc-nonres-tips" class="ccc-help-tips">
+	<i></i><a href="#">购买千元免赔，发生事故主动上报，1000元以内免赔付！</a>
+</div>
+<script>
+		$(document).ready(function() {
+				
+				$('#nonResSel').select2({
+					minimumResultsForSearch: -1
+				});
+
+				$('#ccc-expense-help').hover(
+					function() {
+						$('#ccc-expense-tips').show();
+					},
+					function() {
+						$('#ccc-expense-tips').hide();
+					}
+				);
+			
+				$('#ccc-nonres-help').hover(
+					function() {
+						$('#ccc-nonres-tips').show();
+					},
+					function() {
+						$('#ccc-nonres-tips').hide();
+					}
+				);
+			});
+				
+			function submit(){
+				showConfirm('提示信息','订单时间 ${lz:date(baseOrderInfo.csoStart,"yyyy-MM-dd , HH:mm")} 到 ${lz:date(baseOrderInfo.csoFinish,"yyyy-MM-dd , HH:mm")} </br></br>取车网点 ${csoCar.$cscOutlets.csoName} ，车牌号 ${csoCar.cscCarNo}</br></br>确定要提交定单吗？<a class="ccc-link" style="margin-left:10px;" href="/activity/activity-reserve.html?do=edit&csoArea=${baseOrderInfo.csoArea}&csoOutlets=${baseOrderInfo.csoOutlets}&csoModel=${baseOrderInfo.csoModel}&csoIsAdCar=${baseOrderInfo.csoIsAdCar}&csoAmount=${baseOrderInfo.csoAmount}&csoIsDate=${baseOrderInfo.csoIsDate}&src=checkout">修改时间</a>','立即下单','我再想想',function(){
+					 var reg = new RegExp(/^\d*\.?\d{0,2}$/);
+					 var _val =$('#fhAmount').val().replace(/[^0-9.]/g, "");
+		            if (!reg.test(_val)) {
+		                showTips("请正确输入免费小时，小数点后最多两位","error",3);
+		                return false;
+		            }
+					var _maxfreeHours = $('#maxHours').val();
+	                if (Number(_val) > Number(_maxfreeHours)) {
+	                	_val = _maxfreeHours;
+	                }
+	                $('#fhAmount').val(_val);
+					var url = "/checkout_submit.html?t="+new Date().getTime()+"&freeHours=0";
+					$.get(url, function(data) {
+						switch (data) {
+							case "201":
+								location.href = '/login.html?from=/activity/activity-checkout.html';
+								break;
+							case "202":
+								location.href = '/activity/activity-reserve.html';
+								break;
+							case "203":
+								showTips("你还没有上传驾驶证照片，现在去上传","error",5,function(){
+									location.href = '/my/account_changelic.html';
+								});
+								break;
+						    case "205":
+								showTips('你的驾驶证正在审核中...<a href="/contacts.html?src=checkout" target="_blank">联系客服加快审核 >></a>',"error");
+								break;
+						    case "204":
+								showTips('账户余额不足，<a href="/my/alipay.html?src=	notenough" target="_blank">马上去充值 >></a>',"error");
+								break;
+							case "206":
+								showTips('你的退款还在处理中，暂时不能下订单，你可以<a href="/my/refund.html?src=checkout" target="_blank">取消退款 </a>或者<a href="/my/refund_details.html?src=checkout" target="_blank">查看退款状态 </a>',"error");
+								break;
+							case "207":
+								showTips('<a href="/account.html?src=checkout" target="_blank">资料信息都完善啦？驾驶证也上传啦？</a> <a href="/contacts.html?src=checkout" target="_blank">联系客服加快审核 >></a>',"error");
+								break;								
+							case "208":
+								showTips('亲，下手不够快哟～，你选择的时间已经被人预订啦，<a class="ccc-link" href="/activity/activity-reserve.html?csoArea=${baseOrderInfo.csoArea}&csoOutlets=${baseOrderInfo.csoOutlets}&csoModel=${baseOrderInfo.csoModel}&csoIsAdCar=${baseOrderInfo.csoIsAdCar}&csoAmount=${baseOrderInfo.csoAmount}&csoIsDate=${baseOrderInfo.csoIsDate}&src=checkout">选择其它车辆</a>',"error");
+								break;							
+							case "101":
+								showTips("请设置取车时间","error",7);
+								break;
+							case "102":
+								showTips("请设置还车时间","error",7);
+								break;
+							case "103":
+								showTips("取车时间不能早于当前时间两小时。","error",7);
+								break;
+							case "104":
+								showTips("取车时间不能晚于还车时间。","error",7);
+								break;
+							case "105":
+								showTips("最低1个小时起租。","error",7);
+								break;
+							case "106":
+								showTips("取、还车时间应该是20分钟的倍数。","error",7);
+								break;
+							case "107":
+								showTips("网站提只提供7天以内的车辆预订。","error",7);
+								break;
+							case "108":
+								showTips("网站提只提供最长29天的订单。","error",7);
+								break;
+							case "109":
+								showTips("请先选择一辆车，再预订。","error",7);
+								break;
+							case "110":
+								showTips("亲，春节租车，需要选择在2月17日17点前提车。","error",7);
+								break;
+							case "111":
+								showTips("亲，春节租车，需要选择在2月25日9点后还车。","error",7);
+								break;
+							case "112":
+								showTips("使用春节套餐租车最短要租满10天哦～","error",7);
+								break;
+							case "false":
+								//跳转错误页面
+								showTips("系统错误，请联系客服。","error",7);
+								break;
+							default:
+								{
+									var order = /^\d*$/;
+									if(order.test(data))
+									{
+										location.href = '/checkout_success.html?order='+data;
+									}else{
+										showTips(data,"error",7);
+									}
+									return;
+								}
+						}
+					});
+					//location.href = '/checkout_submit.html';
+					return false;
+				})
+		}
+	</script>

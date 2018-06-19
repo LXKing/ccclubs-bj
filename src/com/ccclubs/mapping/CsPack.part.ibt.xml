@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsPack_part">	
+	<!-- 系统套餐条件sql片段  -->
+	<sql id="cs_pack_dynamic">
+		<dynamic>
+			<isNotEmpty property="cspId" prepend="and">
+			    $cspIdNot$ cs_pack$suffix$.csp_id = #cspId#
+			</isNotEmpty>
+			<isNotNull property="cspIdNot" prepend="and">
+				<isEmpty property="cspId">
+				$cspIdNot$ cs_pack$suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspName" prepend="and">			    
+			    (<isNotNull property="cspNameNot">
+			    cs_pack$suffix$.csp_name is null or length(cs_pack$suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$cspNameNot$ cs_pack$suffix$.csp_name = #cspName#)
+			</isNotEmpty>
+			<isNotNull property="cspNameNot" prepend="and">
+				<isEmpty property="cspName">
+				$cspNameNot$ (cs_pack$suffix$.csp_name is null or length(cs_pack$suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspPriceMin" prepend="and">
+			    $cspPriceNot$  ( cs_pack$suffix$.csp_price &gt;= #cspPriceMin#
+			    <isEmpty property="cspPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspPriceMax" prepend="and">
+				<isEmpty property="cspPriceMin">$cspPriceNot$   (</isEmpty>
+			    cs_pack$suffix$.csp_price &lt;= #cspPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspPrice" prepend="and">
+			    $cspPriceNot$ cs_pack$suffix$.csp_price = #cspPrice#
+			</isNotEmpty>
+			<isNotNull property="cspPriceNot" prepend="and">
+				<isEmpty property="cspPriceMax"><isEmpty property="cspPriceMin"><isEmpty property="cspPrice">
+				$cspPriceNot$ cs_pack$suffix$.csp_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspFlag" prepend="and">			    
+			    (<isNotNull property="cspFlagNot">
+			    cs_pack$suffix$.csp_flag is null or length(cs_pack$suffix$.csp_flag) &lt; 1 or
+			    </isNotNull>$cspFlagNot$ cs_pack$suffix$.csp_flag = #cspFlag#)
+			</isNotEmpty>
+			<isNotNull property="cspFlagNot" prepend="and">
+				<isEmpty property="cspFlag">
+				$cspFlagNot$ (cs_pack$suffix$.csp_flag is null or length(cs_pack$suffix$.csp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspValidity" prepend="and">
+			    $cspValidityNot$ cs_pack$suffix$.csp_validity = #cspValidity#
+			</isNotEmpty>
+			<isNotNull property="cspValidityNot" prepend="and">
+				<isEmpty property="cspValidity">
+				$cspValidityNot$ cs_pack$suffix$.csp_validity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspDayMin" prepend="and">
+			    $cspDayNot$  ( cs_pack$suffix$.csp_day &gt;= #cspDayMin#
+			    <isEmpty property="cspDayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspDayMax" prepend="and">
+				<isEmpty property="cspDayMin">$cspDayNot$   (</isEmpty>
+			    cs_pack$suffix$.csp_day &lt;= #cspDayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspDay" prepend="and">
+			    $cspDayNot$ cs_pack$suffix$.csp_day = #cspDay#
+			</isNotEmpty>
+			<isNotNull property="cspDayNot" prepend="and">
+				<isEmpty property="cspDayMax"><isEmpty property="cspDayMin"><isEmpty property="cspDay">
+				$cspDayNot$ cs_pack$suffix$.csp_day is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspReorder" prepend="and">
+			    $cspReorderNot$ cs_pack$suffix$.csp_reorder = #cspReorder#
+			</isNotEmpty>
+			<isNotNull property="cspReorderNot" prepend="and">
+				<isEmpty property="cspReorder">
+				$cspReorderNot$ cs_pack$suffix$.csp_reorder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspProfile" prepend="and">			    
+			    (<isNotNull property="cspProfileNot">
+			    cs_pack$suffix$.csp_profile is null or length(cs_pack$suffix$.csp_profile) &lt; 1 or
+			    </isNotNull>$cspProfileNot$ cs_pack$suffix$.csp_profile like #cspProfile#)
+			</isNotEmpty>
+			<isNotNull property="cspProfileNot" prepend="and">
+				<isEmpty property="cspProfile">
+				$cspProfileNot$ (cs_pack$suffix$.csp_profile is null or length(cs_pack$suffix$.csp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspUpdateTimeStart" prepend="and">
+			    $cspUpdateTimeNot$   (cs_pack$suffix$.csp_update_time &gt;= #cspUpdateTimeStart#
+			   <isEmpty property="cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="cspUpdateTimeStart">$cspUpdateTimeNot$   (</isEmpty>
+			    cs_pack$suffix$.csp_update_time &lt;= #cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTime" prepend="and">
+			    $cspUpdateTimeNot$ cs_pack$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cspUpdateTimeNot" prepend="and">
+				<isEmpty property="cspUpdateTimeStart"><isEmpty property="cspUpdateTimeEnd"><isEmpty property="cspUpdateTime">
+				$cspUpdateTimeNot$ cs_pack$suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspAddTimeStart" prepend="and">
+			    $cspAddTimeNot$   (cs_pack$suffix$.csp_add_time &gt;= #cspAddTimeStart#
+			   <isEmpty property="cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTimeEnd" prepend="and">
+				<isEmpty property="cspAddTimeStart">$cspAddTimeNot$   (</isEmpty>
+			    cs_pack$suffix$.csp_add_time &lt;= #cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTime" prepend="and">
+			    $cspAddTimeNot$ cs_pack$suffix$.csp_add_time = #cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="cspAddTimeNot" prepend="and">
+				<isEmpty property="cspAddTimeStart"><isEmpty property="cspAddTimeEnd"><isEmpty property="cspAddTime">
+				$cspAddTimeNot$ cs_pack$suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspStatus" prepend="and">
+			    $cspStatusNot$ cs_pack$suffix$.csp_status = #cspStatus#
+			</isNotEmpty>
+			<isNotNull property="cspStatusNot" prepend="and">
+				<isEmpty property="cspStatus">
+				$cspStatusNot$ cs_pack$suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统套餐left join 条件sql片段 -->
+	<sql id="cs_pack_join">
+		<dynamic>
+			<isNotEmpty property="CsPack.cspId" prepend="and">
+			    $CsPack.cspIdNot$ cs_pack$CsPack.suffix$.csp_id = #CsPack.cspId#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspIdNot" prepend="and">
+				<isEmpty property="CsPack.cspId">
+				$cspIdNot$ cs_pack$CsPack.suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspName" prepend="and">
+				(<isNotNull property="CsPack.cspNameNot">
+			    cs_pack$CsPack.suffix$.csp_name is null or length(cs_pack$CsPack.suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$CsPack.cspNameNot$ cs_pack$CsPack.suffix$.csp_name = #CsPack.cspName#)
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspNameNot" prepend="and">
+				<isEmpty property="CsPack.cspName">
+				$cspNameNot$ (cs_pack$CsPack.suffix$.csp_name is null or length(cs_pack$CsPack.suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspPriceMin" prepend="and">
+			    $CsPack.cspPriceNot$  ( cs_pack$CsPack.suffix$.csp_price &gt;= #CsPack.cspPriceMin#
+			    <isEmpty property="CsPack.cspPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspPriceMax" prepend="and">
+				<isEmpty property="CsPack.cspPriceMin">$CsPack.cspPriceNot$   (</isEmpty>
+			    cs_pack$CsPack.suffix$.csp_price &lt;= #CsPack.cspPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspPrice" prepend="and">
+			    $CsPack.cspPriceNot$ cs_pack$CsPack.suffix$.csp_price = #CsPack.cspPrice#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspPriceNot" prepend="and">
+				<isEmpty property="CsPack.cspPriceMax"><isEmpty property="CsPack.cspPriceMin"><isEmpty property="CsPack.cspPrice">
+				$cspPriceNot$ cs_pack$CsPack.suffix$.csp_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspFlag" prepend="and">
+				(<isNotNull property="CsPack.cspFlagNot">
+			    cs_pack$CsPack.suffix$.csp_flag is null or length(cs_pack$CsPack.suffix$.csp_flag) &lt; 1 or
+			    </isNotNull>$CsPack.cspFlagNot$ cs_pack$CsPack.suffix$.csp_flag = #CsPack.cspFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspFlagNot" prepend="and">
+				<isEmpty property="CsPack.cspFlag">
+				$cspFlagNot$ (cs_pack$CsPack.suffix$.csp_flag is null or length(cs_pack$CsPack.suffix$.csp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspValidity" prepend="and">
+			    $CsPack.cspValidityNot$ cs_pack$CsPack.suffix$.csp_validity = #CsPack.cspValidity#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspValidityNot" prepend="and">
+				<isEmpty property="CsPack.cspValidity">
+				$cspValidityNot$ cs_pack$CsPack.suffix$.csp_validity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspDayMin" prepend="and">
+			    $CsPack.cspDayNot$  ( cs_pack$CsPack.suffix$.csp_day &gt;= #CsPack.cspDayMin#
+			    <isEmpty property="CsPack.cspDayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspDayMax" prepend="and">
+				<isEmpty property="CsPack.cspDayMin">$CsPack.cspDayNot$   (</isEmpty>
+			    cs_pack$CsPack.suffix$.csp_day &lt;= #CsPack.cspDayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspDay" prepend="and">
+			    $CsPack.cspDayNot$ cs_pack$CsPack.suffix$.csp_day = #CsPack.cspDay#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspDayNot" prepend="and">
+				<isEmpty property="CsPack.cspDayMax"><isEmpty property="CsPack.cspDayMin"><isEmpty property="CsPack.cspDay">
+				$cspDayNot$ cs_pack$CsPack.suffix$.csp_day is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspReorder" prepend="and">
+			    $CsPack.cspReorderNot$ cs_pack$CsPack.suffix$.csp_reorder = #CsPack.cspReorder#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspReorderNot" prepend="and">
+				<isEmpty property="CsPack.cspReorder">
+				$cspReorderNot$ cs_pack$CsPack.suffix$.csp_reorder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspProfile" prepend="and">
+				(<isNotNull property="CsPack.cspProfileNot">
+			    cs_pack$CsPack.suffix$.csp_profile is null or length(cs_pack$CsPack.suffix$.csp_profile) &lt; 1 or
+			    </isNotNull>$CsPack.cspProfileNot$ cs_pack$CsPack.suffix$.csp_profile like #CsPack.cspProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspProfileNot" prepend="and">
+				<isEmpty property="CsPack.cspProfile">
+				$cspProfileNot$ (cs_pack$CsPack.suffix$.csp_profile is null or length(cs_pack$CsPack.suffix$.csp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspUpdateTimeStart" prepend="and">
+			    $CsPack.cspUpdateTimeNot$   (cs_pack$CsPack.suffix$.csp_update_time &gt;= #CsPack.cspUpdateTimeStart#
+			   <isEmpty property="CsPack.cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsPack.cspUpdateTimeStart">$CsPack.cspUpdateTimeNot$   (</isEmpty>
+			    cs_pack$CsPack.suffix$.csp_update_time &lt;= #CsPack.cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspUpdateTime" prepend="and">
+			    $CsPack.cspUpdateTimeNot$ cs_pack$CsPack.suffix$.csp_update_time = #CsPack.cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspUpdateTimeNot" prepend="and">
+				<isEmpty property="CsPack.cspUpdateTimeStart"><isEmpty property="CsPack.cspUpdateTimeEnd"><isEmpty property="CsPack.cspUpdateTime">
+				$cspUpdateTimeNot$ cs_pack$CsPack.suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspAddTimeStart" prepend="and">
+			    $CsPack.cspAddTimeNot$   (cs_pack$CsPack.suffix$.csp_add_time &gt;= #CsPack.cspAddTimeStart#
+			   <isEmpty property="CsPack.cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspAddTimeEnd" prepend="and">
+				<isEmpty property="CsPack.cspAddTimeStart">$CsPack.cspAddTimeNot$   (</isEmpty>
+			    cs_pack$CsPack.suffix$.csp_add_time &lt;= #CsPack.cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPack.cspAddTime" prepend="and">
+			    $CsPack.cspAddTimeNot$ cs_pack$CsPack.suffix$.csp_add_time = #CsPack.cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspAddTimeNot" prepend="and">
+				<isEmpty property="CsPack.cspAddTimeStart"><isEmpty property="CsPack.cspAddTimeEnd"><isEmpty property="CsPack.cspAddTime">
+				$cspAddTimeNot$ cs_pack$CsPack.suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPack.cspStatus" prepend="and">
+			    $CsPack.cspStatusNot$ cs_pack$CsPack.suffix$.csp_status = #CsPack.cspStatus#
+			</isNotEmpty>
+			<isNotNull property="CsPack.cspStatusNot" prepend="and">
+				<isEmpty property="CsPack.cspStatus">
+				$cspStatusNot$ cs_pack$CsPack.suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

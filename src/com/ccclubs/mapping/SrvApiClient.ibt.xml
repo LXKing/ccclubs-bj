@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- API客户端之SQL映射 -->
+	<resultMap id="SrvApiClient" class="com.ccclubs.model.SrvApiClient">
+		<result property="sacId" column="sac_id"/>
+		<result property="sacClient" column="sac_client"/>
+		<result property="sacSecret" column="sac_secret"/>
+		<result property="sacDesc" column="sac_desc"/>
+		<result property="sacUpdateTime" column="sac_update_time"/>
+		<result property="sacAddTime" column="sac_add_time"/>
+		<result property="sacStatus" column="sac_status"/>
+	</resultMap>
+		
+	<!-- 获取所有API客户端 -->
+	<select id="getSrvApiClientList" resultMap="SrvApiClient">
+		select srv_api_client$suffix$.* from srv_api_client$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_api_client$suffix$.sac_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApiClient_part.srv_api_client_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sac_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取API客户端分页 -->
+	<select id="getSrvApiClientPage" parameterClass="java.util.HashMap" resultMap="SrvApiClient">
+		select srv_api_client$suffix$.* from srv_api_client$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_api_client$suffix$.sac_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApiClient_part.srv_api_client_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sac_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取API客户端总数 -->
+	<select id="getSrvApiClientEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_api_client$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_api_client$suffix$.sac_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApiClient_part.srv_api_client_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取API客户端 -->
+	<select id="getSrvApiClientById" parameterClass="java.util.HashMap" resultMap="SrvApiClient">
+		select srv_api_client$suffix$.* from srv_api_client$suffix$
+		where sac_id=#id#
+	</select>
+	
+		
+	<!-- 保存API客户端 -->
+	<insert id="saveSrvApiClient"  parameterClass="com.ccclubs.model.SrvApiClient">
+		insert into srv_api_client$suffix$
+		(
+			srv_api_client$suffix$.sac_client
+			,srv_api_client$suffix$.sac_secret
+			,srv_api_client$suffix$.sac_desc
+			,srv_api_client$suffix$.sac_update_time
+			,srv_api_client$suffix$.sac_add_time
+			,srv_api_client$suffix$.sac_status
+		)
+		values(
+			<isNotNull property="sacClient" prepend="">
+				#sacClient#
+			</isNotNull>
+			<isNull property="sacClient" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="sacSecret" prepend=",">
+				#sacSecret#
+			</isNotNull>
+			<isNull property="sacSecret" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sacDesc" prepend=",">
+				#sacDesc#
+			</isNotNull>
+			<isNull property="sacDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sacUpdateTime" prepend=",">
+				#sacUpdateTime#
+			</isNotNull>
+			<isNull property="sacUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sacAddTime" prepend=",">
+				#sacAddTime#
+			</isNotNull>
+			<isNull property="sacAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="sacStatus" prepend=",">
+				#sacStatus#
+			</isNotNull>
+			<isNull property="sacStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新API客户端 -->
+	<update id="updateSrvApiClient"  parameterClass="com.ccclubs.model.SrvApiClient">
+		update srv_api_client$suffix$ set
+			<isNotNull property="sacClient" prepend="">
+				srv_api_client$suffix$.sac_client = #sacClient#
+			</isNotNull>
+			<isNull property="sacClient" prepend="">
+				srv_api_client$suffix$.sac_client = null
+			</isNull>				
+			<isNotNull property="sacSecret" prepend=",">
+				srv_api_client$suffix$.sac_secret = #sacSecret#
+			</isNotNull>
+			<isNull property="sacSecret" prepend=",">
+				srv_api_client$suffix$.sac_secret = null
+			</isNull>				
+			<isNotNull property="sacDesc" prepend=",">
+				srv_api_client$suffix$.sac_desc = #sacDesc#
+			</isNotNull>
+			<isNull property="sacDesc" prepend=",">
+				srv_api_client$suffix$.sac_desc = null
+			</isNull>				
+			<isNotNull property="sacUpdateTime" prepend=",">
+				srv_api_client$suffix$.sac_update_time = #sacUpdateTime#
+			</isNotNull>
+			<isNull property="sacUpdateTime" prepend=",">
+				srv_api_client$suffix$.sac_update_time = null
+			</isNull>				
+			<isNotNull property="sacAddTime" prepend=",">
+				srv_api_client$suffix$.sac_add_time = #sacAddTime#
+			</isNotNull>
+			<isNull property="sacAddTime" prepend=",">
+				srv_api_client$suffix$.sac_add_time = null
+			</isNull>				
+			<isNotNull property="sacStatus" prepend=",">
+				srv_api_client$suffix$.sac_status = #sacStatus#
+			</isNotNull>
+			<isNull property="sacStatus" prepend=",">
+				srv_api_client$suffix$.sac_status = null
+			</isNull>				
+		where
+			sac_id=#sacId#
+	</update>
+	
+	<!-- 更新API客户端非空字段 -->
+	<update id="updateSrvApiClient$NotNull"  parameterClass="com.ccclubs.model.SrvApiClient">
+		update srv_api_client$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="sacClient" prepend=",">
+				srv_api_client$suffix$.sac_client = #sacClient#
+			</isNotNull>		
+			<isNotNull property="sacSecret" prepend=",">
+				srv_api_client$suffix$.sac_secret = #sacSecret#
+			</isNotNull>		
+			<isNotNull property="sacDesc" prepend=",">
+				srv_api_client$suffix$.sac_desc = #sacDesc#
+			</isNotNull>		
+			<isNotNull property="sacUpdateTime" prepend=",">
+				srv_api_client$suffix$.sac_update_time = #sacUpdateTime#
+			</isNotNull>		
+			<isNotNull property="sacAddTime" prepend=",">
+				srv_api_client$suffix$.sac_add_time = #sacAddTime#
+			</isNotNull>		
+			<isNotNull property="sacStatus" prepend=",">
+				srv_api_client$suffix$.sac_status = #sacStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sac_id=#sacId#
+	</update>
+	
+
+	<!-- 根据ID删除一个API客户端 -->
+	<delete id="deleteSrvApiClientById" parameterClass="java.util.HashMap">
+		delete from srv_api_client$suffix$ where sac_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个API客户端 -->
+	<update id="removeSrvApiClientById" parameterClass="java.util.HashMap">
+		update srv_api_client$suffix$ set  srv_api_client$suffix$.sac_status=-1  where sac_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新API客户端 -->
+	<update id="updateSrvApiClientBy"  parameterClass="java.util.HashMap">
+		update srv_api_client$suffix$ set		
+			sac_id=sac_id
+			<isNotNull property="V_sacId" prepend=",">
+				srv_api_client$suffix$.sac_id = #V_sacId#
+			</isNotNull>		
+			<isNotNull property="V_sacClient" prepend=",">
+				srv_api_client$suffix$.sac_client = #V_sacClient#
+			</isNotNull>		
+			<isNotNull property="V_sacSecret" prepend=",">
+				srv_api_client$suffix$.sac_secret = #V_sacSecret#
+			</isNotNull>		
+			<isNotNull property="V_sacDesc" prepend=",">
+				srv_api_client$suffix$.sac_desc = #V_sacDesc#
+			</isNotNull>		
+			<isNotNull property="V_sacUpdateTime" prepend=",">
+				srv_api_client$suffix$.sac_update_time = #V_sacUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_sacAddTime" prepend=",">
+				srv_api_client$suffix$.sac_add_time = #V_sacAddTime#
+			</isNotNull>		
+			<isNotNull property="V_sacStatus" prepend=",">
+				srv_api_client$suffix$.sac_status = #V_sacStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		srv_api_client$suffix$.sac_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvApiClient_part.srv_api_client_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除API客户端 -->
+	<update id="deleteSrvApiClientBy"  parameterClass="java.util.HashMap">
+		delete from srv_api_client$suffix$ where 
+		srv_api_client$suffix$.sac_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvApiClient_part.srv_api_client_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

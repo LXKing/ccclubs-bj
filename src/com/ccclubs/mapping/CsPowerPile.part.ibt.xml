@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsPowerPile_part">	
+	<!-- 充电桩条件sql片段  -->
+	<sql id="cs_power_pile_dynamic">
+		<dynamic>
+			<isNotEmpty property="csppId" prepend="and">
+			    $csppIdNot$ cs_power_pile$suffix$.cspp_id = #csppId#
+			</isNotEmpty>
+			<isNotNull property="csppIdNot" prepend="and">
+				<isEmpty property="csppId">
+				$csppIdNot$ cs_power_pile$suffix$.cspp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_power_pile$suffix$.cspp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csppHost" prepend="and">
+			    $csppHostNot$ cs_power_pile$suffix$.cspp_host = #csppHost#
+			</isNotEmpty>
+			<isNotNull property="csppHostNot" prepend="and">
+				<isEmpty property="csppHost">
+				$csppHostNot$ cs_power_pile$suffix$.cspp_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csppNo" prepend="and">			    
+			    (<isNotNull property="csppNoNot">
+			    cs_power_pile$suffix$.cspp_no is null or length(cs_power_pile$suffix$.cspp_no) &lt; 1 or
+			    </isNotNull>$csppNoNot$ cs_power_pile$suffix$.cspp_no = #csppNo#)
+			</isNotEmpty>
+			<isNotNull property="csppNoNot" prepend="and">
+				<isEmpty property="csppNo">
+				$csppNoNot$ (cs_power_pile$suffix$.cspp_no is null or length(cs_power_pile$suffix$.cspp_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppIndexMin" prepend="and">
+			    $csppIndexNot$  ( cs_power_pile$suffix$.cspp_index &gt;= #csppIndexMin#
+			    <isEmpty property="csppIndexMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csppIndexMax" prepend="and">
+				<isEmpty property="csppIndexMin">$csppIndexNot$   (</isEmpty>
+			    cs_power_pile$suffix$.cspp_index &lt;= #csppIndexMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csppIndex" prepend="and">
+			    $csppIndexNot$ cs_power_pile$suffix$.cspp_index = #csppIndex#
+			</isNotEmpty>
+			<isNotNull property="csppIndexNot" prepend="and">
+				<isEmpty property="csppIndexMax"><isEmpty property="csppIndexMin"><isEmpty property="csppIndex">
+				$csppIndexNot$ cs_power_pile$suffix$.cspp_index is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csppOutlets" prepend="and">
+			    $csppOutletsNot$ cs_power_pile$suffix$.cspp_outlets = #csppOutlets#
+			</isNotEmpty>
+			<isNotNull property="csppOutletsNot" prepend="and">
+				<isEmpty property="csppOutlets">
+				$csppOutletsNot$ cs_power_pile$suffix$.cspp_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppCharge" prepend="and">
+			    $csppChargeNot$ cs_power_pile$suffix$.cspp_charge = #csppCharge#
+			</isNotEmpty>
+			<isNotNull property="csppChargeNot" prepend="and">
+				<isEmpty property="csppCharge">
+				$csppChargeNot$ cs_power_pile$suffix$.cspp_charge is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppPerson" prepend="and">			    
+			    (<isNotNull property="csppPersonNot">
+			    cs_power_pile$suffix$.cspp_person is null or length(cs_power_pile$suffix$.cspp_person) &lt; 1 or
+			    </isNotNull>$csppPersonNot$ cs_power_pile$suffix$.cspp_person like #csppPerson#)
+			</isNotEmpty>
+			<isNotNull property="csppPersonNot" prepend="and">
+				<isEmpty property="csppPerson">
+				$csppPersonNot$ (cs_power_pile$suffix$.cspp_person is null or length(cs_power_pile$suffix$.cspp_person) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppTel" prepend="and">			    
+			    (<isNotNull property="csppTelNot">
+			    cs_power_pile$suffix$.cspp_tel is null or length(cs_power_pile$suffix$.cspp_tel) &lt; 1 or
+			    </isNotNull>$csppTelNot$ cs_power_pile$suffix$.cspp_tel like #csppTel#)
+			</isNotEmpty>
+			<isNotNull property="csppTelNot" prepend="and">
+				<isEmpty property="csppTel">
+				$csppTelNot$ (cs_power_pile$suffix$.cspp_tel is null or length(cs_power_pile$suffix$.cspp_tel) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppImage" prepend="and">
+			    $csppImageNot$ cs_power_pile$suffix$.cspp_image = #csppImage#
+			</isNotEmpty>
+			<isNotNull property="csppImageNot" prepend="and">
+				<isEmpty property="csppImage">
+				$csppImageNot$ cs_power_pile$suffix$.cspp_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppLocation" prepend="and">			    
+			    (<isNotNull property="csppLocationNot">
+			    cs_power_pile$suffix$.cspp_location is null or length(cs_power_pile$suffix$.cspp_location) &lt; 1 or
+			    </isNotNull>$csppLocationNot$ cs_power_pile$suffix$.cspp_location = #csppLocation#)
+			</isNotEmpty>
+			<isNotNull property="csppLocationNot" prepend="and">
+				<isEmpty property="csppLocation">
+				$csppLocationNot$ (cs_power_pile$suffix$.cspp_location is null or length(cs_power_pile$suffix$.cspp_location) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppRemark" prepend="and">			    
+			    (<isNotNull property="csppRemarkNot">
+			    cs_power_pile$suffix$.cspp_remark is null or length(cs_power_pile$suffix$.cspp_remark) &lt; 1 or
+			    </isNotNull>$csppRemarkNot$ cs_power_pile$suffix$.cspp_remark like #csppRemark#)
+			</isNotEmpty>
+			<isNotNull property="csppRemarkNot" prepend="and">
+				<isEmpty property="csppRemark">
+				$csppRemarkNot$ (cs_power_pile$suffix$.cspp_remark is null or length(cs_power_pile$suffix$.cspp_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppUpdateTimeStart" prepend="and">
+			    $csppUpdateTimeNot$   (cs_power_pile$suffix$.cspp_update_time &gt;= #csppUpdateTimeStart#
+			   <isEmpty property="csppUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csppUpdateTimeEnd" prepend="and">
+				<isEmpty property="csppUpdateTimeStart">$csppUpdateTimeNot$   (</isEmpty>
+			    cs_power_pile$suffix$.cspp_update_time &lt;= #csppUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csppUpdateTime" prepend="and">
+			    $csppUpdateTimeNot$ cs_power_pile$suffix$.cspp_update_time = #csppUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csppUpdateTimeNot" prepend="and">
+				<isEmpty property="csppUpdateTimeStart"><isEmpty property="csppUpdateTimeEnd"><isEmpty property="csppUpdateTime">
+				$csppUpdateTimeNot$ cs_power_pile$suffix$.cspp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppAddTimeStart" prepend="and">
+			    $csppAddTimeNot$   (cs_power_pile$suffix$.cspp_add_time &gt;= #csppAddTimeStart#
+			   <isEmpty property="csppAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csppAddTimeEnd" prepend="and">
+				<isEmpty property="csppAddTimeStart">$csppAddTimeNot$   (</isEmpty>
+			    cs_power_pile$suffix$.cspp_add_time &lt;= #csppAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csppAddTime" prepend="and">
+			    $csppAddTimeNot$ cs_power_pile$suffix$.cspp_add_time = #csppAddTime#
+			</isNotEmpty>
+			<isNotNull property="csppAddTimeNot" prepend="and">
+				<isEmpty property="csppAddTimeStart"><isEmpty property="csppAddTimeEnd"><isEmpty property="csppAddTime">
+				$csppAddTimeNot$ cs_power_pile$suffix$.cspp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csppStatus" prepend="and">
+			    $csppStatusNot$ cs_power_pile$suffix$.cspp_status = #csppStatus#
+			</isNotEmpty>
+			<isNotNull property="csppStatusNot" prepend="and">
+				<isEmpty property="csppStatus">
+				$csppStatusNot$ cs_power_pile$suffix$.cspp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 充电桩left join 条件sql片段 -->
+	<sql id="cs_power_pile_join">
+		<dynamic>
+			<isNotEmpty property="CsPowerPile.csppId" prepend="and">
+			    $CsPowerPile.csppIdNot$ cs_power_pile$CsPowerPile.suffix$.cspp_id = #CsPowerPile.csppId#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppIdNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppId">
+				$csppIdNot$ cs_power_pile$CsPowerPile.suffix$.cspp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_power_pile$CsPowerPile.suffix$.cspp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppHost" prepend="and">
+			    $CsPowerPile.csppHostNot$ cs_power_pile$CsPowerPile.suffix$.cspp_host = #CsPowerPile.csppHost#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppHostNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppHost">
+				$csppHostNot$ cs_power_pile$CsPowerPile.suffix$.cspp_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppNo" prepend="and">
+				(<isNotNull property="CsPowerPile.csppNoNot">
+			    cs_power_pile$CsPowerPile.suffix$.cspp_no is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_no) &lt; 1 or
+			    </isNotNull>$CsPowerPile.csppNoNot$ cs_power_pile$CsPowerPile.suffix$.cspp_no = #CsPowerPile.csppNo#)
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppNoNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppNo">
+				$csppNoNot$ (cs_power_pile$CsPowerPile.suffix$.cspp_no is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppIndexMin" prepend="and">
+			    $CsPowerPile.csppIndexNot$  ( cs_power_pile$CsPowerPile.suffix$.cspp_index &gt;= #CsPowerPile.csppIndexMin#
+			    <isEmpty property="CsPowerPile.csppIndexMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppIndexMax" prepend="and">
+				<isEmpty property="CsPowerPile.csppIndexMin">$CsPowerPile.csppIndexNot$   (</isEmpty>
+			    cs_power_pile$CsPowerPile.suffix$.cspp_index &lt;= #CsPowerPile.csppIndexMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppIndex" prepend="and">
+			    $CsPowerPile.csppIndexNot$ cs_power_pile$CsPowerPile.suffix$.cspp_index = #CsPowerPile.csppIndex#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppIndexNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppIndexMax"><isEmpty property="CsPowerPile.csppIndexMin"><isEmpty property="CsPowerPile.csppIndex">
+				$csppIndexNot$ cs_power_pile$CsPowerPile.suffix$.cspp_index is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppOutlets" prepend="and">
+			    $CsPowerPile.csppOutletsNot$ cs_power_pile$CsPowerPile.suffix$.cspp_outlets = #CsPowerPile.csppOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppOutletsNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppOutlets">
+				$csppOutletsNot$ cs_power_pile$CsPowerPile.suffix$.cspp_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppCharge" prepend="and">
+			    $CsPowerPile.csppChargeNot$ cs_power_pile$CsPowerPile.suffix$.cspp_charge = #CsPowerPile.csppCharge#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppChargeNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppCharge">
+				$csppChargeNot$ cs_power_pile$CsPowerPile.suffix$.cspp_charge is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppPerson" prepend="and">
+				(<isNotNull property="CsPowerPile.csppPersonNot">
+			    cs_power_pile$CsPowerPile.suffix$.cspp_person is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_person) &lt; 1 or
+			    </isNotNull>$CsPowerPile.csppPersonNot$ cs_power_pile$CsPowerPile.suffix$.cspp_person like #CsPowerPile.csppPerson#)
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppPersonNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppPerson">
+				$csppPersonNot$ (cs_power_pile$CsPowerPile.suffix$.cspp_person is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_person) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppTel" prepend="and">
+				(<isNotNull property="CsPowerPile.csppTelNot">
+			    cs_power_pile$CsPowerPile.suffix$.cspp_tel is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_tel) &lt; 1 or
+			    </isNotNull>$CsPowerPile.csppTelNot$ cs_power_pile$CsPowerPile.suffix$.cspp_tel like #CsPowerPile.csppTel#)
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppTelNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppTel">
+				$csppTelNot$ (cs_power_pile$CsPowerPile.suffix$.cspp_tel is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_tel) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppImage" prepend="and">
+			    $CsPowerPile.csppImageNot$ cs_power_pile$CsPowerPile.suffix$.cspp_image = #CsPowerPile.csppImage#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppImageNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppImage">
+				$csppImageNot$ cs_power_pile$CsPowerPile.suffix$.cspp_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppLocation" prepend="and">
+				(<isNotNull property="CsPowerPile.csppLocationNot">
+			    cs_power_pile$CsPowerPile.suffix$.cspp_location is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_location) &lt; 1 or
+			    </isNotNull>$CsPowerPile.csppLocationNot$ cs_power_pile$CsPowerPile.suffix$.cspp_location = #CsPowerPile.csppLocation#)
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppLocationNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppLocation">
+				$csppLocationNot$ (cs_power_pile$CsPowerPile.suffix$.cspp_location is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_location) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppRemark" prepend="and">
+				(<isNotNull property="CsPowerPile.csppRemarkNot">
+			    cs_power_pile$CsPowerPile.suffix$.cspp_remark is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_remark) &lt; 1 or
+			    </isNotNull>$CsPowerPile.csppRemarkNot$ cs_power_pile$CsPowerPile.suffix$.cspp_remark like #CsPowerPile.csppRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppRemarkNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppRemark">
+				$csppRemarkNot$ (cs_power_pile$CsPowerPile.suffix$.cspp_remark is null or length(cs_power_pile$CsPowerPile.suffix$.cspp_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppUpdateTimeStart" prepend="and">
+			    $CsPowerPile.csppUpdateTimeNot$   (cs_power_pile$CsPowerPile.suffix$.cspp_update_time &gt;= #CsPowerPile.csppUpdateTimeStart#
+			   <isEmpty property="CsPowerPile.csppUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsPowerPile.csppUpdateTimeStart">$CsPowerPile.csppUpdateTimeNot$   (</isEmpty>
+			    cs_power_pile$CsPowerPile.suffix$.cspp_update_time &lt;= #CsPowerPile.csppUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppUpdateTime" prepend="and">
+			    $CsPowerPile.csppUpdateTimeNot$ cs_power_pile$CsPowerPile.suffix$.cspp_update_time = #CsPowerPile.csppUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppUpdateTimeNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppUpdateTimeStart"><isEmpty property="CsPowerPile.csppUpdateTimeEnd"><isEmpty property="CsPowerPile.csppUpdateTime">
+				$csppUpdateTimeNot$ cs_power_pile$CsPowerPile.suffix$.cspp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppAddTimeStart" prepend="and">
+			    $CsPowerPile.csppAddTimeNot$   (cs_power_pile$CsPowerPile.suffix$.cspp_add_time &gt;= #CsPowerPile.csppAddTimeStart#
+			   <isEmpty property="CsPowerPile.csppAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppAddTimeEnd" prepend="and">
+				<isEmpty property="CsPowerPile.csppAddTimeStart">$CsPowerPile.csppAddTimeNot$   (</isEmpty>
+			    cs_power_pile$CsPowerPile.suffix$.cspp_add_time &lt;= #CsPowerPile.csppAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPowerPile.csppAddTime" prepend="and">
+			    $CsPowerPile.csppAddTimeNot$ cs_power_pile$CsPowerPile.suffix$.cspp_add_time = #CsPowerPile.csppAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppAddTimeNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppAddTimeStart"><isEmpty property="CsPowerPile.csppAddTimeEnd"><isEmpty property="CsPowerPile.csppAddTime">
+				$csppAddTimeNot$ cs_power_pile$CsPowerPile.suffix$.cspp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPowerPile.csppStatus" prepend="and">
+			    $CsPowerPile.csppStatusNot$ cs_power_pile$CsPowerPile.suffix$.cspp_status = #CsPowerPile.csppStatus#
+			</isNotEmpty>
+			<isNotNull property="CsPowerPile.csppStatusNot" prepend="and">
+				<isEmpty property="CsPowerPile.csppStatus">
+				$csppStatusNot$ cs_power_pile$CsPowerPile.suffix$.cspp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

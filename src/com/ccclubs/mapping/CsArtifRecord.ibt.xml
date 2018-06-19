@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 充值扣款之SQL映射 -->
+	<resultMap id="CsArtifRecord" class="com.ccclubs.model.CsArtifRecord">
+		<result property="csarId" column="csar_id"/>
+		<result property="csarHost" column="csar_host"/>
+		<result property="csarTitle" column="csar_title"/>
+		<result property="csarMember" column="csar_member"/>
+		<result property="csarCount" column="csar_count"/>
+		<result property="csarMoneyType" column="csar_money_type"/>
+		<result property="csarRecordSubject" column="csar_record_subject"/>
+		<result property="csarOrder" column="csar_order"/>
+		<result property="csarRelate" column="csar_relate"/>
+		<result property="csarReceived" column="csar_received"/>
+		<result property="csarVoucher" column="csar_voucher"/>
+		<result property="csarAdder" column="csar_adder"/>
+		<result property="csarEditor" column="csar_editor"/>
+		<result property="csarConfirmer" column="csar_confirmer"/>
+		<result property="csarUpdateTime" column="csar_update_time"/>
+		<result property="csarAddTime" column="csar_add_time"/>
+		<result property="csarConfirmTime" column="csar_confirm_time"/>
+		<result property="csarRemark" column="csar_remark"/>
+		<result property="csarStatus" column="csar_status"/>
+	</resultMap>
+		
+	<!-- 获取所有充值扣款 -->
+	<select id="getCsArtifRecordList" resultMap="CsArtifRecord">
+		select cs_artif_record$suffix$.* from cs_artif_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询-->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.csar_record_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.csar_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_artif_record$suffix$.csar_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsArtifRecord_part.cs_artif_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csar_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取充值扣款分页 -->
+	<select id="getCsArtifRecordPage" parameterClass="java.util.HashMap" resultMap="CsArtifRecord">
+		select cs_artif_record$suffix$.* from cs_artif_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询 -->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.csar_record_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.csar_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_artif_record$suffix$.csar_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsArtifRecord_part.cs_artif_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csar_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取充值扣款总数 -->
+	<select id="getCsArtifRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_artif_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.csar_record_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.csar_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_artif_record$suffix$.csar_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsArtifRecord_part.cs_artif_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取充值扣款 -->
+	<select id="getCsArtifRecordById" parameterClass="java.util.HashMap" resultMap="CsArtifRecord">
+		select cs_artif_record$suffix$.* from cs_artif_record$suffix$
+		where csar_id=#id#
+	</select>
+	
+		
+	<!-- 保存充值扣款 -->
+	<insert id="saveCsArtifRecord"  parameterClass="com.ccclubs.model.CsArtifRecord">
+		insert into cs_artif_record$suffix$
+		(
+			cs_artif_record$suffix$.csar_host
+			,cs_artif_record$suffix$.csar_title
+			,cs_artif_record$suffix$.csar_member
+			,cs_artif_record$suffix$.csar_count
+			,cs_artif_record$suffix$.csar_money_type
+			,cs_artif_record$suffix$.csar_record_subject
+			,cs_artif_record$suffix$.csar_order
+			,cs_artif_record$suffix$.csar_relate
+			,cs_artif_record$suffix$.csar_received
+			,cs_artif_record$suffix$.csar_voucher
+			,cs_artif_record$suffix$.csar_adder
+			,cs_artif_record$suffix$.csar_editor
+			,cs_artif_record$suffix$.csar_confirmer
+			,cs_artif_record$suffix$.csar_update_time
+			,cs_artif_record$suffix$.csar_add_time
+			,cs_artif_record$suffix$.csar_confirm_time
+			,cs_artif_record$suffix$.csar_remark
+			,cs_artif_record$suffix$.csar_status
+		)
+		values(
+			<isNotNull property="csarHost" prepend="">
+				#csarHost#
+			</isNotNull>
+			<isNull property="csarHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csarTitle" prepend=",">
+				#csarTitle#
+			</isNotNull>
+			<isNull property="csarTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarMember" prepend=",">
+				#csarMember#
+			</isNotNull>
+			<isNull property="csarMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarCount" prepend=",">
+				#csarCount#
+			</isNotNull>
+			<isNull property="csarCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarMoneyType" prepend=",">
+				#csarMoneyType#
+			</isNotNull>
+			<isNull property="csarMoneyType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarRecordSubject" prepend=",">
+				#csarRecordSubject#
+			</isNotNull>
+			<isNull property="csarRecordSubject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarOrder" prepend=",">
+				#csarOrder#
+			</isNotNull>
+			<isNull property="csarOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarRelate" prepend=",">
+				#csarRelate#
+			</isNotNull>
+			<isNull property="csarRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarReceived" prepend=",">
+				#csarReceived#
+			</isNotNull>
+			<isNull property="csarReceived" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarVoucher" prepend=",">
+				#csarVoucher#
+			</isNotNull>
+			<isNull property="csarVoucher" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarAdder" prepend=",">
+				#csarAdder#
+			</isNotNull>
+			<isNull property="csarAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarEditor" prepend=",">
+				#csarEditor#
+			</isNotNull>
+			<isNull property="csarEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarConfirmer" prepend=",">
+				#csarConfirmer#
+			</isNotNull>
+			<isNull property="csarConfirmer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarUpdateTime" prepend=",">
+				#csarUpdateTime#
+			</isNotNull>
+			<isNull property="csarUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarAddTime" prepend=",">
+				#csarAddTime#
+			</isNotNull>
+			<isNull property="csarAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarConfirmTime" prepend=",">
+				#csarConfirmTime#
+			</isNotNull>
+			<isNull property="csarConfirmTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarRemark" prepend=",">
+				#csarRemark#
+			</isNotNull>
+			<isNull property="csarRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csarStatus" prepend=",">
+				#csarStatus#
+			</isNotNull>
+			<isNull property="csarStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新充值扣款 -->
+	<update id="updateCsArtifRecord"  parameterClass="com.ccclubs.model.CsArtifRecord">
+		update cs_artif_record$suffix$ set
+			<isNotNull property="csarHost" prepend="">
+				cs_artif_record$suffix$.csar_host = #csarHost#
+			</isNotNull>
+			<isNull property="csarHost" prepend="">
+				cs_artif_record$suffix$.csar_host = null
+			</isNull>				
+			<isNotNull property="csarTitle" prepend=",">
+				cs_artif_record$suffix$.csar_title = #csarTitle#
+			</isNotNull>
+			<isNull property="csarTitle" prepend=",">
+				cs_artif_record$suffix$.csar_title = null
+			</isNull>				
+			<isNotNull property="csarMember" prepend=",">
+				cs_artif_record$suffix$.csar_member = #csarMember#
+			</isNotNull>
+			<isNull property="csarMember" prepend=",">
+				cs_artif_record$suffix$.csar_member = null
+			</isNull>				
+			<isNotNull property="csarCount" prepend=",">
+				cs_artif_record$suffix$.csar_count = #csarCount#
+			</isNotNull>
+			<isNull property="csarCount" prepend=",">
+				cs_artif_record$suffix$.csar_count = null
+			</isNull>				
+			<isNotNull property="csarMoneyType" prepend=",">
+				cs_artif_record$suffix$.csar_money_type = #csarMoneyType#
+			</isNotNull>
+			<isNull property="csarMoneyType" prepend=",">
+				cs_artif_record$suffix$.csar_money_type = null
+			</isNull>				
+			<isNotNull property="csarRecordSubject" prepend=",">
+				cs_artif_record$suffix$.csar_record_subject = #csarRecordSubject#
+			</isNotNull>
+			<isNull property="csarRecordSubject" prepend=",">
+				cs_artif_record$suffix$.csar_record_subject = null
+			</isNull>				
+			<isNotNull property="csarOrder" prepend=",">
+				cs_artif_record$suffix$.csar_order = #csarOrder#
+			</isNotNull>
+			<isNull property="csarOrder" prepend=",">
+				cs_artif_record$suffix$.csar_order = null
+			</isNull>				
+			<isNotNull property="csarRelate" prepend=",">
+				cs_artif_record$suffix$.csar_relate = #csarRelate#
+			</isNotNull>
+			<isNull property="csarRelate" prepend=",">
+				cs_artif_record$suffix$.csar_relate = null
+			</isNull>				
+			<isNotNull property="csarReceived" prepend=",">
+				cs_artif_record$suffix$.csar_received = #csarReceived#
+			</isNotNull>
+			<isNull property="csarReceived" prepend=",">
+				cs_artif_record$suffix$.csar_received = null
+			</isNull>				
+			<isNotNull property="csarVoucher" prepend=",">
+				cs_artif_record$suffix$.csar_voucher = #csarVoucher#
+			</isNotNull>
+			<isNull property="csarVoucher" prepend=",">
+				cs_artif_record$suffix$.csar_voucher = null
+			</isNull>				
+			<isNotNull property="csarAdder" prepend=",">
+				cs_artif_record$suffix$.csar_adder = #csarAdder#
+			</isNotNull>
+			<isNull property="csarAdder" prepend=",">
+				cs_artif_record$suffix$.csar_adder = null
+			</isNull>				
+			<isNotNull property="csarEditor" prepend=",">
+				cs_artif_record$suffix$.csar_editor = #csarEditor#
+			</isNotNull>
+			<isNull property="csarEditor" prepend=",">
+				cs_artif_record$suffix$.csar_editor = null
+			</isNull>				
+			<isNotNull property="csarConfirmer" prepend=",">
+				cs_artif_record$suffix$.csar_confirmer = #csarConfirmer#
+			</isNotNull>
+			<isNull property="csarConfirmer" prepend=",">
+				cs_artif_record$suffix$.csar_confirmer = null
+			</isNull>				
+			<isNotNull property="csarUpdateTime" prepend=",">
+				cs_artif_record$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotNull>
+			<isNull property="csarUpdateTime" prepend=",">
+				cs_artif_record$suffix$.csar_update_time = null
+			</isNull>				
+			<isNotNull property="csarAddTime" prepend=",">
+				cs_artif_record$suffix$.csar_add_time = #csarAddTime#
+			</isNotNull>
+			<isNull property="csarAddTime" prepend=",">
+				cs_artif_record$suffix$.csar_add_time = null
+			</isNull>				
+			<isNotNull property="csarConfirmTime" prepend=",">
+				cs_artif_record$suffix$.csar_confirm_time = #csarConfirmTime#
+			</isNotNull>
+			<isNull property="csarConfirmTime" prepend=",">
+				cs_artif_record$suffix$.csar_confirm_time = null
+			</isNull>				
+			<isNotNull property="csarRemark" prepend=",">
+				cs_artif_record$suffix$.csar_remark = #csarRemark#
+			</isNotNull>
+			<isNull property="csarRemark" prepend=",">
+				cs_artif_record$suffix$.csar_remark = null
+			</isNull>				
+			<isNotNull property="csarStatus" prepend=",">
+				cs_artif_record$suffix$.csar_status = #csarStatus#
+			</isNotNull>
+			<isNull property="csarStatus" prepend=",">
+				cs_artif_record$suffix$.csar_status = null
+			</isNull>				
+		where
+			csar_id=#csarId#
+	</update>
+	
+	<!-- 更新充值扣款非空字段 -->
+	<update id="updateCsArtifRecord$NotNull"  parameterClass="com.ccclubs.model.CsArtifRecord">
+		update cs_artif_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csarHost" prepend=",">
+				cs_artif_record$suffix$.csar_host = #csarHost#
+			</isNotNull>		
+			<isNotNull property="csarTitle" prepend=",">
+				cs_artif_record$suffix$.csar_title = #csarTitle#
+			</isNotNull>		
+			<isNotNull property="csarMember" prepend=",">
+				cs_artif_record$suffix$.csar_member = #csarMember#
+			</isNotNull>		
+			<isNotNull property="csarCount" prepend=",">
+				cs_artif_record$suffix$.csar_count = #csarCount#
+			</isNotNull>		
+			<isNotNull property="csarMoneyType" prepend=",">
+				cs_artif_record$suffix$.csar_money_type = #csarMoneyType#
+			</isNotNull>		
+			<isNotNull property="csarRecordSubject" prepend=",">
+				cs_artif_record$suffix$.csar_record_subject = #csarRecordSubject#
+			</isNotNull>		
+			<isNotNull property="csarOrder" prepend=",">
+				cs_artif_record$suffix$.csar_order = #csarOrder#
+			</isNotNull>		
+			<isNotNull property="csarRelate" prepend=",">
+				cs_artif_record$suffix$.csar_relate = #csarRelate#
+			</isNotNull>		
+			<isNotNull property="csarReceived" prepend=",">
+				cs_artif_record$suffix$.csar_received = #csarReceived#
+			</isNotNull>		
+			<isNotNull property="csarVoucher" prepend=",">
+				cs_artif_record$suffix$.csar_voucher = #csarVoucher#
+			</isNotNull>		
+			<isNotNull property="csarAdder" prepend=",">
+				cs_artif_record$suffix$.csar_adder = #csarAdder#
+			</isNotNull>		
+			<isNotNull property="csarEditor" prepend=",">
+				cs_artif_record$suffix$.csar_editor = #csarEditor#
+			</isNotNull>		
+			<isNotNull property="csarConfirmer" prepend=",">
+				cs_artif_record$suffix$.csar_confirmer = #csarConfirmer#
+			</isNotNull>		
+			<isNotNull property="csarUpdateTime" prepend=",">
+				cs_artif_record$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csarAddTime" prepend=",">
+				cs_artif_record$suffix$.csar_add_time = #csarAddTime#
+			</isNotNull>		
+			<isNotNull property="csarConfirmTime" prepend=",">
+				cs_artif_record$suffix$.csar_confirm_time = #csarConfirmTime#
+			</isNotNull>		
+			<isNotNull property="csarRemark" prepend=",">
+				cs_artif_record$suffix$.csar_remark = #csarRemark#
+			</isNotNull>		
+			<isNotNull property="csarStatus" prepend=",">
+				cs_artif_record$suffix$.csar_status = #csarStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csar_id=#csarId#
+	</update>
+	
+
+	<!-- 根据ID删除一个充值扣款 -->
+	<delete id="deleteCsArtifRecordById" parameterClass="java.util.HashMap">
+		delete from cs_artif_record$suffix$ where csar_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个充值扣款 -->
+	<update id="removeCsArtifRecordById" parameterClass="java.util.HashMap">
+		update cs_artif_record$suffix$ set  cs_artif_record$suffix$.csar_status=-1  where csar_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新充值扣款 -->
+	<update id="updateCsArtifRecordBy"  parameterClass="java.util.HashMap">
+		update cs_artif_record$suffix$ set		
+			csar_id=csar_id
+			<isNotNull property="V_csarId" prepend=",">
+				cs_artif_record$suffix$.csar_id = #V_csarId#
+			</isNotNull>		
+			<isNotNull property="V_csarHost" prepend=",">
+				cs_artif_record$suffix$.csar_host = #V_csarHost#
+			</isNotNull>		
+			<isNotNull property="V_csarTitle" prepend=",">
+				cs_artif_record$suffix$.csar_title = #V_csarTitle#
+			</isNotNull>		
+			<isNotNull property="V_csarMember" prepend=",">
+				cs_artif_record$suffix$.csar_member = #V_csarMember#
+			</isNotNull>		
+			<isNotNull property="V_csarCount" prepend=",">
+				cs_artif_record$suffix$.csar_count = #V_csarCount#
+			</isNotNull>		
+			<isNotNull property="V_csarMoneyType" prepend=",">
+				cs_artif_record$suffix$.csar_money_type = #V_csarMoneyType#
+			</isNotNull>		
+			<isNotNull property="V_csarRecordSubject" prepend=",">
+				cs_artif_record$suffix$.csar_record_subject = #V_csarRecordSubject#
+			</isNotNull>		
+			<isNotNull property="V_csarOrder" prepend=",">
+				cs_artif_record$suffix$.csar_order = #V_csarOrder#
+			</isNotNull>		
+			<isNotNull property="V_csarRelate" prepend=",">
+				cs_artif_record$suffix$.csar_relate = #V_csarRelate#
+			</isNotNull>		
+			<isNotNull property="V_csarReceived" prepend=",">
+				cs_artif_record$suffix$.csar_received = #V_csarReceived#
+			</isNotNull>		
+			<isNotNull property="V_csarVoucher" prepend=",">
+				cs_artif_record$suffix$.csar_voucher = #V_csarVoucher#
+			</isNotNull>		
+			<isNotNull property="V_csarAdder" prepend=",">
+				cs_artif_record$suffix$.csar_adder = #V_csarAdder#
+			</isNotNull>		
+			<isNotNull property="V_csarEditor" prepend=",">
+				cs_artif_record$suffix$.csar_editor = #V_csarEditor#
+			</isNotNull>		
+			<isNotNull property="V_csarConfirmer" prepend=",">
+				cs_artif_record$suffix$.csar_confirmer = #V_csarConfirmer#
+			</isNotNull>		
+			<isNotNull property="V_csarUpdateTime" prepend=",">
+				cs_artif_record$suffix$.csar_update_time = #V_csarUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csarAddTime" prepend=",">
+				cs_artif_record$suffix$.csar_add_time = #V_csarAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csarConfirmTime" prepend=",">
+				cs_artif_record$suffix$.csar_confirm_time = #V_csarConfirmTime#
+			</isNotNull>		
+			<isNotNull property="V_csarRemark" prepend=",">
+				cs_artif_record$suffix$.csar_remark = #V_csarRemark#
+			</isNotNull>		
+			<isNotNull property="V_csarStatus" prepend=",">
+				cs_artif_record$suffix$.csar_status = #V_csarStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.csar_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_artif_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询-->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.csar_record_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_artif_record$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.csar_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_artif_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_artif_record$suffix$.csar_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsarMember"><!-- 调用一下CsarMember，把CsMember指向CsarMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsarRecordSubject"><!-- 调用一下CsarRecordSubject，把CsRecordSubject指向CsarRecordSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsarOrder"><!-- 调用一下CsarOrder，把CsOrder指向CsarOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsArtifRecord_part.cs_artif_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除充值扣款 -->
+	<update id="deleteCsArtifRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_artif_record$suffix$ where 
+		cs_artif_record$suffix$.csar_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsArtifRecord_part.cs_artif_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

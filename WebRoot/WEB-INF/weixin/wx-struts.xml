@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢struts的Action框架 -->
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="htm,html"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+
+	<!-- 外勤扫码签到 -->
+	<package name="wx.admin" extends="struts-default" namespace="/weixin/admin">
+		<action name="index" method="execute" class="wxAdminAction">
+			<result name="index">index.html</result>
+		</action>
+		<action name="check_*" method="{1}" class="wxCheckAction">
+			<result name="check">check.html</result>
+		</action>
+		<action name="scan_*" method="{1}" class="wxScanAction">
+			<result name="scan">scan.html</result>
+			<result name="bind">scan_bind.html</result>
+		</action>
+	</package>
+	<package name="wx.root" extends="struts-default" namespace="/weixin">
+		<!-- 微信接口地址 -->
+		<action name="interface-*" method="{1}" class="wxInterfaceAction"></action>
+		<!-- 微信授权地址 -->
+		<action name="oauth_*" method="{1}" class="wxOauthAction"></action>
+		<action name="oauth2_*" method="{1}" class="wxOauth2Action"></action>
+		<!-- 图片上传 -->
+		<action name="upload" method="execute" class="wxUploadAction"></action>
+		<action name="index" method="execute" class="wxIndexAction">
+			<result name="index">index.html</result>
+		</action>
+		<action name="ajax_*" method="{1}" class="wxAjaxAction"></action>
+		<!-- 用户登录 -->
+		<action name="login_*" method="{1}" class="wxLoginAction">
+			<result name="login">login.html</result>
+			<result name="success" type="redirect">/weixin/account.html</result>
+			<result name="403" type="redirect">/weixin/403.html</result>
+		</action>
+		<!-- 网点分布 -->
+		<action name="parkinglot_*" method="{1}" class="wxParkinglotAction">
+			<result name="parkinglot">parkinglot.html</result>
+			<result name="itemlist">parkinglot_itemlist.html</result>
+			<result name="itemdetail">parkinglot_itemdetail.html</result>
+			<result name="map">parkinglot_map.html</result>
+			<result name="mapall">parkinglot_mapall.html</result>
+			<result name="maparea">parkinglot_maparea.html</result>
+		</action>
+		<!-- 订车-->
+		<action name="reserve_*" method="{1}" class="wxReserveAction">
+			<result name="reserve">reserve.html</result>
+			<result name="more">reserve_more.html</result>
+			<result name="checkout">reserve_checkout.html</result>
+			<result name="timeline">reserve_timeline.html</result>
+		</action>
+		<!-- 账户-->
+		<action name="account_*" method="{1}" class="wxAccountAction">
+			<result name="success" type="redirect">/weixin/account.html</result>
+			<result name="account">account.html</result>
+			<result name="bind">account_bind.html</result>
+			<result name="amount">account_amount.html</result>
+			<result name="recharge">account_recharge.html</result>
+			<result name="coupon">account_coupon.html</result>
+			<result name="buy">account_buy.html</result>
+			<result name="exchange">account_exchange.html</result>
+			<result name="callback">account_callback.html</result>
+			<result name="refund">account_refund.html</result>
+			<result name="pw">account_pw.html</result>
+			<result name="order">account_order.html</result>
+			<result name="orderdetail">account_orderdetail.html</result>
+			<result name="consumerdetails">account_consumerdetails.html</result>
+			<result name="ordercontinue">account_ordercontinue.html</result>
+			<result name="register">account_register.html</result>
+			<result name="forgot">account_forgot.html</result>
+			<result name="forgotset">account_forgotset.html</result>
+			<result name="setpwd">account_setpwd.html</result>
+			<result name="setname">account_setname.html</result>
+			<result name="ordermore">account_ordermore.html</result>
+			<result name="credit">account_credit.html</result>
+			<result name="creditInfo">account_creditInfo.html</result>
+			<result name="coin">account_coin.html</result>
+			<result name="paycoin">account_paycoin.html</result>
+			<result name="coinInfo">account_coinInfo.html</result>
+			<result name="binding">account_binding.html</result>
+			<result name="remote">account_remote.html</result>
+			<result name="weizhang">account_weizhang.html</result>
+			<result name="coinsof88">account_coinsof88.html</result>
+		</action>
+		<!-- 价格 -->
+		<action name="price_*" method="{1}" class="wxPriceAction">
+			<result name="price">price.html</result>
+		</action>
+		<!-- 价格 -->
+		<action name="product_*" method="{1}" class="wxProductAction">
+			<result name="product">product.html</result>
+			<result name="detail">product_detail.html</result>
+		</action>
+		<!-- 活动 -->
+		<action name="activity_*" method="{1}" class="wxActivityAction">
+			<result name="activity">activity.html</result>
+			<result name="detail">activity_detail.html</result>
+		</action>
+
+	</package>
+
+
+	<!-- 全局的Action处理，必须放在最后 -->
+	<package name="wx.default" extends="struts-default">
+		<default-action-ref name="index" />
+		<action name="**" method="execute" class="weiXinDefaultAction">
+			<result name="default">${#request.servletPath}</result>
+		</action>
+	</package>
+
+</struts>

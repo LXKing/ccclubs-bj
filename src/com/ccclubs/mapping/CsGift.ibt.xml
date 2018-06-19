@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 优惠内容之SQL映射 -->
+	<resultMap id="CsGift" class="com.ccclubs.model.CsGift">
+		<result property="csgId" column="csg_id"/>
+		<result property="csgHost" column="csg_host"/>
+		<result property="csgName" column="csg_name"/>
+		<result property="csgMember" column="csg_member"/>
+		<result property="csgSysPack" column="csg_sys_pack"/>
+		<result property="csgUserPack" column="csg_user_pack"/>
+		<result property="csgGoods" column="csg_goods"/>
+		<result property="csgOutlets" column="csg_outlets"/>
+		<result property="csgModel" column="csg_model"/>
+		<result property="csgType" column="csg_type"/>
+		<result property="csgCount" column="csg_count"/>
+		<result property="csgRemain" column="csg_remain"/>
+		<result property="csgPrice" column="csg_price"/>
+		<result property="csgRebate" column="csg_rebate"/>
+		<result property="csgScript" column="csg_script"/>
+		<result property="csgUntilTime" column="csg_until_time"/>
+		<result property="csgUpdateTime" column="csg_update_time"/>
+		<result property="csgAddTime" column="csg_add_time"/>
+		<result property="csgStatus" column="csg_status"/>
+	</resultMap>
+		
+	<!-- 获取所有优惠内容 -->
+	<select id="getCsGiftList" resultMap="CsGift">
+		select cs_gift$suffix$.* from cs_gift$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.csg_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.csg_sys_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询-->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<isNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.csg_user_pack=cs_user_pack$CsUserPack.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.$CsUserPack.on$=cs_user_pack$CsUserPack.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询-->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.csg_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.csg_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_gift$suffix$.csg_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询条件sql片段 -->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<include refid="CsUserPack_part.cs_user_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGift_part.cs_gift_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csg_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取优惠内容分页 -->
+	<select id="getCsGiftPage" parameterClass="java.util.HashMap" resultMap="CsGift">
+		select cs_gift$suffix$.* from cs_gift$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.csg_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询 -->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.csg_sys_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询 -->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<isNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.csg_user_pack=cs_user_pack$CsUserPack.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.$CsUserPack.on$=cs_user_pack$CsUserPack.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询 -->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.csg_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.csg_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_gift$suffix$.csg_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询条件sql片段 -->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<include refid="CsUserPack_part.cs_user_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGift_part.cs_gift_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csg_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取优惠内容总数 -->
+	<select id="getCsGiftEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_gift$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.csg_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.csg_sys_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<isNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.csg_user_pack=cs_user_pack$CsUserPack.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.$CsUserPack.on$=cs_user_pack$CsUserPack.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.csg_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.csg_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_gift$suffix$.csg_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询条件sql片段 -->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<include refid="CsUserPack_part.cs_user_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGift_part.cs_gift_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取优惠内容 -->
+	<select id="getCsGiftById" parameterClass="java.util.HashMap" resultMap="CsGift">
+		select cs_gift$suffix$.* from cs_gift$suffix$
+		where csg_id=#id#
+	</select>
+	
+		
+	<!-- 保存优惠内容 -->
+	<insert id="saveCsGift"  parameterClass="com.ccclubs.model.CsGift">
+		insert into cs_gift$suffix$
+		(
+			cs_gift$suffix$.csg_host
+			,cs_gift$suffix$.csg_name
+			,cs_gift$suffix$.csg_member
+			,cs_gift$suffix$.csg_sys_pack
+			,cs_gift$suffix$.csg_user_pack
+			,cs_gift$suffix$.csg_goods
+			,cs_gift$suffix$.csg_outlets
+			,cs_gift$suffix$.csg_model
+			,cs_gift$suffix$.csg_type
+			,cs_gift$suffix$.csg_count
+			,cs_gift$suffix$.csg_remain
+			,cs_gift$suffix$.csg_price
+			,cs_gift$suffix$.csg_rebate
+			,cs_gift$suffix$.csg_script
+			,cs_gift$suffix$.csg_until_time
+			,cs_gift$suffix$.csg_update_time
+			,cs_gift$suffix$.csg_add_time
+			,cs_gift$suffix$.csg_status
+		)
+		values(
+			<isNotNull property="csgHost" prepend="">
+				#csgHost#
+			</isNotNull>
+			<isNull property="csgHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csgName" prepend=",">
+				#csgName#
+			</isNotNull>
+			<isNull property="csgName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgMember" prepend=",">
+				#csgMember#
+			</isNotNull>
+			<isNull property="csgMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgSysPack" prepend=",">
+				#csgSysPack#
+			</isNotNull>
+			<isNull property="csgSysPack" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgUserPack" prepend=",">
+				#csgUserPack#
+			</isNotNull>
+			<isNull property="csgUserPack" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgGoods" prepend=",">
+				#csgGoods#
+			</isNotNull>
+			<isNull property="csgGoods" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgOutlets" prepend=",">
+				#csgOutlets#
+			</isNotNull>
+			<isNull property="csgOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgModel" prepend=",">
+				#csgModel#
+			</isNotNull>
+			<isNull property="csgModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgType" prepend=",">
+				#csgType#
+			</isNotNull>
+			<isNull property="csgType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgCount" prepend=",">
+				#csgCount#
+			</isNotNull>
+			<isNull property="csgCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgRemain" prepend=",">
+				#csgRemain#
+			</isNotNull>
+			<isNull property="csgRemain" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgPrice" prepend=",">
+				#csgPrice#
+			</isNotNull>
+			<isNull property="csgPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgRebate" prepend=",">
+				#csgRebate#
+			</isNotNull>
+			<isNull property="csgRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgScript" prepend=",">
+				#csgScript#
+			</isNotNull>
+			<isNull property="csgScript" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgUntilTime" prepend=",">
+				#csgUntilTime#
+			</isNotNull>
+			<isNull property="csgUntilTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgUpdateTime" prepend=",">
+				#csgUpdateTime#
+			</isNotNull>
+			<isNull property="csgUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgAddTime" prepend=",">
+				#csgAddTime#
+			</isNotNull>
+			<isNull property="csgAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgStatus" prepend=",">
+				#csgStatus#
+			</isNotNull>
+			<isNull property="csgStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新优惠内容 -->
+	<update id="updateCsGift"  parameterClass="com.ccclubs.model.CsGift">
+		update cs_gift$suffix$ set
+			<isNotNull property="csgHost" prepend="">
+				cs_gift$suffix$.csg_host = #csgHost#
+			</isNotNull>
+			<isNull property="csgHost" prepend="">
+				cs_gift$suffix$.csg_host = null
+			</isNull>				
+			<isNotNull property="csgName" prepend=",">
+				cs_gift$suffix$.csg_name = #csgName#
+			</isNotNull>
+			<isNull property="csgName" prepend=",">
+				cs_gift$suffix$.csg_name = null
+			</isNull>				
+			<isNotNull property="csgMember" prepend=",">
+				cs_gift$suffix$.csg_member = #csgMember#
+			</isNotNull>
+			<isNull property="csgMember" prepend=",">
+				cs_gift$suffix$.csg_member = null
+			</isNull>				
+			<isNotNull property="csgSysPack" prepend=",">
+				cs_gift$suffix$.csg_sys_pack = #csgSysPack#
+			</isNotNull>
+			<isNull property="csgSysPack" prepend=",">
+				cs_gift$suffix$.csg_sys_pack = null
+			</isNull>				
+			<isNotNull property="csgUserPack" prepend=",">
+				cs_gift$suffix$.csg_user_pack = #csgUserPack#
+			</isNotNull>
+			<isNull property="csgUserPack" prepend=",">
+				cs_gift$suffix$.csg_user_pack = null
+			</isNull>				
+			<isNotNull property="csgGoods" prepend=",">
+				cs_gift$suffix$.csg_goods = #csgGoods#
+			</isNotNull>
+			<isNull property="csgGoods" prepend=",">
+				cs_gift$suffix$.csg_goods = null
+			</isNull>				
+			<isNotNull property="csgOutlets" prepend=",">
+				cs_gift$suffix$.csg_outlets = #csgOutlets#
+			</isNotNull>
+			<isNull property="csgOutlets" prepend=",">
+				cs_gift$suffix$.csg_outlets = null
+			</isNull>				
+			<isNotNull property="csgModel" prepend=",">
+				cs_gift$suffix$.csg_model = #csgModel#
+			</isNotNull>
+			<isNull property="csgModel" prepend=",">
+				cs_gift$suffix$.csg_model = null
+			</isNull>				
+			<isNotNull property="csgType" prepend=",">
+				cs_gift$suffix$.csg_type = #csgType#
+			</isNotNull>
+			<isNull property="csgType" prepend=",">
+				cs_gift$suffix$.csg_type = null
+			</isNull>				
+			<isNotNull property="csgCount" prepend=",">
+				cs_gift$suffix$.csg_count = #csgCount#
+			</isNotNull>
+			<isNull property="csgCount" prepend=",">
+				cs_gift$suffix$.csg_count = null
+			</isNull>				
+			<isNotNull property="csgRemain" prepend=",">
+				cs_gift$suffix$.csg_remain = #csgRemain#
+			</isNotNull>
+			<isNull property="csgRemain" prepend=",">
+				cs_gift$suffix$.csg_remain = null
+			</isNull>				
+			<isNotNull property="csgPrice" prepend=",">
+				cs_gift$suffix$.csg_price = #csgPrice#
+			</isNotNull>
+			<isNull property="csgPrice" prepend=",">
+				cs_gift$suffix$.csg_price = null
+			</isNull>				
+			<isNotNull property="csgRebate" prepend=",">
+				cs_gift$suffix$.csg_rebate = #csgRebate#
+			</isNotNull>
+			<isNull property="csgRebate" prepend=",">
+				cs_gift$suffix$.csg_rebate = null
+			</isNull>				
+			<isNotNull property="csgScript" prepend=",">
+				cs_gift$suffix$.csg_script = #csgScript#
+			</isNotNull>
+			<isNull property="csgScript" prepend=",">
+				cs_gift$suffix$.csg_script = null
+			</isNull>				
+			<isNotNull property="csgUntilTime" prepend=",">
+				cs_gift$suffix$.csg_until_time = #csgUntilTime#
+			</isNotNull>
+			<isNull property="csgUntilTime" prepend=",">
+				cs_gift$suffix$.csg_until_time = null
+			</isNull>				
+			<isNotNull property="csgUpdateTime" prepend=",">
+				cs_gift$suffix$.csg_update_time = #csgUpdateTime#
+			</isNotNull>
+			<isNull property="csgUpdateTime" prepend=",">
+				cs_gift$suffix$.csg_update_time = null
+			</isNull>				
+			<isNotNull property="csgAddTime" prepend=",">
+				cs_gift$suffix$.csg_add_time = #csgAddTime#
+			</isNotNull>
+			<isNull property="csgAddTime" prepend=",">
+				cs_gift$suffix$.csg_add_time = null
+			</isNull>				
+			<isNotNull property="csgStatus" prepend=",">
+				cs_gift$suffix$.csg_status = #csgStatus#
+			</isNotNull>
+			<isNull property="csgStatus" prepend=",">
+				cs_gift$suffix$.csg_status = null
+			</isNull>				
+		where
+			csg_id=#csgId#
+	</update>
+	
+	<!-- 更新优惠内容非空字段 -->
+	<update id="updateCsGift$NotNull"  parameterClass="com.ccclubs.model.CsGift">
+		update cs_gift$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csgHost" prepend=",">
+				cs_gift$suffix$.csg_host = #csgHost#
+			</isNotNull>		
+			<isNotNull property="csgName" prepend=",">
+				cs_gift$suffix$.csg_name = #csgName#
+			</isNotNull>		
+			<isNotNull property="csgMember" prepend=",">
+				cs_gift$suffix$.csg_member = #csgMember#
+			</isNotNull>		
+			<isNotNull property="csgSysPack" prepend=",">
+				cs_gift$suffix$.csg_sys_pack = #csgSysPack#
+			</isNotNull>		
+			<isNotNull property="csgUserPack" prepend=",">
+				cs_gift$suffix$.csg_user_pack = #csgUserPack#
+			</isNotNull>		
+			<isNotNull property="csgGoods" prepend=",">
+				cs_gift$suffix$.csg_goods = #csgGoods#
+			</isNotNull>		
+			<isNotNull property="csgOutlets" prepend=",">
+				cs_gift$suffix$.csg_outlets = #csgOutlets#
+			</isNotNull>		
+			<isNotNull property="csgModel" prepend=",">
+				cs_gift$suffix$.csg_model = #csgModel#
+			</isNotNull>		
+			<isNotNull property="csgType" prepend=",">
+				cs_gift$suffix$.csg_type = #csgType#
+			</isNotNull>		
+			<isNotNull property="csgCount" prepend=",">
+				cs_gift$suffix$.csg_count = #csgCount#
+			</isNotNull>		
+			<isNotNull property="csgRemain" prepend=",">
+				cs_gift$suffix$.csg_remain = #csgRemain#
+			</isNotNull>		
+			<isNotNull property="csgPrice" prepend=",">
+				cs_gift$suffix$.csg_price = #csgPrice#
+			</isNotNull>		
+			<isNotNull property="csgRebate" prepend=",">
+				cs_gift$suffix$.csg_rebate = #csgRebate#
+			</isNotNull>		
+			<isNotNull property="csgScript" prepend=",">
+				cs_gift$suffix$.csg_script = #csgScript#
+			</isNotNull>		
+			<isNotNull property="csgUntilTime" prepend=",">
+				cs_gift$suffix$.csg_until_time = #csgUntilTime#
+			</isNotNull>		
+			<isNotNull property="csgUpdateTime" prepend=",">
+				cs_gift$suffix$.csg_update_time = #csgUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csgAddTime" prepend=",">
+				cs_gift$suffix$.csg_add_time = #csgAddTime#
+			</isNotNull>		
+			<isNotNull property="csgStatus" prepend=",">
+				cs_gift$suffix$.csg_status = #csgStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csg_id=#csgId#
+	</update>
+	
+
+	<!-- 根据ID删除一个优惠内容 -->
+	<delete id="deleteCsGiftById" parameterClass="java.util.HashMap">
+		delete from cs_gift$suffix$ where csg_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个优惠内容 -->
+	<update id="removeCsGiftById" parameterClass="java.util.HashMap">
+		update cs_gift$suffix$ set  cs_gift$suffix$.csg_status=-1  where csg_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新优惠内容 -->
+	<update id="updateCsGiftBy"  parameterClass="java.util.HashMap">
+		update cs_gift$suffix$ set		
+			csg_id=csg_id
+			<isNotNull property="V_csgId" prepend=",">
+				cs_gift$suffix$.csg_id = #V_csgId#
+			</isNotNull>		
+			<isNotNull property="V_csgHost" prepend=",">
+				cs_gift$suffix$.csg_host = #V_csgHost#
+			</isNotNull>		
+			<isNotNull property="V_csgName" prepend=",">
+				cs_gift$suffix$.csg_name = #V_csgName#
+			</isNotNull>		
+			<isNotNull property="V_csgMember" prepend=",">
+				cs_gift$suffix$.csg_member = #V_csgMember#
+			</isNotNull>		
+			<isNotNull property="V_csgSysPack" prepend=",">
+				cs_gift$suffix$.csg_sys_pack = #V_csgSysPack#
+			</isNotNull>		
+			<isNotNull property="V_csgUserPack" prepend=",">
+				cs_gift$suffix$.csg_user_pack = #V_csgUserPack#
+			</isNotNull>		
+			<isNotNull property="V_csgGoods" prepend=",">
+				cs_gift$suffix$.csg_goods = #V_csgGoods#
+			</isNotNull>		
+			<isNotNull property="V_csgOutlets" prepend=",">
+				cs_gift$suffix$.csg_outlets = #V_csgOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csgModel" prepend=",">
+				cs_gift$suffix$.csg_model = #V_csgModel#
+			</isNotNull>		
+			<isNotNull property="V_csgType" prepend=",">
+				cs_gift$suffix$.csg_type = #V_csgType#
+			</isNotNull>		
+			<isNotNull property="V_csgCount" prepend=",">
+				cs_gift$suffix$.csg_count = #V_csgCount#
+			</isNotNull>		
+			<isNotNull property="V_csgRemain" prepend=",">
+				cs_gift$suffix$.csg_remain = #V_csgRemain#
+			</isNotNull>		
+			<isNotNull property="V_csgPrice" prepend=",">
+				cs_gift$suffix$.csg_price = #V_csgPrice#
+			</isNotNull>		
+			<isNotNull property="V_csgRebate" prepend=",">
+				cs_gift$suffix$.csg_rebate = #V_csgRebate#
+			</isNotNull>		
+			<isNotNull property="V_csgScript" prepend=",">
+				cs_gift$suffix$.csg_script = #V_csgScript#
+			</isNotNull>		
+			<isNotNull property="V_csgUntilTime" prepend=",">
+				cs_gift$suffix$.csg_until_time = #V_csgUntilTime#
+			</isNotNull>		
+			<isNotNull property="V_csgUpdateTime" prepend=",">
+				cs_gift$suffix$.csg_update_time = #V_csgUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csgAddTime" prepend=",">
+				cs_gift$suffix$.csg_add_time = #V_csgAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csgStatus" prepend=",">
+				cs_gift$suffix$.csg_status = #V_csgStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.csg_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_gift$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.csg_sys_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_gift$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询-->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<isNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.csg_user_pack=cs_user_pack$CsUserPack.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUserPack.on">
+				left join cs_user_pack cs_user_pack$CsUserPack.suffix$ on cs_gift$suffix$.$CsUserPack.on$=cs_user_pack$CsUserPack.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询-->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.csg_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_gift$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.csg_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_gift$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_gift$suffix$.csg_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgMember"><!-- 调用一下CsgMember，把CsMember指向CsgMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CsgSysPack"><!-- 调用一下CsgSysPack，把CsPack指向CsgSysPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用户套餐]查询条件sql片段 -->
+		<isNotNull property="CsgUserPack"><!-- 调用一下CsgUserPack，把CsUserPack指向CsgUserPack --></isNotNull>
+		<isNotNull property="CsUserPack">
+			<include refid="CsUserPack_part.cs_user_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsgGoods"><!-- 调用一下CsgGoods，把CsGoods指向CsgGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsgOutlets"><!-- 调用一下CsgOutlets，把CsOutlets指向CsgOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsGift_part.cs_gift_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除优惠内容 -->
+	<update id="deleteCsGiftBy"  parameterClass="java.util.HashMap">
+		delete from cs_gift$suffix$ where 
+		cs_gift$suffix$.csg_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsGift_part.cs_gift_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

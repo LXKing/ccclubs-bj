@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+
+	
+	<!-- 司机车辆之SQL映射 -->
+	<resultMap id="CsDriverCar" class="com.ccclubs.model.CsDriverCar">
+		<result property="csdcId" column="csdc_id"/>
+		<result property="csdcHost" column="csdc_host"/>
+		<result property="csdcOutlets" column="csdc_outlets"/>
+		<result property="csdcDriver" column="csdc_driver"/>
+		<result property="csdcCar" column="csdc_car"/>
+		<result property="csdcState" column="csdc_state"/>
+		<result property="csdcStatus" column="csdc_status"/>
+		<result property="csdcAddTime" column="csdc_add_time"/>
+		<result property="csdcUpdateTime" column="csdc_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有司机车辆 -->
+	<select id="getCsDriverCarList" resultMap="CsDriverCar">
+		select cs_driver_car$suffix$.* from cs_driver_car$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.csdc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询-->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<isNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.csdc_driver=cs_driver$CsDriver.suffix$.csd_id
+			</isNull>
+			<isNotNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.$CsDriver.on$=cs_driver$CsDriver.suffix$.csd_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<isNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.csdc_car=cs_car_res$CsCarRes.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.$CsCarRes.on$=cs_car_res$CsCarRes.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_driver_car$suffix$.csdc_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询条件sql片段 -->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<include refid="CsDriver_part.cs_driver_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<include refid="CsCarRes_part.cs_car_res_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsDriverCar_part.cs_driver_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csdc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取司机车辆分页 -->
+	<select id="getCsDriverCarPage" parameterClass="java.util.HashMap" resultMap="CsDriverCar">
+		select cs_driver_car$suffix$.* from cs_driver_car$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.csdc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询-->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<isNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.csdc_driver=cs_driver$CsDriver.suffix$.csd_id
+			</isNull>
+			<isNotNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.$CsDriver.on$=cs_driver$CsDriver.suffix$.csd_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<isNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.csdc_car=cs_car_res$CsCarRes.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.$CsCarRes.on$=cs_car_res$CsCarRes.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_driver_car$suffix$.csdc_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询条件sql片段 -->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<include refid="CsDriver_part.cs_driver_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<include refid="CsCarRes_part.cs_car_res_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsDriverCar_part.cs_driver_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csdc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取司机车辆总数 -->
+	<select id="getCsDriverCarEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_driver_car$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.csdc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询-->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<isNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.csdc_driver=cs_driver$CsDriver.suffix$.csd_id
+			</isNull>
+			<isNotNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.$CsDriver.on$=cs_driver$CsDriver.suffix$.csd_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<isNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.csdc_car=cs_car_res$CsCarRes.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.$CsCarRes.on$=cs_car_res$CsCarRes.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_driver_car$suffix$.csdc_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询条件sql片段 -->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<include refid="CsDriver_part.cs_driver_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<include refid="CsCarRes_part.cs_car_res_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsDriverCar_part.cs_driver_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取司机车辆 -->
+	<select id="getCsDriverCarById" parameterClass="java.util.HashMap" resultMap="CsDriverCar">
+		select cs_driver_car$suffix$.* from cs_driver_car$suffix$
+		where csdc_id=#id#
+	</select>
+	
+		
+	<!-- 保存司机车辆 -->
+	<insert id="saveCsDriverCar"  parameterClass="com.ccclubs.model.CsDriverCar">
+		insert into cs_driver_car$suffix$
+		(
+			cs_driver_car$suffix$.csdc_host
+			,cs_driver_car$suffix$.csdc_outlets
+			,cs_driver_car$suffix$.csdc_driver
+			,cs_driver_car$suffix$.csdc_car
+			,cs_driver_car$suffix$.csdc_state
+			,cs_driver_car$suffix$.csdc_status
+			,cs_driver_car$suffix$.csdc_add_time
+			,cs_driver_car$suffix$.csdc_update_time
+		)
+		values(
+			<isNotNull property="csdcHost" prepend="">
+				#csdcHost#
+			</isNotNull>
+			<isNull property="csdcHost" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="csdcOutlets" prepend=",">
+				#csdcOutlets#
+			</isNotNull>
+			<isNull property="csdcOutlets" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdcDriver" prepend=",">
+				#csdcDriver#
+			</isNotNull>
+			<isNull property="csdcDriver" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdcCar" prepend=",">
+				#csdcCar#
+			</isNotNull>
+			<isNull property="csdcCar" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdcState" prepend=",">
+				#csdcState#
+			</isNotNull>
+			<isNull property="csdcState" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdcStatus" prepend=",">
+				#csdcStatus#
+			</isNotNull>
+			<isNull property="csdcStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdcAddTime" prepend=",">
+				#csdcAddTime#
+			</isNotNull>
+			<isNull property="csdcAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdcUpdateTime" prepend=",">
+				#csdcUpdateTime#
+			</isNotNull>
+			<isNull property="csdcUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新司机车辆 -->
+	<update id="updateCsDriverCar"  parameterClass="com.ccclubs.model.CsDriverCar">
+		update cs_driver_car$suffix$ set
+			<isNotNull property="csdcHost" prepend="">
+				cs_driver_car$suffix$.csdc_host = #csdcHost#
+			</isNotNull>
+			<isNull property="csdcHost" prepend="">
+				cs_driver_car$suffix$.csdc_host = null
+			</isNull>				
+			<isNotNull property="csdcOutlets" prepend=",">
+				cs_driver_car$suffix$.csdc_outlets = #csdcOutlets#
+			</isNotNull>
+			<isNull property="csdcOutlets" prepend=",">
+				cs_driver_car$suffix$.csdc_outlets = null
+			</isNull>				
+			<isNotNull property="csdcDriver" prepend=",">
+				cs_driver_car$suffix$.csdc_driver = #csdcDriver#
+			</isNotNull>
+			<isNull property="csdcDriver" prepend=",">
+				cs_driver_car$suffix$.csdc_driver = null
+			</isNull>				
+			<isNotNull property="csdcCar" prepend=",">
+				cs_driver_car$suffix$.csdc_car = #csdcCar#
+			</isNotNull>
+			<isNull property="csdcCar" prepend=",">
+				cs_driver_car$suffix$.csdc_car = null
+			</isNull>				
+			<isNotNull property="csdcState" prepend=",">
+				cs_driver_car$suffix$.csdc_state = #csdcState#
+			</isNotNull>
+			<isNull property="csdcState" prepend=",">
+				cs_driver_car$suffix$.csdc_state = null
+			</isNull>				
+			<isNotNull property="csdcStatus" prepend=",">
+				cs_driver_car$suffix$.csdc_status = #csdcStatus#
+			</isNotNull>
+			<isNull property="csdcStatus" prepend=",">
+				cs_driver_car$suffix$.csdc_status = null
+			</isNull>				
+			<isNotNull property="csdcAddTime" prepend=",">
+				cs_driver_car$suffix$.csdc_add_time = #csdcAddTime#
+			</isNotNull>
+			<isNull property="csdcAddTime" prepend=",">
+				cs_driver_car$suffix$.csdc_add_time = null
+			</isNull>				
+			<isNotNull property="csdcUpdateTime" prepend=",">
+				cs_driver_car$suffix$.csdc_update_time = #csdcUpdateTime#
+			</isNotNull>
+			<isNull property="csdcUpdateTime" prepend=",">
+				cs_driver_car$suffix$.csdc_update_time = null
+			</isNull>				
+		where
+			csdc_id=#csdcId#
+	</update>
+	
+	<!-- 更新司机车辆非空字段 -->
+	<update id="updateCsDriverCar$NotNull"  parameterClass="com.ccclubs.model.CsDriverCar">
+		update cs_driver_car$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csdcHost" prepend=",">
+				cs_driver_car$suffix$.csdc_host = #csdcHost#
+			</isNotNull>		
+			<isNotNull property="csdcOutlets" prepend=",">
+				cs_driver_car$suffix$.csdc_outlets = #csdcOutlets#
+			</isNotNull>		
+			<isNotNull property="csdcDriver" prepend=",">
+				cs_driver_car$suffix$.csdc_driver = #csdcDriver#
+			</isNotNull>		
+			<isNotNull property="csdcCar" prepend=",">
+				cs_driver_car$suffix$.csdc_car = #csdcCar#
+			</isNotNull>		
+			<isNotNull property="csdcState" prepend=",">
+				cs_driver_car$suffix$.csdc_state = #csdcState#
+			</isNotNull>		
+			<isNotNull property="csdcStatus" prepend=",">
+				cs_driver_car$suffix$.csdc_status = #csdcStatus#
+			</isNotNull>		
+			<isNotNull property="csdcAddTime" prepend=",">
+				cs_driver_car$suffix$.csdc_add_time = #csdcAddTime#
+			</isNotNull>		
+			<isNotNull property="csdcUpdateTime" prepend=",">
+				cs_driver_car$suffix$.csdc_update_time = #csdcUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csdc_id=#csdcId#
+	</update>
+	
+
+	<!-- 根据ID删除一个司机车辆 -->
+	<delete id="deleteCsDriverCarById" parameterClass="java.util.HashMap">
+		delete from cs_driver_car$suffix$ where csdc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个司机车辆 -->
+	<update id="removeCsDriverCarById" parameterClass="java.util.HashMap">
+		update cs_driver_car$suffix$ set  cs_driver_car$suffix$.csdc_status=-1  where csdc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新司机车辆 -->
+	<update id="updateCsDriverCarBy"  parameterClass="java.util.HashMap">
+		update cs_driver_car$suffix$ set		
+			csdc_id=csdc_id
+			<isNotNull property="V_csdcId" prepend=",">
+				cs_driver_car$suffix$.csdc_id = #V_csdcId#
+			</isNotNull>		
+			<isNotNull property="V_csdcHost" prepend=",">
+				cs_driver_car$suffix$.csdc_host = #V_csdcHost#
+			</isNotNull>		
+			<isNotNull property="V_csdcOutlets" prepend=",">
+				cs_driver_car$suffix$.csdc_outlets = #V_csdcOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csdcDriver" prepend=",">
+				cs_driver_car$suffix$.csdc_driver = #V_csdcDriver#
+			</isNotNull>		
+			<isNotNull property="V_csdcCar" prepend=",">
+				cs_driver_car$suffix$.csdc_car = #V_csdcCar#
+			</isNotNull>		
+			<isNotNull property="V_csdcState" prepend=",">
+				cs_driver_car$suffix$.csdc_state = #V_csdcState#
+			</isNotNull>		
+			<isNotNull property="V_csdcStatus" prepend=",">
+				cs_driver_car$suffix$.csdc_status = #V_csdcStatus#
+			</isNotNull>		
+			<isNotNull property="V_csdcAddTime" prepend=",">
+				cs_driver_car$suffix$.csdc_add_time = #V_csdcAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csdcUpdateTime" prepend=",">
+				cs_driver_car$suffix$.csdc_update_time = #V_csdcUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.csdc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_driver_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询-->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<isNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.csdc_driver=cs_driver$CsDriver.suffix$.csd_id
+			</isNull>
+			<isNotNull property="CsDriver.on">
+				left join cs_driver cs_driver$CsDriver.suffix$ on cs_driver_car$suffix$.$CsDriver.on$=cs_driver$CsDriver.suffix$.csd_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<isNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.csdc_car=cs_car_res$CsCarRes.suffix$.cscr_id
+			</isNull>
+			<isNotNull property="CsCarRes.on">
+				left join cs_car_res cs_car_res$CsCarRes.suffix$ on cs_driver_car$suffix$.$CsCarRes.on$=cs_car_res$CsCarRes.suffix$.cscr_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 1=1 		
+		and cs_driver_car$suffix$.csdc_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsdcOutlets"><!-- 调用一下CsdcOutlets，把CsOutlets指向CsdcOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[司机]查询条件sql片段 -->
+		<isNotNull property="CsdcDriver"><!-- 调用一下CsdcDriver，把CsDriver指向CsdcDriver --></isNotNull>
+		<isNotNull property="CsDriver">
+			<include refid="CsDriver_part.cs_driver_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsdcCar"><!-- 调用一下CsdcCar，把CsCarRes指向CsdcCar --></isNotNull>
+		<isNotNull property="CsCarRes">
+			<include refid="CsCarRes_part.cs_car_res_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsDriverCar_part.cs_driver_car_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除司机车辆 -->
+	<update id="deleteCsDriverCarBy"  parameterClass="java.util.HashMap">
+		delete from cs_driver_car$suffix$ where 
+		cs_driver_car$suffix$.csdc_status!=-1 and 
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsDriverCar_part.cs_driver_car_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

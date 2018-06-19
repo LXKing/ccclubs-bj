@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>兑换免费小时</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+			<ul class="table-view mt15">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						商品名称
+					</div>
+					<span class="badge">免费小时</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						数量
+					</div>
+					<div class="num-control badge">
+						<button id="purNumMinus" class="icon pull-left"></button>
+						<input id="purNum" type="tel" value="1" maxlength="2" class="pull-left">
+						<button id="purNumPlus" class="icon pull-left"></button>
+					</div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						所需积分
+					</div>
+					<div class="badge">
+						<span id="purSum">500</span>
+					</div>
+				</li>
+			</ul>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block">
+					马上兑换
+				</button>
+			</div>
+		</div>
+		<input type="hidden" id="integral" value="${csMember.csmIntegral}">
+		<div id="toast">
+			正在加载...
+		</div>
+		
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		$(document).ready(function () {
+			$(document).on("click", "#purNumPlus", function () {
+				var integral = parseInt($('#integral').val());
+				var num = parseInt($("#purNum").val());
+				if( (parseInt($("#purSum").text())+500) > integral){
+					return;
+				}
+				if (num == 99) {
+					return;
+				}
+				$("#purNum").val(num + 1);
+				setSum();
+			});
+			$(document).on("click", "#purNumMinus", function () {
+				var num = parseInt($("#purNum").val());
+				if (num == 1) {
+					return;
+				}
+				$("#purNum").val(num - 1);
+				setSum();
+			});
+			$(document).on({keydown:function (event) {
+				if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || (event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode == 8 || event.keyCode == 46)) {
+					return false;
+				}
+			}, keyup:function () {
+				var val = $("#purNum").val().replace(/[^\d]/g, "");
+				if (val == "" || val == 0) {
+					val = 1;
+				}
+				this.value = parseInt(val);
+				setSum();
+			}}, "#purNum");
+			function setSum() {
+				var price = 500;
+				var num = parseInt($("#purNum").val().replace(/[^\d]/g, ""));
+				$("#purSum").text(parseInt(price * num));
+			}
+			
+			$(document).on("click", "#register-btn", function () {
+				var btn = $('#register-btn');
+				btn.attr("disabled", true);
+				var integral = parseInt($('#integral').val());
+				if(parseInt($("#purSum").text())==500){
+					if(integral < (parseInt($("#purSum").text())) ){
+						Toast.show('积分不足。');
+						return;
+					}
+				}
+				var purSum = $("#purSum").text();
+				$.ajax({
+            		type: 'get',
+            		url: 'account_exchangefreeSubmit.html',
+            		data:{
+            			purSum:　purSum
+            		},
+            		dataType: 'json',
+            		success: function(data){
+            			btn.removeAttr("disabled");
+            			var integral = parseInt($('#integral').val());
+            			var left = integral-parseInt(purSum);
+            			$('#integral').val(left);
+            			switch (data) {
+						case 100:
+							location.href = 'account_freehours.html';
+							break;
+						case 102:
+							Toast.show("积分不足，可以去赚积分哦。");
+							break;
+						case 9999:
+							Toast.show("免费小时1小时只能兑换1次,请稍候再试。");
+							break;
+						default:
+							Toast.show("未知的返回。");
+							location.href = 'account_freehours.html';
+							return;
+						}
+            		},
+            		error: function(xhr, type){
+            			Toast.show('通讯失败，请检查网络');
+            			location.href = 'account_freehours.html';
+                        return;
+            		}
+            	});
+			});
+		});
+		</script>		
+	</body>
+
+</html>

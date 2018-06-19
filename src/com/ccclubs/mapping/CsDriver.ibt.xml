@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+
+	
+	<!-- 专车司机之SQL映射 -->
+	<resultMap id="CsDriver" class="com.ccclubs.model.CsDriver">
+		<result property="csdId" column="csd_id"/>
+		<result property="csdHost" column="csd_host"/>
+		<result property="csdOutlets" column="csd_outlets"/>
+		<result property="csdName" column="csd_name"/>
+		<result property="csdSex" column="csd_sex"/>
+		<result property="csdMobile" column="csd_mobile"/>
+		<result property="csdPassword" column="csd_password"/>
+		<result property="csdPhoto" column="csd_photo"/>
+		<result property="csdCertifyNum" column="csd_certify_num"/>
+		<result property="csdDriverNum" column="csd_driver_num"/>
+		<result property="csdVReal" column="csd_v_real"/>
+		<result property="csdStatus" column="csd_status"/>
+		<result property="csdAddTime" column="csd_add_time"/>
+		<result property="csdUpdateTime" column="csd_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有专车司机 -->
+	<select id="getCsDriverList" resultMap="CsDriver">
+		select cs_driver$suffix$.* from cs_driver$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_driver$suffix$.csd_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsDriver_part.cs_driver_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csd_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取专车司机分页 -->
+	<select id="getCsDriverPage" parameterClass="java.util.HashMap" resultMap="CsDriver">
+		select cs_driver$suffix$.* from cs_driver$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_driver$suffix$.csd_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsDriver_part.cs_driver_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csd_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取专车司机总数 -->
+	<select id="getCsDriverEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_driver$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_driver$suffix$.csd_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsDriver_part.cs_driver_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取专车司机 -->
+	<select id="getCsDriverById" parameterClass="java.util.HashMap" resultMap="CsDriver">
+		select cs_driver$suffix$.* from cs_driver$suffix$
+		where csd_id=#id#
+	</select>
+	
+		
+	<!-- 保存专车司机 -->
+	<insert id="saveCsDriver"  parameterClass="com.ccclubs.model.CsDriver">
+		insert into cs_driver$suffix$
+		(
+			cs_driver$suffix$.csd_host
+			,cs_driver$suffix$.csd_outlets
+			,cs_driver$suffix$.csd_name
+			,cs_driver$suffix$.csd_sex
+			,cs_driver$suffix$.csd_mobile
+			,cs_driver$suffix$.csd_password
+			,cs_driver$suffix$.csd_photo
+			,cs_driver$suffix$.csd_certify_num
+			,cs_driver$suffix$.csd_driver_num
+			,cs_driver$suffix$.csd_v_real
+			,cs_driver$suffix$.csd_status
+			,cs_driver$suffix$.csd_add_time
+			,cs_driver$suffix$.csd_update_time
+		)
+		values(
+			<isNotNull property="csdHost" prepend="">
+				#csdHost#
+			</isNotNull>
+			<isNull property="csdHost" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="csdOutlets" prepend=",">
+				#csdOutlets#
+			</isNotNull>
+			<isNull property="csdOutlets" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdName" prepend=",">
+				#csdName#
+			</isNotNull>
+			<isNull property="csdName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdSex" prepend=",">
+				#csdSex#
+			</isNotNull>
+			<isNull property="csdSex" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdMobile" prepend=",">
+				#csdMobile#
+			</isNotNull>
+			<isNull property="csdMobile" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdPassword" prepend=",">
+				#csdPassword#
+			</isNotNull>
+			<isNull property="csdPassword" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdPhoto" prepend=",">
+				#csdPhoto#
+			</isNotNull>
+			<isNull property="csdPhoto" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdCertifyNum" prepend=",">
+				#csdCertifyNum#
+			</isNotNull>
+			<isNull property="csdCertifyNum" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdDriverNum" prepend=",">
+				#csdDriverNum#
+			</isNotNull>
+			<isNull property="csdDriverNum" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdVReal" prepend=",">
+				#csdVReal#
+			</isNotNull>
+			<isNull property="csdVReal" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdStatus" prepend=",">
+				#csdStatus#
+			</isNotNull>
+			<isNull property="csdStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdAddTime" prepend=",">
+				#csdAddTime#
+			</isNotNull>
+			<isNull property="csdAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csdUpdateTime" prepend=",">
+				#csdUpdateTime#
+			</isNotNull>
+			<isNull property="csdUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新专车司机 -->
+	<update id="updateCsDriver"  parameterClass="com.ccclubs.model.CsDriver">
+		update cs_driver$suffix$ set
+			<isNotNull property="csdHost" prepend="">
+				cs_driver$suffix$.csd_host = #csdHost#
+			</isNotNull>
+			<isNull property="csdHost" prepend="">
+				cs_driver$suffix$.csd_host = null
+			</isNull>				
+			<isNotNull property="csdOutlets" prepend=",">
+				cs_driver$suffix$.csd_outlets = #csdOutlets#
+			</isNotNull>
+			<isNull property="csdOutlets" prepend=",">
+				cs_driver$suffix$.csd_outlets = null
+			</isNull>				
+			<isNotNull property="csdName" prepend=",">
+				cs_driver$suffix$.csd_name = #csdName#
+			</isNotNull>
+			<isNull property="csdName" prepend=",">
+				cs_driver$suffix$.csd_name = null
+			</isNull>				
+			<isNotNull property="csdSex" prepend=",">
+				cs_driver$suffix$.csd_sex = #csdSex#
+			</isNotNull>
+			<isNull property="csdSex" prepend=",">
+				cs_driver$suffix$.csd_sex = null
+			</isNull>				
+			<isNotNull property="csdMobile" prepend=",">
+				cs_driver$suffix$.csd_mobile = #csdMobile#
+			</isNotNull>
+			<isNull property="csdMobile" prepend=",">
+				cs_driver$suffix$.csd_mobile = null
+			</isNull>				
+			<isNotNull property="csdPassword" prepend=",">
+				cs_driver$suffix$.csd_password = #csdPassword#
+			</isNotNull>
+			<isNull property="csdPassword" prepend=",">
+				cs_driver$suffix$.csd_password = null
+			</isNull>				
+			<isNotNull property="csdPhoto" prepend=",">
+				cs_driver$suffix$.csd_photo = #csdPhoto#
+			</isNotNull>
+			<isNull property="csdPhoto" prepend=",">
+				cs_driver$suffix$.csd_photo = null
+			</isNull>				
+			<isNotNull property="csdCertifyNum" prepend=",">
+				cs_driver$suffix$.csd_certify_num = #csdCertifyNum#
+			</isNotNull>
+			<isNull property="csdCertifyNum" prepend=",">
+				cs_driver$suffix$.csd_certify_num = null
+			</isNull>				
+			<isNotNull property="csdDriverNum" prepend=",">
+				cs_driver$suffix$.csd_driver_num = #csdDriverNum#
+			</isNotNull>
+			<isNull property="csdDriverNum" prepend=",">
+				cs_driver$suffix$.csd_driver_num = null
+			</isNull>				
+			<isNotNull property="csdVReal" prepend=",">
+				cs_driver$suffix$.csd_v_real = #csdVReal#
+			</isNotNull>
+			<isNull property="csdVReal" prepend=",">
+				cs_driver$suffix$.csd_v_real = null
+			</isNull>				
+			<isNotNull property="csdStatus" prepend=",">
+				cs_driver$suffix$.csd_status = #csdStatus#
+			</isNotNull>
+			<isNull property="csdStatus" prepend=",">
+				cs_driver$suffix$.csd_status = null
+			</isNull>				
+			<isNotNull property="csdAddTime" prepend=",">
+				cs_driver$suffix$.csd_add_time = #csdAddTime#
+			</isNotNull>
+			<isNull property="csdAddTime" prepend=",">
+				cs_driver$suffix$.csd_add_time = null
+			</isNull>				
+			<isNotNull property="csdUpdateTime" prepend=",">
+				cs_driver$suffix$.csd_update_time = #csdUpdateTime#
+			</isNotNull>
+			<isNull property="csdUpdateTime" prepend=",">
+				cs_driver$suffix$.csd_update_time = null
+			</isNull>				
+		where
+			csd_id=#csdId#
+	</update>
+	
+	<!-- 更新专车司机非空字段 -->
+	<update id="updateCsDriver$NotNull"  parameterClass="com.ccclubs.model.CsDriver">
+		update cs_driver$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csdHost" prepend=",">
+				cs_driver$suffix$.csd_host = #csdHost#
+			</isNotNull>		
+			<isNotNull property="csdOutlets" prepend=",">
+				cs_driver$suffix$.csd_outlets = #csdOutlets#
+			</isNotNull>		
+			<isNotNull property="csdName" prepend=",">
+				cs_driver$suffix$.csd_name = #csdName#
+			</isNotNull>		
+			<isNotNull property="csdSex" prepend=",">
+				cs_driver$suffix$.csd_sex = #csdSex#
+			</isNotNull>		
+			<isNotNull property="csdMobile" prepend=",">
+				cs_driver$suffix$.csd_mobile = #csdMobile#
+			</isNotNull>		
+			<isNotNull property="csdPassword" prepend=",">
+				cs_driver$suffix$.csd_password = #csdPassword#
+			</isNotNull>		
+			<isNotNull property="csdPhoto" prepend=",">
+				cs_driver$suffix$.csd_photo = #csdPhoto#
+			</isNotNull>		
+			<isNotNull property="csdCertifyNum" prepend=",">
+				cs_driver$suffix$.csd_certify_num = #csdCertifyNum#
+			</isNotNull>		
+			<isNotNull property="csdDriverNum" prepend=",">
+				cs_driver$suffix$.csd_driver_num = #csdDriverNum#
+			</isNotNull>		
+			<isNotNull property="csdVReal" prepend=",">
+				cs_driver$suffix$.csd_v_real = #csdVReal#
+			</isNotNull>		
+			<isNotNull property="csdStatus" prepend=",">
+				cs_driver$suffix$.csd_status = #csdStatus#
+			</isNotNull>		
+			<isNotNull property="csdAddTime" prepend=",">
+				cs_driver$suffix$.csd_add_time = #csdAddTime#
+			</isNotNull>		
+			<isNotNull property="csdUpdateTime" prepend=",">
+				cs_driver$suffix$.csd_update_time = #csdUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csd_id=#csdId#
+	</update>
+	
+
+	<!-- 根据ID删除一个专车司机 -->
+	<delete id="deleteCsDriverById" parameterClass="java.util.HashMap">
+		delete from cs_driver$suffix$ where csd_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个专车司机 -->
+	<update id="removeCsDriverById" parameterClass="java.util.HashMap">
+		update cs_driver$suffix$ set  cs_driver$suffix$.csd_status=-1  where csd_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新专车司机 -->
+	<update id="updateCsDriverBy"  parameterClass="java.util.HashMap">
+		update cs_driver$suffix$ set		
+			csd_id=csd_id
+			<isNotNull property="V_csdId" prepend=",">
+				cs_driver$suffix$.csd_id = #V_csdId#
+			</isNotNull>		
+			<isNotNull property="V_csdHost" prepend=",">
+				cs_driver$suffix$.csd_host = #V_csdHost#
+			</isNotNull>		
+			<isNotNull property="V_csdOutlets" prepend=",">
+				cs_driver$suffix$.csd_outlets = #V_csdOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csdName" prepend=",">
+				cs_driver$suffix$.csd_name = #V_csdName#
+			</isNotNull>		
+			<isNotNull property="V_csdSex" prepend=",">
+				cs_driver$suffix$.csd_sex = #V_csdSex#
+			</isNotNull>		
+			<isNotNull property="V_csdMobile" prepend=",">
+				cs_driver$suffix$.csd_mobile = #V_csdMobile#
+			</isNotNull>		
+			<isNotNull property="V_csdPassword" prepend=",">
+				cs_driver$suffix$.csd_password = #V_csdPassword#
+			</isNotNull>		
+			<isNotNull property="V_csdPhoto" prepend=",">
+				cs_driver$suffix$.csd_photo = #V_csdPhoto#
+			</isNotNull>		
+			<isNotNull property="V_csdCertifyNum" prepend=",">
+				cs_driver$suffix$.csd_certify_num = #V_csdCertifyNum#
+			</isNotNull>		
+			<isNotNull property="V_csdDriverNum" prepend=",">
+				cs_driver$suffix$.csd_driver_num = #V_csdDriverNum#
+			</isNotNull>		
+			<isNotNull property="V_csdVReal" prepend=",">
+				cs_driver$suffix$.csd_v_real = #V_csdVReal#
+			</isNotNull>		
+			<isNotNull property="V_csdStatus" prepend=",">
+				cs_driver$suffix$.csd_status = #V_csdStatus#
+			</isNotNull>		
+			<isNotNull property="V_csdAddTime" prepend=",">
+				cs_driver$suffix$.csd_add_time = #V_csdAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csdUpdateTime" prepend=",">
+				cs_driver$suffix$.csd_update_time = #V_csdUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 1=1 		
+		and cs_driver$suffix$.csd_status!=-1
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsDriver_part.cs_driver_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除专车司机 -->
+	<update id="deleteCsDriverBy"  parameterClass="java.util.HashMap">
+		delete from cs_driver$suffix$ where 
+		cs_driver$suffix$.csd_status!=-1 and 
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsDriver_part.cs_driver_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

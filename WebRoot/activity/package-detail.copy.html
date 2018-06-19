@@ -1,0 +1,46 @@
+<s:if test="#session.tips.notNull==true">
+	<span class="message">${tips.value}</span>
+	<s:if test="#request.packaged==true">
+	<a href="${basePath}activity/activity-reserve.html">赶紧去订车吧！</a>
+	</s:if>
+</s:if>
+<s:if test="#session.ccclubs_web_login==null">
+	<br/><br/>
+	<button class="graybutton" onclick="window.location='${basePath}login.html?from=/activity/package-index.html'" type="button">立即登录</button>
+</s:if>
+
+
+${lz:set("bCanReserve",csPack!=null && lockedPack!=null && csPack.cspId!=lockedPack.cspId)}
+<s:if test="#request.bCanReserve==true">
+	<div class="info">
+		<span style="color:#000000;">对不起，您已经锁定了[${lockedPack.cspName}]，请取消后才能抢定当前车型</span>
+	</div>	
+</s:if>
+
+
+<!-- 已经预定过的 -->
+<s:if test="#request.lockedPack!=null">	
+	<div class="info"> 
+		<span>您在${lz:date(csChjSign.cscsLockTime,"yyyy-MM-dd HH:mm:ss")}已经成功锁定【${lockedPack.cspName}】
+		<br/>系统将为您保留两个小时支付时间，请在两个小时内完成支付</span>
+	</div>
+	<div>
+		<button onclick="buy('${lockedPack.cspFlag}')" type="button">立即支付</button>
+		<a href="javascript:cancel();">取消锁定</a>
+	</div>
+	<br/>
+</s:if>
+<s:elseif test="#request.csPack!=null">	
+	<div class="info">
+		<span>当前套餐【${csPack.cspName}】仍有剩余，优惠价￥<font>${csPack.cspPrice}</font>，赶紧下手吧！</span>
+	</div>
+	<br/>	
+	<div>
+		<button onclick="reserve('${csPack.cspFlag}')" type="button">立即抢定</button>
+		<button  class="graybutton" onclick="$('.dialog').hide()" type="button">返回重选</button>
+	</div>
+	<br/>
+	<div>
+		<span class="small">友情提示：立即抢定可抢先锁定订单，系统将为您保留两个小时订单支付时间</span>
+	</div>	
+</s:elseif>

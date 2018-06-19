@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 交通限行之SQL映射 -->
+	<resultMap id="CsLimitTime" class="com.ccclubs.model.CsLimitTime">
+		<result property="csltId" column="cslt_id"/>
+		<result property="csltHost" column="cslt_host"/>
+		<result property="csltWeekDay" column="cslt_week_day"/>
+		<result property="csltNum" column="cslt_num"/>
+		<result property="csltStart" column="cslt_start"/>
+		<result property="csltEnd" column="cslt_end"/>
+		<result property="csltUpdateTime" column="cslt_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有交通限行 -->
+	<select id="getCsLimitTimeList" resultMap="CsLimitTime">
+		select cs_limit_time$suffix$.* from cs_limit_time$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLimitTime_part.cs_limit_time_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslt_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取交通限行分页 -->
+	<select id="getCsLimitTimePage" parameterClass="java.util.HashMap" resultMap="CsLimitTime">
+		select cs_limit_time$suffix$.* from cs_limit_time$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLimitTime_part.cs_limit_time_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslt_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取交通限行总数 -->
+	<select id="getCsLimitTimeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_limit_time$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLimitTime_part.cs_limit_time_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取交通限行 -->
+	<select id="getCsLimitTimeById" parameterClass="java.util.HashMap" resultMap="CsLimitTime">
+		select cs_limit_time$suffix$.* from cs_limit_time$suffix$
+		where cslt_id=#id#
+	</select>
+	
+		
+	<!-- 保存交通限行 -->
+	<insert id="saveCsLimitTime"  parameterClass="com.ccclubs.model.CsLimitTime">
+		insert into cs_limit_time$suffix$
+		(
+			cs_limit_time$suffix$.cslt_host
+			,cs_limit_time$suffix$.cslt_week_day
+			,cs_limit_time$suffix$.cslt_num
+			,cs_limit_time$suffix$.cslt_start
+			,cs_limit_time$suffix$.cslt_end
+			,cs_limit_time$suffix$.cslt_update_time
+		)
+		values(
+			<isNotNull property="csltHost" prepend="">
+				#csltHost#
+			</isNotNull>
+			<isNull property="csltHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csltWeekDay" prepend=",">
+				#csltWeekDay#
+			</isNotNull>
+			<isNull property="csltWeekDay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csltNum" prepend=",">
+				#csltNum#
+			</isNotNull>
+			<isNull property="csltNum" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csltStart" prepend=",">
+				#csltStart#
+			</isNotNull>
+			<isNull property="csltStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csltEnd" prepend=",">
+				#csltEnd#
+			</isNotNull>
+			<isNull property="csltEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csltUpdateTime" prepend=",">
+				#csltUpdateTime#
+			</isNotNull>
+			<isNull property="csltUpdateTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新交通限行 -->
+	<update id="updateCsLimitTime"  parameterClass="com.ccclubs.model.CsLimitTime">
+		update cs_limit_time$suffix$ set
+			<isNotNull property="csltHost" prepend="">
+				cs_limit_time$suffix$.cslt_host = #csltHost#
+			</isNotNull>
+			<isNull property="csltHost" prepend="">
+				cs_limit_time$suffix$.cslt_host = null
+			</isNull>				
+			<isNotNull property="csltWeekDay" prepend=",">
+				cs_limit_time$suffix$.cslt_week_day = #csltWeekDay#
+			</isNotNull>
+			<isNull property="csltWeekDay" prepend=",">
+				cs_limit_time$suffix$.cslt_week_day = null
+			</isNull>				
+			<isNotNull property="csltNum" prepend=",">
+				cs_limit_time$suffix$.cslt_num = #csltNum#
+			</isNotNull>
+			<isNull property="csltNum" prepend=",">
+				cs_limit_time$suffix$.cslt_num = null
+			</isNull>				
+			<isNotNull property="csltStart" prepend=",">
+				cs_limit_time$suffix$.cslt_start = #csltStart#
+			</isNotNull>
+			<isNull property="csltStart" prepend=",">
+				cs_limit_time$suffix$.cslt_start = null
+			</isNull>				
+			<isNotNull property="csltEnd" prepend=",">
+				cs_limit_time$suffix$.cslt_end = #csltEnd#
+			</isNotNull>
+			<isNull property="csltEnd" prepend=",">
+				cs_limit_time$suffix$.cslt_end = null
+			</isNull>				
+			<isNotNull property="csltUpdateTime" prepend=",">
+				cs_limit_time$suffix$.cslt_update_time = #csltUpdateTime#
+			</isNotNull>
+			<isNull property="csltUpdateTime" prepend=",">
+				cs_limit_time$suffix$.cslt_update_time = null
+			</isNull>				
+		where
+			cslt_id=#csltId#
+	</update>
+	
+	<!-- 更新交通限行非空字段 -->
+	<update id="updateCsLimitTime$NotNull"  parameterClass="com.ccclubs.model.CsLimitTime">
+		update cs_limit_time$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csltHost" prepend=",">
+				cs_limit_time$suffix$.cslt_host = #csltHost#
+			</isNotNull>		
+			<isNotNull property="csltWeekDay" prepend=",">
+				cs_limit_time$suffix$.cslt_week_day = #csltWeekDay#
+			</isNotNull>		
+			<isNotNull property="csltNum" prepend=",">
+				cs_limit_time$suffix$.cslt_num = #csltNum#
+			</isNotNull>		
+			<isNotNull property="csltStart" prepend=",">
+				cs_limit_time$suffix$.cslt_start = #csltStart#
+			</isNotNull>		
+			<isNotNull property="csltEnd" prepend=",">
+				cs_limit_time$suffix$.cslt_end = #csltEnd#
+			</isNotNull>		
+			<isNotNull property="csltUpdateTime" prepend=",">
+				cs_limit_time$suffix$.cslt_update_time = #csltUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cslt_id=#csltId#
+	</update>
+	
+
+	<!-- 根据ID删除一个交通限行 -->
+	<delete id="deleteCsLimitTimeById" parameterClass="java.util.HashMap">
+		delete from cs_limit_time$suffix$ where cslt_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新交通限行 -->
+	<update id="updateCsLimitTimeBy"  parameterClass="java.util.HashMap">
+		update cs_limit_time$suffix$ set		
+			cslt_id=cslt_id
+			<isNotNull property="V_csltId" prepend=",">
+				cs_limit_time$suffix$.cslt_id = #V_csltId#
+			</isNotNull>		
+			<isNotNull property="V_csltHost" prepend=",">
+				cs_limit_time$suffix$.cslt_host = #V_csltHost#
+			</isNotNull>		
+			<isNotNull property="V_csltWeekDay" prepend=",">
+				cs_limit_time$suffix$.cslt_week_day = #V_csltWeekDay#
+			</isNotNull>		
+			<isNotNull property="V_csltNum" prepend=",">
+				cs_limit_time$suffix$.cslt_num = #V_csltNum#
+			</isNotNull>		
+			<isNotNull property="V_csltStart" prepend=",">
+				cs_limit_time$suffix$.cslt_start = #V_csltStart#
+			</isNotNull>		
+			<isNotNull property="V_csltEnd" prepend=",">
+				cs_limit_time$suffix$.cslt_end = #V_csltEnd#
+			</isNotNull>		
+			<isNotNull property="V_csltUpdateTime" prepend=",">
+				cs_limit_time$suffix$.cslt_update_time = #V_csltUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLimitTime_part.cs_limit_time_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除交通限行 -->
+	<update id="deleteCsLimitTimeBy"  parameterClass="java.util.HashMap">
+		delete from cs_limit_time$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLimitTime_part.cs_limit_time_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

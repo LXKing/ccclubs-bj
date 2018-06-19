@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUpdate_part">	
+	<!-- App更新条件sql片段  -->
+	<sql id="cs_update_dynamic">
+		<dynamic>
+			<isNotEmpty property="csuId" prepend="and">
+			    $csuIdNot$ cs_update$suffix$.csu_id = #csuId#
+			</isNotEmpty>
+			<isNotNull property="csuIdNot" prepend="and">
+				<isEmpty property="csuId">
+				$csuIdNot$ cs_update$suffix$.csu_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuName" prepend="and">			    
+			    (<isNotNull property="csuNameNot">
+			    cs_update$suffix$.csu_name is null or length(cs_update$suffix$.csu_name) &lt; 1 or
+			    </isNotNull>$csuNameNot$ cs_update$suffix$.csu_name = #csuName#)
+			</isNotEmpty>
+			<isNotNull property="csuNameNot" prepend="and">
+				<isEmpty property="csuName">
+				$csuNameNot$ (cs_update$suffix$.csu_name is null or length(cs_update$suffix$.csu_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuVersion" prepend="and">			    
+			    (<isNotNull property="csuVersionNot">
+			    cs_update$suffix$.csu_version is null or length(cs_update$suffix$.csu_version) &lt; 1 or
+			    </isNotNull>$csuVersionNot$ cs_update$suffix$.csu_version = #csuVersion#)
+			</isNotEmpty>
+			<isNotNull property="csuVersionNot" prepend="and">
+				<isEmpty property="csuVersion">
+				$csuVersionNot$ (cs_update$suffix$.csu_version is null or length(cs_update$suffix$.csu_version) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuType" prepend="and">
+			    $csuTypeNot$ cs_update$suffix$.csu_type = #csuType#
+			</isNotEmpty>
+			<isNotNull property="csuTypeNot" prepend="and">
+				<isEmpty property="csuType">
+				$csuTypeNot$ cs_update$suffix$.csu_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuFile" prepend="and">
+			    $csuFileNot$ cs_update$suffix$.csu_file = #csuFile#
+			</isNotEmpty>
+			<isNotNull property="csuFileNot" prepend="and">
+				<isEmpty property="csuFile">
+				$csuFileNot$ cs_update$suffix$.csu_file is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuDescript" prepend="and">			    
+			    (<isNotNull property="csuDescriptNot">
+			    cs_update$suffix$.csu_descript is null or length(cs_update$suffix$.csu_descript) &lt; 1 or
+			    </isNotNull>$csuDescriptNot$ cs_update$suffix$.csu_descript like #csuDescript#)
+			</isNotEmpty>
+			<isNotNull property="csuDescriptNot" prepend="and">
+				<isEmpty property="csuDescript">
+				$csuDescriptNot$ (cs_update$suffix$.csu_descript is null or length(cs_update$suffix$.csu_descript) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuUpdateTimeStart" prepend="and">
+			    $csuUpdateTimeNot$   (cs_update$suffix$.csu_update_time &gt;= #csuUpdateTimeStart#
+			   <isEmpty property="csuUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuUpdateTimeEnd" prepend="and">
+				<isEmpty property="csuUpdateTimeStart">$csuUpdateTimeNot$   (</isEmpty>
+			    cs_update$suffix$.csu_update_time &lt;= #csuUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csuUpdateTime" prepend="and">
+			    $csuUpdateTimeNot$ cs_update$suffix$.csu_update_time = #csuUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csuUpdateTimeNot" prepend="and">
+				<isEmpty property="csuUpdateTimeStart"><isEmpty property="csuUpdateTimeEnd"><isEmpty property="csuUpdateTime">
+				$csuUpdateTimeNot$ cs_update$suffix$.csu_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuAddTimeStart" prepend="and">
+			    $csuAddTimeNot$   (cs_update$suffix$.csu_add_time &gt;= #csuAddTimeStart#
+			   <isEmpty property="csuAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuAddTimeEnd" prepend="and">
+				<isEmpty property="csuAddTimeStart">$csuAddTimeNot$   (</isEmpty>
+			    cs_update$suffix$.csu_add_time &lt;= #csuAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csuAddTime" prepend="and">
+			    $csuAddTimeNot$ cs_update$suffix$.csu_add_time = #csuAddTime#
+			</isNotEmpty>
+			<isNotNull property="csuAddTimeNot" prepend="and">
+				<isEmpty property="csuAddTimeStart"><isEmpty property="csuAddTimeEnd"><isEmpty property="csuAddTime">
+				$csuAddTimeNot$ cs_update$suffix$.csu_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuStatus" prepend="and">
+			    $csuStatusNot$ cs_update$suffix$.csu_status = #csuStatus#
+			</isNotEmpty>
+			<isNotNull property="csuStatusNot" prepend="and">
+				<isEmpty property="csuStatus">
+				$csuStatusNot$ cs_update$suffix$.csu_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- App更新left join 条件sql片段 -->
+	<sql id="cs_update_join">
+		<dynamic>
+			<isNotEmpty property="CsUpdate.csuId" prepend="and">
+			    $CsUpdate.csuIdNot$ cs_update$CsUpdate.suffix$.csu_id = #CsUpdate.csuId#
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuIdNot" prepend="and">
+				<isEmpty property="CsUpdate.csuId">
+				$csuIdNot$ cs_update$CsUpdate.suffix$.csu_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuName" prepend="and">
+				(<isNotNull property="CsUpdate.csuNameNot">
+			    cs_update$CsUpdate.suffix$.csu_name is null or length(cs_update$CsUpdate.suffix$.csu_name) &lt; 1 or
+			    </isNotNull>$CsUpdate.csuNameNot$ cs_update$CsUpdate.suffix$.csu_name = #CsUpdate.csuName#)
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuNameNot" prepend="and">
+				<isEmpty property="CsUpdate.csuName">
+				$csuNameNot$ (cs_update$CsUpdate.suffix$.csu_name is null or length(cs_update$CsUpdate.suffix$.csu_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuVersion" prepend="and">
+				(<isNotNull property="CsUpdate.csuVersionNot">
+			    cs_update$CsUpdate.suffix$.csu_version is null or length(cs_update$CsUpdate.suffix$.csu_version) &lt; 1 or
+			    </isNotNull>$CsUpdate.csuVersionNot$ cs_update$CsUpdate.suffix$.csu_version = #CsUpdate.csuVersion#)
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuVersionNot" prepend="and">
+				<isEmpty property="CsUpdate.csuVersion">
+				$csuVersionNot$ (cs_update$CsUpdate.suffix$.csu_version is null or length(cs_update$CsUpdate.suffix$.csu_version) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuType" prepend="and">
+			    $CsUpdate.csuTypeNot$ cs_update$CsUpdate.suffix$.csu_type = #CsUpdate.csuType#
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuTypeNot" prepend="and">
+				<isEmpty property="CsUpdate.csuType">
+				$csuTypeNot$ cs_update$CsUpdate.suffix$.csu_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuFile" prepend="and">
+			    $CsUpdate.csuFileNot$ cs_update$CsUpdate.suffix$.csu_file = #CsUpdate.csuFile#
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuFileNot" prepend="and">
+				<isEmpty property="CsUpdate.csuFile">
+				$csuFileNot$ cs_update$CsUpdate.suffix$.csu_file is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuDescript" prepend="and">
+				(<isNotNull property="CsUpdate.csuDescriptNot">
+			    cs_update$CsUpdate.suffix$.csu_descript is null or length(cs_update$CsUpdate.suffix$.csu_descript) &lt; 1 or
+			    </isNotNull>$CsUpdate.csuDescriptNot$ cs_update$CsUpdate.suffix$.csu_descript like #CsUpdate.csuDescript#)
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuDescriptNot" prepend="and">
+				<isEmpty property="CsUpdate.csuDescript">
+				$csuDescriptNot$ (cs_update$CsUpdate.suffix$.csu_descript is null or length(cs_update$CsUpdate.suffix$.csu_descript) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuUpdateTimeStart" prepend="and">
+			    $CsUpdate.csuUpdateTimeNot$   (cs_update$CsUpdate.suffix$.csu_update_time &gt;= #CsUpdate.csuUpdateTimeStart#
+			   <isEmpty property="CsUpdate.csuUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUpdate.csuUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsUpdate.csuUpdateTimeStart">$CsUpdate.csuUpdateTimeNot$   (</isEmpty>
+			    cs_update$CsUpdate.suffix$.csu_update_time &lt;= #CsUpdate.csuUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUpdate.csuUpdateTime" prepend="and">
+			    $CsUpdate.csuUpdateTimeNot$ cs_update$CsUpdate.suffix$.csu_update_time = #CsUpdate.csuUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuUpdateTimeNot" prepend="and">
+				<isEmpty property="CsUpdate.csuUpdateTimeStart"><isEmpty property="CsUpdate.csuUpdateTimeEnd"><isEmpty property="CsUpdate.csuUpdateTime">
+				$csuUpdateTimeNot$ cs_update$CsUpdate.suffix$.csu_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuAddTimeStart" prepend="and">
+			    $CsUpdate.csuAddTimeNot$   (cs_update$CsUpdate.suffix$.csu_add_time &gt;= #CsUpdate.csuAddTimeStart#
+			   <isEmpty property="CsUpdate.csuAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUpdate.csuAddTimeEnd" prepend="and">
+				<isEmpty property="CsUpdate.csuAddTimeStart">$CsUpdate.csuAddTimeNot$   (</isEmpty>
+			    cs_update$CsUpdate.suffix$.csu_add_time &lt;= #CsUpdate.csuAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUpdate.csuAddTime" prepend="and">
+			    $CsUpdate.csuAddTimeNot$ cs_update$CsUpdate.suffix$.csu_add_time = #CsUpdate.csuAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuAddTimeNot" prepend="and">
+				<isEmpty property="CsUpdate.csuAddTimeStart"><isEmpty property="CsUpdate.csuAddTimeEnd"><isEmpty property="CsUpdate.csuAddTime">
+				$csuAddTimeNot$ cs_update$CsUpdate.suffix$.csu_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUpdate.csuStatus" prepend="and">
+			    $CsUpdate.csuStatusNot$ cs_update$CsUpdate.suffix$.csu_status = #CsUpdate.csuStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUpdate.csuStatusNot" prepend="and">
+				<isEmpty property="CsUpdate.csuStatus">
+				$csuStatusNot$ cs_update$CsUpdate.suffix$.csu_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

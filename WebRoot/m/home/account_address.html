@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>寄送地址</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/pop_ayer.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<div class="input-row" >
+					<label>
+						寄送地址:
+					</label>
+					<input id="txtAddress" readonly="true"  type="text" placeholder="请输入寄送地址" value="${csMember.$csmInfo.csmiAddress}">
+				</div>
+				<div class="input-row">
+					<label>
+						详细地址
+					</label>
+					<input id="detailed_address" type="text" placeholder="请输入寄送地址" value="">
+				</div>
+			</form>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block" onclick="submit()">
+					完成
+				</button>
+				
+			</div>
+		</div>
+		<div class="pop_div"></div>
+		<div id="poplayer" class="pop_ayer" >
+			<div id="datemark"></div>
+				<div  id="wrapper" class="poplayer_ul">
+						<ul id="province_ul">
+						</ul>
+					</div>
+					<div  id="garden_city" class="poplayer_ul">
+						<ul class="garden_city">
+							
+						</ul>
+					</div>
+					<div  id="city_area" class="poplayer_ul">
+						<ul class="city_areas">
+							
+						</ul>
+					</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/ccclubs-date.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/iscroll.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		$(document).ready(
+			function () {
+				province_ajax();
+				city_ajax("2");
+   				area_ajax("3");
+			}
+		);
+		//省
+		function province_ajax() {
+			var src='<li>选择省</li>';
+		    $.ajax({
+				url: "/m/ajax_provinceajax.html",
+				cache: false,
+				async: false,
+		        type: "post",
+		        dataType:"json",
+		        success: function(data) {
+		        	for(var i=0;data.length>i;i++){
+		        		src+="<li value='"+data[i].cspId+"'>"+data[i].cspName+"</li>"
+		        	}
+		        	$("#province_ul").html(src);
+		        },
+		        cache: false,
+		        timeout: 5000,
+		        error: function() {
+		            alert("系统错误请联系管理员！");
+		        }
+		    });}
+		//市
+		function city_ajax(province_val) {
+			var src='<li>选择市</li>';
+		    $.ajax({
+				url: "/m/ajax_cityajax.html",
+				data: {province_val: province_val},
+				cache: false,
+				async: false,
+		        type: "post",
+		        dataType:"json",
+		        success: function(data) {
+		        	for(var i=0;data.length>i;i++){
+		        		src+="<li value='"+data[i].cspId+"'>"+data[i].cspName+"</li>"
+		        	}
+		        	$(".garden_city").html(src);
+		        	area_ajax(data[0].cspId);
+		        },
+		        cache: false,
+		        timeout: 5000,
+		        error: function() {
+		            alert("系统错误请联系管理员！");
+		        }
+		    });}
+		//区
+		function area_ajax(area_val) {
+			var src='<li>选择区</li>';
+		    $.ajax({
+				url: "/m/ajax_areaajax.html",
+				data: {area_val: area_val},
+				cache: false,
+				async: false,
+		        type: "post",
+		        dataType:"json",
+		        success: function(data) {
+		        	for(var i=0;data.length>i;i++){
+		        		src+="<li value='"+data[i].cspId+"'>"+data[i].cspName+"</li>"
+		        	}
+		        	$(".city_areas").html(src);
+		        },
+		        cache: false,
+		        timeout: 5000,
+		        error: function() {
+		            alert("系统错误请联系管理员！");
+		        }
+		    });}
+		/*
+			滑动效果
+		*/
+		var province;
+		var province_val;
+		var wrapper;
+		var city_indexx;
+		function wrapper(){
+			wrapper=new iScroll("wrapper", {
+				snap: "li",
+				vScrollbar: false,
+				onScrollEnd: function() {
+					var indexY =(this.y /43)* -1;
+					//alert(indexY);
+					indexY= Math.round(indexY);
+					province=$('#province_ul').children().eq(indexY+1).html();
+					province_val=$('#province_ul').children().eq(indexY+1).val();
+					city_ajax(province_val);
+					garden_city.refresh();
+					$("#txtAddress").val(province);
+					$(".garden_city").css("-webkit-transform","translate3d(0px, 0px, 0px)");
+		        	$(".city_areas").css("-webkit-transform","translate3d(0px, 0px, 0px)");
+				}
+			})
+		}
+		window.addEventListener("DOMContentLoaded",wrapper,false);
+		var city;
+		var garden_city;
+		function garden_city(){
+			garden_city=new iScroll("garden_city", {
+				snap: "li",
+				vScrollbar: false,
+				onScrollEnd: function() {
+					var indexY =(this.y /43) * -1;
+					indexY= Math.round(indexY);
+					city_indexx=indexY+1;
+					city=$('.garden_city').children().eq(indexY+1).html();
+					area_val=$('.garden_city').children().eq(indexY+1).val();
+					area_ajax(area_val);
+					$(".city_areas").css("-webkit-transform","translate3d(0px, 0px, 0px)");
+					mycity_area.refresh();
+					if(province!=undefined&&province!=''&&province!=null){
+						$("#txtAddress").val(province+city);
+					}else{
+						$("#txtAddress").val("");
+					}
+					
+				}
+			})
+		}
+		window.addEventListener("DOMContentLoaded",garden_city,false);
+		var mycity_area;
+		function city_area(){
+			mycity_area=new iScroll("city_area", {
+				snap: "li",
+				vScrollbar: false,
+				onScrollEnd: function() {
+					var indexY =(this.y /43) * -1;
+					indexY= Math.round(indexY);
+					if(city!=undefined&&city!=''&&city!=null){
+						$("#txtAddress").val(province+city+$('.city_areas').children().eq(indexY+1).html());
+					}else{
+						$("#txtAddress").val("");
+					}
+				}
+			})
+		}
+		window.addEventListener("DOMContentLoaded",city_area,false);
+        /*
+        	隐藏显示内容
+        */
+		$("#txtAddress").click(function(){
+			$(".pop_div").addClass("pop_none");
+		});
+		$("#detailed_address").click(function(){
+			$(".pop_div").removeClass("pop_none");
+		});
+		function submit(){
+			var address = $.trim($("#txtAddress").val()) + $("#detailed_address").val();
+			if(address.length<=0){
+				Toast.show("寄送地址需要填写");
+				return;
+			}
+			$.ajax({
+				type: 'get',
+				url: "account_saveAddress.html",
+        		data:{
+        			txtaddress:address
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			if(data.state){
+        				Toast.show(data.message);
+        				return;
+        			}else{
+        				Toast.show(data.message);
+                        return;
+        			}
+        		},
+        		error: function(xhr, type){
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		}
+		</script>
+	</body>
+</html>

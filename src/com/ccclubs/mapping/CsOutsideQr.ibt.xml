@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 巡检作业之SQL映射 -->
+	<resultMap id="CsOutsideQr" class="com.ccclubs.model.CsOutsideQr">
+		<result property="csoqId" column="csoq_id"/>
+		<result property="csoqHost" column="csoq_host"/>
+		<result property="csoqAdder" column="csoq_adder"/>
+		<result property="csoqCar" column="csoq_car"/>
+		<result property="csoqType" column="csoq_type"/>
+		<result property="csoqUserPosStart" column="csoq_user_pos_start"/>
+		<result property="csoqCarPosStart" column="csoq_car_pos_start"/>
+		<result property="csoqDistanceStart" column="csoq_distance_start"/>
+		<result property="csoqUsePosEnd" column="csoq_use_pos_end"/>
+		<result property="csoqCarPosEnd" column="csoq_car_pos_end"/>
+		<result property="csoqDistanceEnd" column="csoq_distance_end"/>
+		<result property="csoqImages" column="csoq_images"/>
+		<result property="csoqAddTime" column="csoq_add_time"/>
+		<result property="csoqEndTime" column="csoq_end_time"/>
+		<result property="csoqTimeLong" column="csoq_time_long"/>
+		<result property="csoqRemark" column="csoq_remark"/>
+		<result property="csoqStatus" column="csoq_status"/>
+	</resultMap>
+		
+	<!-- 获取所有巡检作业 -->
+	<select id="getCsOutsideQrList" resultMap="CsOutsideQr">
+		select cs_outside_qr$suffix$.* from cs_outside_qr$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.csoq_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_outside_qr$suffix$.csoq_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutsideQr_part.cs_outside_qr_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csoq_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取巡检作业分页 -->
+	<select id="getCsOutsideQrPage" parameterClass="java.util.HashMap" resultMap="CsOutsideQr">
+		select cs_outside_qr$suffix$.* from cs_outside_qr$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.csoq_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_outside_qr$suffix$.csoq_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutsideQr_part.cs_outside_qr_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csoq_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取巡检作业总数 -->
+	<select id="getCsOutsideQrEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_outside_qr$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.csoq_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_outside_qr$suffix$.csoq_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOutsideQr_part.cs_outside_qr_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取巡检作业 -->
+	<select id="getCsOutsideQrById" parameterClass="java.util.HashMap" resultMap="CsOutsideQr">
+		select cs_outside_qr$suffix$.* from cs_outside_qr$suffix$
+		where csoq_id=#id#
+	</select>
+	
+		
+	<!-- 保存巡检作业 -->
+	<insert id="saveCsOutsideQr"  parameterClass="com.ccclubs.model.CsOutsideQr">
+		insert into cs_outside_qr$suffix$
+		(
+			cs_outside_qr$suffix$.csoq_host
+			,cs_outside_qr$suffix$.csoq_adder
+			,cs_outside_qr$suffix$.csoq_car
+			,cs_outside_qr$suffix$.csoq_type
+			,cs_outside_qr$suffix$.csoq_user_pos_start
+			,cs_outside_qr$suffix$.csoq_car_pos_start
+			,cs_outside_qr$suffix$.csoq_distance_start
+			,cs_outside_qr$suffix$.csoq_use_pos_end
+			,cs_outside_qr$suffix$.csoq_car_pos_end
+			,cs_outside_qr$suffix$.csoq_distance_end
+			,cs_outside_qr$suffix$.csoq_images
+			,cs_outside_qr$suffix$.csoq_add_time
+			,cs_outside_qr$suffix$.csoq_end_time
+			,cs_outside_qr$suffix$.csoq_time_long
+			,cs_outside_qr$suffix$.csoq_remark
+			,cs_outside_qr$suffix$.csoq_status
+		)
+		values(
+			<isNotNull property="csoqHost" prepend="">
+				#csoqHost#
+			</isNotNull>
+			<isNull property="csoqHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csoqAdder" prepend=",">
+				#csoqAdder#
+			</isNotNull>
+			<isNull property="csoqAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqCar" prepend=",">
+				#csoqCar#
+			</isNotNull>
+			<isNull property="csoqCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqType" prepend=",">
+				#csoqType#
+			</isNotNull>
+			<isNull property="csoqType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqUserPosStart" prepend=",">
+				#csoqUserPosStart#
+			</isNotNull>
+			<isNull property="csoqUserPosStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqCarPosStart" prepend=",">
+				#csoqCarPosStart#
+			</isNotNull>
+			<isNull property="csoqCarPosStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqDistanceStart" prepend=",">
+				#csoqDistanceStart#
+			</isNotNull>
+			<isNull property="csoqDistanceStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqUsePosEnd" prepend=",">
+				#csoqUsePosEnd#
+			</isNotNull>
+			<isNull property="csoqUsePosEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqCarPosEnd" prepend=",">
+				#csoqCarPosEnd#
+			</isNotNull>
+			<isNull property="csoqCarPosEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqDistanceEnd" prepend=",">
+				#csoqDistanceEnd#
+			</isNotNull>
+			<isNull property="csoqDistanceEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqImages" prepend=",">
+				#csoqImages#
+			</isNotNull>
+			<isNull property="csoqImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqAddTime" prepend=",">
+				#csoqAddTime#
+			</isNotNull>
+			<isNull property="csoqAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqEndTime" prepend=",">
+				#csoqEndTime#
+			</isNotNull>
+			<isNull property="csoqEndTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqTimeLong" prepend=",">
+				#csoqTimeLong#
+			</isNotNull>
+			<isNull property="csoqTimeLong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqRemark" prepend=",">
+				#csoqRemark#
+			</isNotNull>
+			<isNull property="csoqRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoqStatus" prepend=",">
+				#csoqStatus#
+			</isNotNull>
+			<isNull property="csoqStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新巡检作业 -->
+	<update id="updateCsOutsideQr"  parameterClass="com.ccclubs.model.CsOutsideQr">
+		update cs_outside_qr$suffix$ set
+			<isNotNull property="csoqHost" prepend="">
+				cs_outside_qr$suffix$.csoq_host = #csoqHost#
+			</isNotNull>
+			<isNull property="csoqHost" prepend="">
+				cs_outside_qr$suffix$.csoq_host = null
+			</isNull>				
+			<isNotNull property="csoqAdder" prepend=",">
+				cs_outside_qr$suffix$.csoq_adder = #csoqAdder#
+			</isNotNull>
+			<isNull property="csoqAdder" prepend=",">
+				cs_outside_qr$suffix$.csoq_adder = null
+			</isNull>				
+			<isNotNull property="csoqCar" prepend=",">
+				cs_outside_qr$suffix$.csoq_car = #csoqCar#
+			</isNotNull>
+			<isNull property="csoqCar" prepend=",">
+				cs_outside_qr$suffix$.csoq_car = null
+			</isNull>				
+			<isNotNull property="csoqType" prepend=",">
+				cs_outside_qr$suffix$.csoq_type = #csoqType#
+			</isNotNull>
+			<isNull property="csoqType" prepend=",">
+				cs_outside_qr$suffix$.csoq_type = null
+			</isNull>				
+			<isNotNull property="csoqUserPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_user_pos_start = #csoqUserPosStart#
+			</isNotNull>
+			<isNull property="csoqUserPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_user_pos_start = null
+			</isNull>				
+			<isNotNull property="csoqCarPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_start = #csoqCarPosStart#
+			</isNotNull>
+			<isNull property="csoqCarPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_start = null
+			</isNull>				
+			<isNotNull property="csoqDistanceStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_start = #csoqDistanceStart#
+			</isNotNull>
+			<isNull property="csoqDistanceStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_start = null
+			</isNull>				
+			<isNotNull property="csoqUsePosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_use_pos_end = #csoqUsePosEnd#
+			</isNotNull>
+			<isNull property="csoqUsePosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_use_pos_end = null
+			</isNull>				
+			<isNotNull property="csoqCarPosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_end = #csoqCarPosEnd#
+			</isNotNull>
+			<isNull property="csoqCarPosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_end = null
+			</isNull>				
+			<isNotNull property="csoqDistanceEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_end = #csoqDistanceEnd#
+			</isNotNull>
+			<isNull property="csoqDistanceEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_end = null
+			</isNull>				
+			<isNotNull property="csoqImages" prepend=",">
+				cs_outside_qr$suffix$.csoq_images = #csoqImages#
+			</isNotNull>
+			<isNull property="csoqImages" prepend=",">
+				cs_outside_qr$suffix$.csoq_images = null
+			</isNull>				
+			<isNotNull property="csoqAddTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_add_time = #csoqAddTime#
+			</isNotNull>
+			<isNull property="csoqAddTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_add_time = null
+			</isNull>				
+			<isNotNull property="csoqEndTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_end_time = #csoqEndTime#
+			</isNotNull>
+			<isNull property="csoqEndTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_end_time = null
+			</isNull>				
+			<isNotNull property="csoqTimeLong" prepend=",">
+				cs_outside_qr$suffix$.csoq_time_long = #csoqTimeLong#
+			</isNotNull>
+			<isNull property="csoqTimeLong" prepend=",">
+				cs_outside_qr$suffix$.csoq_time_long = null
+			</isNull>				
+			<isNotNull property="csoqRemark" prepend=",">
+				cs_outside_qr$suffix$.csoq_remark = #csoqRemark#
+			</isNotNull>
+			<isNull property="csoqRemark" prepend=",">
+				cs_outside_qr$suffix$.csoq_remark = null
+			</isNull>				
+			<isNotNull property="csoqStatus" prepend=",">
+				cs_outside_qr$suffix$.csoq_status = #csoqStatus#
+			</isNotNull>
+			<isNull property="csoqStatus" prepend=",">
+				cs_outside_qr$suffix$.csoq_status = null
+			</isNull>				
+		where
+			csoq_id=#csoqId#
+	</update>
+	
+	<!-- 更新巡检作业非空字段 -->
+	<update id="updateCsOutsideQr$NotNull"  parameterClass="com.ccclubs.model.CsOutsideQr">
+		update cs_outside_qr$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csoqHost" prepend=",">
+				cs_outside_qr$suffix$.csoq_host = #csoqHost#
+			</isNotNull>		
+			<isNotNull property="csoqAdder" prepend=",">
+				cs_outside_qr$suffix$.csoq_adder = #csoqAdder#
+			</isNotNull>		
+			<isNotNull property="csoqCar" prepend=",">
+				cs_outside_qr$suffix$.csoq_car = #csoqCar#
+			</isNotNull>		
+			<isNotNull property="csoqType" prepend=",">
+				cs_outside_qr$suffix$.csoq_type = #csoqType#
+			</isNotNull>		
+			<isNotNull property="csoqUserPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_user_pos_start = #csoqUserPosStart#
+			</isNotNull>		
+			<isNotNull property="csoqCarPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_start = #csoqCarPosStart#
+			</isNotNull>		
+			<isNotNull property="csoqDistanceStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_start = #csoqDistanceStart#
+			</isNotNull>		
+			<isNotNull property="csoqUsePosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_use_pos_end = #csoqUsePosEnd#
+			</isNotNull>		
+			<isNotNull property="csoqCarPosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_end = #csoqCarPosEnd#
+			</isNotNull>		
+			<isNotNull property="csoqDistanceEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_end = #csoqDistanceEnd#
+			</isNotNull>		
+			<isNotNull property="csoqImages" prepend=",">
+				cs_outside_qr$suffix$.csoq_images = #csoqImages#
+			</isNotNull>		
+			<isNotNull property="csoqAddTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_add_time = #csoqAddTime#
+			</isNotNull>		
+			<isNotNull property="csoqEndTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_end_time = #csoqEndTime#
+			</isNotNull>		
+			<isNotNull property="csoqTimeLong" prepend=",">
+				cs_outside_qr$suffix$.csoq_time_long = #csoqTimeLong#
+			</isNotNull>		
+			<isNotNull property="csoqRemark" prepend=",">
+				cs_outside_qr$suffix$.csoq_remark = #csoqRemark#
+			</isNotNull>		
+			<isNotNull property="csoqStatus" prepend=",">
+				cs_outside_qr$suffix$.csoq_status = #csoqStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csoq_id=#csoqId#
+	</update>
+	
+
+	<!-- 根据ID删除一个巡检作业 -->
+	<delete id="deleteCsOutsideQrById" parameterClass="java.util.HashMap">
+		delete from cs_outside_qr$suffix$ where csoq_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个巡检作业 -->
+	<update id="removeCsOutsideQrById" parameterClass="java.util.HashMap">
+		update cs_outside_qr$suffix$ set  cs_outside_qr$suffix$.csoq_status=-1  where csoq_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新巡检作业 -->
+	<update id="updateCsOutsideQrBy"  parameterClass="java.util.HashMap">
+		update cs_outside_qr$suffix$ set		
+			csoq_id=csoq_id
+			<isNotNull property="V_csoqId" prepend=",">
+				cs_outside_qr$suffix$.csoq_id = #V_csoqId#
+			</isNotNull>		
+			<isNotNull property="V_csoqHost" prepend=",">
+				cs_outside_qr$suffix$.csoq_host = #V_csoqHost#
+			</isNotNull>		
+			<isNotNull property="V_csoqAdder" prepend=",">
+				cs_outside_qr$suffix$.csoq_adder = #V_csoqAdder#
+			</isNotNull>		
+			<isNotNull property="V_csoqCar" prepend=",">
+				cs_outside_qr$suffix$.csoq_car = #V_csoqCar#
+			</isNotNull>		
+			<isNotNull property="V_csoqType" prepend=",">
+				cs_outside_qr$suffix$.csoq_type = #V_csoqType#
+			</isNotNull>		
+			<isNotNull property="V_csoqUserPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_user_pos_start = #V_csoqUserPosStart#
+			</isNotNull>		
+			<isNotNull property="V_csoqCarPosStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_start = #V_csoqCarPosStart#
+			</isNotNull>		
+			<isNotNull property="V_csoqDistanceStart" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_start = #V_csoqDistanceStart#
+			</isNotNull>		
+			<isNotNull property="V_csoqUsePosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_use_pos_end = #V_csoqUsePosEnd#
+			</isNotNull>		
+			<isNotNull property="V_csoqCarPosEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_car_pos_end = #V_csoqCarPosEnd#
+			</isNotNull>		
+			<isNotNull property="V_csoqDistanceEnd" prepend=",">
+				cs_outside_qr$suffix$.csoq_distance_end = #V_csoqDistanceEnd#
+			</isNotNull>		
+			<isNotNull property="V_csoqImages" prepend=",">
+				cs_outside_qr$suffix$.csoq_images = #V_csoqImages#
+			</isNotNull>		
+			<isNotNull property="V_csoqAddTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_add_time = #V_csoqAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csoqEndTime" prepend=",">
+				cs_outside_qr$suffix$.csoq_end_time = #V_csoqEndTime#
+			</isNotNull>		
+			<isNotNull property="V_csoqTimeLong" prepend=",">
+				cs_outside_qr$suffix$.csoq_time_long = #V_csoqTimeLong#
+			</isNotNull>		
+			<isNotNull property="V_csoqRemark" prepend=",">
+				cs_outside_qr$suffix$.csoq_remark = #V_csoqRemark#
+			</isNotNull>		
+			<isNotNull property="V_csoqStatus" prepend=",">
+				cs_outside_qr$suffix$.csoq_status = #V_csoqStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.csoq_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_outside_qr$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_outside_qr$suffix$.csoq_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoqCar"><!-- 调用一下CsoqCar，把CsCar指向CsoqCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOutsideQr_part.cs_outside_qr_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除巡检作业 -->
+	<update id="deleteCsOutsideQrBy"  parameterClass="java.util.HashMap">
+		delete from cs_outside_qr$suffix$ where 
+		cs_outside_qr$suffix$.csoq_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOutsideQr_part.cs_outside_qr_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

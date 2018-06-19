@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢struts的Action框架 -->
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="htm,html"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+
+	<!-- 外勤扫码签到 -->
+	<package name="m.admin" extends="struts-default" namespace="/m/admin">
+		<action name="index" method="execute" class="mAdminAction">
+			<result name="index">index.html</result>
+		</action>
+		<action name="scan_*" method="{1}" class="mScanAction">
+			<result name="scan">scan.html</result>
+			<result name="bind">scan_bind.html</result>
+		</action>
+	</package>
+	<package name="m.root" extends="struts-default" namespace="/m">
+		<!-- 微信接口地址 -->
+		<action name="interface-*" method="{1}" class="mInterfaceAction"></action>
+		<!-- 微信授权地址 -->
+		<action name="oauth_*" method="{1}" class="mOauthAction"></action>
+		<action name="oauth2_*" method="{1}" class="mOauth2Action"></action>
+		<!-- 图片上传 -->
+		<action name="upload" method="execute" class="mUploadAction"></action>
+		<action name="index" method="execute" class="mIndexAction">
+			<result name="index">index.html</result>
+		</action>
+		<action name="ajax_*" method="{1}" class="mAjaxAction">
+			<result name="model">ajax_model.html</result>
+			<result name="city">ajax_city.html</result>
+			<result name="order">ajax_order.html</result>
+		</action>
+		<!-- 用户登录 -->
+		<action name="login_*" method="{1}" class="mLoginAction">
+			<result name="login">login.html</result>
+			<result name="success" type="redirect">/m/home/index.html</result>
+			<result name="403" type="redirect">/m/403.html</result>
+		</action>
+		<!-- 用户注册 -->
+		<action name="register_*" method="{1}" class="mRegisterAction">
+			<result name="register">register.html</result>
+			<result name="identity">register_identity.html</result>
+			<result name="register_identity">register_identity.html</result>
+			<result name="driver">register_driver.html</result>
+			<result name="register_driver">register_driver.html</result>
+			<result name="address">register_address.html</result>
+			<result name="register_address">register_address.html</result>
+			<result name="success" type="redirect">/m/home/index.html</result>
+			<result name="setname">register_setname.html</result>
+			<result name="forgot">register_forgot.html</result>
+		</action>
+		<!-- 网点分布 -->
+		<!-- 订车-->
+		<action name="reserve_*" method="{1}" class="mReserveAction">
+			<result name="reserve">reserve.html</result>
+			<result name="timeline">reserve_timeline.html</result>
+		</action>
+		<action name="checkout_*" method="{1}" class="mCheckoutAction">
+			<result name="checkout">checkout.html</result>
+		</action>
+		<action name="confirm_*" method="{1}" class="mConfirmAction">
+			<result name="confirm">confirm.html</result>
+		</action>
+	</package>
+	
+	<package name="m.home" extends="struts-default" namespace="/m/home">
+	<!-- 账户-->
+		<action name="index_*" method="{1}" class="mHomeIndexAction">
+			<result name="index">index.html</result>
+		</action>
+		<action name="account_*" method="{1}" class="mHomeAccountAction">
+			<result name="identiy">account_identity.html</result>
+			<result name="violat">account_violat.html</result>
+			<result name="violatdetail">account_violatdetail.html</result>
+			<result name="money">account_money.html</result>
+			<result name="recharge">account_recharge.html</result>
+			<result name="coupon">account_coupon.html</result>
+			<result name="buycoupon">account_buycoupon.html</result>
+			<result name="coin">account_coin.html</result>
+			<result name="exchangecoin">account_exchangecoin.html</result>
+			<result name="coinarea">account_coinarea.html</result>
+			<result name="freehours">account_freehours.html</result>
+			<result name="integral">account_integral.html</result>
+			<result name="exchangefreehours">account_exchangefreehours.html</result>
+			<result name="credit">account_credit.html</result>
+			<result name="creditInfo">account_creditInfo.html</result>
+			<result name="info">account_info.html</result>
+			<result name="address">account_address.html</result>
+			<result name="emergencycontacts">account_emergencycontacts.html</result>
+			<result name="pwd">account_pwd.html</result>
+			<result name="callback">account_callback.html</result>
+			<result name="feedback">account_feedback.html</result>
+			<result name="grade">account_grade.html</result>
+			<result name="gradelist">account_gradelist.html</result>
+		</action>
+		<action name="order_*" method="{1}" class="mOrderAction">
+			<result name="order">order.html</result>
+			<result name="usecar">order_usecar.html</result>
+			<result name="detail">order_detail.html</result>
+			<result name="operate">order_operate.html</result>
+			<result name="reorder">order_reorder.html</result>
+			<result name="operatefail">../index.html</result>
+		</action>
+	</package>
+
+
+	<!-- 全局的Action处理，必须放在最后 -->
+	<package name="m.default" extends="struts-default">
+		<default-action-ref name="index" />
+		<action name="**" method="execute" class="mDefaultAction">
+			<result name="default">${#request.servletPath}</result>
+		</action>
+	</package>
+
+</struts>

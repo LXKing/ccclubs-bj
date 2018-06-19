@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsViolat_part">	
+	<!-- 车辆违章条件sql片段  -->
+	<sql id="cs_violat_dynamic">
+		<dynamic>
+			<isNotEmpty property="csvId" prepend="and">
+			    $csvIdNot$ cs_violat$suffix$.csv_id = #csvId#
+			</isNotEmpty>
+			<isNotNull property="csvIdNot" prepend="and">
+				<isEmpty property="csvId">
+				$csvIdNot$ cs_violat$suffix$.csv_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_violat$suffix$.csv_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csvHost" prepend="and">
+			    $csvHostNot$ cs_violat$suffix$.csv_host = #csvHost#
+			</isNotEmpty>
+			<isNotNull property="csvHostNot" prepend="and">
+				<isEmpty property="csvHost">
+				$csvHostNot$ cs_violat$suffix$.csv_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csvOrder" prepend="and">
+			    $csvOrderNot$ cs_violat$suffix$.csv_order = #csvOrder#
+			</isNotEmpty>
+			<isNotNull property="csvOrderNot" prepend="and">
+				<isEmpty property="csvOrder">
+				$csvOrderNot$ cs_violat$suffix$.csv_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvMember" prepend="and">
+			    $csvMemberNot$ cs_violat$suffix$.csv_member = #csvMember#
+			</isNotEmpty>
+			<isNotNull property="csvMemberNot" prepend="and">
+				<isEmpty property="csvMember">
+				$csvMemberNot$ cs_violat$suffix$.csv_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvCar" prepend="and">
+			    $csvCarNot$ cs_violat$suffix$.csv_car = #csvCar#
+			</isNotEmpty>
+			<isNotNull property="csvCarNot" prepend="and">
+				<isEmpty property="csvCar">
+				$csvCarNot$ cs_violat$suffix$.csv_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvMoneyMin" prepend="and">
+			    $csvMoneyNot$  ( cs_violat$suffix$.csv_money &gt;= #csvMoneyMin#
+			    <isEmpty property="csvMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvMoneyMax" prepend="and">
+				<isEmpty property="csvMoneyMin">$csvMoneyNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_money &lt;= #csvMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csvMoney" prepend="and">
+			    $csvMoneyNot$ cs_violat$suffix$.csv_money = #csvMoney#
+			</isNotEmpty>
+			<isNotNull property="csvMoneyNot" prepend="and">
+				<isEmpty property="csvMoneyMax"><isEmpty property="csvMoneyMin"><isEmpty property="csvMoney">
+				$csvMoneyNot$ cs_violat$suffix$.csv_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvScoreMin" prepend="and">
+			    $csvScoreNot$  ( cs_violat$suffix$.csv_score &gt;= #csvScoreMin#
+			    <isEmpty property="csvScoreMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvScoreMax" prepend="and">
+				<isEmpty property="csvScoreMin">$csvScoreNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_score &lt;= #csvScoreMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csvScore" prepend="and">
+			    $csvScoreNot$ cs_violat$suffix$.csv_score = #csvScore#
+			</isNotEmpty>
+			<isNotNull property="csvScoreNot" prepend="and">
+				<isEmpty property="csvScoreMax"><isEmpty property="csvScoreMin"><isEmpty property="csvScore">
+				$csvScoreNot$ cs_violat$suffix$.csv_score is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvHappenTimeStart" prepend="and">
+			    $csvHappenTimeNot$   (cs_violat$suffix$.csv_happen_time &gt;= #csvHappenTimeStart#
+			   <isEmpty property="csvHappenTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvHappenTimeEnd" prepend="and">
+				<isEmpty property="csvHappenTimeStart">$csvHappenTimeNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_happen_time &lt;= #csvHappenTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csvHappenTime" prepend="and">
+			    $csvHappenTimeNot$ cs_violat$suffix$.csv_happen_time = #csvHappenTime#
+			</isNotEmpty>
+			<isNotNull property="csvHappenTimeNot" prepend="and">
+				<isEmpty property="csvHappenTimeStart"><isEmpty property="csvHappenTimeEnd"><isEmpty property="csvHappenTime">
+				$csvHappenTimeNot$ cs_violat$suffix$.csv_happen_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvDecipt" prepend="and">			    
+			    (<isNotNull property="csvDeciptNot">
+			    cs_violat$suffix$.csv_decipt is null or length(cs_violat$suffix$.csv_decipt) &lt; 1 or
+			    </isNotNull>$csvDeciptNot$ cs_violat$suffix$.csv_decipt like #csvDecipt#)
+			</isNotEmpty>
+			<isNotNull property="csvDeciptNot" prepend="and">
+				<isEmpty property="csvDecipt">
+				$csvDeciptNot$ (cs_violat$suffix$.csv_decipt is null or length(cs_violat$suffix$.csv_decipt) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvNoticeTimeStart" prepend="and">
+			    $csvNoticeTimeNot$   (cs_violat$suffix$.csv_notice_time &gt;= #csvNoticeTimeStart#
+			   <isEmpty property="csvNoticeTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvNoticeTimeEnd" prepend="and">
+				<isEmpty property="csvNoticeTimeStart">$csvNoticeTimeNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_notice_time &lt;= #csvNoticeTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csvNoticeTime" prepend="and">
+			    $csvNoticeTimeNot$ cs_violat$suffix$.csv_notice_time = #csvNoticeTime#
+			</isNotEmpty>
+			<isNotNull property="csvNoticeTimeNot" prepend="and">
+				<isEmpty property="csvNoticeTimeStart"><isEmpty property="csvNoticeTimeEnd"><isEmpty property="csvNoticeTime">
+				$csvNoticeTimeNot$ cs_violat$suffix$.csv_notice_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvCutoffTimeStart" prepend="and">
+			    $csvCutoffTimeNot$   (cs_violat$suffix$.csv_cutoff_time &gt;= #csvCutoffTimeStart#
+			   <isEmpty property="csvCutoffTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvCutoffTimeEnd" prepend="and">
+				<isEmpty property="csvCutoffTimeStart">$csvCutoffTimeNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_cutoff_time &lt;= #csvCutoffTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csvCutoffTime" prepend="and">
+			    $csvCutoffTimeNot$ cs_violat$suffix$.csv_cutoff_time = #csvCutoffTime#
+			</isNotEmpty>
+			<isNotNull property="csvCutoffTimeNot" prepend="and">
+				<isEmpty property="csvCutoffTimeStart"><isEmpty property="csvCutoffTimeEnd"><isEmpty property="csvCutoffTime">
+				$csvCutoffTimeNot$ cs_violat$suffix$.csv_cutoff_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvType" prepend="and">
+			    $csvTypeNot$ cs_violat$suffix$.csv_type = #csvType#
+			</isNotEmpty>
+			<isNotNull property="csvTypeNot" prepend="and">
+				<isEmpty property="csvType">
+				$csvTypeNot$ cs_violat$suffix$.csv_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvPriceMin" prepend="and">
+			    $csvPriceNot$  ( cs_violat$suffix$.csv_price &gt;= #csvPriceMin#
+			    <isEmpty property="csvPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvPriceMax" prepend="and">
+				<isEmpty property="csvPriceMin">$csvPriceNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_price &lt;= #csvPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csvPrice" prepend="and">
+			    $csvPriceNot$ cs_violat$suffix$.csv_price = #csvPrice#
+			</isNotEmpty>
+			<isNotNull property="csvPriceNot" prepend="and">
+				<isEmpty property="csvPriceMax"><isEmpty property="csvPriceMin"><isEmpty property="csvPrice">
+				$csvPriceNot$ cs_violat$suffix$.csv_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvBranch" prepend="and">
+			    $csvBranchNot$ cs_violat$suffix$.csv_branch = #csvBranch#
+			</isNotEmpty>
+			<isNotNull property="csvBranchNot" prepend="and">
+				<isEmpty property="csvBranch">
+				$csvBranchNot$ cs_violat$suffix$.csv_branch is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvPostType" prepend="and">
+			    $csvPostTypeNot$ cs_violat$suffix$.csv_post_type = #csvPostType#
+			</isNotEmpty>
+			<isNotNull property="csvPostTypeNot" prepend="and">
+				<isEmpty property="csvPostType">
+				$csvPostTypeNot$ cs_violat$suffix$.csv_post_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvAddress" prepend="and">			    
+			    (<isNotNull property="csvAddressNot">
+			    cs_violat$suffix$.csv_address is null or length(cs_violat$suffix$.csv_address) &lt; 1 or
+			    </isNotNull>$csvAddressNot$ cs_violat$suffix$.csv_address like #csvAddress#)
+			</isNotEmpty>
+			<isNotNull property="csvAddressNot" prepend="and">
+				<isEmpty property="csvAddress">
+				$csvAddressNot$ (cs_violat$suffix$.csv_address is null or length(cs_violat$suffix$.csv_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvRemark" prepend="and">			    
+			    (<isNotNull property="csvRemarkNot">
+			    cs_violat$suffix$.csv_remark is null or length(cs_violat$suffix$.csv_remark) &lt; 1 or
+			    </isNotNull>$csvRemarkNot$ cs_violat$suffix$.csv_remark like #csvRemark#)
+			</isNotEmpty>
+			<isNotNull property="csvRemarkNot" prepend="and">
+				<isEmpty property="csvRemark">
+				$csvRemarkNot$ (cs_violat$suffix$.csv_remark is null or length(cs_violat$suffix$.csv_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvAccepter" prepend="and">
+			    $csvAccepterNot$ cs_violat$suffix$.csv_accepter = #csvAccepter#
+			</isNotEmpty>
+			<isNotNull property="csvAccepterNot" prepend="and">
+				<isEmpty property="csvAccepter">
+				$csvAccepterNot$ cs_violat$suffix$.csv_accepter is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvAdder" prepend="and">
+			    $csvAdderNot$ cs_violat$suffix$.csv_adder = #csvAdder#
+			</isNotEmpty>
+			<isNotNull property="csvAdderNot" prepend="and">
+				<isEmpty property="csvAdder">
+				$csvAdderNot$ cs_violat$suffix$.csv_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvUpdateTimeStart" prepend="and">
+			    $csvUpdateTimeNot$   (cs_violat$suffix$.csv_update_time &gt;= #csvUpdateTimeStart#
+			   <isEmpty property="csvUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvUpdateTimeEnd" prepend="and">
+				<isEmpty property="csvUpdateTimeStart">$csvUpdateTimeNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_update_time &lt;= #csvUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csvUpdateTime" prepend="and">
+			    $csvUpdateTimeNot$ cs_violat$suffix$.csv_update_time = #csvUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csvUpdateTimeNot" prepend="and">
+				<isEmpty property="csvUpdateTimeStart"><isEmpty property="csvUpdateTimeEnd"><isEmpty property="csvUpdateTime">
+				$csvUpdateTimeNot$ cs_violat$suffix$.csv_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvAddTimeStart" prepend="and">
+			    $csvAddTimeNot$   (cs_violat$suffix$.csv_add_time &gt;= #csvAddTimeStart#
+			   <isEmpty property="csvAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvAddTimeEnd" prepend="and">
+				<isEmpty property="csvAddTimeStart">$csvAddTimeNot$   (</isEmpty>
+			    cs_violat$suffix$.csv_add_time &lt;= #csvAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csvAddTime" prepend="and">
+			    $csvAddTimeNot$ cs_violat$suffix$.csv_add_time = #csvAddTime#
+			</isNotEmpty>
+			<isNotNull property="csvAddTimeNot" prepend="and">
+				<isEmpty property="csvAddTimeStart"><isEmpty property="csvAddTimeEnd"><isEmpty property="csvAddTime">
+				$csvAddTimeNot$ cs_violat$suffix$.csv_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvDealFlag" prepend="and">
+			    $csvDealFlagNot$ cs_violat$suffix$.csv_deal_flag = #csvDealFlag#
+			</isNotEmpty>
+			<isNotNull property="csvDealFlagNot" prepend="and">
+				<isEmpty property="csvDealFlag">
+				$csvDealFlagNot$ cs_violat$suffix$.csv_deal_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csv22Min" prepend="and">
+			    $csv22Not$  ( cs_violat$suffix$.csv_22 &gt;= #csv22Min#
+			    <isEmpty property="csv22Max">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csv22Max" prepend="and">
+				<isEmpty property="csv22Min">$csv22Not$   (</isEmpty>
+			    cs_violat$suffix$.csv_22 &lt;= #csv22Max# )
+			</isNotEmpty>
+			<isNotEmpty property="csv22" prepend="and">
+			    $csv22Not$ cs_violat$suffix$.csv_22 = #csv22#
+			</isNotEmpty>
+			<isNotNull property="csv22Not" prepend="and">
+				<isEmpty property="csv22Max"><isEmpty property="csv22Min"><isEmpty property="csv22">
+				$csv22Not$ cs_violat$suffix$.csv_22 is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvStatus" prepend="and">
+			    $csvStatusNot$ cs_violat$suffix$.csv_status = #csvStatus#
+			</isNotEmpty>
+			<isNotNull property="csvStatusNot" prepend="and">
+				<isEmpty property="csvStatus">
+				$csvStatusNot$ cs_violat$suffix$.csv_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆违章left join 条件sql片段 -->
+	<sql id="cs_violat_join">
+		<dynamic>
+			<isNotEmpty property="CsViolat.csvId" prepend="and">
+			    $CsViolat.csvIdNot$ cs_violat$CsViolat.suffix$.csv_id = #CsViolat.csvId#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvIdNot" prepend="and">
+				<isEmpty property="CsViolat.csvId">
+				$csvIdNot$ cs_violat$CsViolat.suffix$.csv_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_violat$CsViolat.suffix$.csv_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvHost" prepend="and">
+			    $CsViolat.csvHostNot$ cs_violat$CsViolat.suffix$.csv_host = #CsViolat.csvHost#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvHostNot" prepend="and">
+				<isEmpty property="CsViolat.csvHost">
+				$csvHostNot$ cs_violat$CsViolat.suffix$.csv_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvOrder" prepend="and">
+			    $CsViolat.csvOrderNot$ cs_violat$CsViolat.suffix$.csv_order = #CsViolat.csvOrder#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvOrderNot" prepend="and">
+				<isEmpty property="CsViolat.csvOrder">
+				$csvOrderNot$ cs_violat$CsViolat.suffix$.csv_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvMember" prepend="and">
+			    $CsViolat.csvMemberNot$ cs_violat$CsViolat.suffix$.csv_member = #CsViolat.csvMember#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvMemberNot" prepend="and">
+				<isEmpty property="CsViolat.csvMember">
+				$csvMemberNot$ cs_violat$CsViolat.suffix$.csv_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvCar" prepend="and">
+			    $CsViolat.csvCarNot$ cs_violat$CsViolat.suffix$.csv_car = #CsViolat.csvCar#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvCarNot" prepend="and">
+				<isEmpty property="CsViolat.csvCar">
+				$csvCarNot$ cs_violat$CsViolat.suffix$.csv_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvMoneyMin" prepend="and">
+			    $CsViolat.csvMoneyNot$  ( cs_violat$CsViolat.suffix$.csv_money &gt;= #CsViolat.csvMoneyMin#
+			    <isEmpty property="CsViolat.csvMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvMoneyMax" prepend="and">
+				<isEmpty property="CsViolat.csvMoneyMin">$CsViolat.csvMoneyNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_money &lt;= #CsViolat.csvMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvMoney" prepend="and">
+			    $CsViolat.csvMoneyNot$ cs_violat$CsViolat.suffix$.csv_money = #CsViolat.csvMoney#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvMoneyNot" prepend="and">
+				<isEmpty property="CsViolat.csvMoneyMax"><isEmpty property="CsViolat.csvMoneyMin"><isEmpty property="CsViolat.csvMoney">
+				$csvMoneyNot$ cs_violat$CsViolat.suffix$.csv_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvScoreMin" prepend="and">
+			    $CsViolat.csvScoreNot$  ( cs_violat$CsViolat.suffix$.csv_score &gt;= #CsViolat.csvScoreMin#
+			    <isEmpty property="CsViolat.csvScoreMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvScoreMax" prepend="and">
+				<isEmpty property="CsViolat.csvScoreMin">$CsViolat.csvScoreNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_score &lt;= #CsViolat.csvScoreMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvScore" prepend="and">
+			    $CsViolat.csvScoreNot$ cs_violat$CsViolat.suffix$.csv_score = #CsViolat.csvScore#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvScoreNot" prepend="and">
+				<isEmpty property="CsViolat.csvScoreMax"><isEmpty property="CsViolat.csvScoreMin"><isEmpty property="CsViolat.csvScore">
+				$csvScoreNot$ cs_violat$CsViolat.suffix$.csv_score is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvHappenTimeStart" prepend="and">
+			    $CsViolat.csvHappenTimeNot$   (cs_violat$CsViolat.suffix$.csv_happen_time &gt;= #CsViolat.csvHappenTimeStart#
+			   <isEmpty property="CsViolat.csvHappenTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvHappenTimeEnd" prepend="and">
+				<isEmpty property="CsViolat.csvHappenTimeStart">$CsViolat.csvHappenTimeNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_happen_time &lt;= #CsViolat.csvHappenTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvHappenTime" prepend="and">
+			    $CsViolat.csvHappenTimeNot$ cs_violat$CsViolat.suffix$.csv_happen_time = #CsViolat.csvHappenTime#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvHappenTimeNot" prepend="and">
+				<isEmpty property="CsViolat.csvHappenTimeStart"><isEmpty property="CsViolat.csvHappenTimeEnd"><isEmpty property="CsViolat.csvHappenTime">
+				$csvHappenTimeNot$ cs_violat$CsViolat.suffix$.csv_happen_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvDecipt" prepend="and">
+				(<isNotNull property="CsViolat.csvDeciptNot">
+			    cs_violat$CsViolat.suffix$.csv_decipt is null or length(cs_violat$CsViolat.suffix$.csv_decipt) &lt; 1 or
+			    </isNotNull>$CsViolat.csvDeciptNot$ cs_violat$CsViolat.suffix$.csv_decipt like #CsViolat.csvDecipt#)
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvDeciptNot" prepend="and">
+				<isEmpty property="CsViolat.csvDecipt">
+				$csvDeciptNot$ (cs_violat$CsViolat.suffix$.csv_decipt is null or length(cs_violat$CsViolat.suffix$.csv_decipt) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvNoticeTimeStart" prepend="and">
+			    $CsViolat.csvNoticeTimeNot$   (cs_violat$CsViolat.suffix$.csv_notice_time &gt;= #CsViolat.csvNoticeTimeStart#
+			   <isEmpty property="CsViolat.csvNoticeTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvNoticeTimeEnd" prepend="and">
+				<isEmpty property="CsViolat.csvNoticeTimeStart">$CsViolat.csvNoticeTimeNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_notice_time &lt;= #CsViolat.csvNoticeTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvNoticeTime" prepend="and">
+			    $CsViolat.csvNoticeTimeNot$ cs_violat$CsViolat.suffix$.csv_notice_time = #CsViolat.csvNoticeTime#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvNoticeTimeNot" prepend="and">
+				<isEmpty property="CsViolat.csvNoticeTimeStart"><isEmpty property="CsViolat.csvNoticeTimeEnd"><isEmpty property="CsViolat.csvNoticeTime">
+				$csvNoticeTimeNot$ cs_violat$CsViolat.suffix$.csv_notice_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvCutoffTimeStart" prepend="and">
+			    $CsViolat.csvCutoffTimeNot$   (cs_violat$CsViolat.suffix$.csv_cutoff_time &gt;= #CsViolat.csvCutoffTimeStart#
+			   <isEmpty property="CsViolat.csvCutoffTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvCutoffTimeEnd" prepend="and">
+				<isEmpty property="CsViolat.csvCutoffTimeStart">$CsViolat.csvCutoffTimeNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_cutoff_time &lt;= #CsViolat.csvCutoffTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvCutoffTime" prepend="and">
+			    $CsViolat.csvCutoffTimeNot$ cs_violat$CsViolat.suffix$.csv_cutoff_time = #CsViolat.csvCutoffTime#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvCutoffTimeNot" prepend="and">
+				<isEmpty property="CsViolat.csvCutoffTimeStart"><isEmpty property="CsViolat.csvCutoffTimeEnd"><isEmpty property="CsViolat.csvCutoffTime">
+				$csvCutoffTimeNot$ cs_violat$CsViolat.suffix$.csv_cutoff_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvType" prepend="and">
+			    $CsViolat.csvTypeNot$ cs_violat$CsViolat.suffix$.csv_type = #CsViolat.csvType#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvTypeNot" prepend="and">
+				<isEmpty property="CsViolat.csvType">
+				$csvTypeNot$ cs_violat$CsViolat.suffix$.csv_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvPriceMin" prepend="and">
+			    $CsViolat.csvPriceNot$  ( cs_violat$CsViolat.suffix$.csv_price &gt;= #CsViolat.csvPriceMin#
+			    <isEmpty property="CsViolat.csvPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvPriceMax" prepend="and">
+				<isEmpty property="CsViolat.csvPriceMin">$CsViolat.csvPriceNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_price &lt;= #CsViolat.csvPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvPrice" prepend="and">
+			    $CsViolat.csvPriceNot$ cs_violat$CsViolat.suffix$.csv_price = #CsViolat.csvPrice#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvPriceNot" prepend="and">
+				<isEmpty property="CsViolat.csvPriceMax"><isEmpty property="CsViolat.csvPriceMin"><isEmpty property="CsViolat.csvPrice">
+				$csvPriceNot$ cs_violat$CsViolat.suffix$.csv_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvBranch" prepend="and">
+			    $CsViolat.csvBranchNot$ cs_violat$CsViolat.suffix$.csv_branch = #CsViolat.csvBranch#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvBranchNot" prepend="and">
+				<isEmpty property="CsViolat.csvBranch">
+				$csvBranchNot$ cs_violat$CsViolat.suffix$.csv_branch is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvPostType" prepend="and">
+			    $CsViolat.csvPostTypeNot$ cs_violat$CsViolat.suffix$.csv_post_type = #CsViolat.csvPostType#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvPostTypeNot" prepend="and">
+				<isEmpty property="CsViolat.csvPostType">
+				$csvPostTypeNot$ cs_violat$CsViolat.suffix$.csv_post_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvAddress" prepend="and">
+				(<isNotNull property="CsViolat.csvAddressNot">
+			    cs_violat$CsViolat.suffix$.csv_address is null or length(cs_violat$CsViolat.suffix$.csv_address) &lt; 1 or
+			    </isNotNull>$CsViolat.csvAddressNot$ cs_violat$CsViolat.suffix$.csv_address like #CsViolat.csvAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvAddressNot" prepend="and">
+				<isEmpty property="CsViolat.csvAddress">
+				$csvAddressNot$ (cs_violat$CsViolat.suffix$.csv_address is null or length(cs_violat$CsViolat.suffix$.csv_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvRemark" prepend="and">
+				(<isNotNull property="CsViolat.csvRemarkNot">
+			    cs_violat$CsViolat.suffix$.csv_remark is null or length(cs_violat$CsViolat.suffix$.csv_remark) &lt; 1 or
+			    </isNotNull>$CsViolat.csvRemarkNot$ cs_violat$CsViolat.suffix$.csv_remark like #CsViolat.csvRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvRemarkNot" prepend="and">
+				<isEmpty property="CsViolat.csvRemark">
+				$csvRemarkNot$ (cs_violat$CsViolat.suffix$.csv_remark is null or length(cs_violat$CsViolat.suffix$.csv_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvAccepter" prepend="and">
+			    $CsViolat.csvAccepterNot$ cs_violat$CsViolat.suffix$.csv_accepter = #CsViolat.csvAccepter#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvAccepterNot" prepend="and">
+				<isEmpty property="CsViolat.csvAccepter">
+				$csvAccepterNot$ cs_violat$CsViolat.suffix$.csv_accepter is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvAdder" prepend="and">
+			    $CsViolat.csvAdderNot$ cs_violat$CsViolat.suffix$.csv_adder = #CsViolat.csvAdder#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvAdderNot" prepend="and">
+				<isEmpty property="CsViolat.csvAdder">
+				$csvAdderNot$ cs_violat$CsViolat.suffix$.csv_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvUpdateTimeStart" prepend="and">
+			    $CsViolat.csvUpdateTimeNot$   (cs_violat$CsViolat.suffix$.csv_update_time &gt;= #CsViolat.csvUpdateTimeStart#
+			   <isEmpty property="CsViolat.csvUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsViolat.csvUpdateTimeStart">$CsViolat.csvUpdateTimeNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_update_time &lt;= #CsViolat.csvUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvUpdateTime" prepend="and">
+			    $CsViolat.csvUpdateTimeNot$ cs_violat$CsViolat.suffix$.csv_update_time = #CsViolat.csvUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvUpdateTimeNot" prepend="and">
+				<isEmpty property="CsViolat.csvUpdateTimeStart"><isEmpty property="CsViolat.csvUpdateTimeEnd"><isEmpty property="CsViolat.csvUpdateTime">
+				$csvUpdateTimeNot$ cs_violat$CsViolat.suffix$.csv_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvAddTimeStart" prepend="and">
+			    $CsViolat.csvAddTimeNot$   (cs_violat$CsViolat.suffix$.csv_add_time &gt;= #CsViolat.csvAddTimeStart#
+			   <isEmpty property="CsViolat.csvAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvAddTimeEnd" prepend="and">
+				<isEmpty property="CsViolat.csvAddTimeStart">$CsViolat.csvAddTimeNot$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_add_time &lt;= #CsViolat.csvAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csvAddTime" prepend="and">
+			    $CsViolat.csvAddTimeNot$ cs_violat$CsViolat.suffix$.csv_add_time = #CsViolat.csvAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvAddTimeNot" prepend="and">
+				<isEmpty property="CsViolat.csvAddTimeStart"><isEmpty property="CsViolat.csvAddTimeEnd"><isEmpty property="CsViolat.csvAddTime">
+				$csvAddTimeNot$ cs_violat$CsViolat.suffix$.csv_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvDealFlag" prepend="and">
+			    $CsViolat.csvDealFlagNot$ cs_violat$CsViolat.suffix$.csv_deal_flag = #CsViolat.csvDealFlag#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvDealFlagNot" prepend="and">
+				<isEmpty property="CsViolat.csvDealFlag">
+				$csvDealFlagNot$ cs_violat$CsViolat.suffix$.csv_deal_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csv22Min" prepend="and">
+			    $CsViolat.csv22Not$  ( cs_violat$CsViolat.suffix$.csv_22 &gt;= #CsViolat.csv22Min#
+			    <isEmpty property="CsViolat.csv22Max">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csv22Max" prepend="and">
+				<isEmpty property="CsViolat.csv22Min">$CsViolat.csv22Not$   (</isEmpty>
+			    cs_violat$CsViolat.suffix$.csv_22 &lt;= #CsViolat.csv22Max# )
+			</isNotEmpty>
+			<isNotEmpty property="CsViolat.csv22" prepend="and">
+			    $CsViolat.csv22Not$ cs_violat$CsViolat.suffix$.csv_22 = #CsViolat.csv22#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csv22Not" prepend="and">
+				<isEmpty property="CsViolat.csv22Max"><isEmpty property="CsViolat.csv22Min"><isEmpty property="CsViolat.csv22">
+				$csv22Not$ cs_violat$CsViolat.suffix$.csv_22 is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsViolat.csvStatus" prepend="and">
+			    $CsViolat.csvStatusNot$ cs_violat$CsViolat.suffix$.csv_status = #CsViolat.csvStatus#
+			</isNotEmpty>
+			<isNotNull property="CsViolat.csvStatusNot" prepend="and">
+				<isEmpty property="CsViolat.csvStatus">
+				$csvStatusNot$ cs_violat$CsViolat.suffix$.csv_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

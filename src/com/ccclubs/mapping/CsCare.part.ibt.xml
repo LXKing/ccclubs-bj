@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCare_part">	
+	<!-- 客户关怀条件sql片段  -->
+	<sql id="cs_care_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_care$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_care$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_care$suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscHost" prepend="and">
+			    $cscHostNot$ cs_care$suffix$.csc_host = #cscHost#
+			</isNotEmpty>
+			<isNotNull property="cscHostNot" prepend="and">
+				<isEmpty property="cscHost">
+				$cscHostNot$ cs_care$suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscMember" prepend="and">
+			    $cscMemberNot$ cs_care$suffix$.csc_member = #cscMember#
+			</isNotEmpty>
+			<isNotNull property="cscMemberNot" prepend="and">
+				<isEmpty property="cscMember">
+				$cscMemberNot$ cs_care$suffix$.csc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUser" prepend="and">
+			    $cscUserNot$ cs_care$suffix$.csc_user = #cscUser#
+			</isNotEmpty>
+			<isNotNull property="cscUserNot" prepend="and">
+				<isEmpty property="cscUser">
+				$cscUserNot$ cs_care$suffix$.csc_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscSort" prepend="and">
+			    $cscSortNot$ cs_care$suffix$.csc_sort = #cscSort#
+			</isNotEmpty>
+			<isNotNull property="cscSortNot" prepend="and">
+				<isEmpty property="cscSort">
+				$cscSortNot$ cs_care$suffix$.csc_sort is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscType" prepend="and">
+			    $cscTypeNot$ cs_care$suffix$.csc_type = #cscType#
+			</isNotEmpty>
+			<isNotNull property="cscTypeNot" prepend="and">
+				<isEmpty property="cscType">
+				$cscTypeNot$ cs_care$suffix$.csc_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTitle" prepend="and">			    
+			    (<isNotNull property="cscTitleNot">
+			    cs_care$suffix$.csc_title is null or length(cs_care$suffix$.csc_title) &lt; 1 or
+			    </isNotNull>$cscTitleNot$ cs_care$suffix$.csc_title like #cscTitle#)
+			</isNotEmpty>
+			<isNotNull property="cscTitleNot" prepend="and">
+				<isEmpty property="cscTitle">
+				$cscTitleNot$ (cs_care$suffix$.csc_title is null or length(cs_care$suffix$.csc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscDesc" prepend="and">			    
+			    (<isNotNull property="cscDescNot">
+			    cs_care$suffix$.csc_desc is null or length(cs_care$suffix$.csc_desc) &lt; 1 or
+			    </isNotNull>$cscDescNot$ cs_care$suffix$.csc_desc like #cscDesc#)
+			</isNotEmpty>
+			<isNotNull property="cscDescNot" prepend="and">
+				<isEmpty property="cscDesc">
+				$cscDescNot$ (cs_care$suffix$.csc_desc is null or length(cs_care$suffix$.csc_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUpdateTimeStart" prepend="and">
+			    $cscUpdateTimeNot$   (cs_care$suffix$.csc_update_time &gt;= #cscUpdateTimeStart#
+			   <isEmpty property="cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscUpdateTimeStart">$cscUpdateTimeNot$   (</isEmpty>
+			    cs_care$suffix$.csc_update_time &lt;= #cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTime" prepend="and">
+			    $cscUpdateTimeNot$ cs_care$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscUpdateTimeNot" prepend="and">
+				<isEmpty property="cscUpdateTimeStart"><isEmpty property="cscUpdateTimeEnd"><isEmpty property="cscUpdateTime">
+				$cscUpdateTimeNot$ cs_care$suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddTimeStart" prepend="and">
+			    $cscAddTimeNot$   (cs_care$suffix$.csc_add_time &gt;= #cscAddTimeStart#
+			   <isEmpty property="cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTimeEnd" prepend="and">
+				<isEmpty property="cscAddTimeStart">$cscAddTimeNot$   (</isEmpty>
+			    cs_care$suffix$.csc_add_time &lt;= #cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTime" prepend="and">
+			    $cscAddTimeNot$ cs_care$suffix$.csc_add_time = #cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscAddTimeNot" prepend="and">
+				<isEmpty property="cscAddTimeStart"><isEmpty property="cscAddTimeEnd"><isEmpty property="cscAddTime">
+				$cscAddTimeNot$ cs_care$suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAlarmTimeStart" prepend="and">
+			    $cscAlarmTimeNot$   (cs_care$suffix$.csc_alarm_time &gt;= #cscAlarmTimeStart#
+			   <isEmpty property="cscAlarmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAlarmTimeEnd" prepend="and">
+				<isEmpty property="cscAlarmTimeStart">$cscAlarmTimeNot$   (</isEmpty>
+			    cs_care$suffix$.csc_alarm_time &lt;= #cscAlarmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAlarmTime" prepend="and">
+			    $cscAlarmTimeNot$ cs_care$suffix$.csc_alarm_time = #cscAlarmTime#
+			</isNotEmpty>
+			<isNotNull property="cscAlarmTimeNot" prepend="and">
+				<isEmpty property="cscAlarmTimeStart"><isEmpty property="cscAlarmTimeEnd"><isEmpty property="cscAlarmTime">
+				$cscAlarmTimeNot$ cs_care$suffix$.csc_alarm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscStatus" prepend="and">
+			    $cscStatusNot$ cs_care$suffix$.csc_status = #cscStatus#
+			</isNotEmpty>
+			<isNotNull property="cscStatusNot" prepend="and">
+				<isEmpty property="cscStatus">
+				$cscStatusNot$ cs_care$suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 客户关怀left join 条件sql片段 -->
+	<sql id="cs_care_join">
+		<dynamic>
+			<isNotEmpty property="CsCare.cscId" prepend="and">
+			    $CsCare.cscIdNot$ cs_care$CsCare.suffix$.csc_id = #CsCare.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscIdNot" prepend="and">
+				<isEmpty property="CsCare.cscId">
+				$cscIdNot$ cs_care$CsCare.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_care$CsCare.suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscHost" prepend="and">
+			    $CsCare.cscHostNot$ cs_care$CsCare.suffix$.csc_host = #CsCare.cscHost#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscHostNot" prepend="and">
+				<isEmpty property="CsCare.cscHost">
+				$cscHostNot$ cs_care$CsCare.suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscMember" prepend="and">
+			    $CsCare.cscMemberNot$ cs_care$CsCare.suffix$.csc_member = #CsCare.cscMember#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscMemberNot" prepend="and">
+				<isEmpty property="CsCare.cscMember">
+				$cscMemberNot$ cs_care$CsCare.suffix$.csc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscUser" prepend="and">
+			    $CsCare.cscUserNot$ cs_care$CsCare.suffix$.csc_user = #CsCare.cscUser#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscUserNot" prepend="and">
+				<isEmpty property="CsCare.cscUser">
+				$cscUserNot$ cs_care$CsCare.suffix$.csc_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscSort" prepend="and">
+			    $CsCare.cscSortNot$ cs_care$CsCare.suffix$.csc_sort = #CsCare.cscSort#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscSortNot" prepend="and">
+				<isEmpty property="CsCare.cscSort">
+				$cscSortNot$ cs_care$CsCare.suffix$.csc_sort is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscType" prepend="and">
+			    $CsCare.cscTypeNot$ cs_care$CsCare.suffix$.csc_type = #CsCare.cscType#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscTypeNot" prepend="and">
+				<isEmpty property="CsCare.cscType">
+				$cscTypeNot$ cs_care$CsCare.suffix$.csc_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscTitle" prepend="and">
+				(<isNotNull property="CsCare.cscTitleNot">
+			    cs_care$CsCare.suffix$.csc_title is null or length(cs_care$CsCare.suffix$.csc_title) &lt; 1 or
+			    </isNotNull>$CsCare.cscTitleNot$ cs_care$CsCare.suffix$.csc_title like #CsCare.cscTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscTitleNot" prepend="and">
+				<isEmpty property="CsCare.cscTitle">
+				$cscTitleNot$ (cs_care$CsCare.suffix$.csc_title is null or length(cs_care$CsCare.suffix$.csc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscDesc" prepend="and">
+				(<isNotNull property="CsCare.cscDescNot">
+			    cs_care$CsCare.suffix$.csc_desc is null or length(cs_care$CsCare.suffix$.csc_desc) &lt; 1 or
+			    </isNotNull>$CsCare.cscDescNot$ cs_care$CsCare.suffix$.csc_desc like #CsCare.cscDesc#)
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscDescNot" prepend="and">
+				<isEmpty property="CsCare.cscDesc">
+				$cscDescNot$ (cs_care$CsCare.suffix$.csc_desc is null or length(cs_care$CsCare.suffix$.csc_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscUpdateTimeStart" prepend="and">
+			    $CsCare.cscUpdateTimeNot$   (cs_care$CsCare.suffix$.csc_update_time &gt;= #CsCare.cscUpdateTimeStart#
+			   <isEmpty property="CsCare.cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsCare.cscUpdateTimeStart">$CsCare.cscUpdateTimeNot$   (</isEmpty>
+			    cs_care$CsCare.suffix$.csc_update_time &lt;= #CsCare.cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscUpdateTime" prepend="and">
+			    $CsCare.cscUpdateTimeNot$ cs_care$CsCare.suffix$.csc_update_time = #CsCare.cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscUpdateTimeNot" prepend="and">
+				<isEmpty property="CsCare.cscUpdateTimeStart"><isEmpty property="CsCare.cscUpdateTimeEnd"><isEmpty property="CsCare.cscUpdateTime">
+				$cscUpdateTimeNot$ cs_care$CsCare.suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscAddTimeStart" prepend="and">
+			    $CsCare.cscAddTimeNot$   (cs_care$CsCare.suffix$.csc_add_time &gt;= #CsCare.cscAddTimeStart#
+			   <isEmpty property="CsCare.cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscAddTimeEnd" prepend="and">
+				<isEmpty property="CsCare.cscAddTimeStart">$CsCare.cscAddTimeNot$   (</isEmpty>
+			    cs_care$CsCare.suffix$.csc_add_time &lt;= #CsCare.cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscAddTime" prepend="and">
+			    $CsCare.cscAddTimeNot$ cs_care$CsCare.suffix$.csc_add_time = #CsCare.cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscAddTimeNot" prepend="and">
+				<isEmpty property="CsCare.cscAddTimeStart"><isEmpty property="CsCare.cscAddTimeEnd"><isEmpty property="CsCare.cscAddTime">
+				$cscAddTimeNot$ cs_care$CsCare.suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscAlarmTimeStart" prepend="and">
+			    $CsCare.cscAlarmTimeNot$   (cs_care$CsCare.suffix$.csc_alarm_time &gt;= #CsCare.cscAlarmTimeStart#
+			   <isEmpty property="CsCare.cscAlarmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscAlarmTimeEnd" prepend="and">
+				<isEmpty property="CsCare.cscAlarmTimeStart">$CsCare.cscAlarmTimeNot$   (</isEmpty>
+			    cs_care$CsCare.suffix$.csc_alarm_time &lt;= #CsCare.cscAlarmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCare.cscAlarmTime" prepend="and">
+			    $CsCare.cscAlarmTimeNot$ cs_care$CsCare.suffix$.csc_alarm_time = #CsCare.cscAlarmTime#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscAlarmTimeNot" prepend="and">
+				<isEmpty property="CsCare.cscAlarmTimeStart"><isEmpty property="CsCare.cscAlarmTimeEnd"><isEmpty property="CsCare.cscAlarmTime">
+				$cscAlarmTimeNot$ cs_care$CsCare.suffix$.csc_alarm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCare.cscStatus" prepend="and">
+			    $CsCare.cscStatusNot$ cs_care$CsCare.suffix$.csc_status = #CsCare.cscStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCare.cscStatusNot" prepend="and">
+				<isEmpty property="CsCare.cscStatus">
+				$cscStatusNot$ cs_care$CsCare.suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统通知之SQL映射 -->
+	<resultMap id="CsNotice" class="com.ccclubs.model.CsNotice">
+		<result property="csnId" column="csn_id"/>
+		<result property="csnContent" column="csn_content"/>
+		<result property="csnAlarmTime" column="csn_alarm_time"/>
+		<result property="csnUrl" column="csn_url"/>
+		<result property="csnFlag" column="csn_flag"/>
+		<result property="csnSender" column="csn_sender"/>
+		<result property="csnReceiver" column="csn_receiver"/>
+		<result property="csnRemark" column="csn_remark"/>
+		<result property="csnLog" column="csn_log"/>
+		<result property="csnAddTime" column="csn_add_time"/>
+		<result property="csnDealTime" column="csn_deal_time"/>
+		<result property="csnStatus" column="csn_status"/>
+	</resultMap>
+		
+	<!-- 获取所有系统通知 -->
+	<select id="getCsNoticeList" resultMap="CsNotice">
+		select cs_notice$suffix$.* from cs_notice$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_notice$suffix$.csn_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsNotice_part.cs_notice_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csn_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统通知分页 -->
+	<select id="getCsNoticePage" parameterClass="java.util.HashMap" resultMap="CsNotice">
+		select cs_notice$suffix$.* from cs_notice$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_notice$suffix$.csn_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsNotice_part.cs_notice_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csn_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统通知总数 -->
+	<select id="getCsNoticeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_notice$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_notice$suffix$.csn_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsNotice_part.cs_notice_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统通知 -->
+	<select id="getCsNoticeById" parameterClass="java.util.HashMap" resultMap="CsNotice">
+		select cs_notice$suffix$.* from cs_notice$suffix$
+		where csn_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统通知 -->
+	<insert id="saveCsNotice"  parameterClass="com.ccclubs.model.CsNotice">
+		insert into cs_notice$suffix$
+		(
+			cs_notice$suffix$.csn_content
+			,cs_notice$suffix$.csn_alarm_time
+			,cs_notice$suffix$.csn_url
+			,cs_notice$suffix$.csn_flag
+			,cs_notice$suffix$.csn_sender
+			,cs_notice$suffix$.csn_receiver
+			,cs_notice$suffix$.csn_remark
+			,cs_notice$suffix$.csn_log
+			,cs_notice$suffix$.csn_add_time
+			,cs_notice$suffix$.csn_deal_time
+			,cs_notice$suffix$.csn_status
+		)
+		values(
+			<isNotNull property="csnContent" prepend="">
+				#csnContent#
+			</isNotNull>
+			<isNull property="csnContent" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csnAlarmTime" prepend=",">
+				#csnAlarmTime#
+			</isNotNull>
+			<isNull property="csnAlarmTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnUrl" prepend=",">
+				#csnUrl#
+			</isNotNull>
+			<isNull property="csnUrl" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnFlag" prepend=",">
+				#csnFlag#
+			</isNotNull>
+			<isNull property="csnFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnSender" prepend=",">
+				#csnSender#
+			</isNotNull>
+			<isNull property="csnSender" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnReceiver" prepend=",">
+				#csnReceiver#
+			</isNotNull>
+			<isNull property="csnReceiver" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnRemark" prepend=",">
+				#csnRemark#
+			</isNotNull>
+			<isNull property="csnRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnLog" prepend=",">
+				#csnLog#
+			</isNotNull>
+			<isNull property="csnLog" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnAddTime" prepend=",">
+				#csnAddTime#
+			</isNotNull>
+			<isNull property="csnAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnDealTime" prepend=",">
+				#csnDealTime#
+			</isNotNull>
+			<isNull property="csnDealTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csnStatus" prepend=",">
+				#csnStatus#
+			</isNotNull>
+			<isNull property="csnStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统通知 -->
+	<update id="updateCsNotice"  parameterClass="com.ccclubs.model.CsNotice">
+		update cs_notice$suffix$ set
+			<isNotNull property="csnContent" prepend="">
+				cs_notice$suffix$.csn_content = #csnContent#
+			</isNotNull>
+			<isNull property="csnContent" prepend="">
+				cs_notice$suffix$.csn_content = null
+			</isNull>				
+			<isNotNull property="csnAlarmTime" prepend=",">
+				cs_notice$suffix$.csn_alarm_time = #csnAlarmTime#
+			</isNotNull>
+			<isNull property="csnAlarmTime" prepend=",">
+				cs_notice$suffix$.csn_alarm_time = null
+			</isNull>				
+			<isNotNull property="csnUrl" prepend=",">
+				cs_notice$suffix$.csn_url = #csnUrl#
+			</isNotNull>
+			<isNull property="csnUrl" prepend=",">
+				cs_notice$suffix$.csn_url = null
+			</isNull>				
+			<isNotNull property="csnFlag" prepend=",">
+				cs_notice$suffix$.csn_flag = #csnFlag#
+			</isNotNull>
+			<isNull property="csnFlag" prepend=",">
+				cs_notice$suffix$.csn_flag = null
+			</isNull>				
+			<isNotNull property="csnSender" prepend=",">
+				cs_notice$suffix$.csn_sender = #csnSender#
+			</isNotNull>
+			<isNull property="csnSender" prepend=",">
+				cs_notice$suffix$.csn_sender = null
+			</isNull>				
+			<isNotNull property="csnReceiver" prepend=",">
+				cs_notice$suffix$.csn_receiver = #csnReceiver#
+			</isNotNull>
+			<isNull property="csnReceiver" prepend=",">
+				cs_notice$suffix$.csn_receiver = null
+			</isNull>				
+			<isNotNull property="csnRemark" prepend=",">
+				cs_notice$suffix$.csn_remark = #csnRemark#
+			</isNotNull>
+			<isNull property="csnRemark" prepend=",">
+				cs_notice$suffix$.csn_remark = null
+			</isNull>				
+			<isNotNull property="csnLog" prepend=",">
+				cs_notice$suffix$.csn_log = #csnLog#
+			</isNotNull>
+			<isNull property="csnLog" prepend=",">
+				cs_notice$suffix$.csn_log = null
+			</isNull>				
+			<isNotNull property="csnAddTime" prepend=",">
+				cs_notice$suffix$.csn_add_time = #csnAddTime#
+			</isNotNull>
+			<isNull property="csnAddTime" prepend=",">
+				cs_notice$suffix$.csn_add_time = null
+			</isNull>				
+			<isNotNull property="csnDealTime" prepend=",">
+				cs_notice$suffix$.csn_deal_time = #csnDealTime#
+			</isNotNull>
+			<isNull property="csnDealTime" prepend=",">
+				cs_notice$suffix$.csn_deal_time = null
+			</isNull>				
+			<isNotNull property="csnStatus" prepend=",">
+				cs_notice$suffix$.csn_status = #csnStatus#
+			</isNotNull>
+			<isNull property="csnStatus" prepend=",">
+				cs_notice$suffix$.csn_status = null
+			</isNull>				
+		where
+			csn_id=#csnId#
+	</update>
+	
+	<!-- 更新系统通知非空字段 -->
+	<update id="updateCsNotice$NotNull"  parameterClass="com.ccclubs.model.CsNotice">
+		update cs_notice$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csnContent" prepend=",">
+				cs_notice$suffix$.csn_content = #csnContent#
+			</isNotNull>		
+			<isNotNull property="csnAlarmTime" prepend=",">
+				cs_notice$suffix$.csn_alarm_time = #csnAlarmTime#
+			</isNotNull>		
+			<isNotNull property="csnUrl" prepend=",">
+				cs_notice$suffix$.csn_url = #csnUrl#
+			</isNotNull>		
+			<isNotNull property="csnFlag" prepend=",">
+				cs_notice$suffix$.csn_flag = #csnFlag#
+			</isNotNull>		
+			<isNotNull property="csnSender" prepend=",">
+				cs_notice$suffix$.csn_sender = #csnSender#
+			</isNotNull>		
+			<isNotNull property="csnReceiver" prepend=",">
+				cs_notice$suffix$.csn_receiver = #csnReceiver#
+			</isNotNull>		
+			<isNotNull property="csnRemark" prepend=",">
+				cs_notice$suffix$.csn_remark = #csnRemark#
+			</isNotNull>		
+			<isNotNull property="csnLog" prepend=",">
+				cs_notice$suffix$.csn_log = #csnLog#
+			</isNotNull>		
+			<isNotNull property="csnAddTime" prepend=",">
+				cs_notice$suffix$.csn_add_time = #csnAddTime#
+			</isNotNull>		
+			<isNotNull property="csnDealTime" prepend=",">
+				cs_notice$suffix$.csn_deal_time = #csnDealTime#
+			</isNotNull>		
+			<isNotNull property="csnStatus" prepend=",">
+				cs_notice$suffix$.csn_status = #csnStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csn_id=#csnId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统通知 -->
+	<delete id="deleteCsNoticeById" parameterClass="java.util.HashMap">
+		delete from cs_notice$suffix$ where csn_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个系统通知 -->
+	<update id="removeCsNoticeById" parameterClass="java.util.HashMap">
+		update cs_notice$suffix$ set  cs_notice$suffix$.csn_status=-1  where csn_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新系统通知 -->
+	<update id="updateCsNoticeBy"  parameterClass="java.util.HashMap">
+		update cs_notice$suffix$ set		
+			csn_id=csn_id
+			<isNotNull property="V_csnId" prepend=",">
+				cs_notice$suffix$.csn_id = #V_csnId#
+			</isNotNull>		
+			<isNotNull property="V_csnContent" prepend=",">
+				cs_notice$suffix$.csn_content = #V_csnContent#
+			</isNotNull>		
+			<isNotNull property="V_csnAlarmTime" prepend=",">
+				cs_notice$suffix$.csn_alarm_time = #V_csnAlarmTime#
+			</isNotNull>		
+			<isNotNull property="V_csnUrl" prepend=",">
+				cs_notice$suffix$.csn_url = #V_csnUrl#
+			</isNotNull>		
+			<isNotNull property="V_csnFlag" prepend=",">
+				cs_notice$suffix$.csn_flag = #V_csnFlag#
+			</isNotNull>		
+			<isNotNull property="V_csnSender" prepend=",">
+				cs_notice$suffix$.csn_sender = #V_csnSender#
+			</isNotNull>		
+			<isNotNull property="V_csnReceiver" prepend=",">
+				cs_notice$suffix$.csn_receiver = #V_csnReceiver#
+			</isNotNull>		
+			<isNotNull property="V_csnRemark" prepend=",">
+				cs_notice$suffix$.csn_remark = #V_csnRemark#
+			</isNotNull>		
+			<isNotNull property="V_csnLog" prepend=",">
+				cs_notice$suffix$.csn_log = #V_csnLog#
+			</isNotNull>		
+			<isNotNull property="V_csnAddTime" prepend=",">
+				cs_notice$suffix$.csn_add_time = #V_csnAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csnDealTime" prepend=",">
+				cs_notice$suffix$.csn_deal_time = #V_csnDealTime#
+			</isNotNull>		
+			<isNotNull property="V_csnStatus" prepend=",">
+				cs_notice$suffix$.csn_status = #V_csnStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_notice$suffix$.csn_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsNotice_part.cs_notice_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统通知 -->
+	<update id="deleteCsNoticeBy"  parameterClass="java.util.HashMap">
+		delete from cs_notice$suffix$ where 
+		cs_notice$suffix$.csn_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsNotice_part.cs_notice_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsActivity_part">	
+	<!-- 营销活动条件sql片段  -->
+	<sql id="cs_activity_dynamic">
+		<dynamic>
+			<isNotEmpty property="csaId" prepend="and">
+			    $csaIdNot$ cs_activity$suffix$.csa_id = #csaId#
+			</isNotEmpty>
+			<isNotNull property="csaIdNot" prepend="and">
+				<isEmpty property="csaId">
+				$csaIdNot$ cs_activity$suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_activity$suffix$.csa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csaHost" prepend="and">
+			    $csaHostNot$ cs_activity$suffix$.csa_host = #csaHost#
+			</isNotEmpty>
+			<isNotNull property="csaHostNot" prepend="and">
+				<isEmpty property="csaHost">
+				$csaHostNot$ cs_activity$suffix$.csa_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csaTitle" prepend="and">			    
+			    (<isNotNull property="csaTitleNot">
+			    cs_activity$suffix$.csa_title is null or length(cs_activity$suffix$.csa_title) &lt; 1 or
+			    </isNotNull>$csaTitleNot$ cs_activity$suffix$.csa_title like #csaTitle#)
+			</isNotEmpty>
+			<isNotNull property="csaTitleNot" prepend="and">
+				<isEmpty property="csaTitle">
+				$csaTitleNot$ (cs_activity$suffix$.csa_title is null or length(cs_activity$suffix$.csa_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaFlag" prepend="and">			    
+			    (<isNotNull property="csaFlagNot">
+			    cs_activity$suffix$.csa_flag is null or length(cs_activity$suffix$.csa_flag) &lt; 1 or
+			    </isNotNull>$csaFlagNot$ cs_activity$suffix$.csa_flag = #csaFlag#)
+			</isNotEmpty>
+			<isNotNull property="csaFlagNot" prepend="and">
+				<isEmpty property="csaFlag">
+				$csaFlagNot$ (cs_activity$suffix$.csa_flag is null or length(cs_activity$suffix$.csa_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaType" prepend="and">
+			    $csaTypeNot$ cs_activity$suffix$.csa_type = #csaType#
+			</isNotEmpty>
+			<isNotNull property="csaTypeNot" prepend="and">
+				<isEmpty property="csaType">
+				$csaTypeNot$ cs_activity$suffix$.csa_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaPlan" prepend="and">
+			    $csaPlanNot$ cs_activity$suffix$.csa_plan = #csaPlan#
+			</isNotEmpty>
+			<isNotNull property="csaPlanNot" prepend="and">
+				<isEmpty property="csaPlan">
+				$csaPlanNot$ cs_activity$suffix$.csa_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaStartStart" prepend="and">
+			    $csaStartNot$   (cs_activity$suffix$.csa_start &gt;= #csaStartStart#
+			   <isEmpty property="csaStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaStartEnd" prepend="and">
+				<isEmpty property="csaStartStart">$csaStartNot$   (</isEmpty>
+			    cs_activity$suffix$.csa_start &lt;= #csaStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaStart" prepend="and">
+			    $csaStartNot$ cs_activity$suffix$.csa_start = #csaStart#
+			</isNotEmpty>
+			<isNotNull property="csaStartNot" prepend="and">
+				<isEmpty property="csaStartStart"><isEmpty property="csaStartEnd"><isEmpty property="csaStart">
+				$csaStartNot$ cs_activity$suffix$.csa_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaFinishStart" prepend="and">
+			    $csaFinishNot$   (cs_activity$suffix$.csa_finish &gt;= #csaFinishStart#
+			   <isEmpty property="csaFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaFinishEnd" prepend="and">
+				<isEmpty property="csaFinishStart">$csaFinishNot$   (</isEmpty>
+			    cs_activity$suffix$.csa_finish &lt;= #csaFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaFinish" prepend="and">
+			    $csaFinishNot$ cs_activity$suffix$.csa_finish = #csaFinish#
+			</isNotEmpty>
+			<isNotNull property="csaFinishNot" prepend="and">
+				<isEmpty property="csaFinishStart"><isEmpty property="csaFinishEnd"><isEmpty property="csaFinish">
+				$csaFinishNot$ cs_activity$suffix$.csa_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaPoster" prepend="and">
+			    $csaPosterNot$ cs_activity$suffix$.csa_poster = #csaPoster#
+			</isNotEmpty>
+			<isNotNull property="csaPosterNot" prepend="and">
+				<isEmpty property="csaPoster">
+				$csaPosterNot$ cs_activity$suffix$.csa_poster is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaZip" prepend="and">
+			    $csaZipNot$ cs_activity$suffix$.csa_zip = #csaZip#
+			</isNotEmpty>
+			<isNotNull property="csaZipNot" prepend="and">
+				<isEmpty property="csaZip">
+				$csaZipNot$ cs_activity$suffix$.csa_zip is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaCreater" prepend="and">
+			    $csaCreaterNot$ cs_activity$suffix$.csa_creater = #csaCreater#
+			</isNotEmpty>
+			<isNotNull property="csaCreaterNot" prepend="and">
+				<isEmpty property="csaCreater">
+				$csaCreaterNot$ cs_activity$suffix$.csa_creater is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaUpdateTimeStart" prepend="and">
+			    $csaUpdateTimeNot$   (cs_activity$suffix$.csa_update_time &gt;= #csaUpdateTimeStart#
+			   <isEmpty property="csaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaUpdateTimeEnd" prepend="and">
+				<isEmpty property="csaUpdateTimeStart">$csaUpdateTimeNot$   (</isEmpty>
+			    cs_activity$suffix$.csa_update_time &lt;= #csaUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaUpdateTime" prepend="and">
+			    $csaUpdateTimeNot$ cs_activity$suffix$.csa_update_time = #csaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csaUpdateTimeNot" prepend="and">
+				<isEmpty property="csaUpdateTimeStart"><isEmpty property="csaUpdateTimeEnd"><isEmpty property="csaUpdateTime">
+				$csaUpdateTimeNot$ cs_activity$suffix$.csa_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaAddTimeStart" prepend="and">
+			    $csaAddTimeNot$   (cs_activity$suffix$.csa_add_time &gt;= #csaAddTimeStart#
+			   <isEmpty property="csaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaAddTimeEnd" prepend="and">
+				<isEmpty property="csaAddTimeStart">$csaAddTimeNot$   (</isEmpty>
+			    cs_activity$suffix$.csa_add_time &lt;= #csaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaAddTime" prepend="and">
+			    $csaAddTimeNot$ cs_activity$suffix$.csa_add_time = #csaAddTime#
+			</isNotEmpty>
+			<isNotNull property="csaAddTimeNot" prepend="and">
+				<isEmpty property="csaAddTimeStart"><isEmpty property="csaAddTimeEnd"><isEmpty property="csaAddTime">
+				$csaAddTimeNot$ cs_activity$suffix$.csa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaStatus" prepend="and">
+			    $csaStatusNot$ cs_activity$suffix$.csa_status = #csaStatus#
+			</isNotEmpty>
+			<isNotNull property="csaStatusNot" prepend="and">
+				<isEmpty property="csaStatus">
+				$csaStatusNot$ cs_activity$suffix$.csa_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 营销活动left join 条件sql片段 -->
+	<sql id="cs_activity_join">
+		<dynamic>
+			<isNotEmpty property="CsActivity.csaId" prepend="and">
+			    $CsActivity.csaIdNot$ cs_activity$CsActivity.suffix$.csa_id = #CsActivity.csaId#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaIdNot" prepend="and">
+				<isEmpty property="CsActivity.csaId">
+				$csaIdNot$ cs_activity$CsActivity.suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_activity$CsActivity.suffix$.csa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaHost" prepend="and">
+			    $CsActivity.csaHostNot$ cs_activity$CsActivity.suffix$.csa_host = #CsActivity.csaHost#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaHostNot" prepend="and">
+				<isEmpty property="CsActivity.csaHost">
+				$csaHostNot$ cs_activity$CsActivity.suffix$.csa_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaTitle" prepend="and">
+				(<isNotNull property="CsActivity.csaTitleNot">
+			    cs_activity$CsActivity.suffix$.csa_title is null or length(cs_activity$CsActivity.suffix$.csa_title) &lt; 1 or
+			    </isNotNull>$CsActivity.csaTitleNot$ cs_activity$CsActivity.suffix$.csa_title like #CsActivity.csaTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaTitleNot" prepend="and">
+				<isEmpty property="CsActivity.csaTitle">
+				$csaTitleNot$ (cs_activity$CsActivity.suffix$.csa_title is null or length(cs_activity$CsActivity.suffix$.csa_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaFlag" prepend="and">
+				(<isNotNull property="CsActivity.csaFlagNot">
+			    cs_activity$CsActivity.suffix$.csa_flag is null or length(cs_activity$CsActivity.suffix$.csa_flag) &lt; 1 or
+			    </isNotNull>$CsActivity.csaFlagNot$ cs_activity$CsActivity.suffix$.csa_flag = #CsActivity.csaFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaFlagNot" prepend="and">
+				<isEmpty property="CsActivity.csaFlag">
+				$csaFlagNot$ (cs_activity$CsActivity.suffix$.csa_flag is null or length(cs_activity$CsActivity.suffix$.csa_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaType" prepend="and">
+			    $CsActivity.csaTypeNot$ cs_activity$CsActivity.suffix$.csa_type = #CsActivity.csaType#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaTypeNot" prepend="and">
+				<isEmpty property="CsActivity.csaType">
+				$csaTypeNot$ cs_activity$CsActivity.suffix$.csa_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaPlan" prepend="and">
+			    $CsActivity.csaPlanNot$ cs_activity$CsActivity.suffix$.csa_plan = #CsActivity.csaPlan#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaPlanNot" prepend="and">
+				<isEmpty property="CsActivity.csaPlan">
+				$csaPlanNot$ cs_activity$CsActivity.suffix$.csa_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaStartStart" prepend="and">
+			    $CsActivity.csaStartNot$   (cs_activity$CsActivity.suffix$.csa_start &gt;= #CsActivity.csaStartStart#
+			   <isEmpty property="CsActivity.csaStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaStartEnd" prepend="and">
+				<isEmpty property="CsActivity.csaStartStart">$CsActivity.csaStartNot$   (</isEmpty>
+			    cs_activity$CsActivity.suffix$.csa_start &lt;= #CsActivity.csaStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaStart" prepend="and">
+			    $CsActivity.csaStartNot$ cs_activity$CsActivity.suffix$.csa_start = #CsActivity.csaStart#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaStartNot" prepend="and">
+				<isEmpty property="CsActivity.csaStartStart"><isEmpty property="CsActivity.csaStartEnd"><isEmpty property="CsActivity.csaStart">
+				$csaStartNot$ cs_activity$CsActivity.suffix$.csa_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaFinishStart" prepend="and">
+			    $CsActivity.csaFinishNot$   (cs_activity$CsActivity.suffix$.csa_finish &gt;= #CsActivity.csaFinishStart#
+			   <isEmpty property="CsActivity.csaFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaFinishEnd" prepend="and">
+				<isEmpty property="CsActivity.csaFinishStart">$CsActivity.csaFinishNot$   (</isEmpty>
+			    cs_activity$CsActivity.suffix$.csa_finish &lt;= #CsActivity.csaFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaFinish" prepend="and">
+			    $CsActivity.csaFinishNot$ cs_activity$CsActivity.suffix$.csa_finish = #CsActivity.csaFinish#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaFinishNot" prepend="and">
+				<isEmpty property="CsActivity.csaFinishStart"><isEmpty property="CsActivity.csaFinishEnd"><isEmpty property="CsActivity.csaFinish">
+				$csaFinishNot$ cs_activity$CsActivity.suffix$.csa_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaPoster" prepend="and">
+			    $CsActivity.csaPosterNot$ cs_activity$CsActivity.suffix$.csa_poster = #CsActivity.csaPoster#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaPosterNot" prepend="and">
+				<isEmpty property="CsActivity.csaPoster">
+				$csaPosterNot$ cs_activity$CsActivity.suffix$.csa_poster is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaZip" prepend="and">
+			    $CsActivity.csaZipNot$ cs_activity$CsActivity.suffix$.csa_zip = #CsActivity.csaZip#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaZipNot" prepend="and">
+				<isEmpty property="CsActivity.csaZip">
+				$csaZipNot$ cs_activity$CsActivity.suffix$.csa_zip is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaCreater" prepend="and">
+			    $CsActivity.csaCreaterNot$ cs_activity$CsActivity.suffix$.csa_creater = #CsActivity.csaCreater#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaCreaterNot" prepend="and">
+				<isEmpty property="CsActivity.csaCreater">
+				$csaCreaterNot$ cs_activity$CsActivity.suffix$.csa_creater is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaUpdateTimeStart" prepend="and">
+			    $CsActivity.csaUpdateTimeNot$   (cs_activity$CsActivity.suffix$.csa_update_time &gt;= #CsActivity.csaUpdateTimeStart#
+			   <isEmpty property="CsActivity.csaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsActivity.csaUpdateTimeStart">$CsActivity.csaUpdateTimeNot$   (</isEmpty>
+			    cs_activity$CsActivity.suffix$.csa_update_time &lt;= #CsActivity.csaUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaUpdateTime" prepend="and">
+			    $CsActivity.csaUpdateTimeNot$ cs_activity$CsActivity.suffix$.csa_update_time = #CsActivity.csaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaUpdateTimeNot" prepend="and">
+				<isEmpty property="CsActivity.csaUpdateTimeStart"><isEmpty property="CsActivity.csaUpdateTimeEnd"><isEmpty property="CsActivity.csaUpdateTime">
+				$csaUpdateTimeNot$ cs_activity$CsActivity.suffix$.csa_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaAddTimeStart" prepend="and">
+			    $CsActivity.csaAddTimeNot$   (cs_activity$CsActivity.suffix$.csa_add_time &gt;= #CsActivity.csaAddTimeStart#
+			   <isEmpty property="CsActivity.csaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaAddTimeEnd" prepend="and">
+				<isEmpty property="CsActivity.csaAddTimeStart">$CsActivity.csaAddTimeNot$   (</isEmpty>
+			    cs_activity$CsActivity.suffix$.csa_add_time &lt;= #CsActivity.csaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsActivity.csaAddTime" prepend="and">
+			    $CsActivity.csaAddTimeNot$ cs_activity$CsActivity.suffix$.csa_add_time = #CsActivity.csaAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaAddTimeNot" prepend="and">
+				<isEmpty property="CsActivity.csaAddTimeStart"><isEmpty property="CsActivity.csaAddTimeEnd"><isEmpty property="CsActivity.csaAddTime">
+				$csaAddTimeNot$ cs_activity$CsActivity.suffix$.csa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsActivity.csaStatus" prepend="and">
+			    $CsActivity.csaStatusNot$ cs_activity$CsActivity.suffix$.csa_status = #CsActivity.csaStatus#
+			</isNotEmpty>
+			<isNotNull property="CsActivity.csaStatusNot" prepend="and">
+				<isEmpty property="CsActivity.csaStatus">
+				$csaStatusNot$ cs_activity$CsActivity.suffix$.csa_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

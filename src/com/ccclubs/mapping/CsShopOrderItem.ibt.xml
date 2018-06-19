@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 订单明细之SQL映射 -->
+	<resultMap id="CsShopOrderItem" class="com.ccclubs.model.CsShopOrderItem">
+		<result property="cssoiId" column="cssoi_id"/>
+		<result property="cssoiOrder" column="cssoi_order"/>
+		<result property="cssoiItem" column="cssoi_item"/>
+		<result property="cssoiMember" column="cssoi_member"/>
+		<result property="cssoiTitle" column="cssoi_title"/>
+		<result property="cssoiPrice" column="cssoi_price"/>
+		<result property="cssoiRebate" column="cssoi_rebate"/>
+		<result property="cssoiCount" column="cssoi_count"/>
+		<result property="cssoiMoney" column="cssoi_money"/>
+		<result property="cssoiRealpay" column="cssoi_realpay"/>
+		<result property="cssoiEditor" column="cssoi_editor"/>
+		<result property="cssoiRemark" column="cssoi_remark"/>
+		<result property="cssoiUpdateTime" column="cssoi_update_time"/>
+		<result property="cssoiAddTime" column="cssoi_add_time"/>
+		<result property="cssoiStatus" column="cssoi_status"/>
+	</resultMap>
+		
+	<!-- 获取所有订单明细 -->
+	<select id="getCsShopOrderItemList" resultMap="CsShopOrderItem">
+		select cs_shop_order_item$suffix$.* from cs_shop_order_item$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[商城订单]查询-->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<isNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.cssoi_order=cs_shop_order$CsShopOrder.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.$CsShopOrder.on$=cs_shop_order$CsShopOrder.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询-->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.cssoi_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.cssoi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_shop_order_item$suffix$.cssoi_status!=-1
+		<!-- 多对一外链接[商城订单]查询条件sql片段 -->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<include refid="CsShopOrder_part.cs_shop_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShopOrderItem_part.cs_shop_order_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssoi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取订单明细分页 -->
+	<select id="getCsShopOrderItemPage" parameterClass="java.util.HashMap" resultMap="CsShopOrderItem">
+		select cs_shop_order_item$suffix$.* from cs_shop_order_item$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[商城订单]查询 -->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<isNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.cssoi_order=cs_shop_order$CsShopOrder.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.$CsShopOrder.on$=cs_shop_order$CsShopOrder.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询 -->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.cssoi_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.cssoi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_shop_order_item$suffix$.cssoi_status!=-1
+		<!-- 多对一外链接[商城订单]查询条件sql片段 -->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<include refid="CsShopOrder_part.cs_shop_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShopOrderItem_part.cs_shop_order_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssoi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取订单明细总数 -->
+	<select id="getCsShopOrderItemEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_shop_order_item$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[商城订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<isNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.cssoi_order=cs_shop_order$CsShopOrder.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.$CsShopOrder.on$=cs_shop_order$CsShopOrder.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.cssoi_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.cssoi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_shop_order_item$suffix$.cssoi_status!=-1
+		<!-- 多对一外链接[商城订单]查询条件sql片段 -->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<include refid="CsShopOrder_part.cs_shop_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShopOrderItem_part.cs_shop_order_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取订单明细 -->
+	<select id="getCsShopOrderItemById" parameterClass="java.util.HashMap" resultMap="CsShopOrderItem">
+		select cs_shop_order_item$suffix$.* from cs_shop_order_item$suffix$
+		where cssoi_id=#id#
+	</select>
+	
+		
+	<!-- 保存订单明细 -->
+	<insert id="saveCsShopOrderItem"  parameterClass="com.ccclubs.model.CsShopOrderItem">
+		insert into cs_shop_order_item$suffix$
+		(
+			cs_shop_order_item$suffix$.cssoi_order
+			,cs_shop_order_item$suffix$.cssoi_item
+			,cs_shop_order_item$suffix$.cssoi_member
+			,cs_shop_order_item$suffix$.cssoi_title
+			,cs_shop_order_item$suffix$.cssoi_price
+			,cs_shop_order_item$suffix$.cssoi_rebate
+			,cs_shop_order_item$suffix$.cssoi_count
+			,cs_shop_order_item$suffix$.cssoi_money
+			,cs_shop_order_item$suffix$.cssoi_realpay
+			,cs_shop_order_item$suffix$.cssoi_editor
+			,cs_shop_order_item$suffix$.cssoi_remark
+			,cs_shop_order_item$suffix$.cssoi_update_time
+			,cs_shop_order_item$suffix$.cssoi_add_time
+			,cs_shop_order_item$suffix$.cssoi_status
+		)
+		values(
+			<isNotNull property="cssoiOrder" prepend="">
+				#cssoiOrder#
+			</isNotNull>
+			<isNull property="cssoiOrder" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssoiItem" prepend=",">
+				#cssoiItem#
+			</isNotNull>
+			<isNull property="cssoiItem" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiMember" prepend=",">
+				#cssoiMember#
+			</isNotNull>
+			<isNull property="cssoiMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiTitle" prepend=",">
+				#cssoiTitle#
+			</isNotNull>
+			<isNull property="cssoiTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiPrice" prepend=",">
+				#cssoiPrice#
+			</isNotNull>
+			<isNull property="cssoiPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiRebate" prepend=",">
+				#cssoiRebate#
+			</isNotNull>
+			<isNull property="cssoiRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiCount" prepend=",">
+				#cssoiCount#
+			</isNotNull>
+			<isNull property="cssoiCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiMoney" prepend=",">
+				#cssoiMoney#
+			</isNotNull>
+			<isNull property="cssoiMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiRealpay" prepend=",">
+				#cssoiRealpay#
+			</isNotNull>
+			<isNull property="cssoiRealpay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiEditor" prepend=",">
+				#cssoiEditor#
+			</isNotNull>
+			<isNull property="cssoiEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiRemark" prepend=",">
+				#cssoiRemark#
+			</isNotNull>
+			<isNull property="cssoiRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiUpdateTime" prepend=",">
+				#cssoiUpdateTime#
+			</isNotNull>
+			<isNull property="cssoiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiAddTime" prepend=",">
+				#cssoiAddTime#
+			</isNotNull>
+			<isNull property="cssoiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoiStatus" prepend=",">
+				#cssoiStatus#
+			</isNotNull>
+			<isNull property="cssoiStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新订单明细 -->
+	<update id="updateCsShopOrderItem"  parameterClass="com.ccclubs.model.CsShopOrderItem">
+		update cs_shop_order_item$suffix$ set
+			<isNotNull property="cssoiOrder" prepend="">
+				cs_shop_order_item$suffix$.cssoi_order = #cssoiOrder#
+			</isNotNull>
+			<isNull property="cssoiOrder" prepend="">
+				cs_shop_order_item$suffix$.cssoi_order = null
+			</isNull>				
+			<isNotNull property="cssoiItem" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_item = #cssoiItem#
+			</isNotNull>
+			<isNull property="cssoiItem" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_item = null
+			</isNull>				
+			<isNotNull property="cssoiMember" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_member = #cssoiMember#
+			</isNotNull>
+			<isNull property="cssoiMember" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_member = null
+			</isNull>				
+			<isNotNull property="cssoiTitle" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_title = #cssoiTitle#
+			</isNotNull>
+			<isNull property="cssoiTitle" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_title = null
+			</isNull>				
+			<isNotNull property="cssoiPrice" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_price = #cssoiPrice#
+			</isNotNull>
+			<isNull property="cssoiPrice" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_price = null
+			</isNull>				
+			<isNotNull property="cssoiRebate" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_rebate = #cssoiRebate#
+			</isNotNull>
+			<isNull property="cssoiRebate" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_rebate = null
+			</isNull>				
+			<isNotNull property="cssoiCount" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_count = #cssoiCount#
+			</isNotNull>
+			<isNull property="cssoiCount" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_count = null
+			</isNull>				
+			<isNotNull property="cssoiMoney" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_money = #cssoiMoney#
+			</isNotNull>
+			<isNull property="cssoiMoney" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_money = null
+			</isNull>				
+			<isNotNull property="cssoiRealpay" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_realpay = #cssoiRealpay#
+			</isNotNull>
+			<isNull property="cssoiRealpay" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_realpay = null
+			</isNull>				
+			<isNotNull property="cssoiEditor" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_editor = #cssoiEditor#
+			</isNotNull>
+			<isNull property="cssoiEditor" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_editor = null
+			</isNull>				
+			<isNotNull property="cssoiRemark" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_remark = #cssoiRemark#
+			</isNotNull>
+			<isNull property="cssoiRemark" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_remark = null
+			</isNull>				
+			<isNotNull property="cssoiUpdateTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_update_time = #cssoiUpdateTime#
+			</isNotNull>
+			<isNull property="cssoiUpdateTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_update_time = null
+			</isNull>				
+			<isNotNull property="cssoiAddTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_add_time = #cssoiAddTime#
+			</isNotNull>
+			<isNull property="cssoiAddTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_add_time = null
+			</isNull>				
+			<isNotNull property="cssoiStatus" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_status = #cssoiStatus#
+			</isNotNull>
+			<isNull property="cssoiStatus" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_status = null
+			</isNull>				
+		where
+			cssoi_id=#cssoiId#
+	</update>
+	
+	<!-- 更新订单明细非空字段 -->
+	<update id="updateCsShopOrderItem$NotNull"  parameterClass="com.ccclubs.model.CsShopOrderItem">
+		update cs_shop_order_item$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssoiOrder" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_order = #cssoiOrder#
+			</isNotNull>		
+			<isNotNull property="cssoiItem" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_item = #cssoiItem#
+			</isNotNull>		
+			<isNotNull property="cssoiMember" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_member = #cssoiMember#
+			</isNotNull>		
+			<isNotNull property="cssoiTitle" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_title = #cssoiTitle#
+			</isNotNull>		
+			<isNotNull property="cssoiPrice" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_price = #cssoiPrice#
+			</isNotNull>		
+			<isNotNull property="cssoiRebate" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_rebate = #cssoiRebate#
+			</isNotNull>		
+			<isNotNull property="cssoiCount" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_count = #cssoiCount#
+			</isNotNull>		
+			<isNotNull property="cssoiMoney" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_money = #cssoiMoney#
+			</isNotNull>		
+			<isNotNull property="cssoiRealpay" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_realpay = #cssoiRealpay#
+			</isNotNull>		
+			<isNotNull property="cssoiEditor" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_editor = #cssoiEditor#
+			</isNotNull>		
+			<isNotNull property="cssoiRemark" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_remark = #cssoiRemark#
+			</isNotNull>		
+			<isNotNull property="cssoiUpdateTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_update_time = #cssoiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cssoiAddTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_add_time = #cssoiAddTime#
+			</isNotNull>		
+			<isNotNull property="cssoiStatus" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_status = #cssoiStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cssoi_id=#cssoiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个订单明细 -->
+	<delete id="deleteCsShopOrderItemById" parameterClass="java.util.HashMap">
+		delete from cs_shop_order_item$suffix$ where cssoi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个订单明细 -->
+	<update id="removeCsShopOrderItemById" parameterClass="java.util.HashMap">
+		update cs_shop_order_item$suffix$ set  cs_shop_order_item$suffix$.cssoi_status=-1  where cssoi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新订单明细 -->
+	<update id="updateCsShopOrderItemBy"  parameterClass="java.util.HashMap">
+		update cs_shop_order_item$suffix$ set		
+			cssoi_id=cssoi_id
+			<isNotNull property="V_cssoiId" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_id = #V_cssoiId#
+			</isNotNull>		
+			<isNotNull property="V_cssoiOrder" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_order = #V_cssoiOrder#
+			</isNotNull>		
+			<isNotNull property="V_cssoiItem" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_item = #V_cssoiItem#
+			</isNotNull>		
+			<isNotNull property="V_cssoiMember" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_member = #V_cssoiMember#
+			</isNotNull>		
+			<isNotNull property="V_cssoiTitle" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_title = #V_cssoiTitle#
+			</isNotNull>		
+			<isNotNull property="V_cssoiPrice" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_price = #V_cssoiPrice#
+			</isNotNull>		
+			<isNotNull property="V_cssoiRebate" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_rebate = #V_cssoiRebate#
+			</isNotNull>		
+			<isNotNull property="V_cssoiCount" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_count = #V_cssoiCount#
+			</isNotNull>		
+			<isNotNull property="V_cssoiMoney" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_money = #V_cssoiMoney#
+			</isNotNull>		
+			<isNotNull property="V_cssoiRealpay" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_realpay = #V_cssoiRealpay#
+			</isNotNull>		
+			<isNotNull property="V_cssoiEditor" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_editor = #V_cssoiEditor#
+			</isNotNull>		
+			<isNotNull property="V_cssoiRemark" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_remark = #V_cssoiRemark#
+			</isNotNull>		
+			<isNotNull property="V_cssoiUpdateTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_update_time = #V_cssoiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cssoiAddTime" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_add_time = #V_cssoiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssoiStatus" prepend=",">
+				cs_shop_order_item$suffix$.cssoi_status = #V_cssoiStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[商城订单]查询-->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<isNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.cssoi_order=cs_shop_order$CsShopOrder.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsShopOrder.on">
+				left join cs_shop_order cs_shop_order$CsShopOrder.suffix$ on cs_shop_order_item$suffix$.$CsShopOrder.on$=cs_shop_order$CsShopOrder.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询-->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.cssoi_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_shop_order_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.cssoi_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_shop_order_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_shop_order_item$suffix$.cssoi_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[商城订单]查询条件sql片段 -->
+		<isNotNull property="CssoiOrder"><!-- 调用一下CssoiOrder，把CsShopOrder指向CssoiOrder --></isNotNull>
+		<isNotNull property="CsShopOrder">
+			<include refid="CsShopOrder_part.cs_shop_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CssoiItem"><!-- 调用一下CssoiItem，把CsItem指向CssoiItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssoiMember"><!-- 调用一下CssoiMember，把CsMember指向CssoiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsShopOrderItem_part.cs_shop_order_item_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除订单明细 -->
+	<update id="deleteCsShopOrderItemBy"  parameterClass="java.util.HashMap">
+		delete from cs_shop_order_item$suffix$ where 
+		cs_shop_order_item$suffix$.cssoi_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsShopOrderItem_part.cs_shop_order_item_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

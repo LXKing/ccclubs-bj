@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>驾照认证</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-pic.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content">
+			<form onsubmit="return submitDriver();" class="input-group" method="post" action="register_saveDriver.html">
+				<div class="input-row">
+					<label>
+						驾驶证编号
+					</label>
+					<input id="txtLicnum" name="txtLicnum" value="${lz:or(txtLicnum,csMember.$csmInfo.csmiDriverNum)}" type="text" placeholder="请输入驾驶证档案编号">
+				</div>
+				<div class="mt15 ccc-pic">
+					<div class="ccc-pic-wrap">
+						<div class="ccc-corner-lefttop"></div>
+						<div class="ccc-corner-righttop"></div>
+						<div class="ccc-corner-rightbottom"></div>
+						<div class="ccc-corner-leftbottom"></div>
+						<div class="ccc-img-wrap">
+							<a id="chooseImage" class="ccc-img">
+								<img src="${lz:or(txtLicPic,csMember.$csmInfo.csmiDriverImage)}"   width="96%" height="96%">
+							</a>
+						</div>
+					</div>
+				</div>
+				<input id="txtLicPic" name="txtLicPic" type="hidden" value="${lz:or(txtLicPic,csMember.$csmInfo.csmiDriverImage)}" />
+				<div class="wrap-index-reserve">
+					<button id="save-btn" type="submit" class="btn btn-ccclubs-reserve btn-block" onclick="submitDriver()">
+						下一步
+					</button>
+				</div>
+			</form>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/page-register-driver.js?v=${lz:config('version')}"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script src="https://static.alipay.com/aliBridge/1.0.0/aliBridge.min.js"></script>
+	</body>
+	<script>
+	$(document).ready(function(){
+	<s:if test="#session.tips.notNull==true">
+		Toast.show("${tips.value}");	
+	</s:if>
+	});
+	</script>
+	<script type="text/javascript">
+	  /*
+	   * 注意：
+	   * 1. 所有的JS接口只能在公众号绑定的域名下调用，公众号开发者需要先登录微信公众平台进入“公众号设置”的“功能设置”里填写“JS接口安全域名”。
+	   * 2. 如果发现在 Android 不能分享自定义内容，请到官网下载最新的包覆盖安装，Android 自定义分享接口需升级至 6.0.2.58 版本及以上。
+	   * 3. 常见问题及完整 JS-SDK 文档地址：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
+	   *
+	   * 开发中遇到问题详见文档“附录5-常见错误及解决办法”解决，如仍未能解决可通过以下渠道反馈：
+	   * 邮箱地址：weixin-open@qq.com
+	   * 邮件主题：【微信JS-SDK反馈】具体问题
+	   * 邮件内容说明：用简明的语言描述问题所在，并交代清楚遇到该问题的场景，可附上截屏图片，微信团队会尽快处理你的反馈。
+	   */
+	  wx.config({
+	      debug: false,
+	      appId: 'wxf7d08a80787fa584',
+	      timestamp: ${map.timestamp},
+	      nonceStr: '${map.nonceStr}',
+	      signature: '${map.signature}',
+	      jsApiList: [
+	        'checkJsApi',
+	        'closeWindow',
+	        'chooseImage',
+        	'previewImage',
+        	'uploadImage',
+        	'downloadImage'
+	      ]
+	  });
+	  $(document).ready(function() {
+		  // 5 图片接口
+		  var images = {
+		    localId: [],
+		    serverId: []
+		  };
+		  // 5.1 拍照、本地选图
+		  document.querySelector('#chooseImage').onclick = function () {
+		  	//alert(isWeixin());
+			$('#save-btn').attr("disabled", true);
+		  	if(isWeixin()){
+		  	 	// 微信环境下
+			    wx.chooseImage({
+			      success: function (res) {
+			        images.localId = res.localIds;
+			        //alert('已选择 ' + res.localIds.length + ' 张图片');
+			        if (images.localId.length == 0) {
+					      alert('请先选择图片');
+					      return;
+					}else if(images.localId.length >1) {
+					      alert('只能选择一张图片');
+					      return;
+					}
+					//images.serverId = [];
+					upload();
+			      }
+			    });
+			}else{
+		    	//支付宝环境下
+		    	if((Ali.alipayVersion).slice(0,3)>=8.1){
+			        Ali.photo({
+			            dataType: 'dataurl',
+			            allowedEdit: true,
+			            src: 'camera',
+			            format: 'jpg',
+			            quality: 75
+			        }, function(result) {
+						
+			            if(result.errorCode){
+							//switch(result.errorCode){
+                            //      case 10:
+                            //            alert('用户取消操作');
+                             //           break;
+                             //     default:
+                             //           alert('操作失败');
+                             //}
+			                //没有拍照的情况
+			                //errorCode=10，用户取消
+			                //errorCode=11，操作失败（权限不够）
+			            	$('#save-btn').removeAttr("disabled");
+			            }else{
+			                //成功拍照的情况
+			                //result.photo	string	照片信息，为 dataUrl 或者 fileUrl
+			                //$("#chooseImage img").attr('src',"data:image/jpeg;base64," + result.photo);
+							$("#chooseImage img").attr('src',result.photo);
+							
+							$.post('ajax_uploadWeixinPic.html',{type:1,sApp:'memberinfo_edit',photo:result.photo}, function(data) {
+								var map = eval("("+data+")");
+								// alert(map.url);
+								$("#txtLicPic").val(map.url);
+								$('#save-btn').removeAttr("disabled");
+								Toast.show("上传成功");
+							});
+			            }
+			        });
+			    }else{
+			        Ali.alert({
+			            title: '亲',
+			            message: '请升级您的钱包到最新版',
+			            button: '确定'
+			        });
+			    }
+		    }
+		    
+		    function upload() {
+		      wx.uploadImage({
+		        localId: images.localId[0],
+		        success: function (res) {
+		          $.get('ajax_uploadWeixinPic.html?media='+res.serverId+'&sApp=memberinfo_edit&t=' + new Date().getTime(), function(data) {
+						var map = eval("("+data+")");
+						$("#txtLicPic").val(map.url);
+						$("#chooseImage img").attr('src',map.url);
+						$('#save-btn').removeAttr("disabled");
+					});
+		        },
+		        fail: function (res) {
+		        	$('#save-btn').removeAttr("disabled");
+		            alert(JSON.stringify(res));
+		        }
+		      });
+		    }
+		  };
+	  });
+	  
+	function isWeixin(){
+		var ua = navigator.userAgent.toLowerCase();
+		if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		    return true;
+		} else {
+			return false;
+		}
+	}
+	</script>
+</html>

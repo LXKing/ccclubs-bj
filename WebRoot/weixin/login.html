@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>车纷享-用户登录</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<a href="index.html"><div class="loginbanner">
+				<img src="images/login_logo.png">
+			</div></a>
+			<div class="loginbox">
+				<div class="loginname">
+					<input id="username" class="login" type="tel" maxlength="11" placeholder="手机号">
+				</div>
+				<div class="loginpw">
+					<input id="password" class="login" maxlength="20" type="password" placeholder="密码">
+				</div>
+			</div>
+			<div class="error" style="display: none;">
+				您的帐号或密码有误,请重新输入。
+			</div>
+			<div class="reglogintx">
+				<span><a href="account_forgot.html">忘记密码？</a> </span>
+				<b><a href="account_register.html">立即注册</a> </b>
+			</div>
+			<div class="okbuybtn">
+				<a href="javascript:;" id="btn_login">登录</a>
+			</div>
+			<div class="reglogintx" id="alipay">
+				<span>登录后即可绑定车纷享和支付宝账户，并授权车纷享和支付宝共享您的账户信息。</span>
+			</div>
+		</div>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function() {
+		// bind events
+			$('#btn_login').bind('click', function() {
+				var strUsername = $.trim($('#username').val());
+				var strPwd = $.trim($('#password').val());
+		
+				if (strUsername == null || strUsername.length == 0) {
+					var msg = "您还没有输入手机号！";
+					$('.error').css("display", "block");
+					$('.error').html(msg);
+					return;
+				}
+				if (strPwd == null || strPwd.length == 0) {
+					var msg = "您还没有输入密码！";
+					$('.error').css("display", "block");
+					$('.error').html(msg);
+					return;
+				}
+				var ajax = {
+					url: "login_submit.html",
+					type: "POST",
+					data: {
+						username: strUsername,
+						password: strPwd
+					},
+					async: true,
+					success: function(data) {
+						switch (data) {
+							case "100":
+								var msg = "成功登录，正在跳转...";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								location.href = '/weixin/account.html';
+								break;
+							case "102":
+								var msg = "您还没有输入手机号！";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "103":
+								var msg = "您还没有输入密码！";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "105":
+								var msg = "您输入的手机号或密码不正确，请重新输入。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "106":
+								var msg = "该帐户已经失效，请联系车纷享。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "107":
+								location.href = '/weixin/403.html';
+								break;
+							case "9999":
+								var msg = "系统错误,请稍候再试。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							default:
+								var msg = "未知的返回。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								return;
+						}
+					}
+				}
+				$.ajax(ajax);
+			});
+			if(is_weixin()){
+				$('.alipay').css("display", "none");
+			}else{
+				$('.alipay').css("display", "block");
+			}
+		});
+		function is_weixin(){
+		    var ua = navigator.userAgent.toLowerCase();
+		    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+	<!-- 查询车辆有效订单 -->
+	<select id="getCsCarAndOrder" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select distinct cc.csc_vin,
+			   co.cso_start_time,
+			   co.cso_finish_time,
+			   co.cso_id from cs_car cc left join cs_order co 
+			   on co.cso_car = cc.csc_id  and co.cso_status = 1 
+		 where cc.csc_host = 2 and cc.csc_vin !=''
+	</select>
+	
+	<!-- 查询车辆网点和对应车型数据 -->	
+	<select id="getCsOutletsAndCarModelData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+			co.cso_latitude,
+			co.cso_longitude,
+			cp.csp_name,
+			cc.csc_outlets,
+			cc.csc_model,
+			cc.csc_number
+		FROM
+			cs_car cc
+		JOIN cs_outlets co ON cc.csc_outlets = co.cso_id
+		JOIN cs_provid cp ON cp.csp_id = cc.csc_provid
+		WHERE cc.csc_host = 2
+	</select>
+</sqlMap>

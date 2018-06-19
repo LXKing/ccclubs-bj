@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRevisit_part">	
+	<!-- 用户回访条件sql片段  -->
+	<sql id="cs_revisit_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrId" prepend="and">
+			    $csrIdNot$ cs_revisit$suffix$.csr_id = #csrId#
+			</isNotEmpty>
+			<isNotNull property="csrIdNot" prepend="and">
+				<isEmpty property="csrId">
+				$csrIdNot$ cs_revisit$suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_revisit$suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csrHost" prepend="and">
+			    $csrHostNot$ cs_revisit$suffix$.csr_host = #csrHost#
+			</isNotEmpty>
+			<isNotNull property="csrHostNot" prepend="and">
+				<isEmpty property="csrHost">
+				$csrHostNot$ cs_revisit$suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csrMember" prepend="and">
+			    $csrMemberNot$ cs_revisit$suffix$.csr_member = #csrMember#
+			</isNotEmpty>
+			<isNotNull property="csrMemberNot" prepend="and">
+				<isEmpty property="csrMember">
+				$csrMemberNot$ cs_revisit$suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrVisitor" prepend="and">
+			    $csrVisitorNot$ cs_revisit$suffix$.csr_visitor = #csrVisitor#
+			</isNotEmpty>
+			<isNotNull property="csrVisitorNot" prepend="and">
+				<isEmpty property="csrVisitor">
+				$csrVisitorNot$ cs_revisit$suffix$.csr_visitor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrType" prepend="and">
+			    $csrTypeNot$ cs_revisit$suffix$.csr_type = #csrType#
+			</isNotEmpty>
+			<isNotNull property="csrTypeNot" prepend="and">
+				<isEmpty property="csrType">
+				$csrTypeNot$ cs_revisit$suffix$.csr_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrResponse" prepend="and">
+			    $csrResponseNot$ cs_revisit$suffix$.csr_response = #csrResponse#
+			</isNotEmpty>
+			<isNotNull property="csrResponseNot" prepend="and">
+				<isEmpty property="csrResponse">
+				$csrResponseNot$ cs_revisit$suffix$.csr_response is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRemark" prepend="and">			    
+			    (<isNotNull property="csrRemarkNot">
+			    cs_revisit$suffix$.csr_remark is null or length(cs_revisit$suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$csrRemarkNot$ cs_revisit$suffix$.csr_remark like #csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="csrRemarkNot" prepend="and">
+				<isEmpty property="csrRemark">
+				$csrRemarkNot$ (cs_revisit$suffix$.csr_remark is null or length(cs_revisit$suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrUpdateTimeStart" prepend="and">
+			    $csrUpdateTimeNot$   (cs_revisit$suffix$.csr_update_time &gt;= #csrUpdateTimeStart#
+			   <isEmpty property="csrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrUpdateTimeEnd" prepend="and">
+				<isEmpty property="csrUpdateTimeStart">$csrUpdateTimeNot$   (</isEmpty>
+			    cs_revisit$suffix$.csr_update_time &lt;= #csrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrUpdateTime" prepend="and">
+			    $csrUpdateTimeNot$ cs_revisit$suffix$.csr_update_time = #csrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csrUpdateTimeNot" prepend="and">
+				<isEmpty property="csrUpdateTimeStart"><isEmpty property="csrUpdateTimeEnd"><isEmpty property="csrUpdateTime">
+				$csrUpdateTimeNot$ cs_revisit$suffix$.csr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAddTimeStart" prepend="and">
+			    $csrAddTimeNot$   (cs_revisit$suffix$.csr_add_time &gt;= #csrAddTimeStart#
+			   <isEmpty property="csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTimeEnd" prepend="and">
+				<isEmpty property="csrAddTimeStart">$csrAddTimeNot$   (</isEmpty>
+			    cs_revisit$suffix$.csr_add_time &lt;= #csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTime" prepend="and">
+			    $csrAddTimeNot$ cs_revisit$suffix$.csr_add_time = #csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="csrAddTimeNot" prepend="and">
+				<isEmpty property="csrAddTimeStart"><isEmpty property="csrAddTimeEnd"><isEmpty property="csrAddTime">
+				$csrAddTimeNot$ cs_revisit$suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrStatus" prepend="and">
+			    $csrStatusNot$ cs_revisit$suffix$.csr_status = #csrStatus#
+			</isNotEmpty>
+			<isNotNull property="csrStatusNot" prepend="and">
+				<isEmpty property="csrStatus">
+				$csrStatusNot$ cs_revisit$suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 用户回访left join 条件sql片段 -->
+	<sql id="cs_revisit_join">
+		<dynamic>
+			<isNotEmpty property="CsRevisit.csrId" prepend="and">
+			    $CsRevisit.csrIdNot$ cs_revisit$CsRevisit.suffix$.csr_id = #CsRevisit.csrId#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrIdNot" prepend="and">
+				<isEmpty property="CsRevisit.csrId">
+				$csrIdNot$ cs_revisit$CsRevisit.suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_revisit$CsRevisit.suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsRevisit.csrHost" prepend="and">
+			    $CsRevisit.csrHostNot$ cs_revisit$CsRevisit.suffix$.csr_host = #CsRevisit.csrHost#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrHostNot" prepend="and">
+				<isEmpty property="CsRevisit.csrHost">
+				$csrHostNot$ cs_revisit$CsRevisit.suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrMember" prepend="and">
+			    $CsRevisit.csrMemberNot$ cs_revisit$CsRevisit.suffix$.csr_member = #CsRevisit.csrMember#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrMemberNot" prepend="and">
+				<isEmpty property="CsRevisit.csrMember">
+				$csrMemberNot$ cs_revisit$CsRevisit.suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrVisitor" prepend="and">
+			    $CsRevisit.csrVisitorNot$ cs_revisit$CsRevisit.suffix$.csr_visitor = #CsRevisit.csrVisitor#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrVisitorNot" prepend="and">
+				<isEmpty property="CsRevisit.csrVisitor">
+				$csrVisitorNot$ cs_revisit$CsRevisit.suffix$.csr_visitor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrType" prepend="and">
+			    $CsRevisit.csrTypeNot$ cs_revisit$CsRevisit.suffix$.csr_type = #CsRevisit.csrType#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrTypeNot" prepend="and">
+				<isEmpty property="CsRevisit.csrType">
+				$csrTypeNot$ cs_revisit$CsRevisit.suffix$.csr_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrResponse" prepend="and">
+			    $CsRevisit.csrResponseNot$ cs_revisit$CsRevisit.suffix$.csr_response = #CsRevisit.csrResponse#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrResponseNot" prepend="and">
+				<isEmpty property="CsRevisit.csrResponse">
+				$csrResponseNot$ cs_revisit$CsRevisit.suffix$.csr_response is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrRemark" prepend="and">
+				(<isNotNull property="CsRevisit.csrRemarkNot">
+			    cs_revisit$CsRevisit.suffix$.csr_remark is null or length(cs_revisit$CsRevisit.suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$CsRevisit.csrRemarkNot$ cs_revisit$CsRevisit.suffix$.csr_remark like #CsRevisit.csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrRemarkNot" prepend="and">
+				<isEmpty property="CsRevisit.csrRemark">
+				$csrRemarkNot$ (cs_revisit$CsRevisit.suffix$.csr_remark is null or length(cs_revisit$CsRevisit.suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrUpdateTimeStart" prepend="and">
+			    $CsRevisit.csrUpdateTimeNot$   (cs_revisit$CsRevisit.suffix$.csr_update_time &gt;= #CsRevisit.csrUpdateTimeStart#
+			   <isEmpty property="CsRevisit.csrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRevisit.csrUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsRevisit.csrUpdateTimeStart">$CsRevisit.csrUpdateTimeNot$   (</isEmpty>
+			    cs_revisit$CsRevisit.suffix$.csr_update_time &lt;= #CsRevisit.csrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRevisit.csrUpdateTime" prepend="and">
+			    $CsRevisit.csrUpdateTimeNot$ cs_revisit$CsRevisit.suffix$.csr_update_time = #CsRevisit.csrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrUpdateTimeNot" prepend="and">
+				<isEmpty property="CsRevisit.csrUpdateTimeStart"><isEmpty property="CsRevisit.csrUpdateTimeEnd"><isEmpty property="CsRevisit.csrUpdateTime">
+				$csrUpdateTimeNot$ cs_revisit$CsRevisit.suffix$.csr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrAddTimeStart" prepend="and">
+			    $CsRevisit.csrAddTimeNot$   (cs_revisit$CsRevisit.suffix$.csr_add_time &gt;= #CsRevisit.csrAddTimeStart#
+			   <isEmpty property="CsRevisit.csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRevisit.csrAddTimeEnd" prepend="and">
+				<isEmpty property="CsRevisit.csrAddTimeStart">$CsRevisit.csrAddTimeNot$   (</isEmpty>
+			    cs_revisit$CsRevisit.suffix$.csr_add_time &lt;= #CsRevisit.csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRevisit.csrAddTime" prepend="and">
+			    $CsRevisit.csrAddTimeNot$ cs_revisit$CsRevisit.suffix$.csr_add_time = #CsRevisit.csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrAddTimeNot" prepend="and">
+				<isEmpty property="CsRevisit.csrAddTimeStart"><isEmpty property="CsRevisit.csrAddTimeEnd"><isEmpty property="CsRevisit.csrAddTime">
+				$csrAddTimeNot$ cs_revisit$CsRevisit.suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRevisit.csrStatus" prepend="and">
+			    $CsRevisit.csrStatusNot$ cs_revisit$CsRevisit.suffix$.csr_status = #CsRevisit.csrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsRevisit.csrStatusNot" prepend="and">
+				<isEmpty property="CsRevisit.csrStatus">
+				$csrStatusNot$ cs_revisit$CsRevisit.suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

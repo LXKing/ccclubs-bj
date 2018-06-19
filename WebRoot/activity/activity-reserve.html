@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>春节预订${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.timepicker.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.reserve.panel.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.reserve.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+		<style type="text/css">
+.ccc-view-car.long .sellout {
+ background: url(../images/icons/sellout.png) no-repeat; width: 132px; height: 80px; position: absolute; right: 30px; bottom: -2px;
+}
+
+#ul-csoArea li {
+ margin-right: 15px;
+}
+
+#ul-csoArea li:first-child {
+ margin-right: 25px;
+}
+</style>
+	</head>
+
+	<div id="ccc-fullscreen">
+		<div class="ccc-background">
+			<img src="/images/backgrounds/bg5.jpg" />
+		</div>
+		<div class="ccc-fullfill"></div>
+	</div>
+
+	<div id="ccc-global-cont">
+		<%@ include file="/include/nav.html"%>
+		<div id="ccc-container" class="ccc-grid-980">
+			<div class="ccc-paper">
+				<div class="ccc-res-filter-form ccc-clearfix">
+					<div class="ccc-res-prop  ccc-res-district">
+						<div class="ccc-res-attr-key ccc-district">
+							<i></i>区域：
+						</div>
+						<div class="ccc-res-attr-values">
+							<ul class="ccc-res-av-col" id="ul-csoArea">
+								<li class="all ${baseOrderInfo.csoArea==-1 ?'seled' :''}" data="-1">
+									<a href="javascript:;">不限</a>
+								</li>
+								<s:iterator value="#request.areas" id="item" status="i">
+									<li data="${item.spId}" class="${baseOrderInfo.csoArea==item.spId ?'seled' :''}">
+										<a href="javascript:;">${item.spName}<i></i> </a>
+									</li>
+								</s:iterator>
+							</ul>
+							<div class="ccc-res-av-opt">
+								<a href="javascript:;" class="ccc-res-more">更多<i></i> </a>
+							</div>
+							<div class="ccc-res-av-btn">
+								<a href="#" class="ccc-res-submit ccc-btn-white">确定</a>
+								<a href="#" class="ccc-res-cancel ccc-btn-white">取消</a>
+							</div>
+						</div>
+						<img src="/images/icons/simple-divider-slim.png" class="ccc-my-divider">
+					</div>
+					<div class="ccc-res-prop ccc-res-parkinglots">
+						<div class="ccc-res-attr-key">
+							<i></i>网点：
+						</div>
+						<div class="ccc-res-attr-values">
+							<ul class="ccc-res-av-col" id="ul-csoOutlets">
+								<li class="all ${baseOrderInfo.csoOutlets==-1 ?'seled' :''}" data="-1">
+									<a href="javascript:;">不限</a>
+								</li>
+							</ul>
+							<div class="ccc-res-av-opt">
+								<a href="javascript:;" class="ccc-res-more visible">更多<i></i> </a>
+							</div>
+							<div class="ccc-res-av-btn">
+								<a href="javascript:;" class="ccc-res-submit ccc-btn-white">确定</a>
+								<a href="javascript:;" class="ccc-res-cancel ccc-btn-white">取消</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="ccc-res-view-cont" class="ccc-res-view-cont ccc-clearfix">
+					<div id="ccc-gang-tips" class="ccc-view-panel ccc-gang-tips" style="margin-top: -10px;">
+						<div class="ccc-view-panel-inner ccc-clearfix" style="line-height: 22px; height: 22px;">
+							<div class="ccc-res-filter-time ${baseOrderInfo.csoIsDate ?'seled' :''}" style="float: right;">
+								<!-- + seled -->
+								<a class="ccc-res-search ccc-btn-green" onclick="settime()" href="javascript:;">搜索可用车辆</a>
+								<a class="ccc-res-cancel" id="timeCancel" href="javascript:;">撤销</a>
+							</div>
+							tips：春节租车时间需包含
+							<strong>2月17日17点</strong> 至
+							<strong>2月25日09点</strong>。
+							<a class="ccc-link" target="_blank" href="/parkinglots.html?src=springreserve">查看各网点分布</a>
+						</div>
+					</div>
+					<s:if test="#request.csOutlets!=null">
+						<div id="ccc-parkinglot-intro" class="ccc-view-panel">
+							<div class="ccc-view-panel-inner ccc-clearfix">
+								<div class="ccc-title">
+									${csOutlets.csoName}
+									<em></em>
+								</div>
+								<div class="ccc-notes address">
+									<strong>地址：</strong> ${csOutlets.csoAddress}
+									<a href="javascript:;" onclick="getViewmap(${csOutlets.csoId})" class="ccc-link ccc-view-map">查看地图 &raquo;</a>
+								</div>
+								<s:if test="#request.csOutlets.csoDetails!=''&&#request.csOutlets.csoDetails!=null">
+									<div class="ccc-notes pass ">
+										<strong>通行证：</strong> ${csOutlets.csoDetails}
+									</div>
+								</s:if>
+								<div class="ccc-notes space">
+									<strong>停车位：</strong> ${csOutlets.csoSpace}
+								</div>
+								<div class="ccc-notes opening">
+									<strong>开放时间：</strong> ${csOutlets.csoDoorTime}
+								</div>
+							</div>
+						</div>
+					</s:if>
+					<s:if test="#request.page.result.size()>0">
+						<s:iterator value="#request.page.result" id="item" status="i">
+							<div class="ccc-view-car long">
+								<div class="ccc-view-car-inner">
+									<s:if test="#item.cscIsAd">
+										<div class="ccc-car-thumb ccc-ad-car" title="什么是宣传车？">
+											<img src="/images/cars/${item.cscModel}_wide.jpg">
+											<i class="ad"></i>
+											<!--if 宣传车-->
+									</s:if>
+									<s:else>
+										<div class="ccc-car-thumb">
+											<img src="/images/cars/${item.cscModel}_wide.jpg">
+									</s:else>
+									<span class="ccc-thumb-shadow"></span>
+									<span class="ccc-thumb-cover"></span>
+									<div class="ccc-plate-number">
+										${item.cscCarNo}
+										<em></em>
+									</div>
+								</div>
+								<div class="ccc-view-car-detail">
+									<div class="ccc-view-car-desc">
+										<div class="ccc-car-model">
+											<span>${item.$cscModel.cscmName}</span>
+											<div class="ccc-res-view-location">
+												<div class="ccc-res-dist">
+													1.2公里
+													<i></i>
+												</div>
+												<a href="javascript:;" onclick="setOutlets(${item.cscOutlets},${item.$cscOutlets.csoArea})" title="查看“${item.$cscOutlets.csoName}”网点的车辆">${item.$cscOutlets.csoName}</a>
+											</div>
+										</div>
+										<div class="ccc-desc-label-wrap" style="margin-top: 10px;">
+											<span class="ccc-desc-label ${(item.cscColor+1) == 1 ? 'black' : ''}${(item.cscColor+1)  == 2 ? 'white' : ''}${(item.cscColor+1)  == 7 ? 'silver' : ''}${(item.cscColor+1)  == 3 ? 'red' : ''}${(item.cscColor+1)  == 5 ? 'yellow' : ''}${(item.cscColor+1)  == 8 ? 'blue' : ''}">${cc:convertColor(item.cscColor)}</span>
+											<span class="ccc-desc-label">${item.$cscModel.cscmFile==0?'自动档':'手动档'}</span>
+											<span class="ccc-desc-label">${item.$cscModel.cscmType==0?'汽油车':'电动车'}</span>
+											<span class="ccc-desc-label">${item.$cscModel.cscmVolume}</span>
+										</div>
+										<div class="ccc-desc-label-wrap" style="margin-top: 18px;">
+											<div title="${item.$cscModel.cscmSeatS}座" class="ccc-ftr-label st-${item.$cscModel.cscmSeatS}"></div>
+											<div title="USB车载电源" class="ccc-ftr-label pw"></div>
+											<s:if test="#item.cscModel == 1006">
+												<div title="炭包" class="ccc-ftr-label ca"></div>
+											</s:if>
+											<s:if test="#item.$cscOutlets.csoDetails!=''&&#item.$cscOutlets.csoDetails!=null">
+												<div title="通行证：${item.$cscOutlets.csoDetails}" class="ccc-ftr-label pp"></div>
+											</s:if>
+											<div class="ccc-ftr-more" style="display: none">
+												更多
+											</div>
+											<div class="ccc-ftr-hide" style="display: block;">
+												<div title="行驶证：副驾驶手套箱内" class="ccc-ftr-label dl"></div>
+												<div title="中石化油卡：副驾驶手套箱内，密码为加油卡卡号后6位，请加93号汽油" class="ccc-ftr-label gc"></div>
+												<div title="帮助手册：副驾驶手套箱内" class="ccc-ftr-label in"></div>
+											</div>
+										</div>
+									</div>
+									<s:action name="activity-isRent" executeResult="true" namespace="/activity">
+										<s:param name="car">${item.cscId}</s:param>
+									</s:action>
+								</div>
+								<div class="ccc-view-car-opt">
+									<a href="javascript:;" onclick="reserve(${item.cscId})" class="ccc-btn ccc-btn-green">立即预订</a>
+									<a href="javascript:;" onclick="getCarPrice(${item.cscId})" class="ccc-btn ccc-btn-white">价格详情</a>
+								</div>
+							</div>
+				</div>
+				</s:iterator>
+				</s:if>
+				<s:else>
+					<div id="ccc-noresult-tips" class="ccc-view-panel ccc-noresult-tips">
+						<div class="ccc-view-panel-inner ccc-clearfix">
+							<s:if test="#request.baseOrderInfo.csoIsAdCar||#request.baseOrderInfo.csoIsDate||#request.baseOrderInfo.csoModel!=-1">
+								哎呦，没有找到符合要求的车辆～～<a href="/activity/activity-reserve.html?csoArea=${baseOrderInfo.csoArea}&csoOutlets=-1&csoAmount=${baseOrderInfo.csoAmount}&csoIsDate=false" class="ccc-link">换个搜索条件，试试看 &raquo;</a>详情请致电0571-88190338。
+							</s:if>
+							<s:else>
+								车辆临时下线，可能是洗车或者保养去了哦。过会儿再来吧。详情请致电0571-88190338。
+							</s:else>
+						</div>
+					</div>
+				</s:else>
+			</div>
+		</div>
+		<%@ include file="/include/page.html"%>
+	</div>
+
+	<footer id="ccc-footer">
+	</footer>
+	</div>
+	<input id="csoModel" type="hidden" value="${baseOrderInfo.csoModel}" />
+	<input id="csoOutlets" type="hidden" value="${baseOrderInfo.csoOutlets}" />
+	<input id="csoArea" type="hidden" value="${baseOrderInfo.csoArea}" />
+	<input id="csoAmount" type="hidden" value="${baseOrderInfo.csoAmount}" />
+	<input id="csoIsAdCar" type="hidden" value="${baseOrderInfo.csoIsAdCar}" />
+	<input id="csoIsDate" type="hidden" value="${baseOrderInfo.csoIsDate}" />
+	<!-- ajax 弹出层 -->
+	<div id="ccc-layer">
+		<div id="ccc-overlay"></div>
+		<div id="ccc-overpage">
+			<!-- 异步加载 -->
+		</div>
+		<div id="ccc-overclose">
+			<button>
+			</button>
+		</div>
+	</div>
+	<div id="ccc-global-tips">
+		<i></i><span>正在加载...</span>
+	</div>
+	<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+	<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+	<script src="/js/jquery-ui-1.10.1.min.js" type="text/javascript"></script>
+	<script src="/js/jquery-ui-timepicker.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {		
+				/* Time Picker */
+				var timeCur = new Date();
+				// CCClubs Customization
+				$.timepicker.regional['CCClubs']={
+					minDate: new Date(timeCur.getFullYear(), timeCur.getMonth(), timeCur.getDate(), 0, 0)
+				};
+				$.timepicker.setDefaults($.timepicker.regional['CCClubs']);
+				$('.ccc-time-picker').datetimepicker().attr('readonly','readonly');
+				
+				setArea();
+				$(document).on('click','#ul-csoArea li a',function(){
+					var li = $(this).parent();
+					if (li.hasClass('all seled')) {
+						return false;
+					} else if (li.hasClass('seled')) {
+						li.removeClass('seled').siblings('.all').addClass('seled');
+						$('#csoArea').val(-1);
+						$('#csoOutlets').val(-1);
+						getCarDetail();
+						return false;
+					} else {
+						li.addClass('seled').siblings().removeClass('seled');
+						$('#csoArea').val(li.attr('data'));
+						$('#csoOutlets').val(-1);
+						getCarDetail();
+						return false;
+					}
+				});
+				$(document).on('click','#ul-csoOutlets li a',function(){
+					var li = $(this).parent();
+					if (li.hasClass('all seled')||li.hasClass('disabled')) {
+						return false;
+					} else if (li.hasClass('seled')) {
+						li.removeClass('seled').siblings('.all').addClass('seled');
+						$('#csoOutlets').val(-1);
+						getCarDetail();
+						return false;
+					} else {
+						li.addClass('seled').siblings().removeClass('seled');
+						$('#csoOutlets').val(li.attr('data'));
+						getCarDetail();
+						return false;
+					}
+				});
+				$(document).on('click','#ul-csoModel li a',function(){
+					var li = $(this).parent();
+					if (li.hasClass('all seled')) {
+						return false;
+					} else if (li.hasClass('seled')) {
+						li.removeClass('seled').siblings('.all').addClass('seled');
+						$('#csoModel').val(-1);
+						getCarDetail();
+						return false;
+					} else {
+						li.addClass('seled').siblings().removeClass('seled');
+						$('#csoModel').val(li.attr('data'));
+						getCarDetail();
+						return false;
+					}
+				});
+				$(document).on('click','.ccc-res-av-opt .ccc-res-more',function(){
+					var parent = $(this).parents('.ccc-res-attr-values');
+					if (parent.hasClass('all')) {
+						$(this).removeClass('up').html('更多<i></i>');
+						parent.removeClass('all');
+					} else {
+						$(this).addClass('up').html('收起<i></i>');
+						parent.addClass('all');
+					}
+					return false;
+				});
+				// 宣传车
+	            $("#cbk-csoIsAdCar").bind("click", function () {
+	            	$('#csoIsAdCar').val(this.checked);
+					getCarDetail();
+	            });
+	            
+	            $('.ccc-time-picker').focus(function() {
+					$(this).parent().addClass('seled');
+				});
+				$('#timeCancel').click(function() {
+					$('.ccc-time-picker-wrap').removeClass('seled');
+					$('.ccc-res-filter-time').removeClass('seled');
+					$('#csoIsDate').val(false);
+					getCarDetail();
+					return false;
+				});
+				
+				if ((location.href).match(/\?do=edit/i)) {
+						reserve(${baseOrderInfo.csoCar});
+				}
+		});
+		
+		function setAmount(amount){
+			$('#csoAmount').val(amount);
+			getCarDetail();
+		}
+		
+		function setOutlets(outlets,area){
+			$('#csoOutlets').val(outlets);
+			$('#csoArea').val(area);
+			getCarDetail();
+		}
+		
+		function settime(){
+			var start = '2015-02-17 17:00';
+			var finish = '2015-02-25 09:00';
+			if (dateDiff('M', start, finish) <= 0) {
+				showTips("还车时间应该比取车时间晚","error",3);
+				return false;
+			}
+			if (dateDiff('H', start, finish) < 1) {
+				showTips("最低1个小时起租","error",3);
+				return false;
+			}
+			var ajax = {
+			url: "/reserve_checkBasicOrder.html?t="+new Date().getTime(),
+			type: "POST",
+			data: {
+				csoStart: start+":00",
+				csoFinish: finish+":00",
+				csoArea: $('#csoArea').val(),
+				csoModel:$('#csoModel').val(),
+				csoOutlets:$('#csoOutlets').val(),
+				isSpring:true
+			},
+				async: true,
+				success: function(data) {
+					switch (data) {
+						case "100":
+							$('#csoIsDate').val(true);
+							getCarDetail();
+							break;
+						case "101":
+							showTips("请设置取车时间","error",3);
+							break;
+						case "102":
+							showTips("请设置还车时间","error",3);
+							break;
+						case "103":
+							showTips("取车时间不能早于当前时间两小时","error",3);
+							break;
+						case "104":
+							showTips("取车时间不能晚于还车时间","error",3);
+							break;
+						case "105":
+							showTips("最低1个小时起租","error",3);
+							break;
+						case "106":
+							showTips("取、还车时间应该是20分钟的倍数","error",4);
+							break;
+						case "107":
+							showTips("网站提只提供7天以内的车辆预订","error",4);
+							break;
+						case "108":
+							showTips("网站提只提供最长30天的订单","error",4);
+							break;
+						case "109":
+							showTips("请先选择一辆车，再预订","error",3);
+							break;
+						case "110":
+							showTips("该车去维修或者保养去啦，暂时不能租用哦～","error",7);
+							break;
+						case "111":
+							showTips("使用春节套餐租车最短要租满10天哦～","error",7);
+							break;
+						default:
+							var msg = "未知的返回。";
+							return;
+					}
+				}
+			}
+			$.ajax(ajax);
+			return false;
+		}
+		
+		function getCarDetail(){
+			location.href = '/activity/activity-reserve.html?csoArea='+$('#csoArea').val()+"&csoOutlets="+$('#csoOutlets').val()+"&csoModel="+$('#csoModel').val()+"&csoIsAdCar="+$('#csoIsAdCar').val()+"&csoAmount="+$('#csoAmount').val()+"&csoIsDate="+$('#csoIsDate').val()+"&t="+new Date().getTime();
+		}
+		
+		function setArea(){
+			var value =$('#csoArea').val() ;
+			var csoOutletHtml="<li class='all ";
+			if($('#csoOutlets').val()==-1){
+				csoOutletHtml=csoOutletHtml+"seled' data='-1'><a href='javascript:;'>不限</a></li>"
+			}else{
+				csoOutletHtml=csoOutletHtml+"' data='-1'><a href='javascript:;'>不限</a></li>"
+			}
+			$('#ul-csoOutlets').html(csoOutletHtml);
+			$.getJSON("/ajax_outletsByArea.html",{area:value,t:new Date().getTime()},function(data) {
+				  //遍历JSON中的每个entry 
+				  $.each(data, function(entryIndex, entry) {
+				  //var info = '<option selectid="'+entry.csoId;
+				  var info = '<li data ="'+entry.csoId;
+				  if($('#csoOutlets').val()== entry.csoId){
+						  info=info+'" class="seled" ><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						  $("#ul-csoOutlets .all").after(info);
+					 }else{
+					 	 if(!entry.csoCanOrder){
+					 	 		info=info+'" class="disabled" title="预设网点"';
+					        	info= info+'"><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+					       }else{
+								var dur =  (new Date()).getTime() -  entry.csoAddTime;				       			
+					       		if(dur <1000 * 60 * 60 * 24*80){
+					       			info= info+'"><a href="javascript:;">'+entry.csoName+'<i></i><span class="tag new" title="新网点"></span></a></li>';
+					       		}else{
+					       			info= info+'"><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+					       		}
+					       }
+					        $(info).appendTo("#ul-csoOutlets");
+					    }
+					 });
+				  })
+		}
+		
+		function getCarPrice(car){
+			 $.get('/prices_details.html?car='+car+'&t='+new Date().getTime(),function(data){
+				  showLayer();
+				  $('#ccc-overpage').html(data);
+			 });
+		 }
+		 
+		 function reserve(cspCar){
+			$.get('/parkinglots_reserve.html',{cspCar:cspCar},function(data){
+						if(data=="false")
+						{
+							showTips("该车辆价格信息没找到，换辆车吧","error",3);
+							return;
+						}
+						showLayer();
+						$('#ccc-overpage').html(data);
+				});
+		};
+		
+	</script>
+	<script>
+		$('.ccc-timebar .ccc-time-block').hover(
+			function() {
+				$(this).children('.ccc-time-tips').stop(true, false).fadeIn(120);
+			},
+			function() {
+				$(this).children('.ccc-time-tips').stop(true, false).fadeOut(40);
+			}
+		);
+		
+		//$('.ccc-ftr-more').mouseenter(function() {
+		//	$(this).next('.ccc-ftr-hide').show();
+		//	$(this).hide();
+		//});
+		
+		//$('.ccc-ftr-label-wrap').mouseleave(function() {
+		//	$(this).children('.ccc-ftr-hide').hide();
+		//	$(this).children('.ccc-ftr-more').show();
+		//});
+		
+		$(document).ready(function() {
+			adCarToggle();
+		});
+				
+		function adCarToggle() {
+			var adA = $('#adCarTrigger');
+			var adT = $('#adCarTips');
+			
+			$(document).click(function(event) {
+				if ($(event.target).attr('id')=='adCarTrigger') {
+					adT.fadeToggle(100);
+				} else {
+					adT.hide();
+				}
+			});
+			adT.click(function(event) {
+				event.stopPropagation();
+			});
+		}
+		
+		$('#viewAdImg, .ccc-ad-car').click(function() {
+			$.get('/reserve-adcar.html',function(data){
+				showLayer();
+				$('#ccc-overpage').html(data);
+			});
+			return false;
+		});
+		
+		function getViewmap(csoOutlets){
+			$.get('/reserve_viewmap.html',{csoOutlets:csoOutlets},function(data){
+				showLayer();
+				$('#ccc-overpage').html(data);
+			});
+			return false;
+		};
+	</script>
+	</body>
+</html>

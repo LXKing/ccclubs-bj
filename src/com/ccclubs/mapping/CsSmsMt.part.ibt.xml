@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsSmsMt_part">	
+	<!-- 短信发送条件sql片段  -->
+	<sql id="cs_sms_mt_dynamic">
+		<dynamic>
+			<isNotEmpty property="cssmId" prepend="and">
+			    $cssmIdNot$ cs_sms_mt$suffix$.cssm_id = #cssmId#
+			</isNotEmpty>
+			<isNotNull property="cssmIdNot" prepend="and">
+				<isEmpty property="cssmId">
+				$cssmIdNot$ cs_sms_mt$suffix$.cssm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_sms_mt$suffix$.cssm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cssmHost" prepend="and">
+			    $cssmHostNot$ cs_sms_mt$suffix$.cssm_host = #cssmHost#
+			</isNotEmpty>
+			<isNotNull property="cssmHostNot" prepend="and">
+				<isEmpty property="cssmHost">
+				$cssmHostNot$ cs_sms_mt$suffix$.cssm_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cssmType" prepend="and">
+			    $cssmTypeNot$ cs_sms_mt$suffix$.cssm_type = #cssmType#
+			</isNotEmpty>
+			<isNotNull property="cssmTypeNot" prepend="and">
+				<isEmpty property="cssmType">
+				$cssmTypeNot$ cs_sms_mt$suffix$.cssm_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmMobile" prepend="and">			    
+			    (<isNotNull property="cssmMobileNot">
+			    cs_sms_mt$suffix$.cssm_mobile is null or length(cs_sms_mt$suffix$.cssm_mobile) &lt; 1 or
+			    </isNotNull>$cssmMobileNot$ cs_sms_mt$suffix$.cssm_mobile = #cssmMobile#)
+			</isNotEmpty>
+			<isNotNull property="cssmMobileNot" prepend="and">
+				<isEmpty property="cssmMobile">
+				$cssmMobileNot$ (cs_sms_mt$suffix$.cssm_mobile is null or length(cs_sms_mt$suffix$.cssm_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmContent" prepend="and">			    
+			    (<isNotNull property="cssmContentNot">
+			    cs_sms_mt$suffix$.cssm_content is null or length(cs_sms_mt$suffix$.cssm_content) &lt; 1 or
+			    </isNotNull>$cssmContentNot$ cs_sms_mt$suffix$.cssm_content like #cssmContent#)
+			</isNotEmpty>
+			<isNotNull property="cssmContentNot" prepend="and">
+				<isEmpty property="cssmContent">
+				$cssmContentNot$ (cs_sms_mt$suffix$.cssm_content is null or length(cs_sms_mt$suffix$.cssm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmEditor" prepend="and">
+			    $cssmEditorNot$ cs_sms_mt$suffix$.cssm_editor = #cssmEditor#
+			</isNotEmpty>
+			<isNotNull property="cssmEditorNot" prepend="and">
+				<isEmpty property="cssmEditor">
+				$cssmEditorNot$ cs_sms_mt$suffix$.cssm_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmChannel" prepend="and">
+			    $cssmChannelNot$ cs_sms_mt$suffix$.cssm_channel = #cssmChannel#
+			</isNotEmpty>
+			<isNotNull property="cssmChannelNot" prepend="and">
+				<isEmpty property="cssmChannel">
+				$cssmChannelNot$ cs_sms_mt$suffix$.cssm_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmUpdateTimeStart" prepend="and">
+			    $cssmUpdateTimeNot$   (cs_sms_mt$suffix$.cssm_update_time &gt;= #cssmUpdateTimeStart#
+			   <isEmpty property="cssmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssmUpdateTimeEnd" prepend="and">
+				<isEmpty property="cssmUpdateTimeStart">$cssmUpdateTimeNot$   (</isEmpty>
+			    cs_sms_mt$suffix$.cssm_update_time &lt;= #cssmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssmUpdateTime" prepend="and">
+			    $cssmUpdateTimeNot$ cs_sms_mt$suffix$.cssm_update_time = #cssmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cssmUpdateTimeNot" prepend="and">
+				<isEmpty property="cssmUpdateTimeStart"><isEmpty property="cssmUpdateTimeEnd"><isEmpty property="cssmUpdateTime">
+				$cssmUpdateTimeNot$ cs_sms_mt$suffix$.cssm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmAddTimeStart" prepend="and">
+			    $cssmAddTimeNot$   (cs_sms_mt$suffix$.cssm_add_time &gt;= #cssmAddTimeStart#
+			   <isEmpty property="cssmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssmAddTimeEnd" prepend="and">
+				<isEmpty property="cssmAddTimeStart">$cssmAddTimeNot$   (</isEmpty>
+			    cs_sms_mt$suffix$.cssm_add_time &lt;= #cssmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssmAddTime" prepend="and">
+			    $cssmAddTimeNot$ cs_sms_mt$suffix$.cssm_add_time = #cssmAddTime#
+			</isNotEmpty>
+			<isNotNull property="cssmAddTimeNot" prepend="and">
+				<isEmpty property="cssmAddTimeStart"><isEmpty property="cssmAddTimeEnd"><isEmpty property="cssmAddTime">
+				$cssmAddTimeNot$ cs_sms_mt$suffix$.cssm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmRemark" prepend="and">			    
+			    (<isNotNull property="cssmRemarkNot">
+			    cs_sms_mt$suffix$.cssm_remark is null or length(cs_sms_mt$suffix$.cssm_remark) &lt; 1 or
+			    </isNotNull>$cssmRemarkNot$ cs_sms_mt$suffix$.cssm_remark like #cssmRemark#)
+			</isNotEmpty>
+			<isNotNull property="cssmRemarkNot" prepend="and">
+				<isEmpty property="cssmRemark">
+				$cssmRemarkNot$ (cs_sms_mt$suffix$.cssm_remark is null or length(cs_sms_mt$suffix$.cssm_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssmStatus" prepend="and">
+			    $cssmStatusNot$ cs_sms_mt$suffix$.cssm_status = #cssmStatus#
+			</isNotEmpty>
+			<isNotNull property="cssmStatusNot" prepend="and">
+				<isEmpty property="cssmStatus">
+				$cssmStatusNot$ cs_sms_mt$suffix$.cssm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 短信发送left join 条件sql片段 -->
+	<sql id="cs_sms_mt_join">
+		<dynamic>
+			<isNotEmpty property="CsSmsMt.cssmId" prepend="and">
+			    $CsSmsMt.cssmIdNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_id = #CsSmsMt.cssmId#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmIdNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmId">
+				$cssmIdNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_sms_mt$CsSmsMt.suffix$.cssm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsSmsMt.cssmHost" prepend="and">
+			    $CsSmsMt.cssmHostNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_host = #CsSmsMt.cssmHost#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmHostNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmHost">
+				$cssmHostNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmType" prepend="and">
+			    $CsSmsMt.cssmTypeNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_type = #CsSmsMt.cssmType#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmTypeNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmType">
+				$cssmTypeNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmMobile" prepend="and">
+				(<isNotNull property="CsSmsMt.cssmMobileNot">
+			    cs_sms_mt$CsSmsMt.suffix$.cssm_mobile is null or length(cs_sms_mt$CsSmsMt.suffix$.cssm_mobile) &lt; 1 or
+			    </isNotNull>$CsSmsMt.cssmMobileNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_mobile = #CsSmsMt.cssmMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmMobileNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmMobile">
+				$cssmMobileNot$ (cs_sms_mt$CsSmsMt.suffix$.cssm_mobile is null or length(cs_sms_mt$CsSmsMt.suffix$.cssm_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmContent" prepend="and">
+				(<isNotNull property="CsSmsMt.cssmContentNot">
+			    cs_sms_mt$CsSmsMt.suffix$.cssm_content is null or length(cs_sms_mt$CsSmsMt.suffix$.cssm_content) &lt; 1 or
+			    </isNotNull>$CsSmsMt.cssmContentNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_content like #CsSmsMt.cssmContent#)
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmContentNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmContent">
+				$cssmContentNot$ (cs_sms_mt$CsSmsMt.suffix$.cssm_content is null or length(cs_sms_mt$CsSmsMt.suffix$.cssm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmEditor" prepend="and">
+			    $CsSmsMt.cssmEditorNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_editor = #CsSmsMt.cssmEditor#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmEditorNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmEditor">
+				$cssmEditorNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmChannel" prepend="and">
+			    $CsSmsMt.cssmChannelNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_channel = #CsSmsMt.cssmChannel#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmChannelNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmChannel">
+				$cssmChannelNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmUpdateTimeStart" prepend="and">
+			    $CsSmsMt.cssmUpdateTimeNot$   (cs_sms_mt$CsSmsMt.suffix$.cssm_update_time &gt;= #CsSmsMt.cssmUpdateTimeStart#
+			   <isEmpty property="CsSmsMt.cssmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsSmsMt.cssmUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsSmsMt.cssmUpdateTimeStart">$CsSmsMt.cssmUpdateTimeNot$   (</isEmpty>
+			    cs_sms_mt$CsSmsMt.suffix$.cssm_update_time &lt;= #CsSmsMt.cssmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsSmsMt.cssmUpdateTime" prepend="and">
+			    $CsSmsMt.cssmUpdateTimeNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_update_time = #CsSmsMt.cssmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmUpdateTimeNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmUpdateTimeStart"><isEmpty property="CsSmsMt.cssmUpdateTimeEnd"><isEmpty property="CsSmsMt.cssmUpdateTime">
+				$cssmUpdateTimeNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmAddTimeStart" prepend="and">
+			    $CsSmsMt.cssmAddTimeNot$   (cs_sms_mt$CsSmsMt.suffix$.cssm_add_time &gt;= #CsSmsMt.cssmAddTimeStart#
+			   <isEmpty property="CsSmsMt.cssmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsSmsMt.cssmAddTimeEnd" prepend="and">
+				<isEmpty property="CsSmsMt.cssmAddTimeStart">$CsSmsMt.cssmAddTimeNot$   (</isEmpty>
+			    cs_sms_mt$CsSmsMt.suffix$.cssm_add_time &lt;= #CsSmsMt.cssmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsSmsMt.cssmAddTime" prepend="and">
+			    $CsSmsMt.cssmAddTimeNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_add_time = #CsSmsMt.cssmAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmAddTimeNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmAddTimeStart"><isEmpty property="CsSmsMt.cssmAddTimeEnd"><isEmpty property="CsSmsMt.cssmAddTime">
+				$cssmAddTimeNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmRemark" prepend="and">
+				(<isNotNull property="CsSmsMt.cssmRemarkNot">
+			    cs_sms_mt$CsSmsMt.suffix$.cssm_remark is null or length(cs_sms_mt$CsSmsMt.suffix$.cssm_remark) &lt; 1 or
+			    </isNotNull>$CsSmsMt.cssmRemarkNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_remark like #CsSmsMt.cssmRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmRemarkNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmRemark">
+				$cssmRemarkNot$ (cs_sms_mt$CsSmsMt.suffix$.cssm_remark is null or length(cs_sms_mt$CsSmsMt.suffix$.cssm_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSmsMt.cssmStatus" prepend="and">
+			    $CsSmsMt.cssmStatusNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_status = #CsSmsMt.cssmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsSmsMt.cssmStatusNot" prepend="and">
+				<isEmpty property="CsSmsMt.cssmStatus">
+				$cssmStatusNot$ cs_sms_mt$CsSmsMt.suffix$.cssm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

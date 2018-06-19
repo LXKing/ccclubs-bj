@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsTodo_part">	
+	<!-- 待办事项条件sql片段  -->
+	<sql id="cs_todo_dynamic">
+		<dynamic>
+			<isNotEmpty property="cstId" prepend="and">
+			    $cstIdNot$ cs_todo$suffix$.cst_id = #cstId#
+			</isNotEmpty>
+			<isNotNull property="cstIdNot" prepend="and">
+				<isEmpty property="cstId">
+				$cstIdNot$ cs_todo$suffix$.cst_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstTitle" prepend="and">			    
+			    (<isNotNull property="cstTitleNot">
+			    cs_todo$suffix$.cst_title is null or length(cs_todo$suffix$.cst_title) &lt; 1 or
+			    </isNotNull>$cstTitleNot$ cs_todo$suffix$.cst_title like #cstTitle#)
+			</isNotEmpty>
+			<isNotNull property="cstTitleNot" prepend="and">
+				<isEmpty property="cstTitle">
+				$cstTitleNot$ (cs_todo$suffix$.cst_title is null or length(cs_todo$suffix$.cst_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstAlarmTimeStart" prepend="and">
+			    $cstAlarmTimeNot$   (cs_todo$suffix$.cst_alarm_time &gt;= #cstAlarmTimeStart#
+			   <isEmpty property="cstAlarmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstAlarmTimeEnd" prepend="and">
+				<isEmpty property="cstAlarmTimeStart">$cstAlarmTimeNot$   (</isEmpty>
+			    cs_todo$suffix$.cst_alarm_time &lt;= #cstAlarmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstAlarmTime" prepend="and">
+			    $cstAlarmTimeNot$ cs_todo$suffix$.cst_alarm_time = #cstAlarmTime#
+			</isNotEmpty>
+			<isNotNull property="cstAlarmTimeNot" prepend="and">
+				<isEmpty property="cstAlarmTimeStart"><isEmpty property="cstAlarmTimeEnd"><isEmpty property="cstAlarmTime">
+				$cstAlarmTimeNot$ cs_todo$suffix$.cst_alarm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstUser" prepend="and">
+			    $cstUserNot$ cs_todo$suffix$.cst_user = #cstUser#
+			</isNotEmpty>
+			<isNotNull property="cstUserNot" prepend="and">
+				<isEmpty property="cstUser">
+				$cstUserNot$ cs_todo$suffix$.cst_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="FAMILY" prepend="and">
+			    cs_todo$suffix$.cst_user = #cstUser#
+			</isNotEmpty>
+			<isNotEmpty property="cstContent" prepend="and">			    
+			    (<isNotNull property="cstContentNot">
+			    cs_todo$suffix$.cst_content is null or length(cs_todo$suffix$.cst_content) &lt; 1 or
+			    </isNotNull>$cstContentNot$ cs_todo$suffix$.cst_content like #cstContent#)
+			</isNotEmpty>
+			<isNotNull property="cstContentNot" prepend="and">
+				<isEmpty property="cstContent">
+				$cstContentNot$ (cs_todo$suffix$.cst_content is null or length(cs_todo$suffix$.cst_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstUpdateTimeStart" prepend="and">
+			    $cstUpdateTimeNot$   (cs_todo$suffix$.cst_update_time &gt;= #cstUpdateTimeStart#
+			   <isEmpty property="cstUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstUpdateTimeEnd" prepend="and">
+				<isEmpty property="cstUpdateTimeStart">$cstUpdateTimeNot$   (</isEmpty>
+			    cs_todo$suffix$.cst_update_time &lt;= #cstUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstUpdateTime" prepend="and">
+			    $cstUpdateTimeNot$ cs_todo$suffix$.cst_update_time = #cstUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cstUpdateTimeNot" prepend="and">
+				<isEmpty property="cstUpdateTimeStart"><isEmpty property="cstUpdateTimeEnd"><isEmpty property="cstUpdateTime">
+				$cstUpdateTimeNot$ cs_todo$suffix$.cst_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstAddTimeStart" prepend="and">
+			    $cstAddTimeNot$   (cs_todo$suffix$.cst_add_time &gt;= #cstAddTimeStart#
+			   <isEmpty property="cstAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstAddTimeEnd" prepend="and">
+				<isEmpty property="cstAddTimeStart">$cstAddTimeNot$   (</isEmpty>
+			    cs_todo$suffix$.cst_add_time &lt;= #cstAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstAddTime" prepend="and">
+			    $cstAddTimeNot$ cs_todo$suffix$.cst_add_time = #cstAddTime#
+			</isNotEmpty>
+			<isNotNull property="cstAddTimeNot" prepend="and">
+				<isEmpty property="cstAddTimeStart"><isEmpty property="cstAddTimeEnd"><isEmpty property="cstAddTime">
+				$cstAddTimeNot$ cs_todo$suffix$.cst_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstStatus" prepend="and">
+			    $cstStatusNot$ cs_todo$suffix$.cst_status = #cstStatus#
+			</isNotEmpty>
+			<isNotNull property="cstStatusNot" prepend="and">
+				<isEmpty property="cstStatus">
+				$cstStatusNot$ cs_todo$suffix$.cst_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 待办事项left join 条件sql片段 -->
+	<sql id="cs_todo_join">
+		<dynamic>
+			<isNotEmpty property="CsTodo.cstId" prepend="and">
+			    $CsTodo.cstIdNot$ cs_todo$CsTodo.suffix$.cst_id = #CsTodo.cstId#
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstIdNot" prepend="and">
+				<isEmpty property="CsTodo.cstId">
+				$cstIdNot$ cs_todo$CsTodo.suffix$.cst_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTodo.cstTitle" prepend="and">
+				(<isNotNull property="CsTodo.cstTitleNot">
+			    cs_todo$CsTodo.suffix$.cst_title is null or length(cs_todo$CsTodo.suffix$.cst_title) &lt; 1 or
+			    </isNotNull>$CsTodo.cstTitleNot$ cs_todo$CsTodo.suffix$.cst_title like #CsTodo.cstTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstTitleNot" prepend="and">
+				<isEmpty property="CsTodo.cstTitle">
+				$cstTitleNot$ (cs_todo$CsTodo.suffix$.cst_title is null or length(cs_todo$CsTodo.suffix$.cst_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTodo.cstAlarmTimeStart" prepend="and">
+			    $CsTodo.cstAlarmTimeNot$   (cs_todo$CsTodo.suffix$.cst_alarm_time &gt;= #CsTodo.cstAlarmTimeStart#
+			   <isEmpty property="CsTodo.cstAlarmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstAlarmTimeEnd" prepend="and">
+				<isEmpty property="CsTodo.cstAlarmTimeStart">$CsTodo.cstAlarmTimeNot$   (</isEmpty>
+			    cs_todo$CsTodo.suffix$.cst_alarm_time &lt;= #CsTodo.cstAlarmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstAlarmTime" prepend="and">
+			    $CsTodo.cstAlarmTimeNot$ cs_todo$CsTodo.suffix$.cst_alarm_time = #CsTodo.cstAlarmTime#
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstAlarmTimeNot" prepend="and">
+				<isEmpty property="CsTodo.cstAlarmTimeStart"><isEmpty property="CsTodo.cstAlarmTimeEnd"><isEmpty property="CsTodo.cstAlarmTime">
+				$cstAlarmTimeNot$ cs_todo$CsTodo.suffix$.cst_alarm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTodo.cstUser" prepend="and">
+			    $CsTodo.cstUserNot$ cs_todo$CsTodo.suffix$.cst_user = #CsTodo.cstUser#
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstUserNot" prepend="and">
+				<isEmpty property="CsTodo.cstUser">
+				$cstUserNot$ cs_todo$CsTodo.suffix$.cst_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="FAMILY" prepend="and">
+			    cs_todo$suffix$.cst_user = #cstUser#
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstContent" prepend="and">
+				(<isNotNull property="CsTodo.cstContentNot">
+			    cs_todo$CsTodo.suffix$.cst_content is null or length(cs_todo$CsTodo.suffix$.cst_content) &lt; 1 or
+			    </isNotNull>$CsTodo.cstContentNot$ cs_todo$CsTodo.suffix$.cst_content like #CsTodo.cstContent#)
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstContentNot" prepend="and">
+				<isEmpty property="CsTodo.cstContent">
+				$cstContentNot$ (cs_todo$CsTodo.suffix$.cst_content is null or length(cs_todo$CsTodo.suffix$.cst_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTodo.cstUpdateTimeStart" prepend="and">
+			    $CsTodo.cstUpdateTimeNot$   (cs_todo$CsTodo.suffix$.cst_update_time &gt;= #CsTodo.cstUpdateTimeStart#
+			   <isEmpty property="CsTodo.cstUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsTodo.cstUpdateTimeStart">$CsTodo.cstUpdateTimeNot$   (</isEmpty>
+			    cs_todo$CsTodo.suffix$.cst_update_time &lt;= #CsTodo.cstUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstUpdateTime" prepend="and">
+			    $CsTodo.cstUpdateTimeNot$ cs_todo$CsTodo.suffix$.cst_update_time = #CsTodo.cstUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstUpdateTimeNot" prepend="and">
+				<isEmpty property="CsTodo.cstUpdateTimeStart"><isEmpty property="CsTodo.cstUpdateTimeEnd"><isEmpty property="CsTodo.cstUpdateTime">
+				$cstUpdateTimeNot$ cs_todo$CsTodo.suffix$.cst_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTodo.cstAddTimeStart" prepend="and">
+			    $CsTodo.cstAddTimeNot$   (cs_todo$CsTodo.suffix$.cst_add_time &gt;= #CsTodo.cstAddTimeStart#
+			   <isEmpty property="CsTodo.cstAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstAddTimeEnd" prepend="and">
+				<isEmpty property="CsTodo.cstAddTimeStart">$CsTodo.cstAddTimeNot$   (</isEmpty>
+			    cs_todo$CsTodo.suffix$.cst_add_time &lt;= #CsTodo.cstAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTodo.cstAddTime" prepend="and">
+			    $CsTodo.cstAddTimeNot$ cs_todo$CsTodo.suffix$.cst_add_time = #CsTodo.cstAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstAddTimeNot" prepend="and">
+				<isEmpty property="CsTodo.cstAddTimeStart"><isEmpty property="CsTodo.cstAddTimeEnd"><isEmpty property="CsTodo.cstAddTime">
+				$cstAddTimeNot$ cs_todo$CsTodo.suffix$.cst_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTodo.cstStatus" prepend="and">
+			    $CsTodo.cstStatusNot$ cs_todo$CsTodo.suffix$.cst_status = #CsTodo.cstStatus#
+			</isNotEmpty>
+			<isNotNull property="CsTodo.cstStatusNot" prepend="and">
+				<isEmpty property="CsTodo.cstStatus">
+				$cstStatusNot$ cs_todo$CsTodo.suffix$.cst_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

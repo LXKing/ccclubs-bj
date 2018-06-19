@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>个人中心${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.reserve.panel.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.my.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.timepicker.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/grass2.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-my-page">
+			<%@ include file="/include/myUserInfo.html"%>
+
+			<div class="ccc-my-paper ccc-clearfix">
+				${lz:set("menu","index")} <%@ include file="/include/myLeftNavigation.html"%>
+				<div class="ccc-my-main">
+					<div class="ccc-my-paper-borderleft"></div>
+					<div class="ccc-my-paper-deco"></div>
+					<div class="ccc-my-main-cont">
+						<div class="ccc-my-main-top ccc-clearfix">
+							<div class="ccc-my-userinfo">
+								<a href="/my/account_setheader.html" class="ccc-my-user-icon ccc-linear-wh-trans"> <img src="${cc:isNullOrEmpty(ccclubs_web_login.csmHeader)?'/images/member-thumb.png':ccclubs_web_login.csmHeader}" /> <span>更换头像</span> </a>
+								<div class="ccc-my-account-banner">
+									<div class="ccc-my-user-summary">
+										<div class="ccc-my-user-name">
+											${cc:getTimeDisplay()}，
+											<a href="/my/account.html">${member.csmName==null ? cc:mobile2Star(member.csmMobile) : member.csmName}</a>
+											<!-- <s:if test="#request.member.csmRebate<1"><a href="javascript:void(0);" class="ccc-together" title="风雨同舟，一路有你，专享租金${lz:digit(member.csmRebate*10,1)}折优惠"></a>
+											</s:if> -->
+											<!-- <div  class="usergrade">
+												<a href="/my/grade.html" title="您的会员等级">
+													<img src="../images/usergrade.png">
+													<img src="../images/usergrade.png">
+													<img src="../images/usergrade.png">
+												</a>
+											</div>
+											 -->
+										</div>
+										<div class="ccc-my-user-account">
+											账户名： 
+											<a href="/my/account.html" class="ccc-font-lato">${cc:mobile2Star(member.csmMobile)}</a>
+										</div>
+									</div>
+									<!-- <a class="ccc-link" target="_blank" style="margin-left: 15px;" href="/activity/activity-reserve.html?src=my">2014 春节，车纷享带你回家<i class="new"></i> </a> -->
+								</div>
+								<div class="ccc-my-panel">
+									<div class="ccc-my-account-summary">
+
+										<div class="ccc-my-panel-summary-item alpha">
+											<div class="ccc-my-amount">
+												<span class="ccc-my-title">可用余额<a class="ccc-help">[?]
+														<div class="ccc-bubble-azure">
+															可用余额 = 充值余额 + 现金券余额
+														</div> </a> </span>
+												<div class="ccc-my-num">
+													<a href="/my/history.html">${lz:digit(money,2)}<span class="ccc-my-num-unit">元</span> </a>
+												</div>
+												<div class="ccc-my-amount-opt" style="padding-top:1px;">
+													<a href="/my/alipay.html" class="ccc-btn-green" style="margin-left:0px;">充值</a>
+												</div>
+											</div>
+
+											<div class="ccc-my-amount-details vertical">
+												<b></b><i></i>
+												<div class="ccc-my-panel-summary-item">
+													<span class="ccc-my-title">充值余额</span>
+													<div class="ccc-my-num">
+														<!-- 冻结资金比固定资产大 -->
+														<s:if test="#request.member.csmMoney >=#request.money">
+															${lz:digit(money,2)}
+															<span class="ccc-my-num-unit">元</span>
+														</s:if>
+														<!-- 冻结资金比固定资产小 -->
+														<s:else>
+													${lz:digit(member.csmMoney,2)}
+															<span class="ccc-my-num-unit">元</span>
+														</s:else>
+													</div>
+												</div>
+
+												<div class="ccc-my-panel-summary-item">
+													<span class="ccc-my-title">现金券余额</span>
+													<div class="ccc-my-num">
+														<!-- 冻结资金比固定资产大 -->
+														<s:if test="#request.member.csmMoney >=#request.money">
+														0.00
+															<span class="ccc-my-num-unit">元</span>
+														</s:if>
+														<!-- 冻结资金比固定资产小 -->
+														<s:else>
+													${lz:digit(money - member.csmMoney,2)}
+															<span class="ccc-my-num-unit">元</span>
+														</s:else>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="ccc-my-panel-summary-item">
+											<div class="ccc-my-amount">
+												<span class="ccc-my-title">红包</span>
+												<div class="ccc-my-num">
+													<a href="/my/coin.html">${allcoins}<span class="ccc-my-num-unit">元</span> </a>
+												</div>
+												<div class="ccc-my-amount-opt" style="padding-top:1px;">
+													<a href="/my/exchange.html" class="ccc-btn-red" style="margin-left:0px;">兑换</a>
+												</div>
+											</div>
+											<s:if test="#request.allcoins>0">
+											<div class="ccc-my-amount-details vertical">
+												<b></b><i></i>
+												<s:iterator value="#request.coins" id="item" status="i">
+												<div class="ccc-my-panel-summary-item">
+													<span class="ccc-my-title">${item.cityName}</span>
+													<div class="ccc-my-num">
+														<span class="ccc-my-num-unit">${item.coin}元</span>
+													</div>
+												</div>
+												</s:iterator>
+											</div>
+											</s:if>
+										</div>
+										<div class="ccc-my-panel-summary-item">
+											<span class="ccc-my-title">冻结资金</span>
+											<div class="ccc-my-num">
+												${lz:digit(member.csmMoney + member.csmCoupon - money,2)}
+												<span class="ccc-my-num-unit">元</span>
+											</div>
+										</div>
+
+										<div class="ccc-my-panel-summary-item">
+											<span class="ccc-my-title">当前积分</span>
+											<div class="ccc-my-num">
+												<a href="/my/point.html">${cc:toInt(member.csmIntegral)}</a>
+											</div>
+										</div>
+
+										<div class="ccc-my-panel-summary-item omega">
+											<span class="ccc-my-title">免费小时</span>
+											<div class="ccc-my-num">
+												<a href="/my/freehours.html?type=1">${lz:digit(sum,2)}<span class="ccc-my-num-unit">小时</span> </a>
+											</div>
+											
+											<div class="ccc-my-amount-opt" style="padding-top:1px;margin-right:0px;">
+												<a href="/my/point.html?do=exchange" class="ccc-btn-red" style="margin-left:0px;">兑换</a>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="ccc-my-main-right">
+								<div class="ccc-my-amount-opt">
+									<a href="/my/alipay.html" class="ccc-btn-green">充值</a>
+									<!-- 
+									<a href="/my/exchange.html" class="ccc-btn-red">兑换</a>
+									 -->
+									<a href="/my/refund.html" class="ccc-btn-white">退款</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="ccc-my-main-middle">
+							<div class="ccc-my-main-middle-cont">
+								<article id="ccc-my-panel-order">
+								<div class="ccc-my-panel">
+									<header>
+									<img src="/images/colorful-bar.png" class="ccc-colorful-bar">
+									<h2>
+										当前订单
+									</h2>
+									</header>
+									<div class="ccc-my-panel-inner">
+										<div class="ccc-my-panel-cont">
+											<s:if test="#request.orderlist.size==0">
+												<div class="ccc-my-noresult">
+													<a href="/reserve.html?src=order"><span>当前没有订单</span> 立即订车 »</a>
+												</div>
+											</s:if>
+											<s:else>
+												<ul class="ccc-my-ver-list ccc-clearfix">
+													<s:iterator value="#request.orderlist" id="item" status="i">
+														<li>
+															<div class="ccc-my-panel-order-item ccc-clearfix">
+																<div class="ccc-car-thumb">
+																	${lz:set("car",(get:CsCar(item.csoCar)))}
+																	<img src="${cc:thumb(car)}" />
+																	<s:if test="#item.csoIsAdCar==null">
+																		${item.$csoCar.cscIsAd == true ? "<i class='ad'></i>" : ""}
+																	</s:if>
+																	<s:else>${item.csoIsAdCar == true ? "<i class='ad'></i>" : ""}</s:else>
+																	<!--if 宣传车-->
+																	<span class="ccc-thumb-cover"></span>
+																</div>
+																<div class="ccc-my-order-det">
+																	<div class="ccc-car-model">
+																		<span class="ccc-font-lato" title="订单号">订单号：${item.csoId}</span>
+																		<span class="ccc-font-lato" title="下单时间">${lz:date(item.csoAddTime,"yyyy-MM-dd , HH:mm")}</span>${item.$csoCar.cscCarNo}
+																		<i class="ccc-non-res" title="${item.$csoInsureType.cspName}"></i>
+																	</div>
+																	<div class="ccc-my-order-grid order-grid-1">
+																		<p>
+																			取车时间：
+																			<span class="ccc-font-lato">${lz:date(item.csoStartTime,"yyyy-MM-dd , HH:mm")}</span>
+																		</p>
+																		<p>
+																			还车时间：
+																			<span class="ccc-font-lato">${lz:date(item.csoFinishTime,"yyyy-MM-dd , HH:mm")}</span>
+																		</p>
+																		<p>
+																			取车网点：
+																			<span class="ccc-font-lato">${item.$csoOutlets.csoName}</span>
+																		</p>
+
+																	</div>
+																	<div class="ccc-my-order-grid order-grid-2">
+																		<p>
+																			授权码：
+																			<span class="ccc-font-lato">${item.csoCode}</span>
+																		</p>
+																		<p>
+																			车型：
+																			<span class="ccc-font-lato">${item.$csoCar.$cscModel.cscmName}</span>
+																		</p>
+																		<p>
+																			还车网点：
+																			<span class="ccc-font-lato">${item.$csoOutletsRet.csoName}</span>
+																		</p>
+																	</div>
+																	<div class="ccc-my-order-opt">
+																		<!-- 免押金订单不允许在网站续订 -->
+																		<s:if test="#item.csoCreditCard==null||#item.csoCreditCard==''">
+																			<a href="javascript:void(0);" onclick="renew(${item.csoId})" class="ccc-btn-green">订单续订</a>
+																		</s:if>
+																		<s:if test="#item.csoStatus==0">
+																			<a href="javascript:void(0);" onclick="cancel(${item.csoId})" class="ccc-btn-white">取消订单</a>
+																		</s:if>
+																	</div>
+																	<!--<p class="ccc-my-order-tip">
+																	温馨提示：该车00:00~06:00在XXX路段限行
+																</p>
+																<!-- if 提示限行/门禁 -->
+																</div>
+															</div>
+														</li>
+													</s:iterator>
+												</ul>
+											</s:else>
+										</div>
+									</div>
+								</div>
+								</article>
+							</div>
+						</div>
+						<!-- 积分面板  -->
+						<%@ include file="/include/myRightNavigation.html"%>
+					</div>
+				</div>
+			</div>
+		</div>
+		<s:if test="!#request.infoSuccess">
+			<div id="ccc-my-global-tips">
+				<a href="/my/account.html">立即完善资料，获取更多积分</a>
+			</div>
+		</s:if>
+
+		<%@ include file="/include/myInfoBox.html"%>
+
+		<!-- ajax 弹出层 -->
+		<div id="ccc-layer">
+			<div id="ccc-overlay"></div>
+			<div id="ccc-ajax-loader">
+				<i></i>正在加载...
+			</div>
+			<div id="ccc-overpage">
+				<!-- 异步加载 -->
+			</div>
+			<div id="ccc-overclose">
+				<button>
+				</button>
+			</div>
+		</div>
+		<div id="ccc-global-tips">
+			<i></i><span>正在加载...</span>
+		</div>
+		<div id="ccc-global-confirm" class="ccc-confirm">
+			<div class="ccc-confirm-cont">
+				<header>
+				<img src="/images/colorful-bar.png" class="ccc-colorful-bar">
+				<h3></h3>
+				</header>
+				<div class="ccc-confirm-desc">
+					<div id="ccc-confirm-tip"></div>
+					<div class="ccc-confirm-opt">
+						<button class="ccc-cfm-close ccc-btn-white" id="ccc-return">
+							取消
+						</button>
+						<button class="ccc-cfm-true ccc-cfm-close ccc-btn-green" id="ccc-true">
+							确定
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/ccclubs.my.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/jquery-ui-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/jquery-ui-timepicker.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script>
+		$(document).ready(function() {
+			$('.ccc-my-amount .ccc-my-num').hover(
+				function () {
+					$(this).parent().siblings('.ccc-my-amount-details').show(100);
+				},
+				function () {
+					$(this).parent().siblings('.ccc-my-amount-details').hide(50);
+				}
+			);
+		})
+		function renew(order){
+			$.get('/my/order_renew.html',{order:order},function(data){
+				if($.trim(data).indexOf('<!DOCTYPE html>')>-1)
+					{
+						location.href = '/my/order.html';
+					}else{
+						if(data=="false")
+						{
+							return;
+						}
+						showLayer();
+						$('#ccc-overpage').html(data);
+					}
+				});
+			}
+		
+		function cancel(orderid){
+			showConfirm('提示信息','<p><strong>时段订单</strong>(小于24小时)：1小时外取消将收取订单租金的10%费用；1小时内取消将收取订单租金的100%费用。</p><p><strong>天租定单</strong>(不小于24小时)：8小时外取消将收取订单租金的10%费用；8小时内取消将收取订单租金的100%费用。</p><p>确定要取消订单吗？</p>','取消订单','算了，不取消',function(){
+					$.get('/checkout_cancel.html',{orderid:orderid},function(data){
+							switch (data) {
+								case "100":
+									showTips("取消订单成功。","succ",3,function(){
+										location.href = '/my/index.html';
+									});
+									break;
+								case "101":
+									location.href = '/login.html?from=/my/index.html';
+									break;
+								case "102":
+									showTips("亲，只有本人才能取消定单哦～","error",3);
+									break;
+								case "103":
+									showTips("亲，只有已预订状态下的订单才能取消哦～","error",3);
+									break;
+								case "9999":
+									showTips("系统出问题啦，请联系客服！","error",5);
+									break;
+								default:
+									showTips(data,"error",5);
+									return;
+							}
+						});	
+					})
+			}
+	</script>
+	</body>
+</html>

@@ -1,0 +1,1464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 企业订单之SQL映射 -->
+	<resultMap id="CsUnitOrder" class="com.ccclubs.model.CsUnitOrder">
+		<result property="csuoId" column="csuo_id"/>
+		<result property="csuoHost" column="csuo_host"/>
+		<result property="csuoOrder" column="csuo_order"/>
+		<result property="csuoSpecial" column="csuo_special"/>
+		<result property="csuoUnitInfo" column="csuo_unit_info"/>
+		<result property="csuoUnitGroup" column="csuo_unit_group"/>
+		<result property="csuoUnitMember" column="csuo_unit_member"/>
+		<result property="csuoUnitChild" column="csuo_unit_child"/>
+		<result property="csuoCar" column="csuo_car"/>
+		<result property="csuoNumber" column="csuo_number"/>
+		<result property="csuoType" column="csuo_type"/>
+		<result property="csuoPerson" column="csuo_person"/>
+		<result property="csuoUsername" column="csuo_username"/>
+		<result property="csuoAlias" column="csuo_alias"/>
+		<result property="csuoMobile" column="csuo_mobile"/>
+		<result property="csuoProfile" column="csuo_profile"/>
+		<result property="csuoIdcard" column="csuo_idcard"/>
+		<result property="csuoStartTime" column="csuo_start_time"/>
+		<result property="csuoFinishTime" column="csuo_finish_time"/>
+		<result property="csuoRetTime" column="csuo_ret_time"/>
+		<result property="csuoFreeHour" column="csuo_free_hour"/>
+		<result property="csuoFreeKm" column="csuo_free_km"/>
+		<result property="csuoDayPrice" column="csuo_day_price"/>
+		<result property="csuoHourPrice" column="csuo_hour_price"/>
+		<result property="csuoKmPrice" column="csuo_km_price"/>
+		<result property="csuoPayNeed" column="csuo_pay_need"/>
+		<result property="csuoPayReal" column="csuo_pay_real"/>
+		<result property="csuoRemark" column="csuo_remark"/>
+		<result property="csuoAddTime" column="csuo_add_time"/>
+		<result property="csuoUpdateTime" column="csuo_update_time"/>
+		<result property="csuoMileage" column="csuo_mileage"/>
+		<result property="csuoSettlement" column="csuo_settlement"/>
+		<result property="csuoSettleState" column="csuo_settle_state"/>
+		<result property="csuoSettleTime" column="csuo_settle_time"/>
+		<result property="csuoStatement" column="csuo_statement"/>
+		<result property="csuoFrom" column="csuo_from"/>
+		<result property="csuoCheckTime" column="csuo_check_time"/>
+		<result property="csuoChecker" column="csuo_checker"/>
+		<result property="csuoState" column="csuo_state"/>
+	</resultMap>
+		
+	<!-- 获取所有企业订单 -->
+	<select id="getCsUnitOrderList" resultMap="CsUnitOrder">
+		select cs_unit_order$suffix$.* from cs_unit_order$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.csuo_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询-->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<isNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.csuo_special=cs_special_car$CsSpecialCar.suffix$.cssc_id
+			</isNull>
+			<isNotNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.$CsSpecialCar.on$=cs_special_car$CsSpecialCar.suffix$.cssc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.csuo_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询-->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.csuo_unit_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.csuo_unit_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.csuo_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询-->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.csuo_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询-->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.csuo_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_order$suffix$.csuo_state!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询条件sql片段 -->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<include refid="CsSpecialCar_part.cs_special_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitOrder_part.cs_unit_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csuo_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取企业订单分页 -->
+	<select id="getCsUnitOrderPage" parameterClass="java.util.HashMap" resultMap="CsUnitOrder">
+		select cs_unit_order$suffix$.* from cs_unit_order$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.csuo_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询 -->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<isNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.csuo_special=cs_special_car$CsSpecialCar.suffix$.cssc_id
+			</isNull>
+			<isNotNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.$CsSpecialCar.on$=cs_special_car$CsSpecialCar.suffix$.cssc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询 -->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.csuo_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询 -->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.csuo_unit_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.csuo_unit_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.csuo_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询 -->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.csuo_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询 -->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.csuo_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_order$suffix$.csuo_state!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询条件sql片段 -->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<include refid="CsSpecialCar_part.cs_special_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitOrder_part.cs_unit_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csuo_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取企业订单总数 -->
+	<select id="getCsUnitOrderEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_order$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.csuo_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<isNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.csuo_special=cs_special_car$CsSpecialCar.suffix$.cssc_id
+			</isNull>
+			<isNotNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.$CsSpecialCar.on$=cs_special_car$CsSpecialCar.suffix$.cssc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.csuo_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.csuo_unit_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.csuo_unit_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.csuo_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.csuo_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.csuo_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_order$suffix$.csuo_state!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询条件sql片段 -->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<include refid="CsSpecialCar_part.cs_special_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitOrder_part.cs_unit_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取企业订单 -->
+	<select id="getCsUnitOrderById" parameterClass="java.util.HashMap" resultMap="CsUnitOrder">
+		select cs_unit_order$suffix$.* from cs_unit_order$suffix$
+		where csuo_id=#id#
+	</select>
+	
+		
+	<!-- 保存企业订单 -->
+	<insert id="saveCsUnitOrder"  parameterClass="com.ccclubs.model.CsUnitOrder">
+		insert into cs_unit_order$suffix$
+		(
+			cs_unit_order$suffix$.csuo_host
+			,cs_unit_order$suffix$.csuo_order
+			,cs_unit_order$suffix$.csuo_special
+			,cs_unit_order$suffix$.csuo_unit_info
+			,cs_unit_order$suffix$.csuo_unit_group
+			,cs_unit_order$suffix$.csuo_unit_member
+			,cs_unit_order$suffix$.csuo_unit_child
+			,cs_unit_order$suffix$.csuo_car
+			,cs_unit_order$suffix$.csuo_number
+			,cs_unit_order$suffix$.csuo_type
+			,cs_unit_order$suffix$.csuo_person
+			,cs_unit_order$suffix$.csuo_username
+			,cs_unit_order$suffix$.csuo_alias
+			,cs_unit_order$suffix$.csuo_mobile
+			,cs_unit_order$suffix$.csuo_profile
+			,cs_unit_order$suffix$.csuo_idcard
+			,cs_unit_order$suffix$.csuo_start_time
+			,cs_unit_order$suffix$.csuo_finish_time
+			,cs_unit_order$suffix$.csuo_ret_time
+			,cs_unit_order$suffix$.csuo_free_hour
+			,cs_unit_order$suffix$.csuo_free_km
+			,cs_unit_order$suffix$.csuo_day_price
+			,cs_unit_order$suffix$.csuo_hour_price
+			,cs_unit_order$suffix$.csuo_km_price
+			,cs_unit_order$suffix$.csuo_pay_need
+			,cs_unit_order$suffix$.csuo_pay_real
+			,cs_unit_order$suffix$.csuo_remark
+			,cs_unit_order$suffix$.csuo_add_time
+			,cs_unit_order$suffix$.csuo_update_time
+			,cs_unit_order$suffix$.csuo_mileage
+			,cs_unit_order$suffix$.csuo_settlement
+			,cs_unit_order$suffix$.csuo_settle_state
+			,cs_unit_order$suffix$.csuo_settle_time
+			,cs_unit_order$suffix$.csuo_statement
+			,cs_unit_order$suffix$.csuo_from
+			,cs_unit_order$suffix$.csuo_check_time
+			,cs_unit_order$suffix$.csuo_checker
+			,cs_unit_order$suffix$.csuo_state
+		)
+		values(
+			<isNotNull property="csuoHost" prepend="">
+				#csuoHost#
+			</isNotNull>
+			<isNull property="csuoHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csuoOrder" prepend=",">
+				#csuoOrder#
+			</isNotNull>
+			<isNull property="csuoOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoSpecial" prepend=",">
+				#csuoSpecial#
+			</isNotNull>
+			<isNull property="csuoSpecial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoUnitInfo" prepend=",">
+				#csuoUnitInfo#
+			</isNotNull>
+			<isNull property="csuoUnitInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoUnitGroup" prepend=",">
+				#csuoUnitGroup#
+			</isNotNull>
+			<isNull property="csuoUnitGroup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoUnitMember" prepend=",">
+				#csuoUnitMember#
+			</isNotNull>
+			<isNull property="csuoUnitMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoUnitChild" prepend=",">
+				#csuoUnitChild#
+			</isNotNull>
+			<isNull property="csuoUnitChild" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoCar" prepend=",">
+				#csuoCar#
+			</isNotNull>
+			<isNull property="csuoCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoNumber" prepend=",">
+				#csuoNumber#
+			</isNotNull>
+			<isNull property="csuoNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoType" prepend=",">
+				#csuoType#
+			</isNotNull>
+			<isNull property="csuoType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoPerson" prepend=",">
+				#csuoPerson#
+			</isNotNull>
+			<isNull property="csuoPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoUsername" prepend=",">
+				#csuoUsername#
+			</isNotNull>
+			<isNull property="csuoUsername" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoAlias" prepend=",">
+				#csuoAlias#
+			</isNotNull>
+			<isNull property="csuoAlias" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoMobile" prepend=",">
+				#csuoMobile#
+			</isNotNull>
+			<isNull property="csuoMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoProfile" prepend=",">
+				#csuoProfile#
+			</isNotNull>
+			<isNull property="csuoProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoIdcard" prepend=",">
+				#csuoIdcard#
+			</isNotNull>
+			<isNull property="csuoIdcard" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoStartTime" prepend=",">
+				#csuoStartTime#
+			</isNotNull>
+			<isNull property="csuoStartTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoFinishTime" prepend=",">
+				#csuoFinishTime#
+			</isNotNull>
+			<isNull property="csuoFinishTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoRetTime" prepend=",">
+				#csuoRetTime#
+			</isNotNull>
+			<isNull property="csuoRetTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoFreeHour" prepend=",">
+				#csuoFreeHour#
+			</isNotNull>
+			<isNull property="csuoFreeHour" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoFreeKm" prepend=",">
+				#csuoFreeKm#
+			</isNotNull>
+			<isNull property="csuoFreeKm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoDayPrice" prepend=",">
+				#csuoDayPrice#
+			</isNotNull>
+			<isNull property="csuoDayPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoHourPrice" prepend=",">
+				#csuoHourPrice#
+			</isNotNull>
+			<isNull property="csuoHourPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoKmPrice" prepend=",">
+				#csuoKmPrice#
+			</isNotNull>
+			<isNull property="csuoKmPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoPayNeed" prepend=",">
+				#csuoPayNeed#
+			</isNotNull>
+			<isNull property="csuoPayNeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoPayReal" prepend=",">
+				#csuoPayReal#
+			</isNotNull>
+			<isNull property="csuoPayReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoRemark" prepend=",">
+				#csuoRemark#
+			</isNotNull>
+			<isNull property="csuoRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoAddTime" prepend=",">
+				#csuoAddTime#
+			</isNotNull>
+			<isNull property="csuoAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoUpdateTime" prepend=",">
+				#csuoUpdateTime#
+			</isNotNull>
+			<isNull property="csuoUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoMileage" prepend=",">
+				#csuoMileage#
+			</isNotNull>
+			<isNull property="csuoMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoSettlement" prepend=",">
+				#csuoSettlement#
+			</isNotNull>
+			<isNull property="csuoSettlement" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoSettleState" prepend=",">
+				#csuoSettleState#
+			</isNotNull>
+			<isNull property="csuoSettleState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoSettleTime" prepend=",">
+				#csuoSettleTime#
+			</isNotNull>
+			<isNull property="csuoSettleTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoStatement" prepend=",">
+				#csuoStatement#
+			</isNotNull>
+			<isNull property="csuoStatement" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoFrom" prepend=",">
+				#csuoFrom#
+			</isNotNull>
+			<isNull property="csuoFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoCheckTime" prepend=",">
+				#csuoCheckTime#
+			</isNotNull>
+			<isNull property="csuoCheckTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoChecker" prepend=",">
+				#csuoChecker#
+			</isNotNull>
+			<isNull property="csuoChecker" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csuoState" prepend=",">
+				#csuoState#
+			</isNotNull>
+			<isNull property="csuoState" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新企业订单 -->
+	<update id="updateCsUnitOrder"  parameterClass="com.ccclubs.model.CsUnitOrder">
+		update cs_unit_order$suffix$ set
+			<isNotNull property="csuoHost" prepend="">
+				cs_unit_order$suffix$.csuo_host = #csuoHost#
+			</isNotNull>
+			<isNull property="csuoHost" prepend="">
+				cs_unit_order$suffix$.csuo_host = null
+			</isNull>				
+			<isNotNull property="csuoOrder" prepend=",">
+				cs_unit_order$suffix$.csuo_order = #csuoOrder#
+			</isNotNull>
+			<isNull property="csuoOrder" prepend=",">
+				cs_unit_order$suffix$.csuo_order = null
+			</isNull>				
+			<isNotNull property="csuoSpecial" prepend=",">
+				cs_unit_order$suffix$.csuo_special = #csuoSpecial#
+			</isNotNull>
+			<isNull property="csuoSpecial" prepend=",">
+				cs_unit_order$suffix$.csuo_special = null
+			</isNull>				
+			<isNotNull property="csuoUnitInfo" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_info = #csuoUnitInfo#
+			</isNotNull>
+			<isNull property="csuoUnitInfo" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_info = null
+			</isNull>				
+			<isNotNull property="csuoUnitGroup" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_group = #csuoUnitGroup#
+			</isNotNull>
+			<isNull property="csuoUnitGroup" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_group = null
+			</isNull>				
+			<isNotNull property="csuoUnitMember" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_member = #csuoUnitMember#
+			</isNotNull>
+			<isNull property="csuoUnitMember" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_member = null
+			</isNull>				
+			<isNotNull property="csuoUnitChild" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_child = #csuoUnitChild#
+			</isNotNull>
+			<isNull property="csuoUnitChild" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_child = null
+			</isNull>				
+			<isNotNull property="csuoCar" prepend=",">
+				cs_unit_order$suffix$.csuo_car = #csuoCar#
+			</isNotNull>
+			<isNull property="csuoCar" prepend=",">
+				cs_unit_order$suffix$.csuo_car = null
+			</isNull>				
+			<isNotNull property="csuoNumber" prepend=",">
+				cs_unit_order$suffix$.csuo_number = #csuoNumber#
+			</isNotNull>
+			<isNull property="csuoNumber" prepend=",">
+				cs_unit_order$suffix$.csuo_number = null
+			</isNull>				
+			<isNotNull property="csuoType" prepend=",">
+				cs_unit_order$suffix$.csuo_type = #csuoType#
+			</isNotNull>
+			<isNull property="csuoType" prepend=",">
+				cs_unit_order$suffix$.csuo_type = null
+			</isNull>				
+			<isNotNull property="csuoPerson" prepend=",">
+				cs_unit_order$suffix$.csuo_person = #csuoPerson#
+			</isNotNull>
+			<isNull property="csuoPerson" prepend=",">
+				cs_unit_order$suffix$.csuo_person = null
+			</isNull>				
+			<isNotNull property="csuoUsername" prepend=",">
+				cs_unit_order$suffix$.csuo_username = #csuoUsername#
+			</isNotNull>
+			<isNull property="csuoUsername" prepend=",">
+				cs_unit_order$suffix$.csuo_username = null
+			</isNull>				
+			<isNotNull property="csuoAlias" prepend=",">
+				cs_unit_order$suffix$.csuo_alias = #csuoAlias#
+			</isNotNull>
+			<isNull property="csuoAlias" prepend=",">
+				cs_unit_order$suffix$.csuo_alias = null
+			</isNull>				
+			<isNotNull property="csuoMobile" prepend=",">
+				cs_unit_order$suffix$.csuo_mobile = #csuoMobile#
+			</isNotNull>
+			<isNull property="csuoMobile" prepend=",">
+				cs_unit_order$suffix$.csuo_mobile = null
+			</isNull>				
+			<isNotNull property="csuoProfile" prepend=",">
+				cs_unit_order$suffix$.csuo_profile = #csuoProfile#
+			</isNotNull>
+			<isNull property="csuoProfile" prepend=",">
+				cs_unit_order$suffix$.csuo_profile = null
+			</isNull>				
+			<isNotNull property="csuoIdcard" prepend=",">
+				cs_unit_order$suffix$.csuo_idcard = #csuoIdcard#
+			</isNotNull>
+			<isNull property="csuoIdcard" prepend=",">
+				cs_unit_order$suffix$.csuo_idcard = null
+			</isNull>				
+			<isNotNull property="csuoStartTime" prepend=",">
+				cs_unit_order$suffix$.csuo_start_time = #csuoStartTime#
+			</isNotNull>
+			<isNull property="csuoStartTime" prepend=",">
+				cs_unit_order$suffix$.csuo_start_time = null
+			</isNull>				
+			<isNotNull property="csuoFinishTime" prepend=",">
+				cs_unit_order$suffix$.csuo_finish_time = #csuoFinishTime#
+			</isNotNull>
+			<isNull property="csuoFinishTime" prepend=",">
+				cs_unit_order$suffix$.csuo_finish_time = null
+			</isNull>				
+			<isNotNull property="csuoRetTime" prepend=",">
+				cs_unit_order$suffix$.csuo_ret_time = #csuoRetTime#
+			</isNotNull>
+			<isNull property="csuoRetTime" prepend=",">
+				cs_unit_order$suffix$.csuo_ret_time = null
+			</isNull>				
+			<isNotNull property="csuoFreeHour" prepend=",">
+				cs_unit_order$suffix$.csuo_free_hour = #csuoFreeHour#
+			</isNotNull>
+			<isNull property="csuoFreeHour" prepend=",">
+				cs_unit_order$suffix$.csuo_free_hour = null
+			</isNull>				
+			<isNotNull property="csuoFreeKm" prepend=",">
+				cs_unit_order$suffix$.csuo_free_km = #csuoFreeKm#
+			</isNotNull>
+			<isNull property="csuoFreeKm" prepend=",">
+				cs_unit_order$suffix$.csuo_free_km = null
+			</isNull>				
+			<isNotNull property="csuoDayPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_day_price = #csuoDayPrice#
+			</isNotNull>
+			<isNull property="csuoDayPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_day_price = null
+			</isNull>				
+			<isNotNull property="csuoHourPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_hour_price = #csuoHourPrice#
+			</isNotNull>
+			<isNull property="csuoHourPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_hour_price = null
+			</isNull>				
+			<isNotNull property="csuoKmPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_km_price = #csuoKmPrice#
+			</isNotNull>
+			<isNull property="csuoKmPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_km_price = null
+			</isNull>				
+			<isNotNull property="csuoPayNeed" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_need = #csuoPayNeed#
+			</isNotNull>
+			<isNull property="csuoPayNeed" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_need = null
+			</isNull>				
+			<isNotNull property="csuoPayReal" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_real = #csuoPayReal#
+			</isNotNull>
+			<isNull property="csuoPayReal" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_real = null
+			</isNull>				
+			<isNotNull property="csuoRemark" prepend=",">
+				cs_unit_order$suffix$.csuo_remark = #csuoRemark#
+			</isNotNull>
+			<isNull property="csuoRemark" prepend=",">
+				cs_unit_order$suffix$.csuo_remark = null
+			</isNull>				
+			<isNotNull property="csuoAddTime" prepend=",">
+				cs_unit_order$suffix$.csuo_add_time = #csuoAddTime#
+			</isNotNull>
+			<isNull property="csuoAddTime" prepend=",">
+				cs_unit_order$suffix$.csuo_add_time = null
+			</isNull>				
+			<isNotNull property="csuoUpdateTime" prepend=",">
+				cs_unit_order$suffix$.csuo_update_time = #csuoUpdateTime#
+			</isNotNull>
+			<isNull property="csuoUpdateTime" prepend=",">
+				cs_unit_order$suffix$.csuo_update_time = null
+			</isNull>				
+			<isNotNull property="csuoMileage" prepend=",">
+				cs_unit_order$suffix$.csuo_mileage = #csuoMileage#
+			</isNotNull>
+			<isNull property="csuoMileage" prepend=",">
+				cs_unit_order$suffix$.csuo_mileage = null
+			</isNull>				
+			<isNotNull property="csuoSettlement" prepend=",">
+				cs_unit_order$suffix$.csuo_settlement = #csuoSettlement#
+			</isNotNull>
+			<isNull property="csuoSettlement" prepend=",">
+				cs_unit_order$suffix$.csuo_settlement = null
+			</isNull>				
+			<isNotNull property="csuoSettleState" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_state = #csuoSettleState#
+			</isNotNull>
+			<isNull property="csuoSettleState" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_state = null
+			</isNull>				
+			<isNotNull property="csuoSettleTime" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_time = #csuoSettleTime#
+			</isNotNull>
+			<isNull property="csuoSettleTime" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_time = null
+			</isNull>				
+			<isNotNull property="csuoStatement" prepend=",">
+				cs_unit_order$suffix$.csuo_statement = #csuoStatement#
+			</isNotNull>
+			<isNull property="csuoStatement" prepend=",">
+				cs_unit_order$suffix$.csuo_statement = null
+			</isNull>				
+			<isNotNull property="csuoFrom" prepend=",">
+				cs_unit_order$suffix$.csuo_from = #csuoFrom#
+			</isNotNull>
+			<isNull property="csuoFrom" prepend=",">
+				cs_unit_order$suffix$.csuo_from = null
+			</isNull>				
+			<isNotNull property="csuoCheckTime" prepend=",">
+				cs_unit_order$suffix$.csuo_check_time = #csuoCheckTime#
+			</isNotNull>
+			<isNull property="csuoCheckTime" prepend=",">
+				cs_unit_order$suffix$.csuo_check_time = null
+			</isNull>				
+			<isNotNull property="csuoChecker" prepend=",">
+				cs_unit_order$suffix$.csuo_checker = #csuoChecker#
+			</isNotNull>
+			<isNull property="csuoChecker" prepend=",">
+				cs_unit_order$suffix$.csuo_checker = null
+			</isNull>				
+			<isNotNull property="csuoState" prepend=",">
+				cs_unit_order$suffix$.csuo_state = #csuoState#
+			</isNotNull>
+			<isNull property="csuoState" prepend=",">
+				cs_unit_order$suffix$.csuo_state = null
+			</isNull>				
+		where
+			csuo_id=#csuoId#
+	</update>
+	
+	<!-- 更新企业订单非空字段 -->
+	<update id="updateCsUnitOrder$NotNull"  parameterClass="com.ccclubs.model.CsUnitOrder">
+		update cs_unit_order$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csuoHost" prepend=",">
+				cs_unit_order$suffix$.csuo_host = #csuoHost#
+			</isNotNull>		
+			<isNotNull property="csuoOrder" prepend=",">
+				cs_unit_order$suffix$.csuo_order = #csuoOrder#
+			</isNotNull>		
+			<isNotNull property="csuoSpecial" prepend=",">
+				cs_unit_order$suffix$.csuo_special = #csuoSpecial#
+			</isNotNull>		
+			<isNotNull property="csuoUnitInfo" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_info = #csuoUnitInfo#
+			</isNotNull>		
+			<isNotNull property="csuoUnitGroup" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_group = #csuoUnitGroup#
+			</isNotNull>		
+			<isNotNull property="csuoUnitMember" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_member = #csuoUnitMember#
+			</isNotNull>		
+			<isNotNull property="csuoUnitChild" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_child = #csuoUnitChild#
+			</isNotNull>		
+			<isNotNull property="csuoCar" prepend=",">
+				cs_unit_order$suffix$.csuo_car = #csuoCar#
+			</isNotNull>		
+			<isNotNull property="csuoNumber" prepend=",">
+				cs_unit_order$suffix$.csuo_number = #csuoNumber#
+			</isNotNull>		
+			<isNotNull property="csuoType" prepend=",">
+				cs_unit_order$suffix$.csuo_type = #csuoType#
+			</isNotNull>		
+			<isNotNull property="csuoPerson" prepend=",">
+				cs_unit_order$suffix$.csuo_person = #csuoPerson#
+			</isNotNull>		
+			<isNotNull property="csuoUsername" prepend=",">
+				cs_unit_order$suffix$.csuo_username = #csuoUsername#
+			</isNotNull>		
+			<isNotNull property="csuoAlias" prepend=",">
+				cs_unit_order$suffix$.csuo_alias = #csuoAlias#
+			</isNotNull>		
+			<isNotNull property="csuoMobile" prepend=",">
+				cs_unit_order$suffix$.csuo_mobile = #csuoMobile#
+			</isNotNull>		
+			<isNotNull property="csuoProfile" prepend=",">
+				cs_unit_order$suffix$.csuo_profile = #csuoProfile#
+			</isNotNull>		
+			<isNotNull property="csuoIdcard" prepend=",">
+				cs_unit_order$suffix$.csuo_idcard = #csuoIdcard#
+			</isNotNull>		
+			<isNotNull property="csuoStartTime" prepend=",">
+				cs_unit_order$suffix$.csuo_start_time = #csuoStartTime#
+			</isNotNull>		
+			<isNotNull property="csuoFinishTime" prepend=",">
+				cs_unit_order$suffix$.csuo_finish_time = #csuoFinishTime#
+			</isNotNull>		
+			<isNotNull property="csuoRetTime" prepend=",">
+				cs_unit_order$suffix$.csuo_ret_time = #csuoRetTime#
+			</isNotNull>		
+			<isNotNull property="csuoFreeHour" prepend=",">
+				cs_unit_order$suffix$.csuo_free_hour = #csuoFreeHour#
+			</isNotNull>		
+			<isNotNull property="csuoFreeKm" prepend=",">
+				cs_unit_order$suffix$.csuo_free_km = #csuoFreeKm#
+			</isNotNull>		
+			<isNotNull property="csuoDayPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_day_price = #csuoDayPrice#
+			</isNotNull>		
+			<isNotNull property="csuoHourPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_hour_price = #csuoHourPrice#
+			</isNotNull>		
+			<isNotNull property="csuoKmPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_km_price = #csuoKmPrice#
+			</isNotNull>		
+			<isNotNull property="csuoPayNeed" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_need = #csuoPayNeed#
+			</isNotNull>		
+			<isNotNull property="csuoPayReal" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_real = #csuoPayReal#
+			</isNotNull>		
+			<isNotNull property="csuoRemark" prepend=",">
+				cs_unit_order$suffix$.csuo_remark = #csuoRemark#
+			</isNotNull>		
+			<isNotNull property="csuoAddTime" prepend=",">
+				cs_unit_order$suffix$.csuo_add_time = #csuoAddTime#
+			</isNotNull>		
+			<isNotNull property="csuoUpdateTime" prepend=",">
+				cs_unit_order$suffix$.csuo_update_time = #csuoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csuoMileage" prepend=",">
+				cs_unit_order$suffix$.csuo_mileage = #csuoMileage#
+			</isNotNull>		
+			<isNotNull property="csuoSettlement" prepend=",">
+				cs_unit_order$suffix$.csuo_settlement = #csuoSettlement#
+			</isNotNull>		
+			<isNotNull property="csuoSettleState" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_state = #csuoSettleState#
+			</isNotNull>		
+			<isNotNull property="csuoSettleTime" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_time = #csuoSettleTime#
+			</isNotNull>		
+			<isNotNull property="csuoStatement" prepend=",">
+				cs_unit_order$suffix$.csuo_statement = #csuoStatement#
+			</isNotNull>		
+			<isNotNull property="csuoFrom" prepend=",">
+				cs_unit_order$suffix$.csuo_from = #csuoFrom#
+			</isNotNull>		
+			<isNotNull property="csuoCheckTime" prepend=",">
+				cs_unit_order$suffix$.csuo_check_time = #csuoCheckTime#
+			</isNotNull>		
+			<isNotNull property="csuoChecker" prepend=",">
+				cs_unit_order$suffix$.csuo_checker = #csuoChecker#
+			</isNotNull>		
+			<isNotNull property="csuoState" prepend=",">
+				cs_unit_order$suffix$.csuo_state = #csuoState#
+			</isNotNull>		
+			</dynamic>
+		where
+			csuo_id=#csuoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个企业订单 -->
+	<delete id="deleteCsUnitOrderById" parameterClass="java.util.HashMap">
+		delete from cs_unit_order$suffix$ where csuo_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个企业订单 -->
+	<update id="removeCsUnitOrderById" parameterClass="java.util.HashMap">
+		update cs_unit_order$suffix$ set  cs_unit_order$suffix$.csuo_state=-1  where csuo_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新企业订单 -->
+	<update id="updateCsUnitOrderBy"  parameterClass="java.util.HashMap">
+		update cs_unit_order$suffix$ set		
+			csuo_id=csuo_id
+			<isNotNull property="V_csuoId" prepend=",">
+				cs_unit_order$suffix$.csuo_id = #V_csuoId#
+			</isNotNull>		
+			<isNotNull property="V_csuoHost" prepend=",">
+				cs_unit_order$suffix$.csuo_host = #V_csuoHost#
+			</isNotNull>		
+			<isNotNull property="V_csuoOrder" prepend=",">
+				cs_unit_order$suffix$.csuo_order = #V_csuoOrder#
+			</isNotNull>		
+			<isNotNull property="V_csuoSpecial" prepend=",">
+				cs_unit_order$suffix$.csuo_special = #V_csuoSpecial#
+			</isNotNull>		
+			<isNotNull property="V_csuoUnitInfo" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_info = #V_csuoUnitInfo#
+			</isNotNull>		
+			<isNotNull property="V_csuoUnitGroup" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_group = #V_csuoUnitGroup#
+			</isNotNull>		
+			<isNotNull property="V_csuoUnitMember" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_member = #V_csuoUnitMember#
+			</isNotNull>		
+			<isNotNull property="V_csuoUnitChild" prepend=",">
+				cs_unit_order$suffix$.csuo_unit_child = #V_csuoUnitChild#
+			</isNotNull>		
+			<isNotNull property="V_csuoCar" prepend=",">
+				cs_unit_order$suffix$.csuo_car = #V_csuoCar#
+			</isNotNull>		
+			<isNotNull property="V_csuoNumber" prepend=",">
+				cs_unit_order$suffix$.csuo_number = #V_csuoNumber#
+			</isNotNull>		
+			<isNotNull property="V_csuoType" prepend=",">
+				cs_unit_order$suffix$.csuo_type = #V_csuoType#
+			</isNotNull>		
+			<isNotNull property="V_csuoPerson" prepend=",">
+				cs_unit_order$suffix$.csuo_person = #V_csuoPerson#
+			</isNotNull>		
+			<isNotNull property="V_csuoUsername" prepend=",">
+				cs_unit_order$suffix$.csuo_username = #V_csuoUsername#
+			</isNotNull>		
+			<isNotNull property="V_csuoAlias" prepend=",">
+				cs_unit_order$suffix$.csuo_alias = #V_csuoAlias#
+			</isNotNull>		
+			<isNotNull property="V_csuoMobile" prepend=",">
+				cs_unit_order$suffix$.csuo_mobile = #V_csuoMobile#
+			</isNotNull>		
+			<isNotNull property="V_csuoProfile" prepend=",">
+				cs_unit_order$suffix$.csuo_profile = #V_csuoProfile#
+			</isNotNull>		
+			<isNotNull property="V_csuoIdcard" prepend=",">
+				cs_unit_order$suffix$.csuo_idcard = #V_csuoIdcard#
+			</isNotNull>		
+			<isNotNull property="V_csuoStartTime" prepend=",">
+				cs_unit_order$suffix$.csuo_start_time = #V_csuoStartTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoFinishTime" prepend=",">
+				cs_unit_order$suffix$.csuo_finish_time = #V_csuoFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoRetTime" prepend=",">
+				cs_unit_order$suffix$.csuo_ret_time = #V_csuoRetTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoFreeHour" prepend=",">
+				cs_unit_order$suffix$.csuo_free_hour = #V_csuoFreeHour#
+			</isNotNull>		
+			<isNotNull property="V_csuoFreeKm" prepend=",">
+				cs_unit_order$suffix$.csuo_free_km = #V_csuoFreeKm#
+			</isNotNull>		
+			<isNotNull property="V_csuoDayPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_day_price = #V_csuoDayPrice#
+			</isNotNull>		
+			<isNotNull property="V_csuoHourPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_hour_price = #V_csuoHourPrice#
+			</isNotNull>		
+			<isNotNull property="V_csuoKmPrice" prepend=",">
+				cs_unit_order$suffix$.csuo_km_price = #V_csuoKmPrice#
+			</isNotNull>		
+			<isNotNull property="V_csuoPayNeed" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_need = #V_csuoPayNeed#
+			</isNotNull>		
+			<isNotNull property="V_csuoPayReal" prepend=",">
+				cs_unit_order$suffix$.csuo_pay_real = #V_csuoPayReal#
+			</isNotNull>		
+			<isNotNull property="V_csuoRemark" prepend=",">
+				cs_unit_order$suffix$.csuo_remark = #V_csuoRemark#
+			</isNotNull>		
+			<isNotNull property="V_csuoAddTime" prepend=",">
+				cs_unit_order$suffix$.csuo_add_time = #V_csuoAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoUpdateTime" prepend=",">
+				cs_unit_order$suffix$.csuo_update_time = #V_csuoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoMileage" prepend=",">
+				cs_unit_order$suffix$.csuo_mileage = #V_csuoMileage#
+			</isNotNull>		
+			<isNotNull property="V_csuoSettlement" prepend=",">
+				cs_unit_order$suffix$.csuo_settlement = #V_csuoSettlement#
+			</isNotNull>		
+			<isNotNull property="V_csuoSettleState" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_state = #V_csuoSettleState#
+			</isNotNull>		
+			<isNotNull property="V_csuoSettleTime" prepend=",">
+				cs_unit_order$suffix$.csuo_settle_time = #V_csuoSettleTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoStatement" prepend=",">
+				cs_unit_order$suffix$.csuo_statement = #V_csuoStatement#
+			</isNotNull>		
+			<isNotNull property="V_csuoFrom" prepend=",">
+				cs_unit_order$suffix$.csuo_from = #V_csuoFrom#
+			</isNotNull>		
+			<isNotNull property="V_csuoCheckTime" prepend=",">
+				cs_unit_order$suffix$.csuo_check_time = #V_csuoCheckTime#
+			</isNotNull>		
+			<isNotNull property="V_csuoChecker" prepend=",">
+				cs_unit_order$suffix$.csuo_checker = #V_csuoChecker#
+			</isNotNull>		
+			<isNotNull property="V_csuoState" prepend=",">
+				cs_unit_order$suffix$.csuo_state = #V_csuoState#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.csuo_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_unit_order$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询-->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<isNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.csuo_special=cs_special_car$CsSpecialCar.suffix$.cssc_id
+			</isNull>
+			<isNotNull property="CsSpecialCar.on">
+				left join cs_special_car cs_special_car$CsSpecialCar.suffix$ on cs_unit_order$suffix$.$CsSpecialCar.on$=cs_special_car$CsSpecialCar.suffix$.cssc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.csuo_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_order$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询-->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.csuo_unit_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_order$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.csuo_unit_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_unit_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.csuo_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_unit_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询-->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.csuo_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_unit_order$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询-->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<isNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.csuo_statement=cs_unit_bill$CsUnitBill.suffix$.csub_id
+			</isNull>
+			<isNotNull property="CsUnitBill.on">
+				left join cs_unit_bill cs_unit_bill$CsUnitBill.suffix$ on cs_unit_order$suffix$.$CsUnitBill.on$=cs_unit_bill$CsUnitBill.suffix$.csub_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_unit_order$suffix$.csuo_state!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsuoOrder"><!-- 调用一下CsuoOrder，把CsOrder指向CsuoOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车订单]查询条件sql片段 -->
+		<isNotNull property="CsuoSpecial"><!-- 调用一下CsuoSpecial，把CsSpecialCar指向CsuoSpecial --></isNotNull>
+		<isNotNull property="CsSpecialCar">
+			<include refid="CsSpecialCar_part.cs_special_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitInfo"><!-- 调用一下CsuoUnitInfo，把CsUnitInfo指向CsuoUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[分组信息]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitGroup"><!-- 调用一下CsuoUnitGroup，把CsUnitGroup指向CsuoUnitGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsuoUnitMember"><!-- 调用一下CsuoUnitMember，把CsMember指向CsuoUnitMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsuoCar"><!-- 调用一下CsuoCar，把CsCar指向CsuoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsuoPerson"><!-- 调用一下CsuoPerson，把CsUnitPerson指向CsuoPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业对账]查询条件sql片段 -->
+		<isNotNull property="CsuoStatement"><!-- 调用一下CsuoStatement，把CsUnitBill指向CsuoStatement --></isNotNull>
+		<isNotNull property="CsUnitBill">
+			<include refid="CsUnitBill_part.cs_unit_bill_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitOrder_part.cs_unit_order_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除企业订单 -->
+	<update id="deleteCsUnitOrderBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_order$suffix$ where 
+		cs_unit_order$suffix$.csuo_state!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitOrder_part.cs_unit_order_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

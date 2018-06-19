@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 静态内容之SQL映射 -->
+	<resultMap id="CsContent" class="com.ccclubs.model.CsContent">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscTitle" column="csc_title"/>
+		<result property="cscParent" column="csc_parent"/>
+		<result property="cscFlag" column="csc_flag"/>
+		<result property="cscRecommend" column="csc_order"/>
+		<result property="cscThum" column="csc_thum"/>
+		<result property="cscIntroduction" column="csc_introduction"/>
+		<result property="cscKeywords" column="csc_keywords"/>
+		<result property="cscImages" column="csc_images"/>
+		<result property="cscContent" column="csc_content"/>
+		<result property="cscFile" column="csc_file"/>
+		<result property="cscAddTime" column="csc_add_time"/>
+		<result property="cscUpdateTime" column="csc_update_time"/>
+		<result property="cscViewS" column="csc_view_s"/>
+		<result property="cscReplyS" column="csc_reply_s"/>
+		<result property="cscCollectS" column="csc_collect_s"/>
+		<result property="cscPraiseS" column="csc_praise_s"/>
+		<result property="cscStatus" column="csc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有静态内容 -->
+	<select id="getCsContentList" resultMap="CsContent">
+		select cs_content$suffix$.* from cs_content$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_content$suffix$.csc_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsContent_part.cs_content_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取静态内容分页 -->
+	<select id="getCsContentPage" parameterClass="java.util.HashMap" resultMap="CsContent">
+		select cs_content$suffix$.* from cs_content$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_content$suffix$.csc_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsContent_part.cs_content_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取静态内容总数 -->
+	<select id="getCsContentEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_content$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_content$suffix$.csc_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsContent_part.cs_content_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取静态内容 -->
+	<select id="getCsContentById" parameterClass="java.util.HashMap" resultMap="CsContent">
+		select cs_content$suffix$.* from cs_content$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存静态内容 -->
+	<insert id="saveCsContent"  parameterClass="com.ccclubs.model.CsContent">
+		insert into cs_content$suffix$
+		(
+			cs_content$suffix$.csc_title
+			,cs_content$suffix$.csc_parent
+			,cs_content$suffix$.csc_flag
+			,cs_content$suffix$.csc_order
+			,cs_content$suffix$.csc_thum
+			,cs_content$suffix$.csc_introduction
+			,cs_content$suffix$.csc_keywords
+			,cs_content$suffix$.csc_images
+			,cs_content$suffix$.csc_content
+			,cs_content$suffix$.csc_file
+			,cs_content$suffix$.csc_add_time
+			,cs_content$suffix$.csc_update_time
+			,cs_content$suffix$.csc_view_s
+			,cs_content$suffix$.csc_reply_s
+			,cs_content$suffix$.csc_collect_s
+			,cs_content$suffix$.csc_praise_s
+			,cs_content$suffix$.csc_status
+		)
+		values(
+			<isNotNull property="cscTitle" prepend="">
+				#cscTitle#
+			</isNotNull>
+			<isNull property="cscTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscParent" prepend=",">
+				#cscParent#
+			</isNotNull>
+			<isNull property="cscParent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscFlag" prepend=",">
+				#cscFlag#
+			</isNotNull>
+			<isNull property="cscFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscRecommend" prepend=",">
+				#cscRecommend#
+			</isNotNull>
+			<isNull property="cscRecommend" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscThum" prepend=",">
+				#cscThum#
+			</isNotNull>
+			<isNull property="cscThum" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscIntroduction" prepend=",">
+				#cscIntroduction#
+			</isNotNull>
+			<isNull property="cscIntroduction" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscKeywords" prepend=",">
+				#cscKeywords#
+			</isNotNull>
+			<isNull property="cscKeywords" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscImages" prepend=",">
+				#cscImages#
+			</isNotNull>
+			<isNull property="cscImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscContent" prepend=",">
+				#cscContent#
+			</isNotNull>
+			<isNull property="cscContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscFile" prepend=",">
+				#cscFile#
+			</isNotNull>
+			<isNull property="cscFile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddTime" prepend=",">
+				#cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUpdateTime" prepend=",">
+				#cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscViewS" prepend=",">
+				#cscViewS#
+			</isNotNull>
+			<isNull property="cscViewS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscReplyS" prepend=",">
+				#cscReplyS#
+			</isNotNull>
+			<isNull property="cscReplyS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscCollectS" prepend=",">
+				#cscCollectS#
+			</isNotNull>
+			<isNull property="cscCollectS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscPraiseS" prepend=",">
+				#cscPraiseS#
+			</isNotNull>
+			<isNull property="cscPraiseS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscStatus" prepend=",">
+				#cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新静态内容 -->
+	<update id="updateCsContent"  parameterClass="com.ccclubs.model.CsContent">
+		update cs_content$suffix$ set
+			<isNotNull property="cscTitle" prepend="">
+				cs_content$suffix$.csc_title = #cscTitle#
+			</isNotNull>
+			<isNull property="cscTitle" prepend="">
+				cs_content$suffix$.csc_title = null
+			</isNull>				
+			<isNotNull property="cscParent" prepend=",">
+				cs_content$suffix$.csc_parent = #cscParent#
+			</isNotNull>
+			<isNull property="cscParent" prepend=",">
+				cs_content$suffix$.csc_parent = null
+			</isNull>				
+			<isNotNull property="cscFlag" prepend=",">
+				cs_content$suffix$.csc_flag = #cscFlag#
+			</isNotNull>
+			<isNull property="cscFlag" prepend=",">
+				cs_content$suffix$.csc_flag = null
+			</isNull>				
+			<isNotNull property="cscRecommend" prepend=",">
+				cs_content$suffix$.csc_order = #cscRecommend#
+			</isNotNull>
+			<isNull property="cscRecommend" prepend=",">
+				cs_content$suffix$.csc_order = null
+			</isNull>				
+			<isNotNull property="cscThum" prepend=",">
+				cs_content$suffix$.csc_thum = #cscThum#
+			</isNotNull>
+			<isNull property="cscThum" prepend=",">
+				cs_content$suffix$.csc_thum = null
+			</isNull>				
+			<isNotNull property="cscIntroduction" prepend=",">
+				cs_content$suffix$.csc_introduction = #cscIntroduction#
+			</isNotNull>
+			<isNull property="cscIntroduction" prepend=",">
+				cs_content$suffix$.csc_introduction = null
+			</isNull>				
+			<isNotNull property="cscKeywords" prepend=",">
+				cs_content$suffix$.csc_keywords = #cscKeywords#
+			</isNotNull>
+			<isNull property="cscKeywords" prepend=",">
+				cs_content$suffix$.csc_keywords = null
+			</isNull>				
+			<isNotNull property="cscImages" prepend=",">
+				cs_content$suffix$.csc_images = #cscImages#
+			</isNotNull>
+			<isNull property="cscImages" prepend=",">
+				cs_content$suffix$.csc_images = null
+			</isNull>				
+			<isNotNull property="cscContent" prepend=",">
+				cs_content$suffix$.csc_content = #cscContent#
+			</isNotNull>
+			<isNull property="cscContent" prepend=",">
+				cs_content$suffix$.csc_content = null
+			</isNull>				
+			<isNotNull property="cscFile" prepend=",">
+				cs_content$suffix$.csc_file = #cscFile#
+			</isNotNull>
+			<isNull property="cscFile" prepend=",">
+				cs_content$suffix$.csc_file = null
+			</isNull>				
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_content$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				cs_content$suffix$.csc_add_time = null
+			</isNull>				
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_content$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				cs_content$suffix$.csc_update_time = null
+			</isNull>				
+			<isNotNull property="cscViewS" prepend=",">
+				cs_content$suffix$.csc_view_s = #cscViewS#
+			</isNotNull>
+			<isNull property="cscViewS" prepend=",">
+				cs_content$suffix$.csc_view_s = null
+			</isNull>				
+			<isNotNull property="cscReplyS" prepend=",">
+				cs_content$suffix$.csc_reply_s = #cscReplyS#
+			</isNotNull>
+			<isNull property="cscReplyS" prepend=",">
+				cs_content$suffix$.csc_reply_s = null
+			</isNull>				
+			<isNotNull property="cscCollectS" prepend=",">
+				cs_content$suffix$.csc_collect_s = #cscCollectS#
+			</isNotNull>
+			<isNull property="cscCollectS" prepend=",">
+				cs_content$suffix$.csc_collect_s = null
+			</isNull>				
+			<isNotNull property="cscPraiseS" prepend=",">
+				cs_content$suffix$.csc_praise_s = #cscPraiseS#
+			</isNotNull>
+			<isNull property="cscPraiseS" prepend=",">
+				cs_content$suffix$.csc_praise_s = null
+			</isNull>				
+			<isNotNull property="cscStatus" prepend=",">
+				cs_content$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				cs_content$suffix$.csc_status = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新静态内容非空字段 -->
+	<update id="updateCsContent$NotNull"  parameterClass="com.ccclubs.model.CsContent">
+		update cs_content$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscTitle" prepend=",">
+				cs_content$suffix$.csc_title = #cscTitle#
+			</isNotNull>		
+			<isNotNull property="cscParent" prepend=",">
+				cs_content$suffix$.csc_parent = #cscParent#
+			</isNotNull>		
+			<isNotNull property="cscFlag" prepend=",">
+				cs_content$suffix$.csc_flag = #cscFlag#
+			</isNotNull>		
+			<isNotNull property="cscRecommend" prepend=",">
+				cs_content$suffix$.csc_order = #cscRecommend#
+			</isNotNull>		
+			<isNotNull property="cscThum" prepend=",">
+				cs_content$suffix$.csc_thum = #cscThum#
+			</isNotNull>		
+			<isNotNull property="cscIntroduction" prepend=",">
+				cs_content$suffix$.csc_introduction = #cscIntroduction#
+			</isNotNull>		
+			<isNotNull property="cscKeywords" prepend=",">
+				cs_content$suffix$.csc_keywords = #cscKeywords#
+			</isNotNull>		
+			<isNotNull property="cscImages" prepend=",">
+				cs_content$suffix$.csc_images = #cscImages#
+			</isNotNull>		
+			<isNotNull property="cscContent" prepend=",">
+				cs_content$suffix$.csc_content = #cscContent#
+			</isNotNull>		
+			<isNotNull property="cscFile" prepend=",">
+				cs_content$suffix$.csc_file = #cscFile#
+			</isNotNull>		
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_content$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>		
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_content$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscViewS" prepend=",">
+				cs_content$suffix$.csc_view_s = #cscViewS#
+			</isNotNull>		
+			<isNotNull property="cscReplyS" prepend=",">
+				cs_content$suffix$.csc_reply_s = #cscReplyS#
+			</isNotNull>		
+			<isNotNull property="cscCollectS" prepend=",">
+				cs_content$suffix$.csc_collect_s = #cscCollectS#
+			</isNotNull>		
+			<isNotNull property="cscPraiseS" prepend=",">
+				cs_content$suffix$.csc_praise_s = #cscPraiseS#
+			</isNotNull>		
+			<isNotNull property="cscStatus" prepend=",">
+				cs_content$suffix$.csc_status = #cscStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个静态内容 -->
+	<delete id="deleteCsContentById" parameterClass="java.util.HashMap">
+		delete from cs_content$suffix$ where csc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个静态内容 -->
+	<update id="removeCsContentById" parameterClass="java.util.HashMap">
+		update cs_content$suffix$ set  cs_content$suffix$.csc_status=-1  where csc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新静态内容 -->
+	<update id="updateCsContentBy"  parameterClass="java.util.HashMap">
+		update cs_content$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_content$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscTitle" prepend=",">
+				cs_content$suffix$.csc_title = #V_cscTitle#
+			</isNotNull>		
+			<isNotNull property="V_cscParent" prepend=",">
+				cs_content$suffix$.csc_parent = #V_cscParent#
+			</isNotNull>		
+			<isNotNull property="V_cscFlag" prepend=",">
+				cs_content$suffix$.csc_flag = #V_cscFlag#
+			</isNotNull>		
+			<isNotNull property="V_cscRecommend" prepend=",">
+				cs_content$suffix$.csc_order = #V_cscRecommend#
+			</isNotNull>		
+			<isNotNull property="V_cscThum" prepend=",">
+				cs_content$suffix$.csc_thum = #V_cscThum#
+			</isNotNull>		
+			<isNotNull property="V_cscIntroduction" prepend=",">
+				cs_content$suffix$.csc_introduction = #V_cscIntroduction#
+			</isNotNull>		
+			<isNotNull property="V_cscKeywords" prepend=",">
+				cs_content$suffix$.csc_keywords = #V_cscKeywords#
+			</isNotNull>		
+			<isNotNull property="V_cscImages" prepend=",">
+				cs_content$suffix$.csc_images = #V_cscImages#
+			</isNotNull>		
+			<isNotNull property="V_cscContent" prepend=",">
+				cs_content$suffix$.csc_content = #V_cscContent#
+			</isNotNull>		
+			<isNotNull property="V_cscFile" prepend=",">
+				cs_content$suffix$.csc_file = #V_cscFile#
+			</isNotNull>		
+			<isNotNull property="V_cscAddTime" prepend=",">
+				cs_content$suffix$.csc_add_time = #V_cscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscUpdateTime" prepend=",">
+				cs_content$suffix$.csc_update_time = #V_cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscViewS" prepend=",">
+				cs_content$suffix$.csc_view_s = #V_cscViewS#
+			</isNotNull>		
+			<isNotNull property="V_cscReplyS" prepend=",">
+				cs_content$suffix$.csc_reply_s = #V_cscReplyS#
+			</isNotNull>		
+			<isNotNull property="V_cscCollectS" prepend=",">
+				cs_content$suffix$.csc_collect_s = #V_cscCollectS#
+			</isNotNull>		
+			<isNotNull property="V_cscPraiseS" prepend=",">
+				cs_content$suffix$.csc_praise_s = #V_cscPraiseS#
+			</isNotNull>		
+			<isNotNull property="V_cscStatus" prepend=",">
+				cs_content$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_content$suffix$.csc_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsContent_part.cs_content_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除静态内容 -->
+	<update id="deleteCsContentBy"  parameterClass="java.util.HashMap">
+		delete from cs_content$suffix$ where 
+		cs_content$suffix$.csc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsContent_part.cs_content_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

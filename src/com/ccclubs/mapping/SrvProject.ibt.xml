@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap>
+	<resultMap id="SrvProject" class="com.ccclubs.model.SrvProject">
+		<result property="spId" column="sp_id"/>
+		<result property="spName" column="sp_name"/>
+		<result property="spParentId" column="sp_parent_id"/>
+		<result property="spFamily" column="sp_family"/>
+		<result property="spLevel" column="sp_level"/>	
+		<result property="spUrl" column="sp_url"/>
+		<result property="spLogo" column="sp_logo"/>
+		<result property="spDescript" column="sp_descript"/>
+		<result property="spLimitExp" column="sp_limit_exp"/>
+		<result property="spGroup" column="sp_group"/>
+		<result property="spMind" column="sp_mind"/>
+		<result property="spStatus" column="sp_status"/>
+	</resultMap>
+	<select id="getSrvProjectById" parameterClass="java.util.HashMap" resultMap="SrvProject">
+		select * from srv_project where sp_id=#id#
+	</select>		
+	<select id="getSrvProjectList" resultMap="SrvProject">
+		select * from srv_project
+	</select>	
+	<insert id="saveSrvProject"  parameterClass="com.ccclubs.model.SrvProject">
+		insert into srv_project 
+		(sp_name,sp_parent_id,sp_family,sp_level,sp_url,sp_logo,sp_descript,sp_limit_exp,sp_group,sp_mind,sp_status)
+		values(#spName#,#spParentId#,#spFamily#,#spLevel#,#spUrl#,#spLogo#,#spDescript#,#spLimitExp#,#spGroup#,#spMind#,#spStatus#)
+		<selectKey resultClass="long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>	
+	<update id="updateSrvProject"  parameterClass="com.ccclubs.model.SrvProject">
+		update srv_project set 
+			sp_name=#spName#,
+			sp_parent_id=#spParentId#,
+			sp_family=#spFamily#,
+			sp_level=#spLevel#,
+			sp_url=#spUrl#,
+			sp_logo=#spLogo#,
+			sp_descript=#spDescript#,
+			sp_limit_exp=#spLimitExp#,
+			sp_group=#spGroup#,
+			sp_mind=#spMind#,
+			sp_status=#spStatus#
+		where
+			sp_id=#spId#
+	</update>
+	<select id="getSrvProjectListByIds" parameterClass="java.util.HashMap" resultMap="SrvProject">
+		select * from srv_project where sp_id in ($ids$)
+	</select>
+	<select id="getSrvProjectTree" parameterClass="com.ccclubs.model.SrvProject" resultMap="SrvProject">
+		select * from srv_project where sp_family like '$spFamily$,%' or sp_family='$spFamily$'
+	</select>
+	<delete id="delSrvProjectTree" parameterClass="com.ccclubs.model.SrvProject">
+		delete from srv_project where sp_family like '$spFamily$,%' or sp_family='$spFamily$'
+	</delete>
+	
+	<!-- 获取所有项目 -->
+	<select id="getSrvProjectListBy" resultMap="SrvProject">
+		select * from srv_project where 1=1 
+		<dynamic>
+			<isNotEmpty property="spName" prepend="and">
+			    sp_name like #spName#
+			</isNotEmpty>
+			<isNotEmpty property="spParentId" prepend="and">
+			    sp_parent_id = #spParentId#
+			</isNotEmpty>
+			<isNotEmpty property="spUrl" prepend="and">
+			    sp_url = #spUrl#
+			</isNotEmpty>
+			<isNotEmpty property="spLogo" prepend="and">
+			    sp_logo = #spLogo#
+			</isNotEmpty>
+			<isNotEmpty property="spFamily" prepend="and">
+			    sp_family = #spFamily#
+			</isNotEmpty>
+			<isNotEmpty property="spLogo" prepend="and">
+			    sp_logo = #spLogo#
+			</isNotEmpty>	
+			<isNotEmpty property="spDescript" prepend="and">
+			    sp_descript like #spDescript#
+			</isNotEmpty>
+			<isNotEmpty property="spLimitExp" prepend="and">
+			    sp_limit_exp = #spLimitExp#
+			</isNotEmpty>
+			<isNotEmpty property="spGroup" prepend="and">
+			    sp_group = #spGroup#
+			</isNotEmpty>
+			<isNotEmpty property="spMind" prepend="and">
+			    sp_mind = #spMind#
+			</isNotEmpty>
+			<isNotEmpty property="spStatus" prepend="and">
+			    sp_status = #spStatus#
+			</isNotEmpty>	
+		</dynamic>
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sp_id asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		
+	</select>
+	
+</sqlMap>

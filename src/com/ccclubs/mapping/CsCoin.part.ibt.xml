@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsCoin_part">	
+	<!-- 红包条件sql片段  -->
+	<sql id="cs_coin_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_coin$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_coin$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_coin$suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscHost" prepend="and">
+			    $cscHostNot$ cs_coin$suffix$.csc_host = #cscHost#
+			</isNotEmpty>
+			<isNotNull property="cscHostNot" prepend="and">
+				<isEmpty property="cscHost">
+				$cscHostNot$ cs_coin$suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscMember" prepend="and">
+			    $cscMemberNot$ cs_coin$suffix$.csc_member = #cscMember#
+			</isNotEmpty>
+			<isNotNull property="cscMemberNot" prepend="and">
+				<isEmpty property="cscMember">
+				$cscMemberNot$ cs_coin$suffix$.csc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscCountMin" prepend="and">
+			    $cscCountNot$  ( cs_coin$suffix$.csc_count &gt;= #cscCountMin#
+			    <isEmpty property="cscCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscCountMax" prepend="and">
+				<isEmpty property="cscCountMin">$cscCountNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_count &lt;= #cscCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscCount" prepend="and">
+			    $cscCountNot$ cs_coin$suffix$.csc_count = #cscCount#
+			</isNotEmpty>
+			<isNotNull property="cscCountNot" prepend="and">
+				<isEmpty property="cscCountMax"><isEmpty property="cscCountMin"><isEmpty property="cscCount">
+				$cscCountNot$ cs_coin$suffix$.csc_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscRemainMin" prepend="and">
+			    $cscRemainNot$  ( cs_coin$suffix$.csc_remain &gt;= #cscRemainMin#
+			    <isEmpty property="cscRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscRemainMax" prepend="and">
+				<isEmpty property="cscRemainMin">$cscRemainNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_remain &lt;= #cscRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscRemain" prepend="and">
+			    $cscRemainNot$ cs_coin$suffix$.csc_remain = #cscRemain#
+			</isNotEmpty>
+			<isNotNull property="cscRemainNot" prepend="and">
+				<isEmpty property="cscRemainMax"><isEmpty property="cscRemainMin"><isEmpty property="cscRemain">
+				$cscRemainNot$ cs_coin$suffix$.csc_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscValidityMin" prepend="and">
+			    $cscValidityNot$  ( cs_coin$suffix$.csc_validity &gt;= #cscValidityMin#
+			    <isEmpty property="cscValidityMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscValidityMax" prepend="and">
+				<isEmpty property="cscValidityMin">$cscValidityNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_validity &lt;= #cscValidityMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscValidity" prepend="and">
+			    $cscValidityNot$ cs_coin$suffix$.csc_validity = #cscValidity#
+			</isNotEmpty>
+			<isNotNull property="cscValidityNot" prepend="and">
+				<isEmpty property="cscValidityMax"><isEmpty property="cscValidityMin"><isEmpty property="cscValidity">
+				$cscValidityNot$ cs_coin$suffix$.csc_validity is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscFlag" prepend="and">			    
+			    (<isNotNull property="cscFlagNot">
+			    cs_coin$suffix$.csc_flag is null or length(cs_coin$suffix$.csc_flag) &lt; 1 or
+			    </isNotNull>$cscFlagNot$ cs_coin$suffix$.csc_flag = #cscFlag#)
+			</isNotEmpty>
+			<isNotNull property="cscFlagNot" prepend="and">
+				<isEmpty property="cscFlag">
+				$cscFlagNot$ (cs_coin$suffix$.csc_flag is null or length(cs_coin$suffix$.csc_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscEndStart" prepend="and">
+			    $cscEndNot$   (cs_coin$suffix$.csc_end &gt;= #cscEndStart#
+			   <isEmpty property="cscEndEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscEndEnd" prepend="and">
+				<isEmpty property="cscEndStart">$cscEndNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_end &lt;= #cscEndEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscEnd" prepend="and">
+			    $cscEndNot$ cs_coin$suffix$.csc_end = #cscEnd#
+			</isNotEmpty>
+			<isNotNull property="cscEndNot" prepend="and">
+				<isEmpty property="cscEndStart"><isEmpty property="cscEndEnd"><isEmpty property="cscEnd">
+				$cscEndNot$ cs_coin$suffix$.csc_end is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscSerial" prepend="and">			    
+			    (<isNotNull property="cscSerialNot">
+			    cs_coin$suffix$.csc_serial is null or length(cs_coin$suffix$.csc_serial) &lt; 1 or
+			    </isNotNull>$cscSerialNot$ cs_coin$suffix$.csc_serial = #cscSerial#)
+			</isNotEmpty>
+			<isNotNull property="cscSerialNot" prepend="and">
+				<isEmpty property="cscSerial">
+				$cscSerialNot$ (cs_coin$suffix$.csc_serial is null or length(cs_coin$suffix$.csc_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscEditor" prepend="and">
+			    $cscEditorNot$ cs_coin$suffix$.csc_editor = #cscEditor#
+			</isNotEmpty>
+			<isNotNull property="cscEditorNot" prepend="and">
+				<isEmpty property="cscEditor">
+				$cscEditorNot$ cs_coin$suffix$.csc_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUpdateTimeStart" prepend="and">
+			    $cscUpdateTimeNot$   (cs_coin$suffix$.csc_update_time &gt;= #cscUpdateTimeStart#
+			   <isEmpty property="cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscUpdateTimeStart">$cscUpdateTimeNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_update_time &lt;= #cscUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscUpdateTime" prepend="and">
+			    $cscUpdateTimeNot$ cs_coin$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscUpdateTimeNot" prepend="and">
+				<isEmpty property="cscUpdateTimeStart"><isEmpty property="cscUpdateTimeEnd"><isEmpty property="cscUpdateTime">
+				$cscUpdateTimeNot$ cs_coin$suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddTimeStart" prepend="and">
+			    $cscAddTimeNot$   (cs_coin$suffix$.csc_add_time &gt;= #cscAddTimeStart#
+			   <isEmpty property="cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTimeEnd" prepend="and">
+				<isEmpty property="cscAddTimeStart">$cscAddTimeNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_add_time &lt;= #cscAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscAddTime" prepend="and">
+			    $cscAddTimeNot$ cs_coin$suffix$.csc_add_time = #cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscAddTimeNot" prepend="and">
+				<isEmpty property="cscAddTimeStart"><isEmpty property="cscAddTimeEnd"><isEmpty property="cscAddTime">
+				$cscAddTimeNot$ cs_coin$suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscRemark" prepend="and">			    
+			    (<isNotNull property="cscRemarkNot">
+			    cs_coin$suffix$.csc_remark is null or length(cs_coin$suffix$.csc_remark) &lt; 1 or
+			    </isNotNull>$cscRemarkNot$ cs_coin$suffix$.csc_remark = #cscRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscRemarkNot" prepend="and">
+				<isEmpty property="cscRemark">
+				$cscRemarkNot$ (cs_coin$suffix$.csc_remark is null or length(cs_coin$suffix$.csc_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscStatusMin" prepend="and">
+			    $cscStatusNot$  ( cs_coin$suffix$.csc_status &gt;= #cscStatusMin#
+			    <isEmpty property="cscStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscStatusMax" prepend="and">
+				<isEmpty property="cscStatusMin">$cscStatusNot$   (</isEmpty>
+			    cs_coin$suffix$.csc_status &lt;= #cscStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscStatus" prepend="and">
+			    $cscStatusNot$ cs_coin$suffix$.csc_status = #cscStatus#
+			</isNotEmpty>
+			<isNotNull property="cscStatusNot" prepend="and">
+				<isEmpty property="cscStatusMax"><isEmpty property="cscStatusMin"><isEmpty property="cscStatus">
+				$cscStatusNot$ cs_coin$suffix$.csc_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscCoinSource" prepend="and">
+			    $cscCoinSourceNot$ cs_coin$suffix$.csc_coin_source = #cscCoinSource#
+			</isNotEmpty>
+			<isNotNull property="cscCoinSourceNot" prepend="and">
+				<isEmpty property="cscCoinSource">
+				$cscCoinSourceNot$ cs_coin$suffix$.csc_coin_source is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 红包left join 条件sql片段 -->
+	<sql id="cs_coin_join">
+		<dynamic>
+			<isNotEmpty property="CsCoin.cscId" prepend="and">
+			    $CsCoin.cscIdNot$ cs_coin$CsCoin.suffix$.csc_id = #CsCoin.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscIdNot" prepend="and">
+				<isEmpty property="CsCoin.cscId">
+				$cscIdNot$ cs_coin$CsCoin.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_coin$CsCoin.suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscHost" prepend="and">
+			    $CsCoin.cscHostNot$ cs_coin$CsCoin.suffix$.csc_host = #CsCoin.cscHost#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscHostNot" prepend="and">
+				<isEmpty property="CsCoin.cscHost">
+				$cscHostNot$ cs_coin$CsCoin.suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCoin.cscMember" prepend="and">
+			    $CsCoin.cscMemberNot$ cs_coin$CsCoin.suffix$.csc_member = #CsCoin.cscMember#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscMemberNot" prepend="and">
+				<isEmpty property="CsCoin.cscMember">
+				$cscMemberNot$ cs_coin$CsCoin.suffix$.csc_member is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCoin.cscCountMin" prepend="and">
+			    $CsCoin.cscCountNot$  ( cs_coin$CsCoin.suffix$.csc_count &gt;= #CsCoin.cscCountMin#
+			    <isEmpty property="CsCoin.cscCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscCountMax" prepend="and">
+				<isEmpty property="CsCoin.cscCountMin">$CsCoin.cscCountNot$   (</isEmpty>
+			    cs_coin$CsCoin.suffix$.csc_count &lt;= #CsCoin.cscCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscCount" prepend="and">
+			    $CsCoin.cscCountNot$ cs_coin$CsCoin.suffix$.csc_count = #CsCoin.cscCount#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscCountNot" prepend="and">
+				<isEmpty property="CsCoin.cscCountMax"><isEmpty property="CsCoin.cscCountMin"><isEmpty property="CsCoin.cscCount">
+				$cscCountNot$ cs_coin$CsCoin.suffix$.csc_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCoin.cscRemainMin" prepend="and">
+			    $CsCoin.cscRemainNot$  ( cs_coin$CsCoin.suffix$.csc_remain &gt;= #CsCoin.cscRemainMin#
+			    <isEmpty property="CsCoin.cscRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscRemainMax" prepend="and">
+				<isEmpty property="CsCoin.cscRemainMin">$CsCoin.cscRemainNot$   (</isEmpty>
+			    cs_coin$CsCoin.suffix$.csc_remain &lt;= #CsCoin.cscRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscRemain" prepend="and">
+			    $CsCoin.cscRemainNot$ cs_coin$CsCoin.suffix$.csc_remain = #CsCoin.cscRemain#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscRemainNot" prepend="and">
+				<isEmpty property="CsCoin.cscRemainMax"><isEmpty property="CsCoin.cscRemainMin"><isEmpty property="CsCoin.cscRemain">
+				$cscRemainNot$ cs_coin$CsCoin.suffix$.csc_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCoin.cscValidityMin" prepend="and">
+			    $CsCoin.cscValidityNot$  ( cs_coin$CsCoin.suffix$.csc_validity &gt;= #CsCoin.cscValidityMin#
+			    <isEmpty property="CsCoin.cscValidityMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscValidityMax" prepend="and">
+				<isEmpty property="CsCoin.cscValidityMin">$CsCoin.cscValidityNot$   (</isEmpty>
+			    cs_coin$CsCoin.suffix$.csc_validity &lt;= #CsCoin.cscValidityMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscValidity" prepend="and">
+			    $CsCoin.cscValidityNot$ cs_coin$CsCoin.suffix$.csc_validity = #CsCoin.cscValidity#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscValidityNot" prepend="and">
+				<isEmpty property="CsCoin.cscValidityMax"><isEmpty property="CsCoin.cscValidityMin"><isEmpty property="CsCoin.cscValidity">
+				$cscValidityNot$ cs_coin$CsCoin.suffix$.csc_validity is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCoin.cscFlag" prepend="and">			    
+				    (<isNotNull property="CsCoin.cscFlagNot">
+				    cs_coin$CsCoin.suffix$.csc_flag is null or length(cs_coin$CsCoin.suffix$.csc_flag) &lt; 1 or
+				    </isNotNull>$CsCoin.cscFlagNot$ cs_coin$CsCoin.suffix$.csc_flag = #CsCoin.cscFlag#)
+				</isNotEmpty>
+				<isNotNull property="CsCoin.cscFlagNot" prepend="and">
+					<isEmpty property="CsCoin.cscFlag">
+					$cscFlagNot$ (cs_coin$CsCoin.suffix$.csc_flag is null or length(cs_coin$CsCoin.suffix$.csc_flag) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCoin.cscEndStart" prepend="and">
+				    $CsCoin.cscEndNot$   (cs_coin$CsCoin.suffix$.csc_end &gt;= #CsCoin.cscEndStart#
+				   <isEmpty property="CsCoin.cscEndEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCoin.cscEndEnd" prepend="and">
+					<isEmpty property="CsCoin.cscEndStart">$CsCoin.cscEndNot$   (</isEmpty>
+				    cs_coin$CsCoin.suffix$.csc_end &lt;= #CsCoin.cscEndEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCoin.cscEnd" prepend="and">
+				    $CsCoin.cscEndNot$ cs_coin$CsCoin.suffix$.csc_end = #CsCoin.cscEnd#
+				</isNotEmpty>
+				<isNotNull property="CsCoin.cscEndNot" prepend="and">
+					<isEmpty property="CsCoin.cscEndStart"><isEmpty property="CsCoin.cscEndEnd"><isEmpty property="CsCoin.cscEnd">
+					$cscEndNot$ cs_coin$CsCoin.suffix$.csc_end is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCoin.cscSerial" prepend="and">			    
+				    (<isNotNull property="CsCoin.cscSerialNot">
+				    cs_coin$CsCoin.suffix$.csc_serial is null or length(cs_coin$CsCoin.suffix$.csc_serial) &lt; 1 or
+				    </isNotNull>$CsCoin.cscSerialNot$ cs_coin$CsCoin.suffix$.csc_serial = #CsCoin.cscSerial#)
+				</isNotEmpty>
+				<isNotNull property="CsCoin.cscSerialNot" prepend="and">
+					<isEmpty property="CsCoin.cscSerial">
+					$cscSerialNot$ (cs_coin$CsCoin.suffix$.csc_serial is null or length(cs_coin$CsCoin.suffix$.csc_serial) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCoin.cscEditor" prepend="and">
+			    $CsCoin.cscEditorNot$ cs_coin$CsCoin.suffix$.csc_editor = #CsCoin.cscEditor#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscEditorNot" prepend="and">
+				<isEmpty property="CsCoin.cscEditor">
+				$cscEditorNot$ cs_coin$CsCoin.suffix$.csc_editor is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsCoin.cscUpdateTimeStart" prepend="and">
+				    $CsCoin.cscUpdateTimeNot$   (cs_coin$CsCoin.suffix$.csc_update_time &gt;= #CsCoin.cscUpdateTimeStart#
+				   <isEmpty property="CsCoin.cscUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCoin.cscUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsCoin.cscUpdateTimeStart">$CsCoin.cscUpdateTimeNot$   (</isEmpty>
+				    cs_coin$CsCoin.suffix$.csc_update_time &lt;= #CsCoin.cscUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCoin.cscUpdateTime" prepend="and">
+				    $CsCoin.cscUpdateTimeNot$ cs_coin$CsCoin.suffix$.csc_update_time = #CsCoin.cscUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsCoin.cscUpdateTimeNot" prepend="and">
+					<isEmpty property="CsCoin.cscUpdateTimeStart"><isEmpty property="CsCoin.cscUpdateTimeEnd"><isEmpty property="CsCoin.cscUpdateTime">
+					$cscUpdateTimeNot$ cs_coin$CsCoin.suffix$.csc_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCoin.cscAddTimeStart" prepend="and">
+				    $CsCoin.cscAddTimeNot$   (cs_coin$CsCoin.suffix$.csc_add_time &gt;= #CsCoin.cscAddTimeStart#
+				   <isEmpty property="CsCoin.cscAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCoin.cscAddTimeEnd" prepend="and">
+					<isEmpty property="CsCoin.cscAddTimeStart">$CsCoin.cscAddTimeNot$   (</isEmpty>
+				    cs_coin$CsCoin.suffix$.csc_add_time &lt;= #CsCoin.cscAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCoin.cscAddTime" prepend="and">
+				    $CsCoin.cscAddTimeNot$ cs_coin$CsCoin.suffix$.csc_add_time = #CsCoin.cscAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsCoin.cscAddTimeNot" prepend="and">
+					<isEmpty property="CsCoin.cscAddTimeStart"><isEmpty property="CsCoin.cscAddTimeEnd"><isEmpty property="CsCoin.cscAddTime">
+					$cscAddTimeNot$ cs_coin$CsCoin.suffix$.csc_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCoin.cscRemark" prepend="and">			    
+				    (<isNotNull property="CsCoin.cscRemarkNot">
+				    cs_coin$CsCoin.suffix$.csc_remark is null or length(cs_coin$CsCoin.suffix$.csc_remark) &lt; 1 or
+				    </isNotNull>$CsCoin.cscRemarkNot$ cs_coin$CsCoin.suffix$.csc_remark = #CsCoin.cscRemark#)
+				</isNotEmpty>
+				<isNotNull property="CsCoin.cscRemarkNot" prepend="and">
+					<isEmpty property="CsCoin.cscRemark">
+					$cscRemarkNot$ (cs_coin$CsCoin.suffix$.csc_remark is null or length(cs_coin$CsCoin.suffix$.csc_remark) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCoin.cscStatusMin" prepend="and">
+			    $CsCoin.cscStatusNot$  ( cs_coin$CsCoin.suffix$.csc_status &gt;= #CsCoin.cscStatusMin#
+			    <isEmpty property="CsCoin.cscStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscStatusMax" prepend="and">
+				<isEmpty property="CsCoin.cscStatusMin">$CsCoin.cscStatusNot$   (</isEmpty>
+			    cs_coin$CsCoin.suffix$.csc_status &lt;= #CsCoin.cscStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCoin.cscStatus" prepend="and">
+			    $CsCoin.cscStatusNot$ cs_coin$CsCoin.suffix$.csc_status = #CsCoin.cscStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscStatusNot" prepend="and">
+				<isEmpty property="CsCoin.cscStatusMax"><isEmpty property="CsCoin.cscStatusMin"><isEmpty property="CsCoin.cscStatus">
+				$cscStatusNot$ cs_coin$CsCoin.suffix$.csc_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCoin.cscCoinSource" prepend="and">
+			    $CsCoin.cscCoinSourceNot$ cs_coin$CsCoin.suffix$.csc_coin_source = #CsCoin.cscCoinSource#
+			</isNotEmpty>
+			<isNotNull property="CsCoin.cscCoinSourceNot" prepend="and">
+				<isEmpty property="CsCoin.cscCoinSource">
+				$cscCoinSourceNot$ cs_coin$CsCoin.suffix$.csc_coin_source is null
+				</isEmpty>
+			</isNotNull>	
+		</dynamic>
+	</sql>
+	
+</sqlMap>

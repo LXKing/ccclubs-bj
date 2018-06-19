@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 推送消息之SQL映射 -->
+	<resultMap id="CsUnitMt" class="com.ccclubs.model.CsUnitMt">
+		<result property="csumId" column="csum_id"/>
+		<result property="csumHost" column="csum_host"/>
+		<result property="csumInfo" column="csum_info"/>
+		<result property="csumPerson" column="csum_person"/>
+		<result property="csumTitle" column="csum_title"/>
+		<result property="csumContent" column="csum_content"/>
+		<result property="csumType" column="csum_type"/>
+		<result property="csumData" column="csum_data"/>
+		<result property="csumReadTime" column="csum_read_time"/>
+		<result property="csumUpdateTime" column="csum_update_time"/>
+		<result property="csumAddTime" column="csum_add_time"/>
+		<result property="csumStatus" column="csum_status"/>
+	</resultMap>
+		
+	<!-- 获取所有推送消息 -->
+	<select id="getCsUnitMtList" resultMap="CsUnitMt">
+		select cs_unit_mt$suffix$.* from cs_unit_mt$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.csum_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_mt$suffix$.csum_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitMt_part.cs_unit_mt_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csum_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取推送消息分页 -->
+	<select id="getCsUnitMtPage" parameterClass="java.util.HashMap" resultMap="CsUnitMt">
+		select cs_unit_mt$suffix$.* from cs_unit_mt$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询 -->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.csum_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_mt$suffix$.csum_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitMt_part.cs_unit_mt_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csum_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取推送消息总数 -->
+	<select id="getCsUnitMtEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_mt$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.csum_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_mt$suffix$.csum_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitMt_part.cs_unit_mt_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取推送消息 -->
+	<select id="getCsUnitMtById" parameterClass="java.util.HashMap" resultMap="CsUnitMt">
+		select cs_unit_mt$suffix$.* from cs_unit_mt$suffix$
+		where csum_id=#id#
+	</select>
+	
+		
+	<!-- 保存推送消息 -->
+	<insert id="saveCsUnitMt"  parameterClass="com.ccclubs.model.CsUnitMt">
+		insert into cs_unit_mt$suffix$
+		(
+			cs_unit_mt$suffix$.csum_host
+			,cs_unit_mt$suffix$.csum_info
+			,cs_unit_mt$suffix$.csum_person
+			,cs_unit_mt$suffix$.csum_title
+			,cs_unit_mt$suffix$.csum_content
+			,cs_unit_mt$suffix$.csum_type
+			,cs_unit_mt$suffix$.csum_data
+			,cs_unit_mt$suffix$.csum_read_time
+			,cs_unit_mt$suffix$.csum_update_time
+			,cs_unit_mt$suffix$.csum_add_time
+			,cs_unit_mt$suffix$.csum_status
+		)
+		values(
+			<isNotNull property="csumHost" prepend="">
+				#csumHost#
+			</isNotNull>
+			<isNull property="csumHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csumInfo" prepend=",">
+				#csumInfo#
+			</isNotNull>
+			<isNull property="csumInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumPerson" prepend=",">
+				#csumPerson#
+			</isNotNull>
+			<isNull property="csumPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumTitle" prepend=",">
+				#csumTitle#
+			</isNotNull>
+			<isNull property="csumTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumContent" prepend=",">
+				#csumContent#
+			</isNotNull>
+			<isNull property="csumContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumType" prepend=",">
+				#csumType#
+			</isNotNull>
+			<isNull property="csumType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumData" prepend=",">
+				#csumData#
+			</isNotNull>
+			<isNull property="csumData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumReadTime" prepend=",">
+				#csumReadTime#
+			</isNotNull>
+			<isNull property="csumReadTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumUpdateTime" prepend=",">
+				#csumUpdateTime#
+			</isNotNull>
+			<isNull property="csumUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumAddTime" prepend=",">
+				#csumAddTime#
+			</isNotNull>
+			<isNull property="csumAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csumStatus" prepend=",">
+				#csumStatus#
+			</isNotNull>
+			<isNull property="csumStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新推送消息 -->
+	<update id="updateCsUnitMt"  parameterClass="com.ccclubs.model.CsUnitMt">
+		update cs_unit_mt$suffix$ set
+			<isNotNull property="csumHost" prepend="">
+				cs_unit_mt$suffix$.csum_host = #csumHost#
+			</isNotNull>
+			<isNull property="csumHost" prepend="">
+				cs_unit_mt$suffix$.csum_host = null
+			</isNull>				
+			<isNotNull property="csumInfo" prepend=",">
+				cs_unit_mt$suffix$.csum_info = #csumInfo#
+			</isNotNull>
+			<isNull property="csumInfo" prepend=",">
+				cs_unit_mt$suffix$.csum_info = null
+			</isNull>				
+			<isNotNull property="csumPerson" prepend=",">
+				cs_unit_mt$suffix$.csum_person = #csumPerson#
+			</isNotNull>
+			<isNull property="csumPerson" prepend=",">
+				cs_unit_mt$suffix$.csum_person = null
+			</isNull>				
+			<isNotNull property="csumTitle" prepend=",">
+				cs_unit_mt$suffix$.csum_title = #csumTitle#
+			</isNotNull>
+			<isNull property="csumTitle" prepend=",">
+				cs_unit_mt$suffix$.csum_title = null
+			</isNull>				
+			<isNotNull property="csumContent" prepend=",">
+				cs_unit_mt$suffix$.csum_content = #csumContent#
+			</isNotNull>
+			<isNull property="csumContent" prepend=",">
+				cs_unit_mt$suffix$.csum_content = null
+			</isNull>				
+			<isNotNull property="csumType" prepend=",">
+				cs_unit_mt$suffix$.csum_type = #csumType#
+			</isNotNull>
+			<isNull property="csumType" prepend=",">
+				cs_unit_mt$suffix$.csum_type = null
+			</isNull>				
+			<isNotNull property="csumData" prepend=",">
+				cs_unit_mt$suffix$.csum_data = #csumData#
+			</isNotNull>
+			<isNull property="csumData" prepend=",">
+				cs_unit_mt$suffix$.csum_data = null
+			</isNull>				
+			<isNotNull property="csumReadTime" prepend=",">
+				cs_unit_mt$suffix$.csum_read_time = #csumReadTime#
+			</isNotNull>
+			<isNull property="csumReadTime" prepend=",">
+				cs_unit_mt$suffix$.csum_read_time = null
+			</isNull>				
+			<isNotNull property="csumUpdateTime" prepend=",">
+				cs_unit_mt$suffix$.csum_update_time = #csumUpdateTime#
+			</isNotNull>
+			<isNull property="csumUpdateTime" prepend=",">
+				cs_unit_mt$suffix$.csum_update_time = null
+			</isNull>				
+			<isNotNull property="csumAddTime" prepend=",">
+				cs_unit_mt$suffix$.csum_add_time = #csumAddTime#
+			</isNotNull>
+			<isNull property="csumAddTime" prepend=",">
+				cs_unit_mt$suffix$.csum_add_time = null
+			</isNull>				
+			<isNotNull property="csumStatus" prepend=",">
+				cs_unit_mt$suffix$.csum_status = #csumStatus#
+			</isNotNull>
+			<isNull property="csumStatus" prepend=",">
+				cs_unit_mt$suffix$.csum_status = null
+			</isNull>				
+		where
+			csum_id=#csumId#
+	</update>
+	
+	<!-- 更新推送消息非空字段 -->
+	<update id="updateCsUnitMt$NotNull"  parameterClass="com.ccclubs.model.CsUnitMt">
+		update cs_unit_mt$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csumHost" prepend=",">
+				cs_unit_mt$suffix$.csum_host = #csumHost#
+			</isNotNull>		
+			<isNotNull property="csumInfo" prepend=",">
+				cs_unit_mt$suffix$.csum_info = #csumInfo#
+			</isNotNull>		
+			<isNotNull property="csumPerson" prepend=",">
+				cs_unit_mt$suffix$.csum_person = #csumPerson#
+			</isNotNull>		
+			<isNotNull property="csumTitle" prepend=",">
+				cs_unit_mt$suffix$.csum_title = #csumTitle#
+			</isNotNull>		
+			<isNotNull property="csumContent" prepend=",">
+				cs_unit_mt$suffix$.csum_content = #csumContent#
+			</isNotNull>		
+			<isNotNull property="csumType" prepend=",">
+				cs_unit_mt$suffix$.csum_type = #csumType#
+			</isNotNull>		
+			<isNotNull property="csumData" prepend=",">
+				cs_unit_mt$suffix$.csum_data = #csumData#
+			</isNotNull>		
+			<isNotNull property="csumReadTime" prepend=",">
+				cs_unit_mt$suffix$.csum_read_time = #csumReadTime#
+			</isNotNull>		
+			<isNotNull property="csumUpdateTime" prepend=",">
+				cs_unit_mt$suffix$.csum_update_time = #csumUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csumAddTime" prepend=",">
+				cs_unit_mt$suffix$.csum_add_time = #csumAddTime#
+			</isNotNull>		
+			<isNotNull property="csumStatus" prepend=",">
+				cs_unit_mt$suffix$.csum_status = #csumStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csum_id=#csumId#
+	</update>
+	
+
+	<!-- 根据ID删除一个推送消息 -->
+	<delete id="deleteCsUnitMtById" parameterClass="java.util.HashMap">
+		delete from cs_unit_mt$suffix$ where csum_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个推送消息 -->
+	<update id="removeCsUnitMtById" parameterClass="java.util.HashMap">
+		update cs_unit_mt$suffix$ set  cs_unit_mt$suffix$.csum_status=-1  where csum_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新推送消息 -->
+	<update id="updateCsUnitMtBy"  parameterClass="java.util.HashMap">
+		update cs_unit_mt$suffix$ set		
+			csum_id=csum_id
+			<isNotNull property="V_csumId" prepend=",">
+				cs_unit_mt$suffix$.csum_id = #V_csumId#
+			</isNotNull>		
+			<isNotNull property="V_csumHost" prepend=",">
+				cs_unit_mt$suffix$.csum_host = #V_csumHost#
+			</isNotNull>		
+			<isNotNull property="V_csumInfo" prepend=",">
+				cs_unit_mt$suffix$.csum_info = #V_csumInfo#
+			</isNotNull>		
+			<isNotNull property="V_csumPerson" prepend=",">
+				cs_unit_mt$suffix$.csum_person = #V_csumPerson#
+			</isNotNull>		
+			<isNotNull property="V_csumTitle" prepend=",">
+				cs_unit_mt$suffix$.csum_title = #V_csumTitle#
+			</isNotNull>		
+			<isNotNull property="V_csumContent" prepend=",">
+				cs_unit_mt$suffix$.csum_content = #V_csumContent#
+			</isNotNull>		
+			<isNotNull property="V_csumType" prepend=",">
+				cs_unit_mt$suffix$.csum_type = #V_csumType#
+			</isNotNull>		
+			<isNotNull property="V_csumData" prepend=",">
+				cs_unit_mt$suffix$.csum_data = #V_csumData#
+			</isNotNull>		
+			<isNotNull property="V_csumReadTime" prepend=",">
+				cs_unit_mt$suffix$.csum_read_time = #V_csumReadTime#
+			</isNotNull>		
+			<isNotNull property="V_csumUpdateTime" prepend=",">
+				cs_unit_mt$suffix$.csum_update_time = #V_csumUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csumAddTime" prepend=",">
+				cs_unit_mt$suffix$.csum_add_time = #V_csumAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csumStatus" prepend=",">
+				cs_unit_mt$suffix$.csum_status = #V_csumStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.csum_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_mt$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_unit_mt$suffix$.csum_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsumInfo"><!-- 调用一下CsumInfo，把CsUnitInfo指向CsumInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitMt_part.cs_unit_mt_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除推送消息 -->
+	<update id="deleteCsUnitMtBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_mt$suffix$ where 
+		cs_unit_mt$suffix$.csum_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitMt_part.cs_unit_mt_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

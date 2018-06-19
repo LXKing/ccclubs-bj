@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsArtifRecord_part">	
+	<!-- 充值扣款条件sql片段  -->
+	<sql id="cs_artif_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csarId" prepend="and">
+			    $csarIdNot$ cs_artif_record$suffix$.csar_id = #csarId#
+			</isNotEmpty>
+			<isNotNull property="csarIdNot" prepend="and">
+				<isEmpty property="csarId">
+				$csarIdNot$ cs_artif_record$suffix$.csar_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_artif_record$suffix$.csar_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csarHost" prepend="and">
+			    $csarHostNot$ cs_artif_record$suffix$.csar_host = #csarHost#
+			</isNotEmpty>
+			<isNotNull property="csarHostNot" prepend="and">
+				<isEmpty property="csarHost">
+				$csarHostNot$ cs_artif_record$suffix$.csar_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csarTitle" prepend="and">			    
+			    (<isNotNull property="csarTitleNot">
+			    cs_artif_record$suffix$.csar_title is null or length(cs_artif_record$suffix$.csar_title) &lt; 1 or
+			    </isNotNull>$csarTitleNot$ cs_artif_record$suffix$.csar_title like #csarTitle#)
+			</isNotEmpty>
+			<isNotNull property="csarTitleNot" prepend="and">
+				<isEmpty property="csarTitle">
+				$csarTitleNot$ (cs_artif_record$suffix$.csar_title is null or length(cs_artif_record$suffix$.csar_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarMember" prepend="and">
+			    $csarMemberNot$ cs_artif_record$suffix$.csar_member = #csarMember#
+			</isNotEmpty>
+			<isNotNull property="csarMemberNot" prepend="and">
+				<isEmpty property="csarMember">
+				$csarMemberNot$ cs_artif_record$suffix$.csar_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarCountMin" prepend="and">
+			    $csarCountNot$  ( cs_artif_record$suffix$.csar_count &gt;= #csarCountMin#
+			    <isEmpty property="csarCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarCountMax" prepend="and">
+				<isEmpty property="csarCountMin">$csarCountNot$   (</isEmpty>
+			    cs_artif_record$suffix$.csar_count &lt;= #csarCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csarCount" prepend="and">
+			    $csarCountNot$ cs_artif_record$suffix$.csar_count = #csarCount#
+			</isNotEmpty>
+			<isNotNull property="csarCountNot" prepend="and">
+				<isEmpty property="csarCountMax"><isEmpty property="csarCountMin"><isEmpty property="csarCount">
+				$csarCountNot$ cs_artif_record$suffix$.csar_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csarMoneyType" prepend="and">
+			    $csarMoneyTypeNot$ cs_artif_record$suffix$.csar_money_type = #csarMoneyType#
+			</isNotEmpty>
+			<isNotNull property="csarMoneyTypeNot" prepend="and">
+				<isEmpty property="csarMoneyType">
+				$csarMoneyTypeNot$ cs_artif_record$suffix$.csar_money_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarRecordSubject" prepend="and">
+			    $csarRecordSubjectNot$ cs_artif_record$suffix$.csar_record_subject = #csarRecordSubject#
+			</isNotEmpty>
+			<isNotNull property="csarRecordSubjectNot" prepend="and">
+				<isEmpty property="csarRecordSubject">
+				$csarRecordSubjectNot$ cs_artif_record$suffix$.csar_record_subject is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarOrder" prepend="and">
+			    $csarOrderNot$ cs_artif_record$suffix$.csar_order = #csarOrder#
+			</isNotEmpty>
+			<isNotNull property="csarOrderNot" prepend="and">
+				<isEmpty property="csarOrder">
+				$csarOrderNot$ cs_artif_record$suffix$.csar_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarRelate" prepend="and">
+			    $csarRelateNot$ cs_artif_record$suffix$.csar_relate = #csarRelate#
+			</isNotEmpty>
+			<isNotNull property="csarRelateNot" prepend="and">
+				<isEmpty property="csarRelate">
+				$csarRelateNot$ cs_artif_record$suffix$.csar_relate is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarReceived" prepend="and">
+			    $csarReceivedNot$ cs_artif_record$suffix$.csar_received = #csarReceived#
+			</isNotEmpty>
+			<isNotNull property="csarReceivedNot" prepend="and">
+				<isEmpty property="csarReceived">
+				$csarReceivedNot$ cs_artif_record$suffix$.csar_received is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarVoucher" prepend="and">			    
+			    (<isNotNull property="csarVoucherNot">
+			    cs_artif_record$suffix$.csar_voucher is null or length(cs_artif_record$suffix$.csar_voucher) &lt; 1 or
+			    </isNotNull>$csarVoucherNot$ cs_artif_record$suffix$.csar_voucher = #csarVoucher#)
+			</isNotEmpty>
+			<isNotNull property="csarVoucherNot" prepend="and">
+				<isEmpty property="csarVoucher">
+				$csarVoucherNot$ (cs_artif_record$suffix$.csar_voucher is null or length(cs_artif_record$suffix$.csar_voucher) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAdder" prepend="and">
+			    $csarAdderNot$ cs_artif_record$suffix$.csar_adder = #csarAdder#
+			</isNotEmpty>
+			<isNotNull property="csarAdderNot" prepend="and">
+				<isEmpty property="csarAdder">
+				$csarAdderNot$ cs_artif_record$suffix$.csar_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarEditor" prepend="and">
+			    $csarEditorNot$ cs_artif_record$suffix$.csar_editor = #csarEditor#
+			</isNotEmpty>
+			<isNotNull property="csarEditorNot" prepend="and">
+				<isEmpty property="csarEditor">
+				$csarEditorNot$ cs_artif_record$suffix$.csar_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarConfirmerMin" prepend="and">
+			    $csarConfirmerNot$  ( cs_artif_record$suffix$.csar_confirmer &gt;= #csarConfirmerMin#
+			    <isEmpty property="csarConfirmerMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarConfirmerMax" prepend="and">
+				<isEmpty property="csarConfirmerMin">$csarConfirmerNot$   (</isEmpty>
+			    cs_artif_record$suffix$.csar_confirmer &lt;= #csarConfirmerMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csarConfirmer" prepend="and">
+			    $csarConfirmerNot$ cs_artif_record$suffix$.csar_confirmer = #csarConfirmer#
+			</isNotEmpty>
+			<isNotNull property="csarConfirmerNot" prepend="and">
+				<isEmpty property="csarConfirmerMax"><isEmpty property="csarConfirmerMin"><isEmpty property="csarConfirmer">
+				$csarConfirmerNot$ cs_artif_record$suffix$.csar_confirmer is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csarUpdateTimeStart" prepend="and">
+			    $csarUpdateTimeNot$   (cs_artif_record$suffix$.csar_update_time &gt;= #csarUpdateTimeStart#
+			   <isEmpty property="csarUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarUpdateTimeEnd" prepend="and">
+				<isEmpty property="csarUpdateTimeStart">$csarUpdateTimeNot$   (</isEmpty>
+			    cs_artif_record$suffix$.csar_update_time &lt;= #csarUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarUpdateTime" prepend="and">
+			    $csarUpdateTimeNot$ cs_artif_record$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csarUpdateTimeNot" prepend="and">
+				<isEmpty property="csarUpdateTimeStart"><isEmpty property="csarUpdateTimeEnd"><isEmpty property="csarUpdateTime">
+				$csarUpdateTimeNot$ cs_artif_record$suffix$.csar_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAddTimeStart" prepend="and">
+			    $csarAddTimeNot$   (cs_artif_record$suffix$.csar_add_time &gt;= #csarAddTimeStart#
+			   <isEmpty property="csarAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarAddTimeEnd" prepend="and">
+				<isEmpty property="csarAddTimeStart">$csarAddTimeNot$   (</isEmpty>
+			    cs_artif_record$suffix$.csar_add_time &lt;= #csarAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarAddTime" prepend="and">
+			    $csarAddTimeNot$ cs_artif_record$suffix$.csar_add_time = #csarAddTime#
+			</isNotEmpty>
+			<isNotNull property="csarAddTimeNot" prepend="and">
+				<isEmpty property="csarAddTimeStart"><isEmpty property="csarAddTimeEnd"><isEmpty property="csarAddTime">
+				$csarAddTimeNot$ cs_artif_record$suffix$.csar_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarConfirmTimeStart" prepend="and">
+			    $csarConfirmTimeNot$   (cs_artif_record$suffix$.csar_confirm_time &gt;= #csarConfirmTimeStart#
+			   <isEmpty property="csarConfirmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarConfirmTimeEnd" prepend="and">
+				<isEmpty property="csarConfirmTimeStart">$csarConfirmTimeNot$   (</isEmpty>
+			    cs_artif_record$suffix$.csar_confirm_time &lt;= #csarConfirmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarConfirmTime" prepend="and">
+			    $csarConfirmTimeNot$ cs_artif_record$suffix$.csar_confirm_time = #csarConfirmTime#
+			</isNotEmpty>
+			<isNotNull property="csarConfirmTimeNot" prepend="and">
+				<isEmpty property="csarConfirmTimeStart"><isEmpty property="csarConfirmTimeEnd"><isEmpty property="csarConfirmTime">
+				$csarConfirmTimeNot$ cs_artif_record$suffix$.csar_confirm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarRemark" prepend="and">			    
+			    (<isNotNull property="csarRemarkNot">
+			    cs_artif_record$suffix$.csar_remark is null or length(cs_artif_record$suffix$.csar_remark) &lt; 1 or
+			    </isNotNull>$csarRemarkNot$ cs_artif_record$suffix$.csar_remark like #csarRemark#)
+			</isNotEmpty>
+			<isNotNull property="csarRemarkNot" prepend="and">
+				<isEmpty property="csarRemark">
+				$csarRemarkNot$ (cs_artif_record$suffix$.csar_remark is null or length(cs_artif_record$suffix$.csar_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarStatus" prepend="and">
+			    $csarStatusNot$ cs_artif_record$suffix$.csar_status = #csarStatus#
+			</isNotEmpty>
+			<isNotNull property="csarStatusNot" prepend="and">
+				<isEmpty property="csarStatus">
+				$csarStatusNot$ cs_artif_record$suffix$.csar_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 充值扣款left join 条件sql片段 -->
+	<sql id="cs_artif_record_join">
+		<dynamic>
+			<isNotEmpty property="CsArtifRecord.csarId" prepend="and">
+			    $CsArtifRecord.csarIdNot$ cs_artif_record$CsArtifRecord.suffix$.csar_id = #CsArtifRecord.csarId#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarIdNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarId">
+				$csarIdNot$ cs_artif_record$CsArtifRecord.suffix$.csar_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_artif_record$CsArtifRecord.suffix$.csar_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarHost" prepend="and">
+			    $CsArtifRecord.csarHostNot$ cs_artif_record$CsArtifRecord.suffix$.csar_host = #CsArtifRecord.csarHost#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarHostNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarHost">
+				$csarHostNot$ cs_artif_record$CsArtifRecord.suffix$.csar_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarTitle" prepend="and">
+				(<isNotNull property="CsArtifRecord.csarTitleNot">
+			    cs_artif_record$CsArtifRecord.suffix$.csar_title is null or length(cs_artif_record$CsArtifRecord.suffix$.csar_title) &lt; 1 or
+			    </isNotNull>$CsArtifRecord.csarTitleNot$ cs_artif_record$CsArtifRecord.suffix$.csar_title like #CsArtifRecord.csarTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarTitleNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarTitle">
+				$csarTitleNot$ (cs_artif_record$CsArtifRecord.suffix$.csar_title is null or length(cs_artif_record$CsArtifRecord.suffix$.csar_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarMember" prepend="and">
+			    $CsArtifRecord.csarMemberNot$ cs_artif_record$CsArtifRecord.suffix$.csar_member = #CsArtifRecord.csarMember#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarMemberNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarMember">
+				$csarMemberNot$ cs_artif_record$CsArtifRecord.suffix$.csar_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarCountMin" prepend="and">
+			    $CsArtifRecord.csarCountNot$  ( cs_artif_record$CsArtifRecord.suffix$.csar_count &gt;= #CsArtifRecord.csarCountMin#
+			    <isEmpty property="CsArtifRecord.csarCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarCountMax" prepend="and">
+				<isEmpty property="CsArtifRecord.csarCountMin">$CsArtifRecord.csarCountNot$   (</isEmpty>
+			    cs_artif_record$CsArtifRecord.suffix$.csar_count &lt;= #CsArtifRecord.csarCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarCount" prepend="and">
+			    $CsArtifRecord.csarCountNot$ cs_artif_record$CsArtifRecord.suffix$.csar_count = #CsArtifRecord.csarCount#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarCountNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarCountMax"><isEmpty property="CsArtifRecord.csarCountMin"><isEmpty property="CsArtifRecord.csarCount">
+				$csarCountNot$ cs_artif_record$CsArtifRecord.suffix$.csar_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarMoneyType" prepend="and">
+			    $CsArtifRecord.csarMoneyTypeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_money_type = #CsArtifRecord.csarMoneyType#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarMoneyTypeNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarMoneyType">
+				$csarMoneyTypeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_money_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarRecordSubject" prepend="and">
+			    $CsArtifRecord.csarRecordSubjectNot$ cs_artif_record$CsArtifRecord.suffix$.csar_record_subject = #CsArtifRecord.csarRecordSubject#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarRecordSubjectNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarRecordSubject">
+				$csarRecordSubjectNot$ cs_artif_record$CsArtifRecord.suffix$.csar_record_subject is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarOrder" prepend="and">
+			    $CsArtifRecord.csarOrderNot$ cs_artif_record$CsArtifRecord.suffix$.csar_order = #CsArtifRecord.csarOrder#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarOrderNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarOrder">
+				$csarOrderNot$ cs_artif_record$CsArtifRecord.suffix$.csar_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarRelate" prepend="and">
+			    $CsArtifRecord.csarRelateNot$ cs_artif_record$CsArtifRecord.suffix$.csar_relate = #CsArtifRecord.csarRelate#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarRelateNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarRelate">
+				$csarRelateNot$ cs_artif_record$CsArtifRecord.suffix$.csar_relate is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarReceived" prepend="and">
+			    $CsArtifRecord.csarReceivedNot$ cs_artif_record$CsArtifRecord.suffix$.csar_received = #CsArtifRecord.csarReceived#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarReceivedNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarReceived">
+				$csarReceivedNot$ cs_artif_record$CsArtifRecord.suffix$.csar_received is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarVoucher" prepend="and">
+				(<isNotNull property="CsArtifRecord.csarVoucherNot">
+			    cs_artif_record$CsArtifRecord.suffix$.csar_voucher is null or length(cs_artif_record$CsArtifRecord.suffix$.csar_voucher) &lt; 1 or
+			    </isNotNull>$CsArtifRecord.csarVoucherNot$ cs_artif_record$CsArtifRecord.suffix$.csar_voucher = #CsArtifRecord.csarVoucher#)
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarVoucherNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarVoucher">
+				$csarVoucherNot$ (cs_artif_record$CsArtifRecord.suffix$.csar_voucher is null or length(cs_artif_record$CsArtifRecord.suffix$.csar_voucher) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarAdder" prepend="and">
+			    $CsArtifRecord.csarAdderNot$ cs_artif_record$CsArtifRecord.suffix$.csar_adder = #CsArtifRecord.csarAdder#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarAdderNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarAdder">
+				$csarAdderNot$ cs_artif_record$CsArtifRecord.suffix$.csar_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarEditor" prepend="and">
+			    $CsArtifRecord.csarEditorNot$ cs_artif_record$CsArtifRecord.suffix$.csar_editor = #CsArtifRecord.csarEditor#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarEditorNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarEditor">
+				$csarEditorNot$ cs_artif_record$CsArtifRecord.suffix$.csar_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarConfirmerMin" prepend="and">
+			    $CsArtifRecord.csarConfirmerNot$  ( cs_artif_record$CsArtifRecord.suffix$.csar_confirmer &gt;= #CsArtifRecord.csarConfirmerMin#
+			    <isEmpty property="CsArtifRecord.csarConfirmerMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarConfirmerMax" prepend="and">
+				<isEmpty property="CsArtifRecord.csarConfirmerMin">$CsArtifRecord.csarConfirmerNot$   (</isEmpty>
+			    cs_artif_record$CsArtifRecord.suffix$.csar_confirmer &lt;= #CsArtifRecord.csarConfirmerMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarConfirmer" prepend="and">
+			    $CsArtifRecord.csarConfirmerNot$ cs_artif_record$CsArtifRecord.suffix$.csar_confirmer = #CsArtifRecord.csarConfirmer#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarConfirmerNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarConfirmerMax"><isEmpty property="CsArtifRecord.csarConfirmerMin"><isEmpty property="CsArtifRecord.csarConfirmer">
+				$csarConfirmerNot$ cs_artif_record$CsArtifRecord.suffix$.csar_confirmer is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarUpdateTimeStart" prepend="and">
+			    $CsArtifRecord.csarUpdateTimeNot$   (cs_artif_record$CsArtifRecord.suffix$.csar_update_time &gt;= #CsArtifRecord.csarUpdateTimeStart#
+			   <isEmpty property="CsArtifRecord.csarUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsArtifRecord.csarUpdateTimeStart">$CsArtifRecord.csarUpdateTimeNot$   (</isEmpty>
+			    cs_artif_record$CsArtifRecord.suffix$.csar_update_time &lt;= #CsArtifRecord.csarUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarUpdateTime" prepend="and">
+			    $CsArtifRecord.csarUpdateTimeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_update_time = #CsArtifRecord.csarUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarUpdateTimeNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarUpdateTimeStart"><isEmpty property="CsArtifRecord.csarUpdateTimeEnd"><isEmpty property="CsArtifRecord.csarUpdateTime">
+				$csarUpdateTimeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarAddTimeStart" prepend="and">
+			    $CsArtifRecord.csarAddTimeNot$   (cs_artif_record$CsArtifRecord.suffix$.csar_add_time &gt;= #CsArtifRecord.csarAddTimeStart#
+			   <isEmpty property="CsArtifRecord.csarAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarAddTimeEnd" prepend="and">
+				<isEmpty property="CsArtifRecord.csarAddTimeStart">$CsArtifRecord.csarAddTimeNot$   (</isEmpty>
+			    cs_artif_record$CsArtifRecord.suffix$.csar_add_time &lt;= #CsArtifRecord.csarAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarAddTime" prepend="and">
+			    $CsArtifRecord.csarAddTimeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_add_time = #CsArtifRecord.csarAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarAddTimeNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarAddTimeStart"><isEmpty property="CsArtifRecord.csarAddTimeEnd"><isEmpty property="CsArtifRecord.csarAddTime">
+				$csarAddTimeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarConfirmTimeStart" prepend="and">
+			    $CsArtifRecord.csarConfirmTimeNot$   (cs_artif_record$CsArtifRecord.suffix$.csar_confirm_time &gt;= #CsArtifRecord.csarConfirmTimeStart#
+			   <isEmpty property="CsArtifRecord.csarConfirmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarConfirmTimeEnd" prepend="and">
+				<isEmpty property="CsArtifRecord.csarConfirmTimeStart">$CsArtifRecord.csarConfirmTimeNot$   (</isEmpty>
+			    cs_artif_record$CsArtifRecord.suffix$.csar_confirm_time &lt;= #CsArtifRecord.csarConfirmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsArtifRecord.csarConfirmTime" prepend="and">
+			    $CsArtifRecord.csarConfirmTimeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_confirm_time = #CsArtifRecord.csarConfirmTime#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarConfirmTimeNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarConfirmTimeStart"><isEmpty property="CsArtifRecord.csarConfirmTimeEnd"><isEmpty property="CsArtifRecord.csarConfirmTime">
+				$csarConfirmTimeNot$ cs_artif_record$CsArtifRecord.suffix$.csar_confirm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarRemark" prepend="and">
+				(<isNotNull property="CsArtifRecord.csarRemarkNot">
+			    cs_artif_record$CsArtifRecord.suffix$.csar_remark is null or length(cs_artif_record$CsArtifRecord.suffix$.csar_remark) &lt; 1 or
+			    </isNotNull>$CsArtifRecord.csarRemarkNot$ cs_artif_record$CsArtifRecord.suffix$.csar_remark like #CsArtifRecord.csarRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarRemarkNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarRemark">
+				$csarRemarkNot$ (cs_artif_record$CsArtifRecord.suffix$.csar_remark is null or length(cs_artif_record$CsArtifRecord.suffix$.csar_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsArtifRecord.csarStatus" prepend="and">
+			    $CsArtifRecord.csarStatusNot$ cs_artif_record$CsArtifRecord.suffix$.csar_status = #CsArtifRecord.csarStatus#
+			</isNotEmpty>
+			<isNotNull property="CsArtifRecord.csarStatusNot" prepend="and">
+				<isEmpty property="CsArtifRecord.csarStatus">
+				$csarStatusNot$ cs_artif_record$CsArtifRecord.suffix$.csar_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

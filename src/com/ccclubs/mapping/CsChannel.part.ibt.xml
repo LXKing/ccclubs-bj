@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsChannel_part">	
+	<!-- 访问渠道条件sql片段  -->
+	<sql id="cs_channel_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_channel$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_channel$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_channel$suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscHost" prepend="and">
+			    $cscHostNot$ cs_channel$suffix$.csc_host = #cscHost#
+			</isNotEmpty>
+			<isNotNull property="cscHostNot" prepend="and">
+				<isEmpty property="cscHost">
+				$cscHostNot$ cs_channel$suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscName" prepend="and">			    
+			    (<isNotNull property="cscNameNot">
+			    cs_channel$suffix$.csc_name is null or length(cs_channel$suffix$.csc_name) &lt; 1 or
+			    </isNotNull>$cscNameNot$ cs_channel$suffix$.csc_name like #cscName#)
+			</isNotEmpty>
+			<isNotNull property="cscNameNot" prepend="and">
+				<isEmpty property="cscName">
+				$cscNameNot$ (cs_channel$suffix$.csc_name is null or length(cs_channel$suffix$.csc_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscType" prepend="and">
+			    $cscTypeNot$ cs_channel$suffix$.csc_type = #cscType#
+			</isNotEmpty>
+			<isNotNull property="cscTypeNot" prepend="and">
+				<isEmpty property="cscType">
+				$cscTypeNot$ cs_channel$suffix$.csc_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscVIndex" prepend="and">
+			    $cscVIndexNot$ cs_channel$suffix$.csc_v_index = #cscVIndex#
+			</isNotEmpty>
+			<isNotNull property="cscVIndexNot" prepend="and">
+				<isEmpty property="cscVIndex">
+				$cscVIndexNot$ cs_channel$suffix$.csc_v_index is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscDesc" prepend="and">			    
+			    (<isNotNull property="cscDescNot">
+			    cs_channel$suffix$.csc_desc is null or length(cs_channel$suffix$.csc_desc) &lt; 1 or
+			    </isNotNull>$cscDescNot$ cs_channel$suffix$.csc_desc like #cscDesc#)
+			</isNotEmpty>
+			<isNotNull property="cscDescNot" prepend="and">
+				<isEmpty property="cscDesc">
+				$cscDescNot$ (cs_channel$suffix$.csc_desc is null or length(cs_channel$suffix$.csc_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUpdateTimeStart" prepend="and">
+			    $cscUpdateTimeNot$   (cs_channel$suffix$.csc_update_time &gt;= #cscUpdateTimeStart#
+			   <isEmpty property="cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscUpdateTimeStart">$cscUpdateTimeNot$   (</isEmpty>
+			    cs_channel$suffix$.csc_update_time &lt;= #cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTime" prepend="and">
+			    $cscUpdateTimeNot$ cs_channel$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscUpdateTimeNot" prepend="and">
+				<isEmpty property="cscUpdateTimeStart"><isEmpty property="cscUpdateTimeEnd"><isEmpty property="cscUpdateTime">
+				$cscUpdateTimeNot$ cs_channel$suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddTimeStart" prepend="and">
+			    $cscAddTimeNot$   (cs_channel$suffix$.csc_add_time &gt;= #cscAddTimeStart#
+			   <isEmpty property="cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTimeEnd" prepend="and">
+				<isEmpty property="cscAddTimeStart">$cscAddTimeNot$   (</isEmpty>
+			    cs_channel$suffix$.csc_add_time &lt;= #cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTime" prepend="and">
+			    $cscAddTimeNot$ cs_channel$suffix$.csc_add_time = #cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscAddTimeNot" prepend="and">
+				<isEmpty property="cscAddTimeStart"><isEmpty property="cscAddTimeEnd"><isEmpty property="cscAddTime">
+				$cscAddTimeNot$ cs_channel$suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscStatus" prepend="and">
+			    $cscStatusNot$ cs_channel$suffix$.csc_status = #cscStatus#
+			</isNotEmpty>
+			<isNotNull property="cscStatusNot" prepend="and">
+				<isEmpty property="cscStatus">
+				$cscStatusNot$ cs_channel$suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 访问渠道left join 条件sql片段 -->
+	<sql id="cs_channel_join">
+		<dynamic>
+			<isNotEmpty property="CsChannel.cscId" prepend="and">
+			    $CsChannel.cscIdNot$ cs_channel$CsChannel.suffix$.csc_id = #CsChannel.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscIdNot" prepend="and">
+				<isEmpty property="CsChannel.cscId">
+				$cscIdNot$ cs_channel$CsChannel.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_channel$CsChannel.suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsChannel.cscHost" prepend="and">
+			    $CsChannel.cscHostNot$ cs_channel$CsChannel.suffix$.csc_host = #CsChannel.cscHost#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscHostNot" prepend="and">
+				<isEmpty property="CsChannel.cscHost">
+				$cscHostNot$ cs_channel$CsChannel.suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscName" prepend="and">
+				(<isNotNull property="CsChannel.cscNameNot">
+			    cs_channel$CsChannel.suffix$.csc_name is null or length(cs_channel$CsChannel.suffix$.csc_name) &lt; 1 or
+			    </isNotNull>$CsChannel.cscNameNot$ cs_channel$CsChannel.suffix$.csc_name like #CsChannel.cscName#)
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscNameNot" prepend="and">
+				<isEmpty property="CsChannel.cscName">
+				$cscNameNot$ (cs_channel$CsChannel.suffix$.csc_name is null or length(cs_channel$CsChannel.suffix$.csc_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscType" prepend="and">
+			    $CsChannel.cscTypeNot$ cs_channel$CsChannel.suffix$.csc_type = #CsChannel.cscType#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscTypeNot" prepend="and">
+				<isEmpty property="CsChannel.cscType">
+				$cscTypeNot$ cs_channel$CsChannel.suffix$.csc_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscVIndex" prepend="and">
+			    $CsChannel.cscVIndexNot$ cs_channel$CsChannel.suffix$.csc_v_index = #CsChannel.cscVIndex#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscVIndexNot" prepend="and">
+				<isEmpty property="CsChannel.cscVIndex">
+				$cscVIndexNot$ cs_channel$CsChannel.suffix$.csc_v_index is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscDesc" prepend="and">
+				(<isNotNull property="CsChannel.cscDescNot">
+			    cs_channel$CsChannel.suffix$.csc_desc is null or length(cs_channel$CsChannel.suffix$.csc_desc) &lt; 1 or
+			    </isNotNull>$CsChannel.cscDescNot$ cs_channel$CsChannel.suffix$.csc_desc like #CsChannel.cscDesc#)
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscDescNot" prepend="and">
+				<isEmpty property="CsChannel.cscDesc">
+				$cscDescNot$ (cs_channel$CsChannel.suffix$.csc_desc is null or length(cs_channel$CsChannel.suffix$.csc_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscUpdateTimeStart" prepend="and">
+			    $CsChannel.cscUpdateTimeNot$   (cs_channel$CsChannel.suffix$.csc_update_time &gt;= #CsChannel.cscUpdateTimeStart#
+			   <isEmpty property="CsChannel.cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChannel.cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsChannel.cscUpdateTimeStart">$CsChannel.cscUpdateTimeNot$   (</isEmpty>
+			    cs_channel$CsChannel.suffix$.csc_update_time &lt;= #CsChannel.cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChannel.cscUpdateTime" prepend="and">
+			    $CsChannel.cscUpdateTimeNot$ cs_channel$CsChannel.suffix$.csc_update_time = #CsChannel.cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscUpdateTimeNot" prepend="and">
+				<isEmpty property="CsChannel.cscUpdateTimeStart"><isEmpty property="CsChannel.cscUpdateTimeEnd"><isEmpty property="CsChannel.cscUpdateTime">
+				$cscUpdateTimeNot$ cs_channel$CsChannel.suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscAddTimeStart" prepend="and">
+			    $CsChannel.cscAddTimeNot$   (cs_channel$CsChannel.suffix$.csc_add_time &gt;= #CsChannel.cscAddTimeStart#
+			   <isEmpty property="CsChannel.cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChannel.cscAddTimeEnd" prepend="and">
+				<isEmpty property="CsChannel.cscAddTimeStart">$CsChannel.cscAddTimeNot$   (</isEmpty>
+			    cs_channel$CsChannel.suffix$.csc_add_time &lt;= #CsChannel.cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChannel.cscAddTime" prepend="and">
+			    $CsChannel.cscAddTimeNot$ cs_channel$CsChannel.suffix$.csc_add_time = #CsChannel.cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscAddTimeNot" prepend="and">
+				<isEmpty property="CsChannel.cscAddTimeStart"><isEmpty property="CsChannel.cscAddTimeEnd"><isEmpty property="CsChannel.cscAddTime">
+				$cscAddTimeNot$ cs_channel$CsChannel.suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannel.cscStatus" prepend="and">
+			    $CsChannel.cscStatusNot$ cs_channel$CsChannel.suffix$.csc_status = #CsChannel.cscStatus#
+			</isNotEmpty>
+			<isNotNull property="CsChannel.cscStatusNot" prepend="and">
+				<isEmpty property="CsChannel.cscStatus">
+				$cscStatusNot$ cs_channel$CsChannel.suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

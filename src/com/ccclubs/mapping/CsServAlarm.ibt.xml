@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 服务监控报警之SQL映射 -->
+	<resultMap id="CsServAlarm" class="com.ccclubs.model.CsServAlarm">
+		<result property="cssaId" column="cssa_id"/>
+		<result property="cssaHost" column="cssa_host"/>
+		<result property="cssaOutlets" column="cssa_outlets"/>
+		<result property="cssaType" column="cssa_type"/>
+		<result property="cssaTitle" column="cssa_title"/>
+		<result property="cssaContent" column="cssa_content"/>
+		<result property="cssaRelate" column="cssa_relate"/>
+		<result property="cssaSrouce" column="cssa_srouce"/>
+		<result property="cssaStatus" column="cssa_status"/>
+		<result property="cssaData" column="cssa_data"/>
+		<result property="cssaAddTime" column="cssa_add_time"/>
+		<result property="cssaUpdateTime" column="cssa_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有服务监控报警 -->
+	<select id="getCsServAlarmList" resultMap="CsServAlarm">
+		select cs_serv_alarm$suffix$.* from cs_serv_alarm$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.cssa_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询-->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.cssa_type=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_serv_alarm$suffix$.cssa_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询条件sql片段 -->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsServAlarm_part.cs_serv_alarm_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取服务监控报警分页 -->
+	<select id="getCsServAlarmPage" parameterClass="java.util.HashMap" resultMap="CsServAlarm">
+		select cs_serv_alarm$suffix$.* from cs_serv_alarm$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.cssa_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询-->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.cssa_type=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_serv_alarm$suffix$.cssa_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询条件sql片段 -->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsServAlarm_part.cs_serv_alarm_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取服务监控报警总数 -->
+	<select id="getCsServAlarmEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_serv_alarm$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.cssa_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询-->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.cssa_type=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_serv_alarm$suffix$.cssa_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询条件sql片段 -->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsServAlarm_part.cs_serv_alarm_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取服务监控报警 -->
+	<select id="getCsServAlarmById" parameterClass="java.util.HashMap" resultMap="CsServAlarm">
+		select cs_serv_alarm$suffix$.* from cs_serv_alarm$suffix$
+		where cssa_id=#id#
+	</select>
+	
+		
+	<!-- 保存服务监控报警 -->
+	<insert id="saveCsServAlarm"  parameterClass="com.ccclubs.model.CsServAlarm">
+		insert into cs_serv_alarm$suffix$
+		(
+			cs_serv_alarm$suffix$.cssa_host
+			,cs_serv_alarm$suffix$.cssa_outlets
+			,cs_serv_alarm$suffix$.cssa_type
+			,cs_serv_alarm$suffix$.cssa_title
+			,cs_serv_alarm$suffix$.cssa_content
+			,cs_serv_alarm$suffix$.cssa_relate
+			,cs_serv_alarm$suffix$.cssa_srouce
+			,cs_serv_alarm$suffix$.cssa_status
+			,cs_serv_alarm$suffix$.cssa_data
+			,cs_serv_alarm$suffix$.cssa_add_time
+			,cs_serv_alarm$suffix$.cssa_update_time
+		)
+		values(
+			<isNotNull property="cssaHost" prepend="">
+				#cssaHost#
+			</isNotNull>
+			<isNull property="cssaHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssaOutlets" prepend=",">
+				#cssaOutlets#
+			</isNotNull>
+			<isNull property="cssaOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaType" prepend=",">
+				#cssaType#
+			</isNotNull>
+			<isNull property="cssaType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaTitle" prepend=",">
+				#cssaTitle#
+			</isNotNull>
+			<isNull property="cssaTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaContent" prepend=",">
+				#cssaContent#
+			</isNotNull>
+			<isNull property="cssaContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaRelate" prepend=",">
+				#cssaRelate#
+			</isNotNull>
+			<isNull property="cssaRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaSrouce" prepend=",">
+				#cssaSrouce#
+			</isNotNull>
+			<isNull property="cssaSrouce" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaStatus" prepend=",">
+				#cssaStatus#
+			</isNotNull>
+			<isNull property="cssaStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaData" prepend=",">
+				#cssaData#
+			</isNotNull>
+			<isNull property="cssaData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaAddTime" prepend=",">
+				#cssaAddTime#
+			</isNotNull>
+			<isNull property="cssaAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssaUpdateTime" prepend=",">
+				#cssaUpdateTime#
+			</isNotNull>
+			<isNull property="cssaUpdateTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新服务监控报警 -->
+	<update id="updateCsServAlarm"  parameterClass="com.ccclubs.model.CsServAlarm">
+		update cs_serv_alarm$suffix$ set
+			<isNotNull property="cssaHost" prepend="">
+				cs_serv_alarm$suffix$.cssa_host = #cssaHost#
+			</isNotNull>
+			<isNull property="cssaHost" prepend="">
+				cs_serv_alarm$suffix$.cssa_host = null
+			</isNull>				
+			<isNotNull property="cssaOutlets" prepend=",">
+				cs_serv_alarm$suffix$.cssa_outlets = #cssaOutlets#
+			</isNotNull>
+			<isNull property="cssaOutlets" prepend=",">
+				cs_serv_alarm$suffix$.cssa_outlets = null
+			</isNull>				
+			<isNotNull property="cssaType" prepend=",">
+				cs_serv_alarm$suffix$.cssa_type = #cssaType#
+			</isNotNull>
+			<isNull property="cssaType" prepend=",">
+				cs_serv_alarm$suffix$.cssa_type = null
+			</isNull>				
+			<isNotNull property="cssaTitle" prepend=",">
+				cs_serv_alarm$suffix$.cssa_title = #cssaTitle#
+			</isNotNull>
+			<isNull property="cssaTitle" prepend=",">
+				cs_serv_alarm$suffix$.cssa_title = null
+			</isNull>				
+			<isNotNull property="cssaContent" prepend=",">
+				cs_serv_alarm$suffix$.cssa_content = #cssaContent#
+			</isNotNull>
+			<isNull property="cssaContent" prepend=",">
+				cs_serv_alarm$suffix$.cssa_content = null
+			</isNull>				
+			<isNotNull property="cssaRelate" prepend=",">
+				cs_serv_alarm$suffix$.cssa_relate = #cssaRelate#
+			</isNotNull>
+			<isNull property="cssaRelate" prepend=",">
+				cs_serv_alarm$suffix$.cssa_relate = null
+			</isNull>				
+			<isNotNull property="cssaSrouce" prepend=",">
+				cs_serv_alarm$suffix$.cssa_srouce = #cssaSrouce#
+			</isNotNull>
+			<isNull property="cssaSrouce" prepend=",">
+				cs_serv_alarm$suffix$.cssa_srouce = null
+			</isNull>				
+			<isNotNull property="cssaStatus" prepend=",">
+				cs_serv_alarm$suffix$.cssa_status = #cssaStatus#
+			</isNotNull>
+			<isNull property="cssaStatus" prepend=",">
+				cs_serv_alarm$suffix$.cssa_status = null
+			</isNull>				
+			<isNotNull property="cssaData" prepend=",">
+				cs_serv_alarm$suffix$.cssa_data = #cssaData#
+			</isNotNull>
+			<isNull property="cssaData" prepend=",">
+				cs_serv_alarm$suffix$.cssa_data = null
+			</isNull>				
+			<isNotNull property="cssaAddTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_add_time = #cssaAddTime#
+			</isNotNull>
+			<isNull property="cssaAddTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_add_time = null
+			</isNull>				
+			<isNotNull property="cssaUpdateTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_update_time = #cssaUpdateTime#
+			</isNotNull>
+			<isNull property="cssaUpdateTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_update_time = null
+			</isNull>				
+		where
+			cssa_id=#cssaId#
+	</update>
+	
+	<!-- 更新服务监控报警非空字段 -->
+	<update id="updateCsServAlarm$NotNull"  parameterClass="com.ccclubs.model.CsServAlarm">
+		update cs_serv_alarm$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssaHost" prepend=",">
+				cs_serv_alarm$suffix$.cssa_host = #cssaHost#
+			</isNotNull>		
+			<isNotNull property="cssaOutlets" prepend=",">
+				cs_serv_alarm$suffix$.cssa_outlets = #cssaOutlets#
+			</isNotNull>		
+			<isNotNull property="cssaType" prepend=",">
+				cs_serv_alarm$suffix$.cssa_type = #cssaType#
+			</isNotNull>		
+			<isNotNull property="cssaTitle" prepend=",">
+				cs_serv_alarm$suffix$.cssa_title = #cssaTitle#
+			</isNotNull>		
+			<isNotNull property="cssaContent" prepend=",">
+				cs_serv_alarm$suffix$.cssa_content = #cssaContent#
+			</isNotNull>		
+			<isNotNull property="cssaRelate" prepend=",">
+				cs_serv_alarm$suffix$.cssa_relate = #cssaRelate#
+			</isNotNull>		
+			<isNotNull property="cssaSrouce" prepend=",">
+				cs_serv_alarm$suffix$.cssa_srouce = #cssaSrouce#
+			</isNotNull>		
+			<isNotNull property="cssaStatus" prepend=",">
+				cs_serv_alarm$suffix$.cssa_status = #cssaStatus#
+			</isNotNull>		
+			<isNotNull property="cssaData" prepend=",">
+				cs_serv_alarm$suffix$.cssa_data = #cssaData#
+			</isNotNull>		
+			<isNotNull property="cssaAddTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_add_time = #cssaAddTime#
+			</isNotNull>		
+			<isNotNull property="cssaUpdateTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_update_time = #cssaUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cssa_id=#cssaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个服务监控报警 -->
+	<delete id="deleteCsServAlarmById" parameterClass="java.util.HashMap">
+		delete from cs_serv_alarm$suffix$ where cssa_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个服务监控报警 -->
+	<update id="removeCsServAlarmById" parameterClass="java.util.HashMap">
+		update cs_serv_alarm$suffix$ set  cs_serv_alarm$suffix$.cssa_status=-1  where cssa_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新服务监控报警 -->
+	<update id="updateCsServAlarmBy"  parameterClass="java.util.HashMap">
+		update cs_serv_alarm$suffix$ set		
+			cssa_id=cssa_id
+			<isNotNull property="V_cssaId" prepend=",">
+				cs_serv_alarm$suffix$.cssa_id = #V_cssaId#
+			</isNotNull>		
+			<isNotNull property="V_cssaHost" prepend=",">
+				cs_serv_alarm$suffix$.cssa_host = #V_cssaHost#
+			</isNotNull>		
+			<isNotNull property="V_cssaOutlets" prepend=",">
+				cs_serv_alarm$suffix$.cssa_outlets = #V_cssaOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cssaType" prepend=",">
+				cs_serv_alarm$suffix$.cssa_type = #V_cssaType#
+			</isNotNull>		
+			<isNotNull property="V_cssaTitle" prepend=",">
+				cs_serv_alarm$suffix$.cssa_title = #V_cssaTitle#
+			</isNotNull>		
+			<isNotNull property="V_cssaContent" prepend=",">
+				cs_serv_alarm$suffix$.cssa_content = #V_cssaContent#
+			</isNotNull>		
+			<isNotNull property="V_cssaRelate" prepend=",">
+				cs_serv_alarm$suffix$.cssa_relate = #V_cssaRelate#
+			</isNotNull>		
+			<isNotNull property="V_cssaSrouce" prepend=",">
+				cs_serv_alarm$suffix$.cssa_srouce = #V_cssaSrouce#
+			</isNotNull>		
+			<isNotNull property="V_cssaStatus" prepend=",">
+				cs_serv_alarm$suffix$.cssa_status = #V_cssaStatus#
+			</isNotNull>		
+			<isNotNull property="V_cssaData" prepend=",">
+				cs_serv_alarm$suffix$.cssa_data = #V_cssaData#
+			</isNotNull>		
+			<isNotNull property="V_cssaAddTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_add_time = #V_cssaAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssaUpdateTime" prepend=",">
+				cs_serv_alarm$suffix$.cssa_update_time = #V_cssaUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.cssa_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_serv_alarm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询-->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.cssa_type=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_serv_alarm$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where cs_serv_alarm$suffix$.cssa_status!=-1 and
+		1=1 		
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CssaOutlets"><!-- 调用一下CssaOutlets，把CsOutlets指向CssaOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[报警分类]查询条件sql片段 -->
+		<isNotNull property="CssaType"><!-- 调用一下CssaType，把SrvProperty指向CssaType --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsServAlarm_part.cs_serv_alarm_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除服务监控报警 -->
+	<update id="deleteCsServAlarmBy"  parameterClass="java.util.HashMap">
+		delete from cs_serv_alarm$suffix$ where 
+		cs_serv_alarm$suffix$.cssa_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsServAlarm_part.cs_serv_alarm_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

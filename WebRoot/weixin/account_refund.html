@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 申请退款</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="account_amount.html">返回</a>
+					</div>
+					<div class="showtitle">
+						退款
+					</div>
+				</div>
+			</div>
+			<s:if test="#request.csRefund!=null">
+				<div class="refundbox">
+					<dl>
+						<dt>
+							<img src="images/refud_icon1.png">
+						</dt>
+						<dd>
+							退款申请已经提交，正在等待工 作人员处理。
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/refud_icon2.png">
+						</dt>
+						<dd>
+							客服热线：0571-88190338
+						</dd>
+					</dl>
+				</div>
+				<div class="refund2box">
+					<dl>
+						<dt>
+							<img src="images/refud_icon3.png">
+						</dt>
+						<dd>
+							<strong>提交退款申请</strong>
+							<br>
+							${lz:date(csRefund.csrAddTime,"MM月dd日 HH:mm")}
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/refud_icon3.png">
+						</dt>
+						<dd>
+							<strong>工作人员处理</strong>
+							<br>
+							${lz:date(csRefund.csrCheckTime,"MM月dd日 08:45")}
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/refud_icon4.png">
+						</dt>
+						<dd>
+							<strong style="color: #888888;">退款成功</strong>
+							<br>
+							${lz:date(csRefund.csrEndTime,"MM月dd日 23:59")} 前
+						</dd>
+					</dl>
+				</div>
+				<div class="okbuybtn">
+					<a href="javascript:;" onclick="cancleRefund();">取消退款申请</a>
+				</div>
+			</s:if>
+			<s:else>
+				<div class="refundbox">
+					<dl>
+						<dt>
+							<img src="images/refud_icon1.png">
+						</dt>
+						<dd>
+							提交退款申请以后将不能再租用车辆了。
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/refud_icon2.png">
+						</dt>
+						<dd>
+							客服热线：0571-88190338
+						</dd>
+					</dl>
+				</div>
+				<div class="okbuybtn">
+					<a href="javascript:;" onclick="saveRefund();">提交退款申请</a>
+				</div>
+			</s:else>
+		</div>
+		<!-- 弹出层 -->
+		<div class="black"></div>
+		<div class="popbox">
+			<p>
+				提示信息：操作提示内容，如改时间段 已被预订请修改时间，续订成功等
+			</p>
+			<div class="popselect">
+				<a href="javascript:;">确定</a>
+			</div>
+		</div>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			$(document).on('click','.popselect a',function(){
+				$('.black').css("display", "none");
+				$('.popbox').css("display", "none");
+			});
+			
+			function open(){
+				$('.black').css("display", "block");
+				$('.popbox').css("display", "block");
+			};
+			
+			function saveRefund(){
+				if(confirm("确定要提交退款申请吗？")){
+					var ajax = {
+						url: "account_refundsubmit.html?t="+new Date().getTime(),
+						type: "POST",
+						async: true,
+						success: function(data) {
+							switch (data) {
+								case "100":
+									location.href = 'account_refund.html';
+									break;
+								case "101":
+									location.href = 'login.html';
+									break;
+								case "102":
+									$('.popbox p').html('亲，您没有可用余额可退啦～');
+									open();
+									break;
+								case "103":
+									$('.popbox p').html('亲，只有本人才能申请退款哦～');
+									open();
+									break;
+								case "104":
+									$('.popbox p').html('亲，您还有未完成的订单，不能申请退款哦～');
+									open();
+									break;
+								case "105":
+									$('.popbox p').html('亲，您已经提交过退款申请啦，不能申请退款哦～');
+									open();
+									break;
+								default:
+									$('.popbox p').html('系统出问题啦，请联系客服！');
+									open();
+									return;
+							}
+						}
+					}
+					$.ajax(ajax);
+		            return false;
+				}
+			}
+			
+			function cancleRefund(){
+			   if(confirm("确定不再继续等待退款处理结果了吗？")){
+						var ajax = {
+							url: "account_refundcancel.html?t="+new Date().getTime(),
+							type: "POST",
+							async: true,
+							success: function(data) {
+								switch (data) {
+									case "100":
+									location.href = 'account_refund.html';
+									break;
+									case "101":
+									location.href = 'login.html';
+									break;
+									case "102":
+										$('.popbox p').html('亲，只有本人才能取消退款申请哦～');
+										open();
+										break;
+									case "103":
+										$('.popbox p').html('亲，您没有可以取消的退款申请哦～');
+										open();
+										break;
+									default:
+										$('.popbox p').html('系统出问题啦，请联系客服！');
+										open();
+										return;
+								}
+							}
+						}
+						$.ajax(ajax);
+			            return false;
+					}
+				}
+		</script>
+	</body>
+</html>

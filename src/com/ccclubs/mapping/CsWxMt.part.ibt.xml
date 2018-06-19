@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsWxMt_part">	
+	<!-- 微信下行条件sql片段  -->
+	<sql id="cs_wx_mt_dynamic">
+		<dynamic>
+			<isNotEmpty property="cswmId" prepend="and">
+			    $cswmIdNot$ cs_wx_mt$suffix$.cswm_id = #cswmId#
+			</isNotEmpty>
+			<isNotNull property="cswmIdNot" prepend="and">
+				<isEmpty property="cswmId">
+				$cswmIdNot$ cs_wx_mt$suffix$.cswm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_wx_mt$suffix$.cswm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cswmHost" prepend="and">
+			    $cswmHostNot$ cs_wx_mt$suffix$.cswm_host = #cswmHost#
+			</isNotEmpty>
+			<isNotNull property="cswmHostNot" prepend="and">
+				<isEmpty property="cswmHost">
+				$cswmHostNot$ cs_wx_mt$suffix$.cswm_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cswmPlatform" prepend="and">
+			    $cswmPlatformNot$ cs_wx_mt$suffix$.cswm_platform = #cswmPlatform#
+			</isNotEmpty>
+			<isNotNull property="cswmPlatformNot" prepend="and">
+				<isEmpty property="cswmPlatform">
+				$cswmPlatformNot$ cs_wx_mt$suffix$.cswm_platform is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmOpenid" prepend="and">			    
+			    (<isNotNull property="cswmOpenidNot">
+			    cs_wx_mt$suffix$.cswm_openid is null or length(cs_wx_mt$suffix$.cswm_openid) &lt; 1 or
+			    </isNotNull>$cswmOpenidNot$ cs_wx_mt$suffix$.cswm_openid = #cswmOpenid#)
+			</isNotEmpty>
+			<isNotNull property="cswmOpenidNot" prepend="and">
+				<isEmpty property="cswmOpenid">
+				$cswmOpenidNot$ (cs_wx_mt$suffix$.cswm_openid is null or length(cs_wx_mt$suffix$.cswm_openid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmMember" prepend="and">
+			    $cswmMemberNot$ cs_wx_mt$suffix$.cswm_member = #cswmMember#
+			</isNotEmpty>
+			<isNotNull property="cswmMemberNot" prepend="and">
+				<isEmpty property="cswmMember">
+				$cswmMemberNot$ cs_wx_mt$suffix$.cswm_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmMsgFlag" prepend="and">			    
+			    (<isNotNull property="cswmMsgFlagNot">
+			    cs_wx_mt$suffix$.cswm_msg_flag is null or length(cs_wx_mt$suffix$.cswm_msg_flag) &lt; 1 or
+			    </isNotNull>$cswmMsgFlagNot$ cs_wx_mt$suffix$.cswm_msg_flag = #cswmMsgFlag#)
+			</isNotEmpty>
+			<isNotNull property="cswmMsgFlagNot" prepend="and">
+				<isEmpty property="cswmMsgFlag">
+				$cswmMsgFlagNot$ (cs_wx_mt$suffix$.cswm_msg_flag is null or length(cs_wx_mt$suffix$.cswm_msg_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmContentType" prepend="and">
+			    $cswmContentTypeNot$ cs_wx_mt$suffix$.cswm_content_type = #cswmContentType#
+			</isNotEmpty>
+			<isNotNull property="cswmContentTypeNot" prepend="and">
+				<isEmpty property="cswmContentType">
+				$cswmContentTypeNot$ cs_wx_mt$suffix$.cswm_content_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmRelate" prepend="and">
+			    $cswmRelateNot$ cs_wx_mt$suffix$.cswm_relate = #cswmRelate#
+			</isNotEmpty>
+			<isNotNull property="cswmRelateNot" prepend="and">
+				<isEmpty property="cswmRelate">
+				$cswmRelateNot$ cs_wx_mt$suffix$.cswm_relate is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmContent" prepend="and">			    
+			    (<isNotNull property="cswmContentNot">
+			    cs_wx_mt$suffix$.cswm_content is null or length(cs_wx_mt$suffix$.cswm_content) &lt; 1 or
+			    </isNotNull>$cswmContentNot$ cs_wx_mt$suffix$.cswm_content like #cswmContent#)
+			</isNotEmpty>
+			<isNotNull property="cswmContentNot" prepend="and">
+				<isEmpty property="cswmContent">
+				$cswmContentNot$ (cs_wx_mt$suffix$.cswm_content is null or length(cs_wx_mt$suffix$.cswm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmMo" prepend="and">
+			    $cswmMoNot$ cs_wx_mt$suffix$.cswm_mo = #cswmMo#
+			</isNotEmpty>
+			<isNotNull property="cswmMoNot" prepend="and">
+				<isEmpty property="cswmMo">
+				$cswmMoNot$ cs_wx_mt$suffix$.cswm_mo is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmSendTimeStart" prepend="and">
+			    $cswmSendTimeNot$   (cs_wx_mt$suffix$.cswm_send_time &gt;= #cswmSendTimeStart#
+			   <isEmpty property="cswmSendTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswmSendTimeEnd" prepend="and">
+				<isEmpty property="cswmSendTimeStart">$cswmSendTimeNot$   (</isEmpty>
+			    cs_wx_mt$suffix$.cswm_send_time &lt;= #cswmSendTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cswmSendTime" prepend="and">
+			    $cswmSendTimeNot$ cs_wx_mt$suffix$.cswm_send_time = #cswmSendTime#
+			</isNotEmpty>
+			<isNotNull property="cswmSendTimeNot" prepend="and">
+				<isEmpty property="cswmSendTimeStart"><isEmpty property="cswmSendTimeEnd"><isEmpty property="cswmSendTime">
+				$cswmSendTimeNot$ cs_wx_mt$suffix$.cswm_send_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmMask" prepend="and">
+			    $cswmMaskNot$ (cs_wx_mt$suffix$.cswm_mask &amp; #cswmMask#) = #cswmMask#
+			</isNotEmpty>
+			<isNotNull property="cswmMaskNot" prepend="and">
+				<isEmpty property="cswmMask">
+				$cswmMaskNot$ cs_wx_mt$suffix$.cswm_mask is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cswmSuccess" prepend="and">
+			    $cswmSuccessNot$ (cs_wx_mt$suffix$.cswm_success &amp; #cswmSuccess#) = #cswmSuccess#
+			</isNotEmpty>
+			<isNotNull property="cswmSuccessNot" prepend="and">
+				<isEmpty property="cswmSuccess">
+				$cswmSuccessNot$ cs_wx_mt$suffix$.cswm_success is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cswmAddTimeStart" prepend="and">
+			    $cswmAddTimeNot$   (cs_wx_mt$suffix$.cswm_add_time &gt;= #cswmAddTimeStart#
+			   <isEmpty property="cswmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswmAddTimeEnd" prepend="and">
+				<isEmpty property="cswmAddTimeStart">$cswmAddTimeNot$   (</isEmpty>
+			    cs_wx_mt$suffix$.cswm_add_time &lt;= #cswmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cswmAddTime" prepend="and">
+			    $cswmAddTimeNot$ cs_wx_mt$suffix$.cswm_add_time = #cswmAddTime#
+			</isNotEmpty>
+			<isNotNull property="cswmAddTimeNot" prepend="and">
+				<isEmpty property="cswmAddTimeStart"><isEmpty property="cswmAddTimeEnd"><isEmpty property="cswmAddTime">
+				$cswmAddTimeNot$ cs_wx_mt$suffix$.cswm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswmStatus" prepend="and">
+			    $cswmStatusNot$ cs_wx_mt$suffix$.cswm_status = #cswmStatus#
+			</isNotEmpty>
+			<isNotNull property="cswmStatusNot" prepend="and">
+				<isEmpty property="cswmStatus">
+				$cswmStatusNot$ cs_wx_mt$suffix$.cswm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 微信下行left join 条件sql片段 -->
+	<sql id="cs_wx_mt_join">
+		<dynamic>
+			<isNotEmpty property="CsWxMt.cswmId" prepend="and">
+			    $CsWxMt.cswmIdNot$ cs_wx_mt$CsWxMt.suffix$.cswm_id = #CsWxMt.cswmId#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmIdNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmId">
+				$cswmIdNot$ cs_wx_mt$CsWxMt.suffix$.cswm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_wx_mt$CsWxMt.suffix$.cswm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMt.cswmHost" prepend="and">
+			    $CsWxMt.cswmHostNot$ cs_wx_mt$CsWxMt.suffix$.cswm_host = #CsWxMt.cswmHost#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmHostNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmHost">
+				$cswmHostNot$ cs_wx_mt$CsWxMt.suffix$.cswm_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmPlatform" prepend="and">
+			    $CsWxMt.cswmPlatformNot$ cs_wx_mt$CsWxMt.suffix$.cswm_platform = #CsWxMt.cswmPlatform#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmPlatformNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmPlatform">
+				$cswmPlatformNot$ cs_wx_mt$CsWxMt.suffix$.cswm_platform is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmOpenid" prepend="and">
+				(<isNotNull property="CsWxMt.cswmOpenidNot">
+			    cs_wx_mt$CsWxMt.suffix$.cswm_openid is null or length(cs_wx_mt$CsWxMt.suffix$.cswm_openid) &lt; 1 or
+			    </isNotNull>$CsWxMt.cswmOpenidNot$ cs_wx_mt$CsWxMt.suffix$.cswm_openid = #CsWxMt.cswmOpenid#)
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmOpenidNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmOpenid">
+				$cswmOpenidNot$ (cs_wx_mt$CsWxMt.suffix$.cswm_openid is null or length(cs_wx_mt$CsWxMt.suffix$.cswm_openid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmMember" prepend="and">
+			    $CsWxMt.cswmMemberNot$ cs_wx_mt$CsWxMt.suffix$.cswm_member = #CsWxMt.cswmMember#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmMemberNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmMember">
+				$cswmMemberNot$ cs_wx_mt$CsWxMt.suffix$.cswm_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmMsgFlag" prepend="and">
+				(<isNotNull property="CsWxMt.cswmMsgFlagNot">
+			    cs_wx_mt$CsWxMt.suffix$.cswm_msg_flag is null or length(cs_wx_mt$CsWxMt.suffix$.cswm_msg_flag) &lt; 1 or
+			    </isNotNull>$CsWxMt.cswmMsgFlagNot$ cs_wx_mt$CsWxMt.suffix$.cswm_msg_flag = #CsWxMt.cswmMsgFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmMsgFlagNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmMsgFlag">
+				$cswmMsgFlagNot$ (cs_wx_mt$CsWxMt.suffix$.cswm_msg_flag is null or length(cs_wx_mt$CsWxMt.suffix$.cswm_msg_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmContentType" prepend="and">
+			    $CsWxMt.cswmContentTypeNot$ cs_wx_mt$CsWxMt.suffix$.cswm_content_type = #CsWxMt.cswmContentType#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmContentTypeNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmContentType">
+				$cswmContentTypeNot$ cs_wx_mt$CsWxMt.suffix$.cswm_content_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmRelate" prepend="and">
+			    $CsWxMt.cswmRelateNot$ cs_wx_mt$CsWxMt.suffix$.cswm_relate = #CsWxMt.cswmRelate#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmRelateNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmRelate">
+				$cswmRelateNot$ cs_wx_mt$CsWxMt.suffix$.cswm_relate is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmContent" prepend="and">
+				(<isNotNull property="CsWxMt.cswmContentNot">
+			    cs_wx_mt$CsWxMt.suffix$.cswm_content is null or length(cs_wx_mt$CsWxMt.suffix$.cswm_content) &lt; 1 or
+			    </isNotNull>$CsWxMt.cswmContentNot$ cs_wx_mt$CsWxMt.suffix$.cswm_content like #CsWxMt.cswmContent#)
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmContentNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmContent">
+				$cswmContentNot$ (cs_wx_mt$CsWxMt.suffix$.cswm_content is null or length(cs_wx_mt$CsWxMt.suffix$.cswm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmMo" prepend="and">
+			    $CsWxMt.cswmMoNot$ cs_wx_mt$CsWxMt.suffix$.cswm_mo = #CsWxMt.cswmMo#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmMoNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmMo">
+				$cswmMoNot$ cs_wx_mt$CsWxMt.suffix$.cswm_mo is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmSendTimeStart" prepend="and">
+			    $CsWxMt.cswmSendTimeNot$   (cs_wx_mt$CsWxMt.suffix$.cswm_send_time &gt;= #CsWxMt.cswmSendTimeStart#
+			   <isEmpty property="CsWxMt.cswmSendTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMt.cswmSendTimeEnd" prepend="and">
+				<isEmpty property="CsWxMt.cswmSendTimeStart">$CsWxMt.cswmSendTimeNot$   (</isEmpty>
+			    cs_wx_mt$CsWxMt.suffix$.cswm_send_time &lt;= #CsWxMt.cswmSendTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMt.cswmSendTime" prepend="and">
+			    $CsWxMt.cswmSendTimeNot$ cs_wx_mt$CsWxMt.suffix$.cswm_send_time = #CsWxMt.cswmSendTime#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmSendTimeNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmSendTimeStart"><isEmpty property="CsWxMt.cswmSendTimeEnd"><isEmpty property="CsWxMt.cswmSendTime">
+				$cswmSendTimeNot$ cs_wx_mt$CsWxMt.suffix$.cswm_send_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmMask" prepend="and">
+			    $CsWxMt.cswmMaskNot$ (cs_wx_mt$CsWxMt.suffix$.cswm_mask &amp; #CsWxMt.cswmMask#) = #CsWxMt.cswmMask#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmMaskNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmMask">
+				$cswmMaskNot$ cs_wx_mt$CsWxMt.suffix$.cswm_mask is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmSuccess" prepend="and">
+			    $CsWxMt.cswmSuccessNot$ (cs_wx_mt$CsWxMt.suffix$.cswm_success &amp; #CsWxMt.cswmSuccess#) = #CsWxMt.cswmSuccess#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmSuccessNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmSuccess">
+				$cswmSuccessNot$ cs_wx_mt$CsWxMt.suffix$.cswm_success is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmAddTimeStart" prepend="and">
+			    $CsWxMt.cswmAddTimeNot$   (cs_wx_mt$CsWxMt.suffix$.cswm_add_time &gt;= #CsWxMt.cswmAddTimeStart#
+			   <isEmpty property="CsWxMt.cswmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMt.cswmAddTimeEnd" prepend="and">
+				<isEmpty property="CsWxMt.cswmAddTimeStart">$CsWxMt.cswmAddTimeNot$   (</isEmpty>
+			    cs_wx_mt$CsWxMt.suffix$.cswm_add_time &lt;= #CsWxMt.cswmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsWxMt.cswmAddTime" prepend="and">
+			    $CsWxMt.cswmAddTimeNot$ cs_wx_mt$CsWxMt.suffix$.cswm_add_time = #CsWxMt.cswmAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmAddTimeNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmAddTimeStart"><isEmpty property="CsWxMt.cswmAddTimeEnd"><isEmpty property="CsWxMt.cswmAddTime">
+				$cswmAddTimeNot$ cs_wx_mt$CsWxMt.suffix$.cswm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxMt.cswmStatus" prepend="and">
+			    $CsWxMt.cswmStatusNot$ cs_wx_mt$CsWxMt.suffix$.cswm_status = #CsWxMt.cswmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsWxMt.cswmStatusNot" prepend="and">
+				<isEmpty property="CsWxMt.cswmStatus">
+				$cswmStatusNot$ cs_wx_mt$CsWxMt.suffix$.cswm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

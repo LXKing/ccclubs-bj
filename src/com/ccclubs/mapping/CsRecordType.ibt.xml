@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 消费类型之SQL映射 -->
+	<resultMap id="CsRecordType" class="com.ccclubs.model.CsRecordType">
+		<result property="csrtId" column="csrt_id"/>
+		<result property="csrtTypeName" column="csrt_type_name"/>
+		<result property="csrtMoneyType" column="csrt_money_type"/>
+		<result property="csrtIsIncome" column="csrt_is_income"/>
+		<result property="csrtCanInvoice" column="csrt_can_invoice"/>
+		<result property="csrtSubject" column="csrt_subject"/>
+		<result property="csrtStatus" column="csrt_status"/>
+	</resultMap>
+		
+	<!-- 获取所有消费类型 -->
+	<select id="getCsRecordTypeList" resultMap="CsRecordType">
+		select cs_record_type$suffix$.* from cs_record_type$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询-->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.csrt_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_record_type$suffix$.csrt_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRecordType_part.cs_record_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取消费类型分页 -->
+	<select id="getCsRecordTypePage" parameterClass="java.util.HashMap" resultMap="CsRecordType">
+		select cs_record_type$suffix$.* from cs_record_type$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询 -->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.csrt_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_record_type$suffix$.csrt_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRecordType_part.cs_record_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取消费类型总数 -->
+	<select id="getCsRecordTypeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_record_type$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.csrt_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_record_type$suffix$.csrt_status!=-1
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRecordType_part.cs_record_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取消费类型 -->
+	<select id="getCsRecordTypeById" parameterClass="java.util.HashMap" resultMap="CsRecordType">
+		select cs_record_type$suffix$.* from cs_record_type$suffix$
+		where csrt_id=#id#
+	</select>
+	
+		
+	<!-- 保存消费类型 -->
+	<insert id="saveCsRecordType"  parameterClass="com.ccclubs.model.CsRecordType">
+		insert into cs_record_type$suffix$
+		(
+			cs_record_type$suffix$.csrt_type_name
+			,cs_record_type$suffix$.csrt_money_type
+			,cs_record_type$suffix$.csrt_is_income
+			,cs_record_type$suffix$.csrt_can_invoice
+			,cs_record_type$suffix$.csrt_subject
+			,cs_record_type$suffix$.csrt_status
+		)
+		values(
+			<isNotNull property="csrtTypeName" prepend="">
+				#csrtTypeName#
+			</isNotNull>
+			<isNull property="csrtTypeName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrtMoneyType" prepend=",">
+				#csrtMoneyType#
+			</isNotNull>
+			<isNull property="csrtMoneyType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrtIsIncome" prepend=",">
+				#csrtIsIncome#
+			</isNotNull>
+			<isNull property="csrtIsIncome" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrtCanInvoice" prepend=",">
+				#csrtCanInvoice#
+			</isNotNull>
+			<isNull property="csrtCanInvoice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrtSubject" prepend=",">
+				#csrtSubject#
+			</isNotNull>
+			<isNull property="csrtSubject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrtStatus" prepend=",">
+				#csrtStatus#
+			</isNotNull>
+			<isNull property="csrtStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新消费类型 -->
+	<update id="updateCsRecordType"  parameterClass="com.ccclubs.model.CsRecordType">
+		update cs_record_type$suffix$ set
+			<isNotNull property="csrtTypeName" prepend="">
+				cs_record_type$suffix$.csrt_type_name = #csrtTypeName#
+			</isNotNull>
+			<isNull property="csrtTypeName" prepend="">
+				cs_record_type$suffix$.csrt_type_name = null
+			</isNull>				
+			<isNotNull property="csrtMoneyType" prepend=",">
+				cs_record_type$suffix$.csrt_money_type = #csrtMoneyType#
+			</isNotNull>
+			<isNull property="csrtMoneyType" prepend=",">
+				cs_record_type$suffix$.csrt_money_type = null
+			</isNull>				
+			<isNotNull property="csrtIsIncome" prepend=",">
+				cs_record_type$suffix$.csrt_is_income = #csrtIsIncome#
+			</isNotNull>
+			<isNull property="csrtIsIncome" prepend=",">
+				cs_record_type$suffix$.csrt_is_income = null
+			</isNull>				
+			<isNotNull property="csrtCanInvoice" prepend=",">
+				cs_record_type$suffix$.csrt_can_invoice = #csrtCanInvoice#
+			</isNotNull>
+			<isNull property="csrtCanInvoice" prepend=",">
+				cs_record_type$suffix$.csrt_can_invoice = null
+			</isNull>				
+			<isNotNull property="csrtSubject" prepend=",">
+				cs_record_type$suffix$.csrt_subject = #csrtSubject#
+			</isNotNull>
+			<isNull property="csrtSubject" prepend=",">
+				cs_record_type$suffix$.csrt_subject = null
+			</isNull>				
+			<isNotNull property="csrtStatus" prepend=",">
+				cs_record_type$suffix$.csrt_status = #csrtStatus#
+			</isNotNull>
+			<isNull property="csrtStatus" prepend=",">
+				cs_record_type$suffix$.csrt_status = null
+			</isNull>				
+		where
+			csrt_id=#csrtId#
+	</update>
+	
+	<!-- 更新消费类型非空字段 -->
+	<update id="updateCsRecordType$NotNull"  parameterClass="com.ccclubs.model.CsRecordType">
+		update cs_record_type$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrtTypeName" prepend=",">
+				cs_record_type$suffix$.csrt_type_name = #csrtTypeName#
+			</isNotNull>		
+			<isNotNull property="csrtMoneyType" prepend=",">
+				cs_record_type$suffix$.csrt_money_type = #csrtMoneyType#
+			</isNotNull>		
+			<isNotNull property="csrtIsIncome" prepend=",">
+				cs_record_type$suffix$.csrt_is_income = #csrtIsIncome#
+			</isNotNull>		
+			<isNotNull property="csrtCanInvoice" prepend=",">
+				cs_record_type$suffix$.csrt_can_invoice = #csrtCanInvoice#
+			</isNotNull>		
+			<isNotNull property="csrtSubject" prepend=",">
+				cs_record_type$suffix$.csrt_subject = #csrtSubject#
+			</isNotNull>		
+			<isNotNull property="csrtStatus" prepend=",">
+				cs_record_type$suffix$.csrt_status = #csrtStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csrt_id=#csrtId#
+	</update>
+	
+
+	<!-- 根据ID删除一个消费类型 -->
+	<delete id="deleteCsRecordTypeById" parameterClass="java.util.HashMap">
+		delete from cs_record_type$suffix$ where csrt_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个消费类型 -->
+	<update id="removeCsRecordTypeById" parameterClass="java.util.HashMap">
+		update cs_record_type$suffix$ set  cs_record_type$suffix$.csrt_status=-1  where csrt_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新消费类型 -->
+	<update id="updateCsRecordTypeBy"  parameterClass="java.util.HashMap">
+		update cs_record_type$suffix$ set		
+			csrt_id=csrt_id
+			<isNotNull property="V_csrtId" prepend=",">
+				cs_record_type$suffix$.csrt_id = #V_csrtId#
+			</isNotNull>		
+			<isNotNull property="V_csrtTypeName" prepend=",">
+				cs_record_type$suffix$.csrt_type_name = #V_csrtTypeName#
+			</isNotNull>		
+			<isNotNull property="V_csrtMoneyType" prepend=",">
+				cs_record_type$suffix$.csrt_money_type = #V_csrtMoneyType#
+			</isNotNull>		
+			<isNotNull property="V_csrtIsIncome" prepend=",">
+				cs_record_type$suffix$.csrt_is_income = #V_csrtIsIncome#
+			</isNotNull>		
+			<isNotNull property="V_csrtCanInvoice" prepend=",">
+				cs_record_type$suffix$.csrt_can_invoice = #V_csrtCanInvoice#
+			</isNotNull>		
+			<isNotNull property="V_csrtSubject" prepend=",">
+				cs_record_type$suffix$.csrt_subject = #V_csrtSubject#
+			</isNotNull>		
+			<isNotNull property="V_csrtStatus" prepend=",">
+				cs_record_type$suffix$.csrt_status = #V_csrtStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[消费科目]查询-->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<isNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.csrt_subject=cs_record_subject$CsRecordSubject.suffix$.csrs_id
+			</isNull>
+			<isNotNull property="CsRecordSubject.on">
+				left join cs_record_subject cs_record_subject$CsRecordSubject.suffix$ on cs_record_type$suffix$.$CsRecordSubject.on$=cs_record_subject$CsRecordSubject.suffix$.csrs_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_record_type$suffix$.csrt_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[消费科目]查询条件sql片段 -->
+		<isNotNull property="CsrtSubject"><!-- 调用一下CsrtSubject，把CsRecordSubject指向CsrtSubject --></isNotNull>
+		<isNotNull property="CsRecordSubject">
+			<include refid="CsRecordSubject_part.cs_record_subject_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRecordType_part.cs_record_type_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除消费类型 -->
+	<update id="deleteCsRecordTypeBy"  parameterClass="java.util.HashMap">
+		delete from cs_record_type$suffix$ where 
+		cs_record_type$suffix$.csrt_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRecordType_part.cs_record_type_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

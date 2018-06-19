@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 远程控制之SQL映射 -->
+	<resultMap id="CsRemote" class="com.ccclubs.model.CsRemote">
+		<result property="csrId" column="csr_id"/>
+		<result property="csrHost" column="csr_host"/>
+		<result property="csrNumber" column="csr_number"/>
+		<result property="csrCar" column="csr_car"/>
+		<result property="csrWay" column="csr_way"/>
+		<result property="csrType" column="csr_type"/>
+		<result property="csrCode" column="csr_code"/>
+		<result property="csrEditor" column="csr_editor"/>
+		<result property="csrRemark" column="csr_remark"/>
+		<result property="csrUpdateTime" column="csr_update_time"/>
+		<result property="csrAddTime" column="csr_add_time"/>
+		<result property="csrState" column="csr_state"/>
+		<result property="csrStatus" column="csr_status"/>
+		<result property="csrCase" column="csr_case"/>
+	</resultMap>
+		
+	<!-- 获取所有远程控制 -->
+	<select id="getCsRemoteList" resultMap="CsRemote">
+		select cs_remote$suffix$.* from cs_remote$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询-->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.csr_case=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询条件sql片段 -->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRemote_part.cs_remote_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取远程控制分页 -->
+	<select id="getCsRemotePage" parameterClass="java.util.HashMap" resultMap="CsRemote">
+		select cs_remote$suffix$.* from cs_remote$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询-->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.csr_case=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询条件sql片段 -->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRemote_part.cs_remote_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取远程控制总数 -->
+	<select id="getCsRemoteEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_remote$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询-->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.csr_case=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_remote$suffix$.csr_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询条件sql片段 -->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRemote_part.cs_remote_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取远程控制 -->
+	<select id="getCsRemoteById" parameterClass="java.util.HashMap" resultMap="CsRemote">
+		select cs_remote$suffix$.* from cs_remote$suffix$
+		where csr_id=#id#
+	</select>
+	
+		
+	<!-- 保存远程控制 -->
+	<insert id="saveCsRemote"  parameterClass="com.ccclubs.model.CsRemote">
+		insert into cs_remote$suffix$
+		(
+			cs_remote$suffix$.csr_host
+			,cs_remote$suffix$.csr_number
+			,cs_remote$suffix$.csr_car
+			,cs_remote$suffix$.csr_way
+			,cs_remote$suffix$.csr_type
+			,cs_remote$suffix$.csr_code
+			,cs_remote$suffix$.csr_editor
+			,cs_remote$suffix$.csr_remark
+			,cs_remote$suffix$.csr_update_time
+			,cs_remote$suffix$.csr_add_time
+			,cs_remote$suffix$.csr_state
+			,cs_remote$suffix$.csr_status
+			,cs_remote$suffix$.csr_case
+		)
+		values(
+			<isNotNull property="csrHost" prepend="">
+				#csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrNumber" prepend=",">
+				#csrNumber#
+			</isNotNull>
+			<isNull property="csrNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrCar" prepend=",">
+				#csrCar#
+			</isNotNull>
+			<isNull property="csrCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrWay" prepend=",">
+				#csrWay#
+			</isNotNull>
+			<isNull property="csrWay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrType" prepend=",">
+				#csrType#
+			</isNotNull>
+			<isNull property="csrType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrCode" prepend=",">
+				#csrCode#
+			</isNotNull>
+			<isNull property="csrCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrEditor" prepend=",">
+				#csrEditor#
+			</isNotNull>
+			<isNull property="csrEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRemark" prepend=",">
+				#csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrUpdateTime" prepend=",">
+				#csrUpdateTime#
+			</isNotNull>
+			<isNull property="csrUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAddTime" prepend=",">
+				#csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrState" prepend=",">
+				#csrState#
+			</isNotNull>
+			<isNull property="csrState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrStatus" prepend=",">
+				#csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrCase" prepend=",">
+				#csrCase#
+			</isNotNull>
+			<isNull property="csrCase" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新远程控制 -->
+	<update id="updateCsRemote"  parameterClass="com.ccclubs.model.CsRemote">
+		update cs_remote$suffix$ set
+			<isNotNull property="csrHost" prepend="">
+				cs_remote$suffix$.csr_host = #csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				cs_remote$suffix$.csr_host = null
+			</isNull>				
+			<isNotNull property="csrNumber" prepend=",">
+				cs_remote$suffix$.csr_number = #csrNumber#
+			</isNotNull>
+			<isNull property="csrNumber" prepend=",">
+				cs_remote$suffix$.csr_number = null
+			</isNull>				
+			<isNotNull property="csrCar" prepend=",">
+				cs_remote$suffix$.csr_car = #csrCar#
+			</isNotNull>
+			<isNull property="csrCar" prepend=",">
+				cs_remote$suffix$.csr_car = null
+			</isNull>				
+			<isNotNull property="csrWay" prepend=",">
+				cs_remote$suffix$.csr_way = #csrWay#
+			</isNotNull>
+			<isNull property="csrWay" prepend=",">
+				cs_remote$suffix$.csr_way = null
+			</isNull>				
+			<isNotNull property="csrType" prepend=",">
+				cs_remote$suffix$.csr_type = #csrType#
+			</isNotNull>
+			<isNull property="csrType" prepend=",">
+				cs_remote$suffix$.csr_type = null
+			</isNull>				
+			<isNotNull property="csrCode" prepend=",">
+				cs_remote$suffix$.csr_code = #csrCode#
+			</isNotNull>
+			<isNull property="csrCode" prepend=",">
+				cs_remote$suffix$.csr_code = null
+			</isNull>				
+			<isNotNull property="csrEditor" prepend=",">
+				cs_remote$suffix$.csr_editor = #csrEditor#
+			</isNotNull>
+			<isNull property="csrEditor" prepend=",">
+				cs_remote$suffix$.csr_editor = null
+			</isNull>				
+			<isNotNull property="csrRemark" prepend=",">
+				cs_remote$suffix$.csr_remark = #csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				cs_remote$suffix$.csr_remark = null
+			</isNull>				
+			<isNotNull property="csrUpdateTime" prepend=",">
+				cs_remote$suffix$.csr_update_time = #csrUpdateTime#
+			</isNotNull>
+			<isNull property="csrUpdateTime" prepend=",">
+				cs_remote$suffix$.csr_update_time = null
+			</isNull>				
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_remote$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				cs_remote$suffix$.csr_add_time = null
+			</isNull>				
+			<isNotNull property="csrState" prepend=",">
+				cs_remote$suffix$.csr_state = #csrState#
+			</isNotNull>
+			<isNull property="csrState" prepend=",">
+				cs_remote$suffix$.csr_state = null
+			</isNull>				
+			<isNotNull property="csrStatus" prepend=",">
+				cs_remote$suffix$.csr_status = #csrStatus#
+			</isNotNull>
+			<isNull property="csrStatus" prepend=",">
+				cs_remote$suffix$.csr_status = null
+			</isNull>				
+			<isNotNull property="csrCase" prepend=",">
+				cs_remote$suffix$.csr_case = #csrCase#
+			</isNotNull>
+			<isNull property="csrCase" prepend=",">
+				cs_remote$suffix$.csr_case = null
+			</isNull>				
+		where
+			csr_id=#csrId#
+	</update>
+	
+	<!-- 更新远程控制非空字段 -->
+	<update id="updateCsRemote$NotNull"  parameterClass="com.ccclubs.model.CsRemote">
+		update cs_remote$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrHost" prepend=",">
+				cs_remote$suffix$.csr_host = #csrHost#
+			</isNotNull>		
+			<isNotNull property="csrNumber" prepend=",">
+				cs_remote$suffix$.csr_number = #csrNumber#
+			</isNotNull>		
+			<isNotNull property="csrCar" prepend=",">
+				cs_remote$suffix$.csr_car = #csrCar#
+			</isNotNull>		
+			<isNotNull property="csrWay" prepend=",">
+				cs_remote$suffix$.csr_way = #csrWay#
+			</isNotNull>		
+			<isNotNull property="csrType" prepend=",">
+				cs_remote$suffix$.csr_type = #csrType#
+			</isNotNull>		
+			<isNotNull property="csrCode" prepend=",">
+				cs_remote$suffix$.csr_code = #csrCode#
+			</isNotNull>		
+			<isNotNull property="csrEditor" prepend=",">
+				cs_remote$suffix$.csr_editor = #csrEditor#
+			</isNotNull>		
+			<isNotNull property="csrRemark" prepend=",">
+				cs_remote$suffix$.csr_remark = #csrRemark#
+			</isNotNull>		
+			<isNotNull property="csrUpdateTime" prepend=",">
+				cs_remote$suffix$.csr_update_time = #csrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_remote$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>		
+			<isNotNull property="csrState" prepend=",">
+				cs_remote$suffix$.csr_state = #csrState#
+			</isNotNull>		
+			<isNotNull property="csrStatus" prepend=",">
+				cs_remote$suffix$.csr_status = #csrStatus#
+			</isNotNull>		
+			<isNotNull property="csrCase" prepend=",">
+				cs_remote$suffix$.csr_case = #csrCase#
+			</isNotNull>		
+			</dynamic>
+		where
+			csr_id=#csrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个远程控制 -->
+	<delete id="deleteCsRemoteById" parameterClass="java.util.HashMap">
+		delete from cs_remote$suffix$ where csr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个远程控制 -->
+	<update id="removeCsRemoteById" parameterClass="java.util.HashMap">
+		update cs_remote$suffix$ set  cs_remote$suffix$.csr_status=-1  where csr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新远程控制 -->
+	<update id="updateCsRemoteBy"  parameterClass="java.util.HashMap">
+		update cs_remote$suffix$ set		
+			csr_id=csr_id
+			<isNotNull property="V_csrId" prepend=",">
+				cs_remote$suffix$.csr_id = #V_csrId#
+			</isNotNull>		
+			<isNotNull property="V_csrHost" prepend=",">
+				cs_remote$suffix$.csr_host = #V_csrHost#
+			</isNotNull>		
+			<isNotNull property="V_csrNumber" prepend=",">
+				cs_remote$suffix$.csr_number = #V_csrNumber#
+			</isNotNull>		
+			<isNotNull property="V_csrCar" prepend=",">
+				cs_remote$suffix$.csr_car = #V_csrCar#
+			</isNotNull>		
+			<isNotNull property="V_csrWay" prepend=",">
+				cs_remote$suffix$.csr_way = #V_csrWay#
+			</isNotNull>		
+			<isNotNull property="V_csrType" prepend=",">
+				cs_remote$suffix$.csr_type = #V_csrType#
+			</isNotNull>		
+			<isNotNull property="V_csrCode" prepend=",">
+				cs_remote$suffix$.csr_code = #V_csrCode#
+			</isNotNull>		
+			<isNotNull property="V_csrEditor" prepend=",">
+				cs_remote$suffix$.csr_editor = #V_csrEditor#
+			</isNotNull>		
+			<isNotNull property="V_csrRemark" prepend=",">
+				cs_remote$suffix$.csr_remark = #V_csrRemark#
+			</isNotNull>		
+			<isNotNull property="V_csrUpdateTime" prepend=",">
+				cs_remote$suffix$.csr_update_time = #V_csrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csrAddTime" prepend=",">
+				cs_remote$suffix$.csr_add_time = #V_csrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csrState" prepend=",">
+				cs_remote$suffix$.csr_state = #V_csrState#
+			</isNotNull>		
+			<isNotNull property="V_csrStatus" prepend=",">
+				cs_remote$suffix$.csr_status = #V_csrStatus#
+			</isNotNull>		
+			<isNotNull property="V_csrCase" prepend=",">
+				cs_remote$suffix$.csr_case = #V_csrCase#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.csr_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_remote$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询-->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.csr_case=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_remote$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsrCar"><!-- 调用一下CsrCar，把CsCar指向CsrCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[控制原因]查询条件sql片段 -->
+		<isNotNull property="CsrCase"><!-- 调用一下CsrCase，把SrvProperty指向CsrCase --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRemote_part.cs_remote_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除远程控制 -->
+	<update id="deleteCsRemoteBy"  parameterClass="java.util.HashMap">
+		delete from cs_remote$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRemote_part.cs_remote_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

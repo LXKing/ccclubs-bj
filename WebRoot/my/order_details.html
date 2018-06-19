@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>订单详情${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_keyword')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.order.list.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.order.details.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/bg5.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-global-cont">
+			<%@ include file="/include/nav.html"%>
+
+			<div id="ccc-container" class="ccc-grid-980">
+				<div class="ccc-paper">
+					<div class="ccc-header-linear-bg"></div>
+					<div class="ccc-paper-header">
+						<h1>
+							订单详情：
+							<span class="ccc-font-lato">${csOrder.csoId}</span>（${csOrder.csoStatus == 0?'已预订':''}${csOrder.csoStatus == 1?'正在执行':''}${csOrder.csoStatus == 2?'已还车':''}${csOrder.csoStatus == 3?'已取消':''}${csOrder.csoStatus == 4?'已完成':''}${csOrder.csoStatus == 5?'待处理':''}${csOrder.csoStatus == 6?'已退款':''}${csOrder.csoStatus == 7?'已撤销':''}）
+						</h1>
+						<em></em>
+					</div>
+					<div class="ccc-paper-cont">
+						<div class="ccc-order-summary ccc-clearfix">
+							<div class="ccc-car-thumb">
+								${lz:set("car",(get:CsCar(csOrder.csoCar)))}
+								<img src="${lz:or(car.cscPreview,car.$cscModel.cscmImage)}" />
+								<s:if test="#request.csOrder.csoIsAdCar==null">
+										${csOrder.$csoCar.cscIsAd == true ? '<i class="ad"></i>' : ''}
+								</s:if>
+								<s:else>${csOrder.csoIsAdCar == true ? '<i class="ad"></i>' : ''}</s:else>
+								<span class="ccc-thumb-shadow"></span>
+							</div>
+							<div class="ccc-order-details">
+								<ol class="ccc-clearfix">
+									<li>
+										<span class="ccc-label">车牌号：</span>${csOrder.$csoCar.cscCarNo}
+									</li>
+									<li>
+										<span class="ccc-label">车型：</span>${csOrder.$csoCar.$cscModel.cscmName}
+									</li>
+									<li>
+										<span class="ccc-label">取车时间：</span><span class="ccc-font-lato">${lz:date(csOrder.csoStartTime,"yyyy-MM-dd , HH:mm")}</span>
+									</li>
+									<li>
+										<span class="ccc-label">实际取车时间：</span><span class="ccc-font-lato">${lz:date(csOrder.csoTakeTime,"yyyy-MM-dd , HH:mm")}</span>
+									</li>
+									<li>
+										<span class="ccc-label">还车时间：</span><span class="ccc-font-lato">${lz:date(csOrder.csoFinishTime,"yyyy-MM-dd , HH:mm")}</span>
+									</li>
+									<li>
+										<span class="ccc-label">实际还车时间：</span><span class="ccc-font-lato">${lz:date(csOrder.csoRetTime,"yyyy-MM-dd , HH:mm")}</span>
+									</li>
+									<li>
+										<span class="ccc-label">取车网点：</span>${csOrder.$csoOutlets.csoName}
+									</li>
+									<li>
+										<span class="ccc-label">还车网点：</span>${csOrder.$csoOutletsRet.csoName}
+										</span>
+									</li>
+									<li>
+										<span class="ccc-label">会员卡号：</span><span class="ccc-font-lato">${csOrder.$csoUseMember.$csmEvcard.csecNumber}</span>
+									</li>
+									<li>
+										<span class="ccc-label">授权码：</span><span class="ccc-font-lato">${csOrder.csoCode}</span>
+									</li>
+								</ol>
+							</div>
+						</div>
+						<s:if test="#request.csOrder.csoId>10014521">
+							<div class="ccc-order-list">
+								<div class="ccc-order-table-linear-bg"></div>
+								<table class="ccc-order-list-table" width="100%">
+									<colgroup>
+										<col width="35%">
+										<col width="">
+										<col width="">
+										<col width="15%">
+										<col width="">
+									</colgroup>
+									<thead>
+										<tr>
+											<th class="item">
+												产品列表
+											</th>
+											<th class="price">
+												单价（元）
+											</th>
+											<th class="amount">
+												计数
+											</th>
+											<th class="discount">
+												优惠
+											</th>
+											<th class="sum">
+												小计（元）
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<s:iterator value="#request.csOrder.csoCostDetails" id="item" status="i">
+											<s:if test="#i.modulus(2) == 1">
+												<tr>
+											</s:if>
+											<s:else>
+												<tr class="split">
+											</s:else>
+											<td class="item">
+												<p>
+													${item.$csodGoods.csgName}
+												</p>
+												<p class="ccc-time">
+													(${lz:date(item.csodStart,"MM-dd , HH:mm")} ~ ${lz:date(item.csodEnd,"MM-dd , HH:mm")})
+												</p>
+											</td>
+											<td class="price">
+												<s:if test="#item.csodRebate<1 ">
+												<p class="ccc-price-original">
+														${lz:digit(item.csodPrice,2)}
+													</p>
+												</s:if>
+												<p class="ccc-price-now">
+													${lz:digit(item.csodPriceReal*item.csodRebate,2)}
+												</p>
+											</td>
+											<td class="amount">
+												<p>
+													<s:if test="#item.$csodGoods.csgName.contains('公里') or #item.$csodGoods.csgName.contains('里程')">
+														${cc:toInt(item.csodCount)}公里
+													</s:if>
+													<s:else>
+													${cc:getTimeDesc(item.csodStart,item.csodEnd)}
+												</s:else>
+												</p>
+											</td>
+											<td class="discount">
+												<s:if test="#item.csodRemark.contains('车辆折扣')">
+													<p>
+														宣传车
+													</p>
+												</s:if>
+												<s:if test="#item.csodRemark.contains('会员折扣')">
+													<p>
+														会员折扣
+														<span class="ccc-together" title="风雨同舟，一路有你，专享租金优惠"></span>
+													</p>
+												</s:if>
+												<s:if test="#item.csodRemark.contains('里程阶梯折扣')">
+													<p>
+														里程阶梯折扣
+													</p>
+												</s:if>
+												<s:if test="#item.csodRebate<1">
+												<p>
+														（${lz:digit(item.csodRebate*10,1)}折）
+													</p>
+												</s:if>
+												<s:if test="#item.csodRemark.contains('免费小时')">
+													<p>
+														使用${item.csodCount - item.csodCountReal}个免费小时
+													</p>
+												</s:if>
+												<s:if test="#item.csodRemark.contains('套餐')">
+													<s:iterator value="#request.csOrder.gifts" id="entry" status="j">
+														<p>
+															使用套餐优惠${entry.csurCount}个
+														</p>
+													</s:iterator>
+												</s:if>
+												<s:if test="#item.csodRemark.equals('基础价格')">
+													<p>
+														基础价格
+													</p>
+												</s:if>
+											</td>
+											<td class="sum">
+												<p>
+													${lz:digit(item.csodTotalReal,2)}
+												</p>
+											</td>
+											</tr>
+										</s:iterator>
+									</tbody>
+								</table>
+								<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+							</div>
+						</s:if>
+						<s:else>
+							<div class="ccc-order-list">
+								<div class="ccc-order-table-linear-bg"></div>
+								<table class="ccc-order-list-table" width="100%">
+									<colgroup>
+										<col width="20%">
+										<col width="">
+										<col width="">
+										<col width="20%">
+										<col width="">
+									</colgroup>
+									<thead>
+										<tr>
+											<th class="item">
+												实付租金（元）
+											</th>
+											<th class="price">
+												油里程费用（元）
+											</th>
+											<th class="amount">
+												电里程费用（元）
+											</th>
+											<th class="discount">
+												免责费用（元）
+											</th>
+											<th class="sum">
+												超时费用（元）
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="item">
+												<p>
+													${lz:digit(csOrder.csoPayRent,2)}
+												</p>
+											</td>
+											<td class="price">
+												<p>
+													${lz:digit(csOrder.csoPayMileage,2)}
+												</p>
+											</td>
+											<td class="amount">
+												<p>
+													${lz:digit(csOrder.csoPayKilom,2)}
+												</p>
+											</td>
+											<td class="discount">
+												<p>
+													${lz:digit(csOrder.csoPayInsure,2)}
+												</p>
+											</td>
+											<td class="sum">
+												<p>
+													${lz:digit(csOrder.csoPayTimeout,2)}
+												</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<img src="/images/icons/simple-divider.png" class="ccc-my-divider" />
+							</div>
+						</s:else>
+
+						<div class="ccc-order-expense ccc-clearfix">
+							<div class="ccc-divider">
+								<em></em><i></i>
+							</div>
+							<span>实际租车总费用：</span>
+							<div class="ccc-order-total">
+								<sup>
+									￥
+								</sup>
+								<strong>${lz:digit(csOrder.csoPayReal,2)}</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<footer id="ccc-footer">
+			</footer>
+
+		</div>
+		<script src="/js/jquery-1.10.1.min.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+	</body>
+</html>

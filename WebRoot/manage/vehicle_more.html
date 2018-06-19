@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>车辆信息</title>
+</head>
+
+<body class="gradient">
+<div class="vehicle_countent">
+	<div class="vehicles_img">
+		<img src="images/car_bg_02.png" width="100%">
+		<div class="vehicles_text">${carInfo.cscCarNo}</div>
+	</div>
+	<div class="vehicles_list">
+		<ul>
+			<li>所在的网点：</li>
+			<li>${csOutlets}</li>
+			<li>本车的车型：</li>
+			<li>${csCarModel}</li>
+			<s:iterator value="#request.carInfo" id="item" status="i">
+			<li>交强险到期：</li>
+			<li><a>${lz:date(item.cscTiUnit,"yyyy-MM-dd HH:mm")}</a></li>
+			<li>商业险到期：</li>
+			<li><a>${lz:date(item.cscBiUnit,"yyyy-MM-dd HH:mm")}</a></li>
+			<li>车辆状态：</li>
+			<s:if test="#item.cscStatus==0">
+			<li>无效</li>
+			</s:if>
+			<s:if test="#item.cscStatus==1">
+			<li>上线</li>
+			</s:if>
+			<s:if test="#item.cscStatus==2">
+			<li>下线</li>
+			</s:if>
+			<s:if test="#item.cscStatus==3">
+			<li>企业可租</li>
+			</s:if>
+			</s:iterator>
+		</ul>
+	</div>
+</div>
+<div id="toast">
+</div>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+</body>
+</html>

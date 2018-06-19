@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMessage_part">	
+	<!-- 会员消息条件sql片段  -->
+	<sql id="cs_message_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmId" prepend="and">
+			    $csmIdNot$ cs_message$suffix$.csm_id = #csmId#
+			</isNotEmpty>
+			<isNotNull property="csmIdNot" prepend="and">
+				<isEmpty property="csmId">
+				$csmIdNot$ cs_message$suffix$.csm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmTitle" prepend="and">			    
+			    (<isNotNull property="csmTitleNot">
+			    cs_message$suffix$.csm_title is null or length(cs_message$suffix$.csm_title) &lt; 1 or
+			    </isNotNull>$csmTitleNot$ cs_message$suffix$.csm_title like #csmTitle#)
+			</isNotEmpty>
+			<isNotNull property="csmTitleNot" prepend="and">
+				<isEmpty property="csmTitle">
+				$csmTitleNot$ (cs_message$suffix$.csm_title is null or length(cs_message$suffix$.csm_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmContent" prepend="and">			    
+			    (<isNotNull property="csmContentNot">
+			    cs_message$suffix$.csm_content is null or length(cs_message$suffix$.csm_content) &lt; 1 or
+			    </isNotNull>$csmContentNot$ cs_message$suffix$.csm_content like #csmContent#)
+			</isNotEmpty>
+			<isNotNull property="csmContentNot" prepend="and">
+				<isEmpty property="csmContent">
+				$csmContentNot$ (cs_message$suffix$.csm_content is null or length(cs_message$suffix$.csm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmRelateMin" prepend="and">
+			    $csmRelateNot$  ( cs_message$suffix$.csm_relate &gt;= #csmRelateMin#
+			    <isEmpty property="csmRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmRelateMax" prepend="and">
+				<isEmpty property="csmRelateMin">$csmRelateNot$   (</isEmpty>
+			    cs_message$suffix$.csm_relate &lt;= #csmRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmRelate" prepend="and">
+			    $csmRelateNot$ cs_message$suffix$.csm_relate = #csmRelate#
+			</isNotEmpty>
+			<isNotNull property="csmRelateNot" prepend="and">
+				<isEmpty property="csmRelateMax"><isEmpty property="csmRelateMin"><isEmpty property="csmRelate">
+				$csmRelateNot$ cs_message$suffix$.csm_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmObject" prepend="and">			    
+			    (<isNotNull property="csmObjectNot">
+			    cs_message$suffix$.csm_object is null or length(cs_message$suffix$.csm_object) &lt; 1 or
+			    </isNotNull>$csmObjectNot$ cs_message$suffix$.csm_object = #csmObject#)
+			</isNotEmpty>
+			<isNotNull property="csmObjectNot" prepend="and">
+				<isEmpty property="csmObject">
+				$csmObjectNot$ (cs_message$suffix$.csm_object is null or length(cs_message$suffix$.csm_object) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmAttach" prepend="and">
+			    $csmAttachNot$ cs_message$suffix$.csm_attach = #csmAttach#
+			</isNotEmpty>
+			<isNotNull property="csmAttachNot" prepend="and">
+				<isEmpty property="csmAttach">
+				$csmAttachNot$ cs_message$suffix$.csm_attach is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmReceiver" prepend="and">
+			    $csmReceiverNot$ cs_message$suffix$.csm_receiver = #csmReceiver#
+			</isNotEmpty>
+			<isNotNull property="csmReceiverNot" prepend="and">
+				<isEmpty property="csmReceiver">
+				$csmReceiverNot$ cs_message$suffix$.csm_receiver is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmSender" prepend="and">
+			    $csmSenderNot$ cs_message$suffix$.csm_sender = #csmSender#
+			</isNotEmpty>
+			<isNotNull property="csmSenderNot" prepend="and">
+				<isEmpty property="csmSender">
+				$csmSenderNot$ cs_message$suffix$.csm_sender is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmRcvTimeStart" prepend="and">
+			    $csmRcvTimeNot$   (cs_message$suffix$.csm_rcv_time &gt;= #csmRcvTimeStart#
+			   <isEmpty property="csmRcvTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmRcvTimeEnd" prepend="and">
+				<isEmpty property="csmRcvTimeStart">$csmRcvTimeNot$   (</isEmpty>
+			    cs_message$suffix$.csm_rcv_time &lt;= #csmRcvTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmRcvTime" prepend="and">
+			    $csmRcvTimeNot$ cs_message$suffix$.csm_rcv_time = #csmRcvTime#
+			</isNotEmpty>
+			<isNotNull property="csmRcvTimeNot" prepend="and">
+				<isEmpty property="csmRcvTimeStart"><isEmpty property="csmRcvTimeEnd"><isEmpty property="csmRcvTime">
+				$csmRcvTimeNot$ cs_message$suffix$.csm_rcv_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmSndTimeStart" prepend="and">
+			    $csmSndTimeNot$   (cs_message$suffix$.csm_snd_time &gt;= #csmSndTimeStart#
+			   <isEmpty property="csmSndTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmSndTimeEnd" prepend="and">
+				<isEmpty property="csmSndTimeStart">$csmSndTimeNot$   (</isEmpty>
+			    cs_message$suffix$.csm_snd_time &lt;= #csmSndTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmSndTime" prepend="and">
+			    $csmSndTimeNot$ cs_message$suffix$.csm_snd_time = #csmSndTime#
+			</isNotEmpty>
+			<isNotNull property="csmSndTimeNot" prepend="and">
+				<isEmpty property="csmSndTimeStart"><isEmpty property="csmSndTimeEnd"><isEmpty property="csmSndTime">
+				$csmSndTimeNot$ cs_message$suffix$.csm_snd_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmRcvStatus" prepend="and">
+			    $csmRcvStatusNot$ cs_message$suffix$.csm_rcv_status = #csmRcvStatus#
+			</isNotEmpty>
+			<isNotNull property="csmRcvStatusNot" prepend="and">
+				<isEmpty property="csmRcvStatus">
+				$csmRcvStatusNot$ cs_message$suffix$.csm_rcv_status is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmSndStatus" prepend="and">
+			    $csmSndStatusNot$ cs_message$suffix$.csm_snd_status = #csmSndStatus#
+			</isNotEmpty>
+			<isNotNull property="csmSndStatusNot" prepend="and">
+				<isEmpty property="csmSndStatus">
+				$csmSndStatusNot$ cs_message$suffix$.csm_snd_status is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmStatus" prepend="and">
+			    $csmStatusNot$ cs_message$suffix$.csm_status = #csmStatus#
+			</isNotEmpty>
+			<isNotNull property="csmStatusNot" prepend="and">
+				<isEmpty property="csmStatus">
+				$csmStatusNot$ cs_message$suffix$.csm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员消息left join 条件sql片段 -->
+	<sql id="cs_message_join">
+		<dynamic>
+			<isNotEmpty property="CsMessage.csmId" prepend="and">
+			    $CsMessage.csmIdNot$ cs_message$CsMessage.suffix$.csm_id = #CsMessage.csmId#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmIdNot" prepend="and">
+				<isEmpty property="CsMessage.csmId">
+				$csmIdNot$ cs_message$CsMessage.suffix$.csm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmTitle" prepend="and">
+				(<isNotNull property="CsMessage.csmTitleNot">
+			    cs_message$CsMessage.suffix$.csm_title is null or length(cs_message$CsMessage.suffix$.csm_title) &lt; 1 or
+			    </isNotNull>$CsMessage.csmTitleNot$ cs_message$CsMessage.suffix$.csm_title like #CsMessage.csmTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmTitleNot" prepend="and">
+				<isEmpty property="CsMessage.csmTitle">
+				$csmTitleNot$ (cs_message$CsMessage.suffix$.csm_title is null or length(cs_message$CsMessage.suffix$.csm_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmContent" prepend="and">
+				(<isNotNull property="CsMessage.csmContentNot">
+			    cs_message$CsMessage.suffix$.csm_content is null or length(cs_message$CsMessage.suffix$.csm_content) &lt; 1 or
+			    </isNotNull>$CsMessage.csmContentNot$ cs_message$CsMessage.suffix$.csm_content like #CsMessage.csmContent#)
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmContentNot" prepend="and">
+				<isEmpty property="CsMessage.csmContent">
+				$csmContentNot$ (cs_message$CsMessage.suffix$.csm_content is null or length(cs_message$CsMessage.suffix$.csm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmRelateMin" prepend="and">
+			    $CsMessage.csmRelateNot$  ( cs_message$CsMessage.suffix$.csm_relate &gt;= #CsMessage.csmRelateMin#
+			    <isEmpty property="CsMessage.csmRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMessage.csmRelateMax" prepend="and">
+				<isEmpty property="CsMessage.csmRelateMin">$CsMessage.csmRelateNot$   (</isEmpty>
+			    cs_message$CsMessage.suffix$.csm_relate &lt;= #CsMessage.csmRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMessage.csmRelate" prepend="and">
+			    $CsMessage.csmRelateNot$ cs_message$CsMessage.suffix$.csm_relate = #CsMessage.csmRelate#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmRelateNot" prepend="and">
+				<isEmpty property="CsMessage.csmRelateMax"><isEmpty property="CsMessage.csmRelateMin"><isEmpty property="CsMessage.csmRelate">
+				$csmRelateNot$ cs_message$CsMessage.suffix$.csm_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmObject" prepend="and">
+				(<isNotNull property="CsMessage.csmObjectNot">
+			    cs_message$CsMessage.suffix$.csm_object is null or length(cs_message$CsMessage.suffix$.csm_object) &lt; 1 or
+			    </isNotNull>$CsMessage.csmObjectNot$ cs_message$CsMessage.suffix$.csm_object = #CsMessage.csmObject#)
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmObjectNot" prepend="and">
+				<isEmpty property="CsMessage.csmObject">
+				$csmObjectNot$ (cs_message$CsMessage.suffix$.csm_object is null or length(cs_message$CsMessage.suffix$.csm_object) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmAttach" prepend="and">
+			    $CsMessage.csmAttachNot$ cs_message$CsMessage.suffix$.csm_attach = #CsMessage.csmAttach#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmAttachNot" prepend="and">
+				<isEmpty property="CsMessage.csmAttach">
+				$csmAttachNot$ cs_message$CsMessage.suffix$.csm_attach is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmReceiver" prepend="and">
+			    $CsMessage.csmReceiverNot$ cs_message$CsMessage.suffix$.csm_receiver = #CsMessage.csmReceiver#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmReceiverNot" prepend="and">
+				<isEmpty property="CsMessage.csmReceiver">
+				$csmReceiverNot$ cs_message$CsMessage.suffix$.csm_receiver is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmSender" prepend="and">
+			    $CsMessage.csmSenderNot$ cs_message$CsMessage.suffix$.csm_sender = #CsMessage.csmSender#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmSenderNot" prepend="and">
+				<isEmpty property="CsMessage.csmSender">
+				$csmSenderNot$ cs_message$CsMessage.suffix$.csm_sender is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmRcvTimeStart" prepend="and">
+			    $CsMessage.csmRcvTimeNot$   (cs_message$CsMessage.suffix$.csm_rcv_time &gt;= #CsMessage.csmRcvTimeStart#
+			   <isEmpty property="CsMessage.csmRcvTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMessage.csmRcvTimeEnd" prepend="and">
+				<isEmpty property="CsMessage.csmRcvTimeStart">$CsMessage.csmRcvTimeNot$   (</isEmpty>
+			    cs_message$CsMessage.suffix$.csm_rcv_time &lt;= #CsMessage.csmRcvTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMessage.csmRcvTime" prepend="and">
+			    $CsMessage.csmRcvTimeNot$ cs_message$CsMessage.suffix$.csm_rcv_time = #CsMessage.csmRcvTime#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmRcvTimeNot" prepend="and">
+				<isEmpty property="CsMessage.csmRcvTimeStart"><isEmpty property="CsMessage.csmRcvTimeEnd"><isEmpty property="CsMessage.csmRcvTime">
+				$csmRcvTimeNot$ cs_message$CsMessage.suffix$.csm_rcv_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmSndTimeStart" prepend="and">
+			    $CsMessage.csmSndTimeNot$   (cs_message$CsMessage.suffix$.csm_snd_time &gt;= #CsMessage.csmSndTimeStart#
+			   <isEmpty property="CsMessage.csmSndTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMessage.csmSndTimeEnd" prepend="and">
+				<isEmpty property="CsMessage.csmSndTimeStart">$CsMessage.csmSndTimeNot$   (</isEmpty>
+			    cs_message$CsMessage.suffix$.csm_snd_time &lt;= #CsMessage.csmSndTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMessage.csmSndTime" prepend="and">
+			    $CsMessage.csmSndTimeNot$ cs_message$CsMessage.suffix$.csm_snd_time = #CsMessage.csmSndTime#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmSndTimeNot" prepend="and">
+				<isEmpty property="CsMessage.csmSndTimeStart"><isEmpty property="CsMessage.csmSndTimeEnd"><isEmpty property="CsMessage.csmSndTime">
+				$csmSndTimeNot$ cs_message$CsMessage.suffix$.csm_snd_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmRcvStatus" prepend="and">
+			    $CsMessage.csmRcvStatusNot$ cs_message$CsMessage.suffix$.csm_rcv_status = #CsMessage.csmRcvStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmRcvStatusNot" prepend="and">
+				<isEmpty property="CsMessage.csmRcvStatus">
+				$csmRcvStatusNot$ cs_message$CsMessage.suffix$.csm_rcv_status is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmSndStatus" prepend="and">
+			    $CsMessage.csmSndStatusNot$ cs_message$CsMessage.suffix$.csm_snd_status = #CsMessage.csmSndStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmSndStatusNot" prepend="and">
+				<isEmpty property="CsMessage.csmSndStatus">
+				$csmSndStatusNot$ cs_message$CsMessage.suffix$.csm_snd_status is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMessage.csmStatus" prepend="and">
+			    $CsMessage.csmStatusNot$ cs_message$CsMessage.suffix$.csm_status = #CsMessage.csmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMessage.csmStatusNot" prepend="and">
+				<isEmpty property="CsMessage.csmStatus">
+				$csmStatusNot$ cs_message$CsMessage.suffix$.csm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

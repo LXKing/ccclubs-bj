@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+
+	
+	<!-- 专车资源之SQL映射 -->
+	<resultMap id="CsCarRes" class="com.ccclubs.model.CsCarRes">
+		<result property="cscrId" column="cscr_id"/>
+		<result property="cscrHost" column="cscr_host"/>
+		<result property="cscrOutlets" column="cscr_outlets"/>
+		<result property="cscrCar" column="cscr_car"/>
+		<result property="cscrCarmodel" column="cscr_carmodel"/>
+		<result property="cscrCarNo" column="cscr_car_no"/>
+		<result property="cscrColor" column="cscr_color"/>
+		<result property="cscrLocation" column="cscr_location"/>
+		<result property="cscrSource" column="cscr_source"/>
+		<result property="cscrStatus" column="cscr_status"/>
+		<result property="cscrAddTime" column="cscr_add_time"/>
+		<result property="cscrUpdateTime" column="cscr_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有专车资源 -->
+	<select id="getCsCarResList" resultMap="CsCarRes">
+		select cs_car_res$suffix$.* from cs_car_res$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.cscr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_res$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarRes_part.cs_car_res_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取专车资源分页 -->
+	<select id="getCsCarResPage" parameterClass="java.util.HashMap" resultMap="CsCarRes">
+		select cs_car_res$suffix$.* from cs_car_res$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.cscr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_res$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarRes_part.cs_car_res_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取专车资源总数 -->
+	<select id="getCsCarResEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car_res$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.cscr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_res$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarRes_part.cs_car_res_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取专车资源 -->
+	<select id="getCsCarResById" parameterClass="java.util.HashMap" resultMap="CsCarRes">
+		select cs_car_res$suffix$.* from cs_car_res$suffix$
+		where cscr_id=#id#
+	</select>
+	
+		
+	<!-- 保存专车资源 -->
+	<insert id="saveCsCarRes"  parameterClass="com.ccclubs.model.CsCarRes">
+		insert into cs_car_res$suffix$
+		(
+			cs_car_res$suffix$.cscr_host
+			,cs_car_res$suffix$.cscr_outlets
+			,cs_car_res$suffix$.cscr_car
+			,cs_car_res$suffix$.cscr_carmodel
+			,cs_car_res$suffix$.cscr_car_no
+			,cs_car_res$suffix$.cscr_color
+			,cs_car_res$suffix$.cscr_location
+			,cs_car_res$suffix$.cscr_source
+			,cs_car_res$suffix$.cscr_status
+			,cs_car_res$suffix$.cscr_add_time
+			,cs_car_res$suffix$.cscr_update_time
+		)
+		values(
+			<isNotNull property="cscrHost" prepend="">
+				#cscrHost#
+			</isNotNull>
+			<isNull property="cscrHost" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="cscrOutlets" prepend=",">
+				#cscrOutlets#
+			</isNotNull>
+			<isNull property="cscrOutlets" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrCar" prepend=",">
+				#cscrCar#
+			</isNotNull>
+			<isNull property="cscrCar" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrCarmodel" prepend=",">
+				#cscrCarmodel#
+			</isNotNull>
+			<isNull property="cscrCarmodel" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrCarNo" prepend=",">
+				#cscrCarNo#
+			</isNotNull>
+			<isNull property="cscrCarNo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrColor" prepend=",">
+				#cscrColor#
+			</isNotNull>
+			<isNull property="cscrColor" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrLocation" prepend=",">
+				#cscrLocation#
+			</isNotNull>
+			<isNull property="cscrLocation" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrSource" prepend=",">
+				#cscrSource#
+			</isNotNull>
+			<isNull property="cscrSource" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrStatus" prepend=",">
+				#cscrStatus#
+			</isNotNull>
+			<isNull property="cscrStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrAddTime" prepend=",">
+				#cscrAddTime#
+			</isNotNull>
+			<isNull property="cscrAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				#cscrUpdateTime#
+			</isNotNull>
+			<isNull property="cscrUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新专车资源 -->
+	<update id="updateCsCarRes"  parameterClass="com.ccclubs.model.CsCarRes">
+		update cs_car_res$suffix$ set
+			<isNotNull property="cscrHost" prepend="">
+				cs_car_res$suffix$.cscr_host = #cscrHost#
+			</isNotNull>
+			<isNull property="cscrHost" prepend="">
+				cs_car_res$suffix$.cscr_host = null
+			</isNull>				
+			<isNotNull property="cscrOutlets" prepend=",">
+				cs_car_res$suffix$.cscr_outlets = #cscrOutlets#
+			</isNotNull>
+			<isNull property="cscrOutlets" prepend=",">
+				cs_car_res$suffix$.cscr_outlets = null
+			</isNull>				
+			<isNotNull property="cscrCar" prepend=",">
+				cs_car_res$suffix$.cscr_car = #cscrCar#
+			</isNotNull>
+			<isNull property="cscrCar" prepend=",">
+				cs_car_res$suffix$.cscr_car = null
+			</isNull>				
+			<isNotNull property="cscrCarmodel" prepend=",">
+				cs_car_res$suffix$.cscr_carmodel = #cscrCarmodel#
+			</isNotNull>
+			<isNull property="cscrCarmodel" prepend=",">
+				cs_car_res$suffix$.cscr_carmodel = null
+			</isNull>				
+			<isNotNull property="cscrCarNo" prepend=",">
+				cs_car_res$suffix$.cscr_car_no = #cscrCarNo#
+			</isNotNull>
+			<isNull property="cscrCarNo" prepend=",">
+				cs_car_res$suffix$.cscr_car_no = null
+			</isNull>				
+			<isNotNull property="cscrColor" prepend=",">
+				cs_car_res$suffix$.cscr_color = #cscrColor#
+			</isNotNull>
+			<isNull property="cscrColor" prepend=",">
+				cs_car_res$suffix$.cscr_color = null
+			</isNull>				
+			<isNotNull property="cscrLocation" prepend=",">
+				cs_car_res$suffix$.cscr_location = #cscrLocation#
+			</isNotNull>
+			<isNull property="cscrLocation" prepend=",">
+				cs_car_res$suffix$.cscr_location = null
+			</isNull>				
+			<isNotNull property="cscrSource" prepend=",">
+				cs_car_res$suffix$.cscr_source = #cscrSource#
+			</isNotNull>
+			<isNull property="cscrSource" prepend=",">
+				cs_car_res$suffix$.cscr_source = null
+			</isNull>				
+			<isNotNull property="cscrStatus" prepend=",">
+				cs_car_res$suffix$.cscr_status = #cscrStatus#
+			</isNotNull>
+			<isNull property="cscrStatus" prepend=",">
+				cs_car_res$suffix$.cscr_status = null
+			</isNull>				
+			<isNotNull property="cscrAddTime" prepend=",">
+				cs_car_res$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotNull>
+			<isNull property="cscrAddTime" prepend=",">
+				cs_car_res$suffix$.cscr_add_time = null
+			</isNull>				
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				cs_car_res$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotNull>
+			<isNull property="cscrUpdateTime" prepend=",">
+				cs_car_res$suffix$.cscr_update_time = null
+			</isNull>				
+		where
+			cscr_id=#cscrId#
+	</update>
+	
+	<!-- 更新专车资源非空字段 -->
+	<update id="updateCsCarRes$NotNull"  parameterClass="com.ccclubs.model.CsCarRes">
+		update cs_car_res$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscrHost" prepend=",">
+				cs_car_res$suffix$.cscr_host = #cscrHost#
+			</isNotNull>		
+			<isNotNull property="cscrOutlets" prepend=",">
+				cs_car_res$suffix$.cscr_outlets = #cscrOutlets#
+			</isNotNull>		
+			<isNotNull property="cscrCar" prepend=",">
+				cs_car_res$suffix$.cscr_car = #cscrCar#
+			</isNotNull>		
+			<isNotNull property="cscrCarmodel" prepend=",">
+				cs_car_res$suffix$.cscr_carmodel = #cscrCarmodel#
+			</isNotNull>		
+			<isNotNull property="cscrCarNo" prepend=",">
+				cs_car_res$suffix$.cscr_car_no = #cscrCarNo#
+			</isNotNull>		
+			<isNotNull property="cscrColor" prepend=",">
+				cs_car_res$suffix$.cscr_color = #cscrColor#
+			</isNotNull>		
+			<isNotNull property="cscrLocation" prepend=",">
+				cs_car_res$suffix$.cscr_location = #cscrLocation#
+			</isNotNull>		
+			<isNotNull property="cscrSource" prepend=",">
+				cs_car_res$suffix$.cscr_source = #cscrSource#
+			</isNotNull>		
+			<isNotNull property="cscrStatus" prepend=",">
+				cs_car_res$suffix$.cscr_status = #cscrStatus#
+			</isNotNull>		
+			<isNotNull property="cscrAddTime" prepend=",">
+				cs_car_res$suffix$.cscr_add_time = #cscrAddTime#
+			</isNotNull>		
+			<isNotNull property="cscrUpdateTime" prepend=",">
+				cs_car_res$suffix$.cscr_update_time = #cscrUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscr_id=#cscrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个专车资源 -->
+	<delete id="deleteCsCarResById" parameterClass="java.util.HashMap">
+		delete from cs_car_res$suffix$ where cscr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个专车资源 -->
+	<update id="removeCsCarResById" parameterClass="java.util.HashMap">
+		update cs_car_res$suffix$ set  cs_car_res$suffix$.cscr_status=-1  where cscr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新专车资源 -->
+	<update id="updateCsCarResBy"  parameterClass="java.util.HashMap">
+		update cs_car_res$suffix$ set		
+			cscr_id=cscr_id
+			<isNotNull property="V_cscrId" prepend=",">
+				cs_car_res$suffix$.cscr_id = #V_cscrId#
+			</isNotNull>		
+			<isNotNull property="V_cscrHost" prepend=",">
+				cs_car_res$suffix$.cscr_host = #V_cscrHost#
+			</isNotNull>		
+			<isNotNull property="V_cscrOutlets" prepend=",">
+				cs_car_res$suffix$.cscr_outlets = #V_cscrOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cscrCar" prepend=",">
+				cs_car_res$suffix$.cscr_car = #V_cscrCar#
+			</isNotNull>		
+			<isNotNull property="V_cscrCarmodel" prepend=",">
+				cs_car_res$suffix$.cscr_carmodel = #V_cscrCarmodel#
+			</isNotNull>		
+			<isNotNull property="V_cscrCarNo" prepend=",">
+				cs_car_res$suffix$.cscr_car_no = #V_cscrCarNo#
+			</isNotNull>		
+			<isNotNull property="V_cscrColor" prepend=",">
+				cs_car_res$suffix$.cscr_color = #V_cscrColor#
+			</isNotNull>		
+			<isNotNull property="V_cscrLocation" prepend=",">
+				cs_car_res$suffix$.cscr_location = #V_cscrLocation#
+			</isNotNull>		
+			<isNotNull property="V_cscrSource" prepend=",">
+				cs_car_res$suffix$.cscr_source = #V_cscrSource#
+			</isNotNull>		
+			<isNotNull property="V_cscrStatus" prepend=",">
+				cs_car_res$suffix$.cscr_status = #V_cscrStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscrAddTime" prepend=",">
+				cs_car_res$suffix$.cscr_add_time = #V_cscrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscrUpdateTime" prepend=",">
+				cs_car_res$suffix$.cscr_update_time = #V_cscrUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.cscr_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car_res$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 1=1 		
+		and cs_car_res$suffix$.cscr_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscrOutlets"><!-- 调用一下CscrOutlets，把CsOutlets指向CscrOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCarRes_part.cs_car_res_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除专车资源 -->
+	<update id="deleteCsCarResBy"  parameterClass="java.util.HashMap">
+		delete from cs_car_res$suffix$ where 
+		cs_car_res$suffix$.cscr_status!=-1 and 
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCarRes_part.cs_car_res_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

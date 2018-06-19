@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- API接口之SQL映射 -->
+	<resultMap id="SrvApi" class="com.ccclubs.model.SrvApi">
+		<result property="saId" column="sa_id"/>
+		<result property="saName" column="sa_name"/>
+		<result property="saNamespace" column="sa_namespace"/>
+		<result property="saType" column="sa_type"/>
+		<result property="saOpen" column="sa_open"/>
+		<result property="saDescript" column="sa_descript"/>
+		<result property="saParams" column="sa_params"/>
+		<result property="saOauth" column="sa_oauth"/>
+		<result property="saReturnStruct" column="sa_return_struct"/>
+		<result property="saJavaCode" column="sa_java_code"/>
+		<result property="saReturnFormat" column="sa_return_format"/>
+		<result property="saError" column="sa_error"/>
+		<result property="saEditor" column="sa_editor"/>
+		<result property="saUpdateTime" column="sa_update_time"/>
+		<result property="saAddTime" column="sa_add_time"/>
+		<result property="saStatus" column="sa_status"/>
+	</resultMap>
+		
+	<!-- 获取所有API接口 -->
+	<select id="getSrvApiList" resultMap="SrvApi">
+		select srv_api$suffix$.* from srv_api$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_api$suffix$.sa_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApi_part.srv_api_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取API接口分页 -->
+	<select id="getSrvApiPage" parameterClass="java.util.HashMap" resultMap="SrvApi">
+		select srv_api$suffix$.* from srv_api$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_api$suffix$.sa_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApi_part.srv_api_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取API接口总数 -->
+	<select id="getSrvApiEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_api$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_api$suffix$.sa_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApi_part.srv_api_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取API接口 -->
+	<select id="getSrvApiById" parameterClass="java.util.HashMap" resultMap="SrvApi">
+		select srv_api$suffix$.* from srv_api$suffix$
+		where sa_id=#id#
+	</select>
+	
+		
+	<!-- 保存API接口 -->
+	<insert id="saveSrvApi"  parameterClass="com.ccclubs.model.SrvApi">
+		insert into srv_api$suffix$
+		(
+			srv_api$suffix$.sa_name
+			,srv_api$suffix$.sa_namespace
+			,srv_api$suffix$.sa_type
+			,srv_api$suffix$.sa_open
+			,srv_api$suffix$.sa_descript
+			,srv_api$suffix$.sa_params
+			,srv_api$suffix$.sa_oauth
+			,srv_api$suffix$.sa_return_struct
+			,srv_api$suffix$.sa_java_code
+			,srv_api$suffix$.sa_return_format
+			,srv_api$suffix$.sa_error
+			,srv_api$suffix$.sa_editor
+			,srv_api$suffix$.sa_update_time
+			,srv_api$suffix$.sa_add_time
+			,srv_api$suffix$.sa_status
+		)
+		values(
+			<isNotNull property="saName" prepend="">
+				#saName#
+			</isNotNull>
+			<isNull property="saName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="saNamespace" prepend=",">
+				#saNamespace#
+			</isNotNull>
+			<isNull property="saNamespace" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saType" prepend=",">
+				#saType#
+			</isNotNull>
+			<isNull property="saType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saOpen" prepend=",">
+				#saOpen#
+			</isNotNull>
+			<isNull property="saOpen" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saDescript" prepend=",">
+				#saDescript#
+			</isNotNull>
+			<isNull property="saDescript" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saParams" prepend=",">
+				#saParams#
+			</isNotNull>
+			<isNull property="saParams" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saOauth" prepend=",">
+				#saOauth#
+			</isNotNull>
+			<isNull property="saOauth" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saReturnStruct" prepend=",">
+				#saReturnStruct#
+			</isNotNull>
+			<isNull property="saReturnStruct" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saJavaCode" prepend=",">
+				#saJavaCode#
+			</isNotNull>
+			<isNull property="saJavaCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saReturnFormat" prepend=",">
+				#saReturnFormat#
+			</isNotNull>
+			<isNull property="saReturnFormat" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saError" prepend=",">
+				#saError#
+			</isNotNull>
+			<isNull property="saError" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saEditor" prepend=",">
+				#saEditor#
+			</isNotNull>
+			<isNull property="saEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saUpdateTime" prepend=",">
+				#saUpdateTime#
+			</isNotNull>
+			<isNull property="saUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saAddTime" prepend=",">
+				#saAddTime#
+			</isNotNull>
+			<isNull property="saAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="saStatus" prepend=",">
+				#saStatus#
+			</isNotNull>
+			<isNull property="saStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新API接口 -->
+	<update id="updateSrvApi"  parameterClass="com.ccclubs.model.SrvApi">
+		update srv_api$suffix$ set
+			<isNotNull property="saName" prepend="">
+				srv_api$suffix$.sa_name = #saName#
+			</isNotNull>
+			<isNull property="saName" prepend="">
+				srv_api$suffix$.sa_name = null
+			</isNull>				
+			<isNotNull property="saNamespace" prepend=",">
+				srv_api$suffix$.sa_namespace = #saNamespace#
+			</isNotNull>
+			<isNull property="saNamespace" prepend=",">
+				srv_api$suffix$.sa_namespace = null
+			</isNull>				
+			<isNotNull property="saType" prepend=",">
+				srv_api$suffix$.sa_type = #saType#
+			</isNotNull>
+			<isNull property="saType" prepend=",">
+				srv_api$suffix$.sa_type = null
+			</isNull>				
+			<isNotNull property="saOpen" prepend=",">
+				srv_api$suffix$.sa_open = #saOpen#
+			</isNotNull>
+			<isNull property="saOpen" prepend=",">
+				srv_api$suffix$.sa_open = null
+			</isNull>				
+			<isNotNull property="saDescript" prepend=",">
+				srv_api$suffix$.sa_descript = #saDescript#
+			</isNotNull>
+			<isNull property="saDescript" prepend=",">
+				srv_api$suffix$.sa_descript = null
+			</isNull>				
+			<isNotNull property="saParams" prepend=",">
+				srv_api$suffix$.sa_params = #saParams#
+			</isNotNull>
+			<isNull property="saParams" prepend=",">
+				srv_api$suffix$.sa_params = null
+			</isNull>				
+			<isNotNull property="saOauth" prepend=",">
+				srv_api$suffix$.sa_oauth = #saOauth#
+			</isNotNull>
+			<isNull property="saOauth" prepend=",">
+				srv_api$suffix$.sa_oauth = null
+			</isNull>				
+			<isNotNull property="saReturnStruct" prepend=",">
+				srv_api$suffix$.sa_return_struct = #saReturnStruct#
+			</isNotNull>
+			<isNull property="saReturnStruct" prepend=",">
+				srv_api$suffix$.sa_return_struct = null
+			</isNull>				
+			<isNotNull property="saJavaCode" prepend=",">
+				srv_api$suffix$.sa_java_code = #saJavaCode#
+			</isNotNull>
+			<isNull property="saJavaCode" prepend=",">
+				srv_api$suffix$.sa_java_code = null
+			</isNull>				
+			<isNotNull property="saReturnFormat" prepend=",">
+				srv_api$suffix$.sa_return_format = #saReturnFormat#
+			</isNotNull>
+			<isNull property="saReturnFormat" prepend=",">
+				srv_api$suffix$.sa_return_format = null
+			</isNull>				
+			<isNotNull property="saError" prepend=",">
+				srv_api$suffix$.sa_error = #saError#
+			</isNotNull>
+			<isNull property="saError" prepend=",">
+				srv_api$suffix$.sa_error = null
+			</isNull>				
+			<isNotNull property="saEditor" prepend=",">
+				srv_api$suffix$.sa_editor = #saEditor#
+			</isNotNull>
+			<isNull property="saEditor" prepend=",">
+				srv_api$suffix$.sa_editor = null
+			</isNull>				
+			<isNotNull property="saUpdateTime" prepend=",">
+				srv_api$suffix$.sa_update_time = #saUpdateTime#
+			</isNotNull>
+			<isNull property="saUpdateTime" prepend=",">
+				srv_api$suffix$.sa_update_time = null
+			</isNull>				
+			<isNotNull property="saAddTime" prepend=",">
+				srv_api$suffix$.sa_add_time = #saAddTime#
+			</isNotNull>
+			<isNull property="saAddTime" prepend=",">
+				srv_api$suffix$.sa_add_time = null
+			</isNull>				
+			<isNotNull property="saStatus" prepend=",">
+				srv_api$suffix$.sa_status = #saStatus#
+			</isNotNull>
+			<isNull property="saStatus" prepend=",">
+				srv_api$suffix$.sa_status = null
+			</isNull>				
+		where
+			sa_id=#saId#
+	</update>
+	
+	<!-- 更新API接口非空字段 -->
+	<update id="updateSrvApi$NotNull"  parameterClass="com.ccclubs.model.SrvApi">
+		update srv_api$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="saName" prepend=",">
+				srv_api$suffix$.sa_name = #saName#
+			</isNotNull>		
+			<isNotNull property="saNamespace" prepend=",">
+				srv_api$suffix$.sa_namespace = #saNamespace#
+			</isNotNull>		
+			<isNotNull property="saType" prepend=",">
+				srv_api$suffix$.sa_type = #saType#
+			</isNotNull>		
+			<isNotNull property="saOpen" prepend=",">
+				srv_api$suffix$.sa_open = #saOpen#
+			</isNotNull>		
+			<isNotNull property="saDescript" prepend=",">
+				srv_api$suffix$.sa_descript = #saDescript#
+			</isNotNull>		
+			<isNotNull property="saParams" prepend=",">
+				srv_api$suffix$.sa_params = #saParams#
+			</isNotNull>		
+			<isNotNull property="saOauth" prepend=",">
+				srv_api$suffix$.sa_oauth = #saOauth#
+			</isNotNull>		
+			<isNotNull property="saReturnStruct" prepend=",">
+				srv_api$suffix$.sa_return_struct = #saReturnStruct#
+			</isNotNull>		
+			<isNotNull property="saJavaCode" prepend=",">
+				srv_api$suffix$.sa_java_code = #saJavaCode#
+			</isNotNull>		
+			<isNotNull property="saReturnFormat" prepend=",">
+				srv_api$suffix$.sa_return_format = #saReturnFormat#
+			</isNotNull>		
+			<isNotNull property="saError" prepend=",">
+				srv_api$suffix$.sa_error = #saError#
+			</isNotNull>		
+			<isNotNull property="saEditor" prepend=",">
+				srv_api$suffix$.sa_editor = #saEditor#
+			</isNotNull>		
+			<isNotNull property="saUpdateTime" prepend=",">
+				srv_api$suffix$.sa_update_time = #saUpdateTime#
+			</isNotNull>		
+			<isNotNull property="saAddTime" prepend=",">
+				srv_api$suffix$.sa_add_time = #saAddTime#
+			</isNotNull>		
+			<isNotNull property="saStatus" prepend=",">
+				srv_api$suffix$.sa_status = #saStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sa_id=#saId#
+	</update>
+	
+
+	<!-- 根据ID删除一个API接口 -->
+	<delete id="deleteSrvApiById" parameterClass="java.util.HashMap">
+		delete from srv_api$suffix$ where sa_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个API接口 -->
+	<update id="removeSrvApiById" parameterClass="java.util.HashMap">
+		update srv_api$suffix$ set  srv_api$suffix$.sa_status=-1  where sa_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新API接口 -->
+	<update id="updateSrvApiBy"  parameterClass="java.util.HashMap">
+		update srv_api$suffix$ set		
+			sa_id=sa_id
+			<isNotNull property="V_saId" prepend=",">
+				srv_api$suffix$.sa_id = #V_saId#
+			</isNotNull>		
+			<isNotNull property="V_saName" prepend=",">
+				srv_api$suffix$.sa_name = #V_saName#
+			</isNotNull>		
+			<isNotNull property="V_saNamespace" prepend=",">
+				srv_api$suffix$.sa_namespace = #V_saNamespace#
+			</isNotNull>		
+			<isNotNull property="V_saType" prepend=",">
+				srv_api$suffix$.sa_type = #V_saType#
+			</isNotNull>		
+			<isNotNull property="V_saOpen" prepend=",">
+				srv_api$suffix$.sa_open = #V_saOpen#
+			</isNotNull>		
+			<isNotNull property="V_saDescript" prepend=",">
+				srv_api$suffix$.sa_descript = #V_saDescript#
+			</isNotNull>		
+			<isNotNull property="V_saParams" prepend=",">
+				srv_api$suffix$.sa_params = #V_saParams#
+			</isNotNull>		
+			<isNotNull property="V_saOauth" prepend=",">
+				srv_api$suffix$.sa_oauth = #V_saOauth#
+			</isNotNull>		
+			<isNotNull property="V_saReturnStruct" prepend=",">
+				srv_api$suffix$.sa_return_struct = #V_saReturnStruct#
+			</isNotNull>		
+			<isNotNull property="V_saJavaCode" prepend=",">
+				srv_api$suffix$.sa_java_code = #V_saJavaCode#
+			</isNotNull>		
+			<isNotNull property="V_saReturnFormat" prepend=",">
+				srv_api$suffix$.sa_return_format = #V_saReturnFormat#
+			</isNotNull>		
+			<isNotNull property="V_saError" prepend=",">
+				srv_api$suffix$.sa_error = #V_saError#
+			</isNotNull>		
+			<isNotNull property="V_saEditor" prepend=",">
+				srv_api$suffix$.sa_editor = #V_saEditor#
+			</isNotNull>		
+			<isNotNull property="V_saUpdateTime" prepend=",">
+				srv_api$suffix$.sa_update_time = #V_saUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_saAddTime" prepend=",">
+				srv_api$suffix$.sa_add_time = #V_saAddTime#
+			</isNotNull>		
+			<isNotNull property="V_saStatus" prepend=",">
+				srv_api$suffix$.sa_status = #V_saStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		srv_api$suffix$.sa_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvApi_part.srv_api_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除API接口 -->
+	<update id="deleteSrvApiBy"  parameterClass="java.util.HashMap">
+		delete from srv_api$suffix$ where 
+		srv_api$suffix$.sa_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvApi_part.srv_api_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

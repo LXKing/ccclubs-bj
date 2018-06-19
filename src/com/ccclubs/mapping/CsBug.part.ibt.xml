@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsBug_part">	
+	<!-- 系统BUG条件sql片段  -->
+	<sql id="cs_bug_dynamic">
+		<dynamic>
+			<isNotEmpty property="csbId" prepend="and">
+			    $csbIdNot$ cs_bug$suffix$.csb_id = #csbId#
+			</isNotEmpty>
+			<isNotNull property="csbIdNot" prepend="and">
+				<isEmpty property="csbId">
+				$csbIdNot$ cs_bug$suffix$.csb_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbTitle" prepend="and">			    
+			    (<isNotNull property="csbTitleNot">
+			    cs_bug$suffix$.csb_title is null or length(cs_bug$suffix$.csb_title) &lt; 1 or
+			    </isNotNull>$csbTitleNot$ cs_bug$suffix$.csb_title like #csbTitle#)
+			</isNotEmpty>
+			<isNotNull property="csbTitleNot" prepend="and">
+				<isEmpty property="csbTitle">
+				$csbTitleNot$ (cs_bug$suffix$.csb_title is null or length(cs_bug$suffix$.csb_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbDescript" prepend="and">			    
+			    (<isNotNull property="csbDescriptNot">
+			    cs_bug$suffix$.csb_descript is null or length(cs_bug$suffix$.csb_descript) &lt; 1 or
+			    </isNotNull>$csbDescriptNot$ cs_bug$suffix$.csb_descript like #csbDescript#)
+			</isNotEmpty>
+			<isNotNull property="csbDescriptNot" prepend="and">
+				<isEmpty property="csbDescript">
+				$csbDescriptNot$ (cs_bug$suffix$.csb_descript is null or length(cs_bug$suffix$.csb_descript) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbImages" prepend="and">
+			    $csbImagesNot$ cs_bug$suffix$.csb_images = #csbImages#
+			</isNotEmpty>
+			<isNotNull property="csbImagesNot" prepend="and">
+				<isEmpty property="csbImages">
+				$csbImagesNot$ cs_bug$suffix$.csb_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbLevel" prepend="and">
+			    $csbLevelNot$ cs_bug$suffix$.csb_level = #csbLevel#
+			</isNotEmpty>
+			<isNotNull property="csbLevelNot" prepend="and">
+				<isEmpty property="csbLevel">
+				$csbLevelNot$ cs_bug$suffix$.csb_level is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbTester" prepend="and">
+			    $csbTesterNot$ cs_bug$suffix$.csb_tester = #csbTester#
+			</isNotEmpty>
+			<isNotNull property="csbTesterNot" prepend="and">
+				<isEmpty property="csbTester">
+				$csbTesterNot$ cs_bug$suffix$.csb_tester is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbTecher" prepend="and">
+			    $csbTecherNot$ cs_bug$suffix$.csb_techer = #csbTecher#
+			</isNotEmpty>
+			<isNotNull property="csbTecherNot" prepend="and">
+				<isEmpty property="csbTecher">
+				$csbTecherNot$ cs_bug$suffix$.csb_techer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbExpectTimeStart" prepend="and">
+			    $csbExpectTimeNot$   (cs_bug$suffix$.csb_expect_time &gt;= #csbExpectTimeStart#
+			   <isEmpty property="csbExpectTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csbExpectTimeEnd" prepend="and">
+				<isEmpty property="csbExpectTimeStart">$csbExpectTimeNot$   (</isEmpty>
+			    cs_bug$suffix$.csb_expect_time &lt;= #csbExpectTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csbExpectTime" prepend="and">
+			    $csbExpectTimeNot$ cs_bug$suffix$.csb_expect_time = #csbExpectTime#
+			</isNotEmpty>
+			<isNotNull property="csbExpectTimeNot" prepend="and">
+				<isEmpty property="csbExpectTimeStart"><isEmpty property="csbExpectTimeEnd"><isEmpty property="csbExpectTime">
+				$csbExpectTimeNot$ cs_bug$suffix$.csb_expect_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbUpdateTimeStart" prepend="and">
+			    $csbUpdateTimeNot$   (cs_bug$suffix$.csb_update_time &gt;= #csbUpdateTimeStart#
+			   <isEmpty property="csbUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csbUpdateTimeEnd" prepend="and">
+				<isEmpty property="csbUpdateTimeStart">$csbUpdateTimeNot$   (</isEmpty>
+			    cs_bug$suffix$.csb_update_time &lt;= #csbUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csbUpdateTime" prepend="and">
+			    $csbUpdateTimeNot$ cs_bug$suffix$.csb_update_time = #csbUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csbUpdateTimeNot" prepend="and">
+				<isEmpty property="csbUpdateTimeStart"><isEmpty property="csbUpdateTimeEnd"><isEmpty property="csbUpdateTime">
+				$csbUpdateTimeNot$ cs_bug$suffix$.csb_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbAddTimeStart" prepend="and">
+			    $csbAddTimeNot$   (cs_bug$suffix$.csb_add_time &gt;= #csbAddTimeStart#
+			   <isEmpty property="csbAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csbAddTimeEnd" prepend="and">
+				<isEmpty property="csbAddTimeStart">$csbAddTimeNot$   (</isEmpty>
+			    cs_bug$suffix$.csb_add_time &lt;= #csbAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csbAddTime" prepend="and">
+			    $csbAddTimeNot$ cs_bug$suffix$.csb_add_time = #csbAddTime#
+			</isNotEmpty>
+			<isNotNull property="csbAddTimeNot" prepend="and">
+				<isEmpty property="csbAddTimeStart"><isEmpty property="csbAddTimeEnd"><isEmpty property="csbAddTime">
+				$csbAddTimeNot$ cs_bug$suffix$.csb_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbRemark" prepend="and">			    
+			    (<isNotNull property="csbRemarkNot">
+			    cs_bug$suffix$.csb_remark is null or length(cs_bug$suffix$.csb_remark) &lt; 1 or
+			    </isNotNull>$csbRemarkNot$ cs_bug$suffix$.csb_remark like #csbRemark#)
+			</isNotEmpty>
+			<isNotNull property="csbRemarkNot" prepend="and">
+				<isEmpty property="csbRemark">
+				$csbRemarkNot$ (cs_bug$suffix$.csb_remark is null or length(cs_bug$suffix$.csb_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csbStatus" prepend="and">
+			    $csbStatusNot$ cs_bug$suffix$.csb_status = #csbStatus#
+			</isNotEmpty>
+			<isNotNull property="csbStatusNot" prepend="and">
+				<isEmpty property="csbStatus">
+				$csbStatusNot$ cs_bug$suffix$.csb_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统BUGleft join 条件sql片段 -->
+	<sql id="cs_bug_join">
+		<dynamic>
+			<isNotEmpty property="CsBug.csbId" prepend="and">
+			    $CsBug.csbIdNot$ cs_bug$CsBug.suffix$.csb_id = #CsBug.csbId#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbIdNot" prepend="and">
+				<isEmpty property="CsBug.csbId">
+				$csbIdNot$ cs_bug$CsBug.suffix$.csb_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbTitle" prepend="and">
+				(<isNotNull property="CsBug.csbTitleNot">
+			    cs_bug$CsBug.suffix$.csb_title is null or length(cs_bug$CsBug.suffix$.csb_title) &lt; 1 or
+			    </isNotNull>$CsBug.csbTitleNot$ cs_bug$CsBug.suffix$.csb_title like #CsBug.csbTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbTitleNot" prepend="and">
+				<isEmpty property="CsBug.csbTitle">
+				$csbTitleNot$ (cs_bug$CsBug.suffix$.csb_title is null or length(cs_bug$CsBug.suffix$.csb_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbDescript" prepend="and">
+				(<isNotNull property="CsBug.csbDescriptNot">
+			    cs_bug$CsBug.suffix$.csb_descript is null or length(cs_bug$CsBug.suffix$.csb_descript) &lt; 1 or
+			    </isNotNull>$CsBug.csbDescriptNot$ cs_bug$CsBug.suffix$.csb_descript like #CsBug.csbDescript#)
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbDescriptNot" prepend="and">
+				<isEmpty property="CsBug.csbDescript">
+				$csbDescriptNot$ (cs_bug$CsBug.suffix$.csb_descript is null or length(cs_bug$CsBug.suffix$.csb_descript) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbImages" prepend="and">
+			    $CsBug.csbImagesNot$ cs_bug$CsBug.suffix$.csb_images = #CsBug.csbImages#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbImagesNot" prepend="and">
+				<isEmpty property="CsBug.csbImages">
+				$csbImagesNot$ cs_bug$CsBug.suffix$.csb_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbLevel" prepend="and">
+			    $CsBug.csbLevelNot$ cs_bug$CsBug.suffix$.csb_level = #CsBug.csbLevel#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbLevelNot" prepend="and">
+				<isEmpty property="CsBug.csbLevel">
+				$csbLevelNot$ cs_bug$CsBug.suffix$.csb_level is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbTester" prepend="and">
+			    $CsBug.csbTesterNot$ cs_bug$CsBug.suffix$.csb_tester = #CsBug.csbTester#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbTesterNot" prepend="and">
+				<isEmpty property="CsBug.csbTester">
+				$csbTesterNot$ cs_bug$CsBug.suffix$.csb_tester is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbTecher" prepend="and">
+			    $CsBug.csbTecherNot$ cs_bug$CsBug.suffix$.csb_techer = #CsBug.csbTecher#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbTecherNot" prepend="and">
+				<isEmpty property="CsBug.csbTecher">
+				$csbTecherNot$ cs_bug$CsBug.suffix$.csb_techer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbExpectTimeStart" prepend="and">
+			    $CsBug.csbExpectTimeNot$   (cs_bug$CsBug.suffix$.csb_expect_time &gt;= #CsBug.csbExpectTimeStart#
+			   <isEmpty property="CsBug.csbExpectTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsBug.csbExpectTimeEnd" prepend="and">
+				<isEmpty property="CsBug.csbExpectTimeStart">$CsBug.csbExpectTimeNot$   (</isEmpty>
+			    cs_bug$CsBug.suffix$.csb_expect_time &lt;= #CsBug.csbExpectTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsBug.csbExpectTime" prepend="and">
+			    $CsBug.csbExpectTimeNot$ cs_bug$CsBug.suffix$.csb_expect_time = #CsBug.csbExpectTime#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbExpectTimeNot" prepend="and">
+				<isEmpty property="CsBug.csbExpectTimeStart"><isEmpty property="CsBug.csbExpectTimeEnd"><isEmpty property="CsBug.csbExpectTime">
+				$csbExpectTimeNot$ cs_bug$CsBug.suffix$.csb_expect_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbUpdateTimeStart" prepend="and">
+			    $CsBug.csbUpdateTimeNot$   (cs_bug$CsBug.suffix$.csb_update_time &gt;= #CsBug.csbUpdateTimeStart#
+			   <isEmpty property="CsBug.csbUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsBug.csbUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsBug.csbUpdateTimeStart">$CsBug.csbUpdateTimeNot$   (</isEmpty>
+			    cs_bug$CsBug.suffix$.csb_update_time &lt;= #CsBug.csbUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsBug.csbUpdateTime" prepend="and">
+			    $CsBug.csbUpdateTimeNot$ cs_bug$CsBug.suffix$.csb_update_time = #CsBug.csbUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbUpdateTimeNot" prepend="and">
+				<isEmpty property="CsBug.csbUpdateTimeStart"><isEmpty property="CsBug.csbUpdateTimeEnd"><isEmpty property="CsBug.csbUpdateTime">
+				$csbUpdateTimeNot$ cs_bug$CsBug.suffix$.csb_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbAddTimeStart" prepend="and">
+			    $CsBug.csbAddTimeNot$   (cs_bug$CsBug.suffix$.csb_add_time &gt;= #CsBug.csbAddTimeStart#
+			   <isEmpty property="CsBug.csbAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsBug.csbAddTimeEnd" prepend="and">
+				<isEmpty property="CsBug.csbAddTimeStart">$CsBug.csbAddTimeNot$   (</isEmpty>
+			    cs_bug$CsBug.suffix$.csb_add_time &lt;= #CsBug.csbAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsBug.csbAddTime" prepend="and">
+			    $CsBug.csbAddTimeNot$ cs_bug$CsBug.suffix$.csb_add_time = #CsBug.csbAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbAddTimeNot" prepend="and">
+				<isEmpty property="CsBug.csbAddTimeStart"><isEmpty property="CsBug.csbAddTimeEnd"><isEmpty property="CsBug.csbAddTime">
+				$csbAddTimeNot$ cs_bug$CsBug.suffix$.csb_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbRemark" prepend="and">
+				(<isNotNull property="CsBug.csbRemarkNot">
+			    cs_bug$CsBug.suffix$.csb_remark is null or length(cs_bug$CsBug.suffix$.csb_remark) &lt; 1 or
+			    </isNotNull>$CsBug.csbRemarkNot$ cs_bug$CsBug.suffix$.csb_remark like #CsBug.csbRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbRemarkNot" prepend="and">
+				<isEmpty property="CsBug.csbRemark">
+				$csbRemarkNot$ (cs_bug$CsBug.suffix$.csb_remark is null or length(cs_bug$CsBug.suffix$.csb_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsBug.csbStatus" prepend="and">
+			    $CsBug.csbStatusNot$ cs_bug$CsBug.suffix$.csb_status = #CsBug.csbStatus#
+			</isNotEmpty>
+			<isNotNull property="CsBug.csbStatusNot" prepend="and">
+				<isEmpty property="CsBug.csbStatus">
+				$csbStatusNot$ cs_bug$CsBug.suffix$.csb_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

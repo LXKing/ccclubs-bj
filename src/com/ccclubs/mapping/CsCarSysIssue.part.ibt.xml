@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsCarSysIssue_part">	
+	<!-- 系统车况报告条件sql片段  -->
+	<sql id="cs_car_sys_issue_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscsiId" prepend="and">
+			    $cscsiIdNot$ cs_car_sys_issue$suffix$.cscsi_id = #cscsiId#
+			</isNotEmpty>
+			<isNotNull property="cscsiIdNot" prepend="and">
+				<isEmpty property="cscsiId">
+				$cscsiIdNot$ cs_car_sys_issue$suffix$.cscsi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_car_sys_issue$suffix$.cscsi_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscsiHost" prepend="and">
+			    $cscsiHostNot$ cs_car_sys_issue$suffix$.cscsi_host = #cscsiHost#
+			</isNotEmpty>
+			<isNotNull property="cscsiHostNot" prepend="and">
+				<isEmpty property="cscsiHost">
+				$cscsiHostNot$ cs_car_sys_issue$suffix$.cscsi_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiCar" prepend="and">
+			    $cscsiCarNot$ cs_car_sys_issue$suffix$.cscsi_car = #cscsiCar#
+			</isNotEmpty>
+			<isNotNull property="cscsiCarNot" prepend="and">
+				<isEmpty property="cscsiCar">
+				$cscsiCarNot$ cs_car_sys_issue$suffix$.cscsi_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiParts" prepend="and">
+			    $cscsiPartsNot$ cs_car_sys_issue$suffix$.cscsi_parts = #cscsiParts#
+			</isNotEmpty>
+			<isNotNull property="cscsiPartsNot" prepend="and">
+				<isEmpty property="cscsiParts">
+				$cscsiPartsNot$ cs_car_sys_issue$suffix$.cscsi_parts is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiPartsStr" prepend="and">			    
+			    (<isNotNull property="cscsiPartsStrNot">
+			    cs_car_sys_issue$suffix$.cscsi_parts_str is null or length(cs_car_sys_issue$suffix$.cscsi_parts_str) &lt; 1 or
+			    </isNotNull>$cscsiPartsStrNot$ cs_car_sys_issue$suffix$.cscsi_parts_str = #cscsiPartsStr#)
+			</isNotEmpty>
+			<isNotNull property="cscsiPartsStrNot" prepend="and">
+				<isEmpty property="cscsiPartsStr">
+				$cscsiPartsStrNot$ (cs_car_sys_issue$suffix$.cscsi_parts_str is null or length(cs_car_sys_issue$suffix$.cscsi_parts_str) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiContent" prepend="and">			    
+			    (<isNotNull property="cscsiContentNot">
+			    cs_car_sys_issue$suffix$.cscsi_content is null or length(cs_car_sys_issue$suffix$.cscsi_content) &lt; 1 or
+			    </isNotNull>$cscsiContentNot$ cs_car_sys_issue$suffix$.cscsi_content = #cscsiContent#)
+			</isNotEmpty>
+			<isNotNull property="cscsiContentNot" prepend="and">
+				<isEmpty property="cscsiContent">
+				$cscsiContentNot$ (cs_car_sys_issue$suffix$.cscsi_content is null or length(cs_car_sys_issue$suffix$.cscsi_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiKeywords" prepend="and">			    
+			    (<isNotNull property="cscsiKeywordsNot">
+			    cs_car_sys_issue$suffix$.cscsi_keywords is null or length(cs_car_sys_issue$suffix$.cscsi_keywords) &lt; 1 or
+			    </isNotNull>$cscsiKeywordsNot$ cs_car_sys_issue$suffix$.cscsi_keywords = #cscsiKeywords#)
+			</isNotEmpty>
+			<isNotNull property="cscsiKeywordsNot" prepend="and">
+				<isEmpty property="cscsiKeywords">
+				$cscsiKeywordsNot$ (cs_car_sys_issue$suffix$.cscsi_keywords is null or length(cs_car_sys_issue$suffix$.cscsi_keywords) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiImage" prepend="and">			    
+			    (<isNotNull property="cscsiImageNot">
+			    cs_car_sys_issue$suffix$.cscsi_image is null or length(cs_car_sys_issue$suffix$.cscsi_image) &lt; 1 or
+			    </isNotNull>$cscsiImageNot$ cs_car_sys_issue$suffix$.cscsi_image = #cscsiImage#)
+			</isNotEmpty>
+			<isNotNull property="cscsiImageNot" prepend="and">
+				<isEmpty property="cscsiImage">
+				$cscsiImageNot$ (cs_car_sys_issue$suffix$.cscsi_image is null or length(cs_car_sys_issue$suffix$.cscsi_image) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiTypeMin" prepend="and">
+			    $cscsiTypeNot$  ( cs_car_sys_issue$suffix$.cscsi_type &gt;= #cscsiTypeMin#
+			    <isEmpty property="cscsiTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscsiTypeMax" prepend="and">
+				<isEmpty property="cscsiTypeMin">$cscsiTypeNot$   (</isEmpty>
+			    cs_car_sys_issue$suffix$.cscsi_type &lt;= #cscsiTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscsiType" prepend="and">
+			    $cscsiTypeNot$ cs_car_sys_issue$suffix$.cscsi_type = #cscsiType#
+			</isNotEmpty>
+			<isNotNull property="cscsiTypeNot" prepend="and">
+				<isEmpty property="cscsiTypeMax"><isEmpty property="cscsiTypeMin"><isEmpty property="cscsiType">
+				$cscsiTypeNot$ cs_car_sys_issue$suffix$.cscsi_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiSrvuser" prepend="and">
+			    $cscsiSrvuserNot$ cs_car_sys_issue$suffix$.cscsi_srvuser = #cscsiSrvuser#
+			</isNotEmpty>
+			<isNotNull property="cscsiSrvuserNot" prepend="and">
+				<isEmpty property="cscsiSrvuser">
+				$cscsiSrvuserNot$ cs_car_sys_issue$suffix$.cscsi_srvuser is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiAddTimeStart" prepend="and">
+			    $cscsiAddTimeNot$   (cs_car_sys_issue$suffix$.cscsi_add_time &gt;= #cscsiAddTimeStart#
+			   <isEmpty property="cscsiAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscsiAddTimeEnd" prepend="and">
+				<isEmpty property="cscsiAddTimeStart">$cscsiAddTimeNot$   (</isEmpty>
+			    cs_car_sys_issue$suffix$.cscsi_add_time &lt;= #cscsiAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscsiAddTime" prepend="and">
+			    $cscsiAddTimeNot$ cs_car_sys_issue$suffix$.cscsi_add_time = #cscsiAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscsiAddTimeNot" prepend="and">
+				<isEmpty property="cscsiAddTimeStart"><isEmpty property="cscsiAddTimeEnd"><isEmpty property="cscsiAddTime">
+				$cscsiAddTimeNot$ cs_car_sys_issue$suffix$.cscsi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiUpdateTimeStart" prepend="and">
+			    $cscsiUpdateTimeNot$   (cs_car_sys_issue$suffix$.cscsi_update_time &gt;= #cscsiUpdateTimeStart#
+			   <isEmpty property="cscsiUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscsiUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscsiUpdateTimeStart">$cscsiUpdateTimeNot$   (</isEmpty>
+			    cs_car_sys_issue$suffix$.cscsi_update_time &lt;= #cscsiUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscsiUpdateTime" prepend="and">
+			    $cscsiUpdateTimeNot$ cs_car_sys_issue$suffix$.cscsi_update_time = #cscsiUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscsiUpdateTimeNot" prepend="and">
+				<isEmpty property="cscsiUpdateTimeStart"><isEmpty property="cscsiUpdateTimeEnd"><isEmpty property="cscsiUpdateTime">
+				$cscsiUpdateTimeNot$ cs_car_sys_issue$suffix$.cscsi_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiStatusMin" prepend="and">
+			    $cscsiStatusNot$  ( cs_car_sys_issue$suffix$.cscsi_status &gt;= #cscsiStatusMin#
+			    <isEmpty property="cscsiStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscsiStatusMax" prepend="and">
+				<isEmpty property="cscsiStatusMin">$cscsiStatusNot$   (</isEmpty>
+			    cs_car_sys_issue$suffix$.cscsi_status &lt;= #cscsiStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscsiStatus" prepend="and">
+			    $cscsiStatusNot$ cs_car_sys_issue$suffix$.cscsi_status = #cscsiStatus#
+			</isNotEmpty>
+			<isNotNull property="cscsiStatusNot" prepend="and">
+				<isEmpty property="cscsiStatusMax"><isEmpty property="cscsiStatusMin"><isEmpty property="cscsiStatus">
+				$cscsiStatusNot$ cs_car_sys_issue$suffix$.cscsi_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscsiRemark" prepend="and">			    
+			    (<isNotNull property="cscsiRemarkNot">
+			    cs_car_sys_issue$suffix$.cscsi_remark is null or length(cs_car_sys_issue$suffix$.cscsi_remark) &lt; 1 or
+			    </isNotNull>$cscsiRemarkNot$ cs_car_sys_issue$suffix$.cscsi_remark = #cscsiRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscsiRemarkNot" prepend="and">
+				<isEmpty property="cscsiRemark">
+				$cscsiRemarkNot$ (cs_car_sys_issue$suffix$.cscsi_remark is null or length(cs_car_sys_issue$suffix$.cscsi_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 系统车况报告left join 条件sql片段 -->
+	<sql id="cs_car_sys_issue_join">
+		<dynamic>
+			<isNotEmpty property="CsCarSysIssue.cscsiId" prepend="and">
+			    $CsCarSysIssue.cscsiIdNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_id = #CsCarSysIssue.cscsiId#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiIdNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiId">
+				$cscsiIdNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCarSysIssue.cscsiHost" prepend="and">
+			    $CsCarSysIssue.cscsiHostNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_host = #CsCarSysIssue.cscsiHost#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiHostNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiHost">
+				$cscsiHostNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_host is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCarSysIssue.cscsiCar" prepend="and">
+			    $CsCarSysIssue.cscsiCarNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_car = #CsCarSysIssue.cscsiCar#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiCarNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiCar">
+				$cscsiCarNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_car is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCarSysIssue.cscsiParts" prepend="and">
+			    $CsCarSysIssue.cscsiPartsNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts = #CsCarSysIssue.cscsiParts#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiPartsNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiParts">
+				$cscsiPartsNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsCarSysIssue.cscsiPartsStr" prepend="and">			    
+				    (<isNotNull property="CsCarSysIssue.cscsiPartsStrNot">
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts_str is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts_str) &lt; 1 or
+				    </isNotNull>$CsCarSysIssue.cscsiPartsStrNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts_str = #CsCarSysIssue.cscsiPartsStr#)
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiPartsStrNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiPartsStr">
+					$cscsiPartsStrNot$ (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts_str is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_parts_str) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCarSysIssue.cscsiContent" prepend="and">			    
+				    (<isNotNull property="CsCarSysIssue.cscsiContentNot">
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_content is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_content) &lt; 1 or
+				    </isNotNull>$CsCarSysIssue.cscsiContentNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_content = #CsCarSysIssue.cscsiContent#)
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiContentNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiContent">
+					$cscsiContentNot$ (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_content is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_content) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCarSysIssue.cscsiKeywords" prepend="and">			    
+				    (<isNotNull property="CsCarSysIssue.cscsiKeywordsNot">
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_keywords is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_keywords) &lt; 1 or
+				    </isNotNull>$CsCarSysIssue.cscsiKeywordsNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_keywords = #CsCarSysIssue.cscsiKeywords#)
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiKeywordsNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiKeywords">
+					$cscsiKeywordsNot$ (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_keywords is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_keywords) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCarSysIssue.cscsiImage" prepend="and">			    
+				    (<isNotNull property="CsCarSysIssue.cscsiImageNot">
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_image is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_image) &lt; 1 or
+				    </isNotNull>$CsCarSysIssue.cscsiImageNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_image = #CsCarSysIssue.cscsiImage#)
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiImageNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiImage">
+					$cscsiImageNot$ (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_image is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_image) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCarSysIssue.cscsiTypeMin" prepend="and">
+			    $CsCarSysIssue.cscsiTypeNot$  ( cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_type &gt;= #CsCarSysIssue.cscsiTypeMin#
+			    <isEmpty property="CsCarSysIssue.cscsiTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCarSysIssue.cscsiTypeMax" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiTypeMin">$CsCarSysIssue.cscsiTypeNot$   (</isEmpty>
+			    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_type &lt;= #CsCarSysIssue.cscsiTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCarSysIssue.cscsiType" prepend="and">
+			    $CsCarSysIssue.cscsiTypeNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_type = #CsCarSysIssue.cscsiType#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiTypeNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiTypeMax"><isEmpty property="CsCarSysIssue.cscsiTypeMin"><isEmpty property="CsCarSysIssue.cscsiType">
+				$cscsiTypeNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCarSysIssue.cscsiSrvuser" prepend="and">
+			    $CsCarSysIssue.cscsiSrvuserNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_srvuser = #CsCarSysIssue.cscsiSrvuser#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiSrvuserNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiSrvuser">
+				$cscsiSrvuserNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_srvuser is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsCarSysIssue.cscsiAddTimeStart" prepend="and">
+				    $CsCarSysIssue.cscsiAddTimeNot$   (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_add_time &gt;= #CsCarSysIssue.cscsiAddTimeStart#
+				   <isEmpty property="CsCarSysIssue.cscsiAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCarSysIssue.cscsiAddTimeEnd" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiAddTimeStart">$CsCarSysIssue.cscsiAddTimeNot$   (</isEmpty>
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_add_time &lt;= #CsCarSysIssue.cscsiAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCarSysIssue.cscsiAddTime" prepend="and">
+				    $CsCarSysIssue.cscsiAddTimeNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_add_time = #CsCarSysIssue.cscsiAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiAddTimeNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiAddTimeStart"><isEmpty property="CsCarSysIssue.cscsiAddTimeEnd"><isEmpty property="CsCarSysIssue.cscsiAddTime">
+					$cscsiAddTimeNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCarSysIssue.cscsiUpdateTimeStart" prepend="and">
+				    $CsCarSysIssue.cscsiUpdateTimeNot$   (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_update_time &gt;= #CsCarSysIssue.cscsiUpdateTimeStart#
+				   <isEmpty property="CsCarSysIssue.cscsiUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCarSysIssue.cscsiUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiUpdateTimeStart">$CsCarSysIssue.cscsiUpdateTimeNot$   (</isEmpty>
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_update_time &lt;= #CsCarSysIssue.cscsiUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCarSysIssue.cscsiUpdateTime" prepend="and">
+				    $CsCarSysIssue.cscsiUpdateTimeNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_update_time = #CsCarSysIssue.cscsiUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiUpdateTimeNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiUpdateTimeStart"><isEmpty property="CsCarSysIssue.cscsiUpdateTimeEnd"><isEmpty property="CsCarSysIssue.cscsiUpdateTime">
+					$cscsiUpdateTimeNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCarSysIssue.cscsiStatusMin" prepend="and">
+			    $CsCarSysIssue.cscsiStatusNot$  ( cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_status &gt;= #CsCarSysIssue.cscsiStatusMin#
+			    <isEmpty property="CsCarSysIssue.cscsiStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCarSysIssue.cscsiStatusMax" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiStatusMin">$CsCarSysIssue.cscsiStatusNot$   (</isEmpty>
+			    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_status &lt;= #CsCarSysIssue.cscsiStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCarSysIssue.cscsiStatus" prepend="and">
+			    $CsCarSysIssue.cscsiStatusNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_status = #CsCarSysIssue.cscsiStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCarSysIssue.cscsiStatusNot" prepend="and">
+				<isEmpty property="CsCarSysIssue.cscsiStatusMax"><isEmpty property="CsCarSysIssue.cscsiStatusMin"><isEmpty property="CsCarSysIssue.cscsiStatus">
+				$cscsiStatusNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCarSysIssue.cscsiRemark" prepend="and">			    
+				    (<isNotNull property="CsCarSysIssue.cscsiRemarkNot">
+				    cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_remark is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_remark) &lt; 1 or
+				    </isNotNull>$CsCarSysIssue.cscsiRemarkNot$ cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_remark = #CsCarSysIssue.cscsiRemark#)
+				</isNotEmpty>
+				<isNotNull property="CsCarSysIssue.cscsiRemarkNot" prepend="and">
+					<isEmpty property="CsCarSysIssue.cscsiRemark">
+					$cscsiRemarkNot$ (cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_remark is null or length(cs_car_sys_issue$CsCarSysIssue.suffix$.cscsi_remark) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

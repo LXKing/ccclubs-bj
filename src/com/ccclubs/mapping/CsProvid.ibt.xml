@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 供应商之SQL映射 -->
+	<resultMap id="CsProvid" class="com.ccclubs.model.CsProvid">
+		<result property="cspId" column="csp_id"/>
+		<result property="cspHost" column="csp_host"/>
+		<result property="cspName" column="csp_name"/>
+		<result property="cspPerson" column="csp_person"/>
+		<result property="cspConcat" column="csp_concat"/>
+		<result property="cspFlag" column="csp_flag"/>
+		<result property="cspRemark" column="csp_remark"/>
+		<result property="cspUpdateTime" column="csp_update_time"/>
+		<result property="cspAddTime" column="csp_add_time"/>
+		<result property="cspStatus" column="csp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有供应商 -->
+	<select id="getCsProvidList" resultMap="CsProvid">
+		select cs_provid$suffix$.* from cs_provid$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_provid$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsProvid_part.cs_provid_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取供应商分页 -->
+	<select id="getCsProvidPage" parameterClass="java.util.HashMap" resultMap="CsProvid">
+		select cs_provid$suffix$.* from cs_provid$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_provid$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsProvid_part.cs_provid_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取供应商总数 -->
+	<select id="getCsProvidEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_provid$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_provid$suffix$.csp_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsProvid_part.cs_provid_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取供应商 -->
+	<select id="getCsProvidById" parameterClass="java.util.HashMap" resultMap="CsProvid">
+		select cs_provid$suffix$.* from cs_provid$suffix$
+		where csp_id=#id#
+	</select>
+	
+		
+	<!-- 保存供应商 -->
+	<insert id="saveCsProvid"  parameterClass="com.ccclubs.model.CsProvid">
+		insert into cs_provid$suffix$
+		(
+			cs_provid$suffix$.csp_host
+			,cs_provid$suffix$.csp_name
+			,cs_provid$suffix$.csp_person
+			,cs_provid$suffix$.csp_concat
+			,cs_provid$suffix$.csp_flag
+			,cs_provid$suffix$.csp_remark
+			,cs_provid$suffix$.csp_update_time
+			,cs_provid$suffix$.csp_add_time
+			,cs_provid$suffix$.csp_status
+		)
+		values(
+			<isNotNull property="cspHost" prepend="">
+				#cspHost#
+			</isNotNull>
+			<isNull property="cspHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspName" prepend=",">
+				#cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspPerson" prepend=",">
+				#cspPerson#
+			</isNotNull>
+			<isNull property="cspPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspConcat" prepend=",">
+				#cspConcat#
+			</isNotNull>
+			<isNull property="cspConcat" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspFlag" prepend=",">
+				#cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspRemark" prepend=",">
+				#cspRemark#
+			</isNotNull>
+			<isNull property="cspRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspUpdateTime" prepend=",">
+				#cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspAddTime" prepend=",">
+				#cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspStatus" prepend=",">
+				#cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新供应商 -->
+	<update id="updateCsProvid"  parameterClass="com.ccclubs.model.CsProvid">
+		update cs_provid$suffix$ set
+			<isNotNull property="cspHost" prepend="">
+				cs_provid$suffix$.csp_host = #cspHost#
+			</isNotNull>
+			<isNull property="cspHost" prepend="">
+				cs_provid$suffix$.csp_host = null
+			</isNull>				
+			<isNotNull property="cspName" prepend=",">
+				cs_provid$suffix$.csp_name = #cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend=",">
+				cs_provid$suffix$.csp_name = null
+			</isNull>				
+			<isNotNull property="cspPerson" prepend=",">
+				cs_provid$suffix$.csp_person = #cspPerson#
+			</isNotNull>
+			<isNull property="cspPerson" prepend=",">
+				cs_provid$suffix$.csp_person = null
+			</isNull>				
+			<isNotNull property="cspConcat" prepend=",">
+				cs_provid$suffix$.csp_concat = #cspConcat#
+			</isNotNull>
+			<isNull property="cspConcat" prepend=",">
+				cs_provid$suffix$.csp_concat = null
+			</isNull>				
+			<isNotNull property="cspFlag" prepend=",">
+				cs_provid$suffix$.csp_flag = #cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				cs_provid$suffix$.csp_flag = null
+			</isNull>				
+			<isNotNull property="cspRemark" prepend=",">
+				cs_provid$suffix$.csp_remark = #cspRemark#
+			</isNotNull>
+			<isNull property="cspRemark" prepend=",">
+				cs_provid$suffix$.csp_remark = null
+			</isNull>				
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_provid$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				cs_provid$suffix$.csp_update_time = null
+			</isNull>				
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_provid$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				cs_provid$suffix$.csp_add_time = null
+			</isNull>				
+			<isNotNull property="cspStatus" prepend=",">
+				cs_provid$suffix$.csp_status = #cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				cs_provid$suffix$.csp_status = null
+			</isNull>				
+		where
+			csp_id=#cspId#
+	</update>
+	
+	<!-- 更新供应商非空字段 -->
+	<update id="updateCsProvid$NotNull"  parameterClass="com.ccclubs.model.CsProvid">
+		update cs_provid$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspHost" prepend=",">
+				cs_provid$suffix$.csp_host = #cspHost#
+			</isNotNull>		
+			<isNotNull property="cspName" prepend=",">
+				cs_provid$suffix$.csp_name = #cspName#
+			</isNotNull>		
+			<isNotNull property="cspPerson" prepend=",">
+				cs_provid$suffix$.csp_person = #cspPerson#
+			</isNotNull>		
+			<isNotNull property="cspConcat" prepend=",">
+				cs_provid$suffix$.csp_concat = #cspConcat#
+			</isNotNull>		
+			<isNotNull property="cspFlag" prepend=",">
+				cs_provid$suffix$.csp_flag = #cspFlag#
+			</isNotNull>		
+			<isNotNull property="cspRemark" prepend=",">
+				cs_provid$suffix$.csp_remark = #cspRemark#
+			</isNotNull>		
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_provid$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_provid$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>		
+			<isNotNull property="cspStatus" prepend=",">
+				cs_provid$suffix$.csp_status = #cspStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csp_id=#cspId#
+	</update>
+	
+
+	<!-- 根据ID删除一个供应商 -->
+	<delete id="deleteCsProvidById" parameterClass="java.util.HashMap">
+		delete from cs_provid$suffix$ where csp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个供应商 -->
+	<update id="removeCsProvidById" parameterClass="java.util.HashMap">
+		update cs_provid$suffix$ set  cs_provid$suffix$.csp_status=-1  where csp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新供应商 -->
+	<update id="updateCsProvidBy"  parameterClass="java.util.HashMap">
+		update cs_provid$suffix$ set		
+			csp_id=csp_id
+			<isNotNull property="V_cspId" prepend=",">
+				cs_provid$suffix$.csp_id = #V_cspId#
+			</isNotNull>		
+			<isNotNull property="V_cspHost" prepend=",">
+				cs_provid$suffix$.csp_host = #V_cspHost#
+			</isNotNull>		
+			<isNotNull property="V_cspName" prepend=",">
+				cs_provid$suffix$.csp_name = #V_cspName#
+			</isNotNull>		
+			<isNotNull property="V_cspPerson" prepend=",">
+				cs_provid$suffix$.csp_person = #V_cspPerson#
+			</isNotNull>		
+			<isNotNull property="V_cspConcat" prepend=",">
+				cs_provid$suffix$.csp_concat = #V_cspConcat#
+			</isNotNull>		
+			<isNotNull property="V_cspFlag" prepend=",">
+				cs_provid$suffix$.csp_flag = #V_cspFlag#
+			</isNotNull>		
+			<isNotNull property="V_cspRemark" prepend=",">
+				cs_provid$suffix$.csp_remark = #V_cspRemark#
+			</isNotNull>		
+			<isNotNull property="V_cspUpdateTime" prepend=",">
+				cs_provid$suffix$.csp_update_time = #V_cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cspAddTime" prepend=",">
+				cs_provid$suffix$.csp_add_time = #V_cspAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cspStatus" prepend=",">
+				cs_provid$suffix$.csp_status = #V_cspStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_provid$suffix$.csp_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsProvid_part.cs_provid_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除供应商 -->
+	<update id="deleteCsProvidBy"  parameterClass="java.util.HashMap">
+		delete from cs_provid$suffix$ where 
+		cs_provid$suffix$.csp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsProvid_part.cs_provid_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

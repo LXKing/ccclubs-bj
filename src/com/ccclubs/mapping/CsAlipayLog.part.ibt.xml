@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsAlipayLog_part">	
+	<!-- 接口日志条件sql片段  -->
+	<sql id="cs_alipay_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="csalId" prepend="and">
+			    $csalIdNot$ cs_alipay_log$suffix$.csal_id = #csalId#
+			</isNotEmpty>
+			<isNotNull property="csalIdNot" prepend="and">
+				<isEmpty property="csalId">
+				$csalIdNot$ cs_alipay_log$suffix$.csal_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalBankType" prepend="and">
+			    $csalBankTypeNot$ cs_alipay_log$suffix$.csal_bank_type = #csalBankType#
+			</isNotEmpty>
+			<isNotNull property="csalBankTypeNot" prepend="and">
+				<isEmpty property="csalBankType">
+				$csalBankTypeNot$ cs_alipay_log$suffix$.csal_bank_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalRecord" prepend="and">
+			    $csalRecordNot$ cs_alipay_log$suffix$.csal_record = #csalRecord#
+			</isNotEmpty>
+			<isNotNull property="csalRecordNot" prepend="and">
+				<isEmpty property="csalRecord">
+				$csalRecordNot$ cs_alipay_log$suffix$.csal_record is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalRefund" prepend="and">
+			    $csalRefundNot$ cs_alipay_log$suffix$.csal_refund = #csalRefund#
+			</isNotEmpty>
+			<isNotNull property="csalRefundNot" prepend="and">
+				<isEmpty property="csalRefund">
+				$csalRefundNot$ cs_alipay_log$suffix$.csal_refund is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalOtherMin" prepend="and">
+			    $csalOtherNot$  ( cs_alipay_log$suffix$.csal_other &gt;= #csalOtherMin#
+			    <isEmpty property="csalOtherMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csalOtherMax" prepend="and">
+				<isEmpty property="csalOtherMin">$csalOtherNot$   (</isEmpty>
+			    cs_alipay_log$suffix$.csal_other &lt;= #csalOtherMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csalOther" prepend="and">
+			    $csalOtherNot$ cs_alipay_log$suffix$.csal_other = #csalOther#
+			</isNotEmpty>
+			<isNotNull property="csalOtherNot" prepend="and">
+				<isEmpty property="csalOtherMax"><isEmpty property="csalOtherMin"><isEmpty property="csalOther">
+				$csalOtherNot$ cs_alipay_log$suffix$.csal_other is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csalModelClass" prepend="and">			    
+			    (<isNotNull property="csalModelClassNot">
+			    cs_alipay_log$suffix$.csal_model_class is null or length(cs_alipay_log$suffix$.csal_model_class) &lt; 1 or
+			    </isNotNull>$csalModelClassNot$ cs_alipay_log$suffix$.csal_model_class = #csalModelClass#)
+			</isNotEmpty>
+			<isNotNull property="csalModelClassNot" prepend="and">
+				<isEmpty property="csalModelClass">
+				$csalModelClassNot$ (cs_alipay_log$suffix$.csal_model_class is null or length(cs_alipay_log$suffix$.csal_model_class) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalType" prepend="and">
+			    $csalTypeNot$ cs_alipay_log$suffix$.csal_type = #csalType#
+			</isNotEmpty>
+			<isNotNull property="csalTypeNot" prepend="and">
+				<isEmpty property="csalType">
+				$csalTypeNot$ cs_alipay_log$suffix$.csal_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalLog" prepend="and">			    
+			    (<isNotNull property="csalLogNot">
+			    cs_alipay_log$suffix$.csal_log is null or length(cs_alipay_log$suffix$.csal_log) &lt; 1 or
+			    </isNotNull>$csalLogNot$ cs_alipay_log$suffix$.csal_log like #csalLog#)
+			</isNotEmpty>
+			<isNotNull property="csalLogNot" prepend="and">
+				<isEmpty property="csalLog">
+				$csalLogNot$ (cs_alipay_log$suffix$.csal_log is null or length(cs_alipay_log$suffix$.csal_log) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalAddTimeStart" prepend="and">
+			    $csalAddTimeNot$   (cs_alipay_log$suffix$.csal_add_time &gt;= #csalAddTimeStart#
+			   <isEmpty property="csalAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csalAddTimeEnd" prepend="and">
+				<isEmpty property="csalAddTimeStart">$csalAddTimeNot$   (</isEmpty>
+			    cs_alipay_log$suffix$.csal_add_time &lt;= #csalAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csalAddTime" prepend="and">
+			    $csalAddTimeNot$ cs_alipay_log$suffix$.csal_add_time = #csalAddTime#
+			</isNotEmpty>
+			<isNotNull property="csalAddTimeNot" prepend="and">
+				<isEmpty property="csalAddTimeStart"><isEmpty property="csalAddTimeEnd"><isEmpty property="csalAddTime">
+				$csalAddTimeNot$ cs_alipay_log$suffix$.csal_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csalStatus" prepend="and">
+			    $csalStatusNot$ cs_alipay_log$suffix$.csal_status = #csalStatus#
+			</isNotEmpty>
+			<isNotNull property="csalStatusNot" prepend="and">
+				<isEmpty property="csalStatus">
+				$csalStatusNot$ cs_alipay_log$suffix$.csal_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 接口日志left join 条件sql片段 -->
+	<sql id="cs_alipay_log_join">
+		<dynamic>
+			<isNotEmpty property="CsAlipayLog.csalId" prepend="and">
+			    $CsAlipayLog.csalIdNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_id = #CsAlipayLog.csalId#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalIdNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalId">
+				$csalIdNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalBankType" prepend="and">
+			    $CsAlipayLog.csalBankTypeNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_bank_type = #CsAlipayLog.csalBankType#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalBankTypeNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalBankType">
+				$csalBankTypeNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_bank_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalRecord" prepend="and">
+			    $CsAlipayLog.csalRecordNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_record = #CsAlipayLog.csalRecord#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalRecordNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalRecord">
+				$csalRecordNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_record is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalRefund" prepend="and">
+			    $CsAlipayLog.csalRefundNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_refund = #CsAlipayLog.csalRefund#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalRefundNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalRefund">
+				$csalRefundNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_refund is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalOtherMin" prepend="and">
+			    $CsAlipayLog.csalOtherNot$  ( cs_alipay_log$CsAlipayLog.suffix$.csal_other &gt;= #CsAlipayLog.csalOtherMin#
+			    <isEmpty property="CsAlipayLog.csalOtherMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayLog.csalOtherMax" prepend="and">
+				<isEmpty property="CsAlipayLog.csalOtherMin">$CsAlipayLog.csalOtherNot$   (</isEmpty>
+			    cs_alipay_log$CsAlipayLog.suffix$.csal_other &lt;= #CsAlipayLog.csalOtherMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayLog.csalOther" prepend="and">
+			    $CsAlipayLog.csalOtherNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_other = #CsAlipayLog.csalOther#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalOtherNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalOtherMax"><isEmpty property="CsAlipayLog.csalOtherMin"><isEmpty property="CsAlipayLog.csalOther">
+				$csalOtherNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_other is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalModelClass" prepend="and">
+				(<isNotNull property="CsAlipayLog.csalModelClassNot">
+			    cs_alipay_log$CsAlipayLog.suffix$.csal_model_class is null or length(cs_alipay_log$CsAlipayLog.suffix$.csal_model_class) &lt; 1 or
+			    </isNotNull>$CsAlipayLog.csalModelClassNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_model_class = #CsAlipayLog.csalModelClass#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalModelClassNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalModelClass">
+				$csalModelClassNot$ (cs_alipay_log$CsAlipayLog.suffix$.csal_model_class is null or length(cs_alipay_log$CsAlipayLog.suffix$.csal_model_class) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalType" prepend="and">
+			    $CsAlipayLog.csalTypeNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_type = #CsAlipayLog.csalType#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalTypeNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalType">
+				$csalTypeNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalLog" prepend="and">
+				(<isNotNull property="CsAlipayLog.csalLogNot">
+			    cs_alipay_log$CsAlipayLog.suffix$.csal_log is null or length(cs_alipay_log$CsAlipayLog.suffix$.csal_log) &lt; 1 or
+			    </isNotNull>$CsAlipayLog.csalLogNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_log like #CsAlipayLog.csalLog#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalLogNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalLog">
+				$csalLogNot$ (cs_alipay_log$CsAlipayLog.suffix$.csal_log is null or length(cs_alipay_log$CsAlipayLog.suffix$.csal_log) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalAddTimeStart" prepend="and">
+			    $CsAlipayLog.csalAddTimeNot$   (cs_alipay_log$CsAlipayLog.suffix$.csal_add_time &gt;= #CsAlipayLog.csalAddTimeStart#
+			   <isEmpty property="CsAlipayLog.csalAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayLog.csalAddTimeEnd" prepend="and">
+				<isEmpty property="CsAlipayLog.csalAddTimeStart">$CsAlipayLog.csalAddTimeNot$   (</isEmpty>
+			    cs_alipay_log$CsAlipayLog.suffix$.csal_add_time &lt;= #CsAlipayLog.csalAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayLog.csalAddTime" prepend="and">
+			    $CsAlipayLog.csalAddTimeNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_add_time = #CsAlipayLog.csalAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalAddTimeNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalAddTimeStart"><isEmpty property="CsAlipayLog.csalAddTimeEnd"><isEmpty property="CsAlipayLog.csalAddTime">
+				$csalAddTimeNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayLog.csalStatus" prepend="and">
+			    $CsAlipayLog.csalStatusNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_status = #CsAlipayLog.csalStatus#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayLog.csalStatusNot" prepend="and">
+				<isEmpty property="CsAlipayLog.csalStatus">
+				$csalStatusNot$ cs_alipay_log$CsAlipayLog.suffix$.csal_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

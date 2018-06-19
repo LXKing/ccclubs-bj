@@ -1,0 +1,351 @@
+﻿${lz:set("sitename","车纷享")}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户注册</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script type="text/javascript" src="${basePath}api/js/jquery-1.7.1.min.js"></script>
+</head>
+<style>
+body, html {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+	background: #ffffff;
+}
+body, td, div, span {
+	font-size: 12px;
+	color: #4c4c4c;
+}
+form {
+	margin: 0px;
+	padding: 0px;
+}
+.clear {
+	clear: both;
+}
+body {
+	background: #f4f4f4;
+}
+#hd {
+	height: 70px;
+	background: #1f4e8c;
+}
+#hd span, #hd div, #hd td, #hd a, #hd * {
+	color: #ffffff;
+	font-family: "Microsoft YaHei";
+}
+#bd {
+	background: #ffffff;
+	box-shadow: 0px 0px 3px #333333;
+	padding: 1px 0px;
+	position:relative;
+	top:0;
+}
+#ft {
+	clear: both;
+}
+.table {
+	width: 100%;
+}
+.input, .code {
+	width: 100%;
+	height: 32px;
+	border: 1px solid #c6ccd1;
+	font-size:16px;
+	-webkit-border-radius: 5px;
+	box-shadow:0px;
+	-webkit-box-shadow: #666 0px 0px 0px;
+}
+.code {
+	width: 35%;
+}
+.td_left{
+	width:23%;
+	padding-top:20px;
+	font-size:16px;
+}
+.td_right{
+	padding-right:10%;
+	padding-top:20px;
+}
+.loginbtn, #resend-msg {
+	background: #3498db;
+	color: #ffffff;
+	width: 100%;
+	border: 0px;
+	height: 40px;
+	font-size:18px;
+}
+.message {
+	display: block;
+	margin: 10px auto;
+	text-align: center;
+	padding: 20px 0px;
+	color: red;
+	font-size: 14px;
+	border: 1px solid #fcd113;
+	background: #f8da4e;
+	color: #915608;
+}
+.reg a {
+	color: #f60;
+	font-size: 13px;
+	text-decoration: none;
+}
+.reg a:hover {
+	color: #f60;
+	text-decoration: underline;
+}
+#resend-msg {
+	width: 60%;
+	text-decoration: none;
+	border-radius: 4px;
+	float: right;
+	font-size: 12px;
+	text-align: center;
+	display: block;
+	border: none;
+	text-align: center;
+	height: 36px;
+	line-height: 36px;
+}
+.error {
+	color: #f00;
+	width: 94%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+</style>
+<body>
+    <script>
+	<s:if test="#request.success==true">
+		if(window.opener && window.opener.onOauthCallback){
+			window.opener.onOauthCallback("${token}");
+			window.close();
+		}
+		${lz:set("emptyDirect",(empty direct))}
+		<s:if test="#request.emptyDirect==false">
+		window.location.href="${direct}${lz:indexOf(direct,"?")>-1?"&":"?"}token=${token}";
+		</s:if>
+	</s:if>
+	</script> 
+
+    <!-- 头部 --> 
+    <!-- 
+		<div id="hd">
+			<center>
+				<span style='font-size: 22px; line-height: 70px;'>用户注册</<span>
+			</center>
+		</div>
+ 		--> 
+
+    <!-- 体部 -->
+    <div id="bd" style="position: fixed;right: 0;left: 0;z-index: 10;height:30px;padding-top:12px;"> 
+  <center style='font-size:16px;color:#3498db;'>
+        欢迎注册！
+        为您提供便捷的自助用车服务。
+      </center>
+  <br />
+</div>
+    <div id="ft" style="padding-top:50px;"> 
+  <div class="error" style="display: none;font-size:16px;padding-top:10px;" id="tips-error"> 您输入的手机号不正确 </div>
+  <s:if test="#request.success==true">
+        <center style='color: red; font-size: 14px;'>
+      登录成功! ${empty direct?"请关闭当前窗口或退出当前页面以进行下一步的操作":"系统正在进行转跳"}
+    </center>
+      </s:if>
+  <s:elseif test="#request.error!=null">
+        <div class='message'> [错误提示]:${error} </div>
+      </s:elseif>
+  <s:else>
+        <center style='color: red; font-size: 14px;'>
+      ${message}
+    </center>
+        <input type="hidden" name="direct" value="${direct}" />
+        <input type="hidden" name="appid" value="${appid}" />
+        <input type="hidden" name="flag" value="${flag}" />
+        <input type="hidden" name="timestamp" value="${timestamp}" />
+        <input type="hidden" name="sign" value="${sign}" />
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="td_left" align="right"> 手机号： </td>
+      <td class="td_right" ><input type="text" style=""  placeholder="请输入您的手机号" class="input" size="32" name="accName" id="accName" maxlength="11" /></td>
+    </tr>
+    <tr>
+      <td class="td_left"  align="right"> 城市： </td>
+      <td class="td_right"><select id="regCity" class="input" style="height:35px;">
+          <s:iterator value="#request.hostList" id="item" status="i">
+            <option value="${item.shId}" ${item.shId==selHostId?"selected":""}> ${item.shName} </option>
+          </s:iterator>
+        </select></td>
+    </tr>
+    <tr>
+      <td class="td_left"  align="right"> 密码： </td>
+      <td class="td_right"><input type="password" placeholder="请输入您的密码" class="input" size="32" name="accPwd" id="accPwd" maxlength="20" /></td>
+    </tr>
+    <tr>
+      <td class="td_left"  align="right"> 确认密码： </td>
+      <td class="td_right"><input type="password" placeholder="请再次输入您的密码" class="input" size="32" name="accPwdConf" id="accPwdConf" maxlength="20" /></td>
+    </tr>
+    <tr>
+      <td class="td_left"  align="right"> 验证码： </td>
+      <td class="td_right"><input type="tel" placeholder="请输入校验码" style="width:40%;float:left;" class="code" size="32" name="checkcode" id="checkcode" maxlength="4" />
+        <a href="javascript:;" onclick="getCheckCode();" style="width:50%;float:right;margin-top:2px;"  id="resend-msg">获取校验码</a></td>
+    </tr>
+  </tbody>
+</table>
+      </s:else>
+      <button type="submit" style="position:fixed;bottom:0;height:55px;background:#3498db" onclick="submit();" class="loginbtn"> 注&nbsp;&nbsp;册 </button>
+</div>
+    <script type="text/javascript">
+			function getCheckCode() {
+				$('#tips-error').css("display", "none");
+				
+				var regMobile = /^(1[0-9]|15[0|3|6|7|8|9]|18[8|9])|(17[0-9]{9})\d{8}$/;
+				var phone = $.trim($("#accName").val());
+             	if(!regMobile.test(phone))
+					{
+						var msg = "手机号格式不正确。";
+						$('#tips-error').css("display", "block");
+						$('#tips-error').html(msg);
+						return;
+					}
+				//
+				var url = "oauth.exist.do?txtMobile=" + phone+"&t=" + new Date().getTime();
+                $.get(url, function(data) {
+                    switch(data)
+                    {
+                    	case "true":
+		            	 var url0 = "oauth.sms.do?type=0&t=" + new Date().getTime();
+				            $.get(url0,{mobile:phone,host:$("#regCity").val()},function(data) {
+				                if (data == "success") {
+				                    	var btn = $('#resend-msg');
+							            	  btn.attr("onclick", "return false");
+				            			      btn.addClass('off');
+							            var time = 59;
+							            var timer = setInterval(function() {
+							                btn.text(time + "秒后 重新获取校验码");
+							                --time;
+							                if (time == 0) {
+							                    clearInterval(timer);
+							                    btn.text("重新获取校验码");
+												btn.removeClass('off');
+								                btn.attr("onclick", "getCheckCode()");
+							                }
+							            }, 1000);
+				                }
+				            });
+                    	break;
+                    	case "false":
+                    	var msg = "手机号格式不正确。";
+						$('#tips-error').css("display", "block");
+						$('#tips-error').html(msg);
+                    	break;
+                    	case "used":
+                    	var msg = "该手机号码已经被注册，请更换其他号码。";
+						$('#tips-error').css("display", "block");
+						$('#tips-error').html(msg);
+                    	break;
+                    }
+                });
+	        }
+	        
+	    	function submit() {
+		　　　  var regCity = $("#regCity").val();
+	           var ajax = {
+					url: "oauth.save.do",
+					type: "POST",
+					data: {
+						txtHost:regCity,
+						txtMobile: $.trim($("#accName").val()),
+						txtPassWord:$.trim($("#accPwd").val()),
+						txtRePassWord:$.trim($("#accPwdConf").val()),
+						txtCode: $.trim($("#checkcode").val()),
+						appid:"${appid}"
+					},
+					async: true,
+					success: function(data) {
+						switch (data) {
+							case "100":
+								setMsg();
+								break;
+							case "101":
+								var msg = "你还没有输入手机号！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "102":
+								var msg = "你还没有输入密码！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "103":
+								var msg = "你还没有输入验证码!";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "104":
+								var msg = "你还没有输入短信校验码！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "105":
+								var msg = "你输入手机号码格式错误！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "106":
+								var msg = "密码设置有误，请输入6到20位有效密码！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "107":
+								var msg = "两次密码输入不一致！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "108":
+								var msg = "手机号码已被注册！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "109":
+								var msg = "你输入的验证码不正确！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "110":
+								var msg = "你输入的短信校验码不正确！";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							case "9999":
+								var msg = "系统错误,请稍候再试。";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								break;
+							default:
+								var msg = "未知的返回。";
+								$('#tips-error').css("display", "block");
+								$('#tips-error').html(msg);
+								return;
+						}
+					}
+				}
+				$.ajax(ajax);
+	     }
+	     
+	     function setMsg(){
+	     	//alert("恭喜，注册成功！");
+			location.href = 'oauth.do?appid=${appid}&timestamp=${timestamp}&sign=${sign}&opType=2';
+		}
+	   </script>
+</body>
+</html>

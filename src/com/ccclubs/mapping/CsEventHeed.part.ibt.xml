@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsEventHeed_part">	
+	<!-- 事件关注条件sql片段  -->
+	<sql id="cs_event_heed_dynamic">
+		<dynamic>
+			<isNotEmpty property="csehId" prepend="and">
+			    $csehIdNot$ cs_event_heed$suffix$.cseh_id = #csehId#
+			</isNotEmpty>
+			<isNotNull property="csehIdNot" prepend="and">
+				<isEmpty property="csehId">
+				$csehIdNot$ cs_event_heed$suffix$.cseh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehEventType" prepend="and">
+			    $csehEventTypeNot$ cs_event_heed$suffix$.cseh_event_type = #csehEventType#
+			</isNotEmpty>
+			<isNotNull property="csehEventTypeNot" prepend="and">
+				<isEmpty property="csehEventType">
+				$csehEventTypeNot$ cs_event_heed$suffix$.cseh_event_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehHeedUser" prepend="and">
+			    $csehHeedUserNot$ cs_event_heed$suffix$.cseh_heed_user = #csehHeedUser#
+			</isNotEmpty>
+			<isNotNull property="csehHeedUserNot" prepend="and">
+				<isEmpty property="csehHeedUser">
+				$csehHeedUserNot$ cs_event_heed$suffix$.cseh_heed_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehHeedType" prepend="and">			    
+			    (<isNotNull property="csehHeedTypeNot">
+			    cs_event_heed$suffix$.cseh_heed_type is null or length(cs_event_heed$suffix$.cseh_heed_type) &lt; 1 or
+			    </isNotNull>$csehHeedTypeNot$ cs_event_heed$suffix$.cseh_heed_type like #csehHeedType#)
+			</isNotEmpty>
+			<isNotNull property="csehHeedTypeNot" prepend="and">
+				<isEmpty property="csehHeedType">
+				$csehHeedTypeNot$ (cs_event_heed$suffix$.cseh_heed_type is null or length(cs_event_heed$suffix$.cseh_heed_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehUpdateTimeStart" prepend="and">
+			    $csehUpdateTimeNot$   (cs_event_heed$suffix$.cseh_update_time &gt;= #csehUpdateTimeStart#
+			   <isEmpty property="csehUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csehUpdateTimeEnd" prepend="and">
+				<isEmpty property="csehUpdateTimeStart">$csehUpdateTimeNot$   (</isEmpty>
+			    cs_event_heed$suffix$.cseh_update_time &lt;= #csehUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csehUpdateTime" prepend="and">
+			    $csehUpdateTimeNot$ cs_event_heed$suffix$.cseh_update_time = #csehUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csehUpdateTimeNot" prepend="and">
+				<isEmpty property="csehUpdateTimeStart"><isEmpty property="csehUpdateTimeEnd"><isEmpty property="csehUpdateTime">
+				$csehUpdateTimeNot$ cs_event_heed$suffix$.cseh_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehAddTimeStart" prepend="and">
+			    $csehAddTimeNot$   (cs_event_heed$suffix$.cseh_add_time &gt;= #csehAddTimeStart#
+			   <isEmpty property="csehAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csehAddTimeEnd" prepend="and">
+				<isEmpty property="csehAddTimeStart">$csehAddTimeNot$   (</isEmpty>
+			    cs_event_heed$suffix$.cseh_add_time &lt;= #csehAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csehAddTime" prepend="and">
+			    $csehAddTimeNot$ cs_event_heed$suffix$.cseh_add_time = #csehAddTime#
+			</isNotEmpty>
+			<isNotNull property="csehAddTimeNot" prepend="and">
+				<isEmpty property="csehAddTimeStart"><isEmpty property="csehAddTimeEnd"><isEmpty property="csehAddTime">
+				$csehAddTimeNot$ cs_event_heed$suffix$.cseh_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehStatus" prepend="and">
+			    $csehStatusNot$ cs_event_heed$suffix$.cseh_status = #csehStatus#
+			</isNotEmpty>
+			<isNotNull property="csehStatusNot" prepend="and">
+				<isEmpty property="csehStatus">
+				$csehStatusNot$ cs_event_heed$suffix$.cseh_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 事件关注left join 条件sql片段 -->
+	<sql id="cs_event_heed_join">
+		<dynamic>
+			<isNotEmpty property="CsEventHeed.csehId" prepend="and">
+			    $CsEventHeed.csehIdNot$ cs_event_heed$CsEventHeed.suffix$.cseh_id = #CsEventHeed.csehId#
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehIdNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehId">
+				$csehIdNot$ cs_event_heed$CsEventHeed.suffix$.cseh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEventHeed.csehEventType" prepend="and">
+			    $CsEventHeed.csehEventTypeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_event_type = #CsEventHeed.csehEventType#
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehEventTypeNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehEventType">
+				$csehEventTypeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_event_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEventHeed.csehHeedUser" prepend="and">
+			    $CsEventHeed.csehHeedUserNot$ cs_event_heed$CsEventHeed.suffix$.cseh_heed_user = #CsEventHeed.csehHeedUser#
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehHeedUserNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehHeedUser">
+				$csehHeedUserNot$ cs_event_heed$CsEventHeed.suffix$.cseh_heed_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEventHeed.csehHeedType" prepend="and">
+				(<isNotNull property="CsEventHeed.csehHeedTypeNot">
+			    cs_event_heed$CsEventHeed.suffix$.cseh_heed_type is null or length(cs_event_heed$CsEventHeed.suffix$.cseh_heed_type) &lt; 1 or
+			    </isNotNull>$CsEventHeed.csehHeedTypeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_heed_type like #CsEventHeed.csehHeedType#)
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehHeedTypeNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehHeedType">
+				$csehHeedTypeNot$ (cs_event_heed$CsEventHeed.suffix$.cseh_heed_type is null or length(cs_event_heed$CsEventHeed.suffix$.cseh_heed_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEventHeed.csehUpdateTimeStart" prepend="and">
+			    $CsEventHeed.csehUpdateTimeNot$   (cs_event_heed$CsEventHeed.suffix$.cseh_update_time &gt;= #CsEventHeed.csehUpdateTimeStart#
+			   <isEmpty property="CsEventHeed.csehUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEventHeed.csehUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsEventHeed.csehUpdateTimeStart">$CsEventHeed.csehUpdateTimeNot$   (</isEmpty>
+			    cs_event_heed$CsEventHeed.suffix$.cseh_update_time &lt;= #CsEventHeed.csehUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEventHeed.csehUpdateTime" prepend="and">
+			    $CsEventHeed.csehUpdateTimeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_update_time = #CsEventHeed.csehUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehUpdateTimeNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehUpdateTimeStart"><isEmpty property="CsEventHeed.csehUpdateTimeEnd"><isEmpty property="CsEventHeed.csehUpdateTime">
+				$csehUpdateTimeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEventHeed.csehAddTimeStart" prepend="and">
+			    $CsEventHeed.csehAddTimeNot$   (cs_event_heed$CsEventHeed.suffix$.cseh_add_time &gt;= #CsEventHeed.csehAddTimeStart#
+			   <isEmpty property="CsEventHeed.csehAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEventHeed.csehAddTimeEnd" prepend="and">
+				<isEmpty property="CsEventHeed.csehAddTimeStart">$CsEventHeed.csehAddTimeNot$   (</isEmpty>
+			    cs_event_heed$CsEventHeed.suffix$.cseh_add_time &lt;= #CsEventHeed.csehAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEventHeed.csehAddTime" prepend="and">
+			    $CsEventHeed.csehAddTimeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_add_time = #CsEventHeed.csehAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehAddTimeNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehAddTimeStart"><isEmpty property="CsEventHeed.csehAddTimeEnd"><isEmpty property="CsEventHeed.csehAddTime">
+				$csehAddTimeNot$ cs_event_heed$CsEventHeed.suffix$.cseh_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEventHeed.csehStatus" prepend="and">
+			    $CsEventHeed.csehStatusNot$ cs_event_heed$CsEventHeed.suffix$.cseh_status = #CsEventHeed.csehStatus#
+			</isNotEmpty>
+			<isNotNull property="CsEventHeed.csehStatusNot" prepend="and">
+				<isEmpty property="CsEventHeed.csehStatus">
+				$csehStatusNot$ cs_event_heed$CsEventHeed.suffix$.cseh_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

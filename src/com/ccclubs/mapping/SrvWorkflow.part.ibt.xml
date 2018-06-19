@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvWorkflow_part">	
+	<!-- 工作流条件sql片段  -->
+	<sql id="srv_workflow_dynamic">
+		<dynamic>
+			<isNotEmpty property="swId" prepend="and">
+			    $swIdNot$ srv_workflow$suffix$.sw_id = #swId#
+			</isNotEmpty>
+			<isNotNull property="swIdNot" prepend="and">
+				<isEmpty property="swId">
+				$swIdNot$ srv_workflow$suffix$.sw_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swName" prepend="and">			    
+			    (<isNotNull property="swNameNot">
+			    srv_workflow$suffix$.sw_name is null or length(srv_workflow$suffix$.sw_name) &lt; 1 or
+			    </isNotNull>$swNameNot$ srv_workflow$suffix$.sw_name = #swName#)
+			</isNotEmpty>
+			<isNotNull property="swNameNot" prepend="and">
+				<isEmpty property="swName">
+				$swNameNot$ (srv_workflow$suffix$.sw_name is null or length(srv_workflow$suffix$.sw_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swProfile" prepend="and">			    
+			    (<isNotNull property="swProfileNot">
+			    srv_workflow$suffix$.sw_profile is null or length(srv_workflow$suffix$.sw_profile) &lt; 1 or
+			    </isNotNull>$swProfileNot$ srv_workflow$suffix$.sw_profile like #swProfile#)
+			</isNotEmpty>
+			<isNotNull property="swProfileNot" prepend="and">
+				<isEmpty property="swProfile">
+				$swProfileNot$ (srv_workflow$suffix$.sw_profile is null or length(srv_workflow$suffix$.sw_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swPaint" prepend="and">			    
+			    (<isNotNull property="swPaintNot">
+			    srv_workflow$suffix$.sw_paint is null or length(srv_workflow$suffix$.sw_paint) &lt; 1 or
+			    </isNotNull>$swPaintNot$ srv_workflow$suffix$.sw_paint like #swPaint#)
+			</isNotEmpty>
+			<isNotNull property="swPaintNot" prepend="and">
+				<isEmpty property="swPaint">
+				$swPaintNot$ (srv_workflow$suffix$.sw_paint is null or length(srv_workflow$suffix$.sw_paint) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swConfig" prepend="and">			    
+			    (<isNotNull property="swConfigNot">
+			    srv_workflow$suffix$.sw_config is null or length(srv_workflow$suffix$.sw_config) &lt; 1 or
+			    </isNotNull>$swConfigNot$ srv_workflow$suffix$.sw_config like #swConfig#)
+			</isNotEmpty>
+			<isNotNull property="swConfigNot" prepend="and">
+				<isEmpty property="swConfig">
+				$swConfigNot$ (srv_workflow$suffix$.sw_config is null or length(srv_workflow$suffix$.sw_config) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swEditor" prepend="and">
+			    $swEditorNot$ srv_workflow$suffix$.sw_editor = #swEditor#
+			</isNotEmpty>
+			<isNotNull property="swEditorNot" prepend="and">
+				<isEmpty property="swEditor">
+				$swEditorNot$ srv_workflow$suffix$.sw_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swUpdateTimeStart" prepend="and">
+			    $swUpdateTimeNot$   (srv_workflow$suffix$.sw_update_time &gt;= #swUpdateTimeStart#
+			   <isEmpty property="swUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="swUpdateTimeEnd" prepend="and">
+				<isEmpty property="swUpdateTimeStart">$swUpdateTimeNot$   (</isEmpty>
+			    srv_workflow$suffix$.sw_update_time &lt;= #swUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="swUpdateTime" prepend="and">
+			    $swUpdateTimeNot$ srv_workflow$suffix$.sw_update_time = #swUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="swUpdateTimeNot" prepend="and">
+				<isEmpty property="swUpdateTimeStart"><isEmpty property="swUpdateTimeEnd"><isEmpty property="swUpdateTime">
+				$swUpdateTimeNot$ srv_workflow$suffix$.sw_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swAddTimeStart" prepend="and">
+			    $swAddTimeNot$   (srv_workflow$suffix$.sw_add_time &gt;= #swAddTimeStart#
+			   <isEmpty property="swAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="swAddTimeEnd" prepend="and">
+				<isEmpty property="swAddTimeStart">$swAddTimeNot$   (</isEmpty>
+			    srv_workflow$suffix$.sw_add_time &lt;= #swAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="swAddTime" prepend="and">
+			    $swAddTimeNot$ srv_workflow$suffix$.sw_add_time = #swAddTime#
+			</isNotEmpty>
+			<isNotNull property="swAddTimeNot" prepend="and">
+				<isEmpty property="swAddTimeStart"><isEmpty property="swAddTimeEnd"><isEmpty property="swAddTime">
+				$swAddTimeNot$ srv_workflow$suffix$.sw_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="swStatus" prepend="and">
+			    $swStatusNot$ srv_workflow$suffix$.sw_status = #swStatus#
+			</isNotEmpty>
+			<isNotNull property="swStatusNot" prepend="and">
+				<isEmpty property="swStatus">
+				$swStatusNot$ srv_workflow$suffix$.sw_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 工作流left join 条件sql片段 -->
+	<sql id="srv_workflow_join">
+		<dynamic>
+			<isNotEmpty property="SrvWorkflow.swId" prepend="and">
+			    $SrvWorkflow.swIdNot$ srv_workflow$SrvWorkflow.suffix$.sw_id = #SrvWorkflow.swId#
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swIdNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swId">
+				$swIdNot$ srv_workflow$SrvWorkflow.suffix$.sw_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swName" prepend="and">
+				(<isNotNull property="SrvWorkflow.swNameNot">
+			    srv_workflow$SrvWorkflow.suffix$.sw_name is null or length(srv_workflow$SrvWorkflow.suffix$.sw_name) &lt; 1 or
+			    </isNotNull>$SrvWorkflow.swNameNot$ srv_workflow$SrvWorkflow.suffix$.sw_name = #SrvWorkflow.swName#)
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swNameNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swName">
+				$swNameNot$ (srv_workflow$SrvWorkflow.suffix$.sw_name is null or length(srv_workflow$SrvWorkflow.suffix$.sw_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swProfile" prepend="and">
+				(<isNotNull property="SrvWorkflow.swProfileNot">
+			    srv_workflow$SrvWorkflow.suffix$.sw_profile is null or length(srv_workflow$SrvWorkflow.suffix$.sw_profile) &lt; 1 or
+			    </isNotNull>$SrvWorkflow.swProfileNot$ srv_workflow$SrvWorkflow.suffix$.sw_profile like #SrvWorkflow.swProfile#)
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swProfileNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swProfile">
+				$swProfileNot$ (srv_workflow$SrvWorkflow.suffix$.sw_profile is null or length(srv_workflow$SrvWorkflow.suffix$.sw_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swPaint" prepend="and">
+				(<isNotNull property="SrvWorkflow.swPaintNot">
+			    srv_workflow$SrvWorkflow.suffix$.sw_paint is null or length(srv_workflow$SrvWorkflow.suffix$.sw_paint) &lt; 1 or
+			    </isNotNull>$SrvWorkflow.swPaintNot$ srv_workflow$SrvWorkflow.suffix$.sw_paint like #SrvWorkflow.swPaint#)
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swPaintNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swPaint">
+				$swPaintNot$ (srv_workflow$SrvWorkflow.suffix$.sw_paint is null or length(srv_workflow$SrvWorkflow.suffix$.sw_paint) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swConfig" prepend="and">
+				(<isNotNull property="SrvWorkflow.swConfigNot">
+			    srv_workflow$SrvWorkflow.suffix$.sw_config is null or length(srv_workflow$SrvWorkflow.suffix$.sw_config) &lt; 1 or
+			    </isNotNull>$SrvWorkflow.swConfigNot$ srv_workflow$SrvWorkflow.suffix$.sw_config like #SrvWorkflow.swConfig#)
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swConfigNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swConfig">
+				$swConfigNot$ (srv_workflow$SrvWorkflow.suffix$.sw_config is null or length(srv_workflow$SrvWorkflow.suffix$.sw_config) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swEditor" prepend="and">
+			    $SrvWorkflow.swEditorNot$ srv_workflow$SrvWorkflow.suffix$.sw_editor = #SrvWorkflow.swEditor#
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swEditorNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swEditor">
+				$swEditorNot$ srv_workflow$SrvWorkflow.suffix$.sw_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swUpdateTimeStart" prepend="and">
+			    $SrvWorkflow.swUpdateTimeNot$   (srv_workflow$SrvWorkflow.suffix$.sw_update_time &gt;= #SrvWorkflow.swUpdateTimeStart#
+			   <isEmpty property="SrvWorkflow.swUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvWorkflow.swUpdateTimeEnd" prepend="and">
+				<isEmpty property="SrvWorkflow.swUpdateTimeStart">$SrvWorkflow.swUpdateTimeNot$   (</isEmpty>
+			    srv_workflow$SrvWorkflow.suffix$.sw_update_time &lt;= #SrvWorkflow.swUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvWorkflow.swUpdateTime" prepend="and">
+			    $SrvWorkflow.swUpdateTimeNot$ srv_workflow$SrvWorkflow.suffix$.sw_update_time = #SrvWorkflow.swUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swUpdateTimeNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swUpdateTimeStart"><isEmpty property="SrvWorkflow.swUpdateTimeEnd"><isEmpty property="SrvWorkflow.swUpdateTime">
+				$swUpdateTimeNot$ srv_workflow$SrvWorkflow.suffix$.sw_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swAddTimeStart" prepend="and">
+			    $SrvWorkflow.swAddTimeNot$   (srv_workflow$SrvWorkflow.suffix$.sw_add_time &gt;= #SrvWorkflow.swAddTimeStart#
+			   <isEmpty property="SrvWorkflow.swAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvWorkflow.swAddTimeEnd" prepend="and">
+				<isEmpty property="SrvWorkflow.swAddTimeStart">$SrvWorkflow.swAddTimeNot$   (</isEmpty>
+			    srv_workflow$SrvWorkflow.suffix$.sw_add_time &lt;= #SrvWorkflow.swAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvWorkflow.swAddTime" prepend="and">
+			    $SrvWorkflow.swAddTimeNot$ srv_workflow$SrvWorkflow.suffix$.sw_add_time = #SrvWorkflow.swAddTime#
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swAddTimeNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swAddTimeStart"><isEmpty property="SrvWorkflow.swAddTimeEnd"><isEmpty property="SrvWorkflow.swAddTime">
+				$swAddTimeNot$ srv_workflow$SrvWorkflow.suffix$.sw_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvWorkflow.swStatus" prepend="and">
+			    $SrvWorkflow.swStatusNot$ srv_workflow$SrvWorkflow.suffix$.sw_status = #SrvWorkflow.swStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvWorkflow.swStatusNot" prepend="and">
+				<isEmpty property="SrvWorkflow.swStatus">
+				$swStatusNot$ srv_workflow$SrvWorkflow.suffix$.sw_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

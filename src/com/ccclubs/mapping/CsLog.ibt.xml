@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统日志之SQL映射 -->
+	<resultMap id="CsLog" class="com.ccclubs.model.CsLog">
+		<result property="cslId" column="csl_id"/>
+		<result property="cslHost" column="csl_host"/>
+		<result property="cslName" column="csl_name"/>
+		<result property="cslModel" column="csl_model"/>
+		<result property="cslType" column="csl_type"/>
+		<result property="cslUser" column="csl_user"/>
+		<result property="cslClass" column="csl_class"/>
+		<result property="cslRelate" column="csl_relate"/>
+		<result property="cslDetail" column="csl_detail"/>
+		<result property="cslAddTime" column="csl_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有系统日志 -->
+	<select id="getCsLogList" resultMap="CsLog">
+		select cs_log$suffix$.* from cs_log$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLog_part.cs_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csl_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统日志分页 -->
+	<select id="getCsLogPage" parameterClass="java.util.HashMap" resultMap="CsLog">
+		select cs_log$suffix$.* from cs_log$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLog_part.cs_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csl_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统日志总数 -->
+	<select id="getCsLogEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_log$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLog_part.cs_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统日志 -->
+	<select id="getCsLogById" parameterClass="java.util.HashMap" resultMap="CsLog">
+		select cs_log$suffix$.* from cs_log$suffix$
+		where csl_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统日志 -->
+	<insert id="saveCsLog"  parameterClass="com.ccclubs.model.CsLog">
+		insert into cs_log$suffix$
+		(
+			cs_log$suffix$.csl_host
+			,cs_log$suffix$.csl_name
+			,cs_log$suffix$.csl_model
+			,cs_log$suffix$.csl_type
+			,cs_log$suffix$.csl_user
+			,cs_log$suffix$.csl_class
+			,cs_log$suffix$.csl_relate
+			,cs_log$suffix$.csl_detail
+			,cs_log$suffix$.csl_add_time
+		)
+		values(
+			<isNotNull property="cslHost" prepend="">
+				#cslHost#
+			</isNotNull>
+			<isNull property="cslHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cslName" prepend=",">
+				#cslName#
+			</isNotNull>
+			<isNull property="cslName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslModel" prepend=",">
+				#cslModel#
+			</isNotNull>
+			<isNull property="cslModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslType" prepend=",">
+				#cslType#
+			</isNotNull>
+			<isNull property="cslType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslUser" prepend=",">
+				#cslUser#
+			</isNotNull>
+			<isNull property="cslUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslClass" prepend=",">
+				#cslClass#
+			</isNotNull>
+			<isNull property="cslClass" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslRelate" prepend=",">
+				#cslRelate#
+			</isNotNull>
+			<isNull property="cslRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslDetail" prepend=",">
+				#cslDetail#
+			</isNotNull>
+			<isNull property="cslDetail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslAddTime" prepend=",">
+				#cslAddTime#
+			</isNotNull>
+			<isNull property="cslAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统日志 -->
+	<update id="updateCsLog"  parameterClass="com.ccclubs.model.CsLog">
+		update cs_log$suffix$ set
+			<isNotNull property="cslHost" prepend="">
+				cs_log$suffix$.csl_host = #cslHost#
+			</isNotNull>
+			<isNull property="cslHost" prepend="">
+				cs_log$suffix$.csl_host = null
+			</isNull>				
+			<isNotNull property="cslName" prepend=",">
+				cs_log$suffix$.csl_name = #cslName#
+			</isNotNull>
+			<isNull property="cslName" prepend=",">
+				cs_log$suffix$.csl_name = null
+			</isNull>				
+			<isNotNull property="cslModel" prepend=",">
+				cs_log$suffix$.csl_model = #cslModel#
+			</isNotNull>
+			<isNull property="cslModel" prepend=",">
+				cs_log$suffix$.csl_model = null
+			</isNull>				
+			<isNotNull property="cslType" prepend=",">
+				cs_log$suffix$.csl_type = #cslType#
+			</isNotNull>
+			<isNull property="cslType" prepend=",">
+				cs_log$suffix$.csl_type = null
+			</isNull>				
+			<isNotNull property="cslUser" prepend=",">
+				cs_log$suffix$.csl_user = #cslUser#
+			</isNotNull>
+			<isNull property="cslUser" prepend=",">
+				cs_log$suffix$.csl_user = null
+			</isNull>				
+			<isNotNull property="cslClass" prepend=",">
+				cs_log$suffix$.csl_class = #cslClass#
+			</isNotNull>
+			<isNull property="cslClass" prepend=",">
+				cs_log$suffix$.csl_class = null
+			</isNull>				
+			<isNotNull property="cslRelate" prepend=",">
+				cs_log$suffix$.csl_relate = #cslRelate#
+			</isNotNull>
+			<isNull property="cslRelate" prepend=",">
+				cs_log$suffix$.csl_relate = null
+			</isNull>				
+			<isNotNull property="cslDetail" prepend=",">
+				cs_log$suffix$.csl_detail = #cslDetail#
+			</isNotNull>
+			<isNull property="cslDetail" prepend=",">
+				cs_log$suffix$.csl_detail = null
+			</isNull>				
+			<isNotNull property="cslAddTime" prepend=",">
+				cs_log$suffix$.csl_add_time = #cslAddTime#
+			</isNotNull>
+			<isNull property="cslAddTime" prepend=",">
+				cs_log$suffix$.csl_add_time = null
+			</isNull>				
+		where
+			csl_id=#cslId#
+	</update>
+	
+	<!-- 更新系统日志非空字段 -->
+	<update id="updateCsLog$NotNull"  parameterClass="com.ccclubs.model.CsLog">
+		update cs_log$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cslHost" prepend=",">
+				cs_log$suffix$.csl_host = #cslHost#
+			</isNotNull>		
+			<isNotNull property="cslName" prepend=",">
+				cs_log$suffix$.csl_name = #cslName#
+			</isNotNull>		
+			<isNotNull property="cslModel" prepend=",">
+				cs_log$suffix$.csl_model = #cslModel#
+			</isNotNull>		
+			<isNotNull property="cslType" prepend=",">
+				cs_log$suffix$.csl_type = #cslType#
+			</isNotNull>		
+			<isNotNull property="cslUser" prepend=",">
+				cs_log$suffix$.csl_user = #cslUser#
+			</isNotNull>		
+			<isNotNull property="cslClass" prepend=",">
+				cs_log$suffix$.csl_class = #cslClass#
+			</isNotNull>		
+			<isNotNull property="cslRelate" prepend=",">
+				cs_log$suffix$.csl_relate = #cslRelate#
+			</isNotNull>		
+			<isNotNull property="cslDetail" prepend=",">
+				cs_log$suffix$.csl_detail = #cslDetail#
+			</isNotNull>		
+			<isNotNull property="cslAddTime" prepend=",">
+				cs_log$suffix$.csl_add_time = #cslAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csl_id=#cslId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统日志 -->
+	<delete id="deleteCsLogById" parameterClass="java.util.HashMap">
+		delete from cs_log$suffix$ where csl_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新系统日志 -->
+	<update id="updateCsLogBy"  parameterClass="java.util.HashMap">
+		update cs_log$suffix$ set		
+			csl_id=csl_id
+			<isNotNull property="V_cslId" prepend=",">
+				cs_log$suffix$.csl_id = #V_cslId#
+			</isNotNull>		
+			<isNotNull property="V_cslHost" prepend=",">
+				cs_log$suffix$.csl_host = #V_cslHost#
+			</isNotNull>		
+			<isNotNull property="V_cslName" prepend=",">
+				cs_log$suffix$.csl_name = #V_cslName#
+			</isNotNull>		
+			<isNotNull property="V_cslModel" prepend=",">
+				cs_log$suffix$.csl_model = #V_cslModel#
+			</isNotNull>		
+			<isNotNull property="V_cslType" prepend=",">
+				cs_log$suffix$.csl_type = #V_cslType#
+			</isNotNull>		
+			<isNotNull property="V_cslUser" prepend=",">
+				cs_log$suffix$.csl_user = #V_cslUser#
+			</isNotNull>		
+			<isNotNull property="V_cslClass" prepend=",">
+				cs_log$suffix$.csl_class = #V_cslClass#
+			</isNotNull>		
+			<isNotNull property="V_cslRelate" prepend=",">
+				cs_log$suffix$.csl_relate = #V_cslRelate#
+			</isNotNull>		
+			<isNotNull property="V_cslDetail" prepend=",">
+				cs_log$suffix$.csl_detail = #V_cslDetail#
+			</isNotNull>		
+			<isNotNull property="V_cslAddTime" prepend=",">
+				cs_log$suffix$.csl_add_time = #V_cslAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLog_part.cs_log_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统日志 -->
+	<update id="deleteCsLogBy"  parameterClass="java.util.HashMap">
+		delete from cs_log$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLog_part.cs_log_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

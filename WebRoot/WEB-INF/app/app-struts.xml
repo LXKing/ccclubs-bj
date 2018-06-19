@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢struts的Action框架 -->
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="ashx"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+	<include file="struts-default.xml" />
+
+
+	<package name="app.root" extends="struts-default" namespace="/app/v1">		
+		<action name="login.in" method="login" class="appDefaultAction"></action>
+		<action name="login.out" method="logout" class="appDefaultAction"></action>
+		<action name="*" method="{1}" class="appDefaultAction"></action>
+	</package>
+	
+	
+	<package name="app.root.order" extends="struts-default" namespace="/app/v1/order">
+		<action name="*" method="{1}" class="appDefaultAction"></action>
+	</package>
+
+	<package name="app.appicial" extends="struts-default" namespace="/app/official">
+		<action name="*" method="{1}" class="appOfficialDefaultAction"></action>
+	</package>
+	
+	<package name="app.official" extends="struts-default" namespace="/official">
+		<action name="**" method="{1}" class="thirdPartyCallbackAction"></action>
+	</package>
+
+	<package name="app.driver" extends="struts-default" namespace="/driverapp/official">
+		<action name="login.in" method="login" class="appDriverAction"></action>
+		<action name="login.out" method="logout" class="appDriverAction"></action>
+		<action name="*" method="{1}" class="appDriverAction"></action>
+	</package>
+
+	<!-- 运维端 -->
+	<package name="logistic.app" extends="struts-default" namespace="/logistic/app">
+		<action name="*" method="{1}" class="appAction"></action>
+	</package>
+
+
+</struts>

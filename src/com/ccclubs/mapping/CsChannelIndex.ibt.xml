@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 渠道指标之SQL映射 -->
+	<resultMap id="CsChannelIndex" class="com.ccclubs.model.CsChannelIndex">
+		<result property="csciId" column="csci_id"/>
+		<result property="csciHost" column="csci_host"/>
+		<result property="csciName" column="csci_name"/>
+		<result property="csciPlan" column="csci_plan"/>
+		<result property="csciType" column="csci_type"/>
+		<result property="csciDesc" column="csci_desc"/>
+		<result property="csciTarget" column="csci_target"/>
+		<result property="csciResult" column="csci_result"/>
+		<result property="csciRate" column="csci_rate"/>
+		<result property="csciStatus" column="csci_status"/>
+	</resultMap>
+		
+	<!-- 获取所有渠道指标 -->
+	<select id="getCsChannelIndexList" resultMap="CsChannelIndex">
+		select cs_channel_index$suffix$.* from cs_channel_index$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.csci_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_channel_index$suffix$.csci_status!=-1
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannelIndex_part.cs_channel_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csci_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取渠道指标分页 -->
+	<select id="getCsChannelIndexPage" parameterClass="java.util.HashMap" resultMap="CsChannelIndex">
+		select cs_channel_index$suffix$.* from cs_channel_index$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询 -->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.csci_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_channel_index$suffix$.csci_status!=-1
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannelIndex_part.cs_channel_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csci_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取渠道指标总数 -->
+	<select id="getCsChannelIndexEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_channel_index$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.csci_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_channel_index$suffix$.csci_status!=-1
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannelIndex_part.cs_channel_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取渠道指标 -->
+	<select id="getCsChannelIndexById" parameterClass="java.util.HashMap" resultMap="CsChannelIndex">
+		select cs_channel_index$suffix$.* from cs_channel_index$suffix$
+		where csci_id=#id#
+	</select>
+	
+		
+	<!-- 保存渠道指标 -->
+	<insert id="saveCsChannelIndex"  parameterClass="com.ccclubs.model.CsChannelIndex">
+		insert into cs_channel_index$suffix$
+		(
+			cs_channel_index$suffix$.csci_host
+			,cs_channel_index$suffix$.csci_name
+			,cs_channel_index$suffix$.csci_plan
+			,cs_channel_index$suffix$.csci_type
+			,cs_channel_index$suffix$.csci_desc
+			,cs_channel_index$suffix$.csci_target
+			,cs_channel_index$suffix$.csci_result
+			,cs_channel_index$suffix$.csci_rate
+			,cs_channel_index$suffix$.csci_status
+		)
+		values(
+			<isNotNull property="csciHost" prepend="">
+				#csciHost#
+			</isNotNull>
+			<isNull property="csciHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csciName" prepend=",">
+				#csciName#
+			</isNotNull>
+			<isNull property="csciName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciPlan" prepend=",">
+				#csciPlan#
+			</isNotNull>
+			<isNull property="csciPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciType" prepend=",">
+				#csciType#
+			</isNotNull>
+			<isNull property="csciType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciDesc" prepend=",">
+				#csciDesc#
+			</isNotNull>
+			<isNull property="csciDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciTarget" prepend=",">
+				#csciTarget#
+			</isNotNull>
+			<isNull property="csciTarget" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciResult" prepend=",">
+				#csciResult#
+			</isNotNull>
+			<isNull property="csciResult" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciRate" prepend=",">
+				#csciRate#
+			</isNotNull>
+			<isNull property="csciRate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciStatus" prepend=",">
+				#csciStatus#
+			</isNotNull>
+			<isNull property="csciStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新渠道指标 -->
+	<update id="updateCsChannelIndex"  parameterClass="com.ccclubs.model.CsChannelIndex">
+		update cs_channel_index$suffix$ set
+			<isNotNull property="csciHost" prepend="">
+				cs_channel_index$suffix$.csci_host = #csciHost#
+			</isNotNull>
+			<isNull property="csciHost" prepend="">
+				cs_channel_index$suffix$.csci_host = null
+			</isNull>				
+			<isNotNull property="csciName" prepend=",">
+				cs_channel_index$suffix$.csci_name = #csciName#
+			</isNotNull>
+			<isNull property="csciName" prepend=",">
+				cs_channel_index$suffix$.csci_name = null
+			</isNull>				
+			<isNotNull property="csciPlan" prepend=",">
+				cs_channel_index$suffix$.csci_plan = #csciPlan#
+			</isNotNull>
+			<isNull property="csciPlan" prepend=",">
+				cs_channel_index$suffix$.csci_plan = null
+			</isNull>				
+			<isNotNull property="csciType" prepend=",">
+				cs_channel_index$suffix$.csci_type = #csciType#
+			</isNotNull>
+			<isNull property="csciType" prepend=",">
+				cs_channel_index$suffix$.csci_type = null
+			</isNull>				
+			<isNotNull property="csciDesc" prepend=",">
+				cs_channel_index$suffix$.csci_desc = #csciDesc#
+			</isNotNull>
+			<isNull property="csciDesc" prepend=",">
+				cs_channel_index$suffix$.csci_desc = null
+			</isNull>				
+			<isNotNull property="csciTarget" prepend=",">
+				cs_channel_index$suffix$.csci_target = #csciTarget#
+			</isNotNull>
+			<isNull property="csciTarget" prepend=",">
+				cs_channel_index$suffix$.csci_target = null
+			</isNull>				
+			<isNotNull property="csciResult" prepend=",">
+				cs_channel_index$suffix$.csci_result = #csciResult#
+			</isNotNull>
+			<isNull property="csciResult" prepend=",">
+				cs_channel_index$suffix$.csci_result = null
+			</isNull>				
+			<isNotNull property="csciRate" prepend=",">
+				cs_channel_index$suffix$.csci_rate = #csciRate#
+			</isNotNull>
+			<isNull property="csciRate" prepend=",">
+				cs_channel_index$suffix$.csci_rate = null
+			</isNull>				
+			<isNotNull property="csciStatus" prepend=",">
+				cs_channel_index$suffix$.csci_status = #csciStatus#
+			</isNotNull>
+			<isNull property="csciStatus" prepend=",">
+				cs_channel_index$suffix$.csci_status = null
+			</isNull>				
+		where
+			csci_id=#csciId#
+	</update>
+	
+	<!-- 更新渠道指标非空字段 -->
+	<update id="updateCsChannelIndex$NotNull"  parameterClass="com.ccclubs.model.CsChannelIndex">
+		update cs_channel_index$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csciHost" prepend=",">
+				cs_channel_index$suffix$.csci_host = #csciHost#
+			</isNotNull>		
+			<isNotNull property="csciName" prepend=",">
+				cs_channel_index$suffix$.csci_name = #csciName#
+			</isNotNull>		
+			<isNotNull property="csciPlan" prepend=",">
+				cs_channel_index$suffix$.csci_plan = #csciPlan#
+			</isNotNull>		
+			<isNotNull property="csciType" prepend=",">
+				cs_channel_index$suffix$.csci_type = #csciType#
+			</isNotNull>		
+			<isNotNull property="csciDesc" prepend=",">
+				cs_channel_index$suffix$.csci_desc = #csciDesc#
+			</isNotNull>		
+			<isNotNull property="csciTarget" prepend=",">
+				cs_channel_index$suffix$.csci_target = #csciTarget#
+			</isNotNull>		
+			<isNotNull property="csciResult" prepend=",">
+				cs_channel_index$suffix$.csci_result = #csciResult#
+			</isNotNull>		
+			<isNotNull property="csciRate" prepend=",">
+				cs_channel_index$suffix$.csci_rate = #csciRate#
+			</isNotNull>		
+			<isNotNull property="csciStatus" prepend=",">
+				cs_channel_index$suffix$.csci_status = #csciStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csci_id=#csciId#
+	</update>
+	
+
+	<!-- 根据ID删除一个渠道指标 -->
+	<delete id="deleteCsChannelIndexById" parameterClass="java.util.HashMap">
+		delete from cs_channel_index$suffix$ where csci_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个渠道指标 -->
+	<update id="removeCsChannelIndexById" parameterClass="java.util.HashMap">
+		update cs_channel_index$suffix$ set  cs_channel_index$suffix$.csci_status=-1  where csci_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新渠道指标 -->
+	<update id="updateCsChannelIndexBy"  parameterClass="java.util.HashMap">
+		update cs_channel_index$suffix$ set		
+			csci_id=csci_id
+			<isNotNull property="V_csciId" prepend=",">
+				cs_channel_index$suffix$.csci_id = #V_csciId#
+			</isNotNull>		
+			<isNotNull property="V_csciHost" prepend=",">
+				cs_channel_index$suffix$.csci_host = #V_csciHost#
+			</isNotNull>		
+			<isNotNull property="V_csciName" prepend=",">
+				cs_channel_index$suffix$.csci_name = #V_csciName#
+			</isNotNull>		
+			<isNotNull property="V_csciPlan" prepend=",">
+				cs_channel_index$suffix$.csci_plan = #V_csciPlan#
+			</isNotNull>		
+			<isNotNull property="V_csciType" prepend=",">
+				cs_channel_index$suffix$.csci_type = #V_csciType#
+			</isNotNull>		
+			<isNotNull property="V_csciDesc" prepend=",">
+				cs_channel_index$suffix$.csci_desc = #V_csciDesc#
+			</isNotNull>		
+			<isNotNull property="V_csciTarget" prepend=",">
+				cs_channel_index$suffix$.csci_target = #V_csciTarget#
+			</isNotNull>		
+			<isNotNull property="V_csciResult" prepend=",">
+				cs_channel_index$suffix$.csci_result = #V_csciResult#
+			</isNotNull>		
+			<isNotNull property="V_csciRate" prepend=",">
+				cs_channel_index$suffix$.csci_rate = #V_csciRate#
+			</isNotNull>		
+			<isNotNull property="V_csciStatus" prepend=",">
+				cs_channel_index$suffix$.csci_status = #V_csciStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.csci_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_index$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_channel_index$suffix$.csci_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsciPlan"><!-- 调用一下CsciPlan，把CsChannel指向CsciPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChannelIndex_part.cs_channel_index_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除渠道指标 -->
+	<update id="deleteCsChannelIndexBy"  parameterClass="java.util.HashMap">
+		delete from cs_channel_index$suffix$ where 
+		cs_channel_index$suffix$.csci_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChannelIndex_part.cs_channel_index_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

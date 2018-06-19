@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>忘记密码</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<input class="input-dur" maxlength="11" type="tel" name="mobile" id="mobile" placeholder="手机号码">
+				<div class="ccc-checkcode">
+					<input class="ccc-code" maxlength="4" type="tel" name="checkcode" id="checkcode" placeholder="填写校验码">
+					<div class="ccc-resend">
+						<a href="javascript:;" onclick="getCheckCode();" id="j-resend-msg">获取校验码</a>
+					</div>
+				</div>
+				<input class="input-dur" type="password" placeholder="密码6-18位字符" id="psw1">
+				<input class="input-dur" type="password" placeholder="再填写一次密码" id="psw2">
+			</form>
+			<div class="wrap-index-reserve">
+				<button id="index-reserve-btn" class="mt15 btn btn-ccclubs-reserve btn-block" onclick="submit()">
+					确定
+				</button>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/page-forgot.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function submit(){
+			var regMobile = /^(1[3|4|5|8][0-9])\d{8}$/;
+			var phone = $.trim($("#mobile").val());
+         	if(!regMobile.test(phone)){
+				Toast.show("您输入的手机号码不正确。");
+				return;
+			}
+		  	var code = $.trim($("#checkcode").val());
+		  	if(code==""){
+		  		Toast.show("您尚未输入校验码。");
+		  		return;
+		  	}
+		  	if($("#psw1").val()!=$("#psw2").val()){
+		  		Toast.show("您输入的两次密码不一致。");
+		  		return;
+		  	}
+		  	$.ajax({
+		  		url: '${basePath}m/login_changePsw.html',
+		  		type: 'get',
+				data: {
+					txtMobile: phone,
+					txtCode:code,
+					txtPassWord:$("#psw1").val()
+				},
+				dataType: 'json',
+				success: function(data) {
+					if(data.state){
+						location.href="${basePath}m/home/index.html";
+					}else{
+						Toast.show(data.message);
+        				return;
+					}
+				},
+				error: function(xhr, type){
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+		  	});
+		}
+		</script>
+	</body>
+
+</html>

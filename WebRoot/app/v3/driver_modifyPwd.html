@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>修改密码</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta content="telephone=yes" name="format-detection" />
+		<link rel="stylesheet" href="css/driver-app.css">
+		<link rel="stylesheet" href="css/weui.min.css">
+		<style>
+			/* TODO:内联CSS样式 */
+			
+			.weui_label {
+				width: 5.5em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="pageBody">
+			<!-- TODO: 展示的内容 <div class="content"></div>-->
+			<div class="weui_cells weui_cells_form">
+				<div class="weui_cell" id="oldPass">
+					<div class="weui_cell_hd">
+						<label class="weui_label">旧密码</label>
+					</div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<input class="weui_input" type="password" placeholder="请输入旧登录密码">
+					</div>
+					<div class="weui_cell_ft">
+						<i class="weui_icon_warn"></i>
+					</div>
+				</div>
+				<div class="weui_cell" id="newPass">
+					<div class="weui_cell_hd">
+						<label class="weui_label">新密码</label>
+					</div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<input class="weui_input" type="password" placeholder="请输入新登录密码">
+					</div>
+					<div class="weui_cell_ft">
+						<i class="weui_icon_warn"></i>
+					</div>
+				</div>
+				<div class="weui_cell" id="newPass2">
+					<div class="weui_cell_hd">
+						<label class="weui_label">确认新密码</label>
+					</div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<input class="weui_input" type="password" placeholder="请再次输入新登录密码">
+					</div>
+					<div class="weui_cell_ft">
+						<i class="weui_icon_warn"></i>
+					</div>
+				</div>
+			</div>
+			<div class="weui_btn_area">
+				<a class="weui_btn weui_btn_primary" href="javascript:" id="btnSubmit">提交</a>
+			</div>
+		</div>
+		<!--BEGIN toast-->
+		<div id="toast" style="display: none;">
+			<div class="weui_mask_transparent"></div>
+			<div class="weui_toast">
+				<i class="weui_icon_toast"></i>
+				<p class="weui_toast_content">已完成</p>
+			</div>
+		</div>
+		<!--end toast-->
+		<!-- loading toast -->
+		<div id="loadingToast" class="weui_loading_toast" style="display: none;">
+			<div class="weui_mask_transparent"></div>
+			<div class="weui_toast">
+				<div class="weui_loading">
+					<div class="weui_loading_leaf weui_loading_leaf_0"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_1"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_2"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_3"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_4"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_5"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_6"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_7"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_8"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_9"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_10"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_11"></div>
+				</div>
+				<p class="weui_toast_content">数据加载中</p>
+			</div>
+		</div>
+
+		<script src="js/driver-app.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script type="text/javascript">
+			// TODO: 自定义javascript
+			$(function() {
+				showLoadingToast();
+				setTimeout(function() {
+					closeLoadingToast();
+					showPageBody();
+				}, 1000);
+				// weui_cell_warn
+				$('#btnSubmit').on('click', function() {
+					if (!checkForm())
+						return;
+					ajax(URLHelper.ModifyPass, {
+						access_token: getQueryString('access_token'),
+						oldPass: $('#oldPass input').val().trim(),
+						newPass: $('#newPass input').val().trim(),
+						newPass2: $('#newPass2 input').val().trim(),
+					}, function(data) {
+						console.log(data);
+						showSuccessToast('修改成功');
+					});
+				});
+			});
+
+			function checkForm() {
+				if (isEmpty($('#oldPass input').val().trim())) {
+					$('#oldPass').addClass('weui_cell_warn');
+					return false;
+				} else
+					$('#oldPass').removeClass('weui_cell_warn');
+				if (isEmpty($('#newPass input').val().trim())) {
+					$('#newPass').addClass('weui_cell_warn');
+					return false;
+				} else
+					$('#newPass').removeClass('weui_cell_warn');
+				if (isEmpty($('#newPass2 input').val().trim())) {
+					$('#newPass2').addClass('weui_cell_warn');
+					return false;
+				} else
+					$('#newPass2').removeClass('weui_cell_warn');
+				if ($('#newPass input').val().trim() != $('#newPass2 input').val().trim()) {
+					$('#newPass').addClass('weui_cell_warn');
+					$('#newPass2').addClass('weui_cell_warn');
+					return false;
+				} else {
+					$('#newPass').removeClass('weui_cell_warn');
+					$('#newPass2').removeClass('weui_cell_warn');
+				}
+				return true;
+			}
+		</script>
+	</body>
+
+</html>

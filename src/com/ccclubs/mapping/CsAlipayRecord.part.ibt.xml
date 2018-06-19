@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsAlipayRecord_part">	
+	<!-- 接口充值条件sql片段  -->
+	<sql id="cs_alipay_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csarId" prepend="and">
+			    $csarIdNot$ cs_alipay_record$suffix$.csar_id = #csarId#
+			</isNotEmpty>
+			<isNotNull property="csarIdNot" prepend="and">
+				<isEmpty property="csarId">
+				$csarIdNot$ cs_alipay_record$suffix$.csar_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_alipay_record$suffix$.csar_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csarHost" prepend="and">
+			    $csarHostNot$ cs_alipay_record$suffix$.csar_host = #csarHost#
+			</isNotEmpty>
+			<isNotNull property="csarHostNot" prepend="and">
+				<isEmpty property="csarHost">
+				$csarHostNot$ cs_alipay_record$suffix$.csar_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csarBankType" prepend="and">
+			    $csarBankTypeNot$ cs_alipay_record$suffix$.csar_bank_type = #csarBankType#
+			</isNotEmpty>
+			<isNotNull property="csarBankTypeNot" prepend="and">
+				<isEmpty property="csarBankType">
+				$csarBankTypeNot$ cs_alipay_record$suffix$.csar_bank_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarTradeNo" prepend="and">			    
+			    (<isNotNull property="csarTradeNoNot">
+			    cs_alipay_record$suffix$.csar_trade_no is null or length(cs_alipay_record$suffix$.csar_trade_no) &lt; 1 or
+			    </isNotNull>$csarTradeNoNot$ cs_alipay_record$suffix$.csar_trade_no = #csarTradeNo#)
+			</isNotEmpty>
+			<isNotNull property="csarTradeNoNot" prepend="and">
+				<isEmpty property="csarTradeNo">
+				$csarTradeNoNot$ (cs_alipay_record$suffix$.csar_trade_no is null or length(cs_alipay_record$suffix$.csar_trade_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarMember" prepend="and">
+			    $csarMemberNot$ cs_alipay_record$suffix$.csar_member = #csarMember#
+			</isNotEmpty>
+			<isNotNull property="csarMemberNot" prepend="and">
+				<isEmpty property="csarMember">
+				$csarMemberNot$ cs_alipay_record$suffix$.csar_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarRealName" prepend="and">			    
+			    (<isNotNull property="csarRealNameNot">
+			    cs_alipay_record$suffix$.csar_real_name is null or length(cs_alipay_record$suffix$.csar_real_name) &lt; 1 or
+			    </isNotNull>$csarRealNameNot$ cs_alipay_record$suffix$.csar_real_name = #csarRealName#)
+			</isNotEmpty>
+			<isNotNull property="csarRealNameNot" prepend="and">
+				<isEmpty property="csarRealName">
+				$csarRealNameNot$ (cs_alipay_record$suffix$.csar_real_name is null or length(cs_alipay_record$suffix$.csar_real_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAmountMin" prepend="and">
+			    $csarAmountNot$  ( cs_alipay_record$suffix$.csar_amount &gt;= #csarAmountMin#
+			    <isEmpty property="csarAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarAmountMax" prepend="and">
+				<isEmpty property="csarAmountMin">$csarAmountNot$   (</isEmpty>
+			    cs_alipay_record$suffix$.csar_amount &lt;= #csarAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csarAmount" prepend="and">
+			    $csarAmountNot$ cs_alipay_record$suffix$.csar_amount = #csarAmount#
+			</isNotEmpty>
+			<isNotNull property="csarAmountNot" prepend="and">
+				<isEmpty property="csarAmountMax"><isEmpty property="csarAmountMin"><isEmpty property="csarAmount">
+				$csarAmountNot$ cs_alipay_record$suffix$.csar_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csarBuyItem" prepend="and">
+			    $csarBuyItemNot$ cs_alipay_record$suffix$.csar_buy_item = #csarBuyItem#
+			</isNotEmpty>
+			<isNotNull property="csarBuyItemNot" prepend="and">
+				<isEmpty property="csarBuyItem">
+				$csarBuyItemNot$ cs_alipay_record$suffix$.csar_buy_item is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarBuyCountMin" prepend="and">
+			    $csarBuyCountNot$  ( cs_alipay_record$suffix$.csar_buy_count &gt;= #csarBuyCountMin#
+			    <isEmpty property="csarBuyCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarBuyCountMax" prepend="and">
+				<isEmpty property="csarBuyCountMin">$csarBuyCountNot$   (</isEmpty>
+			    cs_alipay_record$suffix$.csar_buy_count &lt;= #csarBuyCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csarBuyCount" prepend="and">
+			    $csarBuyCountNot$ cs_alipay_record$suffix$.csar_buy_count = #csarBuyCount#
+			</isNotEmpty>
+			<isNotNull property="csarBuyCountNot" prepend="and">
+				<isEmpty property="csarBuyCountMax"><isEmpty property="csarBuyCountMin"><isEmpty property="csarBuyCount">
+				$csarBuyCountNot$ cs_alipay_record$suffix$.csar_buy_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csarRefundMin" prepend="and">
+			    $csarRefundNot$  ( cs_alipay_record$suffix$.csar_refund &gt;= #csarRefundMin#
+			    <isEmpty property="csarRefundMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarRefundMax" prepend="and">
+				<isEmpty property="csarRefundMin">$csarRefundNot$   (</isEmpty>
+			    cs_alipay_record$suffix$.csar_refund &lt;= #csarRefundMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csarRefund" prepend="and">
+			    $csarRefundNot$ cs_alipay_record$suffix$.csar_refund = #csarRefund#
+			</isNotEmpty>
+			<isNotNull property="csarRefundNot" prepend="and">
+				<isEmpty property="csarRefundMax"><isEmpty property="csarRefundMin"><isEmpty property="csarRefund">
+				$csarRefundNot$ cs_alipay_record$suffix$.csar_refund is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csarPayMethod" prepend="and">			    
+			    (<isNotNull property="csarPayMethodNot">
+			    cs_alipay_record$suffix$.csar_pay_method is null or length(cs_alipay_record$suffix$.csar_pay_method) &lt; 1 or
+			    </isNotNull>$csarPayMethodNot$ cs_alipay_record$suffix$.csar_pay_method = #csarPayMethod#)
+			</isNotEmpty>
+			<isNotNull property="csarPayMethodNot" prepend="and">
+				<isEmpty property="csarPayMethod">
+				$csarPayMethodNot$ (cs_alipay_record$suffix$.csar_pay_method is null or length(cs_alipay_record$suffix$.csar_pay_method) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarBlank" prepend="and">			    
+			    (<isNotNull property="csarBlankNot">
+			    cs_alipay_record$suffix$.csar_blank is null or length(cs_alipay_record$suffix$.csar_blank) &lt; 1 or
+			    </isNotNull>$csarBlankNot$ cs_alipay_record$suffix$.csar_blank = #csarBlank#)
+			</isNotEmpty>
+			<isNotNull property="csarBlankNot" prepend="and">
+				<isEmpty property="csarBlank">
+				$csarBlankNot$ (cs_alipay_record$suffix$.csar_blank is null or length(cs_alipay_record$suffix$.csar_blank) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAlipayNo" prepend="and">			    
+			    (<isNotNull property="csarAlipayNoNot">
+			    cs_alipay_record$suffix$.csar_alipay_no is null or length(cs_alipay_record$suffix$.csar_alipay_no) &lt; 1 or
+			    </isNotNull>$csarAlipayNoNot$ cs_alipay_record$suffix$.csar_alipay_no = #csarAlipayNo#)
+			</isNotEmpty>
+			<isNotNull property="csarAlipayNoNot" prepend="and">
+				<isEmpty property="csarAlipayNo">
+				$csarAlipayNoNot$ (cs_alipay_record$suffix$.csar_alipay_no is null or length(cs_alipay_record$suffix$.csar_alipay_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarBuyerAccount" prepend="and">			    
+			    (<isNotNull property="csarBuyerAccountNot">
+			    cs_alipay_record$suffix$.csar_buyer_account is null or length(cs_alipay_record$suffix$.csar_buyer_account) &lt; 1 or
+			    </isNotNull>$csarBuyerAccountNot$ cs_alipay_record$suffix$.csar_buyer_account = #csarBuyerAccount#)
+			</isNotEmpty>
+			<isNotNull property="csarBuyerAccountNot" prepend="and">
+				<isEmpty property="csarBuyerAccount">
+				$csarBuyerAccountNot$ (cs_alipay_record$suffix$.csar_buyer_account is null or length(cs_alipay_record$suffix$.csar_buyer_account) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarClientId" prepend="and">
+			    $csarClientIdNot$ cs_alipay_record$suffix$.csar_client_id = #csarClientId#
+			</isNotEmpty>
+			<isNotNull property="csarClientIdNot" prepend="and">
+				<isEmpty property="csarClientId">
+				$csarClientIdNot$ cs_alipay_record$suffix$.csar_client_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarThirdBack" prepend="and">			    
+			    (<isNotNull property="csarThirdBackNot">
+			    cs_alipay_record$suffix$.csar_third_back is null or length(cs_alipay_record$suffix$.csar_third_back) &lt; 1 or
+			    </isNotNull>$csarThirdBackNot$ cs_alipay_record$suffix$.csar_third_back = #csarThirdBack#)
+			</isNotEmpty>
+			<isNotNull property="csarThirdBackNot" prepend="and">
+				<isEmpty property="csarThirdBack">
+				$csarThirdBackNot$ (cs_alipay_record$suffix$.csar_third_back is null or length(cs_alipay_record$suffix$.csar_third_back) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarUpdateTimeStart" prepend="and">
+			    $csarUpdateTimeNot$   (cs_alipay_record$suffix$.csar_update_time &gt;= #csarUpdateTimeStart#
+			   <isEmpty property="csarUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarUpdateTimeEnd" prepend="and">
+				<isEmpty property="csarUpdateTimeStart">$csarUpdateTimeNot$   (</isEmpty>
+			    cs_alipay_record$suffix$.csar_update_time &lt;= #csarUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarUpdateTime" prepend="and">
+			    $csarUpdateTimeNot$ cs_alipay_record$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csarUpdateTimeNot" prepend="and">
+				<isEmpty property="csarUpdateTimeStart"><isEmpty property="csarUpdateTimeEnd"><isEmpty property="csarUpdateTime">
+				$csarUpdateTimeNot$ cs_alipay_record$suffix$.csar_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAddTimeStart" prepend="and">
+			    $csarAddTimeNot$   (cs_alipay_record$suffix$.csar_add_time &gt;= #csarAddTimeStart#
+			   <isEmpty property="csarAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarAddTimeEnd" prepend="and">
+				<isEmpty property="csarAddTimeStart">$csarAddTimeNot$   (</isEmpty>
+			    cs_alipay_record$suffix$.csar_add_time &lt;= #csarAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarAddTime" prepend="and">
+			    $csarAddTimeNot$ cs_alipay_record$suffix$.csar_add_time = #csarAddTime#
+			</isNotEmpty>
+			<isNotNull property="csarAddTimeNot" prepend="and">
+				<isEmpty property="csarAddTimeStart"><isEmpty property="csarAddTimeEnd"><isEmpty property="csarAddTime">
+				$csarAddTimeNot$ cs_alipay_record$suffix$.csar_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarStatus" prepend="and">
+			    $csarStatusNot$ cs_alipay_record$suffix$.csar_status = #csarStatus#
+			</isNotEmpty>
+			<isNotNull property="csarStatusNot" prepend="and">
+				<isEmpty property="csarStatus">
+				$csarStatusNot$ cs_alipay_record$suffix$.csar_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 接口充值left join 条件sql片段 -->
+	<sql id="cs_alipay_record_join">
+		<dynamic>
+			<isNotEmpty property="CsAlipayRecord.csarId" prepend="and">
+			    $CsAlipayRecord.csarIdNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_id = #CsAlipayRecord.csarId#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarIdNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarId">
+				$csarIdNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarHost" prepend="and">
+			    $CsAlipayRecord.csarHostNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_host = #CsAlipayRecord.csarHost#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarHostNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarHost">
+				$csarHostNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarBankType" prepend="and">
+			    $CsAlipayRecord.csarBankTypeNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_bank_type = #CsAlipayRecord.csarBankType#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarBankTypeNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarBankType">
+				$csarBankTypeNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_bank_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarTradeNo" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarTradeNoNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_trade_no is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_trade_no) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarTradeNoNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_trade_no = #CsAlipayRecord.csarTradeNo#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarTradeNoNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarTradeNo">
+				$csarTradeNoNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_trade_no is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_trade_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarMember" prepend="and">
+			    $CsAlipayRecord.csarMemberNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_member = #CsAlipayRecord.csarMember#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarMemberNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarMember">
+				$csarMemberNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarRealName" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarRealNameNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_real_name is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_real_name) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarRealNameNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_real_name = #CsAlipayRecord.csarRealName#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarRealNameNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarRealName">
+				$csarRealNameNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_real_name is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_real_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarAmountMin" prepend="and">
+			    $CsAlipayRecord.csarAmountNot$  ( cs_alipay_record$CsAlipayRecord.suffix$.csar_amount &gt;= #CsAlipayRecord.csarAmountMin#
+			    <isEmpty property="CsAlipayRecord.csarAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarAmountMax" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarAmountMin">$CsAlipayRecord.csarAmountNot$   (</isEmpty>
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_amount &lt;= #CsAlipayRecord.csarAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarAmount" prepend="and">
+			    $CsAlipayRecord.csarAmountNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_amount = #CsAlipayRecord.csarAmount#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarAmountNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarAmountMax"><isEmpty property="CsAlipayRecord.csarAmountMin"><isEmpty property="CsAlipayRecord.csarAmount">
+				$csarAmountNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarBuyItem" prepend="and">
+			    $CsAlipayRecord.csarBuyItemNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_buy_item = #CsAlipayRecord.csarBuyItem#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarBuyItemNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarBuyItem">
+				$csarBuyItemNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_buy_item is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarBuyCountMin" prepend="and">
+			    $CsAlipayRecord.csarBuyCountNot$  ( cs_alipay_record$CsAlipayRecord.suffix$.csar_buy_count &gt;= #CsAlipayRecord.csarBuyCountMin#
+			    <isEmpty property="CsAlipayRecord.csarBuyCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarBuyCountMax" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarBuyCountMin">$CsAlipayRecord.csarBuyCountNot$   (</isEmpty>
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_buy_count &lt;= #CsAlipayRecord.csarBuyCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarBuyCount" prepend="and">
+			    $CsAlipayRecord.csarBuyCountNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_buy_count = #CsAlipayRecord.csarBuyCount#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarBuyCountNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarBuyCountMax"><isEmpty property="CsAlipayRecord.csarBuyCountMin"><isEmpty property="CsAlipayRecord.csarBuyCount">
+				$csarBuyCountNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_buy_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarRefundMin" prepend="and">
+			    $CsAlipayRecord.csarRefundNot$  ( cs_alipay_record$CsAlipayRecord.suffix$.csar_refund &gt;= #CsAlipayRecord.csarRefundMin#
+			    <isEmpty property="CsAlipayRecord.csarRefundMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarRefundMax" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarRefundMin">$CsAlipayRecord.csarRefundNot$   (</isEmpty>
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_refund &lt;= #CsAlipayRecord.csarRefundMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarRefund" prepend="and">
+			    $CsAlipayRecord.csarRefundNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_refund = #CsAlipayRecord.csarRefund#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarRefundNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarRefundMax"><isEmpty property="CsAlipayRecord.csarRefundMin"><isEmpty property="CsAlipayRecord.csarRefund">
+				$csarRefundNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_refund is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarPayMethod" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarPayMethodNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_pay_method is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_pay_method) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarPayMethodNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_pay_method = #CsAlipayRecord.csarPayMethod#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarPayMethodNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarPayMethod">
+				$csarPayMethodNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_pay_method is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_pay_method) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarBlank" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarBlankNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_blank is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_blank) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarBlankNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_blank = #CsAlipayRecord.csarBlank#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarBlankNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarBlank">
+				$csarBlankNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_blank is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_blank) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarAlipayNo" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarAlipayNoNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_alipay_no is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_alipay_no) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarAlipayNoNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_alipay_no = #CsAlipayRecord.csarAlipayNo#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarAlipayNoNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarAlipayNo">
+				$csarAlipayNoNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_alipay_no is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_alipay_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarBuyerAccount" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarBuyerAccountNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_buyer_account is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_buyer_account) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarBuyerAccountNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_buyer_account = #CsAlipayRecord.csarBuyerAccount#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarBuyerAccountNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarBuyerAccount">
+				$csarBuyerAccountNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_buyer_account is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_buyer_account) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarClientId" prepend="and">
+			    $CsAlipayRecord.csarClientIdNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_client_id = #CsAlipayRecord.csarClientId#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarClientIdNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarClientId">
+				$csarClientIdNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_client_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarThirdBack" prepend="and">
+				(<isNotNull property="CsAlipayRecord.csarThirdBackNot">
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_third_back is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_third_back) &lt; 1 or
+			    </isNotNull>$CsAlipayRecord.csarThirdBackNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_third_back = #CsAlipayRecord.csarThirdBack#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarThirdBackNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarThirdBack">
+				$csarThirdBackNot$ (cs_alipay_record$CsAlipayRecord.suffix$.csar_third_back is null or length(cs_alipay_record$CsAlipayRecord.suffix$.csar_third_back) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarUpdateTimeStart" prepend="and">
+			    $CsAlipayRecord.csarUpdateTimeNot$   (cs_alipay_record$CsAlipayRecord.suffix$.csar_update_time &gt;= #CsAlipayRecord.csarUpdateTimeStart#
+			   <isEmpty property="CsAlipayRecord.csarUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarUpdateTimeStart">$CsAlipayRecord.csarUpdateTimeNot$   (</isEmpty>
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_update_time &lt;= #CsAlipayRecord.csarUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarUpdateTime" prepend="and">
+			    $CsAlipayRecord.csarUpdateTimeNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_update_time = #CsAlipayRecord.csarUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarUpdateTimeNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarUpdateTimeStart"><isEmpty property="CsAlipayRecord.csarUpdateTimeEnd"><isEmpty property="CsAlipayRecord.csarUpdateTime">
+				$csarUpdateTimeNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarAddTimeStart" prepend="and">
+			    $CsAlipayRecord.csarAddTimeNot$   (cs_alipay_record$CsAlipayRecord.suffix$.csar_add_time &gt;= #CsAlipayRecord.csarAddTimeStart#
+			   <isEmpty property="CsAlipayRecord.csarAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarAddTimeEnd" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarAddTimeStart">$CsAlipayRecord.csarAddTimeNot$   (</isEmpty>
+			    cs_alipay_record$CsAlipayRecord.suffix$.csar_add_time &lt;= #CsAlipayRecord.csarAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRecord.csarAddTime" prepend="and">
+			    $CsAlipayRecord.csarAddTimeNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_add_time = #CsAlipayRecord.csarAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarAddTimeNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarAddTimeStart"><isEmpty property="CsAlipayRecord.csarAddTimeEnd"><isEmpty property="CsAlipayRecord.csarAddTime">
+				$csarAddTimeNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRecord.csarStatus" prepend="and">
+			    $CsAlipayRecord.csarStatusNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_status = #CsAlipayRecord.csarStatus#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRecord.csarStatusNot" prepend="and">
+				<isEmpty property="CsAlipayRecord.csarStatus">
+				$csarStatusNot$ cs_alipay_record$CsAlipayRecord.suffix$.csar_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

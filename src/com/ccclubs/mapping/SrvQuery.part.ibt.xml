@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvQuery_part">	
+	<!-- 表单查询条件sql片段  -->
+	<sql id="srv_query_dynamic">
+		<dynamic>
+			<isNotEmpty property="sqId" prepend="and">
+			    $sqIdNot$ srv_query$suffix$.sq_id = #sqId#
+			</isNotEmpty>
+			<isNotNull property="sqIdNot" prepend="and">
+				<isEmpty property="sqId">
+				$sqIdNot$ srv_query$suffix$.sq_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqName" prepend="and">			    
+			    (<isNotNull property="sqNameNot">
+			    srv_query$suffix$.sq_name is null or length(srv_query$suffix$.sq_name) &lt; 1 or
+			    </isNotNull>$sqNameNot$ srv_query$suffix$.sq_name like #sqName#)
+			</isNotEmpty>
+			<isNotNull property="sqNameNot" prepend="and">
+				<isEmpty property="sqName">
+				$sqNameNot$ (srv_query$suffix$.sq_name is null or length(srv_query$suffix$.sq_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqIcon" prepend="and">
+			    $sqIconNot$ srv_query$suffix$.sq_icon = #sqIcon#
+			</isNotEmpty>
+			<isNotNull property="sqIconNot" prepend="and">
+				<isEmpty property="sqIcon">
+				$sqIconNot$ srv_query$suffix$.sq_icon is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqPath" prepend="and">			    
+			    (<isNotNull property="sqPathNot">
+			    srv_query$suffix$.sq_path is null or length(srv_query$suffix$.sq_path) &lt; 1 or
+			    </isNotNull>$sqPathNot$ srv_query$suffix$.sq_path = #sqPath#)
+			</isNotEmpty>
+			<isNotNull property="sqPathNot" prepend="and">
+				<isEmpty property="sqPath">
+				$sqPathNot$ (srv_query$suffix$.sq_path is null or length(srv_query$suffix$.sq_path) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqParams" prepend="and">			    
+			    (<isNotNull property="sqParamsNot">
+			    srv_query$suffix$.sq_params is null or length(srv_query$suffix$.sq_params) &lt; 1 or
+			    </isNotNull>$sqParamsNot$ srv_query$suffix$.sq_params like #sqParams#)
+			</isNotEmpty>
+			<isNotNull property="sqParamsNot" prepend="and">
+				<isEmpty property="sqParams">
+				$sqParamsNot$ (srv_query$suffix$.sq_params is null or length(srv_query$suffix$.sq_params) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqEditor" prepend="and">
+			    $sqEditorNot$ srv_query$suffix$.sq_editor = #sqEditor#
+			</isNotEmpty>
+			<isNotNull property="sqEditorNot" prepend="and">
+				<isEmpty property="sqEditor">
+				$sqEditorNot$ srv_query$suffix$.sq_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqUpdateTimeStart" prepend="and">
+			    $sqUpdateTimeNot$   (srv_query$suffix$.sq_update_time &gt;= #sqUpdateTimeStart#
+			   <isEmpty property="sqUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="sqUpdateTimeEnd" prepend="and">
+				<isEmpty property="sqUpdateTimeStart">$sqUpdateTimeNot$   (</isEmpty>
+			    srv_query$suffix$.sq_update_time &lt;= #sqUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="sqUpdateTime" prepend="and">
+			    $sqUpdateTimeNot$ srv_query$suffix$.sq_update_time = #sqUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="sqUpdateTimeNot" prepend="and">
+				<isEmpty property="sqUpdateTimeStart"><isEmpty property="sqUpdateTimeEnd"><isEmpty property="sqUpdateTime">
+				$sqUpdateTimeNot$ srv_query$suffix$.sq_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqAddTimeStart" prepend="and">
+			    $sqAddTimeNot$   (srv_query$suffix$.sq_add_time &gt;= #sqAddTimeStart#
+			   <isEmpty property="sqAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="sqAddTimeEnd" prepend="and">
+				<isEmpty property="sqAddTimeStart">$sqAddTimeNot$   (</isEmpty>
+			    srv_query$suffix$.sq_add_time &lt;= #sqAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="sqAddTime" prepend="and">
+			    $sqAddTimeNot$ srv_query$suffix$.sq_add_time = #sqAddTime#
+			</isNotEmpty>
+			<isNotNull property="sqAddTimeNot" prepend="and">
+				<isEmpty property="sqAddTimeStart"><isEmpty property="sqAddTimeEnd"><isEmpty property="sqAddTime">
+				$sqAddTimeNot$ srv_query$suffix$.sq_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sqStatus" prepend="and">
+			    $sqStatusNot$ srv_query$suffix$.sq_status = #sqStatus#
+			</isNotEmpty>
+			<isNotNull property="sqStatusNot" prepend="and">
+				<isEmpty property="sqStatus">
+				$sqStatusNot$ srv_query$suffix$.sq_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 表单查询left join 条件sql片段 -->
+	<sql id="srv_query_join">
+		<dynamic>
+			<isNotEmpty property="SrvQuery.sqId" prepend="and">
+			    $SrvQuery.sqIdNot$ srv_query$SrvQuery.suffix$.sq_id = #SrvQuery.sqId#
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqIdNot" prepend="and">
+				<isEmpty property="SrvQuery.sqId">
+				$sqIdNot$ srv_query$SrvQuery.suffix$.sq_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqName" prepend="and">
+				(<isNotNull property="SrvQuery.sqNameNot">
+			    srv_query$SrvQuery.suffix$.sq_name is null or length(srv_query$SrvQuery.suffix$.sq_name) &lt; 1 or
+			    </isNotNull>$SrvQuery.sqNameNot$ srv_query$SrvQuery.suffix$.sq_name like #SrvQuery.sqName#)
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqNameNot" prepend="and">
+				<isEmpty property="SrvQuery.sqName">
+				$sqNameNot$ (srv_query$SrvQuery.suffix$.sq_name is null or length(srv_query$SrvQuery.suffix$.sq_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqIcon" prepend="and">
+			    $SrvQuery.sqIconNot$ srv_query$SrvQuery.suffix$.sq_icon = #SrvQuery.sqIcon#
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqIconNot" prepend="and">
+				<isEmpty property="SrvQuery.sqIcon">
+				$sqIconNot$ srv_query$SrvQuery.suffix$.sq_icon is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqPath" prepend="and">
+				(<isNotNull property="SrvQuery.sqPathNot">
+			    srv_query$SrvQuery.suffix$.sq_path is null or length(srv_query$SrvQuery.suffix$.sq_path) &lt; 1 or
+			    </isNotNull>$SrvQuery.sqPathNot$ srv_query$SrvQuery.suffix$.sq_path = #SrvQuery.sqPath#)
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqPathNot" prepend="and">
+				<isEmpty property="SrvQuery.sqPath">
+				$sqPathNot$ (srv_query$SrvQuery.suffix$.sq_path is null or length(srv_query$SrvQuery.suffix$.sq_path) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqParams" prepend="and">
+				(<isNotNull property="SrvQuery.sqParamsNot">
+			    srv_query$SrvQuery.suffix$.sq_params is null or length(srv_query$SrvQuery.suffix$.sq_params) &lt; 1 or
+			    </isNotNull>$SrvQuery.sqParamsNot$ srv_query$SrvQuery.suffix$.sq_params like #SrvQuery.sqParams#)
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqParamsNot" prepend="and">
+				<isEmpty property="SrvQuery.sqParams">
+				$sqParamsNot$ (srv_query$SrvQuery.suffix$.sq_params is null or length(srv_query$SrvQuery.suffix$.sq_params) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqEditor" prepend="and">
+			    $SrvQuery.sqEditorNot$ srv_query$SrvQuery.suffix$.sq_editor = #SrvQuery.sqEditor#
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqEditorNot" prepend="and">
+				<isEmpty property="SrvQuery.sqEditor">
+				$sqEditorNot$ srv_query$SrvQuery.suffix$.sq_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqUpdateTimeStart" prepend="and">
+			    $SrvQuery.sqUpdateTimeNot$   (srv_query$SrvQuery.suffix$.sq_update_time &gt;= #SrvQuery.sqUpdateTimeStart#
+			   <isEmpty property="SrvQuery.sqUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvQuery.sqUpdateTimeEnd" prepend="and">
+				<isEmpty property="SrvQuery.sqUpdateTimeStart">$SrvQuery.sqUpdateTimeNot$   (</isEmpty>
+			    srv_query$SrvQuery.suffix$.sq_update_time &lt;= #SrvQuery.sqUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvQuery.sqUpdateTime" prepend="and">
+			    $SrvQuery.sqUpdateTimeNot$ srv_query$SrvQuery.suffix$.sq_update_time = #SrvQuery.sqUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqUpdateTimeNot" prepend="and">
+				<isEmpty property="SrvQuery.sqUpdateTimeStart"><isEmpty property="SrvQuery.sqUpdateTimeEnd"><isEmpty property="SrvQuery.sqUpdateTime">
+				$sqUpdateTimeNot$ srv_query$SrvQuery.suffix$.sq_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqAddTimeStart" prepend="and">
+			    $SrvQuery.sqAddTimeNot$   (srv_query$SrvQuery.suffix$.sq_add_time &gt;= #SrvQuery.sqAddTimeStart#
+			   <isEmpty property="SrvQuery.sqAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvQuery.sqAddTimeEnd" prepend="and">
+				<isEmpty property="SrvQuery.sqAddTimeStart">$SrvQuery.sqAddTimeNot$   (</isEmpty>
+			    srv_query$SrvQuery.suffix$.sq_add_time &lt;= #SrvQuery.sqAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvQuery.sqAddTime" prepend="and">
+			    $SrvQuery.sqAddTimeNot$ srv_query$SrvQuery.suffix$.sq_add_time = #SrvQuery.sqAddTime#
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqAddTimeNot" prepend="and">
+				<isEmpty property="SrvQuery.sqAddTimeStart"><isEmpty property="SrvQuery.sqAddTimeEnd"><isEmpty property="SrvQuery.sqAddTime">
+				$sqAddTimeNot$ srv_query$SrvQuery.suffix$.sq_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvQuery.sqStatus" prepend="and">
+			    $SrvQuery.sqStatusNot$ srv_query$SrvQuery.suffix$.sq_status = #SrvQuery.sqStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvQuery.sqStatusNot" prepend="and">
+				<isEmpty property="SrvQuery.sqStatus">
+				$sqStatusNot$ srv_query$SrvQuery.suffix$.sq_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

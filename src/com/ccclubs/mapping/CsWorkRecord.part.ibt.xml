@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsWorkRecord_part">	
+	<!-- 后勤工作记录条件sql片段  -->
+	<sql id="cs_work_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="cswrId" prepend="and">
+			    $cswrIdNot$ cs_work_record$suffix$.cswr_id = #cswrId#
+			</isNotEmpty>
+			<isNotNull property="cswrIdNot" prepend="and">
+				<isEmpty property="cswrId">
+				$cswrIdNot$ cs_work_record$suffix$.cswr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_work_record$suffix$.cswr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cswrHost" prepend="and">
+			    $cswrHostNot$ cs_work_record$suffix$.cswr_host = #cswrHost#
+			</isNotEmpty>
+			<isNotNull property="cswrHostNot" prepend="and">
+				<isEmpty property="cswrHost">
+				$cswrHostNot$ cs_work_record$suffix$.cswr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrOutlets" prepend="and">
+			    $cswrOutletsNot$ cs_work_record$suffix$.cswr_outlets = #cswrOutlets#
+			</isNotEmpty>
+			<isNotNull property="cswrOutletsNot" prepend="and">
+				<isEmpty property="cswrOutlets">
+				$cswrOutletsNot$ cs_work_record$suffix$.cswr_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrCar" prepend="and">
+			    $cswrCarNot$ cs_work_record$suffix$.cswr_car = #cswrCar#
+			</isNotEmpty>
+			<isNotNull property="cswrCarNot" prepend="and">
+				<isEmpty property="cswrCar">
+				$cswrCarNot$ cs_work_record$suffix$.cswr_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrUser" prepend="and">
+			    $cswrUserNot$ cs_work_record$suffix$.cswr_user = #cswrUser#
+			</isNotEmpty>
+			<isNotNull property="cswrUserNot" prepend="and">
+				<isEmpty property="cswrUser">
+				$cswrUserNot$ cs_work_record$suffix$.cswr_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrItem" prepend="and">
+			    $cswrItemNot$ cs_work_record$suffix$.cswr_item = #cswrItem#
+			</isNotEmpty>
+			<isNotNull property="cswrItemNot" prepend="and">
+				<isEmpty property="cswrItem">
+				$cswrItemNot$ cs_work_record$suffix$.cswr_item is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrItemname" prepend="and">			    
+			    (<isNotNull property="cswrItemnameNot">
+			    cs_work_record$suffix$.cswr_itemname is null or length(cs_work_record$suffix$.cswr_itemname) &lt; 1 or
+			    </isNotNull>$cswrItemnameNot$ cs_work_record$suffix$.cswr_itemname = #cswrItemname#)
+			</isNotEmpty>
+			<isNotNull property="cswrItemnameNot" prepend="and">
+				<isEmpty property="cswrItemname">
+				$cswrItemnameNot$ (cs_work_record$suffix$.cswr_itemname is null or length(cs_work_record$suffix$.cswr_itemname) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrOperation" prepend="and">			    
+			    (<isNotNull property="cswrOperationNot">
+			    cs_work_record$suffix$.cswr_operation is null or length(cs_work_record$suffix$.cswr_operation) &lt; 1 or
+			    </isNotNull>$cswrOperationNot$ cs_work_record$suffix$.cswr_operation = #cswrOperation#)
+			</isNotEmpty>
+			<isNotNull property="cswrOperationNot" prepend="and">
+				<isEmpty property="cswrOperation">
+				$cswrOperationNot$ (cs_work_record$suffix$.cswr_operation is null or length(cs_work_record$suffix$.cswr_operation) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrData" prepend="and">			    
+			    (<isNotNull property="cswrDataNot">
+			    cs_work_record$suffix$.cswr_data is null or length(cs_work_record$suffix$.cswr_data) &lt; 1 or
+			    </isNotNull>$cswrDataNot$ cs_work_record$suffix$.cswr_data = #cswrData#)
+			</isNotEmpty>
+			<isNotNull property="cswrDataNot" prepend="and">
+				<isEmpty property="cswrData">
+				$cswrDataNot$ (cs_work_record$suffix$.cswr_data is null or length(cs_work_record$suffix$.cswr_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrStatusMin" prepend="and">
+			    $cswrStatusNot$  ( cs_work_record$suffix$.cswr_status &gt;= #cswrStatusMin#
+			    <isEmpty property="cswrStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswrStatusMax" prepend="and">
+				<isEmpty property="cswrStatusMin">$cswrStatusNot$   (</isEmpty>
+			    cs_work_record$suffix$.cswr_status &lt;= #cswrStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cswrStatus" prepend="and">
+			    $cswrStatusNot$ cs_work_record$suffix$.cswr_status = #cswrStatus#
+			</isNotEmpty>
+			<isNotNull property="cswrStatusNot" prepend="and">
+				<isEmpty property="cswrStatusMax"><isEmpty property="cswrStatusMin"><isEmpty property="cswrStatus">
+				$cswrStatusNot$ cs_work_record$suffix$.cswr_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrAddTimeStart" prepend="and">
+			    $cswrAddTimeNot$   (cs_work_record$suffix$.cswr_add_time &gt;= #cswrAddTimeStart#
+			   <isEmpty property="cswrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswrAddTimeEnd" prepend="and">
+				<isEmpty property="cswrAddTimeStart">$cswrAddTimeNot$   (</isEmpty>
+			    cs_work_record$suffix$.cswr_add_time &lt;= #cswrAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cswrAddTime" prepend="and">
+			    $cswrAddTimeNot$ cs_work_record$suffix$.cswr_add_time = #cswrAddTime#
+			</isNotEmpty>
+			<isNotNull property="cswrAddTimeNot" prepend="and">
+				<isEmpty property="cswrAddTimeStart"><isEmpty property="cswrAddTimeEnd"><isEmpty property="cswrAddTime">
+				$cswrAddTimeNot$ cs_work_record$suffix$.cswr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswrUpdateTimeStart" prepend="and">
+			    $cswrUpdateTimeNot$   (cs_work_record$suffix$.cswr_update_time &gt;= #cswrUpdateTimeStart#
+			   <isEmpty property="cswrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswrUpdateTimeEnd" prepend="and">
+				<isEmpty property="cswrUpdateTimeStart">$cswrUpdateTimeNot$   (</isEmpty>
+			    cs_work_record$suffix$.cswr_update_time &lt;= #cswrUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cswrUpdateTime" prepend="and">
+			    $cswrUpdateTimeNot$ cs_work_record$suffix$.cswr_update_time = #cswrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cswrUpdateTimeNot" prepend="and">
+				<isEmpty property="cswrUpdateTimeStart"><isEmpty property="cswrUpdateTimeEnd"><isEmpty property="cswrUpdateTime">
+				$cswrUpdateTimeNot$ cs_work_record$suffix$.cswr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 后勤工作记录left join 条件sql片段 -->
+	<sql id="cs_work_record_join">
+		<dynamic>
+			<isNotEmpty property="CsWorkRecord.cswrId" prepend="and">
+			    $CsWorkRecord.cswrIdNot$ cs_work_record$CsWorkRecord.suffix$.cswr_id = #CsWorkRecord.cswrId#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrIdNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrId">
+				$cswrIdNot$ cs_work_record$CsWorkRecord.suffix$.cswr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_work_record$CsWorkRecord.suffix$.cswr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsWorkRecord.cswrHost" prepend="and">
+			    $CsWorkRecord.cswrHostNot$ cs_work_record$CsWorkRecord.suffix$.cswr_host = #CsWorkRecord.cswrHost#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrHostNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrHost">
+				$cswrHostNot$ cs_work_record$CsWorkRecord.suffix$.cswr_host is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsWorkRecord.cswrOutlets" prepend="and">
+			    $CsWorkRecord.cswrOutletsNot$ cs_work_record$CsWorkRecord.suffix$.cswr_outlets = #CsWorkRecord.cswrOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrOutletsNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrOutlets">
+				$cswrOutletsNot$ cs_work_record$CsWorkRecord.suffix$.cswr_outlets is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsWorkRecord.cswrCar" prepend="and">
+			    $CsWorkRecord.cswrCarNot$ cs_work_record$CsWorkRecord.suffix$.cswr_car = #CsWorkRecord.cswrCar#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrCarNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrCar">
+				$cswrCarNot$ cs_work_record$CsWorkRecord.suffix$.cswr_car is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsWorkRecord.cswrUser" prepend="and">
+			    $CsWorkRecord.cswrUserNot$ cs_work_record$CsWorkRecord.suffix$.cswr_user = #CsWorkRecord.cswrUser#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrUserNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrUser">
+				$cswrUserNot$ cs_work_record$CsWorkRecord.suffix$.cswr_user is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsWorkRecord.cswrItem" prepend="and">
+			    $CsWorkRecord.cswrItemNot$ cs_work_record$CsWorkRecord.suffix$.cswr_item = #CsWorkRecord.cswrItem#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrItemNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrItem">
+				$cswrItemNot$ cs_work_record$CsWorkRecord.suffix$.cswr_item is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsWorkRecord.cswrItemname" prepend="and">			    
+				    (<isNotNull property="CsWorkRecord.cswrItemnameNot">
+				    cs_work_record$CsWorkRecord.suffix$.cswr_itemname is null or length(cs_work_record$CsWorkRecord.suffix$.cswr_itemname) &lt; 1 or
+				    </isNotNull>$CsWorkRecord.cswrItemnameNot$ cs_work_record$CsWorkRecord.suffix$.cswr_itemname = #CsWorkRecord.cswrItemname#)
+				</isNotEmpty>
+				<isNotNull property="CsWorkRecord.cswrItemnameNot" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrItemname">
+					$cswrItemnameNot$ (cs_work_record$CsWorkRecord.suffix$.cswr_itemname is null or length(cs_work_record$CsWorkRecord.suffix$.cswr_itemname) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsWorkRecord.cswrOperation" prepend="and">			    
+				    (<isNotNull property="CsWorkRecord.cswrOperationNot">
+				    cs_work_record$CsWorkRecord.suffix$.cswr_operation is null or length(cs_work_record$CsWorkRecord.suffix$.cswr_operation) &lt; 1 or
+				    </isNotNull>$CsWorkRecord.cswrOperationNot$ cs_work_record$CsWorkRecord.suffix$.cswr_operation = #CsWorkRecord.cswrOperation#)
+				</isNotEmpty>
+				<isNotNull property="CsWorkRecord.cswrOperationNot" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrOperation">
+					$cswrOperationNot$ (cs_work_record$CsWorkRecord.suffix$.cswr_operation is null or length(cs_work_record$CsWorkRecord.suffix$.cswr_operation) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsWorkRecord.cswrData" prepend="and">			    
+				    (<isNotNull property="CsWorkRecord.cswrDataNot">
+				    cs_work_record$CsWorkRecord.suffix$.cswr_data is null or length(cs_work_record$CsWorkRecord.suffix$.cswr_data) &lt; 1 or
+				    </isNotNull>$CsWorkRecord.cswrDataNot$ cs_work_record$CsWorkRecord.suffix$.cswr_data = #CsWorkRecord.cswrData#)
+				</isNotEmpty>
+				<isNotNull property="CsWorkRecord.cswrDataNot" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrData">
+					$cswrDataNot$ (cs_work_record$CsWorkRecord.suffix$.cswr_data is null or length(cs_work_record$CsWorkRecord.suffix$.cswr_data) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsWorkRecord.cswrStatusMin" prepend="and">
+			    $CsWorkRecord.cswrStatusNot$  ( cs_work_record$CsWorkRecord.suffix$.cswr_status &gt;= #CsWorkRecord.cswrStatusMin#
+			    <isEmpty property="CsWorkRecord.cswrStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWorkRecord.cswrStatusMax" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrStatusMin">$CsWorkRecord.cswrStatusNot$   (</isEmpty>
+			    cs_work_record$CsWorkRecord.suffix$.cswr_status &lt;= #CsWorkRecord.cswrStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsWorkRecord.cswrStatus" prepend="and">
+			    $CsWorkRecord.cswrStatusNot$ cs_work_record$CsWorkRecord.suffix$.cswr_status = #CsWorkRecord.cswrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsWorkRecord.cswrStatusNot" prepend="and">
+				<isEmpty property="CsWorkRecord.cswrStatusMax"><isEmpty property="CsWorkRecord.cswrStatusMin"><isEmpty property="CsWorkRecord.cswrStatus">
+				$cswrStatusNot$ cs_work_record$CsWorkRecord.suffix$.cswr_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsWorkRecord.cswrAddTimeStart" prepend="and">
+				    $CsWorkRecord.cswrAddTimeNot$   (cs_work_record$CsWorkRecord.suffix$.cswr_add_time &gt;= #CsWorkRecord.cswrAddTimeStart#
+				   <isEmpty property="CsWorkRecord.cswrAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsWorkRecord.cswrAddTimeEnd" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrAddTimeStart">$CsWorkRecord.cswrAddTimeNot$   (</isEmpty>
+				    cs_work_record$CsWorkRecord.suffix$.cswr_add_time &lt;= #CsWorkRecord.cswrAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsWorkRecord.cswrAddTime" prepend="and">
+				    $CsWorkRecord.cswrAddTimeNot$ cs_work_record$CsWorkRecord.suffix$.cswr_add_time = #CsWorkRecord.cswrAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsWorkRecord.cswrAddTimeNot" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrAddTimeStart"><isEmpty property="CsWorkRecord.cswrAddTimeEnd"><isEmpty property="CsWorkRecord.cswrAddTime">
+					$cswrAddTimeNot$ cs_work_record$CsWorkRecord.suffix$.cswr_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsWorkRecord.cswrUpdateTimeStart" prepend="and">
+				    $CsWorkRecord.cswrUpdateTimeNot$   (cs_work_record$CsWorkRecord.suffix$.cswr_update_time &gt;= #CsWorkRecord.cswrUpdateTimeStart#
+				   <isEmpty property="CsWorkRecord.cswrUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsWorkRecord.cswrUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrUpdateTimeStart">$CsWorkRecord.cswrUpdateTimeNot$   (</isEmpty>
+				    cs_work_record$CsWorkRecord.suffix$.cswr_update_time &lt;= #CsWorkRecord.cswrUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsWorkRecord.cswrUpdateTime" prepend="and">
+				    $CsWorkRecord.cswrUpdateTimeNot$ cs_work_record$CsWorkRecord.suffix$.cswr_update_time = #CsWorkRecord.cswrUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsWorkRecord.cswrUpdateTimeNot" prepend="and">
+					<isEmpty property="CsWorkRecord.cswrUpdateTimeStart"><isEmpty property="CsWorkRecord.cswrUpdateTimeEnd"><isEmpty property="CsWorkRecord.cswrUpdateTime">
+					$cswrUpdateTimeNot$ cs_work_record$CsWorkRecord.suffix$.cswr_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

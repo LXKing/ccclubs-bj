@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsOrderCluster_part">	
+	<!-- 订单簇条件sql片段  -->
+	<sql id="cs_order_cluster_dynamic">
+		<dynamic>
+			<isNotEmpty property="csocId" prepend="and">
+			    $csocIdNot$ cs_order_cluster$suffix$.csoc_id = #csocId#
+			</isNotEmpty>
+			<isNotNull property="csocIdNot" prepend="and">
+				<isEmpty property="csocId">
+				$csocIdNot$ cs_order_cluster$suffix$.csoc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_order_cluster$suffix$.csoc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csocHost" prepend="and">
+			    $csocHostNot$ cs_order_cluster$suffix$.csoc_host = #csocHost#
+			</isNotEmpty>
+			<isNotNull property="csocHostNot" prepend="and">
+				<isEmpty property="csocHost">
+				$csocHostNot$ cs_order_cluster$suffix$.csoc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocSubOrders" prepend="and">			    
+			    (<isNotNull property="csocSubOrdersNot">
+			    cs_order_cluster$suffix$.csoc_sub_orders is null or length(cs_order_cluster$suffix$.csoc_sub_orders) &lt; 1 or
+			    </isNotNull>$csocSubOrdersNot$ cs_order_cluster$suffix$.csoc_sub_orders = #csocSubOrders#)
+			</isNotEmpty>
+			<isNotNull property="csocSubOrdersNot" prepend="and">
+				<isEmpty property="csocSubOrders">
+				$csocSubOrdersNot$ (cs_order_cluster$suffix$.csoc_sub_orders is null or length(cs_order_cluster$suffix$.csoc_sub_orders) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayMember" prepend="and">
+			    $csocPayMemberNot$ cs_order_cluster$suffix$.csoc_pay_member = #csocPayMember#
+			</isNotEmpty>
+			<isNotNull property="csocPayMemberNot" prepend="and">
+				<isEmpty property="csocPayMember">
+				$csocPayMemberNot$ cs_order_cluster$suffix$.csoc_pay_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocMobile" prepend="and">			    
+			    (<isNotNull property="csocMobileNot">
+			    cs_order_cluster$suffix$.csoc_mobile is null or length(cs_order_cluster$suffix$.csoc_mobile) &lt; 1 or
+			    </isNotNull>$csocMobileNot$ cs_order_cluster$suffix$.csoc_mobile = #csocMobile#)
+			</isNotEmpty>
+			<isNotNull property="csocMobileNot" prepend="and">
+				<isEmpty property="csocMobile">
+				$csocMobileNot$ (cs_order_cluster$suffix$.csoc_mobile is null or length(cs_order_cluster$suffix$.csoc_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPriceMin" prepend="and">
+			    $csocPriceNot$  ( cs_order_cluster$suffix$.csoc_price &gt;= #csocPriceMin#
+			    <isEmpty property="csocPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPriceMax" prepend="and">
+				<isEmpty property="csocPriceMin">$csocPriceNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_price &lt;= #csocPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPrice" prepend="and">
+			    $csocPriceNot$ cs_order_cluster$suffix$.csoc_price = #csocPrice#
+			</isNotEmpty>
+			<isNotNull property="csocPriceNot" prepend="and">
+				<isEmpty property="csocPriceMax"><isEmpty property="csocPriceMin"><isEmpty property="csocPrice">
+				$csocPriceNot$ cs_order_cluster$suffix$.csoc_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocMarginNeedMin" prepend="and">
+			    $csocMarginNeedNot$  ( cs_order_cluster$suffix$.csoc_margin_need &gt;= #csocMarginNeedMin#
+			    <isEmpty property="csocMarginNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocMarginNeedMax" prepend="and">
+				<isEmpty property="csocMarginNeedMin">$csocMarginNeedNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_margin_need &lt;= #csocMarginNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocMarginNeed" prepend="and">
+			    $csocMarginNeedNot$ cs_order_cluster$suffix$.csoc_margin_need = #csocMarginNeed#
+			</isNotEmpty>
+			<isNotNull property="csocMarginNeedNot" prepend="and">
+				<isEmpty property="csocMarginNeedMax"><isEmpty property="csocMarginNeedMin"><isEmpty property="csocMarginNeed">
+				$csocMarginNeedNot$ cs_order_cluster$suffix$.csoc_margin_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocTotalDurationMin" prepend="and">
+			    $csocTotalDurationNot$  ( cs_order_cluster$suffix$.csoc_total_duration &gt;= #csocTotalDurationMin#
+			    <isEmpty property="csocTotalDurationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocTotalDurationMax" prepend="and">
+				<isEmpty property="csocTotalDurationMin">$csocTotalDurationNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_total_duration &lt;= #csocTotalDurationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocTotalDuration" prepend="and">
+			    $csocTotalDurationNot$ cs_order_cluster$suffix$.csoc_total_duration = #csocTotalDuration#
+			</isNotEmpty>
+			<isNotNull property="csocTotalDurationNot" prepend="and">
+				<isEmpty property="csocTotalDurationMax"><isEmpty property="csocTotalDurationMin"><isEmpty property="csocTotalDuration">
+				$csocTotalDurationNot$ cs_order_cluster$suffix$.csoc_total_duration is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayMoneyMin" prepend="and">
+			    $csocPayMoneyNot$  ( cs_order_cluster$suffix$.csoc_pay_money &gt;= #csocPayMoneyMin#
+			    <isEmpty property="csocPayMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayMoneyMax" prepend="and">
+				<isEmpty property="csocPayMoneyMin">$csocPayMoneyNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_money &lt;= #csocPayMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayMoney" prepend="and">
+			    $csocPayMoneyNot$ cs_order_cluster$suffix$.csoc_pay_money = #csocPayMoney#
+			</isNotEmpty>
+			<isNotNull property="csocPayMoneyNot" prepend="and">
+				<isEmpty property="csocPayMoneyMax"><isEmpty property="csocPayMoneyMin"><isEmpty property="csocPayMoney">
+				$csocPayMoneyNot$ cs_order_cluster$suffix$.csoc_pay_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayCouponMin" prepend="and">
+			    $csocPayCouponNot$  ( cs_order_cluster$suffix$.csoc_pay_coupon &gt;= #csocPayCouponMin#
+			    <isEmpty property="csocPayCouponMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayCouponMax" prepend="and">
+				<isEmpty property="csocPayCouponMin">$csocPayCouponNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_coupon &lt;= #csocPayCouponMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayCoupon" prepend="and">
+			    $csocPayCouponNot$ cs_order_cluster$suffix$.csoc_pay_coupon = #csocPayCoupon#
+			</isNotEmpty>
+			<isNotNull property="csocPayCouponNot" prepend="and">
+				<isEmpty property="csocPayCouponMax"><isEmpty property="csocPayCouponMin"><isEmpty property="csocPayCoupon">
+				$csocPayCouponNot$ cs_order_cluster$suffix$.csoc_pay_coupon is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayCoinMin" prepend="and">
+			    $csocPayCoinNot$  ( cs_order_cluster$suffix$.csoc_pay_coin &gt;= #csocPayCoinMin#
+			    <isEmpty property="csocPayCoinMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayCoinMax" prepend="and">
+				<isEmpty property="csocPayCoinMin">$csocPayCoinNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_coin &lt;= #csocPayCoinMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayCoin" prepend="and">
+			    $csocPayCoinNot$ cs_order_cluster$suffix$.csoc_pay_coin = #csocPayCoin#
+			</isNotEmpty>
+			<isNotNull property="csocPayCoinNot" prepend="and">
+				<isEmpty property="csocPayCoinMax"><isEmpty property="csocPayCoinMin"><isEmpty property="csocPayCoin">
+				$csocPayCoinNot$ cs_order_cluster$suffix$.csoc_pay_coin is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayNeedMin" prepend="and">
+			    $csocPayNeedNot$  ( cs_order_cluster$suffix$.csoc_pay_need &gt;= #csocPayNeedMin#
+			    <isEmpty property="csocPayNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayNeedMax" prepend="and">
+				<isEmpty property="csocPayNeedMin">$csocPayNeedNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_need &lt;= #csocPayNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayNeed" prepend="and">
+			    $csocPayNeedNot$ cs_order_cluster$suffix$.csoc_pay_need = #csocPayNeed#
+			</isNotEmpty>
+			<isNotNull property="csocPayNeedNot" prepend="and">
+				<isEmpty property="csocPayNeedMax"><isEmpty property="csocPayNeedMin"><isEmpty property="csocPayNeed">
+				$csocPayNeedNot$ cs_order_cluster$suffix$.csoc_pay_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayRealMin" prepend="and">
+			    $csocPayRealNot$  ( cs_order_cluster$suffix$.csoc_pay_real &gt;= #csocPayRealMin#
+			    <isEmpty property="csocPayRealMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayRealMax" prepend="and">
+				<isEmpty property="csocPayRealMin">$csocPayRealNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_real &lt;= #csocPayRealMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayReal" prepend="and">
+			    $csocPayRealNot$ cs_order_cluster$suffix$.csoc_pay_real = #csocPayReal#
+			</isNotEmpty>
+			<isNotNull property="csocPayRealNot" prepend="and">
+				<isEmpty property="csocPayRealMax"><isEmpty property="csocPayRealMin"><isEmpty property="csocPayReal">
+				$csocPayRealNot$ cs_order_cluster$suffix$.csoc_pay_real is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayRentMin" prepend="and">
+			    $csocPayRentNot$  ( cs_order_cluster$suffix$.csoc_pay_rent &gt;= #csocPayRentMin#
+			    <isEmpty property="csocPayRentMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayRentMax" prepend="and">
+				<isEmpty property="csocPayRentMin">$csocPayRentNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_rent &lt;= #csocPayRentMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayRent" prepend="and">
+			    $csocPayRentNot$ cs_order_cluster$suffix$.csoc_pay_rent = #csocPayRent#
+			</isNotEmpty>
+			<isNotNull property="csocPayRentNot" prepend="and">
+				<isEmpty property="csocPayRentMax"><isEmpty property="csocPayRentMin"><isEmpty property="csocPayRent">
+				$csocPayRentNot$ cs_order_cluster$suffix$.csoc_pay_rent is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayInsureMin" prepend="and">
+			    $csocPayInsureNot$  ( cs_order_cluster$suffix$.csoc_pay_insure &gt;= #csocPayInsureMin#
+			    <isEmpty property="csocPayInsureMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayInsureMax" prepend="and">
+				<isEmpty property="csocPayInsureMin">$csocPayInsureNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_insure &lt;= #csocPayInsureMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayInsure" prepend="and">
+			    $csocPayInsureNot$ cs_order_cluster$suffix$.csoc_pay_insure = #csocPayInsure#
+			</isNotEmpty>
+			<isNotNull property="csocPayInsureNot" prepend="and">
+				<isEmpty property="csocPayInsureMax"><isEmpty property="csocPayInsureMin"><isEmpty property="csocPayInsure">
+				$csocPayInsureNot$ cs_order_cluster$suffix$.csoc_pay_insure is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayTimeoutMin" prepend="and">
+			    $csocPayTimeoutNot$  ( cs_order_cluster$suffix$.csoc_pay_timeout &gt;= #csocPayTimeoutMin#
+			    <isEmpty property="csocPayTimeoutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocPayTimeoutMax" prepend="and">
+				<isEmpty property="csocPayTimeoutMin">$csocPayTimeoutNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_pay_timeout &lt;= #csocPayTimeoutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocPayTimeout" prepend="and">
+			    $csocPayTimeoutNot$ cs_order_cluster$suffix$.csoc_pay_timeout = #csocPayTimeout#
+			</isNotEmpty>
+			<isNotNull property="csocPayTimeoutNot" prepend="and">
+				<isEmpty property="csocPayTimeoutMax"><isEmpty property="csocPayTimeoutMin"><isEmpty property="csocPayTimeout">
+				$csocPayTimeoutNot$ cs_order_cluster$suffix$.csoc_pay_timeout is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocPayDetails" prepend="and">			    
+			    (<isNotNull property="csocPayDetailsNot">
+			    cs_order_cluster$suffix$.csoc_pay_details is null or length(cs_order_cluster$suffix$.csoc_pay_details) &lt; 1 or
+			    </isNotNull>$csocPayDetailsNot$ cs_order_cluster$suffix$.csoc_pay_details = #csocPayDetails#)
+			</isNotEmpty>
+			<isNotNull property="csocPayDetailsNot" prepend="and">
+				<isEmpty property="csocPayDetails">
+				$csocPayDetailsNot$ (cs_order_cluster$suffix$.csoc_pay_details is null or length(cs_order_cluster$suffix$.csoc_pay_details) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocOutTypeMin" prepend="and">
+			    $csocOutTypeNot$  ( cs_order_cluster$suffix$.csoc_out_type &gt;= #csocOutTypeMin#
+			    <isEmpty property="csocOutTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocOutTypeMax" prepend="and">
+				<isEmpty property="csocOutTypeMin">$csocOutTypeNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_out_type &lt;= #csocOutTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocOutType" prepend="and">
+			    $csocOutTypeNot$ cs_order_cluster$suffix$.csoc_out_type = #csocOutType#
+			</isNotEmpty>
+			<isNotNull property="csocOutTypeNot" prepend="and">
+				<isEmpty property="csocOutTypeMax"><isEmpty property="csocOutTypeMin"><isEmpty property="csocOutType">
+				$csocOutTypeNot$ cs_order_cluster$suffix$.csoc_out_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocOutIdMin" prepend="and">
+			    $csocOutIdNot$  ( cs_order_cluster$suffix$.csoc_out_id &gt;= #csocOutIdMin#
+			    <isEmpty property="csocOutIdMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocOutIdMax" prepend="and">
+				<isEmpty property="csocOutIdMin">$csocOutIdNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_out_id &lt;= #csocOutIdMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocOutId" prepend="and">
+			    $csocOutIdNot$ cs_order_cluster$suffix$.csoc_out_id = #csocOutId#
+			</isNotEmpty>
+			<isNotNull property="csocOutIdNot" prepend="and">
+				<isEmpty property="csocOutIdMax"><isEmpty property="csocOutIdMin"><isEmpty property="csocOutId">
+				$csocOutIdNot$ cs_order_cluster$suffix$.csoc_out_id is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocStartTimeStart" prepend="and">
+			    $csocStartTimeNot$   (cs_order_cluster$suffix$.csoc_start_time &gt;= #csocStartTimeStart#
+			   <isEmpty property="csocStartTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocStartTimeEnd" prepend="and">
+				<isEmpty property="csocStartTimeStart">$csocStartTimeNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_start_time &lt;= #csocStartTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csocStartTime" prepend="and">
+			    $csocStartTimeNot$ cs_order_cluster$suffix$.csoc_start_time = #csocStartTime#
+			</isNotEmpty>
+			<isNotNull property="csocStartTimeNot" prepend="and">
+				<isEmpty property="csocStartTimeStart"><isEmpty property="csocStartTimeEnd"><isEmpty property="csocStartTime">
+				$csocStartTimeNot$ cs_order_cluster$suffix$.csoc_start_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocFinishTimeStart" prepend="and">
+			    $csocFinishTimeNot$   (cs_order_cluster$suffix$.csoc_finish_time &gt;= #csocFinishTimeStart#
+			   <isEmpty property="csocFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocFinishTimeEnd" prepend="and">
+				<isEmpty property="csocFinishTimeStart">$csocFinishTimeNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_finish_time &lt;= #csocFinishTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csocFinishTime" prepend="and">
+			    $csocFinishTimeNot$ cs_order_cluster$suffix$.csoc_finish_time = #csocFinishTime#
+			</isNotEmpty>
+			<isNotNull property="csocFinishTimeNot" prepend="and">
+				<isEmpty property="csocFinishTimeStart"><isEmpty property="csocFinishTimeEnd"><isEmpty property="csocFinishTime">
+				$csocFinishTimeNot$ cs_order_cluster$suffix$.csoc_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocStatusMin" prepend="and">
+			    $csocStatusNot$  ( cs_order_cluster$suffix$.csoc_status &gt;= #csocStatusMin#
+			    <isEmpty property="csocStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocStatusMax" prepend="and">
+				<isEmpty property="csocStatusMin">$csocStatusNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_status &lt;= #csocStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csocStatus" prepend="and">
+			    $csocStatusNot$ cs_order_cluster$suffix$.csoc_status = #csocStatus#
+			</isNotEmpty>
+			<isNotNull property="csocStatusNot" prepend="and">
+				<isEmpty property="csocStatusMax"><isEmpty property="csocStatusMin"><isEmpty property="csocStatus">
+				$csocStatusNot$ cs_order_cluster$suffix$.csoc_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocAddTimeStart" prepend="and">
+			    $csocAddTimeNot$   (cs_order_cluster$suffix$.csoc_add_time &gt;= #csocAddTimeStart#
+			   <isEmpty property="csocAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocAddTimeEnd" prepend="and">
+				<isEmpty property="csocAddTimeStart">$csocAddTimeNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_add_time &lt;= #csocAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csocAddTime" prepend="and">
+			    $csocAddTimeNot$ cs_order_cluster$suffix$.csoc_add_time = #csocAddTime#
+			</isNotEmpty>
+			<isNotNull property="csocAddTimeNot" prepend="and">
+				<isEmpty property="csocAddTimeStart"><isEmpty property="csocAddTimeEnd"><isEmpty property="csocAddTime">
+				$csocAddTimeNot$ cs_order_cluster$suffix$.csoc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csocUpdateTimeStart" prepend="and">
+			    $csocUpdateTimeNot$   (cs_order_cluster$suffix$.csoc_update_time &gt;= #csocUpdateTimeStart#
+			   <isEmpty property="csocUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csocUpdateTimeEnd" prepend="and">
+				<isEmpty property="csocUpdateTimeStart">$csocUpdateTimeNot$   (</isEmpty>
+			    cs_order_cluster$suffix$.csoc_update_time &lt;= #csocUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csocUpdateTime" prepend="and">
+			    $csocUpdateTimeNot$ cs_order_cluster$suffix$.csoc_update_time = #csocUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csocUpdateTimeNot" prepend="and">
+				<isEmpty property="csocUpdateTimeStart"><isEmpty property="csocUpdateTimeEnd"><isEmpty property="csocUpdateTime">
+				$csocUpdateTimeNot$ cs_order_cluster$suffix$.csoc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 订单簇left join 条件sql片段 -->
+	<sql id="cs_order_cluster_join">
+		<dynamic>
+			<isNotEmpty property="CsOrderCluster.csocId" prepend="and">
+			    $CsOrderCluster.csocIdNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_id = #CsOrderCluster.csocId#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocIdNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocId">
+				$csocIdNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocHost" prepend="and">
+			    $CsOrderCluster.csocHostNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_host = #CsOrderCluster.csocHost#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocHostNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocHost">
+				$csocHostNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_host is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsOrderCluster.csocSubOrders" prepend="and">			    
+				    (<isNotNull property="CsOrderCluster.csocSubOrdersNot">
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_sub_orders is null or length(cs_order_cluster$CsOrderCluster.suffix$.csoc_sub_orders) &lt; 1 or
+				    </isNotNull>$CsOrderCluster.csocSubOrdersNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_sub_orders = #CsOrderCluster.csocSubOrders#)
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocSubOrdersNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocSubOrders">
+					$csocSubOrdersNot$ (cs_order_cluster$CsOrderCluster.suffix$.csoc_sub_orders is null or length(cs_order_cluster$CsOrderCluster.suffix$.csoc_sub_orders) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayMember" prepend="and">
+			    $CsOrderCluster.csocPayMemberNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_member = #CsOrderCluster.csocPayMember#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayMemberNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayMember">
+				$csocPayMemberNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_member is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsOrderCluster.csocMobile" prepend="and">			    
+				    (<isNotNull property="CsOrderCluster.csocMobileNot">
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_mobile is null or length(cs_order_cluster$CsOrderCluster.suffix$.csoc_mobile) &lt; 1 or
+				    </isNotNull>$CsOrderCluster.csocMobileNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_mobile = #CsOrderCluster.csocMobile#)
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocMobileNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocMobile">
+					$csocMobileNot$ (cs_order_cluster$CsOrderCluster.suffix$.csoc_mobile is null or length(cs_order_cluster$CsOrderCluster.suffix$.csoc_mobile) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPriceMin" prepend="and">
+			    $CsOrderCluster.csocPriceNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_price &gt;= #CsOrderCluster.csocPriceMin#
+			    <isEmpty property="CsOrderCluster.csocPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPriceMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPriceMin">$CsOrderCluster.csocPriceNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_price &lt;= #CsOrderCluster.csocPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPrice" prepend="and">
+			    $CsOrderCluster.csocPriceNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_price = #CsOrderCluster.csocPrice#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPriceNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPriceMax"><isEmpty property="CsOrderCluster.csocPriceMin"><isEmpty property="CsOrderCluster.csocPrice">
+				$csocPriceNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocMarginNeedMin" prepend="and">
+			    $CsOrderCluster.csocMarginNeedNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_margin_need &gt;= #CsOrderCluster.csocMarginNeedMin#
+			    <isEmpty property="CsOrderCluster.csocMarginNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocMarginNeedMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocMarginNeedMin">$CsOrderCluster.csocMarginNeedNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_margin_need &lt;= #CsOrderCluster.csocMarginNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocMarginNeed" prepend="and">
+			    $CsOrderCluster.csocMarginNeedNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_margin_need = #CsOrderCluster.csocMarginNeed#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocMarginNeedNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocMarginNeedMax"><isEmpty property="CsOrderCluster.csocMarginNeedMin"><isEmpty property="CsOrderCluster.csocMarginNeed">
+				$csocMarginNeedNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_margin_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocTotalDurationMin" prepend="and">
+			    $CsOrderCluster.csocTotalDurationNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_total_duration &gt;= #CsOrderCluster.csocTotalDurationMin#
+			    <isEmpty property="CsOrderCluster.csocTotalDurationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocTotalDurationMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocTotalDurationMin">$CsOrderCluster.csocTotalDurationNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_total_duration &lt;= #CsOrderCluster.csocTotalDurationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocTotalDuration" prepend="and">
+			    $CsOrderCluster.csocTotalDurationNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_total_duration = #CsOrderCluster.csocTotalDuration#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocTotalDurationNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocTotalDurationMax"><isEmpty property="CsOrderCluster.csocTotalDurationMin"><isEmpty property="CsOrderCluster.csocTotalDuration">
+				$csocTotalDurationNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_total_duration is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayMoneyMin" prepend="and">
+			    $CsOrderCluster.csocPayMoneyNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_money &gt;= #CsOrderCluster.csocPayMoneyMin#
+			    <isEmpty property="CsOrderCluster.csocPayMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayMoneyMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayMoneyMin">$CsOrderCluster.csocPayMoneyNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_money &lt;= #CsOrderCluster.csocPayMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayMoney" prepend="and">
+			    $CsOrderCluster.csocPayMoneyNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_money = #CsOrderCluster.csocPayMoney#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayMoneyNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayMoneyMax"><isEmpty property="CsOrderCluster.csocPayMoneyMin"><isEmpty property="CsOrderCluster.csocPayMoney">
+				$csocPayMoneyNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayCouponMin" prepend="and">
+			    $CsOrderCluster.csocPayCouponNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coupon &gt;= #CsOrderCluster.csocPayCouponMin#
+			    <isEmpty property="CsOrderCluster.csocPayCouponMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayCouponMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayCouponMin">$CsOrderCluster.csocPayCouponNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coupon &lt;= #CsOrderCluster.csocPayCouponMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayCoupon" prepend="and">
+			    $CsOrderCluster.csocPayCouponNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coupon = #CsOrderCluster.csocPayCoupon#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayCouponNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayCouponMax"><isEmpty property="CsOrderCluster.csocPayCouponMin"><isEmpty property="CsOrderCluster.csocPayCoupon">
+				$csocPayCouponNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coupon is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayCoinMin" prepend="and">
+			    $CsOrderCluster.csocPayCoinNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coin &gt;= #CsOrderCluster.csocPayCoinMin#
+			    <isEmpty property="CsOrderCluster.csocPayCoinMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayCoinMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayCoinMin">$CsOrderCluster.csocPayCoinNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coin &lt;= #CsOrderCluster.csocPayCoinMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayCoin" prepend="and">
+			    $CsOrderCluster.csocPayCoinNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coin = #CsOrderCluster.csocPayCoin#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayCoinNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayCoinMax"><isEmpty property="CsOrderCluster.csocPayCoinMin"><isEmpty property="CsOrderCluster.csocPayCoin">
+				$csocPayCoinNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_coin is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayNeedMin" prepend="and">
+			    $CsOrderCluster.csocPayNeedNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_need &gt;= #CsOrderCluster.csocPayNeedMin#
+			    <isEmpty property="CsOrderCluster.csocPayNeedMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayNeedMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayNeedMin">$CsOrderCluster.csocPayNeedNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_need &lt;= #CsOrderCluster.csocPayNeedMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayNeed" prepend="and">
+			    $CsOrderCluster.csocPayNeedNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_need = #CsOrderCluster.csocPayNeed#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayNeedNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayNeedMax"><isEmpty property="CsOrderCluster.csocPayNeedMin"><isEmpty property="CsOrderCluster.csocPayNeed">
+				$csocPayNeedNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_need is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayRealMin" prepend="and">
+			    $CsOrderCluster.csocPayRealNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_real &gt;= #CsOrderCluster.csocPayRealMin#
+			    <isEmpty property="CsOrderCluster.csocPayRealMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayRealMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayRealMin">$CsOrderCluster.csocPayRealNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_real &lt;= #CsOrderCluster.csocPayRealMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayReal" prepend="and">
+			    $CsOrderCluster.csocPayRealNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_real = #CsOrderCluster.csocPayReal#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayRealNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayRealMax"><isEmpty property="CsOrderCluster.csocPayRealMin"><isEmpty property="CsOrderCluster.csocPayReal">
+				$csocPayRealNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_real is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayRentMin" prepend="and">
+			    $CsOrderCluster.csocPayRentNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_rent &gt;= #CsOrderCluster.csocPayRentMin#
+			    <isEmpty property="CsOrderCluster.csocPayRentMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayRentMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayRentMin">$CsOrderCluster.csocPayRentNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_rent &lt;= #CsOrderCluster.csocPayRentMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayRent" prepend="and">
+			    $CsOrderCluster.csocPayRentNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_rent = #CsOrderCluster.csocPayRent#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayRentNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayRentMax"><isEmpty property="CsOrderCluster.csocPayRentMin"><isEmpty property="CsOrderCluster.csocPayRent">
+				$csocPayRentNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_rent is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayInsureMin" prepend="and">
+			    $CsOrderCluster.csocPayInsureNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_insure &gt;= #CsOrderCluster.csocPayInsureMin#
+			    <isEmpty property="CsOrderCluster.csocPayInsureMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayInsureMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayInsureMin">$CsOrderCluster.csocPayInsureNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_insure &lt;= #CsOrderCluster.csocPayInsureMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayInsure" prepend="and">
+			    $CsOrderCluster.csocPayInsureNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_insure = #CsOrderCluster.csocPayInsure#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayInsureNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayInsureMax"><isEmpty property="CsOrderCluster.csocPayInsureMin"><isEmpty property="CsOrderCluster.csocPayInsure">
+				$csocPayInsureNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_insure is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocPayTimeoutMin" prepend="and">
+			    $CsOrderCluster.csocPayTimeoutNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_timeout &gt;= #CsOrderCluster.csocPayTimeoutMin#
+			    <isEmpty property="CsOrderCluster.csocPayTimeoutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayTimeoutMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayTimeoutMin">$CsOrderCluster.csocPayTimeoutNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_timeout &lt;= #CsOrderCluster.csocPayTimeoutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocPayTimeout" prepend="and">
+			    $CsOrderCluster.csocPayTimeoutNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_timeout = #CsOrderCluster.csocPayTimeout#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocPayTimeoutNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocPayTimeoutMax"><isEmpty property="CsOrderCluster.csocPayTimeoutMin"><isEmpty property="CsOrderCluster.csocPayTimeout">
+				$csocPayTimeoutNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_timeout is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsOrderCluster.csocPayDetails" prepend="and">			    
+				    (<isNotNull property="CsOrderCluster.csocPayDetailsNot">
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_details is null or length(cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_details) &lt; 1 or
+				    </isNotNull>$CsOrderCluster.csocPayDetailsNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_details = #CsOrderCluster.csocPayDetails#)
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocPayDetailsNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocPayDetails">
+					$csocPayDetailsNot$ (cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_details is null or length(cs_order_cluster$CsOrderCluster.suffix$.csoc_pay_details) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocOutTypeMin" prepend="and">
+			    $CsOrderCluster.csocOutTypeNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_out_type &gt;= #CsOrderCluster.csocOutTypeMin#
+			    <isEmpty property="CsOrderCluster.csocOutTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocOutTypeMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocOutTypeMin">$CsOrderCluster.csocOutTypeNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_out_type &lt;= #CsOrderCluster.csocOutTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocOutType" prepend="and">
+			    $CsOrderCluster.csocOutTypeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_out_type = #CsOrderCluster.csocOutType#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocOutTypeNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocOutTypeMax"><isEmpty property="CsOrderCluster.csocOutTypeMin"><isEmpty property="CsOrderCluster.csocOutType">
+				$csocOutTypeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_out_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocOutIdMin" prepend="and">
+			    $CsOrderCluster.csocOutIdNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_out_id &gt;= #CsOrderCluster.csocOutIdMin#
+			    <isEmpty property="CsOrderCluster.csocOutIdMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocOutIdMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocOutIdMin">$CsOrderCluster.csocOutIdNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_out_id &lt;= #CsOrderCluster.csocOutIdMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocOutId" prepend="and">
+			    $CsOrderCluster.csocOutIdNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_out_id = #CsOrderCluster.csocOutId#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocOutIdNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocOutIdMax"><isEmpty property="CsOrderCluster.csocOutIdMin"><isEmpty property="CsOrderCluster.csocOutId">
+				$csocOutIdNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_out_id is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsOrderCluster.csocStartTimeStart" prepend="and">
+				    $CsOrderCluster.csocStartTimeNot$   (cs_order_cluster$CsOrderCluster.suffix$.csoc_start_time &gt;= #CsOrderCluster.csocStartTimeStart#
+				   <isEmpty property="CsOrderCluster.csocStartTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsOrderCluster.csocStartTimeEnd" prepend="and">
+					<isEmpty property="CsOrderCluster.csocStartTimeStart">$CsOrderCluster.csocStartTimeNot$   (</isEmpty>
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_start_time &lt;= #CsOrderCluster.csocStartTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsOrderCluster.csocStartTime" prepend="and">
+				    $CsOrderCluster.csocStartTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_start_time = #CsOrderCluster.csocStartTime#
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocStartTimeNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocStartTimeStart"><isEmpty property="CsOrderCluster.csocStartTimeEnd"><isEmpty property="CsOrderCluster.csocStartTime">
+					$csocStartTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_start_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsOrderCluster.csocFinishTimeStart" prepend="and">
+				    $CsOrderCluster.csocFinishTimeNot$   (cs_order_cluster$CsOrderCluster.suffix$.csoc_finish_time &gt;= #CsOrderCluster.csocFinishTimeStart#
+				   <isEmpty property="CsOrderCluster.csocFinishTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsOrderCluster.csocFinishTimeEnd" prepend="and">
+					<isEmpty property="CsOrderCluster.csocFinishTimeStart">$CsOrderCluster.csocFinishTimeNot$   (</isEmpty>
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_finish_time &lt;= #CsOrderCluster.csocFinishTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsOrderCluster.csocFinishTime" prepend="and">
+				    $CsOrderCluster.csocFinishTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_finish_time = #CsOrderCluster.csocFinishTime#
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocFinishTimeNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocFinishTimeStart"><isEmpty property="CsOrderCluster.csocFinishTimeEnd"><isEmpty property="CsOrderCluster.csocFinishTime">
+					$csocFinishTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_finish_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsOrderCluster.csocStatusMin" prepend="and">
+			    $CsOrderCluster.csocStatusNot$  ( cs_order_cluster$CsOrderCluster.suffix$.csoc_status &gt;= #CsOrderCluster.csocStatusMin#
+			    <isEmpty property="CsOrderCluster.csocStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocStatusMax" prepend="and">
+				<isEmpty property="CsOrderCluster.csocStatusMin">$CsOrderCluster.csocStatusNot$   (</isEmpty>
+			    cs_order_cluster$CsOrderCluster.suffix$.csoc_status &lt;= #CsOrderCluster.csocStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderCluster.csocStatus" prepend="and">
+			    $CsOrderCluster.csocStatusNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_status = #CsOrderCluster.csocStatus#
+			</isNotEmpty>
+			<isNotNull property="CsOrderCluster.csocStatusNot" prepend="and">
+				<isEmpty property="CsOrderCluster.csocStatusMax"><isEmpty property="CsOrderCluster.csocStatusMin"><isEmpty property="CsOrderCluster.csocStatus">
+				$csocStatusNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsOrderCluster.csocAddTimeStart" prepend="and">
+				    $CsOrderCluster.csocAddTimeNot$   (cs_order_cluster$CsOrderCluster.suffix$.csoc_add_time &gt;= #CsOrderCluster.csocAddTimeStart#
+				   <isEmpty property="CsOrderCluster.csocAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsOrderCluster.csocAddTimeEnd" prepend="and">
+					<isEmpty property="CsOrderCluster.csocAddTimeStart">$CsOrderCluster.csocAddTimeNot$   (</isEmpty>
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_add_time &lt;= #CsOrderCluster.csocAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsOrderCluster.csocAddTime" prepend="and">
+				    $CsOrderCluster.csocAddTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_add_time = #CsOrderCluster.csocAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocAddTimeNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocAddTimeStart"><isEmpty property="CsOrderCluster.csocAddTimeEnd"><isEmpty property="CsOrderCluster.csocAddTime">
+					$csocAddTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsOrderCluster.csocUpdateTimeStart" prepend="and">
+				    $CsOrderCluster.csocUpdateTimeNot$   (cs_order_cluster$CsOrderCluster.suffix$.csoc_update_time &gt;= #CsOrderCluster.csocUpdateTimeStart#
+				   <isEmpty property="CsOrderCluster.csocUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsOrderCluster.csocUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsOrderCluster.csocUpdateTimeStart">$CsOrderCluster.csocUpdateTimeNot$   (</isEmpty>
+				    cs_order_cluster$CsOrderCluster.suffix$.csoc_update_time &lt;= #CsOrderCluster.csocUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsOrderCluster.csocUpdateTime" prepend="and">
+				    $CsOrderCluster.csocUpdateTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_update_time = #CsOrderCluster.csocUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsOrderCluster.csocUpdateTimeNot" prepend="and">
+					<isEmpty property="CsOrderCluster.csocUpdateTimeStart"><isEmpty property="CsOrderCluster.csocUpdateTimeEnd"><isEmpty property="CsOrderCluster.csocUpdateTime">
+					$csocUpdateTimeNot$ cs_order_cluster$CsOrderCluster.suffix$.csoc_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

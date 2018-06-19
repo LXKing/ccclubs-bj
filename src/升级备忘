@@ -1,0 +1,395 @@
+各个表加host域字段
+添加cs_repair_adr表，并把系统属性中维修地点的数据转移到该表中,并保证ID的一致性
+添加cs_area表，并把系统属性中网点的数据转移到该表中,并保证ID的一致性
+添加cs_config表
+srv_user表添加su_mobile字段
+车主表添加cup_flag字段varchar(32)
+会员组织添加一个公司员工用车帐号组，ID设置为1
+车辆表加csc_engine_no发动机号varchar(32)，车牌名称csc_car_no[varchar(32)]
+车型表加cscm_day_price[double]天租价格,cscm_day_price[double]时租价格,cscm_hosts[varchar(128)]运营城市
+
+cs_violat表
+	csv_time_1改成csv_notice_time
+	csv_cutoff_time[截止时间]
+	csv_notice，csv_time_2,csv_time_3删除
+	
+添加交通限行表cs_limit_time
+########################2014-10-20####################################
+cs_use_record表加csur_coin字段
+########################2014-10-30####################################
+srv_host加sh_fee_type[bigint]字段 不能为空
+计费类型名加csut_hosts [varchar(256)]字段
+########################2014-10-30####################################
+cs_record表添加csr_record_type[bigint]字段，csr_money_type,csr_type改成可以为空
+srv_project表加sp_level字段
+添加cs_integral_record,cs_invoice,cs_member_memo,cs_record_type,cs_address表
+
+truncate table cs_integral_record;
+insert into cs_integral_record (csr_id,csr_host,csr_member,csr_group,csr_amount,csr_remain,csr_type,csr_order,csr_relate,csr_editor,csr_remark,csr_add_time) (select csr_id,csr_host,csr_member,csr_group,csr_amount,csr_remain,csr_type,csr_order,csr_relate,csr_editor,csr_remark,csr_add_time from cs_record where csr_money_type=2);
+truncate table cs_record_type;
+insert into cs_record_type(csrt_type_name,csrt_money_type,csrt_is_income,csrt_can_invoice,csrt_status) select distinct  csr_type,csr_money_type,0,0,1  from cs_record where cs_record.csr_money_type<2;
+update cs_record a left join cs_record_type b on a.csr_money_type = b.csrt_money_type and a.csr_type=b.csrt_type_name set a.csr_record_type = b.csrt_id;
+########################2014-10-30####################################
+加油站和电桩表重新创建
+信用卡帐单加城市
+数据预警表重新创建
+########################2014-12-04####################################
+系统日志添加 csl_relate BIGINT 字段   csl_class VARCHAR 字段
+事故描述改成text类型
+CsEventType加入缓存
+会员表加csm_not_revenue   smallint字段 默认0
+########################2014-12-11####################################
+套餐明细和优惠项的车型改成varchar(256)
+update cs_rule set csr_expression=replace(csr_expression,'R-X|A-I','N');
+update cs_rule set csr_expression=replace(csr_expression,'J-Q','D');
+update cs_rule set csr_expression=replace(csr_expression,'S-X|A-H','N');
+update cs_rule set csr_expression=replace(csr_expression,'A-X','D|N');
+########################2014-12-22####################################
+会员表添加 csm_tracker bigint 跟踪人员字段
+计费类型移除支持城市列表
+车辆表添加 csc_mqtt_flag字段 varchar
+用户名su_host改成varchar型
+添加cs_fee_type_set表
+添加cs_serve表
+添加cs_care表
+添加cs_call_in表
+########################2015-01-06####################################
+添加cs_visit_channel,cs_visit_detail,cs_email表
+srv_user添加su_email  varchar[128]字段
+cs_chj_sign表添加 cscs_year[smallint],cscs_visit_channel[bigint]两字段，cscs_locked字段改成bigint字段
+update cs_chj_sign set cscs_locked = 5 where cscs_locked = 3;
+update cs_chj_sign set cscs_locked = 3 where cscs_locked = 1;
+update cs_chj_sign set cscs_locked = 4 where cscs_locked = 2;
+cs_log表加csl_host[bigint]字段,并更新其字段内容
+订单管理 撤销改作废
+车辆管理 加上下线操作
+########################2015-01-09####################################
+cs_api_client表改srv_api_client表
+添加srv_api表,
+添加srv_api_client表
+添加srv_action_script表
+属性日志操作模块节点log_model标识改成model_class
+信用卡表cs_credit_card添加 cscc_remark[varchar(500)],cscc_data[text]两字段
+config.properties中memcache属性加SrvActionScript
+##########################2015-01-28#################################
+会员表添加csm_channel,csm_market_plan,csm_saler三字段bigint型 ,  csm_express,csm_temp两字段varchar(32)字段
+把之前的添加人数据同步到销售人
+添加cs_activity,cs_activity_in,cs_channel,
+cs_channel_index,cs_channel_log,cs_market_index,
+cs_market_log,cs_market_plan,cs_present,cs_promotion,
+cs_sale_event,cs_sale_opport,cs_sale_survey,cs_visit_ip表
+config.properties文件加visit.platform.flag平台标识
+##########################2015-02-10#################################
+会员表加csm_activity[bigint]字段
+cs_activity表csa_plan字段改成可以为空
+cs_visit_detail表加csvd_activity[bigint]字段
+cs_coin表加csc_flag[varchar(32)]字段
+cs_outlets表加cso_pile_time时间
+cs_credit_card表加cscc_mask字段bigint 默认0
+cs_message表重新生成
+添加表cs_talker
+<sql>
+    alter table cs_member add csm_activity bigint after csm_market;
+    alter table cs_visit_detail add csvd_activity bigint after csvd_plan;
+    alter table cs_coin add csc_flag varchar(32) null after csc_validity;
+    alter table cs_outlets add cso_pile_time datetime null after cso_expire;
+</sql>
+##########################2015-03-05#################################
+生成表:
+	cs_talker,cs_chat_message,cs_message,
+	cs_outside_qr,srv_user_exp,cs_grow_record
+	会员表加 csm_grow,csm_grade[INT]字段不能为空 默认0
+	cs_unit_info表csui_member字段改成可以为空
+	添加cs_upgrade_log表
+##########################2015-03-24#################################
+cs_outside_qr表加csoq_end_time字段
+cs_outside_qr表加 csoq_images字段 varchar[1024]
+添加cs_wx_mt,cs_wx_mo表
+###########################2015-04-01###############################
+cs_violat表加csv_22[int]默认0字段
+srv_user_exp表加sue_is_qr_op [TINYINT] 字段
+###########################2015-04-07###############################
+cs_trouble表加cst_deal_flag [SMALLINT]字段
+cs_violat表加csv_deal_flag [SMALLINT]字段
+cs_order 表加 cso_credit_bill [BIGINT] 字段
+cs_wx_mt表重新生成
+###########################2015-04-15###############################
+cs_car表加csc_on_psd[varchar 50]
+cs_car表加csc_memo[TEXT]字段
+###########################2015-04-17###############################
+添加表cs_oper,tb_record_subject,cs_oper_record,cs_artif_record,tb_problem,cs_scheduling
+srv_host表加sh_oper[bigint]字段
+cs_record表加csr_money_type[small int]字段,csr_record_subject字段,csr_object字段
+cs_record_type表加csrt_subject[bigint]字段
+cs_outlets表加cso_can_a[tinyint]字段，cso_can_b[tinyint]字段，cso_type[smallint]字段
+cs_credit_card表加cscc_scope[int]字段
+cs_event表cse_data_id字段改成varchar(32)
+订单实付额不应包含红包
+###########################2015-04-24###############################
+cs_credit_bill表添加cscb_state[smallint],cscb_pay_serial[varchar(32)],cscb_editor[bigint]字段
+###########################2015-04-27###############################
+cs_order 表加 cso_use_type字段
+添加tb_ab_affirm表
+tb_solve表,tb_problem表加城市字段
+####################################################################
+重新生成srv_lock,srv_transaction表
+事务拦截配置中remove*改PROPAGATION_NESTED
+####################################################################
+cs_recharge_card表加csrc_validity[smallint]非空，默认3,csrc_util[datetime]字段
+####################################################################
+在权限第5，6位上插入两空权限值
+update srv_limited set sl_limit=(((sl_limit&131056)<<2)|(sl_limit&15))
+####################################################################
+cs_invoice表加csi_adder[bigint]字段非空
+####################################################################
+订单表cso_group字段改成可为空，
+订单表加cso_alarm[smallint]非空字段，默认0
+订单表加cso_serial字段varchar(32)不能为空，唯一
+cs_item表加csi_type字段（宝贝类型）
+cs_invoice表加csi_host字段
+消费记录、积分记录之会员组织字段废弃
+充值卡移入计费系统
+计费方式移入计费系统
+计费策略组移入计费系统
+消费科目移入财务系统
+消费类型移入财务系统
+运营商、供应商移入基础信息
+App更新移入系统配置
+会员卡移入会员系统
+加油站移入基础系统
+添加产品中心
+销售系统8个表全部重新生成 
+后台管理员表su_family字段内容更新：
+update srv_user set su_family=
+concat(
+	replace(	
+		replace(
+			su_family
+		,'0,','')	
+	,',',concat('#,@',su_group_id,'@,#') )
+,',_');
+update srv_user d left join 
+(select a.uid as uid,b.su_group_id as gid from (select replace(left(su_family,instr(su_family,',')-1),'#','') as pid,su_id as uid from srv_user) a
+left join srv_user b 
+on a.pid=b.su_id) c 
+on d.su_id=c.uid
+set d.su_family=
+replace(
+	concat(
+		'#0#,@',c.gid,'@,#',d.su_family
+	),',_','#'
+);
+select * from srv_user;
+
+项目表srv_project表加sp_group,sp_mind两字段
+update srv_project set sp_group=sp_limit_exp,sp_limit_exp=null where sp_parent_id=0;
+cs_config表重新生成
+####################################################################
+cs_use_record表加csur_profile[varchar256]字段
+srv_host加sh_state字段[smallint]
+####################################################################
+cs_credit_bill表加cscb_repay_time[datetime]字段
+cs_recharge_card表加csrc_validity_util[datetime]字段
+####################################################################
+cs_repair表加csr_memo[TEXT]字段、csr_profile[varchar256]字段
+cs_car表加csc_setup[smallint]字段
+cs_order表加cso_duration[double]非空0字段
+update cs_order set cso_duration=(GREATEST(unix_timestamp(cso_finish_time),unix_timestamp(cso_ret_time))-unix_timestamp(cso_start_time))/(60*60) where cso_ret_time is not null;
+update cs_order set cso_duration=(unix_timestamp(cso_finish_time)-unix_timestamp(cso_start_time))/(60*60) where cso_ret_time is null;
+####################################################################
+cs_config表加csc_flags[varchar 256]字段
+系统配置改成城市配置
+####################################################################
+cs_unit_info表csui_member字段改成可以为空
+cs_unit_user表的登录帐号改成唯一
+####################################################################
+增加cs_cash_record表
+会员表加csm_src字段varchar(32)
+订单表加cso_src字段varchar(32)
+订单操作记录表加csol_member[bigint],csol_src[varchar(32)],csol_from[smallint]字段
+订单操作记录表csol_editor字段改成可以为空
+cs_alipay_record表加csar_client_id[bigint],csar_third_back[varchar 256]两字段
+####################################################################
+cs_oper表添加cso_full_name，cso_icon[128]字段
+####################################################################
+短信模板表加csst_host[bigint]字段非空默认0
+车辆当前状态表cs_state表加css_car字段[bigint]字段可为空
+####################################################################
+车辆表加csc_mask字段bigint非空
+####################################################################
+cs_coin表加csc_serial【varchar50】字段
+cs_address表加csa_default[tynint]字段 默认0
+############################################################
+添加cs_unit_group,cs_unit_person两表
+############################################################
+cs_integral_record表加csr_serial字段，唯一，不可重复
+############################################################
+cs_complain表加csc_type[smallint]字段
+############################################################
+config.properties加unit.title=公务用车管理平台
+############################################################
+cs_complain表加csc_accept[smallint]字段
+############################################################
+cs_unit_order表加
+	csuo_add_time[datetime]
+	csuo_update_time[datetime]
+	csuo_check_time[datetime]
+	csuo_checker[varchar(32)]
+	csuo_state[smallint]
+字段
+cs_cash_record表加cscr_trade_no[varchar]字段,cscr_image VARCHAR (128) COMMENT '付款截图:',
+运营商+城市+年月日+年月日+年月日
+cs_oper_record表加csor_cash_no[bigint]字段(可为空)
+添加cs_place表
+CREATE TABLE cs_place (
+ csp_id BIGINT NOT NULL PRIMARY KEY auto_increment COMMENT '编号:',
+ csp_name VARCHAR (32) NOT NULL COMMENT '名称:属性名称，如html中select的option的text内容;',
+ csp_parent BIGINT NOT NULL COMMENT '类型:',
+ csp_flag VARCHAR (32) COMMENT '标识:程序变量命名规则格式;',
+ csp_status SMALLINT NOT NULL COMMENT '状态:1:有效,0:内容;'
+)
+cs_unit_person表重新生成
+DROP TABLE cs_unit_person
+CREATE TABLE cs_unit_person (
+ csup_id BIGINT NOT NULL PRIMARY KEY auto_increment COMMENT '编号:',
+ csup_host BIGINT NOT NULL COMMENT '城市:',
+ csup_info BIGINT NOT NULL COMMENT '所属单位:',
+ csup_name VARCHAR (32) NOT NULL COMMENT '姓名:',
+ csup_group BIGINT NOT NULL COMMENT '所属分组:',
+ csup_member BIGINT NOT NULL COMMENT '帐号信息:',
+ csup_remark VARCHAR (256) COMMENT '备注:',
+ csup_memo TEXT COMMENT '备忘信息:textarea:content,text:sign;',
+ csup_update_time DATETIME NOT NULL COMMENT '修改时间:',
+ csup_add_time DATETIME NOT NULL COMMENT '添加时间:',
+ csup_status SMALLINT NOT NULL COMMENT '状态:1:正常,0:无效;'
+)
+############################################################
+cs_unit_order表加csuo_unit_group[bigint]字段
+cs_unit_order表加csuo_profile[varchar(128)]字段
+cs_unit_order表加csuo_person[bigint]字段
+############################################################
+新增表cs_unit_statement
+cs_unit_order表增加csuo_settlement[double],csuo_statement[bigint]两字段
+添加企业消息推送表
+CREATE TABLE cs_unit_mt (
+ csum_id BIGINT NOT NULL PRIMARY KEY auto_increment COMMENT '编号:',
+ csum_host BIGINT NOT NULL COMMENT '城市:',
+ csum_info BIGINT NOT NULL COMMENT '所属企业:',
+ csum_person BIGINT NOT NULL COMMENT '所属人员:',
+ csum_title VARCHAR (32) NOT NULL COMMENT '消息标题:',
+ csum_content VARCHAR (256) NOT NULL COMMENT '消息内容:',
+ csum_type INT NOT NULL COMMENT '消息类型:1:待审核消息;',
+ csum_data VARCHAR (32) NOT NULL COMMENT '关联数据:',
+ csum_read_time DATETIME COMMENT '读取时间:',
+ csum_update_time DATETIME NOT NULL COMMENT '修改时间:',
+ csum_add_time DATETIME NOT NULL COMMENT '添加时间:',
+ csum_status SMALLINT NOT NULL COMMENT '状态:1:已读,0:未读;'
+)
+cs_unit_info表加csui_fee_type[bigint]字段
+############################################################
+cs_unit_order表csuo_car字段改成可以为空,
+cs_unit_order表加csuo_number[varchar(32)]字段,
+update cs_unit_order left JOIN cs_car on csuo_car=csc_id set cs_unit_order.csuo_number=cs_car.csc_car_no
+cs_unit_order表加csuo_special[bigint]字段可为空,csuo_order填0表示专车订单
+cs_unit_order表加csuo_settle_rent,csuo_settle_kilo,csuo_settle_other三字段都是double
+cs_unit_order表加csuo_settle_desc[varchar(256)],csuo_settle_state[smallint],csuo_settle_time[datetime]
+cs_unit_order表加csuo_from[smallint]字段默认0
+cs_special_car表重新生成
+DROP TABLE cs_special_car
+CREATE TABLE cs_special_car (
+ cssc_id BIGINT NOT NULL PRIMARY KEY auto_increment COMMENT '编号:',
+ cssc_host BIGINT NOT NULL COMMENT '城市:',
+ cssc_info BIGINT NOT NULL COMMENT '企业信息:',
+ cssc_person BIGINT NOT NULL COMMENT '用车人员:',
+ cssc_unit_order BIGINT NOT NULL COMMENT '企业订单:',
+ cssc_name VARCHAR (32) COMMENT '乘客姓名:',
+ cssc_mobile VARCHAR (32) COMMENT '乘客电话:',
+ cssc_count INT NOT NULL COMMENT '乘车人数:',
+ cssc_car_model BIGINT COMMENT '预定车型:',
+ cssc_car_number VARCHAR (128) COMMENT '车牌号码:',
+ cssc_driver_name VARCHAR (32) COMMENT '司机姓名:',
+ cssc_driver_phone VARCHAR (32) COMMENT '司机电话:',
+ cssc_driver_image VARCHAR (128) COMMENT '司机照片:',
+ cssc_driver_color VARCHAR (32) COMMENT '车辆颜色:',
+ cssc_driver_car_info VARCHAR (32) COMMENT '车型信息:',
+ cssc_msg VARCHAR (128) COMMENT '客户留言:',
+ cssc_start_point VARCHAR (64) NOT NULL COMMENT '起点位置:',
+ cssc_start_addr VARCHAR (128) COMMENT '起点地址:',
+ cssc_start_time DATETIME NOT NULL COMMENT '开始时间:',
+ cssc_finish_point VARCHAR (64) NOT NULL COMMENT '终点位置:',
+ cssc_finish_addr VARCHAR (128) COMMENT '终点地址:',
+ cssc_finish_time DATETIME COMMENT '结束时间:',
+ cssc_duration INT COMMENT '订单时长:',
+ cssc_real_dur INT COMMENT '实际时长:',
+ cssc_kilo INT COMMENT '公里数:',
+ cssc_scope SMALLINT NOT NULL COMMENT '用车评分:0:未评分,1:一星,2:二星,3:三星,4:四星,5:五星;',
+ cssc_assess VARCHAR (256) COMMENT '用车评价:',
+ cssc_third BIGINT COMMENT '三方名称:1:滴滴专车,2:易道专车;',
+ cssc_third_no VARCHAR (64) COMMENT '三方订单号:',
+ cssc_third_fee DOUBLE COMMENT '三方费用:',
+ cssc_third_fee_data TEXT COMMENT '三方费用信息:',
+ cssc_update_time DATETIME NOT NULL COMMENT '修改时间:',
+ cssc_add_time DATETIME NOT NULL COMMENT '添加时间:',
+ cssc_response VARCHAR (128) COMMENT '响应状态:',
+ cssc_status SMALLINT NOT NULL COMMENT '状态:0:待审核,1:已审核,2:已下单,3:已接单,4:已完成,5:已取消,6:已作废;'
+)
+新建表cs_special_model
+DROP TABLE cs_special_model
+CREATE TABLE cs_special_model (
+ cssm_id BIGINT NOT NULL PRIMARY KEY auto_increment COMMENT '编号:',
+ cssm_name VARCHAR (32) NOT NULL COMMENT '车型名称:',
+ cssm_third BIGINT NOT NULL COMMENT '三方名称:1:滴滴专车,2:易道专车;',
+ cssm_third_code VARCHAR (32) COMMENT '三方代码:',
+ cssm_init_price DOUBLE NOT NULL COMMENT '起步价:',
+ cssm_hour_price DOUBLE NOT NULL COMMENT '小时价格:',
+ cssm_kilo_price DOUBLE NOT NULL COMMENT '里程价格:',
+ cssm_update_time DATETIME NOT NULL COMMENT '修改时间:',
+ cssm_add_time DATETIME NOT NULL COMMENT '添加时间:',
+ cssm_status SMALLINT NOT NULL COMMENT '状态:1:正常,0:无效;'
+)
+cs_unit_info表删除结算日字段
+cs_unit_bill表加csub_fee_order[double]字段
+cs_unit_airport表加csua_statement[bigint]字段
+cs_unit_bill表加csub_order_s[int],csub_special_s[int],csub_fee_special[double]三字段
+cs_unit_order表csuo_status字段删除
+
+新增 cs_long_order,cs_long_order_detail,cs_long_order_fee 三表
+cs_member_info表加csmi_nation[varchar 32]
+cs_maintain表加csm_expect_date[date]字段，csm_expect_km字段改成可以为空,加csm_expect_by[smallint]字段非空默认0
+############################################################
+cs_car表加csc_annual_pre[date],csc_annual_next[date],csc_annual_info[varchar 256]三字段
+cs_unit_order删除csuo_settle_rent,csuo_settle_kilo,csuo_settle_other,csuo_settle_desc字段
+cs_special_model删除cssm_init_price,cssm_hour_price,cssm_kilo_price字段
+cs_long_order表加cslo_pack_no[varchar 64]字段
+cs_long_order_detail表加cslod_remark[varchar 256]字段
+############################################################
+cs_order表加cso_income[smallint]字段默认1
+cs_member表移除csm_type字段
+cs_car_model移除运营城市字段
+cs_user_type移除csut_hosts、csut_on_hour、csut_off_hour字段，
+srv_host加sh_on_hour、sh_off_hour字段
+cs_car表加csc_images[varchar1024]字段
+############################################################
+srv_host表移除sh_master,sh_company,sh_desc
+############################################################
+cs_car表加csc_preview varchar(128)字段
+############################################################
+
+增加redis，配置文件增加入下配置
+####################redis数据源[redis.0]#######################
+redis.0.host=ip地址
+redis.0.port=6379
+redis.0.max=100
+redis.0.min=30
+redis.0.timeout=30000
+redis.0.index=0
+############################################################
+cs_oper表加cso_sign[varchar 32] 字段
+cs_car_model表加cscm_thumb[varchar 128]字段
+############################################################
+update cs_unit_airport set csua_statement=null;
+update cs_unit_order set csuo_statement=null;
+############################################################
+cs_alipay_record表加csar_bank_type
+cs_alipay_refund表加csar_bank_type
+cs_alipay_log表加csal_bank_type

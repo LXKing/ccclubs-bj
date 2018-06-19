@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>忘记密码${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_description')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.account.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/bg1.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-global-cont">
+			<%@ include file="/include/nav.html"%>
+
+			<div id="ccc-container" class="ccc-grid-780 ccc-cont-shadow ccc-account">
+				<header>
+				<div class="ccc-acc-guide ccc-forgot-guide">
+					<div class="ccc-acc-step1"></div>
+					<div class="ccc-acc-step2"></div>
+					<div class="ccc-acc-step3"></div>
+					<em></em>
+					<i></i>
+				</div>
+				</header>
+				<div class="ccc-main ccc-acc-form">
+					<h2>
+						修改密码
+						<span>定期更换密码可以让你的账户更加安全</span>
+					</h2>
+					<div class="ccc-form-divider"></div>
+					<div class="ccc-form-item">
+						<label for="accName" class="ccc-label">
+							当前密码
+						</label>
+						<input type="password" id="accName" placeholder="输入你当前使用的密码" class="ccc-input" />
+						<!-- if错误 class+ error -->
+						<div class="ccc-acc-tooltip single" id="tips-name"></div>
+					</div>
+					<div class="ccc-form-item mid">
+						<label for="checkcode" class="ccc-label">
+							验证码
+						</label>
+						<input type="text" id="checkcode" placeholder="输入验证码" class="ccc-input ccc-checkcode" />
+						<img src="/syscode.jpg.jsp" class="ccc-checkcode-img" />
+						<div class="ccc-acc-tooltip single" id="tips-code"></div>
+					</div>
+				</div>
+				<footer>
+				<div class="ccc-acc-opt">
+					<input type="submit" value="下一步" class="ccc-button-next"  id="nextstep" />
+				</div>
+				</footer>
+			</div>
+
+			<footer id="ccc-footer">
+			</footer>
+		</div>
+
+		<div id="ccc-global-tips">
+			<i></i><span>正在加载...</span>
+		</div>
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script type="text/javascript" src="/js/rsa/RSA.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/BigInt.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/Barrett.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/CodeManage.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="/js/rsa/MyRSA.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+        $(document).ready(function() {
+        	var msg0="输入你当前使用的密码";
+        	var msg2="密码错误";
+        	var msg7="输入验证码，不区分大小写";
+        	var msg8="验证码不对";
+            $('#accName').focus(function() {
+            	$('#accName').removeClass('error');
+            	$('#tips-name').removeClass('error');
+            	$('#tips-name').removeClass('correct');
+                $('#tips-name').addClass('explain');
+                $('#tips-name').css("display", "block");
+                $('#tips-name').html("<span class=\"ccc-text\">"+msg0+"</span><i></i><em></em><b></b>");
+            }).blur(function() {
+               $('#tips-name').removeClass('explain');
+               initMyRSA();
+               var url = "/ajax_checkPwd.html?pass=" + myRSA($.trim($("#accName").val()));
+                $.get(url, function(data) {
+                    switch(data)
+                    {
+                    	case "true":
+                    	$('#tips-name').addClass('correct');
+                		$('#tips-name').html("");
+                    	break;
+                    	case "false":
+                    	$('#accName').addClass('error');
+		            	$('#tips-name').addClass('error');
+                		$('#tips-name').html("<span class=\"ccc-text\">"+msg2+"</span><i></i><em></em><b></b>");
+                    	break;
+                    	case "101":
+                    	location.href = '/login.html?from=/my/account_reset.html';
+                    	break;
+                    }
+                });
+            });
+            
+             $('#checkcode').focus(function() {
+             	$('#checkcode').removeClass('error');
+            	$('#tips-code').removeClass('error');
+            	$('#tips-code').removeClass('correct');
+                $('#tips-code').addClass('explain');
+                $('#tips-code').css("display", "block");
+                $('#tips-code').html("<span class=\"ccc-text\">"+msg7+"</span><i></i><em></em><b></b>");
+            }).blur(function() {
+               $('#tips-code').removeClass('explain');
+               var url = "/ajax_checkCode.html?code=" + $.trim($("#checkcode").val())+"&t=" + new Date().getTime();;
+                $.get(url, function(data) {
+                    switch(data)
+                    {
+                    	case "true":
+		            	$('#tips-code').addClass('correct');
+                		$('#tips-code').html('');
+                    	break;
+                    	case "false":
+                    	default :
+                    	$('#checkcode').addClass('error');
+		            	$('#tips-code').addClass('error');
+                		$('#tips-code').html("<span class=\"ccc-text\">"+msg8+"</span><i></i><em></em><b></b>");
+                    	break;
+                    }
+                });
+            });
+            
+            $('#nextstep').click(function(){
+            	if($('#tips-code').hasClass('correct')&&$('#tips-name').hasClass('correct')){
+            			 submit();
+            			//showLayer();
+            		}else{
+            			if(!$('#tips-code').hasClass('correct')&&!$('#tips-code').hasClass('error')){$('#checkcode').focus();}
+            			if(!$('#tips-name').hasClass('correct')&&!$('#tips-name').hasClass('error')){$('#accName').focus();}
+            			$('#codeimg').attr('src','/syscode.jpg.jsp?sd='+Math.random());
+            			$('#checkcode').addClass('error');
+            			$('#tips-code').removeClass('correct');
+		            	$('#tips-code').addClass('error');
+                		$('#tips-code').html("<span class=\"ccc-text\">"+msg8+"</span><i></i><em></em><b></b>");
+            		}
+            });
+      });
+      
+      function submit() {
+      		 initMyRSA();
+	           var ajax = {
+					url: "/my/account_verify.html",
+					type: "POST",
+					data: {
+						txtPass: myRSA($.trim($("#accName").val())),
+						txtCode: $.trim($("#checkcode").val())
+					},
+					async: true,
+					success: function(data) {
+						switch (data) {
+							case "100":
+								location.href = '/my/account_resetstep2.html';
+								break;
+							case "101":
+								location.href = '/login.html?from=/my/account_resetpass.html';
+								break;
+							case "102":
+								showTips("你还没有输入密码！","error",7);
+								break;
+							case "103":
+								showTips("你还没有输入验证码！","error",7);
+								break;
+							case "104":
+								showTips("你输入的验证码不正确！","error",7);
+								break;
+							case "105":
+								showTips("你输入的密码不正确！","error",7);
+								break;
+							case "9999":
+								showTips("系统错误,请稍候再试。","error",7);
+								break;
+							default:
+								showTips("未知的返回。","error",7);
+								return;
+						}
+					}
+				}
+				$.ajax(ajax);
+	        }
+    </script>
+	</body>
+</html>

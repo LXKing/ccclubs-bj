@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 公司员工之SQL映射 -->
+	<resultMap id="TbEmployee" class="com.ccclubs.model.TbEmployee">
+		<result property="tbeId" column="tbe_id"/>
+		<result property="tbeName" column="tbe_name"/>
+		<result property="tbeDepart" column="tbe_depart"/>
+		<result property="tbeWeixinFlag" column="tbe_weixin_flag"/>
+		<result property="tbeEditor" column="tbe_editor"/>
+		<result property="tbeRemark" column="tbe_remark"/>
+		<result property="tbeMemo" column="tbe_memo"/>
+		<result property="tbeData" column="tbe_data"/>
+		<result property="tbeUpdateTime" column="tbe_update_time"/>
+		<result property="tbeAddTime" column="tbe_add_time"/>
+		<result property="tbeStatus" column="tbe_status"/>
+	</resultMap>
+		
+	<!-- 获取所有公司员工 -->
+	<select id="getTbEmployeeList" resultMap="TbEmployee">
+		select tb_employee$suffix$.* from tb_employee$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[公司部门]查询-->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<isNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.tbe_depart=tb_department$TbDepartment.suffix$.tbd_id
+			</isNull>
+			<isNotNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.$TbDepartment.on$=tb_department$TbDepartment.suffix$.tbd_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_employee$suffix$.tbe_status!=-1
+		<!-- 多对一外链接[公司部门]查询条件sql片段 -->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<include refid="TbDepartment_part.tb_department_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbEmployee_part.tb_employee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbe_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取公司员工分页 -->
+	<select id="getTbEmployeePage" parameterClass="java.util.HashMap" resultMap="TbEmployee">
+		select tb_employee$suffix$.* from tb_employee$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[公司部门]查询 -->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<isNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.tbe_depart=tb_department$TbDepartment.suffix$.tbd_id
+			</isNull>
+			<isNotNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.$TbDepartment.on$=tb_department$TbDepartment.suffix$.tbd_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_employee$suffix$.tbe_status!=-1
+		<!-- 多对一外链接[公司部门]查询条件sql片段 -->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<include refid="TbDepartment_part.tb_department_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbEmployee_part.tb_employee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbe_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取公司员工总数 -->
+	<select id="getTbEmployeeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_employee$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[公司部门]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<isNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.tbe_depart=tb_department$TbDepartment.suffix$.tbd_id
+			</isNull>
+			<isNotNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.$TbDepartment.on$=tb_department$TbDepartment.suffix$.tbd_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_employee$suffix$.tbe_status!=-1
+		<!-- 多对一外链接[公司部门]查询条件sql片段 -->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<include refid="TbDepartment_part.tb_department_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbEmployee_part.tb_employee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取公司员工 -->
+	<select id="getTbEmployeeById" parameterClass="java.util.HashMap" resultMap="TbEmployee">
+		select tb_employee$suffix$.* from tb_employee$suffix$
+		where tbe_id=#id#
+	</select>
+	
+		
+	<!-- 保存公司员工 -->
+	<insert id="saveTbEmployee"  parameterClass="com.ccclubs.model.TbEmployee">
+		insert into tb_employee$suffix$
+		(
+			tb_employee$suffix$.tbe_name
+			,tb_employee$suffix$.tbe_depart
+			,tb_employee$suffix$.tbe_weixin_flag
+			,tb_employee$suffix$.tbe_editor
+			,tb_employee$suffix$.tbe_remark
+			,tb_employee$suffix$.tbe_memo
+			,tb_employee$suffix$.tbe_data
+			,tb_employee$suffix$.tbe_update_time
+			,tb_employee$suffix$.tbe_add_time
+			,tb_employee$suffix$.tbe_status
+		)
+		values(
+			<isNotNull property="tbeName" prepend="">
+				#tbeName#
+			</isNotNull>
+			<isNull property="tbeName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbeDepart" prepend=",">
+				#tbeDepart#
+			</isNotNull>
+			<isNull property="tbeDepart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeWeixinFlag" prepend=",">
+				#tbeWeixinFlag#
+			</isNotNull>
+			<isNull property="tbeWeixinFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeEditor" prepend=",">
+				#tbeEditor#
+			</isNotNull>
+			<isNull property="tbeEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeRemark" prepend=",">
+				#tbeRemark#
+			</isNotNull>
+			<isNull property="tbeRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeMemo" prepend=",">
+				#tbeMemo#
+			</isNotNull>
+			<isNull property="tbeMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeData" prepend=",">
+				#tbeData#
+			</isNotNull>
+			<isNull property="tbeData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeUpdateTime" prepend=",">
+				#tbeUpdateTime#
+			</isNotNull>
+			<isNull property="tbeUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeAddTime" prepend=",">
+				#tbeAddTime#
+			</isNotNull>
+			<isNull property="tbeAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbeStatus" prepend=",">
+				#tbeStatus#
+			</isNotNull>
+			<isNull property="tbeStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新公司员工 -->
+	<update id="updateTbEmployee"  parameterClass="com.ccclubs.model.TbEmployee">
+		update tb_employee$suffix$ set
+			<isNotNull property="tbeName" prepend="">
+				tb_employee$suffix$.tbe_name = #tbeName#
+			</isNotNull>
+			<isNull property="tbeName" prepend="">
+				tb_employee$suffix$.tbe_name = null
+			</isNull>				
+			<isNotNull property="tbeDepart" prepend=",">
+				tb_employee$suffix$.tbe_depart = #tbeDepart#
+			</isNotNull>
+			<isNull property="tbeDepart" prepend=",">
+				tb_employee$suffix$.tbe_depart = null
+			</isNull>				
+			<isNotNull property="tbeWeixinFlag" prepend=",">
+				tb_employee$suffix$.tbe_weixin_flag = #tbeWeixinFlag#
+			</isNotNull>
+			<isNull property="tbeWeixinFlag" prepend=",">
+				tb_employee$suffix$.tbe_weixin_flag = null
+			</isNull>				
+			<isNotNull property="tbeEditor" prepend=",">
+				tb_employee$suffix$.tbe_editor = #tbeEditor#
+			</isNotNull>
+			<isNull property="tbeEditor" prepend=",">
+				tb_employee$suffix$.tbe_editor = null
+			</isNull>				
+			<isNotNull property="tbeRemark" prepend=",">
+				tb_employee$suffix$.tbe_remark = #tbeRemark#
+			</isNotNull>
+			<isNull property="tbeRemark" prepend=",">
+				tb_employee$suffix$.tbe_remark = null
+			</isNull>				
+			<isNotNull property="tbeMemo" prepend=",">
+				tb_employee$suffix$.tbe_memo = #tbeMemo#
+			</isNotNull>
+			<isNull property="tbeMemo" prepend=",">
+				tb_employee$suffix$.tbe_memo = null
+			</isNull>				
+			<isNotNull property="tbeData" prepend=",">
+				tb_employee$suffix$.tbe_data = #tbeData#
+			</isNotNull>
+			<isNull property="tbeData" prepend=",">
+				tb_employee$suffix$.tbe_data = null
+			</isNull>				
+			<isNotNull property="tbeUpdateTime" prepend=",">
+				tb_employee$suffix$.tbe_update_time = #tbeUpdateTime#
+			</isNotNull>
+			<isNull property="tbeUpdateTime" prepend=",">
+				tb_employee$suffix$.tbe_update_time = null
+			</isNull>				
+			<isNotNull property="tbeAddTime" prepend=",">
+				tb_employee$suffix$.tbe_add_time = #tbeAddTime#
+			</isNotNull>
+			<isNull property="tbeAddTime" prepend=",">
+				tb_employee$suffix$.tbe_add_time = null
+			</isNull>				
+			<isNotNull property="tbeStatus" prepend=",">
+				tb_employee$suffix$.tbe_status = #tbeStatus#
+			</isNotNull>
+			<isNull property="tbeStatus" prepend=",">
+				tb_employee$suffix$.tbe_status = null
+			</isNull>				
+		where
+			tbe_id=#tbeId#
+	</update>
+	
+	<!-- 更新公司员工非空字段 -->
+	<update id="updateTbEmployee$NotNull"  parameterClass="com.ccclubs.model.TbEmployee">
+		update tb_employee$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbeName" prepend=",">
+				tb_employee$suffix$.tbe_name = #tbeName#
+			</isNotNull>		
+			<isNotNull property="tbeDepart" prepend=",">
+				tb_employee$suffix$.tbe_depart = #tbeDepart#
+			</isNotNull>		
+			<isNotNull property="tbeWeixinFlag" prepend=",">
+				tb_employee$suffix$.tbe_weixin_flag = #tbeWeixinFlag#
+			</isNotNull>		
+			<isNotNull property="tbeEditor" prepend=",">
+				tb_employee$suffix$.tbe_editor = #tbeEditor#
+			</isNotNull>		
+			<isNotNull property="tbeRemark" prepend=",">
+				tb_employee$suffix$.tbe_remark = #tbeRemark#
+			</isNotNull>		
+			<isNotNull property="tbeMemo" prepend=",">
+				tb_employee$suffix$.tbe_memo = #tbeMemo#
+			</isNotNull>		
+			<isNotNull property="tbeData" prepend=",">
+				tb_employee$suffix$.tbe_data = #tbeData#
+			</isNotNull>		
+			<isNotNull property="tbeUpdateTime" prepend=",">
+				tb_employee$suffix$.tbe_update_time = #tbeUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbeAddTime" prepend=",">
+				tb_employee$suffix$.tbe_add_time = #tbeAddTime#
+			</isNotNull>		
+			<isNotNull property="tbeStatus" prepend=",">
+				tb_employee$suffix$.tbe_status = #tbeStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbe_id=#tbeId#
+	</update>
+	
+
+	<!-- 根据ID删除一个公司员工 -->
+	<delete id="deleteTbEmployeeById" parameterClass="java.util.HashMap">
+		delete from tb_employee$suffix$ where tbe_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个公司员工 -->
+	<update id="removeTbEmployeeById" parameterClass="java.util.HashMap">
+		update tb_employee$suffix$ set  tb_employee$suffix$.tbe_status=-1  where tbe_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新公司员工 -->
+	<update id="updateTbEmployeeBy"  parameterClass="java.util.HashMap">
+		update tb_employee$suffix$ set		
+			tbe_id=tbe_id
+			<isNotNull property="V_tbeId" prepend=",">
+				tb_employee$suffix$.tbe_id = #V_tbeId#
+			</isNotNull>		
+			<isNotNull property="V_tbeName" prepend=",">
+				tb_employee$suffix$.tbe_name = #V_tbeName#
+			</isNotNull>		
+			<isNotNull property="V_tbeDepart" prepend=",">
+				tb_employee$suffix$.tbe_depart = #V_tbeDepart#
+			</isNotNull>		
+			<isNotNull property="V_tbeWeixinFlag" prepend=",">
+				tb_employee$suffix$.tbe_weixin_flag = #V_tbeWeixinFlag#
+			</isNotNull>		
+			<isNotNull property="V_tbeEditor" prepend=",">
+				tb_employee$suffix$.tbe_editor = #V_tbeEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbeRemark" prepend=",">
+				tb_employee$suffix$.tbe_remark = #V_tbeRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbeMemo" prepend=",">
+				tb_employee$suffix$.tbe_memo = #V_tbeMemo#
+			</isNotNull>		
+			<isNotNull property="V_tbeData" prepend=",">
+				tb_employee$suffix$.tbe_data = #V_tbeData#
+			</isNotNull>		
+			<isNotNull property="V_tbeUpdateTime" prepend=",">
+				tb_employee$suffix$.tbe_update_time = #V_tbeUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbeAddTime" prepend=",">
+				tb_employee$suffix$.tbe_add_time = #V_tbeAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbeStatus" prepend=",">
+				tb_employee$suffix$.tbe_status = #V_tbeStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[公司部门]查询-->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<isNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.tbe_depart=tb_department$TbDepartment.suffix$.tbd_id
+			</isNull>
+			<isNotNull property="TbDepartment.on">
+				left join tb_department tb_department$TbDepartment.suffix$ on tb_employee$suffix$.$TbDepartment.on$=tb_department$TbDepartment.suffix$.tbd_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_employee$suffix$.tbe_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[公司部门]查询条件sql片段 -->
+		<isNotNull property="TbeDepart"><!-- 调用一下TbeDepart，把TbDepartment指向TbeDepart --></isNotNull>
+		<isNotNull property="TbDepartment">
+			<include refid="TbDepartment_part.tb_department_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbEmployee_part.tb_employee_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除公司员工 -->
+	<update id="deleteTbEmployeeBy"  parameterClass="java.util.HashMap">
+		delete from tb_employee$suffix$ where 
+		tb_employee$suffix$.tbe_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbEmployee_part.tb_employee_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsEmail_part">	
+	<!-- 邮件内容条件sql片段  -->
+	<sql id="cs_email_dynamic">
+		<dynamic>
+			<isNotEmpty property="cseId" prepend="and">
+			    $cseIdNot$ cs_email$suffix$.cse_id = #cseId#
+			</isNotEmpty>
+			<isNotNull property="cseIdNot" prepend="and">
+				<isEmpty property="cseId">
+				$cseIdNot$ cs_email$suffix$.cse_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseTo" prepend="and">			    
+			    (<isNotNull property="cseToNot">
+			    cs_email$suffix$.cse_to is null or length(cs_email$suffix$.cse_to) &lt; 1 or
+			    </isNotNull>$cseToNot$ cs_email$suffix$.cse_to like #cseTo#)
+			</isNotEmpty>
+			<isNotNull property="cseToNot" prepend="and">
+				<isEmpty property="cseTo">
+				$cseToNot$ (cs_email$suffix$.cse_to is null or length(cs_email$suffix$.cse_to) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseContent" prepend="and">			    
+			    (<isNotNull property="cseContentNot">
+			    cs_email$suffix$.cse_content is null or length(cs_email$suffix$.cse_content) &lt; 1 or
+			    </isNotNull>$cseContentNot$ cs_email$suffix$.cse_content like #cseContent#)
+			</isNotEmpty>
+			<isNotNull property="cseContentNot" prepend="and">
+				<isEmpty property="cseContent">
+				$cseContentNot$ (cs_email$suffix$.cse_content is null or length(cs_email$suffix$.cse_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseFrom" prepend="and">			    
+			    (<isNotNull property="cseFromNot">
+			    cs_email$suffix$.cse_from is null or length(cs_email$suffix$.cse_from) &lt; 1 or
+			    </isNotNull>$cseFromNot$ cs_email$suffix$.cse_from like #cseFrom#)
+			</isNotEmpty>
+			<isNotNull property="cseFromNot" prepend="and">
+				<isEmpty property="cseFrom">
+				$cseFromNot$ (cs_email$suffix$.cse_from is null or length(cs_email$suffix$.cse_from) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseSendTimeStart" prepend="and">
+			    $cseSendTimeNot$   (cs_email$suffix$.cse_send_time &gt;= #cseSendTimeStart#
+			   <isEmpty property="cseSendTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cseSendTimeEnd" prepend="and">
+				<isEmpty property="cseSendTimeStart">$cseSendTimeNot$   (</isEmpty>
+			    cs_email$suffix$.cse_send_time &lt;= #cseSendTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cseSendTime" prepend="and">
+			    $cseSendTimeNot$ cs_email$suffix$.cse_send_time = #cseSendTime#
+			</isNotEmpty>
+			<isNotNull property="cseSendTimeNot" prepend="and">
+				<isEmpty property="cseSendTimeStart"><isEmpty property="cseSendTimeEnd"><isEmpty property="cseSendTime">
+				$cseSendTimeNot$ cs_email$suffix$.cse_send_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseAddTimeStart" prepend="and">
+			    $cseAddTimeNot$   (cs_email$suffix$.cse_add_time &gt;= #cseAddTimeStart#
+			   <isEmpty property="cseAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cseAddTimeEnd" prepend="and">
+				<isEmpty property="cseAddTimeStart">$cseAddTimeNot$   (</isEmpty>
+			    cs_email$suffix$.cse_add_time &lt;= #cseAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cseAddTime" prepend="and">
+			    $cseAddTimeNot$ cs_email$suffix$.cse_add_time = #cseAddTime#
+			</isNotEmpty>
+			<isNotNull property="cseAddTimeNot" prepend="and">
+				<isEmpty property="cseAddTimeStart"><isEmpty property="cseAddTimeEnd"><isEmpty property="cseAddTime">
+				$cseAddTimeNot$ cs_email$suffix$.cse_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cseStatus" prepend="and">
+			    $cseStatusNot$ cs_email$suffix$.cse_status = #cseStatus#
+			</isNotEmpty>
+			<isNotNull property="cseStatusNot" prepend="and">
+				<isEmpty property="cseStatus">
+				$cseStatusNot$ cs_email$suffix$.cse_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 邮件内容left join 条件sql片段 -->
+	<sql id="cs_email_join">
+		<dynamic>
+			<isNotEmpty property="CsEmail.cseId" prepend="and">
+			    $CsEmail.cseIdNot$ cs_email$CsEmail.suffix$.cse_id = #CsEmail.cseId#
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseIdNot" prepend="and">
+				<isEmpty property="CsEmail.cseId">
+				$cseIdNot$ cs_email$CsEmail.suffix$.cse_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEmail.cseTo" prepend="and">
+				(<isNotNull property="CsEmail.cseToNot">
+			    cs_email$CsEmail.suffix$.cse_to is null or length(cs_email$CsEmail.suffix$.cse_to) &lt; 1 or
+			    </isNotNull>$CsEmail.cseToNot$ cs_email$CsEmail.suffix$.cse_to like #CsEmail.cseTo#)
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseToNot" prepend="and">
+				<isEmpty property="CsEmail.cseTo">
+				$cseToNot$ (cs_email$CsEmail.suffix$.cse_to is null or length(cs_email$CsEmail.suffix$.cse_to) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEmail.cseContent" prepend="and">
+				(<isNotNull property="CsEmail.cseContentNot">
+			    cs_email$CsEmail.suffix$.cse_content is null or length(cs_email$CsEmail.suffix$.cse_content) &lt; 1 or
+			    </isNotNull>$CsEmail.cseContentNot$ cs_email$CsEmail.suffix$.cse_content like #CsEmail.cseContent#)
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseContentNot" prepend="and">
+				<isEmpty property="CsEmail.cseContent">
+				$cseContentNot$ (cs_email$CsEmail.suffix$.cse_content is null or length(cs_email$CsEmail.suffix$.cse_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEmail.cseFrom" prepend="and">
+				(<isNotNull property="CsEmail.cseFromNot">
+			    cs_email$CsEmail.suffix$.cse_from is null or length(cs_email$CsEmail.suffix$.cse_from) &lt; 1 or
+			    </isNotNull>$CsEmail.cseFromNot$ cs_email$CsEmail.suffix$.cse_from like #CsEmail.cseFrom#)
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseFromNot" prepend="and">
+				<isEmpty property="CsEmail.cseFrom">
+				$cseFromNot$ (cs_email$CsEmail.suffix$.cse_from is null or length(cs_email$CsEmail.suffix$.cse_from) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEmail.cseSendTimeStart" prepend="and">
+			    $CsEmail.cseSendTimeNot$   (cs_email$CsEmail.suffix$.cse_send_time &gt;= #CsEmail.cseSendTimeStart#
+			   <isEmpty property="CsEmail.cseSendTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEmail.cseSendTimeEnd" prepend="and">
+				<isEmpty property="CsEmail.cseSendTimeStart">$CsEmail.cseSendTimeNot$   (</isEmpty>
+			    cs_email$CsEmail.suffix$.cse_send_time &lt;= #CsEmail.cseSendTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEmail.cseSendTime" prepend="and">
+			    $CsEmail.cseSendTimeNot$ cs_email$CsEmail.suffix$.cse_send_time = #CsEmail.cseSendTime#
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseSendTimeNot" prepend="and">
+				<isEmpty property="CsEmail.cseSendTimeStart"><isEmpty property="CsEmail.cseSendTimeEnd"><isEmpty property="CsEmail.cseSendTime">
+				$cseSendTimeNot$ cs_email$CsEmail.suffix$.cse_send_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEmail.cseAddTimeStart" prepend="and">
+			    $CsEmail.cseAddTimeNot$   (cs_email$CsEmail.suffix$.cse_add_time &gt;= #CsEmail.cseAddTimeStart#
+			   <isEmpty property="CsEmail.cseAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEmail.cseAddTimeEnd" prepend="and">
+				<isEmpty property="CsEmail.cseAddTimeStart">$CsEmail.cseAddTimeNot$   (</isEmpty>
+			    cs_email$CsEmail.suffix$.cse_add_time &lt;= #CsEmail.cseAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEmail.cseAddTime" prepend="and">
+			    $CsEmail.cseAddTimeNot$ cs_email$CsEmail.suffix$.cse_add_time = #CsEmail.cseAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseAddTimeNot" prepend="and">
+				<isEmpty property="CsEmail.cseAddTimeStart"><isEmpty property="CsEmail.cseAddTimeEnd"><isEmpty property="CsEmail.cseAddTime">
+				$cseAddTimeNot$ cs_email$CsEmail.suffix$.cse_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEmail.cseStatus" prepend="and">
+			    $CsEmail.cseStatusNot$ cs_email$CsEmail.suffix$.cse_status = #CsEmail.cseStatus#
+			</isNotEmpty>
+			<isNotNull property="CsEmail.cseStatusNot" prepend="and">
+				<isEmpty property="CsEmail.cseStatus">
+				$cseStatusNot$ cs_email$CsEmail.suffix$.cse_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

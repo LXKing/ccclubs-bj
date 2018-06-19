@@ -1,0 +1,37 @@
+<div class="ccc-res-pagenav">
+	<s:if test="#request.page.total>0">
+		<div class="ccc-res-page next">
+			<div class="bg"></div>
+			<a href="?page=0&${lz:querys("UTF-8","page")}">首页</a>
+		</div>
+		<s:if test="#request.page.prev==true">
+			<div class="ccc-res-page next">
+				<div class="bg"></div>
+				<a href="?page=${page.index-1}&${lz:querys("UTF-8","page")}">上一页</a>
+			</div>
+		</s:if>
+
+		<!-- 取前后3页 -->
+		<s:bean name="org.apache.struts2.util.Counter" id="counter">
+			<s:param name="first" value="(#request.page.index-3)<0?0:(#request.page.index-3)"/>
+			 <s:param name="last" value="(#request.page.index+3)>(#request.page.total-1)?(#request.page.total-1):(#request.page.index+3)" />
+				<s:iterator>
+					<div class="ccc-res-page ${counter.current==(page.index+1) ? 'cur':''}">
+						<div class="bg"></div>
+						<a href="?page=${counter.current-1}&${lz:querys("UTF-8","page")}">${counter.current}</a>
+					</div>
+				</s:iterator>
+		</s:bean>
+
+		<s:if test="#request.page.next==true">
+			<div class="ccc-res-page next">
+				<div class="bg"></div>
+				<a href="?page=${page.index+1}&${lz:querys("UTF-8","page")}">下一页</a>
+			</div>
+		</s:if>
+		<div class="ccc-res-page next">
+			<div class="bg"></div>
+			<a href="?page=${page.total-1}&${lz:querys("UTF-8","page")}">未页</a>
+		</div>
+	</s:if>
+</div>

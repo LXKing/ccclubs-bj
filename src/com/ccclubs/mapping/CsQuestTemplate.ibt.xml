@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 问卷模板之SQL映射 -->
+	<resultMap id="CsQuestTemplate" class="com.ccclubs.model.CsQuestTemplate">
+		<result property="csqtId" column="csqt_id"/>
+		<result property="csqtName" column="csqt_name"/>
+		<result property="csqtType" column="csqt_type"/>
+		<result property="csqtContent" column="csqt_content"/>
+		<result property="csqtFlag" column="csqt_flag"/>
+		<result property="csqtEditor" column="csqt_editor"/>
+		<result property="csqtUpdateTime" column="csqt_update_time"/>
+		<result property="csqtAddTime" column="csqt_add_time"/>
+		<result property="csqtStatus" column="csqt_status"/>
+	</resultMap>
+		
+	<!-- 获取所有问卷模板 -->
+	<select id="getCsQuestTemplateList" resultMap="CsQuestTemplate">
+		select cs_quest_template$suffix$.* from cs_quest_template$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_quest_template$suffix$.csqt_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsQuestTemplate_part.cs_quest_template_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csqt_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取问卷模板分页 -->
+	<select id="getCsQuestTemplatePage" parameterClass="java.util.HashMap" resultMap="CsQuestTemplate">
+		select cs_quest_template$suffix$.* from cs_quest_template$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_quest_template$suffix$.csqt_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsQuestTemplate_part.cs_quest_template_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csqt_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取问卷模板总数 -->
+	<select id="getCsQuestTemplateEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_quest_template$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_quest_template$suffix$.csqt_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsQuestTemplate_part.cs_quest_template_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取问卷模板 -->
+	<select id="getCsQuestTemplateById" parameterClass="java.util.HashMap" resultMap="CsQuestTemplate">
+		select cs_quest_template$suffix$.* from cs_quest_template$suffix$
+		where csqt_id=#id#
+	</select>
+	
+		
+	<!-- 保存问卷模板 -->
+	<insert id="saveCsQuestTemplate"  parameterClass="com.ccclubs.model.CsQuestTemplate">
+		insert into cs_quest_template$suffix$
+		(
+			cs_quest_template$suffix$.csqt_name
+			,cs_quest_template$suffix$.csqt_type
+			,cs_quest_template$suffix$.csqt_content
+			,cs_quest_template$suffix$.csqt_flag
+			,cs_quest_template$suffix$.csqt_editor
+			,cs_quest_template$suffix$.csqt_update_time
+			,cs_quest_template$suffix$.csqt_add_time
+			,cs_quest_template$suffix$.csqt_status
+		)
+		values(
+			<isNotNull property="csqtName" prepend="">
+				#csqtName#
+			</isNotNull>
+			<isNull property="csqtName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csqtType" prepend=",">
+				#csqtType#
+			</isNotNull>
+			<isNull property="csqtType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csqtContent" prepend=",">
+				#csqtContent#
+			</isNotNull>
+			<isNull property="csqtContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csqtFlag" prepend=",">
+				#csqtFlag#
+			</isNotNull>
+			<isNull property="csqtFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csqtEditor" prepend=",">
+				#csqtEditor#
+			</isNotNull>
+			<isNull property="csqtEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csqtUpdateTime" prepend=",">
+				#csqtUpdateTime#
+			</isNotNull>
+			<isNull property="csqtUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csqtAddTime" prepend=",">
+				#csqtAddTime#
+			</isNotNull>
+			<isNull property="csqtAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csqtStatus" prepend=",">
+				#csqtStatus#
+			</isNotNull>
+			<isNull property="csqtStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新问卷模板 -->
+	<update id="updateCsQuestTemplate"  parameterClass="com.ccclubs.model.CsQuestTemplate">
+		update cs_quest_template$suffix$ set
+			<isNotNull property="csqtName" prepend="">
+				cs_quest_template$suffix$.csqt_name = #csqtName#
+			</isNotNull>
+			<isNull property="csqtName" prepend="">
+				cs_quest_template$suffix$.csqt_name = null
+			</isNull>				
+			<isNotNull property="csqtType" prepend=",">
+				cs_quest_template$suffix$.csqt_type = #csqtType#
+			</isNotNull>
+			<isNull property="csqtType" prepend=",">
+				cs_quest_template$suffix$.csqt_type = null
+			</isNull>				
+			<isNotNull property="csqtContent" prepend=",">
+				cs_quest_template$suffix$.csqt_content = #csqtContent#
+			</isNotNull>
+			<isNull property="csqtContent" prepend=",">
+				cs_quest_template$suffix$.csqt_content = null
+			</isNull>				
+			<isNotNull property="csqtFlag" prepend=",">
+				cs_quest_template$suffix$.csqt_flag = #csqtFlag#
+			</isNotNull>
+			<isNull property="csqtFlag" prepend=",">
+				cs_quest_template$suffix$.csqt_flag = null
+			</isNull>				
+			<isNotNull property="csqtEditor" prepend=",">
+				cs_quest_template$suffix$.csqt_editor = #csqtEditor#
+			</isNotNull>
+			<isNull property="csqtEditor" prepend=",">
+				cs_quest_template$suffix$.csqt_editor = null
+			</isNull>				
+			<isNotNull property="csqtUpdateTime" prepend=",">
+				cs_quest_template$suffix$.csqt_update_time = #csqtUpdateTime#
+			</isNotNull>
+			<isNull property="csqtUpdateTime" prepend=",">
+				cs_quest_template$suffix$.csqt_update_time = null
+			</isNull>				
+			<isNotNull property="csqtAddTime" prepend=",">
+				cs_quest_template$suffix$.csqt_add_time = #csqtAddTime#
+			</isNotNull>
+			<isNull property="csqtAddTime" prepend=",">
+				cs_quest_template$suffix$.csqt_add_time = null
+			</isNull>				
+			<isNotNull property="csqtStatus" prepend=",">
+				cs_quest_template$suffix$.csqt_status = #csqtStatus#
+			</isNotNull>
+			<isNull property="csqtStatus" prepend=",">
+				cs_quest_template$suffix$.csqt_status = null
+			</isNull>				
+		where
+			csqt_id=#csqtId#
+	</update>
+	
+	<!-- 更新问卷模板非空字段 -->
+	<update id="updateCsQuestTemplate$NotNull"  parameterClass="com.ccclubs.model.CsQuestTemplate">
+		update cs_quest_template$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csqtName" prepend=",">
+				cs_quest_template$suffix$.csqt_name = #csqtName#
+			</isNotNull>		
+			<isNotNull property="csqtType" prepend=",">
+				cs_quest_template$suffix$.csqt_type = #csqtType#
+			</isNotNull>		
+			<isNotNull property="csqtContent" prepend=",">
+				cs_quest_template$suffix$.csqt_content = #csqtContent#
+			</isNotNull>		
+			<isNotNull property="csqtFlag" prepend=",">
+				cs_quest_template$suffix$.csqt_flag = #csqtFlag#
+			</isNotNull>		
+			<isNotNull property="csqtEditor" prepend=",">
+				cs_quest_template$suffix$.csqt_editor = #csqtEditor#
+			</isNotNull>		
+			<isNotNull property="csqtUpdateTime" prepend=",">
+				cs_quest_template$suffix$.csqt_update_time = #csqtUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csqtAddTime" prepend=",">
+				cs_quest_template$suffix$.csqt_add_time = #csqtAddTime#
+			</isNotNull>		
+			<isNotNull property="csqtStatus" prepend=",">
+				cs_quest_template$suffix$.csqt_status = #csqtStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csqt_id=#csqtId#
+	</update>
+	
+
+	<!-- 根据ID删除一个问卷模板 -->
+	<delete id="deleteCsQuestTemplateById" parameterClass="java.util.HashMap">
+		delete from cs_quest_template$suffix$ where csqt_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个问卷模板 -->
+	<update id="removeCsQuestTemplateById" parameterClass="java.util.HashMap">
+		update cs_quest_template$suffix$ set  cs_quest_template$suffix$.csqt_status=-1  where csqt_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新问卷模板 -->
+	<update id="updateCsQuestTemplateBy"  parameterClass="java.util.HashMap">
+		update cs_quest_template$suffix$ set		
+			csqt_id=csqt_id
+			<isNotNull property="V_csqtId" prepend=",">
+				cs_quest_template$suffix$.csqt_id = #V_csqtId#
+			</isNotNull>		
+			<isNotNull property="V_csqtName" prepend=",">
+				cs_quest_template$suffix$.csqt_name = #V_csqtName#
+			</isNotNull>		
+			<isNotNull property="V_csqtType" prepend=",">
+				cs_quest_template$suffix$.csqt_type = #V_csqtType#
+			</isNotNull>		
+			<isNotNull property="V_csqtContent" prepend=",">
+				cs_quest_template$suffix$.csqt_content = #V_csqtContent#
+			</isNotNull>		
+			<isNotNull property="V_csqtFlag" prepend=",">
+				cs_quest_template$suffix$.csqt_flag = #V_csqtFlag#
+			</isNotNull>		
+			<isNotNull property="V_csqtEditor" prepend=",">
+				cs_quest_template$suffix$.csqt_editor = #V_csqtEditor#
+			</isNotNull>		
+			<isNotNull property="V_csqtUpdateTime" prepend=",">
+				cs_quest_template$suffix$.csqt_update_time = #V_csqtUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csqtAddTime" prepend=",">
+				cs_quest_template$suffix$.csqt_add_time = #V_csqtAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csqtStatus" prepend=",">
+				cs_quest_template$suffix$.csqt_status = #V_csqtStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_quest_template$suffix$.csqt_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsQuestTemplate_part.cs_quest_template_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除问卷模板 -->
+	<update id="deleteCsQuestTemplateBy"  parameterClass="java.util.HashMap">
+		delete from cs_quest_template$suffix$ where 
+		cs_quest_template$suffix$.csqt_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsQuestTemplate_part.cs_quest_template_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

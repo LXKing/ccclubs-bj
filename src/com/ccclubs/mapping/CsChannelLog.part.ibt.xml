@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsChannelLog_part">	
+	<!-- 渠道跟踪维护条件sql片段  -->
+	<sql id="cs_channel_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="csclId" prepend="and">
+			    $csclIdNot$ cs_channel_log$suffix$.cscl_id = #csclId#
+			</isNotEmpty>
+			<isNotNull property="csclIdNot" prepend="and">
+				<isEmpty property="csclId">
+				$csclIdNot$ cs_channel_log$suffix$.cscl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_channel_log$suffix$.cscl_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csclHost" prepend="and">
+			    $csclHostNot$ cs_channel_log$suffix$.cscl_host = #csclHost#
+			</isNotEmpty>
+			<isNotNull property="csclHostNot" prepend="and">
+				<isEmpty property="csclHost">
+				$csclHostNot$ cs_channel_log$suffix$.cscl_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csclTitle" prepend="and">			    
+			    (<isNotNull property="csclTitleNot">
+			    cs_channel_log$suffix$.cscl_title is null or length(cs_channel_log$suffix$.cscl_title) &lt; 1 or
+			    </isNotNull>$csclTitleNot$ cs_channel_log$suffix$.cscl_title like #csclTitle#)
+			</isNotEmpty>
+			<isNotNull property="csclTitleNot" prepend="and">
+				<isEmpty property="csclTitle">
+				$csclTitleNot$ (cs_channel_log$suffix$.cscl_title is null or length(cs_channel_log$suffix$.cscl_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csclPlan" prepend="and">
+			    $csclPlanNot$ cs_channel_log$suffix$.cscl_plan = #csclPlan#
+			</isNotEmpty>
+			<isNotNull property="csclPlanNot" prepend="and">
+				<isEmpty property="csclPlan">
+				$csclPlanNot$ cs_channel_log$suffix$.cscl_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csclProfile" prepend="and">			    
+			    (<isNotNull property="csclProfileNot">
+			    cs_channel_log$suffix$.cscl_profile is null or length(cs_channel_log$suffix$.cscl_profile) &lt; 1 or
+			    </isNotNull>$csclProfileNot$ cs_channel_log$suffix$.cscl_profile like #csclProfile#)
+			</isNotEmpty>
+			<isNotNull property="csclProfileNot" prepend="and">
+				<isEmpty property="csclProfile">
+				$csclProfileNot$ (cs_channel_log$suffix$.cscl_profile is null or length(cs_channel_log$suffix$.cscl_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csclUser" prepend="and">
+			    $csclUserNot$ cs_channel_log$suffix$.cscl_user = #csclUser#
+			</isNotEmpty>
+			<isNotNull property="csclUserNot" prepend="and">
+				<isEmpty property="csclUser">
+				$csclUserNot$ cs_channel_log$suffix$.cscl_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csclUpdateTimeStart" prepend="and">
+			    $csclUpdateTimeNot$   (cs_channel_log$suffix$.cscl_update_time &gt;= #csclUpdateTimeStart#
+			   <isEmpty property="csclUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csclUpdateTimeEnd" prepend="and">
+				<isEmpty property="csclUpdateTimeStart">$csclUpdateTimeNot$   (</isEmpty>
+			    cs_channel_log$suffix$.cscl_update_time &lt;= #csclUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csclUpdateTime" prepend="and">
+			    $csclUpdateTimeNot$ cs_channel_log$suffix$.cscl_update_time = #csclUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csclUpdateTimeNot" prepend="and">
+				<isEmpty property="csclUpdateTimeStart"><isEmpty property="csclUpdateTimeEnd"><isEmpty property="csclUpdateTime">
+				$csclUpdateTimeNot$ cs_channel_log$suffix$.cscl_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csclAddTimeStart" prepend="and">
+			    $csclAddTimeNot$   (cs_channel_log$suffix$.cscl_add_time &gt;= #csclAddTimeStart#
+			   <isEmpty property="csclAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csclAddTimeEnd" prepend="and">
+				<isEmpty property="csclAddTimeStart">$csclAddTimeNot$   (</isEmpty>
+			    cs_channel_log$suffix$.cscl_add_time &lt;= #csclAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csclAddTime" prepend="and">
+			    $csclAddTimeNot$ cs_channel_log$suffix$.cscl_add_time = #csclAddTime#
+			</isNotEmpty>
+			<isNotNull property="csclAddTimeNot" prepend="and">
+				<isEmpty property="csclAddTimeStart"><isEmpty property="csclAddTimeEnd"><isEmpty property="csclAddTime">
+				$csclAddTimeNot$ cs_channel_log$suffix$.cscl_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csclStatus" prepend="and">
+			    $csclStatusNot$ cs_channel_log$suffix$.cscl_status = #csclStatus#
+			</isNotEmpty>
+			<isNotNull property="csclStatusNot" prepend="and">
+				<isEmpty property="csclStatus">
+				$csclStatusNot$ cs_channel_log$suffix$.cscl_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 渠道跟踪维护left join 条件sql片段 -->
+	<sql id="cs_channel_log_join">
+		<dynamic>
+			<isNotEmpty property="CsChannelLog.csclId" prepend="and">
+			    $CsChannelLog.csclIdNot$ cs_channel_log$CsChannelLog.suffix$.cscl_id = #CsChannelLog.csclId#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclIdNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclId">
+				$csclIdNot$ cs_channel_log$CsChannelLog.suffix$.cscl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_channel_log$CsChannelLog.suffix$.cscl_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsChannelLog.csclHost" prepend="and">
+			    $CsChannelLog.csclHostNot$ cs_channel_log$CsChannelLog.suffix$.cscl_host = #CsChannelLog.csclHost#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclHostNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclHost">
+				$csclHostNot$ cs_channel_log$CsChannelLog.suffix$.cscl_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclTitle" prepend="and">
+				(<isNotNull property="CsChannelLog.csclTitleNot">
+			    cs_channel_log$CsChannelLog.suffix$.cscl_title is null or length(cs_channel_log$CsChannelLog.suffix$.cscl_title) &lt; 1 or
+			    </isNotNull>$CsChannelLog.csclTitleNot$ cs_channel_log$CsChannelLog.suffix$.cscl_title like #CsChannelLog.csclTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclTitleNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclTitle">
+				$csclTitleNot$ (cs_channel_log$CsChannelLog.suffix$.cscl_title is null or length(cs_channel_log$CsChannelLog.suffix$.cscl_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclPlan" prepend="and">
+			    $CsChannelLog.csclPlanNot$ cs_channel_log$CsChannelLog.suffix$.cscl_plan = #CsChannelLog.csclPlan#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclPlanNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclPlan">
+				$csclPlanNot$ cs_channel_log$CsChannelLog.suffix$.cscl_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclProfile" prepend="and">
+				(<isNotNull property="CsChannelLog.csclProfileNot">
+			    cs_channel_log$CsChannelLog.suffix$.cscl_profile is null or length(cs_channel_log$CsChannelLog.suffix$.cscl_profile) &lt; 1 or
+			    </isNotNull>$CsChannelLog.csclProfileNot$ cs_channel_log$CsChannelLog.suffix$.cscl_profile like #CsChannelLog.csclProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclProfileNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclProfile">
+				$csclProfileNot$ (cs_channel_log$CsChannelLog.suffix$.cscl_profile is null or length(cs_channel_log$CsChannelLog.suffix$.cscl_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclUser" prepend="and">
+			    $CsChannelLog.csclUserNot$ cs_channel_log$CsChannelLog.suffix$.cscl_user = #CsChannelLog.csclUser#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclUserNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclUser">
+				$csclUserNot$ cs_channel_log$CsChannelLog.suffix$.cscl_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclUpdateTimeStart" prepend="and">
+			    $CsChannelLog.csclUpdateTimeNot$   (cs_channel_log$CsChannelLog.suffix$.cscl_update_time &gt;= #CsChannelLog.csclUpdateTimeStart#
+			   <isEmpty property="CsChannelLog.csclUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChannelLog.csclUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsChannelLog.csclUpdateTimeStart">$CsChannelLog.csclUpdateTimeNot$   (</isEmpty>
+			    cs_channel_log$CsChannelLog.suffix$.cscl_update_time &lt;= #CsChannelLog.csclUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChannelLog.csclUpdateTime" prepend="and">
+			    $CsChannelLog.csclUpdateTimeNot$ cs_channel_log$CsChannelLog.suffix$.cscl_update_time = #CsChannelLog.csclUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclUpdateTimeNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclUpdateTimeStart"><isEmpty property="CsChannelLog.csclUpdateTimeEnd"><isEmpty property="CsChannelLog.csclUpdateTime">
+				$csclUpdateTimeNot$ cs_channel_log$CsChannelLog.suffix$.cscl_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclAddTimeStart" prepend="and">
+			    $CsChannelLog.csclAddTimeNot$   (cs_channel_log$CsChannelLog.suffix$.cscl_add_time &gt;= #CsChannelLog.csclAddTimeStart#
+			   <isEmpty property="CsChannelLog.csclAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChannelLog.csclAddTimeEnd" prepend="and">
+				<isEmpty property="CsChannelLog.csclAddTimeStart">$CsChannelLog.csclAddTimeNot$   (</isEmpty>
+			    cs_channel_log$CsChannelLog.suffix$.cscl_add_time &lt;= #CsChannelLog.csclAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChannelLog.csclAddTime" prepend="and">
+			    $CsChannelLog.csclAddTimeNot$ cs_channel_log$CsChannelLog.suffix$.cscl_add_time = #CsChannelLog.csclAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclAddTimeNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclAddTimeStart"><isEmpty property="CsChannelLog.csclAddTimeEnd"><isEmpty property="CsChannelLog.csclAddTime">
+				$csclAddTimeNot$ cs_channel_log$CsChannelLog.suffix$.cscl_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChannelLog.csclStatus" prepend="and">
+			    $CsChannelLog.csclStatusNot$ cs_channel_log$CsChannelLog.suffix$.cscl_status = #CsChannelLog.csclStatus#
+			</isNotEmpty>
+			<isNotNull property="CsChannelLog.csclStatusNot" prepend="and">
+				<isEmpty property="CsChannelLog.csclStatus">
+				$csclStatusNot$ cs_channel_log$CsChannelLog.suffix$.cscl_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

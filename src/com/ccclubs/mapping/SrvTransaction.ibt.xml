@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 数据事务之SQL映射 -->
+	<resultMap id="SrvTransaction" class="com.ccclubs.model.SrvTransaction">
+		<result property="stId" column="st_id"/>
+		<result property="stEntry" column="st_entry"/>
+		<result property="stDetails" column="st_details"/>
+		<result property="stModels" column="st_models"/>
+	</resultMap>
+		
+	<!-- 获取所有数据事务 -->
+	<select id="getSrvTransactionList" resultMap="SrvTransaction">
+		select srv_transaction$suffix$.* from srv_transaction$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvTransaction_part.srv_transaction_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by st_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取数据事务分页 -->
+	<select id="getSrvTransactionPage" parameterClass="java.util.HashMap" resultMap="SrvTransaction">
+		select srv_transaction$suffix$.* from srv_transaction$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvTransaction_part.srv_transaction_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by st_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取数据事务总数 -->
+	<select id="getSrvTransactionEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_transaction$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvTransaction_part.srv_transaction_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取数据事务 -->
+	<select id="getSrvTransactionById" parameterClass="java.util.HashMap" resultMap="SrvTransaction">
+		select srv_transaction$suffix$.* from srv_transaction$suffix$
+		where st_id=#id#
+	</select>
+	
+		
+	<!-- 保存数据事务 -->
+	<insert id="saveSrvTransaction"  parameterClass="com.ccclubs.model.SrvTransaction">
+		insert into srv_transaction$suffix$
+		(
+			srv_transaction$suffix$.st_entry
+			,srv_transaction$suffix$.st_details
+			,srv_transaction$suffix$.st_models
+		)
+		values(
+			<isNotNull property="stEntry" prepend="">
+				#stEntry#
+			</isNotNull>
+			<isNull property="stEntry" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="stDetails" prepend=",">
+				#stDetails#
+			</isNotNull>
+			<isNull property="stDetails" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="stModels" prepend=",">
+				#stModels#
+			</isNotNull>
+			<isNull property="stModels" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新数据事务 -->
+	<update id="updateSrvTransaction"  parameterClass="com.ccclubs.model.SrvTransaction">
+		update srv_transaction$suffix$ set
+			<isNotNull property="stEntry" prepend="">
+				srv_transaction$suffix$.st_entry = #stEntry#
+			</isNotNull>
+			<isNull property="stEntry" prepend="">
+				srv_transaction$suffix$.st_entry = null
+			</isNull>				
+			<isNotNull property="stDetails" prepend=",">
+				srv_transaction$suffix$.st_details = #stDetails#
+			</isNotNull>
+			<isNull property="stDetails" prepend=",">
+				srv_transaction$suffix$.st_details = null
+			</isNull>				
+			<isNotNull property="stModels" prepend=",">
+				srv_transaction$suffix$.st_models = #stModels#
+			</isNotNull>
+			<isNull property="stModels" prepend=",">
+				srv_transaction$suffix$.st_models = null
+			</isNull>				
+		where
+			st_id=#stId#
+	</update>
+	
+	<!-- 更新数据事务非空字段 -->
+	<update id="updateSrvTransaction$NotNull"  parameterClass="com.ccclubs.model.SrvTransaction">
+		update srv_transaction$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="stEntry" prepend=",">
+				srv_transaction$suffix$.st_entry = #stEntry#
+			</isNotNull>		
+			<isNotNull property="stDetails" prepend=",">
+				srv_transaction$suffix$.st_details = #stDetails#
+			</isNotNull>		
+			<isNotNull property="stModels" prepend=",">
+				srv_transaction$suffix$.st_models = #stModels#
+			</isNotNull>		
+			</dynamic>
+		where
+			st_id=#stId#
+	</update>
+	
+
+	<!-- 根据ID删除一个数据事务 -->
+	<delete id="deleteSrvTransactionById" parameterClass="java.util.HashMap">
+		delete from srv_transaction$suffix$ where st_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新数据事务 -->
+	<update id="updateSrvTransactionBy"  parameterClass="java.util.HashMap">
+		update srv_transaction$suffix$ set		
+			st_id=st_id
+			<isNotNull property="V_stId" prepend=",">
+				srv_transaction$suffix$.st_id = #V_stId#
+			</isNotNull>		
+			<isNotNull property="V_stEntry" prepend=",">
+				srv_transaction$suffix$.st_entry = #V_stEntry#
+			</isNotNull>		
+			<isNotNull property="V_stDetails" prepend=",">
+				srv_transaction$suffix$.st_details = #V_stDetails#
+			</isNotNull>		
+			<isNotNull property="V_stModels" prepend=",">
+				srv_transaction$suffix$.st_models = #V_stModels#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvTransaction_part.srv_transaction_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除数据事务 -->
+	<update id="deleteSrvTransactionBy"  parameterClass="java.util.HashMap">
+		delete from srv_transaction$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvTransaction_part.srv_transaction_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

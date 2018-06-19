@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员备忘之SQL映射 -->
+	<resultMap id="CsMemberMemo" class="com.ccclubs.model.CsMemberMemo">
+		<result property="csmmId" column="csmm_id"/>
+		<result property="csmmContent" column="csmm_content"/>
+		<result property="csmmMember" column="csmm_member"/>
+		<result property="csmmEditor" column="csmm_editor"/>
+		<result property="csmmUpdateTime" column="csmm_update_time"/>
+		<result property="csmmAddTime" column="csmm_add_time"/>
+		<result property="csmmStatus" column="csmm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员备忘 -->
+	<select id="getCsMemberMemoList" resultMap="CsMemberMemo">
+		select cs_member_memo$suffix$.* from cs_member_memo$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.csmm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_memo$suffix$.csmm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberMemo_part.cs_member_memo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员备忘分页 -->
+	<select id="getCsMemberMemoPage" parameterClass="java.util.HashMap" resultMap="CsMemberMemo">
+		select cs_member_memo$suffix$.* from cs_member_memo$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.csmm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_memo$suffix$.csmm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberMemo_part.cs_member_memo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员备忘总数 -->
+	<select id="getCsMemberMemoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_member_memo$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.csmm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_memo$suffix$.csmm_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberMemo_part.cs_member_memo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员备忘 -->
+	<select id="getCsMemberMemoById" parameterClass="java.util.HashMap" resultMap="CsMemberMemo">
+		select cs_member_memo$suffix$.* from cs_member_memo$suffix$
+		where csmm_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员备忘 -->
+	<insert id="saveCsMemberMemo"  parameterClass="com.ccclubs.model.CsMemberMemo">
+		insert into cs_member_memo$suffix$
+		(
+			cs_member_memo$suffix$.csmm_content
+			,cs_member_memo$suffix$.csmm_member
+			,cs_member_memo$suffix$.csmm_editor
+			,cs_member_memo$suffix$.csmm_update_time
+			,cs_member_memo$suffix$.csmm_add_time
+			,cs_member_memo$suffix$.csmm_status
+		)
+		values(
+			<isNotNull property="csmmContent" prepend="">
+				#csmmContent#
+			</isNotNull>
+			<isNull property="csmmContent" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmmMember" prepend=",">
+				#csmmMember#
+			</isNotNull>
+			<isNull property="csmmMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmmEditor" prepend=",">
+				#csmmEditor#
+			</isNotNull>
+			<isNull property="csmmEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmmUpdateTime" prepend=",">
+				#csmmUpdateTime#
+			</isNotNull>
+			<isNull property="csmmUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmmAddTime" prepend=",">
+				#csmmAddTime#
+			</isNotNull>
+			<isNull property="csmmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmmStatus" prepend=",">
+				#csmmStatus#
+			</isNotNull>
+			<isNull property="csmmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员备忘 -->
+	<update id="updateCsMemberMemo"  parameterClass="com.ccclubs.model.CsMemberMemo">
+		update cs_member_memo$suffix$ set
+			<isNotNull property="csmmContent" prepend="">
+				cs_member_memo$suffix$.csmm_content = #csmmContent#
+			</isNotNull>
+			<isNull property="csmmContent" prepend="">
+				cs_member_memo$suffix$.csmm_content = null
+			</isNull>				
+			<isNotNull property="csmmMember" prepend=",">
+				cs_member_memo$suffix$.csmm_member = #csmmMember#
+			</isNotNull>
+			<isNull property="csmmMember" prepend=",">
+				cs_member_memo$suffix$.csmm_member = null
+			</isNull>				
+			<isNotNull property="csmmEditor" prepend=",">
+				cs_member_memo$suffix$.csmm_editor = #csmmEditor#
+			</isNotNull>
+			<isNull property="csmmEditor" prepend=",">
+				cs_member_memo$suffix$.csmm_editor = null
+			</isNull>				
+			<isNotNull property="csmmUpdateTime" prepend=",">
+				cs_member_memo$suffix$.csmm_update_time = #csmmUpdateTime#
+			</isNotNull>
+			<isNull property="csmmUpdateTime" prepend=",">
+				cs_member_memo$suffix$.csmm_update_time = null
+			</isNull>				
+			<isNotNull property="csmmAddTime" prepend=",">
+				cs_member_memo$suffix$.csmm_add_time = #csmmAddTime#
+			</isNotNull>
+			<isNull property="csmmAddTime" prepend=",">
+				cs_member_memo$suffix$.csmm_add_time = null
+			</isNull>				
+			<isNotNull property="csmmStatus" prepend=",">
+				cs_member_memo$suffix$.csmm_status = #csmmStatus#
+			</isNotNull>
+			<isNull property="csmmStatus" prepend=",">
+				cs_member_memo$suffix$.csmm_status = null
+			</isNull>				
+		where
+			csmm_id=#csmmId#
+	</update>
+	
+	<!-- 更新会员备忘非空字段 -->
+	<update id="updateCsMemberMemo$NotNull"  parameterClass="com.ccclubs.model.CsMemberMemo">
+		update cs_member_memo$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmmContent" prepend=",">
+				cs_member_memo$suffix$.csmm_content = #csmmContent#
+			</isNotNull>		
+			<isNotNull property="csmmMember" prepend=",">
+				cs_member_memo$suffix$.csmm_member = #csmmMember#
+			</isNotNull>		
+			<isNotNull property="csmmEditor" prepend=",">
+				cs_member_memo$suffix$.csmm_editor = #csmmEditor#
+			</isNotNull>		
+			<isNotNull property="csmmUpdateTime" prepend=",">
+				cs_member_memo$suffix$.csmm_update_time = #csmmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csmmAddTime" prepend=",">
+				cs_member_memo$suffix$.csmm_add_time = #csmmAddTime#
+			</isNotNull>		
+			<isNotNull property="csmmStatus" prepend=",">
+				cs_member_memo$suffix$.csmm_status = #csmmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csmm_id=#csmmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员备忘 -->
+	<delete id="deleteCsMemberMemoById" parameterClass="java.util.HashMap">
+		delete from cs_member_memo$suffix$ where csmm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员备忘 -->
+	<update id="removeCsMemberMemoById" parameterClass="java.util.HashMap">
+		update cs_member_memo$suffix$ set  cs_member_memo$suffix$.csmm_status=-1  where csmm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员备忘 -->
+	<update id="updateCsMemberMemoBy"  parameterClass="java.util.HashMap">
+		update cs_member_memo$suffix$ set		
+			csmm_id=csmm_id
+			<isNotNull property="V_csmmId" prepend=",">
+				cs_member_memo$suffix$.csmm_id = #V_csmmId#
+			</isNotNull>		
+			<isNotNull property="V_csmmContent" prepend=",">
+				cs_member_memo$suffix$.csmm_content = #V_csmmContent#
+			</isNotNull>		
+			<isNotNull property="V_csmmMember" prepend=",">
+				cs_member_memo$suffix$.csmm_member = #V_csmmMember#
+			</isNotNull>		
+			<isNotNull property="V_csmmEditor" prepend=",">
+				cs_member_memo$suffix$.csmm_editor = #V_csmmEditor#
+			</isNotNull>		
+			<isNotNull property="V_csmmUpdateTime" prepend=",">
+				cs_member_memo$suffix$.csmm_update_time = #V_csmmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csmmAddTime" prepend=",">
+				cs_member_memo$suffix$.csmm_add_time = #V_csmmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmmStatus" prepend=",">
+				cs_member_memo$suffix$.csmm_status = #V_csmmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.csmm_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_memo$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_member_memo$suffix$.csmm_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmmMember"><!-- 调用一下CsmmMember，把CsMember指向CsmmMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMemberMemo_part.cs_member_memo_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员备忘 -->
+	<update id="deleteCsMemberMemoBy"  parameterClass="java.util.HashMap">
+		delete from cs_member_memo$suffix$ where 
+		cs_member_memo$suffix$.csmm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMemberMemo_part.cs_member_memo_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

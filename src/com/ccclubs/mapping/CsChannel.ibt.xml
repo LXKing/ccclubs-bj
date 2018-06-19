@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 访问渠道之SQL映射 -->
+	<resultMap id="CsChannel" class="com.ccclubs.model.CsChannel">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscHost" column="csc_host"/>
+		<result property="cscName" column="csc_name"/>
+		<result property="cscType" column="csc_type"/>
+		<result property="cscVIndex" column="csc_v_index"/>
+		<result property="cscDesc" column="csc_desc"/>
+		<result property="cscUpdateTime" column="csc_update_time"/>
+		<result property="cscAddTime" column="csc_add_time"/>
+		<result property="cscStatus" column="csc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有访问渠道 -->
+	<select id="getCsChannelList" resultMap="CsChannel">
+		select cs_channel$suffix$.* from cs_channel$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_channel$suffix$.csc_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannel_part.cs_channel_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取访问渠道分页 -->
+	<select id="getCsChannelPage" parameterClass="java.util.HashMap" resultMap="CsChannel">
+		select cs_channel$suffix$.* from cs_channel$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_channel$suffix$.csc_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannel_part.cs_channel_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取访问渠道总数 -->
+	<select id="getCsChannelEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_channel$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_channel$suffix$.csc_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannel_part.cs_channel_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取访问渠道 -->
+	<select id="getCsChannelById" parameterClass="java.util.HashMap" resultMap="CsChannel">
+		select cs_channel$suffix$.* from cs_channel$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存访问渠道 -->
+	<insert id="saveCsChannel"  parameterClass="com.ccclubs.model.CsChannel">
+		insert into cs_channel$suffix$
+		(
+			cs_channel$suffix$.csc_host
+			,cs_channel$suffix$.csc_name
+			,cs_channel$suffix$.csc_type
+			,cs_channel$suffix$.csc_v_index
+			,cs_channel$suffix$.csc_desc
+			,cs_channel$suffix$.csc_update_time
+			,cs_channel$suffix$.csc_add_time
+			,cs_channel$suffix$.csc_status
+		)
+		values(
+			<isNotNull property="cscHost" prepend="">
+				#cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscName" prepend=",">
+				#cscName#
+			</isNotNull>
+			<isNull property="cscName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscType" prepend=",">
+				#cscType#
+			</isNotNull>
+			<isNull property="cscType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscVIndex" prepend=",">
+				#cscVIndex#
+			</isNotNull>
+			<isNull property="cscVIndex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscDesc" prepend=",">
+				#cscDesc#
+			</isNotNull>
+			<isNull property="cscDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUpdateTime" prepend=",">
+				#cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddTime" prepend=",">
+				#cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscStatus" prepend=",">
+				#cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新访问渠道 -->
+	<update id="updateCsChannel"  parameterClass="com.ccclubs.model.CsChannel">
+		update cs_channel$suffix$ set
+			<isNotNull property="cscHost" prepend="">
+				cs_channel$suffix$.csc_host = #cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				cs_channel$suffix$.csc_host = null
+			</isNull>				
+			<isNotNull property="cscName" prepend=",">
+				cs_channel$suffix$.csc_name = #cscName#
+			</isNotNull>
+			<isNull property="cscName" prepend=",">
+				cs_channel$suffix$.csc_name = null
+			</isNull>				
+			<isNotNull property="cscType" prepend=",">
+				cs_channel$suffix$.csc_type = #cscType#
+			</isNotNull>
+			<isNull property="cscType" prepend=",">
+				cs_channel$suffix$.csc_type = null
+			</isNull>				
+			<isNotNull property="cscVIndex" prepend=",">
+				cs_channel$suffix$.csc_v_index = #cscVIndex#
+			</isNotNull>
+			<isNull property="cscVIndex" prepend=",">
+				cs_channel$suffix$.csc_v_index = null
+			</isNull>				
+			<isNotNull property="cscDesc" prepend=",">
+				cs_channel$suffix$.csc_desc = #cscDesc#
+			</isNotNull>
+			<isNull property="cscDesc" prepend=",">
+				cs_channel$suffix$.csc_desc = null
+			</isNull>				
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_channel$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				cs_channel$suffix$.csc_update_time = null
+			</isNull>				
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_channel$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				cs_channel$suffix$.csc_add_time = null
+			</isNull>				
+			<isNotNull property="cscStatus" prepend=",">
+				cs_channel$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				cs_channel$suffix$.csc_status = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新访问渠道非空字段 -->
+	<update id="updateCsChannel$NotNull"  parameterClass="com.ccclubs.model.CsChannel">
+		update cs_channel$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscHost" prepend=",">
+				cs_channel$suffix$.csc_host = #cscHost#
+			</isNotNull>		
+			<isNotNull property="cscName" prepend=",">
+				cs_channel$suffix$.csc_name = #cscName#
+			</isNotNull>		
+			<isNotNull property="cscType" prepend=",">
+				cs_channel$suffix$.csc_type = #cscType#
+			</isNotNull>		
+			<isNotNull property="cscVIndex" prepend=",">
+				cs_channel$suffix$.csc_v_index = #cscVIndex#
+			</isNotNull>		
+			<isNotNull property="cscDesc" prepend=",">
+				cs_channel$suffix$.csc_desc = #cscDesc#
+			</isNotNull>		
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_channel$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_channel$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>		
+			<isNotNull property="cscStatus" prepend=",">
+				cs_channel$suffix$.csc_status = #cscStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个访问渠道 -->
+	<delete id="deleteCsChannelById" parameterClass="java.util.HashMap">
+		delete from cs_channel$suffix$ where csc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个访问渠道 -->
+	<update id="removeCsChannelById" parameterClass="java.util.HashMap">
+		update cs_channel$suffix$ set  cs_channel$suffix$.csc_status=-1  where csc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新访问渠道 -->
+	<update id="updateCsChannelBy"  parameterClass="java.util.HashMap">
+		update cs_channel$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_channel$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscHost" prepend=",">
+				cs_channel$suffix$.csc_host = #V_cscHost#
+			</isNotNull>		
+			<isNotNull property="V_cscName" prepend=",">
+				cs_channel$suffix$.csc_name = #V_cscName#
+			</isNotNull>		
+			<isNotNull property="V_cscType" prepend=",">
+				cs_channel$suffix$.csc_type = #V_cscType#
+			</isNotNull>		
+			<isNotNull property="V_cscVIndex" prepend=",">
+				cs_channel$suffix$.csc_v_index = #V_cscVIndex#
+			</isNotNull>		
+			<isNotNull property="V_cscDesc" prepend=",">
+				cs_channel$suffix$.csc_desc = #V_cscDesc#
+			</isNotNull>		
+			<isNotNull property="V_cscUpdateTime" prepend=",">
+				cs_channel$suffix$.csc_update_time = #V_cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAddTime" prepend=",">
+				cs_channel$suffix$.csc_add_time = #V_cscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscStatus" prepend=",">
+				cs_channel$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_channel$suffix$.csc_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChannel_part.cs_channel_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除访问渠道 -->
+	<update id="deleteCsChannelBy"  parameterClass="java.util.HashMap">
+		delete from cs_channel$suffix$ where 
+		cs_channel$suffix$.csc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChannel_part.cs_channel_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

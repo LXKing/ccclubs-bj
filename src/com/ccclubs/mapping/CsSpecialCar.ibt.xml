@@ -1,0 +1,1363 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+
+	
+	<!-- 专车订单之SQL映射 -->
+	<resultMap id="CsSpecialCar" class="com.ccclubs.model.CsSpecialCar">
+		<result property="csscId" column="cssc_id"/>
+		<result property="csscHost" column="cssc_host"/>
+		<result property="csscInfo" column="cssc_info"/>
+		<result property="csscPerson" column="cssc_person"/>
+		<result property="csscUnitOrder" column="cssc_unit_order"/>
+		<result property="csscName" column="cssc_name"/>
+		<result property="csscMobile" column="cssc_mobile"/>
+		<result property="csscCount" column="cssc_count"/>
+		<result property="csscCarModel" column="cssc_car_model"/>
+		<result property="csscCarNumber" column="cssc_car_number"/>
+		<result property="csscDriverName" column="cssc_driver_name"/>
+		<result property="csscDriverPhone" column="cssc_driver_phone"/>
+		<result property="csscDriverImage" column="cssc_driver_image"/>
+		<result property="csscDriverColor" column="cssc_driver_color"/>
+		<result property="csscDriverCarInfo" column="cssc_driver_car_info"/>
+		<result property="csscMsg" column="cssc_msg"/>
+		<result property="csscStartPoint" column="cssc_start_point"/>
+		<result property="csscStartAddr" column="cssc_start_addr"/>
+		<result property="csscStartTime" column="cssc_start_time"/>
+		<result property="csscFinishPoint" column="cssc_finish_point"/>
+		<result property="csscFinishAddr" column="cssc_finish_addr"/>
+		<result property="csscFinishTime" column="cssc_finish_time"/>
+		<result property="csscDuration" column="cssc_duration"/>
+		<result property="csscRealDur" column="cssc_real_dur"/>
+		<result property="csscKilo" column="cssc_kilo"/>
+		<result property="csscScope" column="cssc_scope"/>
+		<result property="csscAssess" column="cssc_assess"/>
+		<result property="csscThird" column="cssc_third"/>
+		<result property="csscThirdNo" column="cssc_third_no"/>
+		<result property="csscThirdFee" column="cssc_third_fee"/>
+		<result property="csscThirdFeeData" column="cssc_third_fee_data"/>
+		<result property="csscThirdOtherFee" column="cssc_third_other_fee"/>
+		<result property="csscThirdOtherFeeDes" column="cssc_third_other_fee_des"/>
+		<result property="csscUpdateTime" column="cssc_update_time"/>
+		<result property="csscAddTime" column="cssc_add_time"/>
+		<result property="csscResponse" column="cssc_response"/>
+		<result property="csscStatus" column="cssc_status"/>
+		<result property="csscPreditMileage" column="cssc_predit_mileage"/>
+		<result property="csscEstimateFee" column="cssc_estimate_fee"/>
+		<result property="csscDemand" column="cssc_demand"/>
+		<result property="csscIsCarpool" column="cssc_is_carpool"/>
+		<result property="csscDriverArrivaltime" column="cssc_driver_arrivaltime"/>
+		<result property="csscDrivercar" column="cssc_drivercar"/>
+	</resultMap>
+		
+	<!-- 获取所有专车订单 -->
+	<select id="getCsSpecialCarList" resultMap="CsSpecialCar">
+		select cs_special_car$suffix$.* from cs_special_car$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.cssc_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询-->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.cssc_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询-->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<isNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.cssc_unit_order=cs_unit_order$CsUnitOrder.suffix$.csuo_id
+			</isNull>
+			<isNotNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.$CsUnitOrder.on$=cs_unit_order$CsUnitOrder.suffix$.csuo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询-->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<isNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.cssc_car_model=cs_special_model$CsSpecialModel.suffix$.cssm_id
+			</isNull>
+			<isNotNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.$CsSpecialModel.on$=cs_special_model$CsSpecialModel.suffix$.cssm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询-->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<isNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.cssc_drivercar=cs_driver_car$CsDriverCar.suffix$.csdc_id
+			</isNull>
+			<isNotNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.$CsDriverCar.on$=cs_driver_car$CsDriverCar.suffix$.csdc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_special_car$suffix$.cssc_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询条件sql片段 -->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<include refid="CsUnitOrder_part.cs_unit_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询条件sql片段 -->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<include refid="CsSpecialModel_part.cs_special_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询条件sql片段 -->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<include refid="CsDriverCar_part.cs_driver_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSpecialCar_part.cs_special_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取专车订单分页 -->
+	<select id="getCsSpecialCarPage" parameterClass="java.util.HashMap" resultMap="CsSpecialCar">
+		select cs_special_car$suffix$.* from cs_special_car$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.cssc_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询-->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.cssc_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询-->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<isNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.cssc_unit_order=cs_unit_order$CsUnitOrder.suffix$.csuo_id
+			</isNull>
+			<isNotNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.$CsUnitOrder.on$=cs_unit_order$CsUnitOrder.suffix$.csuo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询-->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<isNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.cssc_car_model=cs_special_model$CsSpecialModel.suffix$.cssm_id
+			</isNull>
+			<isNotNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.$CsSpecialModel.on$=cs_special_model$CsSpecialModel.suffix$.cssm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询-->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<isNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.cssc_drivercar=cs_driver_car$CsDriverCar.suffix$.csdc_id
+			</isNull>
+			<isNotNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.$CsDriverCar.on$=cs_driver_car$CsDriverCar.suffix$.csdc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_special_car$suffix$.cssc_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询条件sql片段 -->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<include refid="CsUnitOrder_part.cs_unit_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询条件sql片段 -->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<include refid="CsSpecialModel_part.cs_special_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询条件sql片段 -->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<include refid="CsDriverCar_part.cs_driver_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSpecialCar_part.cs_special_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取专车订单总数 -->
+	<select id="getCsSpecialCarEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_special_car$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.cssc_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询-->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.cssc_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询-->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<isNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.cssc_unit_order=cs_unit_order$CsUnitOrder.suffix$.csuo_id
+			</isNull>
+			<isNotNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.$CsUnitOrder.on$=cs_unit_order$CsUnitOrder.suffix$.csuo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询-->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<isNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.cssc_car_model=cs_special_model$CsSpecialModel.suffix$.cssm_id
+			</isNull>
+			<isNotNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.$CsSpecialModel.on$=cs_special_model$CsSpecialModel.suffix$.cssm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询-->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<isNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.cssc_drivercar=cs_driver_car$CsDriverCar.suffix$.csdc_id
+			</isNull>
+			<isNotNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.$CsDriverCar.on$=cs_driver_car$CsDriverCar.suffix$.csdc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_special_car$suffix$.cssc_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询条件sql片段 -->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<include refid="CsUnitOrder_part.cs_unit_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询条件sql片段 -->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<include refid="CsSpecialModel_part.cs_special_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询条件sql片段 -->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<include refid="CsDriverCar_part.cs_driver_car_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSpecialCar_part.cs_special_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取专车订单 -->
+	<select id="getCsSpecialCarById" parameterClass="java.util.HashMap" resultMap="CsSpecialCar">
+		select cs_special_car$suffix$.* from cs_special_car$suffix$
+		where cssc_id=#id#
+	</select>
+	
+		
+	<!-- 保存专车订单 -->
+	<insert id="saveCsSpecialCar"  parameterClass="com.ccclubs.model.CsSpecialCar">
+		insert into cs_special_car$suffix$
+		(
+			cs_special_car$suffix$.cssc_host
+			,cs_special_car$suffix$.cssc_info
+			,cs_special_car$suffix$.cssc_person
+			,cs_special_car$suffix$.cssc_unit_order
+			,cs_special_car$suffix$.cssc_name
+			,cs_special_car$suffix$.cssc_mobile
+			,cs_special_car$suffix$.cssc_count
+			,cs_special_car$suffix$.cssc_car_model
+			,cs_special_car$suffix$.cssc_car_number
+			,cs_special_car$suffix$.cssc_driver_name
+			,cs_special_car$suffix$.cssc_driver_phone
+			,cs_special_car$suffix$.cssc_driver_image
+			,cs_special_car$suffix$.cssc_driver_color
+			,cs_special_car$suffix$.cssc_driver_car_info
+			,cs_special_car$suffix$.cssc_msg
+			,cs_special_car$suffix$.cssc_start_point
+			,cs_special_car$suffix$.cssc_start_addr
+			,cs_special_car$suffix$.cssc_start_time
+			,cs_special_car$suffix$.cssc_finish_point
+			,cs_special_car$suffix$.cssc_finish_addr
+			,cs_special_car$suffix$.cssc_finish_time
+			,cs_special_car$suffix$.cssc_duration
+			,cs_special_car$suffix$.cssc_real_dur
+			,cs_special_car$suffix$.cssc_kilo
+			,cs_special_car$suffix$.cssc_scope
+			,cs_special_car$suffix$.cssc_assess
+			,cs_special_car$suffix$.cssc_third
+			,cs_special_car$suffix$.cssc_third_no
+			,cs_special_car$suffix$.cssc_third_fee
+			,cs_special_car$suffix$.cssc_third_fee_data
+			,cs_special_car$suffix$.cssc_third_other_fee
+			,cs_special_car$suffix$.cssc_third_other_fee_des
+			,cs_special_car$suffix$.cssc_update_time
+			,cs_special_car$suffix$.cssc_add_time
+			,cs_special_car$suffix$.cssc_response
+			,cs_special_car$suffix$.cssc_status
+			,cs_special_car$suffix$.cssc_predit_mileage
+			,cs_special_car$suffix$.cssc_estimate_fee
+			,cs_special_car$suffix$.cssc_demand
+			,cs_special_car$suffix$.cssc_is_carpool
+			,cs_special_car$suffix$.cssc_driver_arrivaltime
+			,cs_special_car$suffix$.cssc_drivercar
+		)
+		values(
+			<isNotNull property="csscHost" prepend="">
+				#csscHost#
+			</isNotNull>
+			<isNull property="csscHost" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="csscInfo" prepend=",">
+				#csscInfo#
+			</isNotNull>
+			<isNull property="csscInfo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscPerson" prepend=",">
+				#csscPerson#
+			</isNotNull>
+			<isNull property="csscPerson" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscUnitOrder" prepend=",">
+				#csscUnitOrder#
+			</isNotNull>
+			<isNull property="csscUnitOrder" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscName" prepend=",">
+				#csscName#
+			</isNotNull>
+			<isNull property="csscName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscMobile" prepend=",">
+				#csscMobile#
+			</isNotNull>
+			<isNull property="csscMobile" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscCount" prepend=",">
+				#csscCount#
+			</isNotNull>
+			<isNull property="csscCount" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscCarModel" prepend=",">
+				#csscCarModel#
+			</isNotNull>
+			<isNull property="csscCarModel" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscCarNumber" prepend=",">
+				#csscCarNumber#
+			</isNotNull>
+			<isNull property="csscCarNumber" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDriverName" prepend=",">
+				#csscDriverName#
+			</isNotNull>
+			<isNull property="csscDriverName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDriverPhone" prepend=",">
+				#csscDriverPhone#
+			</isNotNull>
+			<isNull property="csscDriverPhone" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDriverImage" prepend=",">
+				#csscDriverImage#
+			</isNotNull>
+			<isNull property="csscDriverImage" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDriverColor" prepend=",">
+				#csscDriverColor#
+			</isNotNull>
+			<isNull property="csscDriverColor" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDriverCarInfo" prepend=",">
+				#csscDriverCarInfo#
+			</isNotNull>
+			<isNull property="csscDriverCarInfo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscMsg" prepend=",">
+				#csscMsg#
+			</isNotNull>
+			<isNull property="csscMsg" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscStartPoint" prepend=",">
+				#csscStartPoint#
+			</isNotNull>
+			<isNull property="csscStartPoint" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscStartAddr" prepend=",">
+				#csscStartAddr#
+			</isNotNull>
+			<isNull property="csscStartAddr" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscStartTime" prepend=",">
+				#csscStartTime#
+			</isNotNull>
+			<isNull property="csscStartTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscFinishPoint" prepend=",">
+				#csscFinishPoint#
+			</isNotNull>
+			<isNull property="csscFinishPoint" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscFinishAddr" prepend=",">
+				#csscFinishAddr#
+			</isNotNull>
+			<isNull property="csscFinishAddr" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscFinishTime" prepend=",">
+				#csscFinishTime#
+			</isNotNull>
+			<isNull property="csscFinishTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDuration" prepend=",">
+				#csscDuration#
+			</isNotNull>
+			<isNull property="csscDuration" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscRealDur" prepend=",">
+				#csscRealDur#
+			</isNotNull>
+			<isNull property="csscRealDur" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscKilo" prepend=",">
+				#csscKilo#
+			</isNotNull>
+			<isNull property="csscKilo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscScope" prepend=",">
+				#csscScope#
+			</isNotNull>
+			<isNull property="csscScope" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscAssess" prepend=",">
+				#csscAssess#
+			</isNotNull>
+			<isNull property="csscAssess" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscThird" prepend=",">
+				#csscThird#
+			</isNotNull>
+			<isNull property="csscThird" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscThirdNo" prepend=",">
+				#csscThirdNo#
+			</isNotNull>
+			<isNull property="csscThirdNo" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscThirdFee" prepend=",">
+				#csscThirdFee#
+			</isNotNull>
+			<isNull property="csscThirdFee" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscThirdFeeData" prepend=",">
+				#csscThirdFeeData#
+			</isNotNull>
+			<isNull property="csscThirdFeeData" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscThirdOtherFee" prepend=",">
+				#csscThirdOtherFee#
+			</isNotNull>
+			<isNull property="csscThirdOtherFee" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscThirdOtherFeeDes" prepend=",">
+				#csscThirdOtherFeeDes#
+			</isNotNull>
+			<isNull property="csscThirdOtherFeeDes" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscUpdateTime" prepend=",">
+				#csscUpdateTime#
+			</isNotNull>
+			<isNull property="csscUpdateTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscAddTime" prepend=",">
+				#csscAddTime#
+			</isNotNull>
+			<isNull property="csscAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscResponse" prepend=",">
+				#csscResponse#
+			</isNotNull>
+			<isNull property="csscResponse" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscStatus" prepend=",">
+				#csscStatus#
+			</isNotNull>
+			<isNull property="csscStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscPreditMileage" prepend=",">
+				#csscPreditMileage#
+			</isNotNull>
+			<isNull property="csscPreditMileage" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscEstimateFee" prepend=",">
+				#csscEstimateFee#
+			</isNotNull>
+			<isNull property="csscEstimateFee" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDemand" prepend=",">
+				#csscDemand#
+			</isNotNull>
+			<isNull property="csscDemand" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscIsCarpool" prepend=",">
+				#csscIsCarpool#
+			</isNotNull>
+			<isNull property="csscIsCarpool" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDriverArrivaltime" prepend=",">
+				#csscDriverArrivaltime#
+			</isNotNull>
+			<isNull property="csscDriverArrivaltime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csscDrivercar" prepend=",">
+				#csscDrivercar#
+			</isNotNull>
+			<isNull property="csscDrivercar" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新专车订单 -->
+	<update id="updateCsSpecialCar"  parameterClass="com.ccclubs.model.CsSpecialCar">
+		update cs_special_car$suffix$ set
+			<isNotNull property="csscHost" prepend="">
+				cs_special_car$suffix$.cssc_host = #csscHost#
+			</isNotNull>
+			<isNull property="csscHost" prepend="">
+				cs_special_car$suffix$.cssc_host = null
+			</isNull>				
+			<isNotNull property="csscInfo" prepend=",">
+				cs_special_car$suffix$.cssc_info = #csscInfo#
+			</isNotNull>
+			<isNull property="csscInfo" prepend=",">
+				cs_special_car$suffix$.cssc_info = null
+			</isNull>				
+			<isNotNull property="csscPerson" prepend=",">
+				cs_special_car$suffix$.cssc_person = #csscPerson#
+			</isNotNull>
+			<isNull property="csscPerson" prepend=",">
+				cs_special_car$suffix$.cssc_person = null
+			</isNull>				
+			<isNotNull property="csscUnitOrder" prepend=",">
+				cs_special_car$suffix$.cssc_unit_order = #csscUnitOrder#
+			</isNotNull>
+			<isNull property="csscUnitOrder" prepend=",">
+				cs_special_car$suffix$.cssc_unit_order = null
+			</isNull>				
+			<isNotNull property="csscName" prepend=",">
+				cs_special_car$suffix$.cssc_name = #csscName#
+			</isNotNull>
+			<isNull property="csscName" prepend=",">
+				cs_special_car$suffix$.cssc_name = null
+			</isNull>				
+			<isNotNull property="csscMobile" prepend=",">
+				cs_special_car$suffix$.cssc_mobile = #csscMobile#
+			</isNotNull>
+			<isNull property="csscMobile" prepend=",">
+				cs_special_car$suffix$.cssc_mobile = null
+			</isNull>				
+			<isNotNull property="csscCount" prepend=",">
+				cs_special_car$suffix$.cssc_count = #csscCount#
+			</isNotNull>
+			<isNull property="csscCount" prepend=",">
+				cs_special_car$suffix$.cssc_count = null
+			</isNull>				
+			<isNotNull property="csscCarModel" prepend=",">
+				cs_special_car$suffix$.cssc_car_model = #csscCarModel#
+			</isNotNull>
+			<isNull property="csscCarModel" prepend=",">
+				cs_special_car$suffix$.cssc_car_model = null
+			</isNull>				
+			<isNotNull property="csscCarNumber" prepend=",">
+				cs_special_car$suffix$.cssc_car_number = #csscCarNumber#
+			</isNotNull>
+			<isNull property="csscCarNumber" prepend=",">
+				cs_special_car$suffix$.cssc_car_number = null
+			</isNull>				
+			<isNotNull property="csscDriverName" prepend=",">
+				cs_special_car$suffix$.cssc_driver_name = #csscDriverName#
+			</isNotNull>
+			<isNull property="csscDriverName" prepend=",">
+				cs_special_car$suffix$.cssc_driver_name = null
+			</isNull>				
+			<isNotNull property="csscDriverPhone" prepend=",">
+				cs_special_car$suffix$.cssc_driver_phone = #csscDriverPhone#
+			</isNotNull>
+			<isNull property="csscDriverPhone" prepend=",">
+				cs_special_car$suffix$.cssc_driver_phone = null
+			</isNull>				
+			<isNotNull property="csscDriverImage" prepend=",">
+				cs_special_car$suffix$.cssc_driver_image = #csscDriverImage#
+			</isNotNull>
+			<isNull property="csscDriverImage" prepend=",">
+				cs_special_car$suffix$.cssc_driver_image = null
+			</isNull>				
+			<isNotNull property="csscDriverColor" prepend=",">
+				cs_special_car$suffix$.cssc_driver_color = #csscDriverColor#
+			</isNotNull>
+			<isNull property="csscDriverColor" prepend=",">
+				cs_special_car$suffix$.cssc_driver_color = null
+			</isNull>				
+			<isNotNull property="csscDriverCarInfo" prepend=",">
+				cs_special_car$suffix$.cssc_driver_car_info = #csscDriverCarInfo#
+			</isNotNull>
+			<isNull property="csscDriverCarInfo" prepend=",">
+				cs_special_car$suffix$.cssc_driver_car_info = null
+			</isNull>				
+			<isNotNull property="csscMsg" prepend=",">
+				cs_special_car$suffix$.cssc_msg = #csscMsg#
+			</isNotNull>
+			<isNull property="csscMsg" prepend=",">
+				cs_special_car$suffix$.cssc_msg = null
+			</isNull>				
+			<isNotNull property="csscStartPoint" prepend=",">
+				cs_special_car$suffix$.cssc_start_point = #csscStartPoint#
+			</isNotNull>
+			<isNull property="csscStartPoint" prepend=",">
+				cs_special_car$suffix$.cssc_start_point = null
+			</isNull>				
+			<isNotNull property="csscStartAddr" prepend=",">
+				cs_special_car$suffix$.cssc_start_addr = #csscStartAddr#
+			</isNotNull>
+			<isNull property="csscStartAddr" prepend=",">
+				cs_special_car$suffix$.cssc_start_addr = null
+			</isNull>				
+			<isNotNull property="csscStartTime" prepend=",">
+				cs_special_car$suffix$.cssc_start_time = #csscStartTime#
+			</isNotNull>
+			<isNull property="csscStartTime" prepend=",">
+				cs_special_car$suffix$.cssc_start_time = null
+			</isNull>				
+			<isNotNull property="csscFinishPoint" prepend=",">
+				cs_special_car$suffix$.cssc_finish_point = #csscFinishPoint#
+			</isNotNull>
+			<isNull property="csscFinishPoint" prepend=",">
+				cs_special_car$suffix$.cssc_finish_point = null
+			</isNull>				
+			<isNotNull property="csscFinishAddr" prepend=",">
+				cs_special_car$suffix$.cssc_finish_addr = #csscFinishAddr#
+			</isNotNull>
+			<isNull property="csscFinishAddr" prepend=",">
+				cs_special_car$suffix$.cssc_finish_addr = null
+			</isNull>				
+			<isNotNull property="csscFinishTime" prepend=",">
+				cs_special_car$suffix$.cssc_finish_time = #csscFinishTime#
+			</isNotNull>
+			<isNull property="csscFinishTime" prepend=",">
+				cs_special_car$suffix$.cssc_finish_time = null
+			</isNull>				
+			<isNotNull property="csscDuration" prepend=",">
+				cs_special_car$suffix$.cssc_duration = #csscDuration#
+			</isNotNull>
+			<isNull property="csscDuration" prepend=",">
+				cs_special_car$suffix$.cssc_duration = null
+			</isNull>				
+			<isNotNull property="csscRealDur" prepend=",">
+				cs_special_car$suffix$.cssc_real_dur = #csscRealDur#
+			</isNotNull>
+			<isNull property="csscRealDur" prepend=",">
+				cs_special_car$suffix$.cssc_real_dur = null
+			</isNull>				
+			<isNotNull property="csscKilo" prepend=",">
+				cs_special_car$suffix$.cssc_kilo = #csscKilo#
+			</isNotNull>
+			<isNull property="csscKilo" prepend=",">
+				cs_special_car$suffix$.cssc_kilo = null
+			</isNull>				
+			<isNotNull property="csscScope" prepend=",">
+				cs_special_car$suffix$.cssc_scope = #csscScope#
+			</isNotNull>
+			<isNull property="csscScope" prepend=",">
+				cs_special_car$suffix$.cssc_scope = null
+			</isNull>				
+			<isNotNull property="csscAssess" prepend=",">
+				cs_special_car$suffix$.cssc_assess = #csscAssess#
+			</isNotNull>
+			<isNull property="csscAssess" prepend=",">
+				cs_special_car$suffix$.cssc_assess = null
+			</isNull>				
+			<isNotNull property="csscThird" prepend=",">
+				cs_special_car$suffix$.cssc_third = #csscThird#
+			</isNotNull>
+			<isNull property="csscThird" prepend=",">
+				cs_special_car$suffix$.cssc_third = null
+			</isNull>				
+			<isNotNull property="csscThirdNo" prepend=",">
+				cs_special_car$suffix$.cssc_third_no = #csscThirdNo#
+			</isNotNull>
+			<isNull property="csscThirdNo" prepend=",">
+				cs_special_car$suffix$.cssc_third_no = null
+			</isNull>				
+			<isNotNull property="csscThirdFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee = #csscThirdFee#
+			</isNotNull>
+			<isNull property="csscThirdFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee = null
+			</isNull>				
+			<isNotNull property="csscThirdFeeData" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee_data = #csscThirdFeeData#
+			</isNotNull>
+			<isNull property="csscThirdFeeData" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee_data = null
+			</isNull>				
+			<isNotNull property="csscThirdOtherFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee = #csscThirdOtherFee#
+			</isNotNull>
+			<isNull property="csscThirdOtherFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee = null
+			</isNull>				
+			<isNotNull property="csscThirdOtherFeeDes" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee_des = #csscThirdOtherFeeDes#
+			</isNotNull>
+			<isNull property="csscThirdOtherFeeDes" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee_des = null
+			</isNull>				
+			<isNotNull property="csscUpdateTime" prepend=",">
+				cs_special_car$suffix$.cssc_update_time = #csscUpdateTime#
+			</isNotNull>
+			<isNull property="csscUpdateTime" prepend=",">
+				cs_special_car$suffix$.cssc_update_time = null
+			</isNull>				
+			<isNotNull property="csscAddTime" prepend=",">
+				cs_special_car$suffix$.cssc_add_time = #csscAddTime#
+			</isNotNull>
+			<isNull property="csscAddTime" prepend=",">
+				cs_special_car$suffix$.cssc_add_time = null
+			</isNull>				
+			<isNotNull property="csscResponse" prepend=",">
+				cs_special_car$suffix$.cssc_response = #csscResponse#
+			</isNotNull>
+			<isNull property="csscResponse" prepend=",">
+				cs_special_car$suffix$.cssc_response = null
+			</isNull>				
+			<isNotNull property="csscStatus" prepend=",">
+				cs_special_car$suffix$.cssc_status = #csscStatus#
+			</isNotNull>
+			<isNull property="csscStatus" prepend=",">
+				cs_special_car$suffix$.cssc_status = null
+			</isNull>				
+			<isNotNull property="csscPreditMileage" prepend=",">
+				cs_special_car$suffix$.cssc_predit_mileage = #csscPreditMileage#
+			</isNotNull>
+			<isNull property="csscPreditMileage" prepend=",">
+				cs_special_car$suffix$.cssc_predit_mileage = null
+			</isNull>				
+			<isNotNull property="csscEstimateFee" prepend=",">
+				cs_special_car$suffix$.cssc_estimate_fee = #csscEstimateFee#
+			</isNotNull>
+			<isNull property="csscEstimateFee" prepend=",">
+				cs_special_car$suffix$.cssc_estimate_fee = null
+			</isNull>				
+			<isNotNull property="csscDemand" prepend=",">
+				cs_special_car$suffix$.cssc_demand = #csscDemand#
+			</isNotNull>
+			<isNull property="csscDemand" prepend=",">
+				cs_special_car$suffix$.cssc_demand = null
+			</isNull>				
+			<isNotNull property="csscIsCarpool" prepend=",">
+				cs_special_car$suffix$.cssc_is_carpool = #csscIsCarpool#
+			</isNotNull>
+			<isNull property="csscIsCarpool" prepend=",">
+				cs_special_car$suffix$.cssc_is_carpool = null
+			</isNull>				
+			<isNotNull property="csscDriverArrivaltime" prepend=",">
+				cs_special_car$suffix$.cssc_driver_arrivaltime = #csscDriverArrivaltime#
+			</isNotNull>
+			<isNull property="csscDriverArrivaltime" prepend=",">
+				cs_special_car$suffix$.cssc_driver_arrivaltime = null
+			</isNull>				
+			<isNotNull property="csscDrivercar" prepend=",">
+				cs_special_car$suffix$.cssc_drivercar = #csscDrivercar#
+			</isNotNull>
+			<isNull property="csscDrivercar" prepend=",">
+				cs_special_car$suffix$.cssc_drivercar = null
+			</isNull>				
+		where
+			cssc_id=#csscId#
+	</update>
+	
+	<!-- 更新专车订单非空字段 -->
+	<update id="updateCsSpecialCar$NotNull"  parameterClass="com.ccclubs.model.CsSpecialCar">
+		update cs_special_car$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csscHost" prepend=",">
+				cs_special_car$suffix$.cssc_host = #csscHost#
+			</isNotNull>		
+			<isNotNull property="csscInfo" prepend=",">
+				cs_special_car$suffix$.cssc_info = #csscInfo#
+			</isNotNull>		
+			<isNotNull property="csscPerson" prepend=",">
+				cs_special_car$suffix$.cssc_person = #csscPerson#
+			</isNotNull>		
+			<isNotNull property="csscUnitOrder" prepend=",">
+				cs_special_car$suffix$.cssc_unit_order = #csscUnitOrder#
+			</isNotNull>		
+			<isNotNull property="csscName" prepend=",">
+				cs_special_car$suffix$.cssc_name = #csscName#
+			</isNotNull>		
+			<isNotNull property="csscMobile" prepend=",">
+				cs_special_car$suffix$.cssc_mobile = #csscMobile#
+			</isNotNull>		
+			<isNotNull property="csscCount" prepend=",">
+				cs_special_car$suffix$.cssc_count = #csscCount#
+			</isNotNull>		
+			<isNotNull property="csscCarModel" prepend=",">
+				cs_special_car$suffix$.cssc_car_model = #csscCarModel#
+			</isNotNull>		
+			<isNotNull property="csscCarNumber" prepend=",">
+				cs_special_car$suffix$.cssc_car_number = #csscCarNumber#
+			</isNotNull>		
+			<isNotNull property="csscDriverName" prepend=",">
+				cs_special_car$suffix$.cssc_driver_name = #csscDriverName#
+			</isNotNull>		
+			<isNotNull property="csscDriverPhone" prepend=",">
+				cs_special_car$suffix$.cssc_driver_phone = #csscDriverPhone#
+			</isNotNull>		
+			<isNotNull property="csscDriverImage" prepend=",">
+				cs_special_car$suffix$.cssc_driver_image = #csscDriverImage#
+			</isNotNull>		
+			<isNotNull property="csscDriverColor" prepend=",">
+				cs_special_car$suffix$.cssc_driver_color = #csscDriverColor#
+			</isNotNull>		
+			<isNotNull property="csscDriverCarInfo" prepend=",">
+				cs_special_car$suffix$.cssc_driver_car_info = #csscDriverCarInfo#
+			</isNotNull>		
+			<isNotNull property="csscMsg" prepend=",">
+				cs_special_car$suffix$.cssc_msg = #csscMsg#
+			</isNotNull>		
+			<isNotNull property="csscStartPoint" prepend=",">
+				cs_special_car$suffix$.cssc_start_point = #csscStartPoint#
+			</isNotNull>		
+			<isNotNull property="csscStartAddr" prepend=",">
+				cs_special_car$suffix$.cssc_start_addr = #csscStartAddr#
+			</isNotNull>		
+			<isNotNull property="csscStartTime" prepend=",">
+				cs_special_car$suffix$.cssc_start_time = #csscStartTime#
+			</isNotNull>		
+			<isNotNull property="csscFinishPoint" prepend=",">
+				cs_special_car$suffix$.cssc_finish_point = #csscFinishPoint#
+			</isNotNull>		
+			<isNotNull property="csscFinishAddr" prepend=",">
+				cs_special_car$suffix$.cssc_finish_addr = #csscFinishAddr#
+			</isNotNull>		
+			<isNotNull property="csscFinishTime" prepend=",">
+				cs_special_car$suffix$.cssc_finish_time = #csscFinishTime#
+			</isNotNull>		
+			<isNotNull property="csscDuration" prepend=",">
+				cs_special_car$suffix$.cssc_duration = #csscDuration#
+			</isNotNull>		
+			<isNotNull property="csscRealDur" prepend=",">
+				cs_special_car$suffix$.cssc_real_dur = #csscRealDur#
+			</isNotNull>		
+			<isNotNull property="csscKilo" prepend=",">
+				cs_special_car$suffix$.cssc_kilo = #csscKilo#
+			</isNotNull>		
+			<isNotNull property="csscScope" prepend=",">
+				cs_special_car$suffix$.cssc_scope = #csscScope#
+			</isNotNull>		
+			<isNotNull property="csscAssess" prepend=",">
+				cs_special_car$suffix$.cssc_assess = #csscAssess#
+			</isNotNull>		
+			<isNotNull property="csscThird" prepend=",">
+				cs_special_car$suffix$.cssc_third = #csscThird#
+			</isNotNull>		
+			<isNotNull property="csscThirdNo" prepend=",">
+				cs_special_car$suffix$.cssc_third_no = #csscThirdNo#
+			</isNotNull>		
+			<isNotNull property="csscThirdFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee = #csscThirdFee#
+			</isNotNull>		
+			<isNotNull property="csscThirdFeeData" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee_data = #csscThirdFeeData#
+			</isNotNull>		
+			<isNotNull property="csscThirdOtherFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee = #csscThirdOtherFee#
+			</isNotNull>		
+			<isNotNull property="csscThirdOtherFeeDes" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee_des = #csscThirdOtherFeeDes#
+			</isNotNull>		
+			<isNotNull property="csscUpdateTime" prepend=",">
+				cs_special_car$suffix$.cssc_update_time = #csscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csscAddTime" prepend=",">
+				cs_special_car$suffix$.cssc_add_time = #csscAddTime#
+			</isNotNull>		
+			<isNotNull property="csscResponse" prepend=",">
+				cs_special_car$suffix$.cssc_response = #csscResponse#
+			</isNotNull>		
+			<isNotNull property="csscStatus" prepend=",">
+				cs_special_car$suffix$.cssc_status = #csscStatus#
+			</isNotNull>		
+			<isNotNull property="csscPreditMileage" prepend=",">
+				cs_special_car$suffix$.cssc_predit_mileage = #csscPreditMileage#
+			</isNotNull>		
+			<isNotNull property="csscEstimateFee" prepend=",">
+				cs_special_car$suffix$.cssc_estimate_fee = #csscEstimateFee#
+			</isNotNull>		
+			<isNotNull property="csscDemand" prepend=",">
+				cs_special_car$suffix$.cssc_demand = #csscDemand#
+			</isNotNull>		
+			<isNotNull property="csscIsCarpool" prepend=",">
+				cs_special_car$suffix$.cssc_is_carpool = #csscIsCarpool#
+			</isNotNull>		
+			<isNotNull property="csscDriverArrivaltime" prepend=",">
+				cs_special_car$suffix$.cssc_driver_arrivaltime = #csscDriverArrivaltime#
+			</isNotNull>		
+			<isNotNull property="csscDrivercar" prepend=",">
+				cs_special_car$suffix$.cssc_drivercar = #csscDrivercar#
+			</isNotNull>		
+			</dynamic>
+		where
+			cssc_id=#csscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个专车订单 -->
+	<delete id="deleteCsSpecialCarById" parameterClass="java.util.HashMap">
+		delete from cs_special_car$suffix$ where cssc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个专车订单 -->
+	<update id="removeCsSpecialCarById" parameterClass="java.util.HashMap">
+		update cs_special_car$suffix$ set  cs_special_car$suffix$.cssc_status=-1  where cssc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新专车订单 -->
+	<update id="updateCsSpecialCarBy"  parameterClass="java.util.HashMap">
+		update cs_special_car$suffix$ set		
+			cssc_id=cssc_id
+			<isNotNull property="V_csscId" prepend=",">
+				cs_special_car$suffix$.cssc_id = #V_csscId#
+			</isNotNull>		
+			<isNotNull property="V_csscHost" prepend=",">
+				cs_special_car$suffix$.cssc_host = #V_csscHost#
+			</isNotNull>		
+			<isNotNull property="V_csscInfo" prepend=",">
+				cs_special_car$suffix$.cssc_info = #V_csscInfo#
+			</isNotNull>		
+			<isNotNull property="V_csscPerson" prepend=",">
+				cs_special_car$suffix$.cssc_person = #V_csscPerson#
+			</isNotNull>		
+			<isNotNull property="V_csscUnitOrder" prepend=",">
+				cs_special_car$suffix$.cssc_unit_order = #V_csscUnitOrder#
+			</isNotNull>		
+			<isNotNull property="V_csscName" prepend=",">
+				cs_special_car$suffix$.cssc_name = #V_csscName#
+			</isNotNull>		
+			<isNotNull property="V_csscMobile" prepend=",">
+				cs_special_car$suffix$.cssc_mobile = #V_csscMobile#
+			</isNotNull>		
+			<isNotNull property="V_csscCount" prepend=",">
+				cs_special_car$suffix$.cssc_count = #V_csscCount#
+			</isNotNull>		
+			<isNotNull property="V_csscCarModel" prepend=",">
+				cs_special_car$suffix$.cssc_car_model = #V_csscCarModel#
+			</isNotNull>		
+			<isNotNull property="V_csscCarNumber" prepend=",">
+				cs_special_car$suffix$.cssc_car_number = #V_csscCarNumber#
+			</isNotNull>		
+			<isNotNull property="V_csscDriverName" prepend=",">
+				cs_special_car$suffix$.cssc_driver_name = #V_csscDriverName#
+			</isNotNull>		
+			<isNotNull property="V_csscDriverPhone" prepend=",">
+				cs_special_car$suffix$.cssc_driver_phone = #V_csscDriverPhone#
+			</isNotNull>		
+			<isNotNull property="V_csscDriverImage" prepend=",">
+				cs_special_car$suffix$.cssc_driver_image = #V_csscDriverImage#
+			</isNotNull>		
+			<isNotNull property="V_csscDriverColor" prepend=",">
+				cs_special_car$suffix$.cssc_driver_color = #V_csscDriverColor#
+			</isNotNull>		
+			<isNotNull property="V_csscDriverCarInfo" prepend=",">
+				cs_special_car$suffix$.cssc_driver_car_info = #V_csscDriverCarInfo#
+			</isNotNull>		
+			<isNotNull property="V_csscMsg" prepend=",">
+				cs_special_car$suffix$.cssc_msg = #V_csscMsg#
+			</isNotNull>		
+			<isNotNull property="V_csscStartPoint" prepend=",">
+				cs_special_car$suffix$.cssc_start_point = #V_csscStartPoint#
+			</isNotNull>		
+			<isNotNull property="V_csscStartAddr" prepend=",">
+				cs_special_car$suffix$.cssc_start_addr = #V_csscStartAddr#
+			</isNotNull>		
+			<isNotNull property="V_csscStartTime" prepend=",">
+				cs_special_car$suffix$.cssc_start_time = #V_csscStartTime#
+			</isNotNull>		
+			<isNotNull property="V_csscFinishPoint" prepend=",">
+				cs_special_car$suffix$.cssc_finish_point = #V_csscFinishPoint#
+			</isNotNull>		
+			<isNotNull property="V_csscFinishAddr" prepend=",">
+				cs_special_car$suffix$.cssc_finish_addr = #V_csscFinishAddr#
+			</isNotNull>		
+			<isNotNull property="V_csscFinishTime" prepend=",">
+				cs_special_car$suffix$.cssc_finish_time = #V_csscFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_csscDuration" prepend=",">
+				cs_special_car$suffix$.cssc_duration = #V_csscDuration#
+			</isNotNull>		
+			<isNotNull property="V_csscRealDur" prepend=",">
+				cs_special_car$suffix$.cssc_real_dur = #V_csscRealDur#
+			</isNotNull>		
+			<isNotNull property="V_csscKilo" prepend=",">
+				cs_special_car$suffix$.cssc_kilo = #V_csscKilo#
+			</isNotNull>		
+			<isNotNull property="V_csscScope" prepend=",">
+				cs_special_car$suffix$.cssc_scope = #V_csscScope#
+			</isNotNull>		
+			<isNotNull property="V_csscAssess" prepend=",">
+				cs_special_car$suffix$.cssc_assess = #V_csscAssess#
+			</isNotNull>		
+			<isNotNull property="V_csscThird" prepend=",">
+				cs_special_car$suffix$.cssc_third = #V_csscThird#
+			</isNotNull>		
+			<isNotNull property="V_csscThirdNo" prepend=",">
+				cs_special_car$suffix$.cssc_third_no = #V_csscThirdNo#
+			</isNotNull>		
+			<isNotNull property="V_csscThirdFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee = #V_csscThirdFee#
+			</isNotNull>		
+			<isNotNull property="V_csscThirdFeeData" prepend=",">
+				cs_special_car$suffix$.cssc_third_fee_data = #V_csscThirdFeeData#
+			</isNotNull>		
+			<isNotNull property="V_csscThirdOtherFee" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee = #V_csscThirdOtherFee#
+			</isNotNull>		
+			<isNotNull property="V_csscThirdOtherFeeDes" prepend=",">
+				cs_special_car$suffix$.cssc_third_other_fee_des = #V_csscThirdOtherFeeDes#
+			</isNotNull>		
+			<isNotNull property="V_csscUpdateTime" prepend=",">
+				cs_special_car$suffix$.cssc_update_time = #V_csscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csscAddTime" prepend=",">
+				cs_special_car$suffix$.cssc_add_time = #V_csscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csscResponse" prepend=",">
+				cs_special_car$suffix$.cssc_response = #V_csscResponse#
+			</isNotNull>		
+			<isNotNull property="V_csscStatus" prepend=",">
+				cs_special_car$suffix$.cssc_status = #V_csscStatus#
+			</isNotNull>		
+			<isNotNull property="V_csscPreditMileage" prepend=",">
+				cs_special_car$suffix$.cssc_predit_mileage = #V_csscPreditMileage#
+			</isNotNull>		
+			<isNotNull property="V_csscEstimateFee" prepend=",">
+				cs_special_car$suffix$.cssc_estimate_fee = #V_csscEstimateFee#
+			</isNotNull>		
+			<isNotNull property="V_csscDemand" prepend=",">
+				cs_special_car$suffix$.cssc_demand = #V_csscDemand#
+			</isNotNull>		
+			<isNotNull property="V_csscIsCarpool" prepend=",">
+				cs_special_car$suffix$.cssc_is_carpool = #V_csscIsCarpool#
+			</isNotNull>		
+			<isNotNull property="V_csscDriverArrivaltime" prepend=",">
+				cs_special_car$suffix$.cssc_driver_arrivaltime = #V_csscDriverArrivaltime#
+			</isNotNull>		
+			<isNotNull property="V_csscDrivercar" prepend=",">
+				cs_special_car$suffix$.cssc_drivercar = #V_csscDrivercar#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.cssc_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_special_car$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询-->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<isNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.cssc_person=cs_unit_person$CsUnitPerson.suffix$.csup_id
+			</isNull>
+			<isNotNull property="CsUnitPerson.on">
+				left join cs_unit_person cs_unit_person$CsUnitPerson.suffix$ on cs_special_car$suffix$.$CsUnitPerson.on$=cs_unit_person$CsUnitPerson.suffix$.csup_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询-->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<isNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.cssc_unit_order=cs_unit_order$CsUnitOrder.suffix$.csuo_id
+			</isNull>
+			<isNotNull property="CsUnitOrder.on">
+				left join cs_unit_order cs_unit_order$CsUnitOrder.suffix$ on cs_special_car$suffix$.$CsUnitOrder.on$=cs_unit_order$CsUnitOrder.suffix$.csuo_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询-->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<isNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.cssc_car_model=cs_special_model$CsSpecialModel.suffix$.cssm_id
+			</isNull>
+			<isNotNull property="CsSpecialModel.on">
+				left join cs_special_model cs_special_model$CsSpecialModel.suffix$ on cs_special_car$suffix$.$CsSpecialModel.on$=cs_special_model$CsSpecialModel.suffix$.cssm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询-->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<isNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.cssc_drivercar=cs_driver_car$CsDriverCar.suffix$.csdc_id
+			</isNull>
+			<isNotNull property="CsDriverCar.on">
+				left join cs_driver_car cs_driver_car$CsDriverCar.suffix$ on cs_special_car$suffix$.$CsDriverCar.on$=cs_driver_car$CsDriverCar.suffix$.csdc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 1=1 		
+		and cs_special_car$suffix$.cssc_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsscInfo"><!-- 调用一下CsscInfo，把CsUnitInfo指向CsscInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[用车人员]查询条件sql片段 -->
+		<isNotNull property="CsscPerson"><!-- 调用一下CsscPerson，把CsUnitPerson指向CsscPerson --></isNotNull>
+		<isNotNull property="CsUnitPerson">
+			<include refid="CsUnitPerson_part.cs_unit_person_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[企业订单]查询条件sql片段 -->
+		<isNotNull property="CsscUnitOrder"><!-- 调用一下CsscUnitOrder，把CsUnitOrder指向CsscUnitOrder --></isNotNull>
+		<isNotNull property="CsUnitOrder">
+			<include refid="CsUnitOrder_part.cs_unit_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[预定车型]查询条件sql片段 -->
+		<isNotNull property="CsscCarModel"><!-- 调用一下CsscCarModel，把CsSpecialModel指向CsscCarModel --></isNotNull>
+		<isNotNull property="CsSpecialModel">
+			<include refid="CsSpecialModel_part.cs_special_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[专车司机]查询条件sql片段 -->
+		<isNotNull property="CsscDrivercar"><!-- 调用一下CsscDrivercar，把CsDriverCar指向CsscDrivercar --></isNotNull>
+		<isNotNull property="CsDriverCar">
+			<include refid="CsDriverCar_part.cs_driver_car_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsSpecialCar_part.cs_special_car_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除专车订单 -->
+	<update id="deleteCsSpecialCarBy"  parameterClass="java.util.HashMap">
+		delete from cs_special_car$suffix$ where 
+		cs_special_car$suffix$.cssc_status!=-1 and 
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsSpecialCar_part.cs_special_car_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

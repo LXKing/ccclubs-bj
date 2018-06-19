@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 价格配置之SQL映射 -->
+	<resultMap id="CsUnitFee" class="com.ccclubs.model.CsUnitFee">
+		<result property="csufId" column="csuf_id"/>
+		<result property="csufHost" column="csuf_host"/>
+		<result property="csufName" column="csuf_name"/>
+		<result property="csufUnitInfo" column="csuf_unit_info"/>
+		<result property="csufModel" column="csuf_model"/>
+		<result property="csufDayPrice" column="csuf_day_price"/>
+		<result property="csufHourPrice" column="csuf_hour_price"/>
+		<result property="csufMileage" column="csuf_mileage"/>
+	</resultMap>
+		
+	<!-- 获取所有价格配置 -->
+	<select id="getCsUnitFeeList" resultMap="CsUnitFee">
+		select cs_unit_fee$suffix$.* from cs_unit_fee$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.csuf_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.csuf_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitFee_part.cs_unit_fee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csuf_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取价格配置分页 -->
+	<select id="getCsUnitFeePage" parameterClass="java.util.HashMap" resultMap="CsUnitFee">
+		select cs_unit_fee$suffix$.* from cs_unit_fee$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询 -->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.csuf_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.csuf_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitFee_part.cs_unit_fee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csuf_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取价格配置总数 -->
+	<select id="getCsUnitFeeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_fee$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.csuf_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.csuf_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitFee_part.cs_unit_fee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取价格配置 -->
+	<select id="getCsUnitFeeById" parameterClass="java.util.HashMap" resultMap="CsUnitFee">
+		select cs_unit_fee$suffix$.* from cs_unit_fee$suffix$
+		where csuf_id=#id#
+	</select>
+	
+		
+	<!-- 保存价格配置 -->
+	<insert id="saveCsUnitFee"  parameterClass="com.ccclubs.model.CsUnitFee">
+		insert into cs_unit_fee$suffix$
+		(
+			cs_unit_fee$suffix$.csuf_host
+			,cs_unit_fee$suffix$.csuf_name
+			,cs_unit_fee$suffix$.csuf_unit_info
+			,cs_unit_fee$suffix$.csuf_model
+			,cs_unit_fee$suffix$.csuf_day_price
+			,cs_unit_fee$suffix$.csuf_hour_price
+			,cs_unit_fee$suffix$.csuf_mileage
+		)
+		values(
+			<isNotNull property="csufHost" prepend="">
+				#csufHost#
+			</isNotNull>
+			<isNull property="csufHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csufName" prepend=",">
+				#csufName#
+			</isNotNull>
+			<isNull property="csufName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csufUnitInfo" prepend=",">
+				#csufUnitInfo#
+			</isNotNull>
+			<isNull property="csufUnitInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csufModel" prepend=",">
+				#csufModel#
+			</isNotNull>
+			<isNull property="csufModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csufDayPrice" prepend=",">
+				#csufDayPrice#
+			</isNotNull>
+			<isNull property="csufDayPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csufHourPrice" prepend=",">
+				#csufHourPrice#
+			</isNotNull>
+			<isNull property="csufHourPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csufMileage" prepend=",">
+				#csufMileage#
+			</isNotNull>
+			<isNull property="csufMileage" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新价格配置 -->
+	<update id="updateCsUnitFee"  parameterClass="com.ccclubs.model.CsUnitFee">
+		update cs_unit_fee$suffix$ set
+			<isNotNull property="csufHost" prepend="">
+				cs_unit_fee$suffix$.csuf_host = #csufHost#
+			</isNotNull>
+			<isNull property="csufHost" prepend="">
+				cs_unit_fee$suffix$.csuf_host = null
+			</isNull>				
+			<isNotNull property="csufName" prepend=",">
+				cs_unit_fee$suffix$.csuf_name = #csufName#
+			</isNotNull>
+			<isNull property="csufName" prepend=",">
+				cs_unit_fee$suffix$.csuf_name = null
+			</isNull>				
+			<isNotNull property="csufUnitInfo" prepend=",">
+				cs_unit_fee$suffix$.csuf_unit_info = #csufUnitInfo#
+			</isNotNull>
+			<isNull property="csufUnitInfo" prepend=",">
+				cs_unit_fee$suffix$.csuf_unit_info = null
+			</isNull>				
+			<isNotNull property="csufModel" prepend=",">
+				cs_unit_fee$suffix$.csuf_model = #csufModel#
+			</isNotNull>
+			<isNull property="csufModel" prepend=",">
+				cs_unit_fee$suffix$.csuf_model = null
+			</isNull>				
+			<isNotNull property="csufDayPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_day_price = #csufDayPrice#
+			</isNotNull>
+			<isNull property="csufDayPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_day_price = null
+			</isNull>				
+			<isNotNull property="csufHourPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_hour_price = #csufHourPrice#
+			</isNotNull>
+			<isNull property="csufHourPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_hour_price = null
+			</isNull>				
+			<isNotNull property="csufMileage" prepend=",">
+				cs_unit_fee$suffix$.csuf_mileage = #csufMileage#
+			</isNotNull>
+			<isNull property="csufMileage" prepend=",">
+				cs_unit_fee$suffix$.csuf_mileage = null
+			</isNull>				
+		where
+			csuf_id=#csufId#
+	</update>
+	
+	<!-- 更新价格配置非空字段 -->
+	<update id="updateCsUnitFee$NotNull"  parameterClass="com.ccclubs.model.CsUnitFee">
+		update cs_unit_fee$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csufHost" prepend=",">
+				cs_unit_fee$suffix$.csuf_host = #csufHost#
+			</isNotNull>		
+			<isNotNull property="csufName" prepend=",">
+				cs_unit_fee$suffix$.csuf_name = #csufName#
+			</isNotNull>		
+			<isNotNull property="csufUnitInfo" prepend=",">
+				cs_unit_fee$suffix$.csuf_unit_info = #csufUnitInfo#
+			</isNotNull>		
+			<isNotNull property="csufModel" prepend=",">
+				cs_unit_fee$suffix$.csuf_model = #csufModel#
+			</isNotNull>		
+			<isNotNull property="csufDayPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_day_price = #csufDayPrice#
+			</isNotNull>		
+			<isNotNull property="csufHourPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_hour_price = #csufHourPrice#
+			</isNotNull>		
+			<isNotNull property="csufMileage" prepend=",">
+				cs_unit_fee$suffix$.csuf_mileage = #csufMileage#
+			</isNotNull>		
+			</dynamic>
+		where
+			csuf_id=#csufId#
+	</update>
+	
+
+	<!-- 根据ID删除一个价格配置 -->
+	<delete id="deleteCsUnitFeeById" parameterClass="java.util.HashMap">
+		delete from cs_unit_fee$suffix$ where csuf_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新价格配置 -->
+	<update id="updateCsUnitFeeBy"  parameterClass="java.util.HashMap">
+		update cs_unit_fee$suffix$ set		
+			csuf_id=csuf_id
+			<isNotNull property="V_csufId" prepend=",">
+				cs_unit_fee$suffix$.csuf_id = #V_csufId#
+			</isNotNull>		
+			<isNotNull property="V_csufHost" prepend=",">
+				cs_unit_fee$suffix$.csuf_host = #V_csufHost#
+			</isNotNull>		
+			<isNotNull property="V_csufName" prepend=",">
+				cs_unit_fee$suffix$.csuf_name = #V_csufName#
+			</isNotNull>		
+			<isNotNull property="V_csufUnitInfo" prepend=",">
+				cs_unit_fee$suffix$.csuf_unit_info = #V_csufUnitInfo#
+			</isNotNull>		
+			<isNotNull property="V_csufModel" prepend=",">
+				cs_unit_fee$suffix$.csuf_model = #V_csufModel#
+			</isNotNull>		
+			<isNotNull property="V_csufDayPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_day_price = #V_csufDayPrice#
+			</isNotNull>		
+			<isNotNull property="V_csufHourPrice" prepend=",">
+				cs_unit_fee$suffix$.csuf_hour_price = #V_csufHourPrice#
+			</isNotNull>		
+			<isNotNull property="V_csufMileage" prepend=",">
+				cs_unit_fee$suffix$.csuf_mileage = #V_csufMileage#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.csuf_unit_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_fee$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.csuf_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_unit_fee$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsufUnitInfo"><!-- 调用一下CsufUnitInfo，把CsUnitInfo指向CsufUnitInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsufModel"><!-- 调用一下CsufModel，把CsCarModel指向CsufModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitFee_part.cs_unit_fee_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除价格配置 -->
+	<update id="deleteCsUnitFeeBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_fee$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitFee_part.cs_unit_fee_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

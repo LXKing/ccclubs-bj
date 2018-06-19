@@ -1,0 +1,927 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆违章之SQL映射 -->
+	<resultMap id="CsViolat" class="com.ccclubs.model.CsViolat">
+		<result property="csvId" column="csv_id"/>
+		<result property="csvHost" column="csv_host"/>
+		<result property="csvOrder" column="csv_order"/>
+		<result property="csvMember" column="csv_member"/>
+		<result property="csvCar" column="csv_car"/>
+		<result property="csvMoney" column="csv_money"/>
+		<result property="csvScore" column="csv_score"/>
+		<result property="csvHappenTime" column="csv_happen_time"/>
+		<result property="csvDecipt" column="csv_decipt"/>
+		<result property="csvNoticeTime" column="csv_notice_time"/>
+		<result property="csvCutoffTime" column="csv_cutoff_time"/>
+		<result property="csvType" column="csv_type"/>
+		<result property="csvPrice" column="csv_price"/>
+		<result property="csvBranch" column="csv_branch"/>
+		<result property="csvPostType" column="csv_post_type"/>
+		<result property="csvAddress" column="csv_address"/>
+		<result property="csvRemark" column="csv_remark"/>
+		<result property="csvAccepter" column="csv_accepter"/>
+		<result property="csvAdder" column="csv_adder"/>
+		<result property="csvUpdateTime" column="csv_update_time"/>
+		<result property="csvAddTime" column="csv_add_time"/>
+		<result property="csvDealFlag" column="csv_deal_flag"/>
+		<result property="csv22" column="csv_22"/>
+		<result property="csvStatus" column="csv_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆违章 -->
+	<select id="getCsViolatList" resultMap="CsViolat">
+		select cs_violat$suffix$.* from cs_violat$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.csv_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.csv_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.csv_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_violat$suffix$.csv_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsViolat_part.cs_violat_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csv_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	<!-- 统计车辆违章 -->
+	<select id="getCsViolatStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_violat$suffix$		
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.csv_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.csv_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.csv_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_violat$suffix$.csv_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsViolat_part.cs_violat_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆违章分页 -->
+	<select id="getCsViolatPage" parameterClass="java.util.HashMap" resultMap="CsViolat">
+		select cs_violat$suffix$.* from cs_violat$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.csv_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.csv_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.csv_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_violat$suffix$.csv_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsViolat_part.cs_violat_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csv_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆违章总数 -->
+	<select id="getCsViolatEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_violat$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.csv_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.csv_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.csv_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_violat$suffix$.csv_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsViolat_part.cs_violat_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆违章 -->
+	<select id="getCsViolatById" parameterClass="java.util.HashMap" resultMap="CsViolat">
+		select cs_violat$suffix$.* from cs_violat$suffix$
+		where csv_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆违章 -->
+	<insert id="saveCsViolat"  parameterClass="com.ccclubs.model.CsViolat">
+		insert into cs_violat$suffix$
+		(
+			cs_violat$suffix$.csv_host
+			,cs_violat$suffix$.csv_order
+			,cs_violat$suffix$.csv_member
+			,cs_violat$suffix$.csv_car
+			,cs_violat$suffix$.csv_money
+			,cs_violat$suffix$.csv_score
+			,cs_violat$suffix$.csv_happen_time
+			,cs_violat$suffix$.csv_decipt
+			,cs_violat$suffix$.csv_notice_time
+			,cs_violat$suffix$.csv_cutoff_time
+			,cs_violat$suffix$.csv_type
+			,cs_violat$suffix$.csv_price
+			,cs_violat$suffix$.csv_branch
+			,cs_violat$suffix$.csv_post_type
+			,cs_violat$suffix$.csv_address
+			,cs_violat$suffix$.csv_remark
+			,cs_violat$suffix$.csv_accepter
+			,cs_violat$suffix$.csv_adder
+			,cs_violat$suffix$.csv_update_time
+			,cs_violat$suffix$.csv_add_time
+			,cs_violat$suffix$.csv_deal_flag
+			,cs_violat$suffix$.csv_22
+			,cs_violat$suffix$.csv_status
+		)
+		values(
+			<isNotNull property="csvHost" prepend="">
+				#csvHost#
+			</isNotNull>
+			<isNull property="csvHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csvOrder" prepend=",">
+				#csvOrder#
+			</isNotNull>
+			<isNull property="csvOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvMember" prepend=",">
+				#csvMember#
+			</isNotNull>
+			<isNull property="csvMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvCar" prepend=",">
+				#csvCar#
+			</isNotNull>
+			<isNull property="csvCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvMoney" prepend=",">
+				#csvMoney#
+			</isNotNull>
+			<isNull property="csvMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvScore" prepend=",">
+				#csvScore#
+			</isNotNull>
+			<isNull property="csvScore" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvHappenTime" prepend=",">
+				#csvHappenTime#
+			</isNotNull>
+			<isNull property="csvHappenTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvDecipt" prepend=",">
+				#csvDecipt#
+			</isNotNull>
+			<isNull property="csvDecipt" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvNoticeTime" prepend=",">
+				#csvNoticeTime#
+			</isNotNull>
+			<isNull property="csvNoticeTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvCutoffTime" prepend=",">
+				#csvCutoffTime#
+			</isNotNull>
+			<isNull property="csvCutoffTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvType" prepend=",">
+				#csvType#
+			</isNotNull>
+			<isNull property="csvType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvPrice" prepend=",">
+				#csvPrice#
+			</isNotNull>
+			<isNull property="csvPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvBranch" prepend=",">
+				#csvBranch#
+			</isNotNull>
+			<isNull property="csvBranch" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvPostType" prepend=",">
+				#csvPostType#
+			</isNotNull>
+			<isNull property="csvPostType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvAddress" prepend=",">
+				#csvAddress#
+			</isNotNull>
+			<isNull property="csvAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvRemark" prepend=",">
+				#csvRemark#
+			</isNotNull>
+			<isNull property="csvRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvAccepter" prepend=",">
+				#csvAccepter#
+			</isNotNull>
+			<isNull property="csvAccepter" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvAdder" prepend=",">
+				#csvAdder#
+			</isNotNull>
+			<isNull property="csvAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvUpdateTime" prepend=",">
+				#csvUpdateTime#
+			</isNotNull>
+			<isNull property="csvUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvAddTime" prepend=",">
+				#csvAddTime#
+			</isNotNull>
+			<isNull property="csvAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvDealFlag" prepend=",">
+				#csvDealFlag#
+			</isNotNull>
+			<isNull property="csvDealFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csv22" prepend=",">
+				#csv22#
+			</isNotNull>
+			<isNull property="csv22" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csvStatus" prepend=",">
+				#csvStatus#
+			</isNotNull>
+			<isNull property="csvStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆违章 -->
+	<update id="updateCsViolat"  parameterClass="com.ccclubs.model.CsViolat">
+		update cs_violat$suffix$ set
+			<isNotNull property="csvHost" prepend="">
+				cs_violat$suffix$.csv_host = #csvHost#
+			</isNotNull>
+			<isNull property="csvHost" prepend="">
+				cs_violat$suffix$.csv_host = null
+			</isNull>				
+			<isNotNull property="csvOrder" prepend=",">
+				cs_violat$suffix$.csv_order = #csvOrder#
+			</isNotNull>
+			<isNull property="csvOrder" prepend=",">
+				cs_violat$suffix$.csv_order = null
+			</isNull>				
+			<isNotNull property="csvMember" prepend=",">
+				cs_violat$suffix$.csv_member = #csvMember#
+			</isNotNull>
+			<isNull property="csvMember" prepend=",">
+				cs_violat$suffix$.csv_member = null
+			</isNull>				
+			<isNotNull property="csvCar" prepend=",">
+				cs_violat$suffix$.csv_car = #csvCar#
+			</isNotNull>
+			<isNull property="csvCar" prepend=",">
+				cs_violat$suffix$.csv_car = null
+			</isNull>				
+			<isNotNull property="csvMoney" prepend=",">
+				cs_violat$suffix$.csv_money = #csvMoney#
+			</isNotNull>
+			<isNull property="csvMoney" prepend=",">
+				cs_violat$suffix$.csv_money = null
+			</isNull>				
+			<isNotNull property="csvScore" prepend=",">
+				cs_violat$suffix$.csv_score = #csvScore#
+			</isNotNull>
+			<isNull property="csvScore" prepend=",">
+				cs_violat$suffix$.csv_score = null
+			</isNull>				
+			<isNotNull property="csvHappenTime" prepend=",">
+				cs_violat$suffix$.csv_happen_time = #csvHappenTime#
+			</isNotNull>
+			<isNull property="csvHappenTime" prepend=",">
+				cs_violat$suffix$.csv_happen_time = null
+			</isNull>				
+			<isNotNull property="csvDecipt" prepend=",">
+				cs_violat$suffix$.csv_decipt = #csvDecipt#
+			</isNotNull>
+			<isNull property="csvDecipt" prepend=",">
+				cs_violat$suffix$.csv_decipt = null
+			</isNull>				
+			<isNotNull property="csvNoticeTime" prepend=",">
+				cs_violat$suffix$.csv_notice_time = #csvNoticeTime#
+			</isNotNull>
+			<isNull property="csvNoticeTime" prepend=",">
+				cs_violat$suffix$.csv_notice_time = null
+			</isNull>				
+			<isNotNull property="csvCutoffTime" prepend=",">
+				cs_violat$suffix$.csv_cutoff_time = #csvCutoffTime#
+			</isNotNull>
+			<isNull property="csvCutoffTime" prepend=",">
+				cs_violat$suffix$.csv_cutoff_time = null
+			</isNull>				
+			<isNotNull property="csvType" prepend=",">
+				cs_violat$suffix$.csv_type = #csvType#
+			</isNotNull>
+			<isNull property="csvType" prepend=",">
+				cs_violat$suffix$.csv_type = null
+			</isNull>				
+			<isNotNull property="csvPrice" prepend=",">
+				cs_violat$suffix$.csv_price = #csvPrice#
+			</isNotNull>
+			<isNull property="csvPrice" prepend=",">
+				cs_violat$suffix$.csv_price = null
+			</isNull>				
+			<isNotNull property="csvBranch" prepend=",">
+				cs_violat$suffix$.csv_branch = #csvBranch#
+			</isNotNull>
+			<isNull property="csvBranch" prepend=",">
+				cs_violat$suffix$.csv_branch = null
+			</isNull>				
+			<isNotNull property="csvPostType" prepend=",">
+				cs_violat$suffix$.csv_post_type = #csvPostType#
+			</isNotNull>
+			<isNull property="csvPostType" prepend=",">
+				cs_violat$suffix$.csv_post_type = null
+			</isNull>				
+			<isNotNull property="csvAddress" prepend=",">
+				cs_violat$suffix$.csv_address = #csvAddress#
+			</isNotNull>
+			<isNull property="csvAddress" prepend=",">
+				cs_violat$suffix$.csv_address = null
+			</isNull>				
+			<isNotNull property="csvRemark" prepend=",">
+				cs_violat$suffix$.csv_remark = #csvRemark#
+			</isNotNull>
+			<isNull property="csvRemark" prepend=",">
+				cs_violat$suffix$.csv_remark = null
+			</isNull>				
+			<isNotNull property="csvAccepter" prepend=",">
+				cs_violat$suffix$.csv_accepter = #csvAccepter#
+			</isNotNull>
+			<isNull property="csvAccepter" prepend=",">
+				cs_violat$suffix$.csv_accepter = null
+			</isNull>				
+			<isNotNull property="csvAdder" prepend=",">
+				cs_violat$suffix$.csv_adder = #csvAdder#
+			</isNotNull>
+			<isNull property="csvAdder" prepend=",">
+				cs_violat$suffix$.csv_adder = null
+			</isNull>				
+			<isNotNull property="csvUpdateTime" prepend=",">
+				cs_violat$suffix$.csv_update_time = #csvUpdateTime#
+			</isNotNull>
+			<isNull property="csvUpdateTime" prepend=",">
+				cs_violat$suffix$.csv_update_time = null
+			</isNull>				
+			<isNotNull property="csvAddTime" prepend=",">
+				cs_violat$suffix$.csv_add_time = #csvAddTime#
+			</isNotNull>
+			<isNull property="csvAddTime" prepend=",">
+				cs_violat$suffix$.csv_add_time = null
+			</isNull>				
+			<isNotNull property="csvDealFlag" prepend=",">
+				cs_violat$suffix$.csv_deal_flag = #csvDealFlag#
+			</isNotNull>
+			<isNull property="csvDealFlag" prepend=",">
+				cs_violat$suffix$.csv_deal_flag = null
+			</isNull>				
+			<isNotNull property="csv22" prepend=",">
+				cs_violat$suffix$.csv_22 = #csv22#
+			</isNotNull>
+			<isNull property="csv22" prepend=",">
+				cs_violat$suffix$.csv_22 = null
+			</isNull>				
+			<isNotNull property="csvStatus" prepend=",">
+				cs_violat$suffix$.csv_status = #csvStatus#
+			</isNotNull>
+			<isNull property="csvStatus" prepend=",">
+				cs_violat$suffix$.csv_status = null
+			</isNull>				
+		where
+			csv_id=#csvId#
+	</update>
+	
+	<!-- 更新车辆违章非空字段 -->
+	<update id="updateCsViolat$NotNull"  parameterClass="com.ccclubs.model.CsViolat">
+		update cs_violat$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csvHost" prepend=",">
+				cs_violat$suffix$.csv_host = #csvHost#
+			</isNotNull>		
+			<isNotNull property="csvOrder" prepend=",">
+				cs_violat$suffix$.csv_order = #csvOrder#
+			</isNotNull>		
+			<isNotNull property="csvMember" prepend=",">
+				cs_violat$suffix$.csv_member = #csvMember#
+			</isNotNull>		
+			<isNotNull property="csvCar" prepend=",">
+				cs_violat$suffix$.csv_car = #csvCar#
+			</isNotNull>		
+			<isNotNull property="csvMoney" prepend=",">
+				cs_violat$suffix$.csv_money = #csvMoney#
+			</isNotNull>		
+			<isNotNull property="csvScore" prepend=",">
+				cs_violat$suffix$.csv_score = #csvScore#
+			</isNotNull>		
+			<isNotNull property="csvHappenTime" prepend=",">
+				cs_violat$suffix$.csv_happen_time = #csvHappenTime#
+			</isNotNull>		
+			<isNotNull property="csvDecipt" prepend=",">
+				cs_violat$suffix$.csv_decipt = #csvDecipt#
+			</isNotNull>		
+			<isNotNull property="csvNoticeTime" prepend=",">
+				cs_violat$suffix$.csv_notice_time = #csvNoticeTime#
+			</isNotNull>		
+			<isNotNull property="csvCutoffTime" prepend=",">
+				cs_violat$suffix$.csv_cutoff_time = #csvCutoffTime#
+			</isNotNull>		
+			<isNotNull property="csvType" prepend=",">
+				cs_violat$suffix$.csv_type = #csvType#
+			</isNotNull>		
+			<isNotNull property="csvPrice" prepend=",">
+				cs_violat$suffix$.csv_price = #csvPrice#
+			</isNotNull>		
+			<isNotNull property="csvBranch" prepend=",">
+				cs_violat$suffix$.csv_branch = #csvBranch#
+			</isNotNull>		
+			<isNotNull property="csvPostType" prepend=",">
+				cs_violat$suffix$.csv_post_type = #csvPostType#
+			</isNotNull>		
+			<isNotNull property="csvAddress" prepend=",">
+				cs_violat$suffix$.csv_address = #csvAddress#
+			</isNotNull>		
+			<isNotNull property="csvRemark" prepend=",">
+				cs_violat$suffix$.csv_remark = #csvRemark#
+			</isNotNull>		
+			<isNotNull property="csvAccepter" prepend=",">
+				cs_violat$suffix$.csv_accepter = #csvAccepter#
+			</isNotNull>		
+			<isNotNull property="csvAdder" prepend=",">
+				cs_violat$suffix$.csv_adder = #csvAdder#
+			</isNotNull>		
+			<isNotNull property="csvUpdateTime" prepend=",">
+				cs_violat$suffix$.csv_update_time = #csvUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csvAddTime" prepend=",">
+				cs_violat$suffix$.csv_add_time = #csvAddTime#
+			</isNotNull>		
+			<isNotNull property="csvDealFlag" prepend=",">
+				cs_violat$suffix$.csv_deal_flag = #csvDealFlag#
+			</isNotNull>		
+			<isNotNull property="csv22" prepend=",">
+				cs_violat$suffix$.csv_22 = #csv22#
+			</isNotNull>		
+			<isNotNull property="csvStatus" prepend=",">
+				cs_violat$suffix$.csv_status = #csvStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csv_id=#csvId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆违章 -->
+	<delete id="deleteCsViolatById" parameterClass="java.util.HashMap">
+		delete from cs_violat$suffix$ where csv_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆违章 -->
+	<update id="removeCsViolatById" parameterClass="java.util.HashMap">
+		update cs_violat$suffix$ set  cs_violat$suffix$.csv_status=-1  where csv_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆违章 -->
+	<update id="updateCsViolatBy"  parameterClass="java.util.HashMap">
+		update cs_violat$suffix$ set		
+			csv_id=csv_id
+			<isNotNull property="V_csvId" prepend=",">
+				cs_violat$suffix$.csv_id = #V_csvId#
+			</isNotNull>		
+			<isNotNull property="V_csvHost" prepend=",">
+				cs_violat$suffix$.csv_host = #V_csvHost#
+			</isNotNull>		
+			<isNotNull property="V_csvOrder" prepend=",">
+				cs_violat$suffix$.csv_order = #V_csvOrder#
+			</isNotNull>		
+			<isNotNull property="V_csvMember" prepend=",">
+				cs_violat$suffix$.csv_member = #V_csvMember#
+			</isNotNull>		
+			<isNotNull property="V_csvCar" prepend=",">
+				cs_violat$suffix$.csv_car = #V_csvCar#
+			</isNotNull>		
+			<isNotNull property="V_csvMoney" prepend=",">
+				cs_violat$suffix$.csv_money = #V_csvMoney#
+			</isNotNull>		
+			<isNotNull property="V_csvScore" prepend=",">
+				cs_violat$suffix$.csv_score = #V_csvScore#
+			</isNotNull>		
+			<isNotNull property="V_csvHappenTime" prepend=",">
+				cs_violat$suffix$.csv_happen_time = #V_csvHappenTime#
+			</isNotNull>		
+			<isNotNull property="V_csvDecipt" prepend=",">
+				cs_violat$suffix$.csv_decipt = #V_csvDecipt#
+			</isNotNull>		
+			<isNotNull property="V_csvNoticeTime" prepend=",">
+				cs_violat$suffix$.csv_notice_time = #V_csvNoticeTime#
+			</isNotNull>		
+			<isNotNull property="V_csvCutoffTime" prepend=",">
+				cs_violat$suffix$.csv_cutoff_time = #V_csvCutoffTime#
+			</isNotNull>		
+			<isNotNull property="V_csvType" prepend=",">
+				cs_violat$suffix$.csv_type = #V_csvType#
+			</isNotNull>		
+			<isNotNull property="V_csvPrice" prepend=",">
+				cs_violat$suffix$.csv_price = #V_csvPrice#
+			</isNotNull>		
+			<isNotNull property="V_csvBranch" prepend=",">
+				cs_violat$suffix$.csv_branch = #V_csvBranch#
+			</isNotNull>		
+			<isNotNull property="V_csvPostType" prepend=",">
+				cs_violat$suffix$.csv_post_type = #V_csvPostType#
+			</isNotNull>		
+			<isNotNull property="V_csvAddress" prepend=",">
+				cs_violat$suffix$.csv_address = #V_csvAddress#
+			</isNotNull>		
+			<isNotNull property="V_csvRemark" prepend=",">
+				cs_violat$suffix$.csv_remark = #V_csvRemark#
+			</isNotNull>		
+			<isNotNull property="V_csvAccepter" prepend=",">
+				cs_violat$suffix$.csv_accepter = #V_csvAccepter#
+			</isNotNull>		
+			<isNotNull property="V_csvAdder" prepend=",">
+				cs_violat$suffix$.csv_adder = #V_csvAdder#
+			</isNotNull>		
+			<isNotNull property="V_csvUpdateTime" prepend=",">
+				cs_violat$suffix$.csv_update_time = #V_csvUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csvAddTime" prepend=",">
+				cs_violat$suffix$.csv_add_time = #V_csvAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csvDealFlag" prepend=",">
+				cs_violat$suffix$.csv_deal_flag = #V_csvDealFlag#
+			</isNotNull>		
+			<isNotNull property="V_csv22" prepend=",">
+				cs_violat$suffix$.csv_22 = #V_csv22#
+			</isNotNull>		
+			<isNotNull property="V_csvStatus" prepend=",">
+				cs_violat$suffix$.csv_status = #V_csvStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.csv_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_violat$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.csv_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_violat$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.csv_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_violat$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_violat$suffix$.csv_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsvOrder"><!-- 调用一下CsvOrder，把CsOrder指向CsvOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsvMember"><!-- 调用一下CsvMember，把CsMember指向CsvMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsvCar"><!-- 调用一下CsvCar，把CsCar指向CsvCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsViolat_part.cs_violat_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆违章 -->
+	<update id="deleteCsViolatBy"  parameterClass="java.util.HashMap">
+		delete from cs_violat$suffix$ where 
+		cs_violat$suffix$.csv_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsViolat_part.cs_violat_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

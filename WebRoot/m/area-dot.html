@@ -1,0 +1,120 @@
+<div id="area_dot" style="width: 100%;height: 100%;position: fixed;top: 0;left: 0;z-index: 555">
+  <div style="background: #000;width: 100%;height: 100%;opacity: 0.8;filter: alpha(opacity=80);"></div>
+  <div class="panel" data-role="panel" style="width:90%;position: fixed;top:20%;left:5%;z-index: 111;background-color: #fff">
+    <div class="panel-header">网点取车</div>
+    <div class="panel-content">
+      <div id="datemark"></div>
+      <div id="datescroll">
+        <div id="areacars" class="carlayer arealayer_ul">
+          <ul class="areacar">
+          </ul>
+        </div>
+        <div  id="dotcars" class="carlayer dotlayer_ul">
+          <ul class="dotcar">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer segmented-control" style="margin-bottom: 0"> <a id="dateconfirm" class="platform-switch control-item font-positive" onclick="mineDot()">确  定</a> <a id="datecancle" class="platform-switch control-item font-gray" onclick="areahide()">取  消</a> </div>
+  </div>
+</div>
+<script type="text/javascript" src="js/iscroll.js"></script>
+	<script>
+	area_ajax();
+	myareacar()
+	var area_val="";
+	var dot_val="";
+	var first_area_id;
+	var first_area_name;
+	var areacar;
+	function myareacar(){
+	areacar=new iScroll("areacars", {
+		snap: "li",
+		vScrollbar: false,
+		checkDOMChanges:true,
+		onScrollEnd: function() {
+			var indexY =(this.y /62) * -1;
+			indexY= Math.round(indexY);
+			area_val=$('.areacar').children().eq(indexY+1).html();
+			area_id=$('.areacar').children().eq(indexY+1).val();
+			dot_ajax(area_id);
+			$(".dotcar").css("-webkit-transform","translate3d(0px, 0px, 0px)");
+			mydotcar();
+			}
+		})
+	}
+	window.addEventListener("DOMContentLoaded",areacar,false);
+	var dotcar;
+	function mydotcar(){
+		dotcar=new iScroll("dotcars", {
+		snap: "li",
+		vScrollbar: false,
+		checkDOMChanges:true,
+		onScrollEnd: function() {
+			var indexY =(this.y /62)* -1;
+			indexY= Math.round(indexY);
+			dot_val=$('.dotcar').children().eq(indexY+1).html();
+			dot_id=$('.dotcar').children().eq(indexY+1).val();
+			}
+		})
+	}
+	window.addEventListener("DOMContentLoaded",dotcar,false);
+	//区域
+	function area_ajax() {
+		var src='<li>选择区域</li>';
+	$.ajax({
+		url: "/m/ajax_indexArea.html",
+	data: {csHost: Cache.get('host_value').data},
+	cache: false,
+	async: false,
+	type: "post",
+	dataType:"json",
+	success: function(data) {
+		var datas=data.list;
+		for(var i=0;datas.length>i;i++){
+			src+="<li value='"+datas[i].csaId+"'>"+datas[i].csaName.substring(0,4)+"</li>"
+		}
+		first_area_id=datas[0].csaId;
+		first_area_name=datas[0].csaName;
+		dot_ajax(first_area_id);
+		mydotcar();
+		src+='<li>&nbsp;</li>';
+		$(".areacar").html(src);
+	    },
+	   
+	    cache: false,
+	    timeout: 5000,
+	    error: function() {
+	        alert("系统错误请联系管理员！");
+	    }
+	});}
+	//网点
+	function dot_ajax(id) {
+	$(".dotcar").html("");
+	var src='<li>&nbsp;</li><li>所有网点</li>';
+	$.ajax({
+		url: "/m/ajax_cityOfRegion.html",
+		data: {region: id},
+		cache: false,
+		async: false,
+	    type: "post",
+	    dataType:"json",
+	    success: function(data) {
+	    	var datas=data.list
+	    	for(var i=0;datas.length>i;i++){
+	    		src+="<li value='"+datas[i].csoId+"'>"+datas[i].csoName.substring(0,12)+"</li>"
+	    	}
+	    	src+='<li>&nbsp;</li>';
+	    	$(".dotcar").html(src);
+	    },
+	   
+	    cache: false,
+	    timeout: 5000,
+	    error: function() {
+	        alert("系统错误请联系管理员！");
+	    }
+	});}
+	function areahide(){
+		$("#ccc-area-box").hide();
+	}
+</script>

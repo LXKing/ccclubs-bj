@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>意见反馈</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body class="chat-bg">
+		<div id="content" class="content">
+			<!-- div class="harder-title"><p>意见反馈</p></div> -->
+			<s:if test="#request.complain.size()>0">
+			<s:iterator value="#request.complain" id="item" status="i">
+				<div class="chat">
+					<div class="chat-left">
+						<img alt="头像" title="用户头像" src="${cc:isNullOrEmpty(csMember.csmHeader)?'/weixin/images/renpic.jpg':csMember.csmHeader}" />
+						<p>${item.cscContent}</p>
+					</div>
+					<s:if test="#item.cscDispose!=null">
+					<div class="chat-right">
+						<img src="http://img.ccclubs.com/header/201506151415061920.jpg">
+						<p>${item.cscDispose}</p>
+					</div>
+					</s:if>
+				</div>
+			</s:iterator>
+			</s:if>
+			<div class="chat-buttom">
+				<div class="buttom-textarea" id="sendtxt"><textarea></textarea></div>
+				<div class="buttom-btn" onclick="send()" id="sendbtn"><p>发送</p></div>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function send(){
+			var btn = $('#sendbtn');
+			btn.attr("disabled", true);
+			var tucao = $('#sendtxt').val();
+			if(tucao==null||typeof(tucao)=='undefined'){
+				Toast.show('请留下您的意见和建议，我们将努力改进。');
+				btn.removeAttr("disabled");
+				return;
+			}
+			$.ajax({
+				type: 'get',
+        		url: 'account_back.html',
+        		data:{
+        			type: '1',
+        			tucao: tucao
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			btn.removeAttr("disabled");
+       				Toast.show(data.message);
+       				$('#sendtxt').val("");
+        		},
+        		error: function(xhr, type){
+        			btn.removeAttr("disabled");
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		}
+		</script>
+	</body>
+</html>

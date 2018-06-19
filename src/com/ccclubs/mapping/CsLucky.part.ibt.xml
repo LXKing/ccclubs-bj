@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsLucky_part">	
+	<!-- 抽奖活动条件sql片段  -->
+	<sql id="cs_lucky_dynamic">
+		<dynamic>
+			<isNotEmpty property="cslId" prepend="and">
+			    $cslIdNot$ cs_lucky$suffix$.csl_id = #cslId#
+			</isNotEmpty>
+			<isNotNull property="cslIdNot" prepend="and">
+				<isEmpty property="cslId">
+				$cslIdNot$ cs_lucky$suffix$.csl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslName" prepend="and">			    
+			    (<isNotNull property="cslNameNot">
+			    cs_lucky$suffix$.csl_name is null or length(cs_lucky$suffix$.csl_name) &lt; 1 or
+			    </isNotNull>$cslNameNot$ cs_lucky$suffix$.csl_name like #cslName#)
+			</isNotEmpty>
+			<isNotNull property="cslNameNot" prepend="and">
+				<isEmpty property="cslName">
+				$cslNameNot$ (cs_lucky$suffix$.csl_name is null or length(cs_lucky$suffix$.csl_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslFlag" prepend="and">			    
+			    (<isNotNull property="cslFlagNot">
+			    cs_lucky$suffix$.csl_flag is null or length(cs_lucky$suffix$.csl_flag) &lt; 1 or
+			    </isNotNull>$cslFlagNot$ cs_lucky$suffix$.csl_flag = #cslFlag#)
+			</isNotEmpty>
+			<isNotNull property="cslFlagNot" prepend="and">
+				<isEmpty property="cslFlag">
+				$cslFlagNot$ (cs_lucky$suffix$.csl_flag is null or length(cs_lucky$suffix$.csl_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslType" prepend="and">
+			    $cslTypeNot$ cs_lucky$suffix$.csl_type = #cslType#
+			</isNotEmpty>
+			<isNotNull property="cslTypeNot" prepend="and">
+				<isEmpty property="cslType">
+				$cslTypeNot$ cs_lucky$suffix$.csl_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslStartStart" prepend="and">
+			    $cslStartNot$   (cs_lucky$suffix$.csl_start &gt;= #cslStartStart#
+			   <isEmpty property="cslStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslStartEnd" prepend="and">
+				<isEmpty property="cslStartStart">$cslStartNot$   (</isEmpty>
+			    cs_lucky$suffix$.csl_start &lt;= #cslStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cslStart" prepend="and">
+			    $cslStartNot$ cs_lucky$suffix$.csl_start = #cslStart#
+			</isNotEmpty>
+			<isNotNull property="cslStartNot" prepend="and">
+				<isEmpty property="cslStartStart"><isEmpty property="cslStartEnd"><isEmpty property="cslStart">
+				$cslStartNot$ cs_lucky$suffix$.csl_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslFinishStart" prepend="and">
+			    $cslFinishNot$   (cs_lucky$suffix$.csl_finish &gt;= #cslFinishStart#
+			   <isEmpty property="cslFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslFinishEnd" prepend="and">
+				<isEmpty property="cslFinishStart">$cslFinishNot$   (</isEmpty>
+			    cs_lucky$suffix$.csl_finish &lt;= #cslFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cslFinish" prepend="and">
+			    $cslFinishNot$ cs_lucky$suffix$.csl_finish = #cslFinish#
+			</isNotEmpty>
+			<isNotNull property="cslFinishNot" prepend="and">
+				<isEmpty property="cslFinishStart"><isEmpty property="cslFinishEnd"><isEmpty property="cslFinish">
+				$cslFinishNot$ cs_lucky$suffix$.csl_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslPriceMin" prepend="and">
+			    $cslPriceNot$  ( cs_lucky$suffix$.csl_price &gt;= #cslPriceMin#
+			    <isEmpty property="cslPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslPriceMax" prepend="and">
+				<isEmpty property="cslPriceMin">$cslPriceNot$   (</isEmpty>
+			    cs_lucky$suffix$.csl_price &lt;= #cslPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cslPrice" prepend="and">
+			    $cslPriceNot$ cs_lucky$suffix$.csl_price = #cslPrice#
+			</isNotEmpty>
+			<isNotNull property="cslPriceNot" prepend="and">
+				<isEmpty property="cslPriceMax"><isEmpty property="cslPriceMin"><isEmpty property="cslPrice">
+				$cslPriceNot$ cs_lucky$suffix$.csl_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cslEditor" prepend="and">
+			    $cslEditorNot$ cs_lucky$suffix$.csl_editor = #cslEditor#
+			</isNotEmpty>
+			<isNotNull property="cslEditorNot" prepend="and">
+				<isEmpty property="cslEditor">
+				$cslEditorNot$ cs_lucky$suffix$.csl_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslUpdateTimeStart" prepend="and">
+			    $cslUpdateTimeNot$   (cs_lucky$suffix$.csl_update_time &gt;= #cslUpdateTimeStart#
+			   <isEmpty property="cslUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslUpdateTimeEnd" prepend="and">
+				<isEmpty property="cslUpdateTimeStart">$cslUpdateTimeNot$   (</isEmpty>
+			    cs_lucky$suffix$.csl_update_time &lt;= #cslUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cslUpdateTime" prepend="and">
+			    $cslUpdateTimeNot$ cs_lucky$suffix$.csl_update_time = #cslUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cslUpdateTimeNot" prepend="and">
+				<isEmpty property="cslUpdateTimeStart"><isEmpty property="cslUpdateTimeEnd"><isEmpty property="cslUpdateTime">
+				$cslUpdateTimeNot$ cs_lucky$suffix$.csl_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslAddTimeStart" prepend="and">
+			    $cslAddTimeNot$   (cs_lucky$suffix$.csl_add_time &gt;= #cslAddTimeStart#
+			   <isEmpty property="cslAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslAddTimeEnd" prepend="and">
+				<isEmpty property="cslAddTimeStart">$cslAddTimeNot$   (</isEmpty>
+			    cs_lucky$suffix$.csl_add_time &lt;= #cslAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cslAddTime" prepend="and">
+			    $cslAddTimeNot$ cs_lucky$suffix$.csl_add_time = #cslAddTime#
+			</isNotEmpty>
+			<isNotNull property="cslAddTimeNot" prepend="and">
+				<isEmpty property="cslAddTimeStart"><isEmpty property="cslAddTimeEnd"><isEmpty property="cslAddTime">
+				$cslAddTimeNot$ cs_lucky$suffix$.csl_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslStatus" prepend="and">
+			    $cslStatusNot$ cs_lucky$suffix$.csl_status = #cslStatus#
+			</isNotEmpty>
+			<isNotNull property="cslStatusNot" prepend="and">
+				<isEmpty property="cslStatus">
+				$cslStatusNot$ cs_lucky$suffix$.csl_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 抽奖活动left join 条件sql片段 -->
+	<sql id="cs_lucky_join">
+		<dynamic>
+			<isNotEmpty property="CsLucky.cslId" prepend="and">
+			    $CsLucky.cslIdNot$ cs_lucky$CsLucky.suffix$.csl_id = #CsLucky.cslId#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslIdNot" prepend="and">
+				<isEmpty property="CsLucky.cslId">
+				$cslIdNot$ cs_lucky$CsLucky.suffix$.csl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslName" prepend="and">
+				(<isNotNull property="CsLucky.cslNameNot">
+			    cs_lucky$CsLucky.suffix$.csl_name is null or length(cs_lucky$CsLucky.suffix$.csl_name) &lt; 1 or
+			    </isNotNull>$CsLucky.cslNameNot$ cs_lucky$CsLucky.suffix$.csl_name like #CsLucky.cslName#)
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslNameNot" prepend="and">
+				<isEmpty property="CsLucky.cslName">
+				$cslNameNot$ (cs_lucky$CsLucky.suffix$.csl_name is null or length(cs_lucky$CsLucky.suffix$.csl_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslFlag" prepend="and">
+				(<isNotNull property="CsLucky.cslFlagNot">
+			    cs_lucky$CsLucky.suffix$.csl_flag is null or length(cs_lucky$CsLucky.suffix$.csl_flag) &lt; 1 or
+			    </isNotNull>$CsLucky.cslFlagNot$ cs_lucky$CsLucky.suffix$.csl_flag = #CsLucky.cslFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslFlagNot" prepend="and">
+				<isEmpty property="CsLucky.cslFlag">
+				$cslFlagNot$ (cs_lucky$CsLucky.suffix$.csl_flag is null or length(cs_lucky$CsLucky.suffix$.csl_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslType" prepend="and">
+			    $CsLucky.cslTypeNot$ cs_lucky$CsLucky.suffix$.csl_type = #CsLucky.cslType#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslTypeNot" prepend="and">
+				<isEmpty property="CsLucky.cslType">
+				$cslTypeNot$ cs_lucky$CsLucky.suffix$.csl_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslStartStart" prepend="and">
+			    $CsLucky.cslStartNot$   (cs_lucky$CsLucky.suffix$.csl_start &gt;= #CsLucky.cslStartStart#
+			   <isEmpty property="CsLucky.cslStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslStartEnd" prepend="and">
+				<isEmpty property="CsLucky.cslStartStart">$CsLucky.cslStartNot$   (</isEmpty>
+			    cs_lucky$CsLucky.suffix$.csl_start &lt;= #CsLucky.cslStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslStart" prepend="and">
+			    $CsLucky.cslStartNot$ cs_lucky$CsLucky.suffix$.csl_start = #CsLucky.cslStart#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslStartNot" prepend="and">
+				<isEmpty property="CsLucky.cslStartStart"><isEmpty property="CsLucky.cslStartEnd"><isEmpty property="CsLucky.cslStart">
+				$cslStartNot$ cs_lucky$CsLucky.suffix$.csl_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslFinishStart" prepend="and">
+			    $CsLucky.cslFinishNot$   (cs_lucky$CsLucky.suffix$.csl_finish &gt;= #CsLucky.cslFinishStart#
+			   <isEmpty property="CsLucky.cslFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslFinishEnd" prepend="and">
+				<isEmpty property="CsLucky.cslFinishStart">$CsLucky.cslFinishNot$   (</isEmpty>
+			    cs_lucky$CsLucky.suffix$.csl_finish &lt;= #CsLucky.cslFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslFinish" prepend="and">
+			    $CsLucky.cslFinishNot$ cs_lucky$CsLucky.suffix$.csl_finish = #CsLucky.cslFinish#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslFinishNot" prepend="and">
+				<isEmpty property="CsLucky.cslFinishStart"><isEmpty property="CsLucky.cslFinishEnd"><isEmpty property="CsLucky.cslFinish">
+				$cslFinishNot$ cs_lucky$CsLucky.suffix$.csl_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslPriceMin" prepend="and">
+			    $CsLucky.cslPriceNot$  ( cs_lucky$CsLucky.suffix$.csl_price &gt;= #CsLucky.cslPriceMin#
+			    <isEmpty property="CsLucky.cslPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslPriceMax" prepend="and">
+				<isEmpty property="CsLucky.cslPriceMin">$CsLucky.cslPriceNot$   (</isEmpty>
+			    cs_lucky$CsLucky.suffix$.csl_price &lt;= #CsLucky.cslPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslPrice" prepend="and">
+			    $CsLucky.cslPriceNot$ cs_lucky$CsLucky.suffix$.csl_price = #CsLucky.cslPrice#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslPriceNot" prepend="and">
+				<isEmpty property="CsLucky.cslPriceMax"><isEmpty property="CsLucky.cslPriceMin"><isEmpty property="CsLucky.cslPrice">
+				$cslPriceNot$ cs_lucky$CsLucky.suffix$.csl_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslEditor" prepend="and">
+			    $CsLucky.cslEditorNot$ cs_lucky$CsLucky.suffix$.csl_editor = #CsLucky.cslEditor#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslEditorNot" prepend="and">
+				<isEmpty property="CsLucky.cslEditor">
+				$cslEditorNot$ cs_lucky$CsLucky.suffix$.csl_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslUpdateTimeStart" prepend="and">
+			    $CsLucky.cslUpdateTimeNot$   (cs_lucky$CsLucky.suffix$.csl_update_time &gt;= #CsLucky.cslUpdateTimeStart#
+			   <isEmpty property="CsLucky.cslUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsLucky.cslUpdateTimeStart">$CsLucky.cslUpdateTimeNot$   (</isEmpty>
+			    cs_lucky$CsLucky.suffix$.csl_update_time &lt;= #CsLucky.cslUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslUpdateTime" prepend="and">
+			    $CsLucky.cslUpdateTimeNot$ cs_lucky$CsLucky.suffix$.csl_update_time = #CsLucky.cslUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslUpdateTimeNot" prepend="and">
+				<isEmpty property="CsLucky.cslUpdateTimeStart"><isEmpty property="CsLucky.cslUpdateTimeEnd"><isEmpty property="CsLucky.cslUpdateTime">
+				$cslUpdateTimeNot$ cs_lucky$CsLucky.suffix$.csl_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslAddTimeStart" prepend="and">
+			    $CsLucky.cslAddTimeNot$   (cs_lucky$CsLucky.suffix$.csl_add_time &gt;= #CsLucky.cslAddTimeStart#
+			   <isEmpty property="CsLucky.cslAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslAddTimeEnd" prepend="and">
+				<isEmpty property="CsLucky.cslAddTimeStart">$CsLucky.cslAddTimeNot$   (</isEmpty>
+			    cs_lucky$CsLucky.suffix$.csl_add_time &lt;= #CsLucky.cslAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLucky.cslAddTime" prepend="and">
+			    $CsLucky.cslAddTimeNot$ cs_lucky$CsLucky.suffix$.csl_add_time = #CsLucky.cslAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslAddTimeNot" prepend="and">
+				<isEmpty property="CsLucky.cslAddTimeStart"><isEmpty property="CsLucky.cslAddTimeEnd"><isEmpty property="CsLucky.cslAddTime">
+				$cslAddTimeNot$ cs_lucky$CsLucky.suffix$.csl_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLucky.cslStatus" prepend="and">
+			    $CsLucky.cslStatusNot$ cs_lucky$CsLucky.suffix$.csl_status = #CsLucky.cslStatus#
+			</isNotEmpty>
+			<isNotNull property="CsLucky.cslStatusNot" prepend="and">
+				<isEmpty property="CsLucky.cslStatus">
+				$cslStatusNot$ cs_lucky$CsLucky.suffix$.csl_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

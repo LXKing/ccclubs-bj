@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsProduct_part">	
+	<!-- 产品条件sql片段  -->
+	<sql id="cs_product_dynamic">
+		<dynamic>
+			<isNotEmpty property="cspId" prepend="and">
+			    $cspIdNot$ cs_product$suffix$.csp_id = #cspId#
+			</isNotEmpty>
+			<isNotNull property="cspIdNot" prepend="and">
+				<isEmpty property="cspId">
+				$cspIdNot$ cs_product$suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspName" prepend="and">			    
+			    (<isNotNull property="cspNameNot">
+			    cs_product$suffix$.csp_name is null or length(cs_product$suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$cspNameNot$ cs_product$suffix$.csp_name = #cspName#)
+			</isNotEmpty>
+			<isNotNull property="cspNameNot" prepend="and">
+				<isEmpty property="cspName">
+				$cspNameNot$ (cs_product$suffix$.csp_name is null or length(cs_product$suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspFlag" prepend="and">			    
+			    (<isNotNull property="cspFlagNot">
+			    cs_product$suffix$.csp_flag is null or length(cs_product$suffix$.csp_flag) &lt; 1 or
+			    </isNotNull>$cspFlagNot$ cs_product$suffix$.csp_flag = #cspFlag#)
+			</isNotEmpty>
+			<isNotNull property="cspFlagNot" prepend="and">
+				<isEmpty property="cspFlag">
+				$cspFlagNot$ (cs_product$suffix$.csp_flag is null or length(cs_product$suffix$.csp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspProfile" prepend="and">			    
+			    (<isNotNull property="cspProfileNot">
+			    cs_product$suffix$.csp_profile is null or length(cs_product$suffix$.csp_profile) &lt; 1 or
+			    </isNotNull>$cspProfileNot$ cs_product$suffix$.csp_profile like #cspProfile#)
+			</isNotEmpty>
+			<isNotNull property="cspProfileNot" prepend="and">
+				<isEmpty property="cspProfile">
+				$cspProfileNot$ (cs_product$suffix$.csp_profile is null or length(cs_product$suffix$.csp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspUpdateTimeStart" prepend="and">
+			    $cspUpdateTimeNot$   (cs_product$suffix$.csp_update_time &gt;= #cspUpdateTimeStart#
+			   <isEmpty property="cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="cspUpdateTimeStart">$cspUpdateTimeNot$   (</isEmpty>
+			    cs_product$suffix$.csp_update_time &lt;= #cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTime" prepend="and">
+			    $cspUpdateTimeNot$ cs_product$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cspUpdateTimeNot" prepend="and">
+				<isEmpty property="cspUpdateTimeStart"><isEmpty property="cspUpdateTimeEnd"><isEmpty property="cspUpdateTime">
+				$cspUpdateTimeNot$ cs_product$suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspAddTimeStart" prepend="and">
+			    $cspAddTimeNot$   (cs_product$suffix$.csp_add_time &gt;= #cspAddTimeStart#
+			   <isEmpty property="cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTimeEnd" prepend="and">
+				<isEmpty property="cspAddTimeStart">$cspAddTimeNot$   (</isEmpty>
+			    cs_product$suffix$.csp_add_time &lt;= #cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTime" prepend="and">
+			    $cspAddTimeNot$ cs_product$suffix$.csp_add_time = #cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="cspAddTimeNot" prepend="and">
+				<isEmpty property="cspAddTimeStart"><isEmpty property="cspAddTimeEnd"><isEmpty property="cspAddTime">
+				$cspAddTimeNot$ cs_product$suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspStatus" prepend="and">
+			    $cspStatusNot$ cs_product$suffix$.csp_status = #cspStatus#
+			</isNotEmpty>
+			<isNotNull property="cspStatusNot" prepend="and">
+				<isEmpty property="cspStatus">
+				$cspStatusNot$ cs_product$suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 产品left join 条件sql片段 -->
+	<sql id="cs_product_join">
+		<dynamic>
+			<isNotEmpty property="CsProduct.cspId" prepend="and">
+			    $CsProduct.cspIdNot$ cs_product$CsProduct.suffix$.csp_id = #CsProduct.cspId#
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspIdNot" prepend="and">
+				<isEmpty property="CsProduct.cspId">
+				$cspIdNot$ cs_product$CsProduct.suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsProduct.cspName" prepend="and">
+				(<isNotNull property="CsProduct.cspNameNot">
+			    cs_product$CsProduct.suffix$.csp_name is null or length(cs_product$CsProduct.suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$CsProduct.cspNameNot$ cs_product$CsProduct.suffix$.csp_name = #CsProduct.cspName#)
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspNameNot" prepend="and">
+				<isEmpty property="CsProduct.cspName">
+				$cspNameNot$ (cs_product$CsProduct.suffix$.csp_name is null or length(cs_product$CsProduct.suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsProduct.cspFlag" prepend="and">
+				(<isNotNull property="CsProduct.cspFlagNot">
+			    cs_product$CsProduct.suffix$.csp_flag is null or length(cs_product$CsProduct.suffix$.csp_flag) &lt; 1 or
+			    </isNotNull>$CsProduct.cspFlagNot$ cs_product$CsProduct.suffix$.csp_flag = #CsProduct.cspFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspFlagNot" prepend="and">
+				<isEmpty property="CsProduct.cspFlag">
+				$cspFlagNot$ (cs_product$CsProduct.suffix$.csp_flag is null or length(cs_product$CsProduct.suffix$.csp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsProduct.cspProfile" prepend="and">
+				(<isNotNull property="CsProduct.cspProfileNot">
+			    cs_product$CsProduct.suffix$.csp_profile is null or length(cs_product$CsProduct.suffix$.csp_profile) &lt; 1 or
+			    </isNotNull>$CsProduct.cspProfileNot$ cs_product$CsProduct.suffix$.csp_profile like #CsProduct.cspProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspProfileNot" prepend="and">
+				<isEmpty property="CsProduct.cspProfile">
+				$cspProfileNot$ (cs_product$CsProduct.suffix$.csp_profile is null or length(cs_product$CsProduct.suffix$.csp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsProduct.cspUpdateTimeStart" prepend="and">
+			    $CsProduct.cspUpdateTimeNot$   (cs_product$CsProduct.suffix$.csp_update_time &gt;= #CsProduct.cspUpdateTimeStart#
+			   <isEmpty property="CsProduct.cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsProduct.cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsProduct.cspUpdateTimeStart">$CsProduct.cspUpdateTimeNot$   (</isEmpty>
+			    cs_product$CsProduct.suffix$.csp_update_time &lt;= #CsProduct.cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsProduct.cspUpdateTime" prepend="and">
+			    $CsProduct.cspUpdateTimeNot$ cs_product$CsProduct.suffix$.csp_update_time = #CsProduct.cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspUpdateTimeNot" prepend="and">
+				<isEmpty property="CsProduct.cspUpdateTimeStart"><isEmpty property="CsProduct.cspUpdateTimeEnd"><isEmpty property="CsProduct.cspUpdateTime">
+				$cspUpdateTimeNot$ cs_product$CsProduct.suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsProduct.cspAddTimeStart" prepend="and">
+			    $CsProduct.cspAddTimeNot$   (cs_product$CsProduct.suffix$.csp_add_time &gt;= #CsProduct.cspAddTimeStart#
+			   <isEmpty property="CsProduct.cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsProduct.cspAddTimeEnd" prepend="and">
+				<isEmpty property="CsProduct.cspAddTimeStart">$CsProduct.cspAddTimeNot$   (</isEmpty>
+			    cs_product$CsProduct.suffix$.csp_add_time &lt;= #CsProduct.cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsProduct.cspAddTime" prepend="and">
+			    $CsProduct.cspAddTimeNot$ cs_product$CsProduct.suffix$.csp_add_time = #CsProduct.cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspAddTimeNot" prepend="and">
+				<isEmpty property="CsProduct.cspAddTimeStart"><isEmpty property="CsProduct.cspAddTimeEnd"><isEmpty property="CsProduct.cspAddTime">
+				$cspAddTimeNot$ cs_product$CsProduct.suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsProduct.cspStatus" prepend="and">
+			    $CsProduct.cspStatusNot$ cs_product$CsProduct.suffix$.csp_status = #CsProduct.cspStatus#
+			</isNotEmpty>
+			<isNotNull property="CsProduct.cspStatusNot" prepend="and">
+				<isEmpty property="CsProduct.cspStatus">
+				$cspStatusNot$ cs_product$CsProduct.suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 销售机会之SQL映射 -->
+	<resultMap id="CsSaleOpport" class="com.ccclubs.model.CsSaleOpport">
+		<result property="cssoId" column="csso_id"/>
+		<result property="cssoHost" column="csso_host"/>
+		<result property="cssoTitle" column="csso_title"/>
+		<result property="cssoBattle" column="csso_battle"/>
+		<result property="cssoEvent" column="csso_event"/>
+		<result property="cssoFrom" column="csso_from"/>
+		<result property="cssoCustom" column="csso_custom"/>
+		<result property="cssoContact" column="csso_contact"/>
+		<result property="cssoNumber" column="csso_number"/>
+		<result property="cssoRate" column="csso_rate"/>
+		<result property="cssoOnwer" column="csso_onwer"/>
+		<result property="cssoUser" column="csso_user"/>
+		<result property="cssoTag" column="csso_tag"/>
+		<result property="cssoProfile" column="csso_profile"/>
+		<result property="cssoUpdateTime" column="csso_update_time"/>
+		<result property="cssoAddTime" column="csso_add_time"/>
+		<result property="cssoStatus" column="csso_status"/>
+	</resultMap>
+		
+	<!-- 获取所有销售机会 -->
+	<select id="getCsSaleOpportList" resultMap="CsSaleOpport">
+		select cs_sale_opport$suffix$.* from cs_sale_opport$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询-->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.csso_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.csso_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询-->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.csso_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_opport$suffix$.csso_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleOpport_part.cs_sale_opport_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csso_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取销售机会分页 -->
+	<select id="getCsSaleOpportPage" parameterClass="java.util.HashMap" resultMap="CsSaleOpport">
+		select cs_sale_opport$suffix$.* from cs_sale_opport$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询 -->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.csso_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询 -->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.csso_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询 -->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.csso_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_opport$suffix$.csso_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleOpport_part.cs_sale_opport_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csso_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取销售机会总数 -->
+	<select id="getCsSaleOpportEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_sale_opport$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.csso_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.csso_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.csso_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_sale_opport$suffix$.csso_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSaleOpport_part.cs_sale_opport_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取销售机会 -->
+	<select id="getCsSaleOpportById" parameterClass="java.util.HashMap" resultMap="CsSaleOpport">
+		select cs_sale_opport$suffix$.* from cs_sale_opport$suffix$
+		where csso_id=#id#
+	</select>
+	
+		
+	<!-- 保存销售机会 -->
+	<insert id="saveCsSaleOpport"  parameterClass="com.ccclubs.model.CsSaleOpport">
+		insert into cs_sale_opport$suffix$
+		(
+			cs_sale_opport$suffix$.csso_host
+			,cs_sale_opport$suffix$.csso_title
+			,cs_sale_opport$suffix$.csso_battle
+			,cs_sale_opport$suffix$.csso_event
+			,cs_sale_opport$suffix$.csso_from
+			,cs_sale_opport$suffix$.csso_custom
+			,cs_sale_opport$suffix$.csso_contact
+			,cs_sale_opport$suffix$.csso_number
+			,cs_sale_opport$suffix$.csso_rate
+			,cs_sale_opport$suffix$.csso_onwer
+			,cs_sale_opport$suffix$.csso_user
+			,cs_sale_opport$suffix$.csso_tag
+			,cs_sale_opport$suffix$.csso_profile
+			,cs_sale_opport$suffix$.csso_update_time
+			,cs_sale_opport$suffix$.csso_add_time
+			,cs_sale_opport$suffix$.csso_status
+		)
+		values(
+			<isNotNull property="cssoHost" prepend="">
+				#cssoHost#
+			</isNotNull>
+			<isNull property="cssoHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssoTitle" prepend=",">
+				#cssoTitle#
+			</isNotNull>
+			<isNull property="cssoTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoBattle" prepend=",">
+				#cssoBattle#
+			</isNotNull>
+			<isNull property="cssoBattle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoEvent" prepend=",">
+				#cssoEvent#
+			</isNotNull>
+			<isNull property="cssoEvent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoFrom" prepend=",">
+				#cssoFrom#
+			</isNotNull>
+			<isNull property="cssoFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoCustom" prepend=",">
+				#cssoCustom#
+			</isNotNull>
+			<isNull property="cssoCustom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoContact" prepend=",">
+				#cssoContact#
+			</isNotNull>
+			<isNull property="cssoContact" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoNumber" prepend=",">
+				#cssoNumber#
+			</isNotNull>
+			<isNull property="cssoNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoRate" prepend=",">
+				#cssoRate#
+			</isNotNull>
+			<isNull property="cssoRate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoOnwer" prepend=",">
+				#cssoOnwer#
+			</isNotNull>
+			<isNull property="cssoOnwer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoUser" prepend=",">
+				#cssoUser#
+			</isNotNull>
+			<isNull property="cssoUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoTag" prepend=",">
+				#cssoTag#
+			</isNotNull>
+			<isNull property="cssoTag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoProfile" prepend=",">
+				#cssoProfile#
+			</isNotNull>
+			<isNull property="cssoProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoUpdateTime" prepend=",">
+				#cssoUpdateTime#
+			</isNotNull>
+			<isNull property="cssoUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoAddTime" prepend=",">
+				#cssoAddTime#
+			</isNotNull>
+			<isNull property="cssoAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssoStatus" prepend=",">
+				#cssoStatus#
+			</isNotNull>
+			<isNull property="cssoStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新销售机会 -->
+	<update id="updateCsSaleOpport"  parameterClass="com.ccclubs.model.CsSaleOpport">
+		update cs_sale_opport$suffix$ set
+			<isNotNull property="cssoHost" prepend="">
+				cs_sale_opport$suffix$.csso_host = #cssoHost#
+			</isNotNull>
+			<isNull property="cssoHost" prepend="">
+				cs_sale_opport$suffix$.csso_host = null
+			</isNull>				
+			<isNotNull property="cssoTitle" prepend=",">
+				cs_sale_opport$suffix$.csso_title = #cssoTitle#
+			</isNotNull>
+			<isNull property="cssoTitle" prepend=",">
+				cs_sale_opport$suffix$.csso_title = null
+			</isNull>				
+			<isNotNull property="cssoBattle" prepend=",">
+				cs_sale_opport$suffix$.csso_battle = #cssoBattle#
+			</isNotNull>
+			<isNull property="cssoBattle" prepend=",">
+				cs_sale_opport$suffix$.csso_battle = null
+			</isNull>				
+			<isNotNull property="cssoEvent" prepend=",">
+				cs_sale_opport$suffix$.csso_event = #cssoEvent#
+			</isNotNull>
+			<isNull property="cssoEvent" prepend=",">
+				cs_sale_opport$suffix$.csso_event = null
+			</isNull>				
+			<isNotNull property="cssoFrom" prepend=",">
+				cs_sale_opport$suffix$.csso_from = #cssoFrom#
+			</isNotNull>
+			<isNull property="cssoFrom" prepend=",">
+				cs_sale_opport$suffix$.csso_from = null
+			</isNull>				
+			<isNotNull property="cssoCustom" prepend=",">
+				cs_sale_opport$suffix$.csso_custom = #cssoCustom#
+			</isNotNull>
+			<isNull property="cssoCustom" prepend=",">
+				cs_sale_opport$suffix$.csso_custom = null
+			</isNull>				
+			<isNotNull property="cssoContact" prepend=",">
+				cs_sale_opport$suffix$.csso_contact = #cssoContact#
+			</isNotNull>
+			<isNull property="cssoContact" prepend=",">
+				cs_sale_opport$suffix$.csso_contact = null
+			</isNull>				
+			<isNotNull property="cssoNumber" prepend=",">
+				cs_sale_opport$suffix$.csso_number = #cssoNumber#
+			</isNotNull>
+			<isNull property="cssoNumber" prepend=",">
+				cs_sale_opport$suffix$.csso_number = null
+			</isNull>				
+			<isNotNull property="cssoRate" prepend=",">
+				cs_sale_opport$suffix$.csso_rate = #cssoRate#
+			</isNotNull>
+			<isNull property="cssoRate" prepend=",">
+				cs_sale_opport$suffix$.csso_rate = null
+			</isNull>				
+			<isNotNull property="cssoOnwer" prepend=",">
+				cs_sale_opport$suffix$.csso_onwer = #cssoOnwer#
+			</isNotNull>
+			<isNull property="cssoOnwer" prepend=",">
+				cs_sale_opport$suffix$.csso_onwer = null
+			</isNull>				
+			<isNotNull property="cssoUser" prepend=",">
+				cs_sale_opport$suffix$.csso_user = #cssoUser#
+			</isNotNull>
+			<isNull property="cssoUser" prepend=",">
+				cs_sale_opport$suffix$.csso_user = null
+			</isNull>				
+			<isNotNull property="cssoTag" prepend=",">
+				cs_sale_opport$suffix$.csso_tag = #cssoTag#
+			</isNotNull>
+			<isNull property="cssoTag" prepend=",">
+				cs_sale_opport$suffix$.csso_tag = null
+			</isNull>				
+			<isNotNull property="cssoProfile" prepend=",">
+				cs_sale_opport$suffix$.csso_profile = #cssoProfile#
+			</isNotNull>
+			<isNull property="cssoProfile" prepend=",">
+				cs_sale_opport$suffix$.csso_profile = null
+			</isNull>				
+			<isNotNull property="cssoUpdateTime" prepend=",">
+				cs_sale_opport$suffix$.csso_update_time = #cssoUpdateTime#
+			</isNotNull>
+			<isNull property="cssoUpdateTime" prepend=",">
+				cs_sale_opport$suffix$.csso_update_time = null
+			</isNull>				
+			<isNotNull property="cssoAddTime" prepend=",">
+				cs_sale_opport$suffix$.csso_add_time = #cssoAddTime#
+			</isNotNull>
+			<isNull property="cssoAddTime" prepend=",">
+				cs_sale_opport$suffix$.csso_add_time = null
+			</isNull>				
+			<isNotNull property="cssoStatus" prepend=",">
+				cs_sale_opport$suffix$.csso_status = #cssoStatus#
+			</isNotNull>
+			<isNull property="cssoStatus" prepend=",">
+				cs_sale_opport$suffix$.csso_status = null
+			</isNull>				
+		where
+			csso_id=#cssoId#
+	</update>
+	
+	<!-- 更新销售机会非空字段 -->
+	<update id="updateCsSaleOpport$NotNull"  parameterClass="com.ccclubs.model.CsSaleOpport">
+		update cs_sale_opport$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssoHost" prepend=",">
+				cs_sale_opport$suffix$.csso_host = #cssoHost#
+			</isNotNull>		
+			<isNotNull property="cssoTitle" prepend=",">
+				cs_sale_opport$suffix$.csso_title = #cssoTitle#
+			</isNotNull>		
+			<isNotNull property="cssoBattle" prepend=",">
+				cs_sale_opport$suffix$.csso_battle = #cssoBattle#
+			</isNotNull>		
+			<isNotNull property="cssoEvent" prepend=",">
+				cs_sale_opport$suffix$.csso_event = #cssoEvent#
+			</isNotNull>		
+			<isNotNull property="cssoFrom" prepend=",">
+				cs_sale_opport$suffix$.csso_from = #cssoFrom#
+			</isNotNull>		
+			<isNotNull property="cssoCustom" prepend=",">
+				cs_sale_opport$suffix$.csso_custom = #cssoCustom#
+			</isNotNull>		
+			<isNotNull property="cssoContact" prepend=",">
+				cs_sale_opport$suffix$.csso_contact = #cssoContact#
+			</isNotNull>		
+			<isNotNull property="cssoNumber" prepend=",">
+				cs_sale_opport$suffix$.csso_number = #cssoNumber#
+			</isNotNull>		
+			<isNotNull property="cssoRate" prepend=",">
+				cs_sale_opport$suffix$.csso_rate = #cssoRate#
+			</isNotNull>		
+			<isNotNull property="cssoOnwer" prepend=",">
+				cs_sale_opport$suffix$.csso_onwer = #cssoOnwer#
+			</isNotNull>		
+			<isNotNull property="cssoUser" prepend=",">
+				cs_sale_opport$suffix$.csso_user = #cssoUser#
+			</isNotNull>		
+			<isNotNull property="cssoTag" prepend=",">
+				cs_sale_opport$suffix$.csso_tag = #cssoTag#
+			</isNotNull>		
+			<isNotNull property="cssoProfile" prepend=",">
+				cs_sale_opport$suffix$.csso_profile = #cssoProfile#
+			</isNotNull>		
+			<isNotNull property="cssoUpdateTime" prepend=",">
+				cs_sale_opport$suffix$.csso_update_time = #cssoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cssoAddTime" prepend=",">
+				cs_sale_opport$suffix$.csso_add_time = #cssoAddTime#
+			</isNotNull>		
+			<isNotNull property="cssoStatus" prepend=",">
+				cs_sale_opport$suffix$.csso_status = #cssoStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csso_id=#cssoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个销售机会 -->
+	<delete id="deleteCsSaleOpportById" parameterClass="java.util.HashMap">
+		delete from cs_sale_opport$suffix$ where csso_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个销售机会 -->
+	<update id="removeCsSaleOpportById" parameterClass="java.util.HashMap">
+		update cs_sale_opport$suffix$ set  cs_sale_opport$suffix$.csso_status=-1  where csso_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新销售机会 -->
+	<update id="updateCsSaleOpportBy"  parameterClass="java.util.HashMap">
+		update cs_sale_opport$suffix$ set		
+			csso_id=csso_id
+			<isNotNull property="V_cssoId" prepend=",">
+				cs_sale_opport$suffix$.csso_id = #V_cssoId#
+			</isNotNull>		
+			<isNotNull property="V_cssoHost" prepend=",">
+				cs_sale_opport$suffix$.csso_host = #V_cssoHost#
+			</isNotNull>		
+			<isNotNull property="V_cssoTitle" prepend=",">
+				cs_sale_opport$suffix$.csso_title = #V_cssoTitle#
+			</isNotNull>		
+			<isNotNull property="V_cssoBattle" prepend=",">
+				cs_sale_opport$suffix$.csso_battle = #V_cssoBattle#
+			</isNotNull>		
+			<isNotNull property="V_cssoEvent" prepend=",">
+				cs_sale_opport$suffix$.csso_event = #V_cssoEvent#
+			</isNotNull>		
+			<isNotNull property="V_cssoFrom" prepend=",">
+				cs_sale_opport$suffix$.csso_from = #V_cssoFrom#
+			</isNotNull>		
+			<isNotNull property="V_cssoCustom" prepend=",">
+				cs_sale_opport$suffix$.csso_custom = #V_cssoCustom#
+			</isNotNull>		
+			<isNotNull property="V_cssoContact" prepend=",">
+				cs_sale_opport$suffix$.csso_contact = #V_cssoContact#
+			</isNotNull>		
+			<isNotNull property="V_cssoNumber" prepend=",">
+				cs_sale_opport$suffix$.csso_number = #V_cssoNumber#
+			</isNotNull>		
+			<isNotNull property="V_cssoRate" prepend=",">
+				cs_sale_opport$suffix$.csso_rate = #V_cssoRate#
+			</isNotNull>		
+			<isNotNull property="V_cssoOnwer" prepend=",">
+				cs_sale_opport$suffix$.csso_onwer = #V_cssoOnwer#
+			</isNotNull>		
+			<isNotNull property="V_cssoUser" prepend=",">
+				cs_sale_opport$suffix$.csso_user = #V_cssoUser#
+			</isNotNull>		
+			<isNotNull property="V_cssoTag" prepend=",">
+				cs_sale_opport$suffix$.csso_tag = #V_cssoTag#
+			</isNotNull>		
+			<isNotNull property="V_cssoProfile" prepend=",">
+				cs_sale_opport$suffix$.csso_profile = #V_cssoProfile#
+			</isNotNull>		
+			<isNotNull property="V_cssoUpdateTime" prepend=",">
+				cs_sale_opport$suffix$.csso_update_time = #V_cssoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cssoAddTime" prepend=",">
+				cs_sale_opport$suffix$.csso_add_time = #V_cssoAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssoStatus" prepend=",">
+				cs_sale_opport$suffix$.csso_status = #V_cssoStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询-->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.csso_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on cs_sale_opport$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.csso_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on cs_sale_opport$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询-->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<isNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.csso_custom=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id
+			</isNull>
+			<isNotNull property="TbSaleCustom.on">
+				left join tb_sale_custom tb_sale_custom$TbSaleCustom.suffix$ on cs_sale_opport$suffix$.$TbSaleCustom.on$=tb_sale_custom$TbSaleCustom.suffix$.tbsc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_sale_opport$suffix$.csso_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="CssoBattle"><!-- 调用一下CssoBattle，把TbSaleBattle指向CssoBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="CssoEvent"><!-- 调用一下CssoEvent，把CsSaleEvent指向CssoEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户资料]查询条件sql片段 -->
+		<isNotNull property="CssoCustom"><!-- 调用一下CssoCustom，把TbSaleCustom指向CssoCustom --></isNotNull>
+		<isNotNull property="TbSaleCustom">
+			<include refid="TbSaleCustom_part.tb_sale_custom_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsSaleOpport_part.cs_sale_opport_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除销售机会 -->
+	<update id="deleteCsSaleOpportBy"  parameterClass="java.util.HashMap">
+		delete from cs_sale_opport$suffix$ where 
+		cs_sale_opport$suffix$.csso_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsSaleOpport_part.cs_sale_opport_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

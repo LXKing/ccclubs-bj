@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsCarParts_part">	
+	<!-- 车辆部件条件sql片段  -->
+	<sql id="cs_car_parts_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscpId" prepend="and">
+			    $cscpIdNot$ cs_car_parts$suffix$.cscp_id = #cscpId#
+			</isNotEmpty>
+			<isNotNull property="cscpIdNot" prepend="and">
+				<isEmpty property="cscpId">
+				$cscpIdNot$ cs_car_parts$suffix$.cscp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscpName" prepend="and">			    
+			    (<isNotNull property="cscpNameNot">
+			    cs_car_parts$suffix$.cscp_name is null or length(cs_car_parts$suffix$.cscp_name) &lt; 1 or
+			    </isNotNull>$cscpNameNot$ cs_car_parts$suffix$.cscp_name = #cscpName#)
+			</isNotEmpty>
+			<isNotNull property="cscpNameNot" prepend="and">
+				<isEmpty property="cscpName">
+				$cscpNameNot$ (cs_car_parts$suffix$.cscp_name is null or length(cs_car_parts$suffix$.cscp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscpParentIdMin" prepend="and">
+			    $cscpParentIdNot$  ( cs_car_parts$suffix$.cscp_parent_id &gt;= #cscpParentIdMin#
+			    <isEmpty property="cscpParentIdMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscpParentIdMax" prepend="and">
+				<isEmpty property="cscpParentIdMin">$cscpParentIdNot$   (</isEmpty>
+			    cs_car_parts$suffix$.cscp_parent_id &lt;= #cscpParentIdMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscpParentId" prepend="and">
+			    $cscpParentIdNot$ cs_car_parts$suffix$.cscp_parent_id = #cscpParentId#
+			</isNotEmpty>
+			<isNotNull property="cscpParentIdNot" prepend="and">
+				<isEmpty property="cscpParentIdMax"><isEmpty property="cscpParentIdMin"><isEmpty property="cscpParentId">
+				$cscpParentIdNot$ cs_car_parts$suffix$.cscp_parent_id is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscpLevelMin" prepend="and">
+			    $cscpLevelNot$  ( cs_car_parts$suffix$.cscp_level &gt;= #cscpLevelMin#
+			    <isEmpty property="cscpLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscpLevelMax" prepend="and">
+				<isEmpty property="cscpLevelMin">$cscpLevelNot$   (</isEmpty>
+			    cs_car_parts$suffix$.cscp_level &lt;= #cscpLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscpLevel" prepend="and">
+			    $cscpLevelNot$ cs_car_parts$suffix$.cscp_level = #cscpLevel#
+			</isNotEmpty>
+			<isNotNull property="cscpLevelNot" prepend="and">
+				<isEmpty property="cscpLevelMax"><isEmpty property="cscpLevelMin"><isEmpty property="cscpLevel">
+				$cscpLevelNot$ cs_car_parts$suffix$.cscp_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscpStatusMin" prepend="and">
+			    $cscpStatusNot$  ( cs_car_parts$suffix$.cscp_status &gt;= #cscpStatusMin#
+			    <isEmpty property="cscpStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscpStatusMax" prepend="and">
+				<isEmpty property="cscpStatusMin">$cscpStatusNot$   (</isEmpty>
+			    cs_car_parts$suffix$.cscp_status &lt;= #cscpStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscpStatus" prepend="and">
+			    $cscpStatusNot$ cs_car_parts$suffix$.cscp_status = #cscpStatus#
+			</isNotEmpty>
+			<isNotNull property="cscpStatusNot" prepend="and">
+				<isEmpty property="cscpStatusMax"><isEmpty property="cscpStatusMin"><isEmpty property="cscpStatus">
+				$cscpStatusNot$ cs_car_parts$suffix$.cscp_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscpAddTimeStart" prepend="and">
+			    $cscpAddTimeNot$   (cs_car_parts$suffix$.cscp_add_time &gt;= #cscpAddTimeStart#
+			   <isEmpty property="cscpAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscpAddTimeEnd" prepend="and">
+				<isEmpty property="cscpAddTimeStart">$cscpAddTimeNot$   (</isEmpty>
+			    cs_car_parts$suffix$.cscp_add_time &lt;= #cscpAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscpAddTime" prepend="and">
+			    $cscpAddTimeNot$ cs_car_parts$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscpAddTimeNot" prepend="and">
+				<isEmpty property="cscpAddTimeStart"><isEmpty property="cscpAddTimeEnd"><isEmpty property="cscpAddTime">
+				$cscpAddTimeNot$ cs_car_parts$suffix$.cscp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscpByname" prepend="and">			    
+			    (<isNotNull property="cscpBynameNot">
+			    cs_car_parts$suffix$.cscp_byname is null or length(cs_car_parts$suffix$.cscp_byname) &lt; 1 or
+			    </isNotNull>$cscpBynameNot$ cs_car_parts$suffix$.cscp_byname = #cscpByname#)
+			</isNotEmpty>
+			<isNotNull property="cscpBynameNot" prepend="and">
+				<isEmpty property="cscpByname">
+				$cscpBynameNot$ (cs_car_parts$suffix$.cscp_byname is null or length(cs_car_parts$suffix$.cscp_byname) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 车辆部件left join 条件sql片段 -->
+	<sql id="cs_car_parts_join">
+		<dynamic>
+			<isNotEmpty property="CsCarParts.cscpId" prepend="and">
+			    $CsCarParts.cscpIdNot$ cs_car_parts$CsCarParts.suffix$.cscp_id = #CsCarParts.cscpId#
+			</isNotEmpty>
+			<isNotNull property="CsCarParts.cscpIdNot" prepend="and">
+				<isEmpty property="CsCarParts.cscpId">
+				$cscpIdNot$ cs_car_parts$CsCarParts.suffix$.cscp_id is null
+				</isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCarParts.cscpName" prepend="and">			    
+				    (<isNotNull property="CsCarParts.cscpNameNot">
+				    cs_car_parts$CsCarParts.suffix$.cscp_name is null or length(cs_car_parts$CsCarParts.suffix$.cscp_name) &lt; 1 or
+				    </isNotNull>$CsCarParts.cscpNameNot$ cs_car_parts$CsCarParts.suffix$.cscp_name = #CsCarParts.cscpName#)
+				</isNotEmpty>
+				<isNotNull property="CsCarParts.cscpNameNot" prepend="and">
+					<isEmpty property="CsCarParts.cscpName">
+					$cscpNameNot$ (cs_car_parts$CsCarParts.suffix$.cscp_name is null or length(cs_car_parts$CsCarParts.suffix$.cscp_name) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCarParts.cscpParentIdMin" prepend="and">
+			    $CsCarParts.cscpParentIdNot$  ( cs_car_parts$CsCarParts.suffix$.cscp_parent_id &gt;= #CsCarParts.cscpParentIdMin#
+			    <isEmpty property="CsCarParts.cscpParentIdMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCarParts.cscpParentIdMax" prepend="and">
+				<isEmpty property="CsCarParts.cscpParentIdMin">$CsCarParts.cscpParentIdNot$   (</isEmpty>
+			    cs_car_parts$CsCarParts.suffix$.cscp_parent_id &lt;= #CsCarParts.cscpParentIdMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCarParts.cscpParentId" prepend="and">
+			    $CsCarParts.cscpParentIdNot$ cs_car_parts$CsCarParts.suffix$.cscp_parent_id = #CsCarParts.cscpParentId#
+			</isNotEmpty>
+			<isNotNull property="CsCarParts.cscpParentIdNot" prepend="and">
+				<isEmpty property="CsCarParts.cscpParentIdMax"><isEmpty property="CsCarParts.cscpParentIdMin"><isEmpty property="CsCarParts.cscpParentId">
+				$cscpParentIdNot$ cs_car_parts$CsCarParts.suffix$.cscp_parent_id is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCarParts.cscpLevelMin" prepend="and">
+			    $CsCarParts.cscpLevelNot$  ( cs_car_parts$CsCarParts.suffix$.cscp_level &gt;= #CsCarParts.cscpLevelMin#
+			    <isEmpty property="CsCarParts.cscpLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCarParts.cscpLevelMax" prepend="and">
+				<isEmpty property="CsCarParts.cscpLevelMin">$CsCarParts.cscpLevelNot$   (</isEmpty>
+			    cs_car_parts$CsCarParts.suffix$.cscp_level &lt;= #CsCarParts.cscpLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCarParts.cscpLevel" prepend="and">
+			    $CsCarParts.cscpLevelNot$ cs_car_parts$CsCarParts.suffix$.cscp_level = #CsCarParts.cscpLevel#
+			</isNotEmpty>
+			<isNotNull property="CsCarParts.cscpLevelNot" prepend="and">
+				<isEmpty property="CsCarParts.cscpLevelMax"><isEmpty property="CsCarParts.cscpLevelMin"><isEmpty property="CsCarParts.cscpLevel">
+				$cscpLevelNot$ cs_car_parts$CsCarParts.suffix$.cscp_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCarParts.cscpStatusMin" prepend="and">
+			    $CsCarParts.cscpStatusNot$  ( cs_car_parts$CsCarParts.suffix$.cscp_status &gt;= #CsCarParts.cscpStatusMin#
+			    <isEmpty property="CsCarParts.cscpStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCarParts.cscpStatusMax" prepend="and">
+				<isEmpty property="CsCarParts.cscpStatusMin">$CsCarParts.cscpStatusNot$   (</isEmpty>
+			    cs_car_parts$CsCarParts.suffix$.cscp_status &lt;= #CsCarParts.cscpStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCarParts.cscpStatus" prepend="and">
+			    $CsCarParts.cscpStatusNot$ cs_car_parts$CsCarParts.suffix$.cscp_status = #CsCarParts.cscpStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCarParts.cscpStatusNot" prepend="and">
+				<isEmpty property="CsCarParts.cscpStatusMax"><isEmpty property="CsCarParts.cscpStatusMin"><isEmpty property="CsCarParts.cscpStatus">
+				$cscpStatusNot$ cs_car_parts$CsCarParts.suffix$.cscp_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCarParts.cscpAddTimeStart" prepend="and">
+				    $CsCarParts.cscpAddTimeNot$   (cs_car_parts$CsCarParts.suffix$.cscp_add_time &gt;= #CsCarParts.cscpAddTimeStart#
+				   <isEmpty property="CsCarParts.cscpAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCarParts.cscpAddTimeEnd" prepend="and">
+					<isEmpty property="CsCarParts.cscpAddTimeStart">$CsCarParts.cscpAddTimeNot$   (</isEmpty>
+				    cs_car_parts$CsCarParts.suffix$.cscp_add_time &lt;= #CsCarParts.cscpAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCarParts.cscpAddTime" prepend="and">
+				    $CsCarParts.cscpAddTimeNot$ cs_car_parts$CsCarParts.suffix$.cscp_add_time = #CsCarParts.cscpAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsCarParts.cscpAddTimeNot" prepend="and">
+					<isEmpty property="CsCarParts.cscpAddTimeStart"><isEmpty property="CsCarParts.cscpAddTimeEnd"><isEmpty property="CsCarParts.cscpAddTime">
+					$cscpAddTimeNot$ cs_car_parts$CsCarParts.suffix$.cscp_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCarParts.cscpByname" prepend="and">			    
+				    (<isNotNull property="CsCarParts.cscpBynameNot">
+				    cs_car_parts$CsCarParts.suffix$.cscp_byname is null or length(cs_car_parts$CsCarParts.suffix$.cscp_byname) &lt; 1 or
+				    </isNotNull>$CsCarParts.cscpBynameNot$ cs_car_parts$CsCarParts.suffix$.cscp_byname = #CsCarParts.cscpByname#)
+				</isNotEmpty>
+				<isNotNull property="CsCarParts.cscpBynameNot" prepend="and">
+					<isEmpty property="CsCarParts.cscpByname">
+					$cscpBynameNot$ (cs_car_parts$CsCarParts.suffix$.cscp_byname is null or length(cs_car_parts$CsCarParts.suffix$.cscp_byname) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

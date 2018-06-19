@@ -1,0 +1,1451 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsMember_part">	
+	<!-- 会员帐号条件sql片段  -->
+	<sql id="cs_member_dynamic">
+		<dynamic>
+			<isNotEmpty property="csmId" prepend="and">
+			    $csmIdNot$ cs_member$suffix$.csm_id = #csmId#
+			</isNotEmpty>
+			<isNotNull property="csmIdNot" prepend="and">
+				<isEmpty property="csmId">
+				$csmIdNot$ cs_member$suffix$.csm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_member$suffix$.csm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csmHost" prepend="and">
+			    $csmHostNot$ cs_member$suffix$.csm_host = #csmHost#
+			</isNotEmpty>
+			<isNotNull property="csmHostNot" prepend="and">
+				<isEmpty property="csmHost">
+				$csmHostNot$ cs_member$suffix$.csm_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csmUsername" prepend="and">			    
+			    (<isNotNull property="csmUsernameNot">
+			    cs_member$suffix$.csm_username is null or length(cs_member$suffix$.csm_username) &lt; 1 or
+			    </isNotNull>$csmUsernameNot$ cs_member$suffix$.csm_username = #csmUsername#)
+			</isNotEmpty>
+			<isNotNull property="csmUsernameNot" prepend="and">
+				<isEmpty property="csmUsername">
+				$csmUsernameNot$ (cs_member$suffix$.csm_username is null or length(cs_member$suffix$.csm_username) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmPassword" prepend="and">			    
+			    (<isNotNull property="csmPasswordNot">
+			    cs_member$suffix$.csm_password is null or length(cs_member$suffix$.csm_password) &lt; 1 or
+			    </isNotNull>$csmPasswordNot$ cs_member$suffix$.csm_password = #csmPassword#)
+			</isNotEmpty>
+			<isNotNull property="csmPasswordNot" prepend="and">
+				<isEmpty property="csmPassword">
+				$csmPasswordNot$ (cs_member$suffix$.csm_password is null or length(cs_member$suffix$.csm_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmGroup" prepend="and">
+			    $csmGroupNot$ cs_member$suffix$.csm_group = #csmGroup#
+			</isNotEmpty>
+			<isNotNull property="csmGroupNot" prepend="and">
+				<isEmpty property="csmGroup">
+				$csmGroupNot$ cs_member$suffix$.csm_group is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmMoneyMin" prepend="and">
+			    $csmMoneyNot$  ( cs_member$suffix$.csm_money &gt;= #csmMoneyMin#
+			    <isEmpty property="csmMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmMoneyMax" prepend="and">
+				<isEmpty property="csmMoneyMin">$csmMoneyNot$   (</isEmpty>
+			    cs_member$suffix$.csm_money &lt;= #csmMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmMoney" prepend="and">
+			    $csmMoneyNot$ cs_member$suffix$.csm_money = #csmMoney#
+			</isNotEmpty>
+			<isNotNull property="csmMoneyNot" prepend="and">
+				<isEmpty property="csmMoneyMax"><isEmpty property="csmMoneyMin"><isEmpty property="csmMoney">
+				$csmMoneyNot$ cs_member$suffix$.csm_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmCouponMin" prepend="and">
+			    $csmCouponNot$  ( cs_member$suffix$.csm_coupon &gt;= #csmCouponMin#
+			    <isEmpty property="csmCouponMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmCouponMax" prepend="and">
+				<isEmpty property="csmCouponMin">$csmCouponNot$   (</isEmpty>
+			    cs_member$suffix$.csm_coupon &lt;= #csmCouponMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmCoupon" prepend="and">
+			    $csmCouponNot$ cs_member$suffix$.csm_coupon = #csmCoupon#
+			</isNotEmpty>
+			<isNotNull property="csmCouponNot" prepend="and">
+				<isEmpty property="csmCouponMax"><isEmpty property="csmCouponMin"><isEmpty property="csmCoupon">
+				$csmCouponNot$ cs_member$suffix$.csm_coupon is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmIntegralMin" prepend="and">
+			    $csmIntegralNot$  ( cs_member$suffix$.csm_integral &gt;= #csmIntegralMin#
+			    <isEmpty property="csmIntegralMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmIntegralMax" prepend="and">
+				<isEmpty property="csmIntegralMin">$csmIntegralNot$   (</isEmpty>
+			    cs_member$suffix$.csm_integral &lt;= #csmIntegralMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmIntegral" prepend="and">
+			    $csmIntegralNot$ cs_member$suffix$.csm_integral = #csmIntegral#
+			</isNotEmpty>
+			<isNotNull property="csmIntegralNot" prepend="and">
+				<isEmpty property="csmIntegralMax"><isEmpty property="csmIntegralMin"><isEmpty property="csmIntegral">
+				$csmIntegralNot$ cs_member$suffix$.csm_integral is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmGrowMin" prepend="and">
+			    $csmGrowNot$  ( cs_member$suffix$.csm_grow &gt;= #csmGrowMin#
+			    <isEmpty property="csmGrowMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmGrowMax" prepend="and">
+				<isEmpty property="csmGrowMin">$csmGrowNot$   (</isEmpty>
+			    cs_member$suffix$.csm_grow &lt;= #csmGrowMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmGrow" prepend="and">
+			    $csmGrowNot$ cs_member$suffix$.csm_grow = #csmGrow#
+			</isNotEmpty>
+			<isNotNull property="csmGrowNot" prepend="and">
+				<isEmpty property="csmGrowMax"><isEmpty property="csmGrowMin"><isEmpty property="csmGrow">
+				$csmGrowNot$ cs_member$suffix$.csm_grow is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmGradeMin" prepend="and">
+			    $csmGradeNot$  ( cs_member$suffix$.csm_grade &gt;= #csmGradeMin#
+			    <isEmpty property="csmGradeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmGradeMax" prepend="and">
+				<isEmpty property="csmGradeMin">$csmGradeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_grade &lt;= #csmGradeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmGrade" prepend="and">
+			    $csmGradeNot$ cs_member$suffix$.csm_grade = #csmGrade#
+			</isNotEmpty>
+			<isNotNull property="csmGradeNot" prepend="and">
+				<isEmpty property="csmGradeMax"><isEmpty property="csmGradeMin"><isEmpty property="csmGrade">
+				$csmGradeNot$ cs_member$suffix$.csm_grade is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmRebateMin" prepend="and">
+			    $csmRebateNot$  ( cs_member$suffix$.csm_rebate &gt;= #csmRebateMin#
+			    <isEmpty property="csmRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmRebateMax" prepend="and">
+				<isEmpty property="csmRebateMin">$csmRebateNot$   (</isEmpty>
+			    cs_member$suffix$.csm_rebate &lt;= #csmRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmRebate" prepend="and">
+			    $csmRebateNot$ cs_member$suffix$.csm_rebate = #csmRebate#
+			</isNotEmpty>
+			<isNotNull property="csmRebateNot" prepend="and">
+				<isEmpty property="csmRebateMax"><isEmpty property="csmRebateMin"><isEmpty property="csmRebate">
+				$csmRebateNot$ cs_member$suffix$.csm_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmNotRevenue" prepend="and">
+			    $csmNotRevenueNot$ cs_member$suffix$.csm_not_revenue = #csmNotRevenue#
+			</isNotEmpty>
+			<isNotNull property="csmNotRevenueNot" prepend="and">
+				<isEmpty property="csmNotRevenue">
+				$csmNotRevenueNot$ cs_member$suffix$.csm_not_revenue is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmWeixinFlag" prepend="and">			    
+			    (<isNotNull property="csmWeixinFlagNot">
+			    cs_member$suffix$.csm_weixin_flag is null or length(cs_member$suffix$.csm_weixin_flag) &lt; 1 or
+			    </isNotNull>$csmWeixinFlagNot$ cs_member$suffix$.csm_weixin_flag = #csmWeixinFlag#)
+			</isNotEmpty>
+			<isNotNull property="csmWeixinFlagNot" prepend="and">
+				<isEmpty property="csmWeixinFlag">
+				$csmWeixinFlagNot$ (cs_member$suffix$.csm_weixin_flag is null or length(cs_member$suffix$.csm_weixin_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmAlipayFlag" prepend="and">			    
+			    (<isNotNull property="csmAlipayFlagNot">
+			    cs_member$suffix$.csm_alipay_flag is null or length(cs_member$suffix$.csm_alipay_flag) &lt; 1 or
+			    </isNotNull>$csmAlipayFlagNot$ cs_member$suffix$.csm_alipay_flag = #csmAlipayFlag#)
+			</isNotEmpty>
+			<isNotNull property="csmAlipayFlagNot" prepend="and">
+				<isEmpty property="csmAlipayFlag">
+				$csmAlipayFlagNot$ (cs_member$suffix$.csm_alipay_flag is null or length(cs_member$suffix$.csm_alipay_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmHeader" prepend="and">
+			    $csmHeaderNot$ cs_member$suffix$.csm_header = #csmHeader#
+			</isNotEmpty>
+			<isNotNull property="csmHeaderNot" prepend="and">
+				<isEmpty property="csmHeader">
+				$csmHeaderNot$ cs_member$suffix$.csm_header is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmEmail" prepend="and">			    
+			    (<isNotNull property="csmEmailNot">
+			    cs_member$suffix$.csm_email is null or length(cs_member$suffix$.csm_email) &lt; 1 or
+			    </isNotNull>$csmEmailNot$ cs_member$suffix$.csm_email = #csmEmail#)
+			</isNotEmpty>
+			<isNotNull property="csmEmailNot" prepend="and">
+				<isEmpty property="csmEmail">
+				$csmEmailNot$ (cs_member$suffix$.csm_email is null or length(cs_member$suffix$.csm_email) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmMobile" prepend="and">			    
+			    (<isNotNull property="csmMobileNot">
+			    cs_member$suffix$.csm_mobile is null or length(cs_member$suffix$.csm_mobile) &lt; 1 or
+			    </isNotNull>$csmMobileNot$ cs_member$suffix$.csm_mobile = #csmMobile#)
+			</isNotEmpty>
+			<isNotNull property="csmMobileNot" prepend="and">
+				<isEmpty property="csmMobile">
+				$csmMobileNot$ (cs_member$suffix$.csm_mobile is null or length(cs_member$suffix$.csm_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmEvcard" prepend="and">
+			    $csmEvcardNot$ cs_member$suffix$.csm_evcard = #csmEvcard#
+			</isNotEmpty>
+			<isNotNull property="csmEvcardNot" prepend="and">
+				<isEmpty property="csmEvcard">
+				$csmEvcardNot$ cs_member$suffix$.csm_evcard is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmExpress" prepend="and">			    
+			    (<isNotNull property="csmExpressNot">
+			    cs_member$suffix$.csm_express is null or length(cs_member$suffix$.csm_express) &lt; 1 or
+			    </isNotNull>$csmExpressNot$ cs_member$suffix$.csm_express = #csmExpress#)
+			</isNotEmpty>
+			<isNotNull property="csmExpressNot" prepend="and">
+				<isEmpty property="csmExpress">
+				$csmExpressNot$ (cs_member$suffix$.csm_express is null or length(cs_member$suffix$.csm_express) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmTemp" prepend="and">			    
+			    (<isNotNull property="csmTempNot">
+			    cs_member$suffix$.csm_temp is null or length(cs_member$suffix$.csm_temp) &lt; 1 or
+			    </isNotNull>$csmTempNot$ cs_member$suffix$.csm_temp = #csmTemp#)
+			</isNotEmpty>
+			<isNotNull property="csmTempNot" prepend="and">
+				<isEmpty property="csmTemp">
+				$csmTempNot$ (cs_member$suffix$.csm_temp is null or length(cs_member$suffix$.csm_temp) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmName" prepend="and">			    
+			    (<isNotNull property="csmNameNot">
+			    cs_member$suffix$.csm_name is null or length(cs_member$suffix$.csm_name) &lt; 1 or
+			    </isNotNull>$csmNameNot$ cs_member$suffix$.csm_name = #csmName#)
+			</isNotEmpty>
+			<isNotNull property="csmNameNot" prepend="and">
+				<isEmpty property="csmName">
+				$csmNameNot$ (cs_member$suffix$.csm_name is null or length(cs_member$suffix$.csm_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmInfo" prepend="and">
+			    $csmInfoNot$ cs_member$suffix$.csm_info = #csmInfo#
+			</isNotEmpty>
+			<isNotNull property="csmInfoNot" prepend="and">
+				<isEmpty property="csmInfo">
+				$csmInfoNot$ cs_member$suffix$.csm_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmOutlets" prepend="and">
+			    $csmOutletsNot$ cs_member$suffix$.csm_outlets = #csmOutlets#
+			</isNotEmpty>
+			<isNotNull property="csmOutletsNot" prepend="and">
+				<isEmpty property="csmOutlets">
+				$csmOutletsNot$ cs_member$suffix$.csm_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmIsVip" prepend="and">
+			    $csmIsVipNot$ cs_member$suffix$.csm_is_vip = #csmIsVip#
+			</isNotEmpty>
+			<isNotNull property="csmIsVipNot" prepend="and">
+				<isEmpty property="csmIsVip">
+				$csmIsVipNot$ cs_member$suffix$.csm_is_vip is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVipStartStart" prepend="and">
+			    $csmVipStartNot$   (cs_member$suffix$.csm_vip_start &gt;= #csmVipStartStart#
+			   <isEmpty property="csmVipStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmVipStartEnd" prepend="and">
+				<isEmpty property="csmVipStartStart">$csmVipStartNot$   (</isEmpty>
+			    cs_member$suffix$.csm_vip_start &lt;= #csmVipStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmVipStart" prepend="and">
+			    $csmVipStartNot$ cs_member$suffix$.csm_vip_start = #csmVipStart#
+			</isNotEmpty>
+			<isNotNull property="csmVipStartNot" prepend="and">
+				<isEmpty property="csmVipStartStart"><isEmpty property="csmVipStartEnd"><isEmpty property="csmVipStart">
+				$csmVipStartNot$ cs_member$suffix$.csm_vip_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVipEndStart" prepend="and">
+			    $csmVipEndNot$   (cs_member$suffix$.csm_vip_end &gt;= #csmVipEndStart#
+			   <isEmpty property="csmVipEndEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmVipEndEnd" prepend="and">
+				<isEmpty property="csmVipEndStart">$csmVipEndNot$   (</isEmpty>
+			    cs_member$suffix$.csm_vip_end &lt;= #csmVipEndEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmVipEnd" prepend="and">
+			    $csmVipEndNot$ cs_member$suffix$.csm_vip_end = #csmVipEnd#
+			</isNotEmpty>
+			<isNotNull property="csmVipEndNot" prepend="and">
+				<isEmpty property="csmVipEndStart"><isEmpty property="csmVipEndEnd"><isEmpty property="csmVipEnd">
+				$csmVipEndNot$ cs_member$suffix$.csm_vip_end is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmUpdateTimeStart" prepend="and">
+			    $csmUpdateTimeNot$   (cs_member$suffix$.csm_update_time &gt;= #csmUpdateTimeStart#
+			   <isEmpty property="csmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmUpdateTimeEnd" prepend="and">
+				<isEmpty property="csmUpdateTimeStart">$csmUpdateTimeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_update_time &lt;= #csmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmUpdateTime" prepend="and">
+			    $csmUpdateTimeNot$ cs_member$suffix$.csm_update_time = #csmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csmUpdateTimeNot" prepend="and">
+				<isEmpty property="csmUpdateTimeStart"><isEmpty property="csmUpdateTimeEnd"><isEmpty property="csmUpdateTime">
+				$csmUpdateTimeNot$ cs_member$suffix$.csm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmAddTimeStart" prepend="and">
+			    $csmAddTimeNot$   (cs_member$suffix$.csm_add_time &gt;= #csmAddTimeStart#
+			   <isEmpty property="csmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmAddTimeEnd" prepend="and">
+				<isEmpty property="csmAddTimeStart">$csmAddTimeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_add_time &lt;= #csmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmAddTime" prepend="and">
+			    $csmAddTimeNot$ cs_member$suffix$.csm_add_time = #csmAddTime#
+			</isNotEmpty>
+			<isNotNull property="csmAddTimeNot" prepend="and">
+				<isEmpty property="csmAddTimeStart"><isEmpty property="csmAddTimeEnd"><isEmpty property="csmAddTime">
+				$csmAddTimeNot$ cs_member$suffix$.csm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmLastTimeStart" prepend="and">
+			    $csmLastTimeNot$   (cs_member$suffix$.csm_last_time &gt;= #csmLastTimeStart#
+			   <isEmpty property="csmLastTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmLastTimeEnd" prepend="and">
+				<isEmpty property="csmLastTimeStart">$csmLastTimeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_last_time &lt;= #csmLastTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmLastTime" prepend="and">
+			    $csmLastTimeNot$ cs_member$suffix$.csm_last_time = #csmLastTime#
+			</isNotEmpty>
+			<isNotNull property="csmLastTimeNot" prepend="and">
+				<isEmpty property="csmLastTimeStart"><isEmpty property="csmLastTimeEnd"><isEmpty property="csmLastTime">
+				$csmLastTimeNot$ cs_member$suffix$.csm_last_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmLastIp" prepend="and">			    
+			    (<isNotNull property="csmLastIpNot">
+			    cs_member$suffix$.csm_last_ip is null or length(cs_member$suffix$.csm_last_ip) &lt; 1 or
+			    </isNotNull>$csmLastIpNot$ cs_member$suffix$.csm_last_ip = #csmLastIp#)
+			</isNotEmpty>
+			<isNotNull property="csmLastIpNot" prepend="and">
+				<isEmpty property="csmLastIp">
+				$csmLastIpNot$ (cs_member$suffix$.csm_last_ip is null or length(cs_member$suffix$.csm_last_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmLoginSMin" prepend="and">
+			    $csmLoginSNot$  ( cs_member$suffix$.csm_login_s &gt;= #csmLoginSMin#
+			    <isEmpty property="csmLoginSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmLoginSMax" prepend="and">
+				<isEmpty property="csmLoginSMin">$csmLoginSNot$   (</isEmpty>
+			    cs_member$suffix$.csm_login_s &lt;= #csmLoginSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmLoginS" prepend="and">
+			    $csmLoginSNot$ cs_member$suffix$.csm_login_s = #csmLoginS#
+			</isNotEmpty>
+			<isNotNull property="csmLoginSNot" prepend="and">
+				<isEmpty property="csmLoginSMax"><isEmpty property="csmLoginSMin"><isEmpty property="csmLoginS">
+				$csmLoginSNot$ cs_member$suffix$.csm_login_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmFirstUseStart" prepend="and">
+			    $csmFirstUseNot$   (cs_member$suffix$.csm_first_use &gt;= #csmFirstUseStart#
+			   <isEmpty property="csmFirstUseEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmFirstUseEnd" prepend="and">
+				<isEmpty property="csmFirstUseStart">$csmFirstUseNot$   (</isEmpty>
+			    cs_member$suffix$.csm_first_use &lt;= #csmFirstUseEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmFirstUse" prepend="and">
+			    $csmFirstUseNot$ cs_member$suffix$.csm_first_use = #csmFirstUse#
+			</isNotEmpty>
+			<isNotNull property="csmFirstUseNot" prepend="and">
+				<isEmpty property="csmFirstUseStart"><isEmpty property="csmFirstUseEnd"><isEmpty property="csmFirstUse">
+				$csmFirstUseNot$ cs_member$suffix$.csm_first_use is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmLastUseStart" prepend="and">
+			    $csmLastUseNot$   (cs_member$suffix$.csm_last_use &gt;= #csmLastUseStart#
+			   <isEmpty property="csmLastUseEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmLastUseEnd" prepend="and">
+				<isEmpty property="csmLastUseStart">$csmLastUseNot$   (</isEmpty>
+			    cs_member$suffix$.csm_last_use &lt;= #csmLastUseEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmLastUse" prepend="and">
+			    $csmLastUseNot$ cs_member$suffix$.csm_last_use = #csmLastUse#
+			</isNotEmpty>
+			<isNotNull property="csmLastUseNot" prepend="and">
+				<isEmpty property="csmLastUseStart"><isEmpty property="csmLastUseEnd"><isEmpty property="csmLastUse">
+				$csmLastUseNot$ cs_member$suffix$.csm_last_use is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmAllRechargeMin" prepend="and">
+			    $csmAllRechargeNot$  ( cs_member$suffix$.csm_all_recharge &gt;= #csmAllRechargeMin#
+			    <isEmpty property="csmAllRechargeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmAllRechargeMax" prepend="and">
+				<isEmpty property="csmAllRechargeMin">$csmAllRechargeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_all_recharge &lt;= #csmAllRechargeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmAllRecharge" prepend="and">
+			    $csmAllRechargeNot$ cs_member$suffix$.csm_all_recharge = #csmAllRecharge#
+			</isNotEmpty>
+			<isNotNull property="csmAllRechargeNot" prepend="and">
+				<isEmpty property="csmAllRechargeMax"><isEmpty property="csmAllRechargeMin"><isEmpty property="csmAllRecharge">
+				$csmAllRechargeNot$ cs_member$suffix$.csm_all_recharge is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmAllOrderSMin" prepend="and">
+			    $csmAllOrderSNot$  ( cs_member$suffix$.csm_all_order_s &gt;= #csmAllOrderSMin#
+			    <isEmpty property="csmAllOrderSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmAllOrderSMax" prepend="and">
+				<isEmpty property="csmAllOrderSMin">$csmAllOrderSNot$   (</isEmpty>
+			    cs_member$suffix$.csm_all_order_s &lt;= #csmAllOrderSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmAllOrderS" prepend="and">
+			    $csmAllOrderSNot$ cs_member$suffix$.csm_all_order_s = #csmAllOrderS#
+			</isNotEmpty>
+			<isNotNull property="csmAllOrderSNot" prepend="and">
+				<isEmpty property="csmAllOrderSMax"><isEmpty property="csmAllOrderSMin"><isEmpty property="csmAllOrderS">
+				$csmAllOrderSNot$ cs_member$suffix$.csm_all_order_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmAllUseTimeMin" prepend="and">
+			    $csmAllUseTimeNot$  ( cs_member$suffix$.csm_all_use_time &gt;= #csmAllUseTimeMin#
+			    <isEmpty property="csmAllUseTimeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmAllUseTimeMax" prepend="and">
+				<isEmpty property="csmAllUseTimeMin">$csmAllUseTimeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_all_use_time &lt;= #csmAllUseTimeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmAllUseTime" prepend="and">
+			    $csmAllUseTimeNot$ cs_member$suffix$.csm_all_use_time = #csmAllUseTime#
+			</isNotEmpty>
+			<isNotNull property="csmAllUseTimeNot" prepend="and">
+				<isEmpty property="csmAllUseTimeMax"><isEmpty property="csmAllUseTimeMin"><isEmpty property="csmAllUseTime">
+				$csmAllUseTimeNot$ cs_member$suffix$.csm_all_use_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmAllViolatSMin" prepend="and">
+			    $csmAllViolatSNot$  ( cs_member$suffix$.csm_all_violat_s &gt;= #csmAllViolatSMin#
+			    <isEmpty property="csmAllViolatSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmAllViolatSMax" prepend="and">
+				<isEmpty property="csmAllViolatSMin">$csmAllViolatSNot$   (</isEmpty>
+			    cs_member$suffix$.csm_all_violat_s &lt;= #csmAllViolatSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmAllViolatS" prepend="and">
+			    $csmAllViolatSNot$ cs_member$suffix$.csm_all_violat_s = #csmAllViolatS#
+			</isNotEmpty>
+			<isNotNull property="csmAllViolatSNot" prepend="and">
+				<isEmpty property="csmAllViolatSMax"><isEmpty property="csmAllViolatSMin"><isEmpty property="csmAllViolatS">
+				$csmAllViolatSNot$ cs_member$suffix$.csm_all_violat_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmUnViolatSMin" prepend="and">
+			    $csmUnViolatSNot$  ( cs_member$suffix$.csm_un_violat_s &gt;= #csmUnViolatSMin#
+			    <isEmpty property="csmUnViolatSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmUnViolatSMax" prepend="and">
+				<isEmpty property="csmUnViolatSMin">$csmUnViolatSNot$   (</isEmpty>
+			    cs_member$suffix$.csm_un_violat_s &lt;= #csmUnViolatSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmUnViolatS" prepend="and">
+			    $csmUnViolatSNot$ cs_member$suffix$.csm_un_violat_s = #csmUnViolatS#
+			</isNotEmpty>
+			<isNotNull property="csmUnViolatSNot" prepend="and">
+				<isEmpty property="csmUnViolatSMax"><isEmpty property="csmUnViolatSMin"><isEmpty property="csmUnViolatS">
+				$csmUnViolatSNot$ cs_member$suffix$.csm_un_violat_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmAllTroubleSMin" prepend="and">
+			    $csmAllTroubleSNot$  ( cs_member$suffix$.csm_all_trouble_s &gt;= #csmAllTroubleSMin#
+			    <isEmpty property="csmAllTroubleSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmAllTroubleSMax" prepend="and">
+				<isEmpty property="csmAllTroubleSMin">$csmAllTroubleSNot$   (</isEmpty>
+			    cs_member$suffix$.csm_all_trouble_s &lt;= #csmAllTroubleSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csmAllTroubleS" prepend="and">
+			    $csmAllTroubleSNot$ cs_member$suffix$.csm_all_trouble_s = #csmAllTroubleS#
+			</isNotEmpty>
+			<isNotNull property="csmAllTroubleSNot" prepend="and">
+				<isEmpty property="csmAllTroubleSMax"><isEmpty property="csmAllTroubleSMin"><isEmpty property="csmAllTroubleS">
+				$csmAllTroubleSNot$ cs_member$suffix$.csm_all_trouble_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmFirstRechargeStart" prepend="and">
+			    $csmFirstRechargeNot$   (cs_member$suffix$.csm_first_recharge &gt;= #csmFirstRechargeStart#
+			   <isEmpty property="csmFirstRechargeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmFirstRechargeEnd" prepend="and">
+				<isEmpty property="csmFirstRechargeStart">$csmFirstRechargeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_first_recharge &lt;= #csmFirstRechargeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmFirstRecharge" prepend="and">
+			    $csmFirstRechargeNot$ cs_member$suffix$.csm_first_recharge = #csmFirstRecharge#
+			</isNotEmpty>
+			<isNotNull property="csmFirstRechargeNot" prepend="and">
+				<isEmpty property="csmFirstRechargeStart"><isEmpty property="csmFirstRechargeEnd"><isEmpty property="csmFirstRecharge">
+				$csmFirstRechargeNot$ cs_member$suffix$.csm_first_recharge is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmRefundTimeStart" prepend="and">
+			    $csmRefundTimeNot$   (cs_member$suffix$.csm_refund_time &gt;= #csmRefundTimeStart#
+			   <isEmpty property="csmRefundTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csmRefundTimeEnd" prepend="and">
+				<isEmpty property="csmRefundTimeStart">$csmRefundTimeNot$   (</isEmpty>
+			    cs_member$suffix$.csm_refund_time &lt;= #csmRefundTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csmRefundTime" prepend="and">
+			    $csmRefundTimeNot$ cs_member$suffix$.csm_refund_time = #csmRefundTime#
+			</isNotEmpty>
+			<isNotNull property="csmRefundTimeNot" prepend="and">
+				<isEmpty property="csmRefundTimeStart"><isEmpty property="csmRefundTimeEnd"><isEmpty property="csmRefundTime">
+				$csmRefundTimeNot$ cs_member$suffix$.csm_refund_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmRegistIp" prepend="and">			    
+			    (<isNotNull property="csmRegistIpNot">
+			    cs_member$suffix$.csm_regist_ip is null or length(cs_member$suffix$.csm_regist_ip) &lt; 1 or
+			    </isNotNull>$csmRegistIpNot$ cs_member$suffix$.csm_regist_ip = #csmRegistIp#)
+			</isNotEmpty>
+			<isNotNull property="csmRegistIpNot" prepend="and">
+				<isEmpty property="csmRegistIp">
+				$csmRegistIpNot$ (cs_member$suffix$.csm_regist_ip is null or length(cs_member$suffix$.csm_regist_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmAdder" prepend="and">
+			    $csmAdderNot$ cs_member$suffix$.csm_adder = #csmAdder#
+			</isNotEmpty>
+			<isNotNull property="csmAdderNot" prepend="and">
+				<isEmpty property="csmAdder">
+				$csmAdderNot$ cs_member$suffix$.csm_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmTracker" prepend="and">
+			    $csmTrackerNot$ cs_member$suffix$.csm_tracker = #csmTracker#
+			</isNotEmpty>
+			<isNotNull property="csmTrackerNot" prepend="and">
+				<isEmpty property="csmTracker">
+				$csmTrackerNot$ cs_member$suffix$.csm_tracker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmRefer" prepend="and">
+			    $csmReferNot$ cs_member$suffix$.csm_refer = #csmRefer#
+			</isNotEmpty>
+			<isNotNull property="csmReferNot" prepend="and">
+				<isEmpty property="csmRefer">
+				$csmReferNot$ cs_member$suffix$.csm_refer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmReferType" prepend="and">
+			    $csmReferTypeNot$ cs_member$suffix$.csm_refer_type = #csmReferType#
+			</isNotEmpty>
+			<isNotNull property="csmReferTypeNot" prepend="and">
+				<isEmpty property="csmReferType">
+				$csmReferTypeNot$ cs_member$suffix$.csm_refer_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmFrom" prepend="and">
+			    $csmFromNot$ cs_member$suffix$.csm_from = #csmFrom#
+			</isNotEmpty>
+			<isNotNull property="csmFromNot" prepend="and">
+				<isEmpty property="csmFrom">
+				$csmFromNot$ cs_member$suffix$.csm_from is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmSrc" prepend="and">
+			    $csmSrcNot$ cs_member$suffix$.csm_src = #csmSrc#
+			</isNotEmpty>
+			<isNotNull property="csmSrcNot" prepend="and">
+				<isEmpty property="csmSrc">
+				$csmSrcNot$ cs_member$suffix$.csm_src is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmChannel" prepend="and">
+			    $csmChannelNot$ cs_member$suffix$.csm_channel = #csmChannel#
+			</isNotEmpty>
+			<isNotNull property="csmChannelNot" prepend="and">
+				<isEmpty property="csmChannel">
+				$csmChannelNot$ cs_member$suffix$.csm_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmMarketPlan" prepend="and">
+			    $csmMarketPlanNot$ cs_member$suffix$.csm_market_plan = #csmMarketPlan#
+			</isNotEmpty>
+			<isNotNull property="csmMarketPlanNot" prepend="and">
+				<isEmpty property="csmMarketPlan">
+				$csmMarketPlanNot$ cs_member$suffix$.csm_market_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmActivity" prepend="and">
+			    $csmActivityNot$ cs_member$suffix$.csm_activity = #csmActivity#
+			</isNotEmpty>
+			<isNotNull property="csmActivityNot" prepend="and">
+				<isEmpty property="csmActivity">
+				$csmActivityNot$ cs_member$suffix$.csm_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmSaler" prepend="and">
+			    $csmSalerNot$ cs_member$suffix$.csm_saler = #csmSaler#
+			</isNotEmpty>
+			<isNotNull property="csmSalerNot" prepend="and">
+				<isEmpty property="csmSaler">
+				$csmSalerNot$ cs_member$suffix$.csm_saler is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmMarket" prepend="and">			    
+			    (<isNotNull property="csmMarketNot">
+			    cs_member$suffix$.csm_market is null or length(cs_member$suffix$.csm_market) &lt; 1 or
+			    </isNotNull>$csmMarketNot$ cs_member$suffix$.csm_market like #csmMarket#)
+			</isNotEmpty>
+			<isNotNull property="csmMarketNot" prepend="and">
+				<isEmpty property="csmMarket">
+				$csmMarketNot$ (cs_member$suffix$.csm_market is null or length(cs_member$suffix$.csm_market) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmTag" prepend="and">			    
+			    (<isNotNull property="csmTagNot">
+			    cs_member$suffix$.csm_tag is null or length(cs_member$suffix$.csm_tag) &lt; 1 or
+			    </isNotNull>$csmTagNot$ cs_member$suffix$.csm_tag like #csmTag#)
+			</isNotEmpty>
+			<isNotNull property="csmTagNot" prepend="and">
+				<isEmpty property="csmTag">
+				$csmTagNot$ (cs_member$suffix$.csm_tag is null or length(cs_member$suffix$.csm_tag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmMark" prepend="and">			    
+			    (<isNotNull property="csmMarkNot">
+			    cs_member$suffix$.csm_mark is null or length(cs_member$suffix$.csm_mark) &lt; 1 or
+			    </isNotNull>$csmMarkNot$ cs_member$suffix$.csm_mark like #csmMark#)
+			</isNotEmpty>
+			<isNotNull property="csmMarkNot" prepend="and">
+				<isEmpty property="csmMark">
+				$csmMarkNot$ (cs_member$suffix$.csm_mark is null or length(cs_member$suffix$.csm_mark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVisitFlag" prepend="and">			    
+			    (<isNotNull property="csmVisitFlagNot">
+			    cs_member$suffix$.csm_visit_flag is null or length(cs_member$suffix$.csm_visit_flag) &lt; 1 or
+			    </isNotNull>$csmVisitFlagNot$ cs_member$suffix$.csm_visit_flag like #csmVisitFlag#)
+			</isNotEmpty>
+			<isNotNull property="csmVisitFlagNot" prepend="and">
+				<isEmpty property="csmVisitFlag">
+				$csmVisitFlagNot$ (cs_member$suffix$.csm_visit_flag is null or length(cs_member$suffix$.csm_visit_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmMask" prepend="and">
+			    $csmMaskNot$ (cs_member$suffix$.csm_mask &amp; #csmMask#) = #csmMask#
+			</isNotEmpty>
+			<isNotNull property="csmMaskNot" prepend="and">
+				<isEmpty property="csmMask">
+				$csmMaskNot$ cs_member$suffix$.csm_mask is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csmRemark" prepend="and">			    
+			    (<isNotNull property="csmRemarkNot">
+			    cs_member$suffix$.csm_remark is null or length(cs_member$suffix$.csm_remark) &lt; 1 or
+			    </isNotNull>$csmRemarkNot$ cs_member$suffix$.csm_remark like #csmRemark#)
+			</isNotEmpty>
+			<isNotNull property="csmRemarkNot" prepend="and">
+				<isEmpty property="csmRemark">
+				$csmRemarkNot$ (cs_member$suffix$.csm_remark is null or length(cs_member$suffix$.csm_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVMobile" prepend="and">
+			    $csmVMobileNot$ cs_member$suffix$.csm_v_mobile = #csmVMobile#
+			</isNotEmpty>
+			<isNotNull property="csmVMobileNot" prepend="and">
+				<isEmpty property="csmVMobile">
+				$csmVMobileNot$ cs_member$suffix$.csm_v_mobile is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVEmail" prepend="and">
+			    $csmVEmailNot$ cs_member$suffix$.csm_v_email = #csmVEmail#
+			</isNotEmpty>
+			<isNotNull property="csmVEmailNot" prepend="and">
+				<isEmpty property="csmVEmail">
+				$csmVEmailNot$ cs_member$suffix$.csm_v_email is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVReal" prepend="and">
+			    $csmVRealNot$ cs_member$suffix$.csm_v_real = #csmVReal#
+			</isNotEmpty>
+			<isNotNull property="csmVRealNot" prepend="and">
+				<isEmpty property="csmVReal">
+				$csmVRealNot$ cs_member$suffix$.csm_v_real is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmVDrive" prepend="and">
+			    $csmVDriveNot$ cs_member$suffix$.csm_v_drive = #csmVDrive#
+			</isNotEmpty>
+			<isNotNull property="csmVDriveNot" prepend="and">
+				<isEmpty property="csmVDrive">
+				$csmVDriveNot$ cs_member$suffix$.csm_v_drive is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csmStatus" prepend="and">
+			    $csmStatusNot$ cs_member$suffix$.csm_status = #csmStatus#
+			</isNotEmpty>
+			<isNotNull property="csmStatusNot" prepend="and">
+				<isEmpty property="csmStatus">
+				$csmStatusNot$ cs_member$suffix$.csm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员帐号left join 条件sql片段 -->
+	<sql id="cs_member_join">
+		<dynamic>
+			<isNotEmpty property="CsMember.csmId" prepend="and">
+			    $CsMember.csmIdNot$ cs_member$CsMember.suffix$.csm_id = #CsMember.csmId#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmIdNot" prepend="and">
+				<isEmpty property="CsMember.csmId">
+				$csmIdNot$ cs_member$CsMember.suffix$.csm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_member$CsMember.suffix$.csm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmHost" prepend="and">
+			    $CsMember.csmHostNot$ cs_member$CsMember.suffix$.csm_host = #CsMember.csmHost#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmHostNot" prepend="and">
+				<isEmpty property="CsMember.csmHost">
+				$csmHostNot$ cs_member$CsMember.suffix$.csm_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmUsername" prepend="and">
+				(<isNotNull property="CsMember.csmUsernameNot">
+			    cs_member$CsMember.suffix$.csm_username is null or length(cs_member$CsMember.suffix$.csm_username) &lt; 1 or
+			    </isNotNull>$CsMember.csmUsernameNot$ cs_member$CsMember.suffix$.csm_username = #CsMember.csmUsername#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmUsernameNot" prepend="and">
+				<isEmpty property="CsMember.csmUsername">
+				$csmUsernameNot$ (cs_member$CsMember.suffix$.csm_username is null or length(cs_member$CsMember.suffix$.csm_username) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmPassword" prepend="and">
+				(<isNotNull property="CsMember.csmPasswordNot">
+			    cs_member$CsMember.suffix$.csm_password is null or length(cs_member$CsMember.suffix$.csm_password) &lt; 1 or
+			    </isNotNull>$CsMember.csmPasswordNot$ cs_member$CsMember.suffix$.csm_password = #CsMember.csmPassword#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmPasswordNot" prepend="and">
+				<isEmpty property="CsMember.csmPassword">
+				$csmPasswordNot$ (cs_member$CsMember.suffix$.csm_password is null or length(cs_member$CsMember.suffix$.csm_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmGroup" prepend="and">
+			    $CsMember.csmGroupNot$ cs_member$CsMember.suffix$.csm_group = #CsMember.csmGroup#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmGroupNot" prepend="and">
+				<isEmpty property="CsMember.csmGroup">
+				$csmGroupNot$ cs_member$CsMember.suffix$.csm_group is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmMoneyMin" prepend="and">
+			    $CsMember.csmMoneyNot$  ( cs_member$CsMember.suffix$.csm_money &gt;= #CsMember.csmMoneyMin#
+			    <isEmpty property="CsMember.csmMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmMoneyMax" prepend="and">
+				<isEmpty property="CsMember.csmMoneyMin">$CsMember.csmMoneyNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_money &lt;= #CsMember.csmMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmMoney" prepend="and">
+			    $CsMember.csmMoneyNot$ cs_member$CsMember.suffix$.csm_money = #CsMember.csmMoney#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmMoneyNot" prepend="and">
+				<isEmpty property="CsMember.csmMoneyMax"><isEmpty property="CsMember.csmMoneyMin"><isEmpty property="CsMember.csmMoney">
+				$csmMoneyNot$ cs_member$CsMember.suffix$.csm_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmCouponMin" prepend="and">
+			    $CsMember.csmCouponNot$  ( cs_member$CsMember.suffix$.csm_coupon &gt;= #CsMember.csmCouponMin#
+			    <isEmpty property="CsMember.csmCouponMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmCouponMax" prepend="and">
+				<isEmpty property="CsMember.csmCouponMin">$CsMember.csmCouponNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_coupon &lt;= #CsMember.csmCouponMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmCoupon" prepend="and">
+			    $CsMember.csmCouponNot$ cs_member$CsMember.suffix$.csm_coupon = #CsMember.csmCoupon#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmCouponNot" prepend="and">
+				<isEmpty property="CsMember.csmCouponMax"><isEmpty property="CsMember.csmCouponMin"><isEmpty property="CsMember.csmCoupon">
+				$csmCouponNot$ cs_member$CsMember.suffix$.csm_coupon is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmIntegralMin" prepend="and">
+			    $CsMember.csmIntegralNot$  ( cs_member$CsMember.suffix$.csm_integral &gt;= #CsMember.csmIntegralMin#
+			    <isEmpty property="CsMember.csmIntegralMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmIntegralMax" prepend="and">
+				<isEmpty property="CsMember.csmIntegralMin">$CsMember.csmIntegralNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_integral &lt;= #CsMember.csmIntegralMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmIntegral" prepend="and">
+			    $CsMember.csmIntegralNot$ cs_member$CsMember.suffix$.csm_integral = #CsMember.csmIntegral#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmIntegralNot" prepend="and">
+				<isEmpty property="CsMember.csmIntegralMax"><isEmpty property="CsMember.csmIntegralMin"><isEmpty property="CsMember.csmIntegral">
+				$csmIntegralNot$ cs_member$CsMember.suffix$.csm_integral is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmGrowMin" prepend="and">
+			    $CsMember.csmGrowNot$  ( cs_member$CsMember.suffix$.csm_grow &gt;= #CsMember.csmGrowMin#
+			    <isEmpty property="CsMember.csmGrowMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmGrowMax" prepend="and">
+				<isEmpty property="CsMember.csmGrowMin">$CsMember.csmGrowNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_grow &lt;= #CsMember.csmGrowMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmGrow" prepend="and">
+			    $CsMember.csmGrowNot$ cs_member$CsMember.suffix$.csm_grow = #CsMember.csmGrow#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmGrowNot" prepend="and">
+				<isEmpty property="CsMember.csmGrowMax"><isEmpty property="CsMember.csmGrowMin"><isEmpty property="CsMember.csmGrow">
+				$csmGrowNot$ cs_member$CsMember.suffix$.csm_grow is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmGradeMin" prepend="and">
+			    $CsMember.csmGradeNot$  ( cs_member$CsMember.suffix$.csm_grade &gt;= #CsMember.csmGradeMin#
+			    <isEmpty property="CsMember.csmGradeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmGradeMax" prepend="and">
+				<isEmpty property="CsMember.csmGradeMin">$CsMember.csmGradeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_grade &lt;= #CsMember.csmGradeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmGrade" prepend="and">
+			    $CsMember.csmGradeNot$ cs_member$CsMember.suffix$.csm_grade = #CsMember.csmGrade#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmGradeNot" prepend="and">
+				<isEmpty property="CsMember.csmGradeMax"><isEmpty property="CsMember.csmGradeMin"><isEmpty property="CsMember.csmGrade">
+				$csmGradeNot$ cs_member$CsMember.suffix$.csm_grade is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmRebateMin" prepend="and">
+			    $CsMember.csmRebateNot$  ( cs_member$CsMember.suffix$.csm_rebate &gt;= #CsMember.csmRebateMin#
+			    <isEmpty property="CsMember.csmRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmRebateMax" prepend="and">
+				<isEmpty property="CsMember.csmRebateMin">$CsMember.csmRebateNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_rebate &lt;= #CsMember.csmRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmRebate" prepend="and">
+			    $CsMember.csmRebateNot$ cs_member$CsMember.suffix$.csm_rebate = #CsMember.csmRebate#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmRebateNot" prepend="and">
+				<isEmpty property="CsMember.csmRebateMax"><isEmpty property="CsMember.csmRebateMin"><isEmpty property="CsMember.csmRebate">
+				$csmRebateNot$ cs_member$CsMember.suffix$.csm_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmNotRevenue" prepend="and">
+			    $CsMember.csmNotRevenueNot$ cs_member$CsMember.suffix$.csm_not_revenue = #CsMember.csmNotRevenue#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmNotRevenueNot" prepend="and">
+				<isEmpty property="CsMember.csmNotRevenue">
+				$csmNotRevenueNot$ cs_member$CsMember.suffix$.csm_not_revenue is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmWeixinFlag" prepend="and">
+				(<isNotNull property="CsMember.csmWeixinFlagNot">
+			    cs_member$CsMember.suffix$.csm_weixin_flag is null or length(cs_member$CsMember.suffix$.csm_weixin_flag) &lt; 1 or
+			    </isNotNull>$CsMember.csmWeixinFlagNot$ cs_member$CsMember.suffix$.csm_weixin_flag = #CsMember.csmWeixinFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmWeixinFlagNot" prepend="and">
+				<isEmpty property="CsMember.csmWeixinFlag">
+				$csmWeixinFlagNot$ (cs_member$CsMember.suffix$.csm_weixin_flag is null or length(cs_member$CsMember.suffix$.csm_weixin_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAlipayFlag" prepend="and">
+				(<isNotNull property="CsMember.csmAlipayFlagNot">
+			    cs_member$CsMember.suffix$.csm_alipay_flag is null or length(cs_member$CsMember.suffix$.csm_alipay_flag) &lt; 1 or
+			    </isNotNull>$CsMember.csmAlipayFlagNot$ cs_member$CsMember.suffix$.csm_alipay_flag = #CsMember.csmAlipayFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAlipayFlagNot" prepend="and">
+				<isEmpty property="CsMember.csmAlipayFlag">
+				$csmAlipayFlagNot$ (cs_member$CsMember.suffix$.csm_alipay_flag is null or length(cs_member$CsMember.suffix$.csm_alipay_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmHeader" prepend="and">
+			    $CsMember.csmHeaderNot$ cs_member$CsMember.suffix$.csm_header = #CsMember.csmHeader#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmHeaderNot" prepend="and">
+				<isEmpty property="CsMember.csmHeader">
+				$csmHeaderNot$ cs_member$CsMember.suffix$.csm_header is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmEmail" prepend="and">
+				(<isNotNull property="CsMember.csmEmailNot">
+			    cs_member$CsMember.suffix$.csm_email is null or length(cs_member$CsMember.suffix$.csm_email) &lt; 1 or
+			    </isNotNull>$CsMember.csmEmailNot$ cs_member$CsMember.suffix$.csm_email = #CsMember.csmEmail#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmEmailNot" prepend="and">
+				<isEmpty property="CsMember.csmEmail">
+				$csmEmailNot$ (cs_member$CsMember.suffix$.csm_email is null or length(cs_member$CsMember.suffix$.csm_email) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmMobile" prepend="and">
+				(<isNotNull property="CsMember.csmMobileNot">
+			    cs_member$CsMember.suffix$.csm_mobile is null or length(cs_member$CsMember.suffix$.csm_mobile) &lt; 1 or
+			    </isNotNull>$CsMember.csmMobileNot$ cs_member$CsMember.suffix$.csm_mobile = #CsMember.csmMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmMobileNot" prepend="and">
+				<isEmpty property="CsMember.csmMobile">
+				$csmMobileNot$ (cs_member$CsMember.suffix$.csm_mobile is null or length(cs_member$CsMember.suffix$.csm_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmEvcard" prepend="and">
+			    $CsMember.csmEvcardNot$ cs_member$CsMember.suffix$.csm_evcard = #CsMember.csmEvcard#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmEvcardNot" prepend="and">
+				<isEmpty property="CsMember.csmEvcard">
+				$csmEvcardNot$ cs_member$CsMember.suffix$.csm_evcard is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmExpress" prepend="and">
+				(<isNotNull property="CsMember.csmExpressNot">
+			    cs_member$CsMember.suffix$.csm_express is null or length(cs_member$CsMember.suffix$.csm_express) &lt; 1 or
+			    </isNotNull>$CsMember.csmExpressNot$ cs_member$CsMember.suffix$.csm_express = #CsMember.csmExpress#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmExpressNot" prepend="and">
+				<isEmpty property="CsMember.csmExpress">
+				$csmExpressNot$ (cs_member$CsMember.suffix$.csm_express is null or length(cs_member$CsMember.suffix$.csm_express) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmTemp" prepend="and">
+				(<isNotNull property="CsMember.csmTempNot">
+			    cs_member$CsMember.suffix$.csm_temp is null or length(cs_member$CsMember.suffix$.csm_temp) &lt; 1 or
+			    </isNotNull>$CsMember.csmTempNot$ cs_member$CsMember.suffix$.csm_temp = #CsMember.csmTemp#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmTempNot" prepend="and">
+				<isEmpty property="CsMember.csmTemp">
+				$csmTempNot$ (cs_member$CsMember.suffix$.csm_temp is null or length(cs_member$CsMember.suffix$.csm_temp) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmName" prepend="and">
+				(<isNotNull property="CsMember.csmNameNot">
+			    cs_member$CsMember.suffix$.csm_name is null or length(cs_member$CsMember.suffix$.csm_name) &lt; 1 or
+			    </isNotNull>$CsMember.csmNameNot$ cs_member$CsMember.suffix$.csm_name = #CsMember.csmName#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmNameNot" prepend="and">
+				<isEmpty property="CsMember.csmName">
+				$csmNameNot$ (cs_member$CsMember.suffix$.csm_name is null or length(cs_member$CsMember.suffix$.csm_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmInfo" prepend="and">
+			    $CsMember.csmInfoNot$ cs_member$CsMember.suffix$.csm_info = #CsMember.csmInfo#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmInfoNot" prepend="and">
+				<isEmpty property="CsMember.csmInfo">
+				$csmInfoNot$ cs_member$CsMember.suffix$.csm_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmOutlets" prepend="and">
+			    $CsMember.csmOutletsNot$ cs_member$CsMember.suffix$.csm_outlets = #CsMember.csmOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmOutletsNot" prepend="and">
+				<isEmpty property="CsMember.csmOutlets">
+				$csmOutletsNot$ cs_member$CsMember.suffix$.csm_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmIsVip" prepend="and">
+			    $CsMember.csmIsVipNot$ cs_member$CsMember.suffix$.csm_is_vip = #CsMember.csmIsVip#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmIsVipNot" prepend="and">
+				<isEmpty property="CsMember.csmIsVip">
+				$csmIsVipNot$ cs_member$CsMember.suffix$.csm_is_vip is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVipStartStart" prepend="and">
+			    $CsMember.csmVipStartNot$   (cs_member$CsMember.suffix$.csm_vip_start &gt;= #CsMember.csmVipStartStart#
+			   <isEmpty property="CsMember.csmVipStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmVipStartEnd" prepend="and">
+				<isEmpty property="CsMember.csmVipStartStart">$CsMember.csmVipStartNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_vip_start &lt;= #CsMember.csmVipStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmVipStart" prepend="and">
+			    $CsMember.csmVipStartNot$ cs_member$CsMember.suffix$.csm_vip_start = #CsMember.csmVipStart#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVipStartNot" prepend="and">
+				<isEmpty property="CsMember.csmVipStartStart"><isEmpty property="CsMember.csmVipStartEnd"><isEmpty property="CsMember.csmVipStart">
+				$csmVipStartNot$ cs_member$CsMember.suffix$.csm_vip_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVipEndStart" prepend="and">
+			    $CsMember.csmVipEndNot$   (cs_member$CsMember.suffix$.csm_vip_end &gt;= #CsMember.csmVipEndStart#
+			   <isEmpty property="CsMember.csmVipEndEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmVipEndEnd" prepend="and">
+				<isEmpty property="CsMember.csmVipEndStart">$CsMember.csmVipEndNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_vip_end &lt;= #CsMember.csmVipEndEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmVipEnd" prepend="and">
+			    $CsMember.csmVipEndNot$ cs_member$CsMember.suffix$.csm_vip_end = #CsMember.csmVipEnd#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVipEndNot" prepend="and">
+				<isEmpty property="CsMember.csmVipEndStart"><isEmpty property="CsMember.csmVipEndEnd"><isEmpty property="CsMember.csmVipEnd">
+				$csmVipEndNot$ cs_member$CsMember.suffix$.csm_vip_end is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmUpdateTimeStart" prepend="and">
+			    $CsMember.csmUpdateTimeNot$   (cs_member$CsMember.suffix$.csm_update_time &gt;= #CsMember.csmUpdateTimeStart#
+			   <isEmpty property="CsMember.csmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsMember.csmUpdateTimeStart">$CsMember.csmUpdateTimeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_update_time &lt;= #CsMember.csmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmUpdateTime" prepend="and">
+			    $CsMember.csmUpdateTimeNot$ cs_member$CsMember.suffix$.csm_update_time = #CsMember.csmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmUpdateTimeNot" prepend="and">
+				<isEmpty property="CsMember.csmUpdateTimeStart"><isEmpty property="CsMember.csmUpdateTimeEnd"><isEmpty property="CsMember.csmUpdateTime">
+				$csmUpdateTimeNot$ cs_member$CsMember.suffix$.csm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAddTimeStart" prepend="and">
+			    $CsMember.csmAddTimeNot$   (cs_member$CsMember.suffix$.csm_add_time &gt;= #CsMember.csmAddTimeStart#
+			   <isEmpty property="CsMember.csmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAddTimeEnd" prepend="and">
+				<isEmpty property="CsMember.csmAddTimeStart">$CsMember.csmAddTimeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_add_time &lt;= #CsMember.csmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAddTime" prepend="and">
+			    $CsMember.csmAddTimeNot$ cs_member$CsMember.suffix$.csm_add_time = #CsMember.csmAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAddTimeNot" prepend="and">
+				<isEmpty property="CsMember.csmAddTimeStart"><isEmpty property="CsMember.csmAddTimeEnd"><isEmpty property="CsMember.csmAddTime">
+				$csmAddTimeNot$ cs_member$CsMember.suffix$.csm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmLastTimeStart" prepend="and">
+			    $CsMember.csmLastTimeNot$   (cs_member$CsMember.suffix$.csm_last_time &gt;= #CsMember.csmLastTimeStart#
+			   <isEmpty property="CsMember.csmLastTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmLastTimeEnd" prepend="and">
+				<isEmpty property="CsMember.csmLastTimeStart">$CsMember.csmLastTimeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_last_time &lt;= #CsMember.csmLastTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmLastTime" prepend="and">
+			    $CsMember.csmLastTimeNot$ cs_member$CsMember.suffix$.csm_last_time = #CsMember.csmLastTime#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmLastTimeNot" prepend="and">
+				<isEmpty property="CsMember.csmLastTimeStart"><isEmpty property="CsMember.csmLastTimeEnd"><isEmpty property="CsMember.csmLastTime">
+				$csmLastTimeNot$ cs_member$CsMember.suffix$.csm_last_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmLastIp" prepend="and">
+				(<isNotNull property="CsMember.csmLastIpNot">
+			    cs_member$CsMember.suffix$.csm_last_ip is null or length(cs_member$CsMember.suffix$.csm_last_ip) &lt; 1 or
+			    </isNotNull>$CsMember.csmLastIpNot$ cs_member$CsMember.suffix$.csm_last_ip = #CsMember.csmLastIp#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmLastIpNot" prepend="and">
+				<isEmpty property="CsMember.csmLastIp">
+				$csmLastIpNot$ (cs_member$CsMember.suffix$.csm_last_ip is null or length(cs_member$CsMember.suffix$.csm_last_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmLoginSMin" prepend="and">
+			    $CsMember.csmLoginSNot$  ( cs_member$CsMember.suffix$.csm_login_s &gt;= #CsMember.csmLoginSMin#
+			    <isEmpty property="CsMember.csmLoginSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmLoginSMax" prepend="and">
+				<isEmpty property="CsMember.csmLoginSMin">$CsMember.csmLoginSNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_login_s &lt;= #CsMember.csmLoginSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmLoginS" prepend="and">
+			    $CsMember.csmLoginSNot$ cs_member$CsMember.suffix$.csm_login_s = #CsMember.csmLoginS#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmLoginSNot" prepend="and">
+				<isEmpty property="CsMember.csmLoginSMax"><isEmpty property="CsMember.csmLoginSMin"><isEmpty property="CsMember.csmLoginS">
+				$csmLoginSNot$ cs_member$CsMember.suffix$.csm_login_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmFirstUseStart" prepend="and">
+			    $CsMember.csmFirstUseNot$   (cs_member$CsMember.suffix$.csm_first_use &gt;= #CsMember.csmFirstUseStart#
+			   <isEmpty property="CsMember.csmFirstUseEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmFirstUseEnd" prepend="and">
+				<isEmpty property="CsMember.csmFirstUseStart">$CsMember.csmFirstUseNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_first_use &lt;= #CsMember.csmFirstUseEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmFirstUse" prepend="and">
+			    $CsMember.csmFirstUseNot$ cs_member$CsMember.suffix$.csm_first_use = #CsMember.csmFirstUse#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmFirstUseNot" prepend="and">
+				<isEmpty property="CsMember.csmFirstUseStart"><isEmpty property="CsMember.csmFirstUseEnd"><isEmpty property="CsMember.csmFirstUse">
+				$csmFirstUseNot$ cs_member$CsMember.suffix$.csm_first_use is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmLastUseStart" prepend="and">
+			    $CsMember.csmLastUseNot$   (cs_member$CsMember.suffix$.csm_last_use &gt;= #CsMember.csmLastUseStart#
+			   <isEmpty property="CsMember.csmLastUseEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmLastUseEnd" prepend="and">
+				<isEmpty property="CsMember.csmLastUseStart">$CsMember.csmLastUseNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_last_use &lt;= #CsMember.csmLastUseEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmLastUse" prepend="and">
+			    $CsMember.csmLastUseNot$ cs_member$CsMember.suffix$.csm_last_use = #CsMember.csmLastUse#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmLastUseNot" prepend="and">
+				<isEmpty property="CsMember.csmLastUseStart"><isEmpty property="CsMember.csmLastUseEnd"><isEmpty property="CsMember.csmLastUse">
+				$csmLastUseNot$ cs_member$CsMember.suffix$.csm_last_use is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAllRechargeMin" prepend="and">
+			    $CsMember.csmAllRechargeNot$  ( cs_member$CsMember.suffix$.csm_all_recharge &gt;= #CsMember.csmAllRechargeMin#
+			    <isEmpty property="CsMember.csmAllRechargeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllRechargeMax" prepend="and">
+				<isEmpty property="CsMember.csmAllRechargeMin">$CsMember.csmAllRechargeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_all_recharge &lt;= #CsMember.csmAllRechargeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllRecharge" prepend="and">
+			    $CsMember.csmAllRechargeNot$ cs_member$CsMember.suffix$.csm_all_recharge = #CsMember.csmAllRecharge#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAllRechargeNot" prepend="and">
+				<isEmpty property="CsMember.csmAllRechargeMax"><isEmpty property="CsMember.csmAllRechargeMin"><isEmpty property="CsMember.csmAllRecharge">
+				$csmAllRechargeNot$ cs_member$CsMember.suffix$.csm_all_recharge is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAllOrderSMin" prepend="and">
+			    $CsMember.csmAllOrderSNot$  ( cs_member$CsMember.suffix$.csm_all_order_s &gt;= #CsMember.csmAllOrderSMin#
+			    <isEmpty property="CsMember.csmAllOrderSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllOrderSMax" prepend="and">
+				<isEmpty property="CsMember.csmAllOrderSMin">$CsMember.csmAllOrderSNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_all_order_s &lt;= #CsMember.csmAllOrderSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllOrderS" prepend="and">
+			    $CsMember.csmAllOrderSNot$ cs_member$CsMember.suffix$.csm_all_order_s = #CsMember.csmAllOrderS#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAllOrderSNot" prepend="and">
+				<isEmpty property="CsMember.csmAllOrderSMax"><isEmpty property="CsMember.csmAllOrderSMin"><isEmpty property="CsMember.csmAllOrderS">
+				$csmAllOrderSNot$ cs_member$CsMember.suffix$.csm_all_order_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAllUseTimeMin" prepend="and">
+			    $CsMember.csmAllUseTimeNot$  ( cs_member$CsMember.suffix$.csm_all_use_time &gt;= #CsMember.csmAllUseTimeMin#
+			    <isEmpty property="CsMember.csmAllUseTimeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllUseTimeMax" prepend="and">
+				<isEmpty property="CsMember.csmAllUseTimeMin">$CsMember.csmAllUseTimeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_all_use_time &lt;= #CsMember.csmAllUseTimeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllUseTime" prepend="and">
+			    $CsMember.csmAllUseTimeNot$ cs_member$CsMember.suffix$.csm_all_use_time = #CsMember.csmAllUseTime#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAllUseTimeNot" prepend="and">
+				<isEmpty property="CsMember.csmAllUseTimeMax"><isEmpty property="CsMember.csmAllUseTimeMin"><isEmpty property="CsMember.csmAllUseTime">
+				$csmAllUseTimeNot$ cs_member$CsMember.suffix$.csm_all_use_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAllViolatSMin" prepend="and">
+			    $CsMember.csmAllViolatSNot$  ( cs_member$CsMember.suffix$.csm_all_violat_s &gt;= #CsMember.csmAllViolatSMin#
+			    <isEmpty property="CsMember.csmAllViolatSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllViolatSMax" prepend="and">
+				<isEmpty property="CsMember.csmAllViolatSMin">$CsMember.csmAllViolatSNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_all_violat_s &lt;= #CsMember.csmAllViolatSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllViolatS" prepend="and">
+			    $CsMember.csmAllViolatSNot$ cs_member$CsMember.suffix$.csm_all_violat_s = #CsMember.csmAllViolatS#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAllViolatSNot" prepend="and">
+				<isEmpty property="CsMember.csmAllViolatSMax"><isEmpty property="CsMember.csmAllViolatSMin"><isEmpty property="CsMember.csmAllViolatS">
+				$csmAllViolatSNot$ cs_member$CsMember.suffix$.csm_all_violat_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmUnViolatSMin" prepend="and">
+			    $CsMember.csmUnViolatSNot$  ( cs_member$CsMember.suffix$.csm_un_violat_s &gt;= #CsMember.csmUnViolatSMin#
+			    <isEmpty property="CsMember.csmUnViolatSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmUnViolatSMax" prepend="and">
+				<isEmpty property="CsMember.csmUnViolatSMin">$CsMember.csmUnViolatSNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_un_violat_s &lt;= #CsMember.csmUnViolatSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmUnViolatS" prepend="and">
+			    $CsMember.csmUnViolatSNot$ cs_member$CsMember.suffix$.csm_un_violat_s = #CsMember.csmUnViolatS#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmUnViolatSNot" prepend="and">
+				<isEmpty property="CsMember.csmUnViolatSMax"><isEmpty property="CsMember.csmUnViolatSMin"><isEmpty property="CsMember.csmUnViolatS">
+				$csmUnViolatSNot$ cs_member$CsMember.suffix$.csm_un_violat_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAllTroubleSMin" prepend="and">
+			    $CsMember.csmAllTroubleSNot$  ( cs_member$CsMember.suffix$.csm_all_trouble_s &gt;= #CsMember.csmAllTroubleSMin#
+			    <isEmpty property="CsMember.csmAllTroubleSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllTroubleSMax" prepend="and">
+				<isEmpty property="CsMember.csmAllTroubleSMin">$CsMember.csmAllTroubleSNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_all_trouble_s &lt;= #CsMember.csmAllTroubleSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmAllTroubleS" prepend="and">
+			    $CsMember.csmAllTroubleSNot$ cs_member$CsMember.suffix$.csm_all_trouble_s = #CsMember.csmAllTroubleS#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAllTroubleSNot" prepend="and">
+				<isEmpty property="CsMember.csmAllTroubleSMax"><isEmpty property="CsMember.csmAllTroubleSMin"><isEmpty property="CsMember.csmAllTroubleS">
+				$csmAllTroubleSNot$ cs_member$CsMember.suffix$.csm_all_trouble_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmFirstRechargeStart" prepend="and">
+			    $CsMember.csmFirstRechargeNot$   (cs_member$CsMember.suffix$.csm_first_recharge &gt;= #CsMember.csmFirstRechargeStart#
+			   <isEmpty property="CsMember.csmFirstRechargeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmFirstRechargeEnd" prepend="and">
+				<isEmpty property="CsMember.csmFirstRechargeStart">$CsMember.csmFirstRechargeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_first_recharge &lt;= #CsMember.csmFirstRechargeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmFirstRecharge" prepend="and">
+			    $CsMember.csmFirstRechargeNot$ cs_member$CsMember.suffix$.csm_first_recharge = #CsMember.csmFirstRecharge#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmFirstRechargeNot" prepend="and">
+				<isEmpty property="CsMember.csmFirstRechargeStart"><isEmpty property="CsMember.csmFirstRechargeEnd"><isEmpty property="CsMember.csmFirstRecharge">
+				$csmFirstRechargeNot$ cs_member$CsMember.suffix$.csm_first_recharge is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmRefundTimeStart" prepend="and">
+			    $CsMember.csmRefundTimeNot$   (cs_member$CsMember.suffix$.csm_refund_time &gt;= #CsMember.csmRefundTimeStart#
+			   <isEmpty property="CsMember.csmRefundTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmRefundTimeEnd" prepend="and">
+				<isEmpty property="CsMember.csmRefundTimeStart">$CsMember.csmRefundTimeNot$   (</isEmpty>
+			    cs_member$CsMember.suffix$.csm_refund_time &lt;= #CsMember.csmRefundTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsMember.csmRefundTime" prepend="and">
+			    $CsMember.csmRefundTimeNot$ cs_member$CsMember.suffix$.csm_refund_time = #CsMember.csmRefundTime#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmRefundTimeNot" prepend="and">
+				<isEmpty property="CsMember.csmRefundTimeStart"><isEmpty property="CsMember.csmRefundTimeEnd"><isEmpty property="CsMember.csmRefundTime">
+				$csmRefundTimeNot$ cs_member$CsMember.suffix$.csm_refund_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmRegistIp" prepend="and">
+				(<isNotNull property="CsMember.csmRegistIpNot">
+			    cs_member$CsMember.suffix$.csm_regist_ip is null or length(cs_member$CsMember.suffix$.csm_regist_ip) &lt; 1 or
+			    </isNotNull>$CsMember.csmRegistIpNot$ cs_member$CsMember.suffix$.csm_regist_ip = #CsMember.csmRegistIp#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmRegistIpNot" prepend="and">
+				<isEmpty property="CsMember.csmRegistIp">
+				$csmRegistIpNot$ (cs_member$CsMember.suffix$.csm_regist_ip is null or length(cs_member$CsMember.suffix$.csm_regist_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmAdder" prepend="and">
+			    $CsMember.csmAdderNot$ cs_member$CsMember.suffix$.csm_adder = #CsMember.csmAdder#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmAdderNot" prepend="and">
+				<isEmpty property="CsMember.csmAdder">
+				$csmAdderNot$ cs_member$CsMember.suffix$.csm_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmTracker" prepend="and">
+			    $CsMember.csmTrackerNot$ cs_member$CsMember.suffix$.csm_tracker = #CsMember.csmTracker#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmTrackerNot" prepend="and">
+				<isEmpty property="CsMember.csmTracker">
+				$csmTrackerNot$ cs_member$CsMember.suffix$.csm_tracker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmRefer" prepend="and">
+			    $CsMember.csmReferNot$ cs_member$CsMember.suffix$.csm_refer = #CsMember.csmRefer#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmReferNot" prepend="and">
+				<isEmpty property="CsMember.csmRefer">
+				$csmReferNot$ cs_member$CsMember.suffix$.csm_refer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmReferType" prepend="and">
+			    $CsMember.csmReferTypeNot$ cs_member$CsMember.suffix$.csm_refer_type = #CsMember.csmReferType#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmReferTypeNot" prepend="and">
+				<isEmpty property="CsMember.csmReferType">
+				$csmReferTypeNot$ cs_member$CsMember.suffix$.csm_refer_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmFrom" prepend="and">
+			    $CsMember.csmFromNot$ cs_member$CsMember.suffix$.csm_from = #CsMember.csmFrom#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmFromNot" prepend="and">
+				<isEmpty property="CsMember.csmFrom">
+				$csmFromNot$ cs_member$CsMember.suffix$.csm_from is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmSrc" prepend="and">
+			    $CsMember.csmSrcNot$ cs_member$CsMember.suffix$.csm_src = #CsMember.csmSrc#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmSrcNot" prepend="and">
+				<isEmpty property="CsMember.csmSrc">
+				$csmSrcNot$ cs_member$CsMember.suffix$.csm_src is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmChannel" prepend="and">
+			    $CsMember.csmChannelNot$ cs_member$CsMember.suffix$.csm_channel = #CsMember.csmChannel#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmChannelNot" prepend="and">
+				<isEmpty property="CsMember.csmChannel">
+				$csmChannelNot$ cs_member$CsMember.suffix$.csm_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmMarketPlan" prepend="and">
+			    $CsMember.csmMarketPlanNot$ cs_member$CsMember.suffix$.csm_market_plan = #CsMember.csmMarketPlan#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmMarketPlanNot" prepend="and">
+				<isEmpty property="CsMember.csmMarketPlan">
+				$csmMarketPlanNot$ cs_member$CsMember.suffix$.csm_market_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmActivity" prepend="and">
+			    $CsMember.csmActivityNot$ cs_member$CsMember.suffix$.csm_activity = #CsMember.csmActivity#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmActivityNot" prepend="and">
+				<isEmpty property="CsMember.csmActivity">
+				$csmActivityNot$ cs_member$CsMember.suffix$.csm_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmSaler" prepend="and">
+			    $CsMember.csmSalerNot$ cs_member$CsMember.suffix$.csm_saler = #CsMember.csmSaler#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmSalerNot" prepend="and">
+				<isEmpty property="CsMember.csmSaler">
+				$csmSalerNot$ cs_member$CsMember.suffix$.csm_saler is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmMarket" prepend="and">
+				(<isNotNull property="CsMember.csmMarketNot">
+			    cs_member$CsMember.suffix$.csm_market is null or length(cs_member$CsMember.suffix$.csm_market) &lt; 1 or
+			    </isNotNull>$CsMember.csmMarketNot$ cs_member$CsMember.suffix$.csm_market like #CsMember.csmMarket#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmMarketNot" prepend="and">
+				<isEmpty property="CsMember.csmMarket">
+				$csmMarketNot$ (cs_member$CsMember.suffix$.csm_market is null or length(cs_member$CsMember.suffix$.csm_market) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmTag" prepend="and">
+				(<isNotNull property="CsMember.csmTagNot">
+			    cs_member$CsMember.suffix$.csm_tag is null or length(cs_member$CsMember.suffix$.csm_tag) &lt; 1 or
+			    </isNotNull>$CsMember.csmTagNot$ cs_member$CsMember.suffix$.csm_tag like #CsMember.csmTag#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmTagNot" prepend="and">
+				<isEmpty property="CsMember.csmTag">
+				$csmTagNot$ (cs_member$CsMember.suffix$.csm_tag is null or length(cs_member$CsMember.suffix$.csm_tag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmMark" prepend="and">
+				(<isNotNull property="CsMember.csmMarkNot">
+			    cs_member$CsMember.suffix$.csm_mark is null or length(cs_member$CsMember.suffix$.csm_mark) &lt; 1 or
+			    </isNotNull>$CsMember.csmMarkNot$ cs_member$CsMember.suffix$.csm_mark like #CsMember.csmMark#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmMarkNot" prepend="and">
+				<isEmpty property="CsMember.csmMark">
+				$csmMarkNot$ (cs_member$CsMember.suffix$.csm_mark is null or length(cs_member$CsMember.suffix$.csm_mark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVisitFlag" prepend="and">
+				(<isNotNull property="CsMember.csmVisitFlagNot">
+			    cs_member$CsMember.suffix$.csm_visit_flag is null or length(cs_member$CsMember.suffix$.csm_visit_flag) &lt; 1 or
+			    </isNotNull>$CsMember.csmVisitFlagNot$ cs_member$CsMember.suffix$.csm_visit_flag like #CsMember.csmVisitFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVisitFlagNot" prepend="and">
+				<isEmpty property="CsMember.csmVisitFlag">
+				$csmVisitFlagNot$ (cs_member$CsMember.suffix$.csm_visit_flag is null or length(cs_member$CsMember.suffix$.csm_visit_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmMask" prepend="and">
+			    $CsMember.csmMaskNot$ (cs_member$CsMember.suffix$.csm_mask &amp; #CsMember.csmMask#) = #CsMember.csmMask#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmMaskNot" prepend="and">
+				<isEmpty property="CsMember.csmMask">
+				$csmMaskNot$ cs_member$CsMember.suffix$.csm_mask is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmRemark" prepend="and">
+				(<isNotNull property="CsMember.csmRemarkNot">
+			    cs_member$CsMember.suffix$.csm_remark is null or length(cs_member$CsMember.suffix$.csm_remark) &lt; 1 or
+			    </isNotNull>$CsMember.csmRemarkNot$ cs_member$CsMember.suffix$.csm_remark like #CsMember.csmRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmRemarkNot" prepend="and">
+				<isEmpty property="CsMember.csmRemark">
+				$csmRemarkNot$ (cs_member$CsMember.suffix$.csm_remark is null or length(cs_member$CsMember.suffix$.csm_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVMobile" prepend="and">
+			    $CsMember.csmVMobileNot$ cs_member$CsMember.suffix$.csm_v_mobile = #CsMember.csmVMobile#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVMobileNot" prepend="and">
+				<isEmpty property="CsMember.csmVMobile">
+				$csmVMobileNot$ cs_member$CsMember.suffix$.csm_v_mobile is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVEmail" prepend="and">
+			    $CsMember.csmVEmailNot$ cs_member$CsMember.suffix$.csm_v_email = #CsMember.csmVEmail#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVEmailNot" prepend="and">
+				<isEmpty property="CsMember.csmVEmail">
+				$csmVEmailNot$ cs_member$CsMember.suffix$.csm_v_email is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVReal" prepend="and">
+			    $CsMember.csmVRealNot$ cs_member$CsMember.suffix$.csm_v_real = #CsMember.csmVReal#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVRealNot" prepend="and">
+				<isEmpty property="CsMember.csmVReal">
+				$csmVRealNot$ cs_member$CsMember.suffix$.csm_v_real is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmVDrive" prepend="and">
+			    $CsMember.csmVDriveNot$ cs_member$CsMember.suffix$.csm_v_drive = #CsMember.csmVDrive#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmVDriveNot" prepend="and">
+				<isEmpty property="CsMember.csmVDrive">
+				$csmVDriveNot$ cs_member$CsMember.suffix$.csm_v_drive is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsMember.csmStatus" prepend="and">
+			    $CsMember.csmStatusNot$ cs_member$CsMember.suffix$.csm_status = #CsMember.csmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsMember.csmStatusNot" prepend="and">
+				<isEmpty property="CsMember.csmStatus">
+				$csmStatusNot$ cs_member$CsMember.suffix$.csm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+	<!-- 充电桩之SQL映射 -->
+	<resultMap id="CsChargePile" class="com.ccclubs.model.CsChargePile">
+		<result property="cscpId" column="cscp_id"/>
+		<result property="cscpStation" column="cscp_station"/>
+		<result property="cscpCode" column="cscp_code"/>
+		<result property="cscpName" column="cscp_name"/>
+		<result property="cscpType" column="cscp_type"/>
+		<result property="cscpState" column="cscp_state"/>
+		<result property="cscpVoltage" column="cscp_voltage"/>
+		<result property="cscpGalvanic" column="cscp_galvanic"/>
+		<result property="cscpPower" column="cscp_power"/>
+		<result property="cscpProvider" column="cscp_provider"/>
+		<result property="cscpData" column="cscp_data"/>
+		<result property="cscpAddTime" column="cscp_add_time"/>
+		<result property="cscpUpdateTime" column="cscp_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有充电桩 -->
+	<select id="getCsChargePileList" resultMap="CsChargePile">
+		select cs_charge_pile$suffix$.* from cs_charge_pile$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargePile_part.cs_charge_pile_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取充电桩分页 -->
+	<select id="getCsChargePilePage" parameterClass="java.util.HashMap" resultMap="CsChargePile">
+		select cs_charge_pile$suffix$.* from cs_charge_pile$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargePile_part.cs_charge_pile_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取充电桩总数 -->
+	<select id="getCsChargePileEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_charge_pile$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChargePile_part.cs_charge_pile_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取充电桩 -->
+	<select id="getCsChargePileById" parameterClass="java.util.HashMap" resultMap="CsChargePile">
+		select cs_charge_pile$suffix$.* from cs_charge_pile$suffix$
+		where cscp_id=#id#
+	</select>
+	
+		
+	<!-- 保存充电桩 -->
+	<insert id="saveCsChargePile"  parameterClass="com.ccclubs.model.CsChargePile">
+		insert into cs_charge_pile$suffix$
+		(
+			cs_charge_pile$suffix$.cscp_station
+			,cs_charge_pile$suffix$.cscp_code
+			,cs_charge_pile$suffix$.cscp_name
+			,cs_charge_pile$suffix$.cscp_type
+			,cs_charge_pile$suffix$.cscp_state
+			,cs_charge_pile$suffix$.cscp_voltage
+			,cs_charge_pile$suffix$.cscp_galvanic
+			,cs_charge_pile$suffix$.cscp_power
+			,cs_charge_pile$suffix$.cscp_provider
+			,cs_charge_pile$suffix$.cscp_data
+			,cs_charge_pile$suffix$.cscp_add_time
+			,cs_charge_pile$suffix$.cscp_update_time
+		)
+		values(
+			<isNotNull property="cscpStation" prepend="">
+				#cscpStation#
+			</isNotNull>
+			<isNull property="cscpStation" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="cscpCode" prepend=",">
+				#cscpCode#
+			</isNotNull>
+			<isNull property="cscpCode" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpName" prepend=",">
+				#cscpName#
+			</isNotNull>
+			<isNull property="cscpName" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpType" prepend=",">
+				#cscpType#
+			</isNotNull>
+			<isNull property="cscpType" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpState" prepend=",">
+				#cscpState#
+			</isNotNull>
+			<isNull property="cscpState" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpVoltage" prepend=",">
+				#cscpVoltage#
+			</isNotNull>
+			<isNull property="cscpVoltage" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpGalvanic" prepend=",">
+				#cscpGalvanic#
+			</isNotNull>
+			<isNull property="cscpGalvanic" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpPower" prepend=",">
+				#cscpPower#
+			</isNotNull>
+			<isNull property="cscpPower" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpProvider" prepend=",">
+				#cscpProvider#
+			</isNotNull>
+			<isNull property="cscpProvider" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpData" prepend=",">
+				#cscpData#
+			</isNotNull>
+			<isNull property="cscpData" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpAddTime" prepend=",">
+				#cscpAddTime#
+			</isNotNull>
+			<isNull property="cscpAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="cscpUpdateTime" prepend=",">
+				#cscpUpdateTime#
+			</isNotNull>
+			<isNull property="cscpUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新充电桩 -->
+	<update id="updateCsChargePile"  parameterClass="com.ccclubs.model.CsChargePile">
+		update cs_charge_pile$suffix$ set
+			<isNotNull property="cscpStation" prepend="">
+				cs_charge_pile$suffix$.cscp_station = #cscpStation#
+			</isNotNull>
+			<isNull property="cscpStation" prepend="">
+				cs_charge_pile$suffix$.cscp_station = null
+			</isNull>				
+			<isNotNull property="cscpCode" prepend=",">
+				cs_charge_pile$suffix$.cscp_code = #cscpCode#
+			</isNotNull>
+			<isNull property="cscpCode" prepend=",">
+				cs_charge_pile$suffix$.cscp_code = null
+			</isNull>				
+			<isNotNull property="cscpName" prepend=",">
+				cs_charge_pile$suffix$.cscp_name = #cscpName#
+			</isNotNull>
+			<isNull property="cscpName" prepend=",">
+				cs_charge_pile$suffix$.cscp_name = null
+			</isNull>				
+			<isNotNull property="cscpType" prepend=",">
+				cs_charge_pile$suffix$.cscp_type = #cscpType#
+			</isNotNull>
+			<isNull property="cscpType" prepend=",">
+				cs_charge_pile$suffix$.cscp_type = null
+			</isNull>				
+			<isNotNull property="cscpState" prepend=",">
+				cs_charge_pile$suffix$.cscp_state = #cscpState#
+			</isNotNull>
+			<isNull property="cscpState" prepend=",">
+				cs_charge_pile$suffix$.cscp_state = null
+			</isNull>				
+			<isNotNull property="cscpVoltage" prepend=",">
+				cs_charge_pile$suffix$.cscp_voltage = #cscpVoltage#
+			</isNotNull>
+			<isNull property="cscpVoltage" prepend=",">
+				cs_charge_pile$suffix$.cscp_voltage = null
+			</isNull>				
+			<isNotNull property="cscpGalvanic" prepend=",">
+				cs_charge_pile$suffix$.cscp_galvanic = #cscpGalvanic#
+			</isNotNull>
+			<isNull property="cscpGalvanic" prepend=",">
+				cs_charge_pile$suffix$.cscp_galvanic = null
+			</isNull>				
+			<isNotNull property="cscpPower" prepend=",">
+				cs_charge_pile$suffix$.cscp_power = #cscpPower#
+			</isNotNull>
+			<isNull property="cscpPower" prepend=",">
+				cs_charge_pile$suffix$.cscp_power = null
+			</isNull>				
+			<isNotNull property="cscpProvider" prepend=",">
+				cs_charge_pile$suffix$.cscp_provider = #cscpProvider#
+			</isNotNull>
+			<isNull property="cscpProvider" prepend=",">
+				cs_charge_pile$suffix$.cscp_provider = null
+			</isNull>				
+			<isNotNull property="cscpData" prepend=",">
+				cs_charge_pile$suffix$.cscp_data = #cscpData#
+			</isNotNull>
+			<isNull property="cscpData" prepend=",">
+				cs_charge_pile$suffix$.cscp_data = null
+			</isNull>				
+			<isNotNull property="cscpAddTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotNull>
+			<isNull property="cscpAddTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_add_time = null
+			</isNull>				
+			<isNotNull property="cscpUpdateTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_update_time = #cscpUpdateTime#
+			</isNotNull>
+			<isNull property="cscpUpdateTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_update_time = null
+			</isNull>				
+		where
+			cscp_id=#cscpId#
+	</update>
+	
+	<!-- 更新充电桩非空字段 -->
+	<update id="updateCsChargePile$NotNull"  parameterClass="com.ccclubs.model.CsChargePile">
+		update cs_charge_pile$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscpStation" prepend=",">
+				cs_charge_pile$suffix$.cscp_station = #cscpStation#
+			</isNotNull>		
+			<isNotNull property="cscpCode" prepend=",">
+				cs_charge_pile$suffix$.cscp_code = #cscpCode#
+			</isNotNull>		
+			<isNotNull property="cscpName" prepend=",">
+				cs_charge_pile$suffix$.cscp_name = #cscpName#
+			</isNotNull>		
+			<isNotNull property="cscpType" prepend=",">
+				cs_charge_pile$suffix$.cscp_type = #cscpType#
+			</isNotNull>		
+			<isNotNull property="cscpState" prepend=",">
+				cs_charge_pile$suffix$.cscp_state = #cscpState#
+			</isNotNull>		
+			<isNotNull property="cscpVoltage" prepend=",">
+				cs_charge_pile$suffix$.cscp_voltage = #cscpVoltage#
+			</isNotNull>		
+			<isNotNull property="cscpGalvanic" prepend=",">
+				cs_charge_pile$suffix$.cscp_galvanic = #cscpGalvanic#
+			</isNotNull>		
+			<isNotNull property="cscpPower" prepend=",">
+				cs_charge_pile$suffix$.cscp_power = #cscpPower#
+			</isNotNull>		
+			<isNotNull property="cscpProvider" prepend=",">
+				cs_charge_pile$suffix$.cscp_provider = #cscpProvider#
+			</isNotNull>		
+			<isNotNull property="cscpData" prepend=",">
+				cs_charge_pile$suffix$.cscp_data = #cscpData#
+			</isNotNull>		
+			<isNotNull property="cscpAddTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotNull>		
+			<isNotNull property="cscpUpdateTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_update_time = #cscpUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscp_id=#cscpId#
+	</update>
+	
+
+	<!-- 根据ID删除一个充电桩 -->
+	<delete id="deleteCsChargePileById" parameterClass="java.util.HashMap">
+		delete from cs_charge_pile$suffix$ where cscp_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新充电桩 -->
+	<update id="updateCsChargePileBy"  parameterClass="java.util.HashMap">
+		update cs_charge_pile$suffix$ set		
+			cscp_id=cscp_id
+			<isNotNull property="V_cscpId" prepend=",">
+				cs_charge_pile$suffix$.cscp_id = #V_cscpId#
+			</isNotNull>		
+			<isNotNull property="V_cscpStation" prepend=",">
+				cs_charge_pile$suffix$.cscp_station = #V_cscpStation#
+			</isNotNull>		
+			<isNotNull property="V_cscpCode" prepend=",">
+				cs_charge_pile$suffix$.cscp_code = #V_cscpCode#
+			</isNotNull>		
+			<isNotNull property="V_cscpName" prepend=",">
+				cs_charge_pile$suffix$.cscp_name = #V_cscpName#
+			</isNotNull>		
+			<isNotNull property="V_cscpType" prepend=",">
+				cs_charge_pile$suffix$.cscp_type = #V_cscpType#
+			</isNotNull>		
+			<isNotNull property="V_cscpState" prepend=",">
+				cs_charge_pile$suffix$.cscp_state = #V_cscpState#
+			</isNotNull>		
+			<isNotNull property="V_cscpVoltage" prepend=",">
+				cs_charge_pile$suffix$.cscp_voltage = #V_cscpVoltage#
+			</isNotNull>		
+			<isNotNull property="V_cscpGalvanic" prepend=",">
+				cs_charge_pile$suffix$.cscp_galvanic = #V_cscpGalvanic#
+			</isNotNull>		
+			<isNotNull property="V_cscpPower" prepend=",">
+				cs_charge_pile$suffix$.cscp_power = #V_cscpPower#
+			</isNotNull>		
+			<isNotNull property="V_cscpProvider" prepend=",">
+				cs_charge_pile$suffix$.cscp_provider = #V_cscpProvider#
+			</isNotNull>		
+			<isNotNull property="V_cscpData" prepend=",">
+				cs_charge_pile$suffix$.cscp_data = #V_cscpData#
+			</isNotNull>		
+			<isNotNull property="V_cscpAddTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_add_time = #V_cscpAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscpUpdateTime" prepend=",">
+				cs_charge_pile$suffix$.cscp_update_time = #V_cscpUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChargePile_part.cs_charge_pile_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除充电桩 -->
+	<update id="deleteCsChargePileBy"  parameterClass="java.util.HashMap">
+		delete from cs_charge_pile$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChargePile_part.cs_charge_pile_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

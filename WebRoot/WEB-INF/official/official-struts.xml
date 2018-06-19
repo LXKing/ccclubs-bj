@@ -1,0 +1,85 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author zhuangtian -->
+
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="do"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+	<constant name="struts.enable.SlashesInActionNames" value="true" />
+	<include file="struts-default.xml" />
+	
+	<package name="official-default" extends="struts-default" namespace="/">
+	 	<global-results>
+            <result name="login" type="redirect">/official/login.do</result>          
+        </global-results>
+    </package>
+    
+    <package name="official.root" extends="official-default" namespace="/official">
+		<action name="login.*" method="{1}" class="officialLoginAction">
+			<result name="index">login.jsp</result>
+			<result name="success" type="redirect">/official/index.do</result>
+			<result name="failure" type="redirect">/official/login.do</result>
+		</action>
+		<action name="password.*" method="{1}" class="officialPasswordAction">			
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">password.edit.jsp</result>
+			<result name="entry" type="redirect">password.do</result>
+		</action>
+		<action name="index.*" method="{1}" class="officialIndexAction">			
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">index.jsp</result>
+		</action>
+		<action name="dept.*" method="{1}" class="deptAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">dept.jsp</result>
+			<result name="edit">dept.edit.jsp</result>
+			<result name="entrypoint" type="redirect">/official/dept.do</result>
+		</action>
+		<action name="clerk.*" method="{1}" class="clerkAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">clerk.jsp</result>
+			<result name="edit">clerk.edit.jsp</result>
+			<result name="entrypoint" type="redirect">/official/clerk.do</result>
+			<result name="details">clerk.details.jsp</result>
+		</action>
+		<action name="order.*" method="{1}" class="orderAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">order.jsp</result>
+			<result name="edit">order.edit.jsp</result>
+			<result name="add">order.add.jsp</result>
+			<result name="reorder">order.reorder.jsp</result>
+			<result name="detail">order.settlement.jsp</result>
+		</action>
+		<action name="specialorder.*" method="{1}" class="specialCarAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">specialcarorder.jsp</result>
+			<result name="checkorder">specialcarorder.check.jsp</result>
+		</action>
+		<action name="car.*" method="{1}" class="carAction">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">car.jsp</result>
+		</action>
+		<action name="financial.*" method="{1}" class="financial">
+			<result name="{1}">{1}.jsp</result>
+			<result name="index">financial.jsp</result>
+			<result name="details">financial.details.jsp</result>
+		</action>
+		<action name="map_*" method="{1}" class="mapAction">
+			<result name="index">map_index.jsp</result>
+			<result name="soso">map_soso.jsp</result>
+			<result name="info">map_info.jsp</result>
+			<result name="history">map_history.jsp</result>
+		</action>
+	</package>
+	
+	<package name="official.ajax" extends="official-default" namespace="/official">
+		<action name="person/person_inquire" method="person_inquire" class="officialAdapterAction"></action>
+		<action name="object/car_query" method="car_query" class="officialAdapterAction"></action>	
+		<action name="object/outlets_tree" method="outlets_tree" class="officialAdapterAction"></action>	
+		<action name="object/carmodel_query" method="carmodel_query" class="officialAdapterAction"></action>
+	</package>
+	
+</struts>

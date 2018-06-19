@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 红包来源之SQL映射 -->
+	<resultMap id="CsCoinSource" class="com.ccclubs.model.CsCoinSource">
+		<result property="cscsId" column="cscs_id"/>
+		<result property="cscsName" column="cscs_name"/>
+		<result property="cscsFlag" column="cscs_flag"/>
+		<result property="cscsUpdateTime" column="cscs_update_time"/>
+		<result property="cscsAddTime" column="cscs_add_time"/>
+		<result property="cscsRemark" column="cscs_remark"/>
+		<result property="cscsStatus" column="cscs_status"/>
+	</resultMap>
+		
+	<!-- 获取所有红包来源 -->
+	<select id="getCsCoinSourceList" resultMap="CsCoinSource">
+		select cs_coin_source$suffix$.* from cs_coin_source$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_coin_source$suffix$.cscs_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCoinSource_part.cs_coin_source_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取红包来源分页 -->
+	<select id="getCsCoinSourcePage" parameterClass="java.util.HashMap" resultMap="CsCoinSource">
+		select cs_coin_source$suffix$.* from cs_coin_source$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_coin_source$suffix$.cscs_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCoinSource_part.cs_coin_source_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取红包来源总数 -->
+	<select id="getCsCoinSourceEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_coin_source$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_coin_source$suffix$.cscs_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCoinSource_part.cs_coin_source_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取红包来源 -->
+	<select id="getCsCoinSourceById" parameterClass="java.util.HashMap" resultMap="CsCoinSource">
+		select cs_coin_source$suffix$.* from cs_coin_source$suffix$
+		where cscs_id=#id#
+	</select>
+	
+		
+	<!-- 保存红包来源 -->
+	<insert id="saveCsCoinSource"  parameterClass="com.ccclubs.model.CsCoinSource">
+		insert into cs_coin_source$suffix$
+		(
+			cs_coin_source$suffix$.cscs_name
+			,cs_coin_source$suffix$.cscs_flag
+			,cs_coin_source$suffix$.cscs_update_time
+			,cs_coin_source$suffix$.cscs_add_time
+			,cs_coin_source$suffix$.cscs_remark
+			,cs_coin_source$suffix$.cscs_status
+		)
+		values(
+			<isNotNull property="cscsName" prepend="">
+				#cscsName#
+			</isNotNull>
+			<isNull property="cscsName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscsFlag" prepend=",">
+				#cscsFlag#
+			</isNotNull>
+			<isNull property="cscsFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				#cscsUpdateTime#
+			</isNotNull>
+			<isNull property="cscsUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsAddTime" prepend=",">
+				#cscsAddTime#
+			</isNotNull>
+			<isNull property="cscsAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsRemark" prepend=",">
+				#cscsRemark#
+			</isNotNull>
+			<isNull property="cscsRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsStatus" prepend=",">
+				#cscsStatus#
+			</isNotNull>
+			<isNull property="cscsStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新红包来源 -->
+	<update id="updateCsCoinSource"  parameterClass="com.ccclubs.model.CsCoinSource">
+		update cs_coin_source$suffix$ set
+			<isNotNull property="cscsName" prepend="">
+				cs_coin_source$suffix$.cscs_name = #cscsName#
+			</isNotNull>
+			<isNull property="cscsName" prepend="">
+				cs_coin_source$suffix$.cscs_name = null
+			</isNull>				
+			<isNotNull property="cscsFlag" prepend=",">
+				cs_coin_source$suffix$.cscs_flag = #cscsFlag#
+			</isNotNull>
+			<isNull property="cscsFlag" prepend=",">
+				cs_coin_source$suffix$.cscs_flag = null
+			</isNull>				
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				cs_coin_source$suffix$.cscs_update_time = #cscsUpdateTime#
+			</isNotNull>
+			<isNull property="cscsUpdateTime" prepend=",">
+				cs_coin_source$suffix$.cscs_update_time = null
+			</isNull>				
+			<isNotNull property="cscsAddTime" prepend=",">
+				cs_coin_source$suffix$.cscs_add_time = #cscsAddTime#
+			</isNotNull>
+			<isNull property="cscsAddTime" prepend=",">
+				cs_coin_source$suffix$.cscs_add_time = null
+			</isNull>				
+			<isNotNull property="cscsRemark" prepend=",">
+				cs_coin_source$suffix$.cscs_remark = #cscsRemark#
+			</isNotNull>
+			<isNull property="cscsRemark" prepend=",">
+				cs_coin_source$suffix$.cscs_remark = null
+			</isNull>				
+			<isNotNull property="cscsStatus" prepend=",">
+				cs_coin_source$suffix$.cscs_status = #cscsStatus#
+			</isNotNull>
+			<isNull property="cscsStatus" prepend=",">
+				cs_coin_source$suffix$.cscs_status = null
+			</isNull>				
+		where
+			cscs_id=#cscsId#
+	</update>
+	
+	<!-- 更新红包来源非空字段 -->
+	<update id="updateCsCoinSource$NotNull"  parameterClass="com.ccclubs.model.CsCoinSource">
+		update cs_coin_source$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscsName" prepend=",">
+				cs_coin_source$suffix$.cscs_name = #cscsName#
+			</isNotNull>		
+			<isNotNull property="cscsFlag" prepend=",">
+				cs_coin_source$suffix$.cscs_flag = #cscsFlag#
+			</isNotNull>		
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				cs_coin_source$suffix$.cscs_update_time = #cscsUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscsAddTime" prepend=",">
+				cs_coin_source$suffix$.cscs_add_time = #cscsAddTime#
+			</isNotNull>		
+			<isNotNull property="cscsRemark" prepend=",">
+				cs_coin_source$suffix$.cscs_remark = #cscsRemark#
+			</isNotNull>		
+			<isNotNull property="cscsStatus" prepend=",">
+				cs_coin_source$suffix$.cscs_status = #cscsStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscs_id=#cscsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个红包来源 -->
+	<delete id="deleteCsCoinSourceById" parameterClass="java.util.HashMap">
+		delete from cs_coin_source$suffix$ where cscs_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个红包来源 -->
+	<update id="removeCsCoinSourceById" parameterClass="java.util.HashMap">
+		update cs_coin_source$suffix$ set  cs_coin_source$suffix$.cscs_status=-1  where cscs_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新红包来源 -->
+	<update id="updateCsCoinSourceBy"  parameterClass="java.util.HashMap">
+		update cs_coin_source$suffix$ set		
+			cscs_id=cscs_id
+			<isNotNull property="V_cscsId" prepend=",">
+				cs_coin_source$suffix$.cscs_id = #V_cscsId#
+			</isNotNull>		
+			<isNotNull property="V_cscsName" prepend=",">
+				cs_coin_source$suffix$.cscs_name = #V_cscsName#
+			</isNotNull>		
+			<isNotNull property="V_cscsFlag" prepend=",">
+				cs_coin_source$suffix$.cscs_flag = #V_cscsFlag#
+			</isNotNull>		
+			<isNotNull property="V_cscsUpdateTime" prepend=",">
+				cs_coin_source$suffix$.cscs_update_time = #V_cscsUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsAddTime" prepend=",">
+				cs_coin_source$suffix$.cscs_add_time = #V_cscsAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsRemark" prepend=",">
+				cs_coin_source$suffix$.cscs_remark = #V_cscsRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscsStatus" prepend=",">
+				cs_coin_source$suffix$.cscs_status = #V_cscsStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+				and cs_coin_source$suffix$.cscs_status!=-1
+ and
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCoinSource_part.cs_coin_source_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除红包来源 -->
+	<update id="deleteCsCoinSourceBy"  parameterClass="java.util.HashMap">
+		delete from cs_coin_source$suffix$ where 
+		cs_coin_source$suffix$.cscs_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCoinSource_part.cs_coin_source_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

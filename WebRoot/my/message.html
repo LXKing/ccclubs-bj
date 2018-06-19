@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Acathur" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit">
+		<title>消息中心${lz:config('html_title_summary')}</title>
+		<meta name="keywords" content="${lz:config('html_header_keyword')}" />
+		<meta name="description" content="${lz:config('html_header_keyword')}" />
+		<link rel="stylesheet" href="/css/ccclubs.global.css?v=${lz:config('version')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ccclubs.my.css?v=${lz:config('version')}" type="text/css" />
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="/js/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div id="ccc-fullscreen">
+			<div class="ccc-background">
+				<img src="/images/backgrounds/grass2.jpg" />
+			</div>
+			<div class="ccc-fullfill"></div>
+		</div>
+
+		<div id="ccc-my-page">
+			<%@ include file="/include/myUserInfo.html"%>
+
+			<div class="ccc-my-paper ccc-clearfix">
+				${lz:set("menu","message")} <%@ include file="/include/myLeftNavigation.html"%>
+				<div class="ccc-my-main ccc-my-page" id="ccc-my-message">
+					<div class="ccc-my-paper-borderleft"></div>
+					<div class="ccc-my-paper-deco"></div>
+					<div class="ccc-my-main-cont">
+						<div class="ccc-my-main-middle">
+							<div class="ccc-my-main-middle-cont">
+								<article id="ccc-my-panel-message">
+								<div class="ccc-my-panel">
+									<header>
+									<img src="/images/colorful-bar.png" class="ccc-colorful-bar">
+									<h1>
+										消息中心
+										<s:if test="#request.unRead > 0">
+											<span>( 未读{unRead} )</span>
+										</s:if>
+									</h1>
+									</header>
+									<s:if test="#request.page.result.size==0">
+										<div class="ccc-my-noresult single">
+											<a>哎哟，暂无消息哦，亲~</a>
+										</div>
+									</s:if>
+									<s:else>
+										<ul class="ccc-my-general-list ccc-my-message-list">
+											<s:iterator value="#request.page.result" id="item" status="i">
+												<li>
+													<i></i>
+													<s:if test="itme.csmRcvStatus == 0">
+														<b></b>
+													</s:if>
+													<!-- if 未读 -->
+													<a href="#" class="ccc-list-inner">
+														<div class="ccc-date">
+															<div class="ccc-month">
+																${lz:date(item.csmSndTime,"M")}
+															</div>
+															<div class="ccc-day">
+																${lz:date(item.csmSndTime,"dd")}
+															</div>
+														</div>
+														<div class="ccc-list-cont">
+															<div class="ccc-my-info-meta">
+																<span class="ccc-font-lato ccc-time">${lz:date(item.csmSndTime,"HH:mm a")}</span>
+																<span class="ccc-my-info-cate ccc-color-green">系统通知</span>
+															</div>
+															<div class="ccc-my-info-summary">
+																<span class="ccc-bold">${item.csmTitle}：</span>${item.csmContent}
+															</div>
+														</div> </a>
+												</li>
+											</s:iterator>
+										</ul>
+									</s:else>
+								</div>
+								</article>
+							</div>
+						</div>
+
+						<%@ include file="/include/myRightNavigation.html"%>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%@ include file="/include/myInfoBox.html"%>
+		<script src="/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+		<script src="/js/ccclubs.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script src="/js/ccclubs.my.global.js?v=${lz:config('version')}" type="text/javascript"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					var page = 0;
+					var maxPage = ${page.total};
+					$(window).bind('scroll', function() {
+						if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+							if(page < maxPage-1)
+							{
+								page++;
+								$.get('/my/history_moreMessage.html',{page:page},function(data){
+									if($.trim(data).indexOf('<!DOCTYPE html>')>-1)
+									{
+										location.href = '/my/message.html';
+									}else{
+										$('.ccc-my-message-list').append(data);
+									}
+								});
+							}
+						};
+					});
+				});
+				
+		</script>
+	</body>
+</html>

@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsTrouble_part">	
+	<!-- 车辆事故条件sql片段  -->
+	<sql id="cs_trouble_dynamic">
+		<dynamic>
+			<isNotEmpty property="cstId" prepend="and">
+			    $cstIdNot$ cs_trouble$suffix$.cst_id = #cstId#
+			</isNotEmpty>
+			<isNotNull property="cstIdNot" prepend="and">
+				<isEmpty property="cstId">
+				$cstIdNot$ cs_trouble$suffix$.cst_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_trouble$suffix$.cst_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cstHost" prepend="and">
+			    $cstHostNot$ cs_trouble$suffix$.cst_host = #cstHost#
+			</isNotEmpty>
+			<isNotNull property="cstHostNot" prepend="and">
+				<isEmpty property="cstHost">
+				$cstHostNot$ cs_trouble$suffix$.cst_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cstTitle" prepend="and">			    
+			    (<isNotNull property="cstTitleNot">
+			    cs_trouble$suffix$.cst_title is null or length(cs_trouble$suffix$.cst_title) &lt; 1 or
+			    </isNotNull>$cstTitleNot$ cs_trouble$suffix$.cst_title like #cstTitle#)
+			</isNotEmpty>
+			<isNotNull property="cstTitleNot" prepend="and">
+				<isEmpty property="cstTitle">
+				$cstTitleNot$ (cs_trouble$suffix$.cst_title is null or length(cs_trouble$suffix$.cst_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstOrder" prepend="and">
+			    $cstOrderNot$ cs_trouble$suffix$.cst_order = #cstOrder#
+			</isNotEmpty>
+			<isNotNull property="cstOrderNot" prepend="and">
+				<isEmpty property="cstOrder">
+				$cstOrderNot$ cs_trouble$suffix$.cst_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstMember" prepend="and">
+			    $cstMemberNot$ cs_trouble$suffix$.cst_member = #cstMember#
+			</isNotEmpty>
+			<isNotNull property="cstMemberNot" prepend="and">
+				<isEmpty property="cstMember">
+				$cstMemberNot$ cs_trouble$suffix$.cst_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstCar" prepend="and">
+			    $cstCarNot$ cs_trouble$suffix$.cst_car = #cstCar#
+			</isNotEmpty>
+			<isNotNull property="cstCarNot" prepend="and">
+				<isEmpty property="cstCar">
+				$cstCarNot$ cs_trouble$suffix$.cst_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstType" prepend="and">
+			    $cstTypeNot$ cs_trouble$suffix$.cst_type = #cstType#
+			</isNotEmpty>
+			<isNotNull property="cstTypeNot" prepend="and">
+				<isEmpty property="cstType">
+				$cstTypeNot$ cs_trouble$suffix$.cst_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstDamage" prepend="and">			    
+			    (<isNotNull property="cstDamageNot">
+			    cs_trouble$suffix$.cst_damage is null or length(cs_trouble$suffix$.cst_damage) &lt; 1 or
+			    </isNotNull>$cstDamageNot$ cs_trouble$suffix$.cst_damage like #cstDamage#)
+			</isNotEmpty>
+			<isNotNull property="cstDamageNot" prepend="and">
+				<isEmpty property="cstDamage">
+				$cstDamageNot$ (cs_trouble$suffix$.cst_damage is null or length(cs_trouble$suffix$.cst_damage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstRepairAdr" prepend="and">
+			    $cstRepairAdrNot$ cs_trouble$suffix$.cst_repair_adr = #cstRepairAdr#
+			</isNotEmpty>
+			<isNotNull property="cstRepairAdrNot" prepend="and">
+				<isEmpty property="cstRepairAdr">
+				$cstRepairAdrNot$ cs_trouble$suffix$.cst_repair_adr is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstRepairPart" prepend="and">			    
+			    (<isNotNull property="cstRepairPartNot">
+			    cs_trouble$suffix$.cst_repair_part is null or length(cs_trouble$suffix$.cst_repair_part) &lt; 1 or
+			    </isNotNull>$cstRepairPartNot$ cs_trouble$suffix$.cst_repair_part like #cstRepairPart#)
+			</isNotEmpty>
+			<isNotNull property="cstRepairPartNot" prepend="and">
+				<isEmpty property="cstRepairPart">
+				$cstRepairPartNot$ (cs_trouble$suffix$.cst_repair_part is null or length(cs_trouble$suffix$.cst_repair_part) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstRepair" prepend="and">
+			    $cstRepairNot$ cs_trouble$suffix$.cst_repair = #cstRepair#
+			</isNotEmpty>
+			<isNotNull property="cstRepairNot" prepend="and">
+				<isEmpty property="cstRepair">
+				$cstRepairNot$ cs_trouble$suffix$.cst_repair is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstInvoiceMin" prepend="and">
+			    $cstInvoiceNot$  ( cs_trouble$suffix$.cst_invoice &gt;= #cstInvoiceMin#
+			    <isEmpty property="cstInvoiceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstInvoiceMax" prepend="and">
+				<isEmpty property="cstInvoiceMin">$cstInvoiceNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_invoice &lt;= #cstInvoiceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstInvoice" prepend="and">
+			    $cstInvoiceNot$ cs_trouble$suffix$.cst_invoice = #cstInvoice#
+			</isNotEmpty>
+			<isNotNull property="cstInvoiceNot" prepend="and">
+				<isEmpty property="cstInvoiceMax"><isEmpty property="cstInvoiceMin"><isEmpty property="cstInvoice">
+				$cstInvoiceNot$ cs_trouble$suffix$.cst_invoice is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstInsureFeeMin" prepend="and">
+			    $cstInsureFeeNot$  ( cs_trouble$suffix$.cst_insure_fee &gt;= #cstInsureFeeMin#
+			    <isEmpty property="cstInsureFeeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstInsureFeeMax" prepend="and">
+				<isEmpty property="cstInsureFeeMin">$cstInsureFeeNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_insure_fee &lt;= #cstInsureFeeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstInsureFee" prepend="and">
+			    $cstInsureFeeNot$ cs_trouble$suffix$.cst_insure_fee = #cstInsureFee#
+			</isNotEmpty>
+			<isNotNull property="cstInsureFeeNot" prepend="and">
+				<isEmpty property="cstInsureFeeMax"><isEmpty property="cstInsureFeeMin"><isEmpty property="cstInsureFee">
+				$cstInsureFeeNot$ cs_trouble$suffix$.cst_insure_fee is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstMoneyMin" prepend="and">
+			    $cstMoneyNot$  ( cs_trouble$suffix$.cst_money &gt;= #cstMoneyMin#
+			    <isEmpty property="cstMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstMoneyMax" prepend="and">
+				<isEmpty property="cstMoneyMin">$cstMoneyNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_money &lt;= #cstMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstMoney" prepend="and">
+			    $cstMoneyNot$ cs_trouble$suffix$.cst_money = #cstMoney#
+			</isNotEmpty>
+			<isNotNull property="cstMoneyNot" prepend="and">
+				<isEmpty property="cstMoneyMax"><isEmpty property="cstMoneyMin"><isEmpty property="cstMoney">
+				$cstMoneyNot$ cs_trouble$suffix$.cst_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstThirdLossMin" prepend="and">
+			    $cstThirdLossNot$  ( cs_trouble$suffix$.cst_third_loss &gt;= #cstThirdLossMin#
+			    <isEmpty property="cstThirdLossMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstThirdLossMax" prepend="and">
+				<isEmpty property="cstThirdLossMin">$cstThirdLossNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_third_loss &lt;= #cstThirdLossMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstThirdLoss" prepend="and">
+			    $cstThirdLossNot$ cs_trouble$suffix$.cst_third_loss = #cstThirdLoss#
+			</isNotEmpty>
+			<isNotNull property="cstThirdLossNot" prepend="and">
+				<isEmpty property="cstThirdLossMax"><isEmpty property="cstThirdLossMin"><isEmpty property="cstThirdLoss">
+				$cstThirdLossNot$ cs_trouble$suffix$.cst_third_loss is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstTrailFeeMin" prepend="and">
+			    $cstTrailFeeNot$  ( cs_trouble$suffix$.cst_trail_fee &gt;= #cstTrailFeeMin#
+			    <isEmpty property="cstTrailFeeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstTrailFeeMax" prepend="and">
+				<isEmpty property="cstTrailFeeMin">$cstTrailFeeNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_trail_fee &lt;= #cstTrailFeeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstTrailFee" prepend="and">
+			    $cstTrailFeeNot$ cs_trouble$suffix$.cst_trail_fee = #cstTrailFee#
+			</isNotEmpty>
+			<isNotNull property="cstTrailFeeNot" prepend="and">
+				<isEmpty property="cstTrailFeeMax"><isEmpty property="cstTrailFeeMin"><isEmpty property="cstTrailFee">
+				$cstTrailFeeNot$ cs_trouble$suffix$.cst_trail_fee is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstRepayDateStart" prepend="and">
+			    $cstRepayDateNot$   (cs_trouble$suffix$.cst_repay_date &gt;= #cstRepayDateStart#
+			   <isEmpty property="cstRepayDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstRepayDateEnd" prepend="and">
+				<isEmpty property="cstRepayDateStart">$cstRepayDateNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_repay_date &lt;= #cstRepayDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstRepayDate" prepend="and">
+			    $cstRepayDateNot$ cs_trouble$suffix$.cst_repay_date = #cstRepayDate#
+			</isNotEmpty>
+			<isNotNull property="cstRepayDateNot" prepend="and">
+				<isEmpty property="cstRepayDateStart"><isEmpty property="cstRepayDateEnd"><isEmpty property="cstRepayDate">
+				$cstRepayDateNot$ cs_trouble$suffix$.cst_repay_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstRepayType" prepend="and">
+			    $cstRepayTypeNot$ cs_trouble$suffix$.cst_repay_type = #cstRepayType#
+			</isNotEmpty>
+			<isNotNull property="cstRepayTypeNot" prepend="and">
+				<isEmpty property="cstRepayType">
+				$cstRepayTypeNot$ cs_trouble$suffix$.cst_repay_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstThirdDesc" prepend="and">			    
+			    (<isNotNull property="cstThirdDescNot">
+			    cs_trouble$suffix$.cst_third_desc is null or length(cs_trouble$suffix$.cst_third_desc) &lt; 1 or
+			    </isNotNull>$cstThirdDescNot$ cs_trouble$suffix$.cst_third_desc = #cstThirdDesc#)
+			</isNotEmpty>
+			<isNotNull property="cstThirdDescNot" prepend="and">
+				<isEmpty property="cstThirdDesc">
+				$cstThirdDescNot$ (cs_trouble$suffix$.cst_third_desc is null or length(cs_trouble$suffix$.cst_third_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstCompensateMin" prepend="and">
+			    $cstCompensateNot$  ( cs_trouble$suffix$.cst_compensate &gt;= #cstCompensateMin#
+			    <isEmpty property="cstCompensateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstCompensateMax" prepend="and">
+				<isEmpty property="cstCompensateMin">$cstCompensateNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_compensate &lt;= #cstCompensateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstCompensate" prepend="and">
+			    $cstCompensateNot$ cs_trouble$suffix$.cst_compensate = #cstCompensate#
+			</isNotEmpty>
+			<isNotNull property="cstCompensateNot" prepend="and">
+				<isEmpty property="cstCompensateMax"><isEmpty property="cstCompensateMin"><isEmpty property="cstCompensate">
+				$cstCompensateNot$ cs_trouble$suffix$.cst_compensate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstCompDateStart" prepend="and">
+			    $cstCompDateNot$   (cs_trouble$suffix$.cst_comp_date &gt;= #cstCompDateStart#
+			   <isEmpty property="cstCompDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstCompDateEnd" prepend="and">
+				<isEmpty property="cstCompDateStart">$cstCompDateNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_comp_date &lt;= #cstCompDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstCompDate" prepend="and">
+			    $cstCompDateNot$ cs_trouble$suffix$.cst_comp_date = #cstCompDate#
+			</isNotEmpty>
+			<isNotNull property="cstCompDateNot" prepend="and">
+				<isEmpty property="cstCompDateStart"><isEmpty property="cstCompDateEnd"><isEmpty property="cstCompDate">
+				$cstCompDateNot$ cs_trouble$suffix$.cst_comp_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstRepairPayMin" prepend="and">
+			    $cstRepairPayNot$  ( cs_trouble$suffix$.cst_repair_pay &gt;= #cstRepairPayMin#
+			    <isEmpty property="cstRepairPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstRepairPayMax" prepend="and">
+				<isEmpty property="cstRepairPayMin">$cstRepairPayNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_repair_pay &lt;= #cstRepairPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstRepairPay" prepend="and">
+			    $cstRepairPayNot$ cs_trouble$suffix$.cst_repair_pay = #cstRepairPay#
+			</isNotEmpty>
+			<isNotNull property="cstRepairPayNot" prepend="and">
+				<isEmpty property="cstRepairPayMax"><isEmpty property="cstRepairPayMin"><isEmpty property="cstRepairPay">
+				$cstRepairPayNot$ cs_trouble$suffix$.cst_repair_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstAgioMin" prepend="and">
+			    $cstAgioNot$  ( cs_trouble$suffix$.cst_agio &gt;= #cstAgioMin#
+			    <isEmpty property="cstAgioMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstAgioMax" prepend="and">
+				<isEmpty property="cstAgioMin">$cstAgioNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_agio &lt;= #cstAgioMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cstAgio" prepend="and">
+			    $cstAgioNot$ cs_trouble$suffix$.cst_agio = #cstAgio#
+			</isNotEmpty>
+			<isNotNull property="cstAgioNot" prepend="and">
+				<isEmpty property="cstAgioMax"><isEmpty property="cstAgioMin"><isEmpty property="cstAgio">
+				$cstAgioNot$ cs_trouble$suffix$.cst_agio is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cstDecipt" prepend="and">			    
+			    (<isNotNull property="cstDeciptNot">
+			    cs_trouble$suffix$.cst_decipt is null or length(cs_trouble$suffix$.cst_decipt) &lt; 1 or
+			    </isNotNull>$cstDeciptNot$ cs_trouble$suffix$.cst_decipt like #cstDecipt#)
+			</isNotEmpty>
+			<isNotNull property="cstDeciptNot" prepend="and">
+				<isEmpty property="cstDecipt">
+				$cstDeciptNot$ (cs_trouble$suffix$.cst_decipt is null or length(cs_trouble$suffix$.cst_decipt) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstImages" prepend="and">
+			    $cstImagesNot$ cs_trouble$suffix$.cst_images = #cstImages#
+			</isNotEmpty>
+			<isNotNull property="cstImagesNot" prepend="and">
+				<isEmpty property="cstImages">
+				$cstImagesNot$ cs_trouble$suffix$.cst_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstHappenTimeStart" prepend="and">
+			    $cstHappenTimeNot$   (cs_trouble$suffix$.cst_happen_time &gt;= #cstHappenTimeStart#
+			   <isEmpty property="cstHappenTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstHappenTimeEnd" prepend="and">
+				<isEmpty property="cstHappenTimeStart">$cstHappenTimeNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_happen_time &lt;= #cstHappenTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstHappenTime" prepend="and">
+			    $cstHappenTimeNot$ cs_trouble$suffix$.cst_happen_time = #cstHappenTime#
+			</isNotEmpty>
+			<isNotNull property="cstHappenTimeNot" prepend="and">
+				<isEmpty property="cstHappenTimeStart"><isEmpty property="cstHappenTimeEnd"><isEmpty property="cstHappenTime">
+				$cstHappenTimeNot$ cs_trouble$suffix$.cst_happen_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstNotice" prepend="and">
+			    $cstNoticeNot$ cs_trouble$suffix$.cst_notice = #cstNotice#
+			</isNotEmpty>
+			<isNotNull property="cstNoticeNot" prepend="and">
+				<isEmpty property="cstNotice">
+				$cstNoticeNot$ cs_trouble$suffix$.cst_notice is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstDealFlag" prepend="and">
+			    $cstDealFlagNot$ cs_trouble$suffix$.cst_deal_flag = #cstDealFlag#
+			</isNotEmpty>
+			<isNotNull property="cstDealFlagNot" prepend="and">
+				<isEmpty property="cstDealFlag">
+				$cstDealFlagNot$ cs_trouble$suffix$.cst_deal_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstAccepter" prepend="and">
+			    $cstAccepterNot$ cs_trouble$suffix$.cst_accepter = #cstAccepter#
+			</isNotEmpty>
+			<isNotNull property="cstAccepterNot" prepend="and">
+				<isEmpty property="cstAccepter">
+				$cstAccepterNot$ cs_trouble$suffix$.cst_accepter is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstCaser" prepend="and">
+			    $cstCaserNot$ cs_trouble$suffix$.cst_caser = #cstCaser#
+			</isNotEmpty>
+			<isNotNull property="cstCaserNot" prepend="and">
+				<isEmpty property="cstCaser">
+				$cstCaserNot$ cs_trouble$suffix$.cst_caser is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstFinishTimeStart" prepend="and">
+			    $cstFinishTimeNot$   (cs_trouble$suffix$.cst_finish_time &gt;= #cstFinishTimeStart#
+			   <isEmpty property="cstFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstFinishTimeEnd" prepend="and">
+				<isEmpty property="cstFinishTimeStart">$cstFinishTimeNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_finish_time &lt;= #cstFinishTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstFinishTime" prepend="and">
+			    $cstFinishTimeNot$ cs_trouble$suffix$.cst_finish_time = #cstFinishTime#
+			</isNotEmpty>
+			<isNotNull property="cstFinishTimeNot" prepend="and">
+				<isEmpty property="cstFinishTimeStart"><isEmpty property="cstFinishTimeEnd"><isEmpty property="cstFinishTime">
+				$cstFinishTimeNot$ cs_trouble$suffix$.cst_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstRemark" prepend="and">			    
+			    (<isNotNull property="cstRemarkNot">
+			    cs_trouble$suffix$.cst_remark is null or length(cs_trouble$suffix$.cst_remark) &lt; 1 or
+			    </isNotNull>$cstRemarkNot$ cs_trouble$suffix$.cst_remark like #cstRemark#)
+			</isNotEmpty>
+			<isNotNull property="cstRemarkNot" prepend="and">
+				<isEmpty property="cstRemark">
+				$cstRemarkNot$ (cs_trouble$suffix$.cst_remark is null or length(cs_trouble$suffix$.cst_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstUpdateTimeStart" prepend="and">
+			    $cstUpdateTimeNot$   (cs_trouble$suffix$.cst_update_time &gt;= #cstUpdateTimeStart#
+			   <isEmpty property="cstUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstUpdateTimeEnd" prepend="and">
+				<isEmpty property="cstUpdateTimeStart">$cstUpdateTimeNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_update_time &lt;= #cstUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstUpdateTime" prepend="and">
+			    $cstUpdateTimeNot$ cs_trouble$suffix$.cst_update_time = #cstUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cstUpdateTimeNot" prepend="and">
+				<isEmpty property="cstUpdateTimeStart"><isEmpty property="cstUpdateTimeEnd"><isEmpty property="cstUpdateTime">
+				$cstUpdateTimeNot$ cs_trouble$suffix$.cst_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstAddTimeStart" prepend="and">
+			    $cstAddTimeNot$   (cs_trouble$suffix$.cst_add_time &gt;= #cstAddTimeStart#
+			   <isEmpty property="cstAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstAddTimeEnd" prepend="and">
+				<isEmpty property="cstAddTimeStart">$cstAddTimeNot$   (</isEmpty>
+			    cs_trouble$suffix$.cst_add_time &lt;= #cstAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstAddTime" prepend="and">
+			    $cstAddTimeNot$ cs_trouble$suffix$.cst_add_time = #cstAddTime#
+			</isNotEmpty>
+			<isNotNull property="cstAddTimeNot" prepend="and">
+				<isEmpty property="cstAddTimeStart"><isEmpty property="cstAddTimeEnd"><isEmpty property="cstAddTime">
+				$cstAddTimeNot$ cs_trouble$suffix$.cst_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstStatus" prepend="and">
+			    $cstStatusNot$ cs_trouble$suffix$.cst_status = #cstStatus#
+			</isNotEmpty>
+			<isNotNull property="cstStatusNot" prepend="and">
+				<isEmpty property="cstStatus">
+				$cstStatusNot$ cs_trouble$suffix$.cst_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆事故left join 条件sql片段 -->
+	<sql id="cs_trouble_join">
+		<dynamic>
+			<isNotEmpty property="CsTrouble.cstId" prepend="and">
+			    $CsTrouble.cstIdNot$ cs_trouble$CsTrouble.suffix$.cst_id = #CsTrouble.cstId#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstIdNot" prepend="and">
+				<isEmpty property="CsTrouble.cstId">
+				$cstIdNot$ cs_trouble$CsTrouble.suffix$.cst_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_trouble$CsTrouble.suffix$.cst_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstHost" prepend="and">
+			    $CsTrouble.cstHostNot$ cs_trouble$CsTrouble.suffix$.cst_host = #CsTrouble.cstHost#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstHostNot" prepend="and">
+				<isEmpty property="CsTrouble.cstHost">
+				$cstHostNot$ cs_trouble$CsTrouble.suffix$.cst_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstTitle" prepend="and">
+				(<isNotNull property="CsTrouble.cstTitleNot">
+			    cs_trouble$CsTrouble.suffix$.cst_title is null or length(cs_trouble$CsTrouble.suffix$.cst_title) &lt; 1 or
+			    </isNotNull>$CsTrouble.cstTitleNot$ cs_trouble$CsTrouble.suffix$.cst_title like #CsTrouble.cstTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstTitleNot" prepend="and">
+				<isEmpty property="CsTrouble.cstTitle">
+				$cstTitleNot$ (cs_trouble$CsTrouble.suffix$.cst_title is null or length(cs_trouble$CsTrouble.suffix$.cst_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstOrder" prepend="and">
+			    $CsTrouble.cstOrderNot$ cs_trouble$CsTrouble.suffix$.cst_order = #CsTrouble.cstOrder#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstOrderNot" prepend="and">
+				<isEmpty property="CsTrouble.cstOrder">
+				$cstOrderNot$ cs_trouble$CsTrouble.suffix$.cst_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstMember" prepend="and">
+			    $CsTrouble.cstMemberNot$ cs_trouble$CsTrouble.suffix$.cst_member = #CsTrouble.cstMember#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstMemberNot" prepend="and">
+				<isEmpty property="CsTrouble.cstMember">
+				$cstMemberNot$ cs_trouble$CsTrouble.suffix$.cst_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstCar" prepend="and">
+			    $CsTrouble.cstCarNot$ cs_trouble$CsTrouble.suffix$.cst_car = #CsTrouble.cstCar#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstCarNot" prepend="and">
+				<isEmpty property="CsTrouble.cstCar">
+				$cstCarNot$ cs_trouble$CsTrouble.suffix$.cst_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstType" prepend="and">
+			    $CsTrouble.cstTypeNot$ cs_trouble$CsTrouble.suffix$.cst_type = #CsTrouble.cstType#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstTypeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstType">
+				$cstTypeNot$ cs_trouble$CsTrouble.suffix$.cst_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstDamage" prepend="and">
+				(<isNotNull property="CsTrouble.cstDamageNot">
+			    cs_trouble$CsTrouble.suffix$.cst_damage is null or length(cs_trouble$CsTrouble.suffix$.cst_damage) &lt; 1 or
+			    </isNotNull>$CsTrouble.cstDamageNot$ cs_trouble$CsTrouble.suffix$.cst_damage like #CsTrouble.cstDamage#)
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstDamageNot" prepend="and">
+				<isEmpty property="CsTrouble.cstDamage">
+				$cstDamageNot$ (cs_trouble$CsTrouble.suffix$.cst_damage is null or length(cs_trouble$CsTrouble.suffix$.cst_damage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRepairAdr" prepend="and">
+			    $CsTrouble.cstRepairAdrNot$ cs_trouble$CsTrouble.suffix$.cst_repair_adr = #CsTrouble.cstRepairAdr#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRepairAdrNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRepairAdr">
+				$cstRepairAdrNot$ cs_trouble$CsTrouble.suffix$.cst_repair_adr is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRepairPart" prepend="and">
+				(<isNotNull property="CsTrouble.cstRepairPartNot">
+			    cs_trouble$CsTrouble.suffix$.cst_repair_part is null or length(cs_trouble$CsTrouble.suffix$.cst_repair_part) &lt; 1 or
+			    </isNotNull>$CsTrouble.cstRepairPartNot$ cs_trouble$CsTrouble.suffix$.cst_repair_part like #CsTrouble.cstRepairPart#)
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRepairPartNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRepairPart">
+				$cstRepairPartNot$ (cs_trouble$CsTrouble.suffix$.cst_repair_part is null or length(cs_trouble$CsTrouble.suffix$.cst_repair_part) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRepair" prepend="and">
+			    $CsTrouble.cstRepairNot$ cs_trouble$CsTrouble.suffix$.cst_repair = #CsTrouble.cstRepair#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRepairNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRepair">
+				$cstRepairNot$ cs_trouble$CsTrouble.suffix$.cst_repair is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstInvoiceMin" prepend="and">
+			    $CsTrouble.cstInvoiceNot$  ( cs_trouble$CsTrouble.suffix$.cst_invoice &gt;= #CsTrouble.cstInvoiceMin#
+			    <isEmpty property="CsTrouble.cstInvoiceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstInvoiceMax" prepend="and">
+				<isEmpty property="CsTrouble.cstInvoiceMin">$CsTrouble.cstInvoiceNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_invoice &lt;= #CsTrouble.cstInvoiceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstInvoice" prepend="and">
+			    $CsTrouble.cstInvoiceNot$ cs_trouble$CsTrouble.suffix$.cst_invoice = #CsTrouble.cstInvoice#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstInvoiceNot" prepend="and">
+				<isEmpty property="CsTrouble.cstInvoiceMax"><isEmpty property="CsTrouble.cstInvoiceMin"><isEmpty property="CsTrouble.cstInvoice">
+				$cstInvoiceNot$ cs_trouble$CsTrouble.suffix$.cst_invoice is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstInsureFeeMin" prepend="and">
+			    $CsTrouble.cstInsureFeeNot$  ( cs_trouble$CsTrouble.suffix$.cst_insure_fee &gt;= #CsTrouble.cstInsureFeeMin#
+			    <isEmpty property="CsTrouble.cstInsureFeeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstInsureFeeMax" prepend="and">
+				<isEmpty property="CsTrouble.cstInsureFeeMin">$CsTrouble.cstInsureFeeNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_insure_fee &lt;= #CsTrouble.cstInsureFeeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstInsureFee" prepend="and">
+			    $CsTrouble.cstInsureFeeNot$ cs_trouble$CsTrouble.suffix$.cst_insure_fee = #CsTrouble.cstInsureFee#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstInsureFeeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstInsureFeeMax"><isEmpty property="CsTrouble.cstInsureFeeMin"><isEmpty property="CsTrouble.cstInsureFee">
+				$cstInsureFeeNot$ cs_trouble$CsTrouble.suffix$.cst_insure_fee is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstMoneyMin" prepend="and">
+			    $CsTrouble.cstMoneyNot$  ( cs_trouble$CsTrouble.suffix$.cst_money &gt;= #CsTrouble.cstMoneyMin#
+			    <isEmpty property="CsTrouble.cstMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstMoneyMax" prepend="and">
+				<isEmpty property="CsTrouble.cstMoneyMin">$CsTrouble.cstMoneyNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_money &lt;= #CsTrouble.cstMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstMoney" prepend="and">
+			    $CsTrouble.cstMoneyNot$ cs_trouble$CsTrouble.suffix$.cst_money = #CsTrouble.cstMoney#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstMoneyNot" prepend="and">
+				<isEmpty property="CsTrouble.cstMoneyMax"><isEmpty property="CsTrouble.cstMoneyMin"><isEmpty property="CsTrouble.cstMoney">
+				$cstMoneyNot$ cs_trouble$CsTrouble.suffix$.cst_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstThirdLossMin" prepend="and">
+			    $CsTrouble.cstThirdLossNot$  ( cs_trouble$CsTrouble.suffix$.cst_third_loss &gt;= #CsTrouble.cstThirdLossMin#
+			    <isEmpty property="CsTrouble.cstThirdLossMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstThirdLossMax" prepend="and">
+				<isEmpty property="CsTrouble.cstThirdLossMin">$CsTrouble.cstThirdLossNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_third_loss &lt;= #CsTrouble.cstThirdLossMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstThirdLoss" prepend="and">
+			    $CsTrouble.cstThirdLossNot$ cs_trouble$CsTrouble.suffix$.cst_third_loss = #CsTrouble.cstThirdLoss#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstThirdLossNot" prepend="and">
+				<isEmpty property="CsTrouble.cstThirdLossMax"><isEmpty property="CsTrouble.cstThirdLossMin"><isEmpty property="CsTrouble.cstThirdLoss">
+				$cstThirdLossNot$ cs_trouble$CsTrouble.suffix$.cst_third_loss is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstTrailFeeMin" prepend="and">
+			    $CsTrouble.cstTrailFeeNot$  ( cs_trouble$CsTrouble.suffix$.cst_trail_fee &gt;= #CsTrouble.cstTrailFeeMin#
+			    <isEmpty property="CsTrouble.cstTrailFeeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstTrailFeeMax" prepend="and">
+				<isEmpty property="CsTrouble.cstTrailFeeMin">$CsTrouble.cstTrailFeeNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_trail_fee &lt;= #CsTrouble.cstTrailFeeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstTrailFee" prepend="and">
+			    $CsTrouble.cstTrailFeeNot$ cs_trouble$CsTrouble.suffix$.cst_trail_fee = #CsTrouble.cstTrailFee#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstTrailFeeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstTrailFeeMax"><isEmpty property="CsTrouble.cstTrailFeeMin"><isEmpty property="CsTrouble.cstTrailFee">
+				$cstTrailFeeNot$ cs_trouble$CsTrouble.suffix$.cst_trail_fee is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRepayDateStart" prepend="and">
+			    $CsTrouble.cstRepayDateNot$   (cs_trouble$CsTrouble.suffix$.cst_repay_date &gt;= #CsTrouble.cstRepayDateStart#
+			   <isEmpty property="CsTrouble.cstRepayDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstRepayDateEnd" prepend="and">
+				<isEmpty property="CsTrouble.cstRepayDateStart">$CsTrouble.cstRepayDateNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_repay_date &lt;= #CsTrouble.cstRepayDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstRepayDate" prepend="and">
+			    $CsTrouble.cstRepayDateNot$ cs_trouble$CsTrouble.suffix$.cst_repay_date = #CsTrouble.cstRepayDate#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRepayDateNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRepayDateStart"><isEmpty property="CsTrouble.cstRepayDateEnd"><isEmpty property="CsTrouble.cstRepayDate">
+				$cstRepayDateNot$ cs_trouble$CsTrouble.suffix$.cst_repay_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRepayType" prepend="and">
+			    $CsTrouble.cstRepayTypeNot$ cs_trouble$CsTrouble.suffix$.cst_repay_type = #CsTrouble.cstRepayType#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRepayTypeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRepayType">
+				$cstRepayTypeNot$ cs_trouble$CsTrouble.suffix$.cst_repay_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstThirdDesc" prepend="and">
+				(<isNotNull property="CsTrouble.cstThirdDescNot">
+			    cs_trouble$CsTrouble.suffix$.cst_third_desc is null or length(cs_trouble$CsTrouble.suffix$.cst_third_desc) &lt; 1 or
+			    </isNotNull>$CsTrouble.cstThirdDescNot$ cs_trouble$CsTrouble.suffix$.cst_third_desc = #CsTrouble.cstThirdDesc#)
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstThirdDescNot" prepend="and">
+				<isEmpty property="CsTrouble.cstThirdDesc">
+				$cstThirdDescNot$ (cs_trouble$CsTrouble.suffix$.cst_third_desc is null or length(cs_trouble$CsTrouble.suffix$.cst_third_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstCompensateMin" prepend="and">
+			    $CsTrouble.cstCompensateNot$  ( cs_trouble$CsTrouble.suffix$.cst_compensate &gt;= #CsTrouble.cstCompensateMin#
+			    <isEmpty property="CsTrouble.cstCompensateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstCompensateMax" prepend="and">
+				<isEmpty property="CsTrouble.cstCompensateMin">$CsTrouble.cstCompensateNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_compensate &lt;= #CsTrouble.cstCompensateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstCompensate" prepend="and">
+			    $CsTrouble.cstCompensateNot$ cs_trouble$CsTrouble.suffix$.cst_compensate = #CsTrouble.cstCompensate#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstCompensateNot" prepend="and">
+				<isEmpty property="CsTrouble.cstCompensateMax"><isEmpty property="CsTrouble.cstCompensateMin"><isEmpty property="CsTrouble.cstCompensate">
+				$cstCompensateNot$ cs_trouble$CsTrouble.suffix$.cst_compensate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstCompDateStart" prepend="and">
+			    $CsTrouble.cstCompDateNot$   (cs_trouble$CsTrouble.suffix$.cst_comp_date &gt;= #CsTrouble.cstCompDateStart#
+			   <isEmpty property="CsTrouble.cstCompDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstCompDateEnd" prepend="and">
+				<isEmpty property="CsTrouble.cstCompDateStart">$CsTrouble.cstCompDateNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_comp_date &lt;= #CsTrouble.cstCompDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstCompDate" prepend="and">
+			    $CsTrouble.cstCompDateNot$ cs_trouble$CsTrouble.suffix$.cst_comp_date = #CsTrouble.cstCompDate#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstCompDateNot" prepend="and">
+				<isEmpty property="CsTrouble.cstCompDateStart"><isEmpty property="CsTrouble.cstCompDateEnd"><isEmpty property="CsTrouble.cstCompDate">
+				$cstCompDateNot$ cs_trouble$CsTrouble.suffix$.cst_comp_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRepairPayMin" prepend="and">
+			    $CsTrouble.cstRepairPayNot$  ( cs_trouble$CsTrouble.suffix$.cst_repair_pay &gt;= #CsTrouble.cstRepairPayMin#
+			    <isEmpty property="CsTrouble.cstRepairPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstRepairPayMax" prepend="and">
+				<isEmpty property="CsTrouble.cstRepairPayMin">$CsTrouble.cstRepairPayNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_repair_pay &lt;= #CsTrouble.cstRepairPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstRepairPay" prepend="and">
+			    $CsTrouble.cstRepairPayNot$ cs_trouble$CsTrouble.suffix$.cst_repair_pay = #CsTrouble.cstRepairPay#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRepairPayNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRepairPayMax"><isEmpty property="CsTrouble.cstRepairPayMin"><isEmpty property="CsTrouble.cstRepairPay">
+				$cstRepairPayNot$ cs_trouble$CsTrouble.suffix$.cst_repair_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstAgioMin" prepend="and">
+			    $CsTrouble.cstAgioNot$  ( cs_trouble$CsTrouble.suffix$.cst_agio &gt;= #CsTrouble.cstAgioMin#
+			    <isEmpty property="CsTrouble.cstAgioMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstAgioMax" prepend="and">
+				<isEmpty property="CsTrouble.cstAgioMin">$CsTrouble.cstAgioNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_agio &lt;= #CsTrouble.cstAgioMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstAgio" prepend="and">
+			    $CsTrouble.cstAgioNot$ cs_trouble$CsTrouble.suffix$.cst_agio = #CsTrouble.cstAgio#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstAgioNot" prepend="and">
+				<isEmpty property="CsTrouble.cstAgioMax"><isEmpty property="CsTrouble.cstAgioMin"><isEmpty property="CsTrouble.cstAgio">
+				$cstAgioNot$ cs_trouble$CsTrouble.suffix$.cst_agio is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstDecipt" prepend="and">
+				(<isNotNull property="CsTrouble.cstDeciptNot">
+			    cs_trouble$CsTrouble.suffix$.cst_decipt is null or length(cs_trouble$CsTrouble.suffix$.cst_decipt) &lt; 1 or
+			    </isNotNull>$CsTrouble.cstDeciptNot$ cs_trouble$CsTrouble.suffix$.cst_decipt like #CsTrouble.cstDecipt#)
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstDeciptNot" prepend="and">
+				<isEmpty property="CsTrouble.cstDecipt">
+				$cstDeciptNot$ (cs_trouble$CsTrouble.suffix$.cst_decipt is null or length(cs_trouble$CsTrouble.suffix$.cst_decipt) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstImages" prepend="and">
+			    $CsTrouble.cstImagesNot$ cs_trouble$CsTrouble.suffix$.cst_images = #CsTrouble.cstImages#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstImagesNot" prepend="and">
+				<isEmpty property="CsTrouble.cstImages">
+				$cstImagesNot$ cs_trouble$CsTrouble.suffix$.cst_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstHappenTimeStart" prepend="and">
+			    $CsTrouble.cstHappenTimeNot$   (cs_trouble$CsTrouble.suffix$.cst_happen_time &gt;= #CsTrouble.cstHappenTimeStart#
+			   <isEmpty property="CsTrouble.cstHappenTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstHappenTimeEnd" prepend="and">
+				<isEmpty property="CsTrouble.cstHappenTimeStart">$CsTrouble.cstHappenTimeNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_happen_time &lt;= #CsTrouble.cstHappenTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstHappenTime" prepend="and">
+			    $CsTrouble.cstHappenTimeNot$ cs_trouble$CsTrouble.suffix$.cst_happen_time = #CsTrouble.cstHappenTime#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstHappenTimeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstHappenTimeStart"><isEmpty property="CsTrouble.cstHappenTimeEnd"><isEmpty property="CsTrouble.cstHappenTime">
+				$cstHappenTimeNot$ cs_trouble$CsTrouble.suffix$.cst_happen_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstNotice" prepend="and">
+			    $CsTrouble.cstNoticeNot$ cs_trouble$CsTrouble.suffix$.cst_notice = #CsTrouble.cstNotice#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstNoticeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstNotice">
+				$cstNoticeNot$ cs_trouble$CsTrouble.suffix$.cst_notice is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstDealFlag" prepend="and">
+			    $CsTrouble.cstDealFlagNot$ cs_trouble$CsTrouble.suffix$.cst_deal_flag = #CsTrouble.cstDealFlag#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstDealFlagNot" prepend="and">
+				<isEmpty property="CsTrouble.cstDealFlag">
+				$cstDealFlagNot$ cs_trouble$CsTrouble.suffix$.cst_deal_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstAccepter" prepend="and">
+			    $CsTrouble.cstAccepterNot$ cs_trouble$CsTrouble.suffix$.cst_accepter = #CsTrouble.cstAccepter#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstAccepterNot" prepend="and">
+				<isEmpty property="CsTrouble.cstAccepter">
+				$cstAccepterNot$ cs_trouble$CsTrouble.suffix$.cst_accepter is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstCaser" prepend="and">
+			    $CsTrouble.cstCaserNot$ cs_trouble$CsTrouble.suffix$.cst_caser = #CsTrouble.cstCaser#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstCaserNot" prepend="and">
+				<isEmpty property="CsTrouble.cstCaser">
+				$cstCaserNot$ cs_trouble$CsTrouble.suffix$.cst_caser is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstFinishTimeStart" prepend="and">
+			    $CsTrouble.cstFinishTimeNot$   (cs_trouble$CsTrouble.suffix$.cst_finish_time &gt;= #CsTrouble.cstFinishTimeStart#
+			   <isEmpty property="CsTrouble.cstFinishTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstFinishTimeEnd" prepend="and">
+				<isEmpty property="CsTrouble.cstFinishTimeStart">$CsTrouble.cstFinishTimeNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_finish_time &lt;= #CsTrouble.cstFinishTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstFinishTime" prepend="and">
+			    $CsTrouble.cstFinishTimeNot$ cs_trouble$CsTrouble.suffix$.cst_finish_time = #CsTrouble.cstFinishTime#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstFinishTimeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstFinishTimeStart"><isEmpty property="CsTrouble.cstFinishTimeEnd"><isEmpty property="CsTrouble.cstFinishTime">
+				$cstFinishTimeNot$ cs_trouble$CsTrouble.suffix$.cst_finish_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstRemark" prepend="and">
+				(<isNotNull property="CsTrouble.cstRemarkNot">
+			    cs_trouble$CsTrouble.suffix$.cst_remark is null or length(cs_trouble$CsTrouble.suffix$.cst_remark) &lt; 1 or
+			    </isNotNull>$CsTrouble.cstRemarkNot$ cs_trouble$CsTrouble.suffix$.cst_remark like #CsTrouble.cstRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstRemarkNot" prepend="and">
+				<isEmpty property="CsTrouble.cstRemark">
+				$cstRemarkNot$ (cs_trouble$CsTrouble.suffix$.cst_remark is null or length(cs_trouble$CsTrouble.suffix$.cst_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstUpdateTimeStart" prepend="and">
+			    $CsTrouble.cstUpdateTimeNot$   (cs_trouble$CsTrouble.suffix$.cst_update_time &gt;= #CsTrouble.cstUpdateTimeStart#
+			   <isEmpty property="CsTrouble.cstUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsTrouble.cstUpdateTimeStart">$CsTrouble.cstUpdateTimeNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_update_time &lt;= #CsTrouble.cstUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstUpdateTime" prepend="and">
+			    $CsTrouble.cstUpdateTimeNot$ cs_trouble$CsTrouble.suffix$.cst_update_time = #CsTrouble.cstUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstUpdateTimeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstUpdateTimeStart"><isEmpty property="CsTrouble.cstUpdateTimeEnd"><isEmpty property="CsTrouble.cstUpdateTime">
+				$cstUpdateTimeNot$ cs_trouble$CsTrouble.suffix$.cst_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstAddTimeStart" prepend="and">
+			    $CsTrouble.cstAddTimeNot$   (cs_trouble$CsTrouble.suffix$.cst_add_time &gt;= #CsTrouble.cstAddTimeStart#
+			   <isEmpty property="CsTrouble.cstAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstAddTimeEnd" prepend="and">
+				<isEmpty property="CsTrouble.cstAddTimeStart">$CsTrouble.cstAddTimeNot$   (</isEmpty>
+			    cs_trouble$CsTrouble.suffix$.cst_add_time &lt;= #CsTrouble.cstAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTrouble.cstAddTime" prepend="and">
+			    $CsTrouble.cstAddTimeNot$ cs_trouble$CsTrouble.suffix$.cst_add_time = #CsTrouble.cstAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstAddTimeNot" prepend="and">
+				<isEmpty property="CsTrouble.cstAddTimeStart"><isEmpty property="CsTrouble.cstAddTimeEnd"><isEmpty property="CsTrouble.cstAddTime">
+				$cstAddTimeNot$ cs_trouble$CsTrouble.suffix$.cst_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTrouble.cstStatus" prepend="and">
+			    $CsTrouble.cstStatusNot$ cs_trouble$CsTrouble.suffix$.cst_status = #CsTrouble.cstStatus#
+			</isNotEmpty>
+			<isNotNull property="CsTrouble.cstStatusNot" prepend="and">
+				<isEmpty property="CsTrouble.cstStatus">
+				$cstStatusNot$ cs_trouble$CsTrouble.suffix$.cst_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsGift_part">	
+	<!-- 优惠内容条件sql片段  -->
+	<sql id="cs_gift_dynamic">
+		<dynamic>
+			<isNotEmpty property="csgId" prepend="and">
+			    $csgIdNot$ cs_gift$suffix$.csg_id = #csgId#
+			</isNotEmpty>
+			<isNotNull property="csgIdNot" prepend="and">
+				<isEmpty property="csgId">
+				$csgIdNot$ cs_gift$suffix$.csg_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_gift$suffix$.csg_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csgHost" prepend="and">
+			    $csgHostNot$ cs_gift$suffix$.csg_host = #csgHost#
+			</isNotEmpty>
+			<isNotNull property="csgHostNot" prepend="and">
+				<isEmpty property="csgHost">
+				$csgHostNot$ cs_gift$suffix$.csg_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csgName" prepend="and">			    
+			    (<isNotNull property="csgNameNot">
+			    cs_gift$suffix$.csg_name is null or length(cs_gift$suffix$.csg_name) &lt; 1 or
+			    </isNotNull>$csgNameNot$ cs_gift$suffix$.csg_name = #csgName#)
+			</isNotEmpty>
+			<isNotNull property="csgNameNot" prepend="and">
+				<isEmpty property="csgName">
+				$csgNameNot$ (cs_gift$suffix$.csg_name is null or length(cs_gift$suffix$.csg_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgMember" prepend="and">
+			    $csgMemberNot$ cs_gift$suffix$.csg_member = #csgMember#
+			</isNotEmpty>
+			<isNotNull property="csgMemberNot" prepend="and">
+				<isEmpty property="csgMember">
+				$csgMemberNot$ cs_gift$suffix$.csg_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgSysPack" prepend="and">
+			    $csgSysPackNot$ cs_gift$suffix$.csg_sys_pack = #csgSysPack#
+			</isNotEmpty>
+			<isNotNull property="csgSysPackNot" prepend="and">
+				<isEmpty property="csgSysPack">
+				$csgSysPackNot$ cs_gift$suffix$.csg_sys_pack is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgUserPack" prepend="and">
+			    $csgUserPackNot$ cs_gift$suffix$.csg_user_pack = #csgUserPack#
+			</isNotEmpty>
+			<isNotNull property="csgUserPackNot" prepend="and">
+				<isEmpty property="csgUserPack">
+				$csgUserPackNot$ cs_gift$suffix$.csg_user_pack is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgGoods" prepend="and">
+			    $csgGoodsNot$ cs_gift$suffix$.csg_goods = #csgGoods#
+			</isNotEmpty>
+			<isNotNull property="csgGoodsNot" prepend="and">
+				<isEmpty property="csgGoods">
+				$csgGoodsNot$ cs_gift$suffix$.csg_goods is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgOutlets" prepend="and">
+			    $csgOutletsNot$ cs_gift$suffix$.csg_outlets = #csgOutlets#
+			</isNotEmpty>
+			<isNotNull property="csgOutletsNot" prepend="and">
+				<isEmpty property="csgOutlets">
+				$csgOutletsNot$ cs_gift$suffix$.csg_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgModel" prepend="and">			    
+			    (<isNotNull property="csgModelNot">
+			    cs_gift$suffix$.csg_model is null or length(cs_gift$suffix$.csg_model) &lt; 1 or
+			    </isNotNull>$csgModelNot$ cs_gift$suffix$.csg_model like #csgModel#)
+			</isNotEmpty>
+			<isNotNull property="csgModelNot" prepend="and">
+				<isEmpty property="csgModel">
+				$csgModelNot$ (cs_gift$suffix$.csg_model is null or length(cs_gift$suffix$.csg_model) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgType" prepend="and">
+			    $csgTypeNot$ cs_gift$suffix$.csg_type = #csgType#
+			</isNotEmpty>
+			<isNotNull property="csgTypeNot" prepend="and">
+				<isEmpty property="csgType">
+				$csgTypeNot$ cs_gift$suffix$.csg_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgCountMin" prepend="and">
+			    $csgCountNot$  ( cs_gift$suffix$.csg_count &gt;= #csgCountMin#
+			    <isEmpty property="csgCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgCountMax" prepend="and">
+				<isEmpty property="csgCountMin">$csgCountNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_count &lt;= #csgCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csgCount" prepend="and">
+			    $csgCountNot$ cs_gift$suffix$.csg_count = #csgCount#
+			</isNotEmpty>
+			<isNotNull property="csgCountNot" prepend="and">
+				<isEmpty property="csgCountMax"><isEmpty property="csgCountMin"><isEmpty property="csgCount">
+				$csgCountNot$ cs_gift$suffix$.csg_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csgRemainMin" prepend="and">
+			    $csgRemainNot$  ( cs_gift$suffix$.csg_remain &gt;= #csgRemainMin#
+			    <isEmpty property="csgRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgRemainMax" prepend="and">
+				<isEmpty property="csgRemainMin">$csgRemainNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_remain &lt;= #csgRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csgRemain" prepend="and">
+			    $csgRemainNot$ cs_gift$suffix$.csg_remain = #csgRemain#
+			</isNotEmpty>
+			<isNotNull property="csgRemainNot" prepend="and">
+				<isEmpty property="csgRemainMax"><isEmpty property="csgRemainMin"><isEmpty property="csgRemain">
+				$csgRemainNot$ cs_gift$suffix$.csg_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csgPriceMin" prepend="and">
+			    $csgPriceNot$  ( cs_gift$suffix$.csg_price &gt;= #csgPriceMin#
+			    <isEmpty property="csgPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgPriceMax" prepend="and">
+				<isEmpty property="csgPriceMin">$csgPriceNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_price &lt;= #csgPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csgPrice" prepend="and">
+			    $csgPriceNot$ cs_gift$suffix$.csg_price = #csgPrice#
+			</isNotEmpty>
+			<isNotNull property="csgPriceNot" prepend="and">
+				<isEmpty property="csgPriceMax"><isEmpty property="csgPriceMin"><isEmpty property="csgPrice">
+				$csgPriceNot$ cs_gift$suffix$.csg_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csgRebateMin" prepend="and">
+			    $csgRebateNot$  ( cs_gift$suffix$.csg_rebate &gt;= #csgRebateMin#
+			    <isEmpty property="csgRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgRebateMax" prepend="and">
+				<isEmpty property="csgRebateMin">$csgRebateNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_rebate &lt;= #csgRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csgRebate" prepend="and">
+			    $csgRebateNot$ cs_gift$suffix$.csg_rebate = #csgRebate#
+			</isNotEmpty>
+			<isNotNull property="csgRebateNot" prepend="and">
+				<isEmpty property="csgRebateMax"><isEmpty property="csgRebateMin"><isEmpty property="csgRebate">
+				$csgRebateNot$ cs_gift$suffix$.csg_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csgScript" prepend="and">			    
+			    (<isNotNull property="csgScriptNot">
+			    cs_gift$suffix$.csg_script is null or length(cs_gift$suffix$.csg_script) &lt; 1 or
+			    </isNotNull>$csgScriptNot$ cs_gift$suffix$.csg_script = #csgScript#)
+			</isNotEmpty>
+			<isNotNull property="csgScriptNot" prepend="and">
+				<isEmpty property="csgScript">
+				$csgScriptNot$ (cs_gift$suffix$.csg_script is null or length(cs_gift$suffix$.csg_script) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgUntilTimeStart" prepend="and">
+			    $csgUntilTimeNot$   (cs_gift$suffix$.csg_until_time &gt;= #csgUntilTimeStart#
+			   <isEmpty property="csgUntilTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgUntilTimeEnd" prepend="and">
+				<isEmpty property="csgUntilTimeStart">$csgUntilTimeNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_until_time &lt;= #csgUntilTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgUntilTime" prepend="and">
+			    $csgUntilTimeNot$ cs_gift$suffix$.csg_until_time = #csgUntilTime#
+			</isNotEmpty>
+			<isNotNull property="csgUntilTimeNot" prepend="and">
+				<isEmpty property="csgUntilTimeStart"><isEmpty property="csgUntilTimeEnd"><isEmpty property="csgUntilTime">
+				$csgUntilTimeNot$ cs_gift$suffix$.csg_until_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgUpdateTimeStart" prepend="and">
+			    $csgUpdateTimeNot$   (cs_gift$suffix$.csg_update_time &gt;= #csgUpdateTimeStart#
+			   <isEmpty property="csgUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgUpdateTimeEnd" prepend="and">
+				<isEmpty property="csgUpdateTimeStart">$csgUpdateTimeNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_update_time &lt;= #csgUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgUpdateTime" prepend="and">
+			    $csgUpdateTimeNot$ cs_gift$suffix$.csg_update_time = #csgUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csgUpdateTimeNot" prepend="and">
+				<isEmpty property="csgUpdateTimeStart"><isEmpty property="csgUpdateTimeEnd"><isEmpty property="csgUpdateTime">
+				$csgUpdateTimeNot$ cs_gift$suffix$.csg_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgAddTimeStart" prepend="and">
+			    $csgAddTimeNot$   (cs_gift$suffix$.csg_add_time &gt;= #csgAddTimeStart#
+			   <isEmpty property="csgAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgAddTimeEnd" prepend="and">
+				<isEmpty property="csgAddTimeStart">$csgAddTimeNot$   (</isEmpty>
+			    cs_gift$suffix$.csg_add_time &lt;= #csgAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgAddTime" prepend="and">
+			    $csgAddTimeNot$ cs_gift$suffix$.csg_add_time = #csgAddTime#
+			</isNotEmpty>
+			<isNotNull property="csgAddTimeNot" prepend="and">
+				<isEmpty property="csgAddTimeStart"><isEmpty property="csgAddTimeEnd"><isEmpty property="csgAddTime">
+				$csgAddTimeNot$ cs_gift$suffix$.csg_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgStatus" prepend="and">
+			    $csgStatusNot$ cs_gift$suffix$.csg_status = #csgStatus#
+			</isNotEmpty>
+			<isNotNull property="csgStatusNot" prepend="and">
+				<isEmpty property="csgStatus">
+				$csgStatusNot$ cs_gift$suffix$.csg_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 优惠内容left join 条件sql片段 -->
+	<sql id="cs_gift_join">
+		<dynamic>
+			<isNotEmpty property="CsGift.csgId" prepend="and">
+			    $CsGift.csgIdNot$ cs_gift$CsGift.suffix$.csg_id = #CsGift.csgId#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgIdNot" prepend="and">
+				<isEmpty property="CsGift.csgId">
+				$csgIdNot$ cs_gift$CsGift.suffix$.csg_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_gift$CsGift.suffix$.csg_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgHost" prepend="and">
+			    $CsGift.csgHostNot$ cs_gift$CsGift.suffix$.csg_host = #CsGift.csgHost#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgHostNot" prepend="and">
+				<isEmpty property="CsGift.csgHost">
+				$csgHostNot$ cs_gift$CsGift.suffix$.csg_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgName" prepend="and">
+				(<isNotNull property="CsGift.csgNameNot">
+			    cs_gift$CsGift.suffix$.csg_name is null or length(cs_gift$CsGift.suffix$.csg_name) &lt; 1 or
+			    </isNotNull>$CsGift.csgNameNot$ cs_gift$CsGift.suffix$.csg_name = #CsGift.csgName#)
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgNameNot" prepend="and">
+				<isEmpty property="CsGift.csgName">
+				$csgNameNot$ (cs_gift$CsGift.suffix$.csg_name is null or length(cs_gift$CsGift.suffix$.csg_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgMember" prepend="and">
+			    $CsGift.csgMemberNot$ cs_gift$CsGift.suffix$.csg_member = #CsGift.csgMember#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgMemberNot" prepend="and">
+				<isEmpty property="CsGift.csgMember">
+				$csgMemberNot$ cs_gift$CsGift.suffix$.csg_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgSysPack" prepend="and">
+			    $CsGift.csgSysPackNot$ cs_gift$CsGift.suffix$.csg_sys_pack = #CsGift.csgSysPack#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgSysPackNot" prepend="and">
+				<isEmpty property="CsGift.csgSysPack">
+				$csgSysPackNot$ cs_gift$CsGift.suffix$.csg_sys_pack is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgUserPack" prepend="and">
+			    $CsGift.csgUserPackNot$ cs_gift$CsGift.suffix$.csg_user_pack = #CsGift.csgUserPack#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgUserPackNot" prepend="and">
+				<isEmpty property="CsGift.csgUserPack">
+				$csgUserPackNot$ cs_gift$CsGift.suffix$.csg_user_pack is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgGoods" prepend="and">
+			    $CsGift.csgGoodsNot$ cs_gift$CsGift.suffix$.csg_goods = #CsGift.csgGoods#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgGoodsNot" prepend="and">
+				<isEmpty property="CsGift.csgGoods">
+				$csgGoodsNot$ cs_gift$CsGift.suffix$.csg_goods is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgOutlets" prepend="and">
+			    $CsGift.csgOutletsNot$ cs_gift$CsGift.suffix$.csg_outlets = #CsGift.csgOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgOutletsNot" prepend="and">
+				<isEmpty property="CsGift.csgOutlets">
+				$csgOutletsNot$ cs_gift$CsGift.suffix$.csg_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgModel" prepend="and">
+				(<isNotNull property="CsGift.csgModelNot">
+			    cs_gift$CsGift.suffix$.csg_model is null or length(cs_gift$CsGift.suffix$.csg_model) &lt; 1 or
+			    </isNotNull>$CsGift.csgModelNot$ cs_gift$CsGift.suffix$.csg_model like #CsGift.csgModel#)
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgModelNot" prepend="and">
+				<isEmpty property="CsGift.csgModel">
+				$csgModelNot$ (cs_gift$CsGift.suffix$.csg_model is null or length(cs_gift$CsGift.suffix$.csg_model) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgType" prepend="and">
+			    $CsGift.csgTypeNot$ cs_gift$CsGift.suffix$.csg_type = #CsGift.csgType#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgTypeNot" prepend="and">
+				<isEmpty property="CsGift.csgType">
+				$csgTypeNot$ cs_gift$CsGift.suffix$.csg_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgCountMin" prepend="and">
+			    $CsGift.csgCountNot$  ( cs_gift$CsGift.suffix$.csg_count &gt;= #CsGift.csgCountMin#
+			    <isEmpty property="CsGift.csgCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgCountMax" prepend="and">
+				<isEmpty property="CsGift.csgCountMin">$CsGift.csgCountNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_count &lt;= #CsGift.csgCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgCount" prepend="and">
+			    $CsGift.csgCountNot$ cs_gift$CsGift.suffix$.csg_count = #CsGift.csgCount#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgCountNot" prepend="and">
+				<isEmpty property="CsGift.csgCountMax"><isEmpty property="CsGift.csgCountMin"><isEmpty property="CsGift.csgCount">
+				$csgCountNot$ cs_gift$CsGift.suffix$.csg_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgRemainMin" prepend="and">
+			    $CsGift.csgRemainNot$  ( cs_gift$CsGift.suffix$.csg_remain &gt;= #CsGift.csgRemainMin#
+			    <isEmpty property="CsGift.csgRemainMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgRemainMax" prepend="and">
+				<isEmpty property="CsGift.csgRemainMin">$CsGift.csgRemainNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_remain &lt;= #CsGift.csgRemainMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgRemain" prepend="and">
+			    $CsGift.csgRemainNot$ cs_gift$CsGift.suffix$.csg_remain = #CsGift.csgRemain#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgRemainNot" prepend="and">
+				<isEmpty property="CsGift.csgRemainMax"><isEmpty property="CsGift.csgRemainMin"><isEmpty property="CsGift.csgRemain">
+				$csgRemainNot$ cs_gift$CsGift.suffix$.csg_remain is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgPriceMin" prepend="and">
+			    $CsGift.csgPriceNot$  ( cs_gift$CsGift.suffix$.csg_price &gt;= #CsGift.csgPriceMin#
+			    <isEmpty property="CsGift.csgPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgPriceMax" prepend="and">
+				<isEmpty property="CsGift.csgPriceMin">$CsGift.csgPriceNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_price &lt;= #CsGift.csgPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgPrice" prepend="and">
+			    $CsGift.csgPriceNot$ cs_gift$CsGift.suffix$.csg_price = #CsGift.csgPrice#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgPriceNot" prepend="and">
+				<isEmpty property="CsGift.csgPriceMax"><isEmpty property="CsGift.csgPriceMin"><isEmpty property="CsGift.csgPrice">
+				$csgPriceNot$ cs_gift$CsGift.suffix$.csg_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgRebateMin" prepend="and">
+			    $CsGift.csgRebateNot$  ( cs_gift$CsGift.suffix$.csg_rebate &gt;= #CsGift.csgRebateMin#
+			    <isEmpty property="CsGift.csgRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgRebateMax" prepend="and">
+				<isEmpty property="CsGift.csgRebateMin">$CsGift.csgRebateNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_rebate &lt;= #CsGift.csgRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgRebate" prepend="and">
+			    $CsGift.csgRebateNot$ cs_gift$CsGift.suffix$.csg_rebate = #CsGift.csgRebate#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgRebateNot" prepend="and">
+				<isEmpty property="CsGift.csgRebateMax"><isEmpty property="CsGift.csgRebateMin"><isEmpty property="CsGift.csgRebate">
+				$csgRebateNot$ cs_gift$CsGift.suffix$.csg_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgScript" prepend="and">
+				(<isNotNull property="CsGift.csgScriptNot">
+			    cs_gift$CsGift.suffix$.csg_script is null or length(cs_gift$CsGift.suffix$.csg_script) &lt; 1 or
+			    </isNotNull>$CsGift.csgScriptNot$ cs_gift$CsGift.suffix$.csg_script = #CsGift.csgScript#)
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgScriptNot" prepend="and">
+				<isEmpty property="CsGift.csgScript">
+				$csgScriptNot$ (cs_gift$CsGift.suffix$.csg_script is null or length(cs_gift$CsGift.suffix$.csg_script) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgUntilTimeStart" prepend="and">
+			    $CsGift.csgUntilTimeNot$   (cs_gift$CsGift.suffix$.csg_until_time &gt;= #CsGift.csgUntilTimeStart#
+			   <isEmpty property="CsGift.csgUntilTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgUntilTimeEnd" prepend="and">
+				<isEmpty property="CsGift.csgUntilTimeStart">$CsGift.csgUntilTimeNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_until_time &lt;= #CsGift.csgUntilTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgUntilTime" prepend="and">
+			    $CsGift.csgUntilTimeNot$ cs_gift$CsGift.suffix$.csg_until_time = #CsGift.csgUntilTime#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgUntilTimeNot" prepend="and">
+				<isEmpty property="CsGift.csgUntilTimeStart"><isEmpty property="CsGift.csgUntilTimeEnd"><isEmpty property="CsGift.csgUntilTime">
+				$csgUntilTimeNot$ cs_gift$CsGift.suffix$.csg_until_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgUpdateTimeStart" prepend="and">
+			    $CsGift.csgUpdateTimeNot$   (cs_gift$CsGift.suffix$.csg_update_time &gt;= #CsGift.csgUpdateTimeStart#
+			   <isEmpty property="CsGift.csgUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsGift.csgUpdateTimeStart">$CsGift.csgUpdateTimeNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_update_time &lt;= #CsGift.csgUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgUpdateTime" prepend="and">
+			    $CsGift.csgUpdateTimeNot$ cs_gift$CsGift.suffix$.csg_update_time = #CsGift.csgUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgUpdateTimeNot" prepend="and">
+				<isEmpty property="CsGift.csgUpdateTimeStart"><isEmpty property="CsGift.csgUpdateTimeEnd"><isEmpty property="CsGift.csgUpdateTime">
+				$csgUpdateTimeNot$ cs_gift$CsGift.suffix$.csg_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgAddTimeStart" prepend="and">
+			    $CsGift.csgAddTimeNot$   (cs_gift$CsGift.suffix$.csg_add_time &gt;= #CsGift.csgAddTimeStart#
+			   <isEmpty property="CsGift.csgAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgAddTimeEnd" prepend="and">
+				<isEmpty property="CsGift.csgAddTimeStart">$CsGift.csgAddTimeNot$   (</isEmpty>
+			    cs_gift$CsGift.suffix$.csg_add_time &lt;= #CsGift.csgAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGift.csgAddTime" prepend="and">
+			    $CsGift.csgAddTimeNot$ cs_gift$CsGift.suffix$.csg_add_time = #CsGift.csgAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgAddTimeNot" prepend="and">
+				<isEmpty property="CsGift.csgAddTimeStart"><isEmpty property="CsGift.csgAddTimeEnd"><isEmpty property="CsGift.csgAddTime">
+				$csgAddTimeNot$ cs_gift$CsGift.suffix$.csg_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGift.csgStatus" prepend="and">
+			    $CsGift.csgStatusNot$ cs_gift$CsGift.suffix$.csg_status = #CsGift.csgStatus#
+			</isNotEmpty>
+			<isNotNull property="CsGift.csgStatusNot" prepend="and">
+				<isEmpty property="CsGift.csgStatus">
+				$csgStatusNot$ cs_gift$CsGift.suffix$.csg_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

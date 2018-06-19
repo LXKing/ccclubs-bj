@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsAlarm_part">	
+	<!-- 车辆警报条件sql片段  -->
+	<sql id="cs_alarm_dynamic">
+		<dynamic>
+			<isNotEmpty property="csaId" prepend="and">
+			    $csaIdNot$ cs_alarm$suffix$.csa_id = #csaId#
+			</isNotEmpty>
+			<isNotNull property="csaIdNot" prepend="and">
+				<isEmpty property="csaId">
+				$csaIdNot$ cs_alarm$suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_alarm$suffix$.csa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csaHost" prepend="and">
+			    $csaHostNot$ cs_alarm$suffix$.csa_host = #csaHost#
+			</isNotEmpty>
+			<isNotNull property="csaHostNot" prepend="and">
+				<isEmpty property="csaHost">
+				$csaHostNot$ cs_alarm$suffix$.csa_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csaNumber" prepend="and">
+			    $csaNumberNot$ cs_alarm$suffix$.csa_number = #csaNumber#
+			</isNotEmpty>
+			<isNotNull property="csaNumberNot" prepend="and">
+				<isEmpty property="csaNumber">
+				$csaNumberNot$ cs_alarm$suffix$.csa_number is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaAddTimeStart" prepend="and">
+			    $csaAddTimeNot$   (cs_alarm$suffix$.csa_add_time &gt;= #csaAddTimeStart#
+			   <isEmpty property="csaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaAddTimeEnd" prepend="and">
+				<isEmpty property="csaAddTimeStart">$csaAddTimeNot$   (</isEmpty>
+			    cs_alarm$suffix$.csa_add_time &lt;= #csaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaAddTime" prepend="and">
+			    $csaAddTimeNot$ cs_alarm$suffix$.csa_add_time = #csaAddTime#
+			</isNotEmpty>
+			<isNotNull property="csaAddTimeNot" prepend="and">
+				<isEmpty property="csaAddTimeStart"><isEmpty property="csaAddTimeEnd"><isEmpty property="csaAddTime">
+				$csaAddTimeNot$ cs_alarm$suffix$.csa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaInfo" prepend="and">			    
+			    (<isNotNull property="csaInfoNot">
+			    cs_alarm$suffix$.csa_info is null or length(cs_alarm$suffix$.csa_info) &lt; 1 or
+			    </isNotNull>$csaInfoNot$ cs_alarm$suffix$.csa_info = #csaInfo#)
+			</isNotEmpty>
+			<isNotNull property="csaInfoNot" prepend="and">
+				<isEmpty property="csaInfo">
+				$csaInfoNot$ (cs_alarm$suffix$.csa_info is null or length(cs_alarm$suffix$.csa_info) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaOrder" prepend="and">
+			    $csaOrderNot$ cs_alarm$suffix$.csa_order = #csaOrder#
+			</isNotEmpty>
+			<isNotNull property="csaOrderNot" prepend="and">
+				<isEmpty property="csaOrder">
+				$csaOrderNot$ cs_alarm$suffix$.csa_order is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆警报left join 条件sql片段 -->
+	<sql id="cs_alarm_join">
+		<dynamic>
+			<isNotEmpty property="CsAlarm.csaId" prepend="and">
+			    $CsAlarm.csaIdNot$ cs_alarm$CsAlarm.suffix$.csa_id = #CsAlarm.csaId#
+			</isNotEmpty>
+			<isNotNull property="CsAlarm.csaIdNot" prepend="and">
+				<isEmpty property="CsAlarm.csaId">
+				$csaIdNot$ cs_alarm$CsAlarm.suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_alarm$CsAlarm.suffix$.csa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlarm.csaHost" prepend="and">
+			    $CsAlarm.csaHostNot$ cs_alarm$CsAlarm.suffix$.csa_host = #CsAlarm.csaHost#
+			</isNotEmpty>
+			<isNotNull property="CsAlarm.csaHostNot" prepend="and">
+				<isEmpty property="CsAlarm.csaHost">
+				$csaHostNot$ cs_alarm$CsAlarm.suffix$.csa_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlarm.csaNumber" prepend="and">
+			    $CsAlarm.csaNumberNot$ cs_alarm$CsAlarm.suffix$.csa_number = #CsAlarm.csaNumber#
+			</isNotEmpty>
+			<isNotNull property="CsAlarm.csaNumberNot" prepend="and">
+				<isEmpty property="CsAlarm.csaNumber">
+				$csaNumberNot$ cs_alarm$CsAlarm.suffix$.csa_number is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlarm.csaAddTimeStart" prepend="and">
+			    $CsAlarm.csaAddTimeNot$   (cs_alarm$CsAlarm.suffix$.csa_add_time &gt;= #CsAlarm.csaAddTimeStart#
+			   <isEmpty property="CsAlarm.csaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlarm.csaAddTimeEnd" prepend="and">
+				<isEmpty property="CsAlarm.csaAddTimeStart">$CsAlarm.csaAddTimeNot$   (</isEmpty>
+			    cs_alarm$CsAlarm.suffix$.csa_add_time &lt;= #CsAlarm.csaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlarm.csaAddTime" prepend="and">
+			    $CsAlarm.csaAddTimeNot$ cs_alarm$CsAlarm.suffix$.csa_add_time = #CsAlarm.csaAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsAlarm.csaAddTimeNot" prepend="and">
+				<isEmpty property="CsAlarm.csaAddTimeStart"><isEmpty property="CsAlarm.csaAddTimeEnd"><isEmpty property="CsAlarm.csaAddTime">
+				$csaAddTimeNot$ cs_alarm$CsAlarm.suffix$.csa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlarm.csaInfo" prepend="and">
+				(<isNotNull property="CsAlarm.csaInfoNot">
+			    cs_alarm$CsAlarm.suffix$.csa_info is null or length(cs_alarm$CsAlarm.suffix$.csa_info) &lt; 1 or
+			    </isNotNull>$CsAlarm.csaInfoNot$ cs_alarm$CsAlarm.suffix$.csa_info = #CsAlarm.csaInfo#)
+			</isNotEmpty>
+			<isNotNull property="CsAlarm.csaInfoNot" prepend="and">
+				<isEmpty property="CsAlarm.csaInfo">
+				$csaInfoNot$ (cs_alarm$CsAlarm.suffix$.csa_info is null or length(cs_alarm$CsAlarm.suffix$.csa_info) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlarm.csaOrder" prepend="and">
+			    $CsAlarm.csaOrderNot$ cs_alarm$CsAlarm.suffix$.csa_order = #CsAlarm.csaOrder#
+			</isNotEmpty>
+			<isNotNull property="CsAlarm.csaOrderNot" prepend="and">
+				<isEmpty property="CsAlarm.csaOrder">
+				$csaOrderNot$ cs_alarm$CsAlarm.suffix$.csa_order is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

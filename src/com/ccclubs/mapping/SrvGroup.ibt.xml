@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap>
+	<resultMap id="SrvGroup" class="com.ccclubs.model.SrvGroup">
+		<result property="sgId" column="sg_id"/>
+		<result property="sgName" column="sg_name"/>
+		<result property="sgParentId" column="sg_parent_id"/>
+		<result property="sgStatus" column="sg_status"/>
+	</resultMap>	
+	
+	<!-- 获取所有会员组 -->
+	<select id="getSrvGroupListBy" resultMap="SrvGroup">
+		select * from srv_group where 1=1 
+		<dynamic>
+			<isNotEmpty property="sgName" prepend="and">
+			    sg_name like #sgName#
+			</isNotEmpty>
+			<isNotEmpty property="sgParentId" prepend="and">
+			    sg_parent_id = #sgParentId#
+			</isNotEmpty>	
+			<isNotEmpty property="sgStatus" prepend="and">
+			    sg_status = #sgStatus#
+			</isNotEmpty>	
+		</dynamic>
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sg_id asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		
+	</select>
+	
+	<select id="getSrvGroupById" parameterClass="java.util.HashMap" resultMap="SrvGroup">
+		select * from srv_group where sg_id=#id#
+	</select>		
+	<select id="getSrvGroupList" parameterClass="com.ccclubs.model.SrvUser" resultMap="SrvGroup">
+		select * from srv_group where sg_parent_id=#suId# order by sg_id desc
+	</select>
+	<select id="getSrvUserTreeChild" parameterClass="com.ccclubs.model.SrvUser" resultMap="SrvGroup">
+		select * from srv_group where sg_parent_id=#suId# or sg_parent_id in (select su_id from srv_user where su_family like '$suFamily$,%' or su_family='$suFamily$')
+	</select>
+	<insert id="saveSrvGroup"  parameterClass="com.ccclubs.model.SrvGroup">
+		insert into srv_group 
+		(sg_name,sg_parent_id,sg_status)
+		values(#sgName#,#sgParentId#,#sgStatus#)
+		<selectKey resultClass="long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>	
+	<update id="updateSrvGroup"  parameterClass="com.ccclubs.model.SrvGroup">
+		update srv_group set 
+			sg_name=#sgName#,
+			sg_parent_id=#sgParentId#,
+			sg_status=#sgStatus#
+		where
+			sg_id=#sgId#
+	</update>
+	<delete id="deleteSrvGroupById"  parameterClass="java.util.HashMap">
+		delete from srv_group where sg_id=#id#
+	</delete>
+	<delete id="deleteGroupsByUserFamily"  parameterClass="com.ccclubs.model.SrvUser">
+		delete from srv_group where sg_id in (select su_group_id from srv_user where su_family like '$suFamily$,%')
+	</delete>
+	<select id="getUsersByGroupId" resultMap="SrvUser" parameterClass="java.util.HashMap">
+		select * from srv_user where su_group_id=#id#
+	</select>
+	<select id="getGroupsByUserIds" parameterClass="java.util.HashMap" resultMap="SrvGroup">
+		select * from srv_group where sg_parent_id in ($ids$)
+	</select>
+	
+</sqlMap>

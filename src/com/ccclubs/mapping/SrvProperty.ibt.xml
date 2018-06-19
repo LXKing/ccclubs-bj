@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统属性之SQL映射 -->
+	<resultMap id="SrvProperty" class="com.ccclubs.model.SrvProperty">
+		<result property="spId" column="sp_id"/>
+		<result property="spName" column="sp_name"/>
+		<result property="spParent" column="sp_parent"/>
+		<result property="spFlag" column="sp_flag"/>
+		<result property="spNumber" column="sp_number"/>
+		<result property="spValue" column="sp_value"/>
+		<result property="spText" column="sp_text"/>
+		<result property="spStatus" column="sp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有系统属性 -->
+	<select id="getSrvPropertyList" resultMap="SrvProperty">
+		select srv_property$suffix$.* from srv_property$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvProperty_part.srv_property_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sp_parent asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统属性分页 -->
+	<select id="getSrvPropertyPage" parameterClass="java.util.HashMap" resultMap="SrvProperty">
+		select srv_property$suffix$.* from srv_property$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvProperty_part.srv_property_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sp_parent asc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统属性总数 -->
+	<select id="getSrvPropertyEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_property$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvProperty_part.srv_property_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统属性 -->
+	<select id="getSrvPropertyById" parameterClass="java.util.HashMap" resultMap="SrvProperty">
+		select srv_property$suffix$.* from srv_property$suffix$
+		where sp_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统属性 -->
+	<insert id="saveSrvProperty"  parameterClass="com.ccclubs.model.SrvProperty">
+		insert into srv_property$suffix$
+		(
+			srv_property$suffix$.sp_name
+			,srv_property$suffix$.sp_parent
+			,srv_property$suffix$.sp_flag
+			,srv_property$suffix$.sp_number
+			,srv_property$suffix$.sp_value
+			,srv_property$suffix$.sp_text
+			,srv_property$suffix$.sp_status
+		)
+		values(
+			<isNotNull property="spName" prepend="">
+				#spName#
+			</isNotNull>
+			<isNull property="spName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="spParent" prepend=",">
+				#spParent#
+			</isNotNull>
+			<isNull property="spParent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="spFlag" prepend=",">
+				#spFlag#
+			</isNotNull>
+			<isNull property="spFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="spNumber" prepend=",">
+				#spNumber#
+			</isNotNull>
+			<isNull property="spNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="spValue" prepend=",">
+				#spValue#
+			</isNotNull>
+			<isNull property="spValue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="spText" prepend=",">
+				#spText#
+			</isNotNull>
+			<isNull property="spText" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="spStatus" prepend=",">
+				#spStatus#
+			</isNotNull>
+			<isNull property="spStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统属性 -->
+	<update id="updateSrvProperty"  parameterClass="com.ccclubs.model.SrvProperty">
+		update srv_property$suffix$ set
+			<isNotNull property="spName" prepend="">
+				srv_property$suffix$.sp_name = #spName#
+			</isNotNull>
+			<isNull property="spName" prepend="">
+				srv_property$suffix$.sp_name = null
+			</isNull>				
+			<isNotNull property="spParent" prepend=",">
+				srv_property$suffix$.sp_parent = #spParent#
+			</isNotNull>
+			<isNull property="spParent" prepend=",">
+				srv_property$suffix$.sp_parent = null
+			</isNull>				
+			<isNotNull property="spFlag" prepend=",">
+				srv_property$suffix$.sp_flag = #spFlag#
+			</isNotNull>
+			<isNull property="spFlag" prepend=",">
+				srv_property$suffix$.sp_flag = null
+			</isNull>				
+			<isNotNull property="spNumber" prepend=",">
+				srv_property$suffix$.sp_number = #spNumber#
+			</isNotNull>
+			<isNull property="spNumber" prepend=",">
+				srv_property$suffix$.sp_number = null
+			</isNull>				
+			<isNotNull property="spValue" prepend=",">
+				srv_property$suffix$.sp_value = #spValue#
+			</isNotNull>
+			<isNull property="spValue" prepend=",">
+				srv_property$suffix$.sp_value = null
+			</isNull>				
+			<isNotNull property="spText" prepend=",">
+				srv_property$suffix$.sp_text = #spText#
+			</isNotNull>
+			<isNull property="spText" prepend=",">
+				srv_property$suffix$.sp_text = null
+			</isNull>				
+			<isNotNull property="spStatus" prepend=",">
+				srv_property$suffix$.sp_status = #spStatus#
+			</isNotNull>
+			<isNull property="spStatus" prepend=",">
+				srv_property$suffix$.sp_status = null
+			</isNull>				
+		where
+			sp_id=#spId#
+	</update>
+	
+	<!-- 更新系统属性非空字段 -->
+	<update id="updateSrvProperty$NotNull"  parameterClass="com.ccclubs.model.SrvProperty">
+		update srv_property$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="spName" prepend=",">
+				srv_property$suffix$.sp_name = #spName#
+			</isNotNull>		
+			<isNotNull property="spParent" prepend=",">
+				srv_property$suffix$.sp_parent = #spParent#
+			</isNotNull>		
+			<isNotNull property="spFlag" prepend=",">
+				srv_property$suffix$.sp_flag = #spFlag#
+			</isNotNull>		
+			<isNotNull property="spNumber" prepend=",">
+				srv_property$suffix$.sp_number = #spNumber#
+			</isNotNull>		
+			<isNotNull property="spValue" prepend=",">
+				srv_property$suffix$.sp_value = #spValue#
+			</isNotNull>		
+			<isNotNull property="spText" prepend=",">
+				srv_property$suffix$.sp_text = #spText#
+			</isNotNull>		
+			<isNotNull property="spStatus" prepend=",">
+				srv_property$suffix$.sp_status = #spStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sp_id=#spId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统属性 -->
+	<delete id="deleteSrvPropertyById" parameterClass="java.util.HashMap">
+		delete from srv_property$suffix$ where sp_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新系统属性 -->
+	<update id="updateSrvPropertyBy"  parameterClass="java.util.HashMap">
+		update srv_property$suffix$ set		
+			sp_id=sp_id
+			<isNotNull property="V_spId" prepend=",">
+				srv_property$suffix$.sp_id = #V_spId#
+			</isNotNull>		
+			<isNotNull property="V_spName" prepend=",">
+				srv_property$suffix$.sp_name = #V_spName#
+			</isNotNull>		
+			<isNotNull property="V_spParent" prepend=",">
+				srv_property$suffix$.sp_parent = #V_spParent#
+			</isNotNull>		
+			<isNotNull property="V_spFlag" prepend=",">
+				srv_property$suffix$.sp_flag = #V_spFlag#
+			</isNotNull>		
+			<isNotNull property="V_spNumber" prepend=",">
+				srv_property$suffix$.sp_number = #V_spNumber#
+			</isNotNull>		
+			<isNotNull property="V_spValue" prepend=",">
+				srv_property$suffix$.sp_value = #V_spValue#
+			</isNotNull>		
+			<isNotNull property="V_spText" prepend=",">
+				srv_property$suffix$.sp_text = #V_spText#
+			</isNotNull>		
+			<isNotNull property="V_spStatus" prepend=",">
+				srv_property$suffix$.sp_status = #V_spStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvProperty_part.srv_property_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统属性 -->
+	<update id="deleteSrvPropertyBy"  parameterClass="java.util.HashMap">
+		delete from srv_property$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvProperty_part.srv_property_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

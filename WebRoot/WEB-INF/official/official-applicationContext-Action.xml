@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- author zhuangtian -->
+
+
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="officialLoginAction" class="com.ccclubs.action.official.LoginAction" scope="prototype">
+		<property name="csUnitUserService" ref="csUnitUserService"></property>
+		<property name="csCarService" ref="csCarService"></property>
+		<property name="csMemberShipService" ref="csMemberShipService"></property>
+	</bean>
+	
+	<bean id="officialIndexAction" class="com.ccclubs.action.official.OfficialIndexAction" scope="prototype">
+		<property name="csUnitUserService" ref="csUnitUserService"></property>
+	</bean>
+	<bean name="officialPasswordAction" class="com.ccclubs.action.official.PasswordAction" scope="prototype">
+		<property name="csUnitUserService" ref="csUnitUserService"></property>
+	</bean>	
+	
+	<bean id="deptAction" class="com.ccclubs.action.official.DeptAction" scope="prototype">
+		<property name="csUnitGroupService" ref="csUnitGroupService"></property>
+		<property name="csUnitPersonService" ref="csUnitPersonService"></property>
+	</bean>
+	<bean id="clerkAction" class="com.ccclubs.action.official.ClerkAction" scope="prototype">
+		<property name="csUnitPersonService" ref="csUnitPersonService"></property>
+		<property name="csUnitGroupService" ref="csUnitGroupService"></property>
+		<property name="csMemberInfoService" ref="csMemberInfoService"></property>
+		<property name="csMemberService" ref="csMemberService"></property>
+		<property name="csMemberShipService" ref="csMemberShipService"></property>
+	</bean>
+	<bean id="orderAction" class="com.ccclubs.action.official.OrderAction" scope="prototype">
+		<property name="csUnitOrderService" ref="csUnitOrderService"></property>
+		<property name="csOrderService" ref="csOrderService"></property>
+		<property name="csUnitGroupService" ref="csUnitGroupService"></property>
+		<property name="csMemberService" ref="csMemberService"></property>
+		<property name="commonUnitService" ref="commonUnitService"></property>
+	</bean>
+	<bean id="specialCarAction" class="com.ccclubs.action.official.SpecialCarAction" scope="prototype">
+		<property name="csSpecialCarService" ref="csSpecialCarService"></property>
+		<property name="csUnitOrderService" ref="csUnitOrderService"></property>
+		<property name="commonUnitService" ref="commonUnitService"></property>
+	</bean>
+	<bean id="carAction" class="com.ccclubs.action.official.CarAction" scope="prototype">
+		<property name="csCarService" ref="csCarService"></property>
+	</bean>
+	<bean id="financial" class="com.ccclubs.action.official.FinancialAction" scope="prototype">
+		<property name="csUnitBillService" ref="csUnitBillService"></property>
+		<property name="csUnitGroupService" ref="csUnitGroupService"></property>
+		<property name="csUnitOrderService" ref="csUnitOrderService"></property>
+	</bean>
+	
+	<bean id="officialAdapterAction" class="com.ccclubs.action.official.AdapterOfficialAction" scope="prototype">
+	</bean>
+	
+	<!-- 地图监控Action -->
+	<bean id="mapAction" class="com.ccclubs.action.official.MapAction" scope="prototype">
+		<property name="csOutletsService" ref="csOutletsService"></property>
+		<property name="csCarService" ref="csCarService"></property>
+		<property name="csStateService" ref="csStateService"></property>
+		<property name="csHistoryStateService" ref="csHistoryStateService"></property>
+		<property name="csOrderService" ref="csOrderService"></property>
+		<property name="csElecHistoryService" ref="csElecHistoryService"></property>
+	</bean>
+	
+	<!-- 企业对账 -->
+	<bean id="createUnitBill" class="com.ccclubs.action.official.CreateUnitBillThread">
+		
+	</bean>
+	<bean id="unitBillDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+		<property name="targetObject" ref="createUnitBill"/>
+		<property name="targetMethod" value="run"></property>
+		<property name="concurrent" value="false"></property>
+	</bean>
+	<bean id="unitBillTigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="unitBillDetail"/>
+		<property name="cronExpression">
+			<value>0 0 3 * * ? </value>
+		</property>
+	</bean>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="unitBillTigger"/>
+			</list>
+		</property>
+	</bean> 
+	<!-- 企业对账 -->
+</beans>

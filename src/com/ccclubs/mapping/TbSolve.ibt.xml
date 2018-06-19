@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 问题处理记录之SQL映射 -->
+	<resultMap id="TbSolve" class="com.ccclubs.model.TbSolve">
+		<result property="tbsId" column="tbs_id"/>
+		<result property="tbsHost" column="tbs_host"/>
+		<result property="tbsDesc" column="tbs_desc"/>
+		<result property="tbsProplem" column="tbs_proplem"/>
+		<result property="tbsUser" column="tbs_user"/>
+		<result property="tbsRedirect" column="tbs_redirect"/>
+		<result property="tbsStatus" column="tbs_status"/>
+	</resultMap>
+		
+	<!-- 获取所有问题处理记录 -->
+	<select id="getTbSolveList" resultMap="TbSolve">
+		select tb_solve$suffix$.* from tb_solve$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[问题故障报修]查询-->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<isNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.tbs_proplem=tb_problem$TbProblem.suffix$.tbp_id
+			</isNull>
+			<isNotNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.$TbProblem.on$=tb_problem$TbProblem.suffix$.tbp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_solve$suffix$.tbs_status!=-1
+		<!-- 多对一外链接[问题故障报修]查询条件sql片段 -->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<include refid="TbProblem_part.tb_problem_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSolve_part.tb_solve_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取问题处理记录分页 -->
+	<select id="getTbSolvePage" parameterClass="java.util.HashMap" resultMap="TbSolve">
+		select tb_solve$suffix$.* from tb_solve$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[问题故障报修]查询 -->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<isNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.tbs_proplem=tb_problem$TbProblem.suffix$.tbp_id
+			</isNull>
+			<isNotNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.$TbProblem.on$=tb_problem$TbProblem.suffix$.tbp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_solve$suffix$.tbs_status!=-1
+		<!-- 多对一外链接[问题故障报修]查询条件sql片段 -->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<include refid="TbProblem_part.tb_problem_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSolve_part.tb_solve_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取问题处理记录总数 -->
+	<select id="getTbSolveEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_solve$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[问题故障报修]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<isNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.tbs_proplem=tb_problem$TbProblem.suffix$.tbp_id
+			</isNull>
+			<isNotNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.$TbProblem.on$=tb_problem$TbProblem.suffix$.tbp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_solve$suffix$.tbs_status!=-1
+		<!-- 多对一外链接[问题故障报修]查询条件sql片段 -->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<include refid="TbProblem_part.tb_problem_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSolve_part.tb_solve_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取问题处理记录 -->
+	<select id="getTbSolveById" parameterClass="java.util.HashMap" resultMap="TbSolve">
+		select tb_solve$suffix$.* from tb_solve$suffix$
+		where tbs_id=#id#
+	</select>
+	
+		
+	<!-- 保存问题处理记录 -->
+	<insert id="saveTbSolve"  parameterClass="com.ccclubs.model.TbSolve">
+		insert into tb_solve$suffix$
+		(
+			tb_solve$suffix$.tbs_host
+			,tb_solve$suffix$.tbs_desc
+			,tb_solve$suffix$.tbs_proplem
+			,tb_solve$suffix$.tbs_user
+			,tb_solve$suffix$.tbs_redirect
+			,tb_solve$suffix$.tbs_status
+		)
+		values(
+			<isNotNull property="tbsHost" prepend="">
+				#tbsHost#
+			</isNotNull>
+			<isNull property="tbsHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbsDesc" prepend=",">
+				#tbsDesc#
+			</isNotNull>
+			<isNull property="tbsDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsProplem" prepend=",">
+				#tbsProplem#
+			</isNotNull>
+			<isNull property="tbsProplem" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsUser" prepend=",">
+				#tbsUser#
+			</isNotNull>
+			<isNull property="tbsUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsRedirect" prepend=",">
+				#tbsRedirect#
+			</isNotNull>
+			<isNull property="tbsRedirect" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsStatus" prepend=",">
+				#tbsStatus#
+			</isNotNull>
+			<isNull property="tbsStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新问题处理记录 -->
+	<update id="updateTbSolve"  parameterClass="com.ccclubs.model.TbSolve">
+		update tb_solve$suffix$ set
+			<isNotNull property="tbsHost" prepend="">
+				tb_solve$suffix$.tbs_host = #tbsHost#
+			</isNotNull>
+			<isNull property="tbsHost" prepend="">
+				tb_solve$suffix$.tbs_host = null
+			</isNull>				
+			<isNotNull property="tbsDesc" prepend=",">
+				tb_solve$suffix$.tbs_desc = #tbsDesc#
+			</isNotNull>
+			<isNull property="tbsDesc" prepend=",">
+				tb_solve$suffix$.tbs_desc = null
+			</isNull>				
+			<isNotNull property="tbsProplem" prepend=",">
+				tb_solve$suffix$.tbs_proplem = #tbsProplem#
+			</isNotNull>
+			<isNull property="tbsProplem" prepend=",">
+				tb_solve$suffix$.tbs_proplem = null
+			</isNull>				
+			<isNotNull property="tbsUser" prepend=",">
+				tb_solve$suffix$.tbs_user = #tbsUser#
+			</isNotNull>
+			<isNull property="tbsUser" prepend=",">
+				tb_solve$suffix$.tbs_user = null
+			</isNull>				
+			<isNotNull property="tbsRedirect" prepend=",">
+				tb_solve$suffix$.tbs_redirect = #tbsRedirect#
+			</isNotNull>
+			<isNull property="tbsRedirect" prepend=",">
+				tb_solve$suffix$.tbs_redirect = null
+			</isNull>				
+			<isNotNull property="tbsStatus" prepend=",">
+				tb_solve$suffix$.tbs_status = #tbsStatus#
+			</isNotNull>
+			<isNull property="tbsStatus" prepend=",">
+				tb_solve$suffix$.tbs_status = null
+			</isNull>				
+		where
+			tbs_id=#tbsId#
+	</update>
+	
+	<!-- 更新问题处理记录非空字段 -->
+	<update id="updateTbSolve$NotNull"  parameterClass="com.ccclubs.model.TbSolve">
+		update tb_solve$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbsHost" prepend=",">
+				tb_solve$suffix$.tbs_host = #tbsHost#
+			</isNotNull>		
+			<isNotNull property="tbsDesc" prepend=",">
+				tb_solve$suffix$.tbs_desc = #tbsDesc#
+			</isNotNull>		
+			<isNotNull property="tbsProplem" prepend=",">
+				tb_solve$suffix$.tbs_proplem = #tbsProplem#
+			</isNotNull>		
+			<isNotNull property="tbsUser" prepend=",">
+				tb_solve$suffix$.tbs_user = #tbsUser#
+			</isNotNull>		
+			<isNotNull property="tbsRedirect" prepend=",">
+				tb_solve$suffix$.tbs_redirect = #tbsRedirect#
+			</isNotNull>		
+			<isNotNull property="tbsStatus" prepend=",">
+				tb_solve$suffix$.tbs_status = #tbsStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbs_id=#tbsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个问题处理记录 -->
+	<delete id="deleteTbSolveById" parameterClass="java.util.HashMap">
+		delete from tb_solve$suffix$ where tbs_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个问题处理记录 -->
+	<update id="removeTbSolveById" parameterClass="java.util.HashMap">
+		update tb_solve$suffix$ set  tb_solve$suffix$.tbs_status=-1  where tbs_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新问题处理记录 -->
+	<update id="updateTbSolveBy"  parameterClass="java.util.HashMap">
+		update tb_solve$suffix$ set		
+			tbs_id=tbs_id
+			<isNotNull property="V_tbsId" prepend=",">
+				tb_solve$suffix$.tbs_id = #V_tbsId#
+			</isNotNull>		
+			<isNotNull property="V_tbsHost" prepend=",">
+				tb_solve$suffix$.tbs_host = #V_tbsHost#
+			</isNotNull>		
+			<isNotNull property="V_tbsDesc" prepend=",">
+				tb_solve$suffix$.tbs_desc = #V_tbsDesc#
+			</isNotNull>		
+			<isNotNull property="V_tbsProplem" prepend=",">
+				tb_solve$suffix$.tbs_proplem = #V_tbsProplem#
+			</isNotNull>		
+			<isNotNull property="V_tbsUser" prepend=",">
+				tb_solve$suffix$.tbs_user = #V_tbsUser#
+			</isNotNull>		
+			<isNotNull property="V_tbsRedirect" prepend=",">
+				tb_solve$suffix$.tbs_redirect = #V_tbsRedirect#
+			</isNotNull>		
+			<isNotNull property="V_tbsStatus" prepend=",">
+				tb_solve$suffix$.tbs_status = #V_tbsStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[问题故障报修]查询-->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<isNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.tbs_proplem=tb_problem$TbProblem.suffix$.tbp_id
+			</isNull>
+			<isNotNull property="TbProblem.on">
+				left join tb_problem tb_problem$TbProblem.suffix$ on tb_solve$suffix$.$TbProblem.on$=tb_problem$TbProblem.suffix$.tbp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_solve$suffix$.tbs_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[问题故障报修]查询条件sql片段 -->
+		<isNotNull property="TbsProplem"><!-- 调用一下TbsProplem，把TbProblem指向TbsProplem --></isNotNull>
+		<isNotNull property="TbProblem">
+			<include refid="TbProblem_part.tb_problem_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbSolve_part.tb_solve_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除问题处理记录 -->
+	<update id="deleteTbSolveBy"  parameterClass="java.util.HashMap">
+		delete from tb_solve$suffix$ where 
+		tb_solve$suffix$.tbs_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbSolve_part.tb_solve_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 运营商之SQL映射 -->
+	<resultMap id="CsOper" class="com.ccclubs.model.CsOper">
+		<result property="csoId" column="cso_id"/>
+		<result property="csoName" column="cso_name"/>
+		<result property="csoFullName" column="cso_full_name"/>
+		<result property="csoIcon" column="cso_icon"/>
+		<result property="csoSign" column="cso_sign"/>
+		<result property="csoPerson" column="cso_person"/>
+		<result property="csoMoney" column="cso_money"/>
+		<result property="csoAddress" column="cso_address"/>
+		<result property="csoContacts" column="cso_contacts"/>
+		<result property="csoAdder" column="cso_adder"/>
+		<result property="csoRemark" column="cso_remark"/>
+		<result property="csoMemo" column="cso_memo"/>
+		<result property="csoData" column="cso_data"/>
+		<result property="csoUpdateTime" column="cso_update_time"/>
+		<result property="csoAddTime" column="cso_add_time"/>
+		<result property="csoStatus" column="cso_status"/>
+	</resultMap>
+		
+	<!-- 获取所有运营商 -->
+	<select id="getCsOperList" resultMap="CsOper">
+		select cs_oper$suffix$.* from cs_oper$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_oper$suffix$.cso_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOper_part.cs_oper_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cso_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取运营商分页 -->
+	<select id="getCsOperPage" parameterClass="java.util.HashMap" resultMap="CsOper">
+		select cs_oper$suffix$.* from cs_oper$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_oper$suffix$.cso_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOper_part.cs_oper_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cso_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取运营商总数 -->
+	<select id="getCsOperEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_oper$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_oper$suffix$.cso_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOper_part.cs_oper_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取运营商 -->
+	<select id="getCsOperById" parameterClass="java.util.HashMap" resultMap="CsOper">
+		select cs_oper$suffix$.* from cs_oper$suffix$
+		where cso_id=#id#
+	</select>
+	
+		
+	<!-- 保存运营商 -->
+	<insert id="saveCsOper"  parameterClass="com.ccclubs.model.CsOper">
+		insert into cs_oper$suffix$
+		(
+			cs_oper$suffix$.cso_name
+			,cs_oper$suffix$.cso_full_name
+			,cs_oper$suffix$.cso_icon
+			,cs_oper$suffix$.cso_sign
+			,cs_oper$suffix$.cso_person
+			,cs_oper$suffix$.cso_money
+			,cs_oper$suffix$.cso_address
+			,cs_oper$suffix$.cso_contacts
+			,cs_oper$suffix$.cso_adder
+			,cs_oper$suffix$.cso_remark
+			,cs_oper$suffix$.cso_memo
+			,cs_oper$suffix$.cso_data
+			,cs_oper$suffix$.cso_update_time
+			,cs_oper$suffix$.cso_add_time
+			,cs_oper$suffix$.cso_status
+		)
+		values(
+			<isNotNull property="csoName" prepend="">
+				#csoName#
+			</isNotNull>
+			<isNull property="csoName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csoFullName" prepend=",">
+				#csoFullName#
+			</isNotNull>
+			<isNull property="csoFullName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoIcon" prepend=",">
+				#csoIcon#
+			</isNotNull>
+			<isNull property="csoIcon" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoSign" prepend=",">
+				#csoSign#
+			</isNotNull>
+			<isNull property="csoSign" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPerson" prepend=",">
+				#csoPerson#
+			</isNotNull>
+			<isNull property="csoPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoMoney" prepend=",">
+				#csoMoney#
+			</isNotNull>
+			<isNull property="csoMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAddress" prepend=",">
+				#csoAddress#
+			</isNotNull>
+			<isNull property="csoAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoContacts" prepend=",">
+				#csoContacts#
+			</isNotNull>
+			<isNull property="csoContacts" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAdder" prepend=",">
+				#csoAdder#
+			</isNotNull>
+			<isNull property="csoAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoRemark" prepend=",">
+				#csoRemark#
+			</isNotNull>
+			<isNull property="csoRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoMemo" prepend=",">
+				#csoMemo#
+			</isNotNull>
+			<isNull property="csoMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoData" prepend=",">
+				#csoData#
+			</isNotNull>
+			<isNull property="csoData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUpdateTime" prepend=",">
+				#csoUpdateTime#
+			</isNotNull>
+			<isNull property="csoUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAddTime" prepend=",">
+				#csoAddTime#
+			</isNotNull>
+			<isNull property="csoAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoStatus" prepend=",">
+				#csoStatus#
+			</isNotNull>
+			<isNull property="csoStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新运营商 -->
+	<update id="updateCsOper"  parameterClass="com.ccclubs.model.CsOper">
+		update cs_oper$suffix$ set
+			<isNotNull property="csoName" prepend="">
+				cs_oper$suffix$.cso_name = #csoName#
+			</isNotNull>
+			<isNull property="csoName" prepend="">
+				cs_oper$suffix$.cso_name = null
+			</isNull>				
+			<isNotNull property="csoFullName" prepend=",">
+				cs_oper$suffix$.cso_full_name = #csoFullName#
+			</isNotNull>
+			<isNull property="csoFullName" prepend=",">
+				cs_oper$suffix$.cso_full_name = null
+			</isNull>				
+			<isNotNull property="csoIcon" prepend=",">
+				cs_oper$suffix$.cso_icon = #csoIcon#
+			</isNotNull>
+			<isNull property="csoIcon" prepend=",">
+				cs_oper$suffix$.cso_icon = null
+			</isNull>				
+			<isNotNull property="csoSign" prepend=",">
+				cs_oper$suffix$.cso_sign = #csoSign#
+			</isNotNull>
+			<isNull property="csoSign" prepend=",">
+				cs_oper$suffix$.cso_sign = null
+			</isNull>				
+			<isNotNull property="csoPerson" prepend=",">
+				cs_oper$suffix$.cso_person = #csoPerson#
+			</isNotNull>
+			<isNull property="csoPerson" prepend=",">
+				cs_oper$suffix$.cso_person = null
+			</isNull>				
+			<isNotNull property="csoMoney" prepend=",">
+				cs_oper$suffix$.cso_money = #csoMoney#
+			</isNotNull>
+			<isNull property="csoMoney" prepend=",">
+				cs_oper$suffix$.cso_money = null
+			</isNull>				
+			<isNotNull property="csoAddress" prepend=",">
+				cs_oper$suffix$.cso_address = #csoAddress#
+			</isNotNull>
+			<isNull property="csoAddress" prepend=",">
+				cs_oper$suffix$.cso_address = null
+			</isNull>				
+			<isNotNull property="csoContacts" prepend=",">
+				cs_oper$suffix$.cso_contacts = #csoContacts#
+			</isNotNull>
+			<isNull property="csoContacts" prepend=",">
+				cs_oper$suffix$.cso_contacts = null
+			</isNull>				
+			<isNotNull property="csoAdder" prepend=",">
+				cs_oper$suffix$.cso_adder = #csoAdder#
+			</isNotNull>
+			<isNull property="csoAdder" prepend=",">
+				cs_oper$suffix$.cso_adder = null
+			</isNull>				
+			<isNotNull property="csoRemark" prepend=",">
+				cs_oper$suffix$.cso_remark = #csoRemark#
+			</isNotNull>
+			<isNull property="csoRemark" prepend=",">
+				cs_oper$suffix$.cso_remark = null
+			</isNull>				
+			<isNotNull property="csoMemo" prepend=",">
+				cs_oper$suffix$.cso_memo = #csoMemo#
+			</isNotNull>
+			<isNull property="csoMemo" prepend=",">
+				cs_oper$suffix$.cso_memo = null
+			</isNull>				
+			<isNotNull property="csoData" prepend=",">
+				cs_oper$suffix$.cso_data = #csoData#
+			</isNotNull>
+			<isNull property="csoData" prepend=",">
+				cs_oper$suffix$.cso_data = null
+			</isNull>				
+			<isNotNull property="csoUpdateTime" prepend=",">
+				cs_oper$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotNull>
+			<isNull property="csoUpdateTime" prepend=",">
+				cs_oper$suffix$.cso_update_time = null
+			</isNull>				
+			<isNotNull property="csoAddTime" prepend=",">
+				cs_oper$suffix$.cso_add_time = #csoAddTime#
+			</isNotNull>
+			<isNull property="csoAddTime" prepend=",">
+				cs_oper$suffix$.cso_add_time = null
+			</isNull>				
+			<isNotNull property="csoStatus" prepend=",">
+				cs_oper$suffix$.cso_status = #csoStatus#
+			</isNotNull>
+			<isNull property="csoStatus" prepend=",">
+				cs_oper$suffix$.cso_status = null
+			</isNull>				
+		where
+			cso_id=#csoId#
+	</update>
+	
+	<!-- 更新运营商非空字段 -->
+	<update id="updateCsOper$NotNull"  parameterClass="com.ccclubs.model.CsOper">
+		update cs_oper$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csoName" prepend=",">
+				cs_oper$suffix$.cso_name = #csoName#
+			</isNotNull>		
+			<isNotNull property="csoFullName" prepend=",">
+				cs_oper$suffix$.cso_full_name = #csoFullName#
+			</isNotNull>		
+			<isNotNull property="csoIcon" prepend=",">
+				cs_oper$suffix$.cso_icon = #csoIcon#
+			</isNotNull>		
+			<isNotNull property="csoSign" prepend=",">
+				cs_oper$suffix$.cso_sign = #csoSign#
+			</isNotNull>		
+			<isNotNull property="csoPerson" prepend=",">
+				cs_oper$suffix$.cso_person = #csoPerson#
+			</isNotNull>		
+			<isNotNull property="csoMoney" prepend=",">
+				cs_oper$suffix$.cso_money = #csoMoney#
+			</isNotNull>		
+			<isNotNull property="csoAddress" prepend=",">
+				cs_oper$suffix$.cso_address = #csoAddress#
+			</isNotNull>		
+			<isNotNull property="csoContacts" prepend=",">
+				cs_oper$suffix$.cso_contacts = #csoContacts#
+			</isNotNull>		
+			<isNotNull property="csoAdder" prepend=",">
+				cs_oper$suffix$.cso_adder = #csoAdder#
+			</isNotNull>		
+			<isNotNull property="csoRemark" prepend=",">
+				cs_oper$suffix$.cso_remark = #csoRemark#
+			</isNotNull>		
+			<isNotNull property="csoMemo" prepend=",">
+				cs_oper$suffix$.cso_memo = #csoMemo#
+			</isNotNull>		
+			<isNotNull property="csoData" prepend=",">
+				cs_oper$suffix$.cso_data = #csoData#
+			</isNotNull>		
+			<isNotNull property="csoUpdateTime" prepend=",">
+				cs_oper$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csoAddTime" prepend=",">
+				cs_oper$suffix$.cso_add_time = #csoAddTime#
+			</isNotNull>		
+			<isNotNull property="csoStatus" prepend=",">
+				cs_oper$suffix$.cso_status = #csoStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cso_id=#csoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个运营商 -->
+	<delete id="deleteCsOperById" parameterClass="java.util.HashMap">
+		delete from cs_oper$suffix$ where cso_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个运营商 -->
+	<update id="removeCsOperById" parameterClass="java.util.HashMap">
+		update cs_oper$suffix$ set  cs_oper$suffix$.cso_status=-1  where cso_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新运营商 -->
+	<update id="updateCsOperBy"  parameterClass="java.util.HashMap">
+		update cs_oper$suffix$ set		
+			cso_id=cso_id
+			<isNotNull property="V_csoId" prepend=",">
+				cs_oper$suffix$.cso_id = #V_csoId#
+			</isNotNull>		
+			<isNotNull property="V_csoName" prepend=",">
+				cs_oper$suffix$.cso_name = #V_csoName#
+			</isNotNull>		
+			<isNotNull property="V_csoFullName" prepend=",">
+				cs_oper$suffix$.cso_full_name = #V_csoFullName#
+			</isNotNull>		
+			<isNotNull property="V_csoIcon" prepend=",">
+				cs_oper$suffix$.cso_icon = #V_csoIcon#
+			</isNotNull>		
+			<isNotNull property="V_csoSign" prepend=",">
+				cs_oper$suffix$.cso_sign = #V_csoSign#
+			</isNotNull>		
+			<isNotNull property="V_csoPerson" prepend=",">
+				cs_oper$suffix$.cso_person = #V_csoPerson#
+			</isNotNull>		
+			<isNotNull property="V_csoMoney" prepend=",">
+				cs_oper$suffix$.cso_money = #V_csoMoney#
+			</isNotNull>		
+			<isNotNull property="V_csoAddress" prepend=",">
+				cs_oper$suffix$.cso_address = #V_csoAddress#
+			</isNotNull>		
+			<isNotNull property="V_csoContacts" prepend=",">
+				cs_oper$suffix$.cso_contacts = #V_csoContacts#
+			</isNotNull>		
+			<isNotNull property="V_csoAdder" prepend=",">
+				cs_oper$suffix$.cso_adder = #V_csoAdder#
+			</isNotNull>		
+			<isNotNull property="V_csoRemark" prepend=",">
+				cs_oper$suffix$.cso_remark = #V_csoRemark#
+			</isNotNull>		
+			<isNotNull property="V_csoMemo" prepend=",">
+				cs_oper$suffix$.cso_memo = #V_csoMemo#
+			</isNotNull>		
+			<isNotNull property="V_csoData" prepend=",">
+				cs_oper$suffix$.cso_data = #V_csoData#
+			</isNotNull>		
+			<isNotNull property="V_csoUpdateTime" prepend=",">
+				cs_oper$suffix$.cso_update_time = #V_csoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csoAddTime" prepend=",">
+				cs_oper$suffix$.cso_add_time = #V_csoAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csoStatus" prepend=",">
+				cs_oper$suffix$.cso_status = #V_csoStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_oper$suffix$.cso_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOper_part.cs_oper_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除运营商 -->
+	<update id="deleteCsOperBy"  parameterClass="java.util.HashMap">
+		delete from cs_oper$suffix$ where 
+		cs_oper$suffix$.cso_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOper_part.cs_oper_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

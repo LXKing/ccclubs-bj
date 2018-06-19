@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>紧急联系人信息</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-pic.css?v=${lz:config('version')}" />
+		<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<ul class="table-view mt15" style="margin-bottom: 0">
+					<li class="table-view-cell media">
+						<a id="ccc-identity" class="navigate-right">
+							<div class="media-body">
+								选择关系
+							</div> <span class="badge">朋友</span>
+							<div class="table-view-icon"></div></a>
+					</li>
+
+				</ul>
+				<div class="input-row" style="height:53px;">
+					<label style="padding-top:15px;">
+						姓名
+					</label>
+					<input type="text" id="csmiPerson" style="text-align: right;padding-right:32px;padding-top:15px;" placeholder="请输入姓名" value="${csMember.$csmInfo.csmiPerson}">
+				</div>
+				<div class="input-row" style="height:53px;">
+					<label style="padding-top:15px;">
+						手机号
+					</label>
+					<input type="tel" style="text-align: right;padding-right:32px;padding-top:15px;" id="csmiContact" maxlength="11" placeholder="请输入手机号" value="${csMember.$csmInfo.csmiContact}">
+				</div>
+			</form>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block" onclick="submit()">
+					保存
+				</button>
+			</div>
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer">
+				<div id="ccc-overlay"></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+						<div class="panel" data-role="panel">
+							<div class="panel-header">
+								选择关系
+							</div>
+							<div class="panel-content">
+								<ul class="table-modal-view">
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('家人','家人');">家人</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('同学','同学');">同学</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('同事','同事');">同事</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('朋友','朋友');">朋友</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<input type="hidden" id="j-identity-type" value="朋友">
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/page-register-identity.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function submit(){
+			var identityType = $.trim($("#j-identity-type").val());
+			var csmiPerson = $.trim($("#csmiPerson").val());
+			var csmiContact = $.trim($("#csmiContact").val());
+			if(identityType<=0){
+				Toast.show("请选择一个关系");
+				return;
+			}
+			if(csmiPerson.length<=0){
+				Toast.show("紧急联系人姓名需要填写");
+				return;
+			}
+			if(csmiContact.length<=0){
+				Toast.show("紧急联系人电话需要填写");
+				return;
+			}
+			$.ajax({
+				type: 'get',
+				url: "account_saveEmergency.html",
+        		data:{
+        			identityType : identityType,
+        			csmiPerson : csmiPerson,
+        			csmiContact : csmiContact
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			if(data.state){
+        				Toast.show(data.message);
+        				return;
+        			}else{
+        				Toast.show(data.message);
+                        return;
+        			}
+        		},
+        		error: function(xhr, type){
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		}
+		</script>
+	</body>
+
+</html>

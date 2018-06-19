@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsChargePile_part">	
+	<!-- 充电桩条件sql片段  -->
+	<sql id="cs_charge_pile_dynamic">
+		<dynamic>
+				<isNotEmpty property="cscpId" prepend="and">
+				    $cscpIdNot$ cs_charge_pile$suffix$.cscp_id = #cscpId#
+				</isNotEmpty>
+				<isNotNull property="cscpIdNot" prepend="and">
+					<isEmpty property="cscpId">
+					$cscpIdNot$ cs_charge_pile$suffix$.cscp_id is null
+					</isEmpty>
+				</isNotNull>
+						<isNotEmpty property="cscpStationMin" prepend="and">
+						    $cscpStationNot$  ( cs_charge_pile$suffix$.cscp_station &gt;= #cscpStationMin#
+						    <isEmpty property="cscpStationMax">)</isEmpty>
+						</isNotEmpty>
+						<isNotEmpty property="cscpStationMax" prepend="and">
+							<isEmpty property="cscpStationMin">$cscpStationNot$   (</isEmpty>
+						    cs_charge_pile$suffix$.cscp_station &lt;= #cscpStationMax# )
+						</isNotEmpty>
+						<isNotEmpty property="cscpStation" prepend="and">
+						    $cscpStationNot$ cs_charge_pile$suffix$.cscp_station = #cscpStation#
+						</isNotEmpty>
+						<isNotNull property="cscpStationNot" prepend="and">
+							<isEmpty property="cscpStationMax"><isEmpty property="cscpStationMin"><isEmpty property="cscpStation">
+							$cscpStationNot$ cs_charge_pile$suffix$.cscp_station is null
+							</isEmpty></isEmpty></isEmpty>
+						</isNotNull>	
+						<isNotEmpty property="cscpCode" prepend="and">			    
+						    (<isNotNull property="cscpCodeNot">
+						    cs_charge_pile$suffix$.cscp_code is null or length(cs_charge_pile$suffix$.cscp_code) &lt; 1 or
+						    </isNotNull>$cscpCodeNot$ cs_charge_pile$suffix$.cscp_code = #cscpCode#)
+						</isNotEmpty>
+						<isNotNull property="cscpCodeNot" prepend="and">
+							<isEmpty property="cscpCode">
+							$cscpCodeNot$ (cs_charge_pile$suffix$.cscp_code is null or length(cs_charge_pile$suffix$.cscp_code) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpName" prepend="and">			    
+						    (<isNotNull property="cscpNameNot">
+						    cs_charge_pile$suffix$.cscp_name is null or length(cs_charge_pile$suffix$.cscp_name) &lt; 1 or
+						    </isNotNull>$cscpNameNot$ cs_charge_pile$suffix$.cscp_name = #cscpName#)
+						</isNotEmpty>
+						<isNotNull property="cscpNameNot" prepend="and">
+							<isEmpty property="cscpName">
+							$cscpNameNot$ (cs_charge_pile$suffix$.cscp_name is null or length(cs_charge_pile$suffix$.cscp_name) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpType" prepend="and">			    
+						    (<isNotNull property="cscpTypeNot">
+						    cs_charge_pile$suffix$.cscp_type is null or length(cs_charge_pile$suffix$.cscp_type) &lt; 1 or
+						    </isNotNull>$cscpTypeNot$ cs_charge_pile$suffix$.cscp_type = #cscpType#)
+						</isNotEmpty>
+						<isNotNull property="cscpTypeNot" prepend="and">
+							<isEmpty property="cscpType">
+							$cscpTypeNot$ (cs_charge_pile$suffix$.cscp_type is null or length(cs_charge_pile$suffix$.cscp_type) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpState" prepend="and">			    
+						    (<isNotNull property="cscpStateNot">
+						    cs_charge_pile$suffix$.cscp_state is null or length(cs_charge_pile$suffix$.cscp_state) &lt; 1 or
+						    </isNotNull>$cscpStateNot$ cs_charge_pile$suffix$.cscp_state = #cscpState#)
+						</isNotEmpty>
+						<isNotNull property="cscpStateNot" prepend="and">
+							<isEmpty property="cscpState">
+							$cscpStateNot$ (cs_charge_pile$suffix$.cscp_state is null or length(cs_charge_pile$suffix$.cscp_state) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpVoltage" prepend="and">			    
+						    (<isNotNull property="cscpVoltageNot">
+						    cs_charge_pile$suffix$.cscp_voltage is null or length(cs_charge_pile$suffix$.cscp_voltage) &lt; 1 or
+						    </isNotNull>$cscpVoltageNot$ cs_charge_pile$suffix$.cscp_voltage = #cscpVoltage#)
+						</isNotEmpty>
+						<isNotNull property="cscpVoltageNot" prepend="and">
+							<isEmpty property="cscpVoltage">
+							$cscpVoltageNot$ (cs_charge_pile$suffix$.cscp_voltage is null or length(cs_charge_pile$suffix$.cscp_voltage) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpGalvanic" prepend="and">			    
+						    (<isNotNull property="cscpGalvanicNot">
+						    cs_charge_pile$suffix$.cscp_galvanic is null or length(cs_charge_pile$suffix$.cscp_galvanic) &lt; 1 or
+						    </isNotNull>$cscpGalvanicNot$ cs_charge_pile$suffix$.cscp_galvanic = #cscpGalvanic#)
+						</isNotEmpty>
+						<isNotNull property="cscpGalvanicNot" prepend="and">
+							<isEmpty property="cscpGalvanic">
+							$cscpGalvanicNot$ (cs_charge_pile$suffix$.cscp_galvanic is null or length(cs_charge_pile$suffix$.cscp_galvanic) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpPower" prepend="and">			    
+						    (<isNotNull property="cscpPowerNot">
+						    cs_charge_pile$suffix$.cscp_power is null or length(cs_charge_pile$suffix$.cscp_power) &lt; 1 or
+						    </isNotNull>$cscpPowerNot$ cs_charge_pile$suffix$.cscp_power = #cscpPower#)
+						</isNotEmpty>
+						<isNotNull property="cscpPowerNot" prepend="and">
+							<isEmpty property="cscpPower">
+							$cscpPowerNot$ (cs_charge_pile$suffix$.cscp_power is null or length(cs_charge_pile$suffix$.cscp_power) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpProvider" prepend="and">			    
+						    (<isNotNull property="cscpProviderNot">
+						    cs_charge_pile$suffix$.cscp_provider is null or length(cs_charge_pile$suffix$.cscp_provider) &lt; 1 or
+						    </isNotNull>$cscpProviderNot$ cs_charge_pile$suffix$.cscp_provider = #cscpProvider#)
+						</isNotEmpty>
+						<isNotNull property="cscpProviderNot" prepend="and">
+							<isEmpty property="cscpProvider">
+							$cscpProviderNot$ (cs_charge_pile$suffix$.cscp_provider is null or length(cs_charge_pile$suffix$.cscp_provider) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpData" prepend="and">			    
+						    (<isNotNull property="cscpDataNot">
+						    cs_charge_pile$suffix$.cscp_data is null or length(cs_charge_pile$suffix$.cscp_data) &lt; 1 or
+						    </isNotNull>$cscpDataNot$ cs_charge_pile$suffix$.cscp_data = #cscpData#)
+						</isNotEmpty>
+						<isNotNull property="cscpDataNot" prepend="and">
+							<isEmpty property="cscpData">
+							$cscpDataNot$ (cs_charge_pile$suffix$.cscp_data is null or length(cs_charge_pile$suffix$.cscp_data) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpAddTimeStart" prepend="and">
+						    $cscpAddTimeNot$   (cs_charge_pile$suffix$.cscp_add_time &gt;= #cscpAddTimeStart#
+						   <isEmpty property="cscpAddTimeEnd">)</isEmpty>
+						</isNotEmpty>
+						<isNotEmpty property="cscpAddTimeEnd" prepend="and">
+							<isEmpty property="cscpAddTimeStart">$cscpAddTimeNot$   (</isEmpty>
+						    cs_charge_pile$suffix$.cscp_add_time &lt;= #cscpAddTimeEnd#)
+						</isNotEmpty>			
+						<isNotEmpty property="cscpAddTime" prepend="and">
+						    $cscpAddTimeNot$ cs_charge_pile$suffix$.cscp_add_time = #cscpAddTime#
+						</isNotEmpty>
+						<isNotNull property="cscpAddTimeNot" prepend="and">
+							<isEmpty property="cscpAddTimeStart"><isEmpty property="cscpAddTimeEnd"><isEmpty property="cscpAddTime">
+							$cscpAddTimeNot$ cs_charge_pile$suffix$.cscp_add_time is null
+							</isEmpty></isEmpty></isEmpty>
+						</isNotNull>
+						<isNotEmpty property="cscpUpdateTimeStart" prepend="and">
+						    $cscpUpdateTimeNot$   (cs_charge_pile$suffix$.cscp_update_time &gt;= #cscpUpdateTimeStart#
+						   <isEmpty property="cscpUpdateTimeEnd">)</isEmpty>
+						</isNotEmpty>
+						<isNotEmpty property="cscpUpdateTimeEnd" prepend="and">
+							<isEmpty property="cscpUpdateTimeStart">$cscpUpdateTimeNot$   (</isEmpty>
+						    cs_charge_pile$suffix$.cscp_update_time &lt;= #cscpUpdateTimeEnd#)
+						</isNotEmpty>			
+						<isNotEmpty property="cscpUpdateTime" prepend="and">
+						    $cscpUpdateTimeNot$ cs_charge_pile$suffix$.cscp_update_time = #cscpUpdateTime#
+						</isNotEmpty>
+						<isNotNull property="cscpUpdateTimeNot" prepend="and">
+							<isEmpty property="cscpUpdateTimeStart"><isEmpty property="cscpUpdateTimeEnd"><isEmpty property="cscpUpdateTime">
+							$cscpUpdateTimeNot$ cs_charge_pile$suffix$.cscp_update_time is null
+							</isEmpty></isEmpty></isEmpty>
+						</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 充电桩left join 条件sql片段 -->
+	<sql id="cs_charge_pile_join">
+		<dynamic>
+				<isNotEmpty property="CsChargePile.cscpId" prepend="and">
+				    $CsChargePile.cscpIdNot$ cs_charge_pile$CsChargePile.suffix$.cscp_id = #CsChargePile.cscpId#
+				</isNotEmpty>
+				<isNotNull property="CsChargePile.cscpIdNot" prepend="and">
+					<isEmpty property="CsChargePile.cscpId">
+					$cscpIdNot$ cs_charge_pile$CsChargePile.suffix$.cscp_id is null
+					</isEmpty>
+				</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpStationMin" prepend="and">
+						    $CsChargePile.cscpStationNot$  ( cs_charge_pile$CsChargePile.suffix$.cscp_station &gt;= #CsChargePile.cscpStationMin#
+						    <isEmpty property="CsChargePile.cscpStationMax">)</isEmpty>
+						</isNotEmpty>
+						<isNotEmpty property="CsChargePile.cscpStationMax" prepend="and">
+							<isEmpty property="CsChargePile.cscpStationMin">$CsChargePile.cscpStationNot$   (</isEmpty>
+						    cs_charge_pile$CsChargePile.suffix$.cscp_station &lt;= #CsChargePile.cscpStationMax# )
+						</isNotEmpty>
+						<isNotEmpty property="CsChargePile.cscpStation" prepend="and">
+						    $CsChargePile.cscpStationNot$ cs_charge_pile$CsChargePile.suffix$.cscp_station = #CsChargePile.cscpStation#
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpStationNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpStationMax"><isEmpty property="CsChargePile.cscpStationMin"><isEmpty property="CsChargePile.cscpStation">
+							$cscpStationNot$ cs_charge_pile$CsChargePile.suffix$.cscp_station is null
+							</isEmpty></isEmpty></isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpCode" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpCodeNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_code is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_code) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpCodeNot$ cs_charge_pile$CsChargePile.suffix$.cscp_code = #CsChargePile.cscpCode#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpCodeNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpCode">
+							$cscpCodeNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_code is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_code) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpName" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpNameNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_name is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_name) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpNameNot$ cs_charge_pile$CsChargePile.suffix$.cscp_name = #CsChargePile.cscpName#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpNameNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpName">
+							$cscpNameNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_name is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_name) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpType" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpTypeNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_type is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_type) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpTypeNot$ cs_charge_pile$CsChargePile.suffix$.cscp_type = #CsChargePile.cscpType#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpTypeNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpType">
+							$cscpTypeNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_type is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_type) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpState" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpStateNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_state is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_state) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpStateNot$ cs_charge_pile$CsChargePile.suffix$.cscp_state = #CsChargePile.cscpState#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpStateNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpState">
+							$cscpStateNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_state is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_state) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpVoltage" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpVoltageNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_voltage is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_voltage) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpVoltageNot$ cs_charge_pile$CsChargePile.suffix$.cscp_voltage = #CsChargePile.cscpVoltage#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpVoltageNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpVoltage">
+							$cscpVoltageNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_voltage is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_voltage) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpGalvanic" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpGalvanicNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_galvanic is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_galvanic) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpGalvanicNot$ cs_charge_pile$CsChargePile.suffix$.cscp_galvanic = #CsChargePile.cscpGalvanic#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpGalvanicNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpGalvanic">
+							$cscpGalvanicNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_galvanic is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_galvanic) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpPower" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpPowerNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_power is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_power) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpPowerNot$ cs_charge_pile$CsChargePile.suffix$.cscp_power = #CsChargePile.cscpPower#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpPowerNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpPower">
+							$cscpPowerNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_power is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_power) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpProvider" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpProviderNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_provider is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_provider) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpProviderNot$ cs_charge_pile$CsChargePile.suffix$.cscp_provider = #CsChargePile.cscpProvider#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpProviderNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpProvider">
+							$cscpProviderNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_provider is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_provider) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpData" prepend="and">			    
+						    (<isNotNull property="CsChargePile.cscpDataNot">
+						    cs_charge_pile$CsChargePile.suffix$.cscp_data is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_data) &lt; 1 or
+						    </isNotNull>$CsChargePile.cscpDataNot$ cs_charge_pile$CsChargePile.suffix$.cscp_data = #CsChargePile.cscpData#)
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpDataNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpData">
+							$cscpDataNot$ (cs_charge_pile$CsChargePile.suffix$.cscp_data is null or length(cs_charge_pile$CsChargePile.suffix$.cscp_data) &lt; 1)
+							</isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpAddTimeStart" prepend="and">
+						    $CsChargePile.cscpAddTimeNot$   (cs_charge_pile$CsChargePile.suffix$.cscp_add_time &gt;= #CsChargePile.cscpAddTimeStart#
+						   <isEmpty property="CsChargePile.cscpAddTimeEnd">)</isEmpty>
+						</isNotEmpty>
+						<isNotEmpty property="CsChargePile.cscpAddTimeEnd" prepend="and">
+							<isEmpty property="CsChargePile.cscpAddTimeStart">$CsChargePile.cscpAddTimeNot$   (</isEmpty>
+						    cs_charge_pile$CsChargePile.suffix$.cscp_add_time &lt;= #CsChargePile.cscpAddTimeEnd#)
+						</isNotEmpty>			
+						<isNotEmpty property="CsChargePile.cscpAddTime" prepend="and">
+						    $CsChargePile.cscpAddTimeNot$ cs_charge_pile$CsChargePile.suffix$.cscp_add_time = #CsChargePile.cscpAddTime#
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpAddTimeNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpAddTimeStart"><isEmpty property="CsChargePile.cscpAddTimeEnd"><isEmpty property="CsChargePile.cscpAddTime">
+							$cscpAddTimeNot$ cs_charge_pile$CsChargePile.suffix$.cscp_add_time is null
+							</isEmpty></isEmpty></isEmpty>
+						</isNotNull>
+						<isNotEmpty property="CsChargePile.cscpUpdateTimeStart" prepend="and">
+						    $CsChargePile.cscpUpdateTimeNot$   (cs_charge_pile$CsChargePile.suffix$.cscp_update_time &gt;= #CsChargePile.cscpUpdateTimeStart#
+						   <isEmpty property="CsChargePile.cscpUpdateTimeEnd">)</isEmpty>
+						</isNotEmpty>
+						<isNotEmpty property="CsChargePile.cscpUpdateTimeEnd" prepend="and">
+							<isEmpty property="CsChargePile.cscpUpdateTimeStart">$CsChargePile.cscpUpdateTimeNot$   (</isEmpty>
+						    cs_charge_pile$CsChargePile.suffix$.cscp_update_time &lt;= #CsChargePile.cscpUpdateTimeEnd#)
+						</isNotEmpty>			
+						<isNotEmpty property="CsChargePile.cscpUpdateTime" prepend="and">
+						    $CsChargePile.cscpUpdateTimeNot$ cs_charge_pile$CsChargePile.suffix$.cscp_update_time = #CsChargePile.cscpUpdateTime#
+						</isNotEmpty>
+						<isNotNull property="CsChargePile.cscpUpdateTimeNot" prepend="and">
+							<isEmpty property="CsChargePile.cscpUpdateTimeStart"><isEmpty property="CsChargePile.cscpUpdateTimeEnd"><isEmpty property="CsChargePile.cscpUpdateTime">
+							$cscpUpdateTimeNot$ cs_charge_pile$CsChargePile.suffix$.cscp_update_time is null
+							</isEmpty></isEmpty></isEmpty>
+						</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsInvoice_part">	
+	<!-- 发票记录条件sql片段  -->
+	<sql id="cs_invoice_dynamic">
+		<dynamic>
+			<isNotEmpty property="csiId" prepend="and">
+			    $csiIdNot$ cs_invoice$suffix$.csi_id = #csiId#
+			</isNotEmpty>
+			<isNotNull property="csiIdNot" prepend="and">
+				<isEmpty property="csiId">
+				$csiIdNot$ cs_invoice$suffix$.csi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_invoice$suffix$.csi_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csiHost" prepend="and">
+			    $csiHostNot$ cs_invoice$suffix$.csi_host = #csiHost#
+			</isNotEmpty>
+			<isNotNull property="csiHostNot" prepend="and">
+				<isEmpty property="csiHost">
+				$csiHostNot$ cs_invoice$suffix$.csi_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csiTitle" prepend="and">			    
+			    (<isNotNull property="csiTitleNot">
+			    cs_invoice$suffix$.csi_title is null or length(cs_invoice$suffix$.csi_title) &lt; 1 or
+			    </isNotNull>$csiTitleNot$ cs_invoice$suffix$.csi_title like #csiTitle#)
+			</isNotEmpty>
+			<isNotNull property="csiTitleNot" prepend="and">
+				<isEmpty property="csiTitle">
+				$csiTitleNot$ (cs_invoice$suffix$.csi_title is null or length(cs_invoice$suffix$.csi_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiContent" prepend="and">
+			    $csiContentNot$ cs_invoice$suffix$.csi_content = #csiContent#
+			</isNotEmpty>
+			<isNotNull property="csiContentNot" prepend="and">
+				<isEmpty property="csiContent">
+				$csiContentNot$ cs_invoice$suffix$.csi_content is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiType" prepend="and">
+			    $csiTypeNot$ cs_invoice$suffix$.csi_type = #csiType#
+			</isNotEmpty>
+			<isNotNull property="csiTypeNot" prepend="and">
+				<isEmpty property="csiType">
+				$csiTypeNot$ cs_invoice$suffix$.csi_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiTariffNo" prepend="and">			    
+			    (<isNotNull property="csiTariffNoNot">
+			    cs_invoice$suffix$.csi_tariff_no is null or length(cs_invoice$suffix$.csi_tariff_no) &lt; 1 or
+			    </isNotNull>$csiTariffNoNot$ cs_invoice$suffix$.csi_tariff_no like #csiTariffNo#)
+			</isNotEmpty>
+			<isNotNull property="csiTariffNoNot" prepend="and">
+				<isEmpty property="csiTariffNo">
+				$csiTariffNoNot$ (cs_invoice$suffix$.csi_tariff_no is null or length(cs_invoice$suffix$.csi_tariff_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiMoneyMin" prepend="and">
+			    $csiMoneyNot$  ( cs_invoice$suffix$.csi_money &gt;= #csiMoneyMin#
+			    <isEmpty property="csiMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiMoneyMax" prepend="and">
+				<isEmpty property="csiMoneyMin">$csiMoneyNot$   (</isEmpty>
+			    cs_invoice$suffix$.csi_money &lt;= #csiMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiMoney" prepend="and">
+			    $csiMoneyNot$ cs_invoice$suffix$.csi_money = #csiMoney#
+			</isNotEmpty>
+			<isNotNull property="csiMoneyNot" prepend="and">
+				<isEmpty property="csiMoneyMax"><isEmpty property="csiMoneyMin"><isEmpty property="csiMoney">
+				$csiMoneyNot$ cs_invoice$suffix$.csi_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiMember" prepend="and">
+			    $csiMemberNot$ cs_invoice$suffix$.csi_member = #csiMember#
+			</isNotEmpty>
+			<isNotNull property="csiMemberNot" prepend="and">
+				<isEmpty property="csiMember">
+				$csiMemberNot$ cs_invoice$suffix$.csi_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiSendType" prepend="and">
+			    $csiSendTypeNot$ cs_invoice$suffix$.csi_send_type = #csiSendType#
+			</isNotEmpty>
+			<isNotNull property="csiSendTypeNot" prepend="and">
+				<isEmpty property="csiSendType">
+				$csiSendTypeNot$ cs_invoice$suffix$.csi_send_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiAddress" prepend="and">
+			    $csiAddressNot$ cs_invoice$suffix$.csi_address = #csiAddress#
+			</isNotEmpty>
+			<isNotNull property="csiAddressNot" prepend="and">
+				<isEmpty property="csiAddress">
+				$csiAddressNot$ cs_invoice$suffix$.csi_address is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiChecker" prepend="and">
+			    $csiCheckerNot$ cs_invoice$suffix$.csi_checker = #csiChecker#
+			</isNotEmpty>
+			<isNotNull property="csiCheckerNot" prepend="and">
+				<isEmpty property="csiChecker">
+				$csiCheckerNot$ cs_invoice$suffix$.csi_checker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiEditor" prepend="and">
+			    $csiEditorNot$ cs_invoice$suffix$.csi_editor = #csiEditor#
+			</isNotEmpty>
+			<isNotNull property="csiEditorNot" prepend="and">
+				<isEmpty property="csiEditor">
+				$csiEditorNot$ cs_invoice$suffix$.csi_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiAdder" prepend="and">
+			    $csiAdderNot$ cs_invoice$suffix$.csi_adder = #csiAdder#
+			</isNotEmpty>
+			<isNotNull property="csiAdderNot" prepend="and">
+				<isEmpty property="csiAdder">
+				$csiAdderNot$ cs_invoice$suffix$.csi_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiRemark" prepend="and">			    
+			    (<isNotNull property="csiRemarkNot">
+			    cs_invoice$suffix$.csi_remark is null or length(cs_invoice$suffix$.csi_remark) &lt; 1 or
+			    </isNotNull>$csiRemarkNot$ cs_invoice$suffix$.csi_remark like #csiRemark#)
+			</isNotEmpty>
+			<isNotNull property="csiRemarkNot" prepend="and">
+				<isEmpty property="csiRemark">
+				$csiRemarkNot$ (cs_invoice$suffix$.csi_remark is null or length(cs_invoice$suffix$.csi_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiCheckTimeStart" prepend="and">
+			    $csiCheckTimeNot$   (cs_invoice$suffix$.csi_check_time &gt;= #csiCheckTimeStart#
+			   <isEmpty property="csiCheckTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiCheckTimeEnd" prepend="and">
+				<isEmpty property="csiCheckTimeStart">$csiCheckTimeNot$   (</isEmpty>
+			    cs_invoice$suffix$.csi_check_time &lt;= #csiCheckTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csiCheckTime" prepend="and">
+			    $csiCheckTimeNot$ cs_invoice$suffix$.csi_check_time = #csiCheckTime#
+			</isNotEmpty>
+			<isNotNull property="csiCheckTimeNot" prepend="and">
+				<isEmpty property="csiCheckTimeStart"><isEmpty property="csiCheckTimeEnd"><isEmpty property="csiCheckTime">
+				$csiCheckTimeNot$ cs_invoice$suffix$.csi_check_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiInvoiceTimeStart" prepend="and">
+			    $csiInvoiceTimeNot$   (cs_invoice$suffix$.csi_invoice_time &gt;= #csiInvoiceTimeStart#
+			   <isEmpty property="csiInvoiceTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiInvoiceTimeEnd" prepend="and">
+				<isEmpty property="csiInvoiceTimeStart">$csiInvoiceTimeNot$   (</isEmpty>
+			    cs_invoice$suffix$.csi_invoice_time &lt;= #csiInvoiceTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csiInvoiceTime" prepend="and">
+			    $csiInvoiceTimeNot$ cs_invoice$suffix$.csi_invoice_time = #csiInvoiceTime#
+			</isNotEmpty>
+			<isNotNull property="csiInvoiceTimeNot" prepend="and">
+				<isEmpty property="csiInvoiceTimeStart"><isEmpty property="csiInvoiceTimeEnd"><isEmpty property="csiInvoiceTime">
+				$csiInvoiceTimeNot$ cs_invoice$suffix$.csi_invoice_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiUpdateTimeStart" prepend="and">
+			    $csiUpdateTimeNot$   (cs_invoice$suffix$.csi_update_time &gt;= #csiUpdateTimeStart#
+			   <isEmpty property="csiUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiUpdateTimeEnd" prepend="and">
+				<isEmpty property="csiUpdateTimeStart">$csiUpdateTimeNot$   (</isEmpty>
+			    cs_invoice$suffix$.csi_update_time &lt;= #csiUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csiUpdateTime" prepend="and">
+			    $csiUpdateTimeNot$ cs_invoice$suffix$.csi_update_time = #csiUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csiUpdateTimeNot" prepend="and">
+				<isEmpty property="csiUpdateTimeStart"><isEmpty property="csiUpdateTimeEnd"><isEmpty property="csiUpdateTime">
+				$csiUpdateTimeNot$ cs_invoice$suffix$.csi_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiAddTimeStart" prepend="and">
+			    $csiAddTimeNot$   (cs_invoice$suffix$.csi_add_time &gt;= #csiAddTimeStart#
+			   <isEmpty property="csiAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiAddTimeEnd" prepend="and">
+				<isEmpty property="csiAddTimeStart">$csiAddTimeNot$   (</isEmpty>
+			    cs_invoice$suffix$.csi_add_time &lt;= #csiAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csiAddTime" prepend="and">
+			    $csiAddTimeNot$ cs_invoice$suffix$.csi_add_time = #csiAddTime#
+			</isNotEmpty>
+			<isNotNull property="csiAddTimeNot" prepend="and">
+				<isEmpty property="csiAddTimeStart"><isEmpty property="csiAddTimeEnd"><isEmpty property="csiAddTime">
+				$csiAddTimeNot$ cs_invoice$suffix$.csi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiStatus" prepend="and">
+			    $csiStatusNot$ cs_invoice$suffix$.csi_status = #csiStatus#
+			</isNotEmpty>
+			<isNotNull property="csiStatusNot" prepend="and">
+				<isEmpty property="csiStatus">
+				$csiStatusNot$ cs_invoice$suffix$.csi_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 发票记录left join 条件sql片段 -->
+	<sql id="cs_invoice_join">
+		<dynamic>
+			<isNotEmpty property="CsInvoice.csiId" prepend="and">
+			    $CsInvoice.csiIdNot$ cs_invoice$CsInvoice.suffix$.csi_id = #CsInvoice.csiId#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiIdNot" prepend="and">
+				<isEmpty property="CsInvoice.csiId">
+				$csiIdNot$ cs_invoice$CsInvoice.suffix$.csi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_invoice$CsInvoice.suffix$.csi_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiHost" prepend="and">
+			    $CsInvoice.csiHostNot$ cs_invoice$CsInvoice.suffix$.csi_host = #CsInvoice.csiHost#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiHostNot" prepend="and">
+				<isEmpty property="CsInvoice.csiHost">
+				$csiHostNot$ cs_invoice$CsInvoice.suffix$.csi_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiTitle" prepend="and">
+				(<isNotNull property="CsInvoice.csiTitleNot">
+			    cs_invoice$CsInvoice.suffix$.csi_title is null or length(cs_invoice$CsInvoice.suffix$.csi_title) &lt; 1 or
+			    </isNotNull>$CsInvoice.csiTitleNot$ cs_invoice$CsInvoice.suffix$.csi_title like #CsInvoice.csiTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiTitleNot" prepend="and">
+				<isEmpty property="CsInvoice.csiTitle">
+				$csiTitleNot$ (cs_invoice$CsInvoice.suffix$.csi_title is null or length(cs_invoice$CsInvoice.suffix$.csi_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiContent" prepend="and">
+			    $CsInvoice.csiContentNot$ cs_invoice$CsInvoice.suffix$.csi_content = #CsInvoice.csiContent#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiContentNot" prepend="and">
+				<isEmpty property="CsInvoice.csiContent">
+				$csiContentNot$ cs_invoice$CsInvoice.suffix$.csi_content is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiType" prepend="and">
+			    $CsInvoice.csiTypeNot$ cs_invoice$CsInvoice.suffix$.csi_type = #CsInvoice.csiType#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiTypeNot" prepend="and">
+				<isEmpty property="CsInvoice.csiType">
+				$csiTypeNot$ cs_invoice$CsInvoice.suffix$.csi_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiTariffNo" prepend="and">
+				(<isNotNull property="CsInvoice.csiTariffNoNot">
+			    cs_invoice$CsInvoice.suffix$.csi_tariff_no is null or length(cs_invoice$CsInvoice.suffix$.csi_tariff_no) &lt; 1 or
+			    </isNotNull>$CsInvoice.csiTariffNoNot$ cs_invoice$CsInvoice.suffix$.csi_tariff_no like #CsInvoice.csiTariffNo#)
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiTariffNoNot" prepend="and">
+				<isEmpty property="CsInvoice.csiTariffNo">
+				$csiTariffNoNot$ (cs_invoice$CsInvoice.suffix$.csi_tariff_no is null or length(cs_invoice$CsInvoice.suffix$.csi_tariff_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiMoneyMin" prepend="and">
+			    $CsInvoice.csiMoneyNot$  ( cs_invoice$CsInvoice.suffix$.csi_money &gt;= #CsInvoice.csiMoneyMin#
+			    <isEmpty property="CsInvoice.csiMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiMoneyMax" prepend="and">
+				<isEmpty property="CsInvoice.csiMoneyMin">$CsInvoice.csiMoneyNot$   (</isEmpty>
+			    cs_invoice$CsInvoice.suffix$.csi_money &lt;= #CsInvoice.csiMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiMoney" prepend="and">
+			    $CsInvoice.csiMoneyNot$ cs_invoice$CsInvoice.suffix$.csi_money = #CsInvoice.csiMoney#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiMoneyNot" prepend="and">
+				<isEmpty property="CsInvoice.csiMoneyMax"><isEmpty property="CsInvoice.csiMoneyMin"><isEmpty property="CsInvoice.csiMoney">
+				$csiMoneyNot$ cs_invoice$CsInvoice.suffix$.csi_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiMember" prepend="and">
+			    $CsInvoice.csiMemberNot$ cs_invoice$CsInvoice.suffix$.csi_member = #CsInvoice.csiMember#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiMemberNot" prepend="and">
+				<isEmpty property="CsInvoice.csiMember">
+				$csiMemberNot$ cs_invoice$CsInvoice.suffix$.csi_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiSendType" prepend="and">
+			    $CsInvoice.csiSendTypeNot$ cs_invoice$CsInvoice.suffix$.csi_send_type = #CsInvoice.csiSendType#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiSendTypeNot" prepend="and">
+				<isEmpty property="CsInvoice.csiSendType">
+				$csiSendTypeNot$ cs_invoice$CsInvoice.suffix$.csi_send_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiAddress" prepend="and">
+			    $CsInvoice.csiAddressNot$ cs_invoice$CsInvoice.suffix$.csi_address = #CsInvoice.csiAddress#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiAddressNot" prepend="and">
+				<isEmpty property="CsInvoice.csiAddress">
+				$csiAddressNot$ cs_invoice$CsInvoice.suffix$.csi_address is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiChecker" prepend="and">
+			    $CsInvoice.csiCheckerNot$ cs_invoice$CsInvoice.suffix$.csi_checker = #CsInvoice.csiChecker#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiCheckerNot" prepend="and">
+				<isEmpty property="CsInvoice.csiChecker">
+				$csiCheckerNot$ cs_invoice$CsInvoice.suffix$.csi_checker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiEditor" prepend="and">
+			    $CsInvoice.csiEditorNot$ cs_invoice$CsInvoice.suffix$.csi_editor = #CsInvoice.csiEditor#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiEditorNot" prepend="and">
+				<isEmpty property="CsInvoice.csiEditor">
+				$csiEditorNot$ cs_invoice$CsInvoice.suffix$.csi_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiAdder" prepend="and">
+			    $CsInvoice.csiAdderNot$ cs_invoice$CsInvoice.suffix$.csi_adder = #CsInvoice.csiAdder#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiAdderNot" prepend="and">
+				<isEmpty property="CsInvoice.csiAdder">
+				$csiAdderNot$ cs_invoice$CsInvoice.suffix$.csi_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiRemark" prepend="and">
+				(<isNotNull property="CsInvoice.csiRemarkNot">
+			    cs_invoice$CsInvoice.suffix$.csi_remark is null or length(cs_invoice$CsInvoice.suffix$.csi_remark) &lt; 1 or
+			    </isNotNull>$CsInvoice.csiRemarkNot$ cs_invoice$CsInvoice.suffix$.csi_remark like #CsInvoice.csiRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiRemarkNot" prepend="and">
+				<isEmpty property="CsInvoice.csiRemark">
+				$csiRemarkNot$ (cs_invoice$CsInvoice.suffix$.csi_remark is null or length(cs_invoice$CsInvoice.suffix$.csi_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiCheckTimeStart" prepend="and">
+			    $CsInvoice.csiCheckTimeNot$   (cs_invoice$CsInvoice.suffix$.csi_check_time &gt;= #CsInvoice.csiCheckTimeStart#
+			   <isEmpty property="CsInvoice.csiCheckTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiCheckTimeEnd" prepend="and">
+				<isEmpty property="CsInvoice.csiCheckTimeStart">$CsInvoice.csiCheckTimeNot$   (</isEmpty>
+			    cs_invoice$CsInvoice.suffix$.csi_check_time &lt;= #CsInvoice.csiCheckTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiCheckTime" prepend="and">
+			    $CsInvoice.csiCheckTimeNot$ cs_invoice$CsInvoice.suffix$.csi_check_time = #CsInvoice.csiCheckTime#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiCheckTimeNot" prepend="and">
+				<isEmpty property="CsInvoice.csiCheckTimeStart"><isEmpty property="CsInvoice.csiCheckTimeEnd"><isEmpty property="CsInvoice.csiCheckTime">
+				$csiCheckTimeNot$ cs_invoice$CsInvoice.suffix$.csi_check_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiInvoiceTimeStart" prepend="and">
+			    $CsInvoice.csiInvoiceTimeNot$   (cs_invoice$CsInvoice.suffix$.csi_invoice_time &gt;= #CsInvoice.csiInvoiceTimeStart#
+			   <isEmpty property="CsInvoice.csiInvoiceTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiInvoiceTimeEnd" prepend="and">
+				<isEmpty property="CsInvoice.csiInvoiceTimeStart">$CsInvoice.csiInvoiceTimeNot$   (</isEmpty>
+			    cs_invoice$CsInvoice.suffix$.csi_invoice_time &lt;= #CsInvoice.csiInvoiceTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiInvoiceTime" prepend="and">
+			    $CsInvoice.csiInvoiceTimeNot$ cs_invoice$CsInvoice.suffix$.csi_invoice_time = #CsInvoice.csiInvoiceTime#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiInvoiceTimeNot" prepend="and">
+				<isEmpty property="CsInvoice.csiInvoiceTimeStart"><isEmpty property="CsInvoice.csiInvoiceTimeEnd"><isEmpty property="CsInvoice.csiInvoiceTime">
+				$csiInvoiceTimeNot$ cs_invoice$CsInvoice.suffix$.csi_invoice_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiUpdateTimeStart" prepend="and">
+			    $CsInvoice.csiUpdateTimeNot$   (cs_invoice$CsInvoice.suffix$.csi_update_time &gt;= #CsInvoice.csiUpdateTimeStart#
+			   <isEmpty property="CsInvoice.csiUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsInvoice.csiUpdateTimeStart">$CsInvoice.csiUpdateTimeNot$   (</isEmpty>
+			    cs_invoice$CsInvoice.suffix$.csi_update_time &lt;= #CsInvoice.csiUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiUpdateTime" prepend="and">
+			    $CsInvoice.csiUpdateTimeNot$ cs_invoice$CsInvoice.suffix$.csi_update_time = #CsInvoice.csiUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiUpdateTimeNot" prepend="and">
+				<isEmpty property="CsInvoice.csiUpdateTimeStart"><isEmpty property="CsInvoice.csiUpdateTimeEnd"><isEmpty property="CsInvoice.csiUpdateTime">
+				$csiUpdateTimeNot$ cs_invoice$CsInvoice.suffix$.csi_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiAddTimeStart" prepend="and">
+			    $CsInvoice.csiAddTimeNot$   (cs_invoice$CsInvoice.suffix$.csi_add_time &gt;= #CsInvoice.csiAddTimeStart#
+			   <isEmpty property="CsInvoice.csiAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiAddTimeEnd" prepend="and">
+				<isEmpty property="CsInvoice.csiAddTimeStart">$CsInvoice.csiAddTimeNot$   (</isEmpty>
+			    cs_invoice$CsInvoice.suffix$.csi_add_time &lt;= #CsInvoice.csiAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsInvoice.csiAddTime" prepend="and">
+			    $CsInvoice.csiAddTimeNot$ cs_invoice$CsInvoice.suffix$.csi_add_time = #CsInvoice.csiAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiAddTimeNot" prepend="and">
+				<isEmpty property="CsInvoice.csiAddTimeStart"><isEmpty property="CsInvoice.csiAddTimeEnd"><isEmpty property="CsInvoice.csiAddTime">
+				$csiAddTimeNot$ cs_invoice$CsInvoice.suffix$.csi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsInvoice.csiStatus" prepend="and">
+			    $CsInvoice.csiStatusNot$ cs_invoice$CsInvoice.suffix$.csi_status = #CsInvoice.csiStatus#
+			</isNotEmpty>
+			<isNotNull property="CsInvoice.csiStatusNot" prepend="and">
+				<isEmpty property="CsInvoice.csiStatus">
+				$csiStatusNot$ cs_invoice$CsInvoice.suffix$.csi_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

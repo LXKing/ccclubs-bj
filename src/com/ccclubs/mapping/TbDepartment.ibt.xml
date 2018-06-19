@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 公司部门之SQL映射 -->
+	<resultMap id="TbDepartment" class="com.ccclubs.model.TbDepartment">
+		<result property="tbdId" column="tbd_id"/>
+		<result property="tbdHost" column="tbd_host"/>
+		<result property="tbdName" column="tbd_name"/>
+		<result property="tbdStatus" column="tbd_status"/>
+	</resultMap>
+		
+	<!-- 获取所有公司部门 -->
+	<select id="getTbDepartmentList" resultMap="TbDepartment">
+		select tb_department$suffix$.* from tb_department$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and tb_department$suffix$.tbd_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbDepartment_part.tb_department_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbd_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取公司部门分页 -->
+	<select id="getTbDepartmentPage" parameterClass="java.util.HashMap" resultMap="TbDepartment">
+		select tb_department$suffix$.* from tb_department$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and tb_department$suffix$.tbd_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbDepartment_part.tb_department_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbd_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取公司部门总数 -->
+	<select id="getTbDepartmentEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_department$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and tb_department$suffix$.tbd_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbDepartment_part.tb_department_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取公司部门 -->
+	<select id="getTbDepartmentById" parameterClass="java.util.HashMap" resultMap="TbDepartment">
+		select tb_department$suffix$.* from tb_department$suffix$
+		where tbd_id=#id#
+	</select>
+	
+		
+	<!-- 保存公司部门 -->
+	<insert id="saveTbDepartment"  parameterClass="com.ccclubs.model.TbDepartment">
+		insert into tb_department$suffix$
+		(
+			tb_department$suffix$.tbd_host
+			,tb_department$suffix$.tbd_name
+			,tb_department$suffix$.tbd_status
+		)
+		values(
+			<isNotNull property="tbdHost" prepend="">
+				#tbdHost#
+			</isNotNull>
+			<isNull property="tbdHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbdName" prepend=",">
+				#tbdName#
+			</isNotNull>
+			<isNull property="tbdName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbdStatus" prepend=",">
+				#tbdStatus#
+			</isNotNull>
+			<isNull property="tbdStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新公司部门 -->
+	<update id="updateTbDepartment"  parameterClass="com.ccclubs.model.TbDepartment">
+		update tb_department$suffix$ set
+			<isNotNull property="tbdHost" prepend="">
+				tb_department$suffix$.tbd_host = #tbdHost#
+			</isNotNull>
+			<isNull property="tbdHost" prepend="">
+				tb_department$suffix$.tbd_host = null
+			</isNull>				
+			<isNotNull property="tbdName" prepend=",">
+				tb_department$suffix$.tbd_name = #tbdName#
+			</isNotNull>
+			<isNull property="tbdName" prepend=",">
+				tb_department$suffix$.tbd_name = null
+			</isNull>				
+			<isNotNull property="tbdStatus" prepend=",">
+				tb_department$suffix$.tbd_status = #tbdStatus#
+			</isNotNull>
+			<isNull property="tbdStatus" prepend=",">
+				tb_department$suffix$.tbd_status = null
+			</isNull>				
+		where
+			tbd_id=#tbdId#
+	</update>
+	
+	<!-- 更新公司部门非空字段 -->
+	<update id="updateTbDepartment$NotNull"  parameterClass="com.ccclubs.model.TbDepartment">
+		update tb_department$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbdHost" prepend=",">
+				tb_department$suffix$.tbd_host = #tbdHost#
+			</isNotNull>		
+			<isNotNull property="tbdName" prepend=",">
+				tb_department$suffix$.tbd_name = #tbdName#
+			</isNotNull>		
+			<isNotNull property="tbdStatus" prepend=",">
+				tb_department$suffix$.tbd_status = #tbdStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbd_id=#tbdId#
+	</update>
+	
+
+	<!-- 根据ID删除一个公司部门 -->
+	<delete id="deleteTbDepartmentById" parameterClass="java.util.HashMap">
+		delete from tb_department$suffix$ where tbd_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个公司部门 -->
+	<update id="removeTbDepartmentById" parameterClass="java.util.HashMap">
+		update tb_department$suffix$ set  tb_department$suffix$.tbd_status=-1  where tbd_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新公司部门 -->
+	<update id="updateTbDepartmentBy"  parameterClass="java.util.HashMap">
+		update tb_department$suffix$ set		
+			tbd_id=tbd_id
+			<isNotNull property="V_tbdId" prepend=",">
+				tb_department$suffix$.tbd_id = #V_tbdId#
+			</isNotNull>		
+			<isNotNull property="V_tbdHost" prepend=",">
+				tb_department$suffix$.tbd_host = #V_tbdHost#
+			</isNotNull>		
+			<isNotNull property="V_tbdName" prepend=",">
+				tb_department$suffix$.tbd_name = #V_tbdName#
+			</isNotNull>		
+			<isNotNull property="V_tbdStatus" prepend=",">
+				tb_department$suffix$.tbd_status = #V_tbdStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		tb_department$suffix$.tbd_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbDepartment_part.tb_department_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除公司部门 -->
+	<update id="deleteTbDepartmentBy"  parameterClass="java.util.HashMap">
+		delete from tb_department$suffix$ where 
+		tb_department$suffix$.tbd_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbDepartment_part.tb_department_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

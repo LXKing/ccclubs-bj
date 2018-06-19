@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 车辆部件之SQL映射 -->
+	<resultMap id="CsCarParts" class="com.ccclubs.model.CsCarParts">
+		<result property="cscpId" column="cscp_id"/>
+		<result property="cscpName" column="cscp_name"/>
+		<result property="cscpParentId" column="cscp_parent_id"/>
+		<result property="cscpLevel" column="cscp_level"/>
+		<result property="cscpStatus" column="cscp_status"/>
+		<result property="cscpAddTime" column="cscp_add_time"/>
+		<result property="cscpByname" column="cscp_byname"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆部件 -->
+	<select id="getCsCarPartsList" resultMap="CsCarParts">
+		select cs_car_parts$suffix$.* from cs_car_parts$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_car_parts$suffix$.cscp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarParts_part.cs_car_parts_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆部件分页 -->
+	<select id="getCsCarPartsPage" parameterClass="java.util.HashMap" resultMap="CsCarParts">
+		select cs_car_parts$suffix$.* from cs_car_parts$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_car_parts$suffix$.cscp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarParts_part.cs_car_parts_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆部件总数 -->
+	<select id="getCsCarPartsEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car_parts$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_car_parts$suffix$.cscp_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarParts_part.cs_car_parts_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆部件 -->
+	<select id="getCsCarPartsById" parameterClass="java.util.HashMap" resultMap="CsCarParts">
+		select cs_car_parts$suffix$.* from cs_car_parts$suffix$
+		where cscp_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆部件 -->
+	<insert id="saveCsCarParts"  parameterClass="com.ccclubs.model.CsCarParts">
+		insert into cs_car_parts$suffix$
+		(
+			cs_car_parts$suffix$.cscp_name
+			,cs_car_parts$suffix$.cscp_parent_id
+			,cs_car_parts$suffix$.cscp_level
+			,cs_car_parts$suffix$.cscp_status
+			,cs_car_parts$suffix$.cscp_add_time
+			,cs_car_parts$suffix$.cscp_byname
+		)
+		values(
+			<isNotNull property="cscpName" prepend="">
+				#cscpName#
+			</isNotNull>
+			<isNull property="cscpName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscpParentId" prepend=",">
+				#cscpParentId#
+			</isNotNull>
+			<isNull property="cscpParentId" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpLevel" prepend=",">
+				#cscpLevel#
+			</isNotNull>
+			<isNull property="cscpLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpStatus" prepend=",">
+				#cscpStatus#
+			</isNotNull>
+			<isNull property="cscpStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpAddTime" prepend=",">
+				#cscpAddTime#
+			</isNotNull>
+			<isNull property="cscpAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpByname" prepend=",">
+				#cscpByname#
+			</isNotNull>
+			<isNull property="cscpByname" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆部件 -->
+	<update id="updateCsCarParts"  parameterClass="com.ccclubs.model.CsCarParts">
+		update cs_car_parts$suffix$ set
+			<isNotNull property="cscpName" prepend="">
+				cs_car_parts$suffix$.cscp_name = #cscpName#
+			</isNotNull>
+			<isNull property="cscpName" prepend="">
+				cs_car_parts$suffix$.cscp_name = null
+			</isNull>				
+			<isNotNull property="cscpParentId" prepend=",">
+				cs_car_parts$suffix$.cscp_parent_id = #cscpParentId#
+			</isNotNull>
+			<isNull property="cscpParentId" prepend=",">
+				cs_car_parts$suffix$.cscp_parent_id = null
+			</isNull>				
+			<isNotNull property="cscpLevel" prepend=",">
+				cs_car_parts$suffix$.cscp_level = #cscpLevel#
+			</isNotNull>
+			<isNull property="cscpLevel" prepend=",">
+				cs_car_parts$suffix$.cscp_level = null
+			</isNull>				
+			<isNotNull property="cscpStatus" prepend=",">
+				cs_car_parts$suffix$.cscp_status = #cscpStatus#
+			</isNotNull>
+			<isNull property="cscpStatus" prepend=",">
+				cs_car_parts$suffix$.cscp_status = null
+			</isNull>				
+			<isNotNull property="cscpAddTime" prepend=",">
+				cs_car_parts$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotNull>
+			<isNull property="cscpAddTime" prepend=",">
+				cs_car_parts$suffix$.cscp_add_time = null
+			</isNull>				
+			<isNotNull property="cscpByname" prepend=",">
+				cs_car_parts$suffix$.cscp_byname = #cscpByname#
+			</isNotNull>
+			<isNull property="cscpByname" prepend=",">
+				cs_car_parts$suffix$.cscp_byname = null
+			</isNull>				
+		where
+			cscp_id=#cscpId#
+	</update>
+	
+	<!-- 更新车辆部件非空字段 -->
+	<update id="updateCsCarParts$NotNull"  parameterClass="com.ccclubs.model.CsCarParts">
+		update cs_car_parts$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscpName" prepend=",">
+				cs_car_parts$suffix$.cscp_name = #cscpName#
+			</isNotNull>		
+			<isNotNull property="cscpParentId" prepend=",">
+				cs_car_parts$suffix$.cscp_parent_id = #cscpParentId#
+			</isNotNull>		
+			<isNotNull property="cscpLevel" prepend=",">
+				cs_car_parts$suffix$.cscp_level = #cscpLevel#
+			</isNotNull>		
+			<isNotNull property="cscpStatus" prepend=",">
+				cs_car_parts$suffix$.cscp_status = #cscpStatus#
+			</isNotNull>		
+			<isNotNull property="cscpAddTime" prepend=",">
+				cs_car_parts$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotNull>		
+			<isNotNull property="cscpByname" prepend=",">
+				cs_car_parts$suffix$.cscp_byname = #cscpByname#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscp_id=#cscpId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆部件 -->
+	<delete id="deleteCsCarPartsById" parameterClass="java.util.HashMap">
+		delete from cs_car_parts$suffix$ where cscp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆部件 -->
+	<update id="removeCsCarPartsById" parameterClass="java.util.HashMap">
+		update cs_car_parts$suffix$ set  cs_car_parts$suffix$.cscp_status=-1  where cscp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆部件 -->
+	<update id="updateCsCarPartsBy"  parameterClass="java.util.HashMap">
+		update cs_car_parts$suffix$ set		
+			cscp_id=cscp_id
+			<isNotNull property="V_cscpId" prepend=",">
+				cs_car_parts$suffix$.cscp_id = #V_cscpId#
+			</isNotNull>		
+			<isNotNull property="V_cscpName" prepend=",">
+				cs_car_parts$suffix$.cscp_name = #V_cscpName#
+			</isNotNull>		
+			<isNotNull property="V_cscpParentId" prepend=",">
+				cs_car_parts$suffix$.cscp_parent_id = #V_cscpParentId#
+			</isNotNull>		
+			<isNotNull property="V_cscpLevel" prepend=",">
+				cs_car_parts$suffix$.cscp_level = #V_cscpLevel#
+			</isNotNull>		
+			<isNotNull property="V_cscpStatus" prepend=",">
+				cs_car_parts$suffix$.cscp_status = #V_cscpStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscpAddTime" prepend=",">
+				cs_car_parts$suffix$.cscp_add_time = #V_cscpAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscpByname" prepend=",">
+				cs_car_parts$suffix$.cscp_byname = #V_cscpByname#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+				and cs_car_parts$suffix$.cscp_status!=-1
+ and
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCarParts_part.cs_car_parts_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆部件 -->
+	<update id="deleteCsCarPartsBy"  parameterClass="java.util.HashMap">
+		delete from cs_car_parts$suffix$ where 
+		cs_car_parts$suffix$.cscp_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCarParts_part.cs_car_parts_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

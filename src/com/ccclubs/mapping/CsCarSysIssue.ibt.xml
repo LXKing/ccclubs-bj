@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 系统车况报告之SQL映射 -->
+	<resultMap id="CsCarSysIssue" class="com.ccclubs.model.CsCarSysIssue">
+		<result property="cscsiId" column="cscsi_id"/>
+		<result property="cscsiHost" column="cscsi_host"/>
+		<result property="cscsiCar" column="cscsi_car"/>
+		<result property="cscsiParts" column="cscsi_parts"/>
+		<result property="cscsiPartsStr" column="cscsi_parts_str"/>
+		<result property="cscsiContent" column="cscsi_content"/>
+		<result property="cscsiKeywords" column="cscsi_keywords"/>
+		<result property="cscsiImage" column="cscsi_image"/>
+		<result property="cscsiType" column="cscsi_type"/>
+		<result property="cscsiSrvuser" column="cscsi_srvuser"/>
+		<result property="cscsiAddTime" column="cscsi_add_time"/>
+		<result property="cscsiUpdateTime" column="cscsi_update_time"/>
+		<result property="cscsiStatus" column="cscsi_status"/>
+		<result property="cscsiRemark" column="cscsi_remark"/>
+	</resultMap>
+		
+	<!-- 获取所有系统车况报告 -->
+	<select id="getCsCarSysIssueList" resultMap="CsCarSysIssue">
+		select cs_car_sys_issue$suffix$.* from cs_car_sys_issue$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆ID]查询-->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.cscsi_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询-->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<isNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.cscsi_parts=cs_car_parts$CsCarParts.suffix$.cscp_id
+			</isNull>
+			<isNotNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.$CsCarParts.on$=cs_car_parts$CsCarParts.suffix$.cscp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询-->
+		<isNotNull property="CscsiSrvuser"><!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.cscsi_srvuser=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_sys_issue$suffix$.cscsi_status!=-1
+		<!-- 多对一外链接[车辆ID]查询条件sql片段 -->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询条件sql片段 -->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<include refid="CsCarParts_part.cs_car_parts_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询条件sql片段 -->
+		<!--  
+		<isNotNull property="CscsiSrvuser">
+		-->
+		<!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser -->
+		<!--
+		</isNotNull>
+		-->
+		<!--
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		-->
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarSysIssue_part.cs_car_sys_issue_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscsi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统车况报告分页 -->
+	<select id="getCsCarSysIssuePage" parameterClass="java.util.HashMap" resultMap="CsCarSysIssue">
+		select cs_car_sys_issue$suffix$.* from cs_car_sys_issue$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆ID]查询-->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.cscsi_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询-->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<isNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.cscsi_parts=cs_car_parts$CsCarParts.suffix$.cscp_id
+			</isNull>
+			<isNotNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.$CsCarParts.on$=cs_car_parts$CsCarParts.suffix$.cscp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询-->
+		<isNotNull property="CscsiSrvuser"><!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.cscsi_srvuser=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_sys_issue$suffix$.cscsi_status!=-1
+		<!-- 多对一外链接[车辆ID]查询条件sql片段 -->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询条件sql片段 -->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<include refid="CsCarParts_part.cs_car_parts_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询条件sql片段 -->
+		<!--  
+		<isNotNull property="CscsiSrvuser">
+		-->
+		<!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser -->
+		<!--
+		</isNotNull>
+		-->
+		<!--
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		-->
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarSysIssue_part.cs_car_sys_issue_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscsi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统车况报告总数 -->
+	<select id="getCsCarSysIssueEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car_sys_issue$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆ID]查询-->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.cscsi_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询-->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<isNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.cscsi_parts=cs_car_parts$CsCarParts.suffix$.cscp_id
+			</isNull>
+			<isNotNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.$CsCarParts.on$=cs_car_parts$CsCarParts.suffix$.cscp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询-->
+		<isNotNull property="CscsiSrvuser"><!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.cscsi_srvuser=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_sys_issue$suffix$.cscsi_status!=-1
+		<!-- 多对一外链接[车辆ID]查询条件sql片段 -->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询条件sql片段 -->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<include refid="CsCarParts_part.cs_car_parts_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询条件sql片段 -->
+		<!--  
+		<isNotNull property="CscsiSrvuser">
+		-->
+		<!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser -->
+		<!--
+		</isNotNull>
+		-->
+		<!--
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		-->
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarSysIssue_part.cs_car_sys_issue_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统车况报告 -->
+	<select id="getCsCarSysIssueById" parameterClass="java.util.HashMap" resultMap="CsCarSysIssue">
+		select cs_car_sys_issue$suffix$.* from cs_car_sys_issue$suffix$
+		where cscsi_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统车况报告 -->
+	<insert id="saveCsCarSysIssue"  parameterClass="com.ccclubs.model.CsCarSysIssue">
+		insert into cs_car_sys_issue$suffix$
+		(
+			cs_car_sys_issue$suffix$.cscsi_host
+			,cs_car_sys_issue$suffix$.cscsi_car
+			,cs_car_sys_issue$suffix$.cscsi_parts
+			,cs_car_sys_issue$suffix$.cscsi_parts_str
+			,cs_car_sys_issue$suffix$.cscsi_content
+			,cs_car_sys_issue$suffix$.cscsi_keywords
+			,cs_car_sys_issue$suffix$.cscsi_image
+			,cs_car_sys_issue$suffix$.cscsi_type
+			,cs_car_sys_issue$suffix$.cscsi_srvuser
+			,cs_car_sys_issue$suffix$.cscsi_add_time
+			,cs_car_sys_issue$suffix$.cscsi_update_time
+			,cs_car_sys_issue$suffix$.cscsi_status
+			,cs_car_sys_issue$suffix$.cscsi_remark
+		)
+		values(
+			<isNotNull property="cscsiHost" prepend="">
+				#cscsiHost#
+			</isNotNull>
+			<isNull property="cscsiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscsiCar" prepend=",">
+				#cscsiCar#
+			</isNotNull>
+			<isNull property="cscsiCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiParts" prepend=",">
+				#cscsiParts#
+			</isNotNull>
+			<isNull property="cscsiParts" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiPartsStr" prepend=",">
+				#cscsiPartsStr#
+			</isNotNull>
+			<isNull property="cscsiPartsStr" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiContent" prepend=",">
+				#cscsiContent#
+			</isNotNull>
+			<isNull property="cscsiContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiKeywords" prepend=",">
+				#cscsiKeywords#
+			</isNotNull>
+			<isNull property="cscsiKeywords" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiImage" prepend=",">
+				#cscsiImage#
+			</isNotNull>
+			<isNull property="cscsiImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiType" prepend=",">
+				#cscsiType#
+			</isNotNull>
+			<isNull property="cscsiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiSrvuser" prepend=",">
+				#cscsiSrvuser#
+			</isNotNull>
+			<isNull property="cscsiSrvuser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiAddTime" prepend=",">
+				#cscsiAddTime#
+			</isNotNull>
+			<isNull property="cscsiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiUpdateTime" prepend=",">
+				#cscsiUpdateTime#
+			</isNotNull>
+			<isNull property="cscsiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiStatus" prepend=",">
+				#cscsiStatus#
+			</isNotNull>
+			<isNull property="cscsiStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsiRemark" prepend=",">
+				#cscsiRemark#
+			</isNotNull>
+			<isNull property="cscsiRemark" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统车况报告 -->
+	<update id="updateCsCarSysIssue"  parameterClass="com.ccclubs.model.CsCarSysIssue">
+		update cs_car_sys_issue$suffix$ set
+			<isNotNull property="cscsiHost" prepend="">
+				cs_car_sys_issue$suffix$.cscsi_host = #cscsiHost#
+			</isNotNull>
+			<isNull property="cscsiHost" prepend="">
+				cs_car_sys_issue$suffix$.cscsi_host = null
+			</isNull>				
+			<isNotNull property="cscsiCar" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_car = #cscsiCar#
+			</isNotNull>
+			<isNull property="cscsiCar" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_car = null
+			</isNull>				
+			<isNotNull property="cscsiParts" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts = #cscsiParts#
+			</isNotNull>
+			<isNull property="cscsiParts" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts = null
+			</isNull>				
+			<isNotNull property="cscsiPartsStr" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts_str = #cscsiPartsStr#
+			</isNotNull>
+			<isNull property="cscsiPartsStr" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts_str = null
+			</isNull>				
+			<isNotNull property="cscsiContent" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_content = #cscsiContent#
+			</isNotNull>
+			<isNull property="cscsiContent" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_content = null
+			</isNull>				
+			<isNotNull property="cscsiKeywords" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_keywords = #cscsiKeywords#
+			</isNotNull>
+			<isNull property="cscsiKeywords" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_keywords = null
+			</isNull>				
+			<isNotNull property="cscsiImage" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_image = #cscsiImage#
+			</isNotNull>
+			<isNull property="cscsiImage" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_image = null
+			</isNull>				
+			<isNotNull property="cscsiType" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_type = #cscsiType#
+			</isNotNull>
+			<isNull property="cscsiType" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_type = null
+			</isNull>				
+			<isNotNull property="cscsiSrvuser" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_srvuser = #cscsiSrvuser#
+			</isNotNull>
+			<isNull property="cscsiSrvuser" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_srvuser = null
+			</isNull>				
+			<isNotNull property="cscsiAddTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_add_time = #cscsiAddTime#
+			</isNotNull>
+			<isNull property="cscsiAddTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_add_time = null
+			</isNull>				
+			<isNotNull property="cscsiUpdateTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_update_time = #cscsiUpdateTime#
+			</isNotNull>
+			<isNull property="cscsiUpdateTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_update_time = null
+			</isNull>				
+			<isNotNull property="cscsiStatus" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_status = #cscsiStatus#
+			</isNotNull>
+			<isNull property="cscsiStatus" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_status = null
+			</isNull>				
+			<isNotNull property="cscsiRemark" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_remark = #cscsiRemark#
+			</isNotNull>
+			<isNull property="cscsiRemark" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_remark = null
+			</isNull>				
+		where
+			cscsi_id=#cscsiId#
+	</update>
+	
+	<!-- 更新系统车况报告非空字段 -->
+	<update id="updateCsCarSysIssue$NotNull"  parameterClass="com.ccclubs.model.CsCarSysIssue">
+		update cs_car_sys_issue$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscsiHost" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_host = #cscsiHost#
+			</isNotNull>		
+			<isNotNull property="cscsiCar" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_car = #cscsiCar#
+			</isNotNull>		
+			<isNotNull property="cscsiParts" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts = #cscsiParts#
+			</isNotNull>		
+			<isNotNull property="cscsiPartsStr" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts_str = #cscsiPartsStr#
+			</isNotNull>		
+			<isNotNull property="cscsiContent" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_content = #cscsiContent#
+			</isNotNull>		
+			<isNotNull property="cscsiKeywords" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_keywords = #cscsiKeywords#
+			</isNotNull>		
+			<isNotNull property="cscsiImage" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_image = #cscsiImage#
+			</isNotNull>		
+			<isNotNull property="cscsiType" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_type = #cscsiType#
+			</isNotNull>		
+			<isNotNull property="cscsiSrvuser" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_srvuser = #cscsiSrvuser#
+			</isNotNull>		
+			<isNotNull property="cscsiAddTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_add_time = #cscsiAddTime#
+			</isNotNull>		
+			<isNotNull property="cscsiUpdateTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_update_time = #cscsiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscsiStatus" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_status = #cscsiStatus#
+			</isNotNull>		
+			<isNotNull property="cscsiRemark" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_remark = #cscsiRemark#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscsi_id=#cscsiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统车况报告 -->
+	<delete id="deleteCsCarSysIssueById" parameterClass="java.util.HashMap">
+		delete from cs_car_sys_issue$suffix$ where cscsi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个系统车况报告 -->
+	<update id="removeCsCarSysIssueById" parameterClass="java.util.HashMap">
+		update cs_car_sys_issue$suffix$ set  cs_car_sys_issue$suffix$.cscsi_status=-1  where cscsi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新系统车况报告 -->
+	<update id="updateCsCarSysIssueBy"  parameterClass="java.util.HashMap">
+		update cs_car_sys_issue$suffix$ set		
+			cscsi_id=cscsi_id
+			<isNotNull property="V_cscsiId" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_id = #V_cscsiId#
+			</isNotNull>		
+			<isNotNull property="V_cscsiHost" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_host = #V_cscsiHost#
+			</isNotNull>		
+			<isNotNull property="V_cscsiCar" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_car = #V_cscsiCar#
+			</isNotNull>		
+			<isNotNull property="V_cscsiParts" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts = #V_cscsiParts#
+			</isNotNull>		
+			<isNotNull property="V_cscsiPartsStr" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_parts_str = #V_cscsiPartsStr#
+			</isNotNull>		
+			<isNotNull property="V_cscsiContent" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_content = #V_cscsiContent#
+			</isNotNull>		
+			<isNotNull property="V_cscsiKeywords" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_keywords = #V_cscsiKeywords#
+			</isNotNull>		
+			<isNotNull property="V_cscsiImage" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_image = #V_cscsiImage#
+			</isNotNull>		
+			<isNotNull property="V_cscsiType" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_type = #V_cscsiType#
+			</isNotNull>		
+			<isNotNull property="V_cscsiSrvuser" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_srvuser = #V_cscsiSrvuser#
+			</isNotNull>		
+			<isNotNull property="V_cscsiAddTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_add_time = #V_cscsiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsiUpdateTime" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_update_time = #V_cscsiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsiStatus" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_status = #V_cscsiStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscsiRemark" prepend=",">
+				cs_car_sys_issue$suffix$.cscsi_remark = #V_cscsiRemark#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆ID]查询-->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.cscsi_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_sys_issue$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询-->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<isNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.cscsi_parts=cs_car_parts$CsCarParts.suffix$.cscp_id
+			</isNull>
+			<isNotNull property="CsCarParts.on">
+				left join cs_car_parts cs_car_parts$CsCarParts.suffix$ on cs_car_sys_issue$suffix$.$CsCarParts.on$=cs_car_parts$CsCarParts.suffix$.cscp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询-->
+		<isNotNull property="CscsiSrvuser"><!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.cscsi_srvuser=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_sys_issue$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_car_sys_issue$suffix$.cscsi_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[车辆ID]查询条件sql片段 -->
+		<isNotNull property="CscsiCar"><!-- 调用一下CscsiCar，把CsCar指向CscsiCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车部件ID]查询条件sql片段 -->
+		<isNotNull property="CscsiParts"><!-- 调用一下CscsiParts，把CsCarParts指向CscsiParts --></isNotNull>
+		<isNotNull property="CsCarParts">
+			<include refid="CsCarParts_part.cs_car_parts_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[操作人]查询条件sql片段 -->
+		<!--  
+		<isNotNull property="CscsiSrvuser">
+		-->
+		<!-- 调用一下CscsiSrvuser，把SrvUser指向CscsiSrvuser -->
+		<!--
+		</isNotNull>
+		-->
+		<!--
+		<isNotNull property="SrvUser">
+			<include refid="SrvUser_part.srv_user_join"/>
+		</isNotNull>
+		-->
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCarSysIssue_part.cs_car_sys_issue_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统车况报告 -->
+	<update id="deleteCsCarSysIssueBy"  parameterClass="java.util.HashMap">
+		delete from cs_car_sys_issue$suffix$ where 
+		cs_car_sys_issue$suffix$.cscsi_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCarSysIssue_part.cs_car_sys_issue_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

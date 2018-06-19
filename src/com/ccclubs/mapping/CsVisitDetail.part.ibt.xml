@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsVisitDetail_part">	
+	<!-- 访问详情条件sql片段  -->
+	<sql id="cs_visit_detail_dynamic">
+		<dynamic>
+			<isNotEmpty property="csvdId" prepend="and">
+			    $csvdIdNot$ cs_visit_detail$suffix$.csvd_id = #csvdId#
+			</isNotEmpty>
+			<isNotNull property="csvdIdNot" prepend="and">
+				<isEmpty property="csvdId">
+				$csvdIdNot$ cs_visit_detail$suffix$.csvd_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_visit_detail$suffix$.csvd_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csvdHost" prepend="and">
+			    $csvdHostNot$ cs_visit_detail$suffix$.csvd_host = #csvdHost#
+			</isNotEmpty>
+			<isNotNull property="csvdHostNot" prepend="and">
+				<isEmpty property="csvdHost">
+				$csvdHostNot$ cs_visit_detail$suffix$.csvd_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csvdPlatform" prepend="and">			    
+			    (<isNotNull property="csvdPlatformNot">
+			    cs_visit_detail$suffix$.csvd_platform is null or length(cs_visit_detail$suffix$.csvd_platform) &lt; 1 or
+			    </isNotNull>$csvdPlatformNot$ cs_visit_detail$suffix$.csvd_platform = #csvdPlatform#)
+			</isNotEmpty>
+			<isNotNull property="csvdPlatformNot" prepend="and">
+				<isEmpty property="csvdPlatform">
+				$csvdPlatformNot$ (cs_visit_detail$suffix$.csvd_platform is null or length(cs_visit_detail$suffix$.csvd_platform) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvdChannel" prepend="and">
+			    $csvdChannelNot$ cs_visit_detail$suffix$.csvd_channel = #csvdChannel#
+			</isNotEmpty>
+			<isNotNull property="csvdChannelNot" prepend="and">
+				<isEmpty property="csvdChannel">
+				$csvdChannelNot$ cs_visit_detail$suffix$.csvd_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvdPlan" prepend="and">
+			    $csvdPlanNot$ cs_visit_detail$suffix$.csvd_plan = #csvdPlan#
+			</isNotEmpty>
+			<isNotNull property="csvdPlanNot" prepend="and">
+				<isEmpty property="csvdPlan">
+				$csvdPlanNot$ cs_visit_detail$suffix$.csvd_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvdActivity" prepend="and">
+			    $csvdActivityNot$ cs_visit_detail$suffix$.csvd_activity = #csvdActivity#
+			</isNotEmpty>
+			<isNotNull property="csvdActivityNot" prepend="and">
+				<isEmpty property="csvdActivity">
+				$csvdActivityNot$ cs_visit_detail$suffix$.csvd_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvdPvMin" prepend="and">
+			    $csvdPvNot$  ( cs_visit_detail$suffix$.csvd_pv &gt;= #csvdPvMin#
+			    <isEmpty property="csvdPvMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvdPvMax" prepend="and">
+				<isEmpty property="csvdPvMin">$csvdPvNot$   (</isEmpty>
+			    cs_visit_detail$suffix$.csvd_pv &lt;= #csvdPvMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csvdPv" prepend="and">
+			    $csvdPvNot$ cs_visit_detail$suffix$.csvd_pv = #csvdPv#
+			</isNotEmpty>
+			<isNotNull property="csvdPvNot" prepend="and">
+				<isEmpty property="csvdPvMax"><isEmpty property="csvdPvMin"><isEmpty property="csvdPv">
+				$csvdPvNot$ cs_visit_detail$suffix$.csvd_pv is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvdUvMin" prepend="and">
+			    $csvdUvNot$  ( cs_visit_detail$suffix$.csvd_uv &gt;= #csvdUvMin#
+			    <isEmpty property="csvdUvMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvdUvMax" prepend="and">
+				<isEmpty property="csvdUvMin">$csvdUvNot$   (</isEmpty>
+			    cs_visit_detail$suffix$.csvd_uv &lt;= #csvdUvMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csvdUv" prepend="and">
+			    $csvdUvNot$ cs_visit_detail$suffix$.csvd_uv = #csvdUv#
+			</isNotEmpty>
+			<isNotNull property="csvdUvNot" prepend="and">
+				<isEmpty property="csvdUvMax"><isEmpty property="csvdUvMin"><isEmpty property="csvdUv">
+				$csvdUvNot$ cs_visit_detail$suffix$.csvd_uv is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvdIpMin" prepend="and">
+			    $csvdIpNot$  ( cs_visit_detail$suffix$.csvd_ip &gt;= #csvdIpMin#
+			    <isEmpty property="csvdIpMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvdIpMax" prepend="and">
+				<isEmpty property="csvdIpMin">$csvdIpNot$   (</isEmpty>
+			    cs_visit_detail$suffix$.csvd_ip &lt;= #csvdIpMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csvdIp" prepend="and">
+			    $csvdIpNot$ cs_visit_detail$suffix$.csvd_ip = #csvdIp#
+			</isNotEmpty>
+			<isNotNull property="csvdIpNot" prepend="and">
+				<isEmpty property="csvdIpMax"><isEmpty property="csvdIpMin"><isEmpty property="csvdIp">
+				$csvdIpNot$ cs_visit_detail$suffix$.csvd_ip is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csvdAddTimeStart" prepend="and">
+			    $csvdAddTimeNot$   (cs_visit_detail$suffix$.csvd_add_time &gt;= #csvdAddTimeStart#
+			   <isEmpty property="csvdAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csvdAddTimeEnd" prepend="and">
+				<isEmpty property="csvdAddTimeStart">$csvdAddTimeNot$   (</isEmpty>
+			    cs_visit_detail$suffix$.csvd_add_time &lt;= #csvdAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csvdAddTime" prepend="and">
+			    $csvdAddTimeNot$ cs_visit_detail$suffix$.csvd_add_time = #csvdAddTime#
+			</isNotEmpty>
+			<isNotNull property="csvdAddTimeNot" prepend="and">
+				<isEmpty property="csvdAddTimeStart"><isEmpty property="csvdAddTimeEnd"><isEmpty property="csvdAddTime">
+				$csvdAddTimeNot$ cs_visit_detail$suffix$.csvd_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csvdStatus" prepend="and">
+			    $csvdStatusNot$ cs_visit_detail$suffix$.csvd_status = #csvdStatus#
+			</isNotEmpty>
+			<isNotNull property="csvdStatusNot" prepend="and">
+				<isEmpty property="csvdStatus">
+				$csvdStatusNot$ cs_visit_detail$suffix$.csvd_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 访问详情left join 条件sql片段 -->
+	<sql id="cs_visit_detail_join">
+		<dynamic>
+			<isNotEmpty property="CsVisitDetail.csvdId" prepend="and">
+			    $CsVisitDetail.csvdIdNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_id = #CsVisitDetail.csvdId#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdIdNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdId">
+				$csvdIdNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_visit_detail$CsVisitDetail.suffix$.csvd_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdHost" prepend="and">
+			    $CsVisitDetail.csvdHostNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_host = #CsVisitDetail.csvdHost#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdHostNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdHost">
+				$csvdHostNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdPlatform" prepend="and">
+				(<isNotNull property="CsVisitDetail.csvdPlatformNot">
+			    cs_visit_detail$CsVisitDetail.suffix$.csvd_platform is null or length(cs_visit_detail$CsVisitDetail.suffix$.csvd_platform) &lt; 1 or
+			    </isNotNull>$CsVisitDetail.csvdPlatformNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_platform = #CsVisitDetail.csvdPlatform#)
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdPlatformNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdPlatform">
+				$csvdPlatformNot$ (cs_visit_detail$CsVisitDetail.suffix$.csvd_platform is null or length(cs_visit_detail$CsVisitDetail.suffix$.csvd_platform) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdChannel" prepend="and">
+			    $CsVisitDetail.csvdChannelNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_channel = #CsVisitDetail.csvdChannel#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdChannelNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdChannel">
+				$csvdChannelNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_channel is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdPlan" prepend="and">
+			    $CsVisitDetail.csvdPlanNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_plan = #CsVisitDetail.csvdPlan#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdPlanNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdPlan">
+				$csvdPlanNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_plan is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdActivity" prepend="and">
+			    $CsVisitDetail.csvdActivityNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_activity = #CsVisitDetail.csvdActivity#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdActivityNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdActivity">
+				$csvdActivityNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdPvMin" prepend="and">
+			    $CsVisitDetail.csvdPvNot$  ( cs_visit_detail$CsVisitDetail.suffix$.csvd_pv &gt;= #CsVisitDetail.csvdPvMin#
+			    <isEmpty property="CsVisitDetail.csvdPvMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdPvMax" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdPvMin">$CsVisitDetail.csvdPvNot$   (</isEmpty>
+			    cs_visit_detail$CsVisitDetail.suffix$.csvd_pv &lt;= #CsVisitDetail.csvdPvMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdPv" prepend="and">
+			    $CsVisitDetail.csvdPvNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_pv = #CsVisitDetail.csvdPv#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdPvNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdPvMax"><isEmpty property="CsVisitDetail.csvdPvMin"><isEmpty property="CsVisitDetail.csvdPv">
+				$csvdPvNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_pv is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdUvMin" prepend="and">
+			    $CsVisitDetail.csvdUvNot$  ( cs_visit_detail$CsVisitDetail.suffix$.csvd_uv &gt;= #CsVisitDetail.csvdUvMin#
+			    <isEmpty property="CsVisitDetail.csvdUvMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdUvMax" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdUvMin">$CsVisitDetail.csvdUvNot$   (</isEmpty>
+			    cs_visit_detail$CsVisitDetail.suffix$.csvd_uv &lt;= #CsVisitDetail.csvdUvMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdUv" prepend="and">
+			    $CsVisitDetail.csvdUvNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_uv = #CsVisitDetail.csvdUv#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdUvNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdUvMax"><isEmpty property="CsVisitDetail.csvdUvMin"><isEmpty property="CsVisitDetail.csvdUv">
+				$csvdUvNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_uv is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdIpMin" prepend="and">
+			    $CsVisitDetail.csvdIpNot$  ( cs_visit_detail$CsVisitDetail.suffix$.csvd_ip &gt;= #CsVisitDetail.csvdIpMin#
+			    <isEmpty property="CsVisitDetail.csvdIpMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdIpMax" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdIpMin">$CsVisitDetail.csvdIpNot$   (</isEmpty>
+			    cs_visit_detail$CsVisitDetail.suffix$.csvd_ip &lt;= #CsVisitDetail.csvdIpMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdIp" prepend="and">
+			    $CsVisitDetail.csvdIpNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_ip = #CsVisitDetail.csvdIp#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdIpNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdIpMax"><isEmpty property="CsVisitDetail.csvdIpMin"><isEmpty property="CsVisitDetail.csvdIp">
+				$csvdIpNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_ip is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdAddTimeStart" prepend="and">
+			    $CsVisitDetail.csvdAddTimeNot$   (cs_visit_detail$CsVisitDetail.suffix$.csvd_add_time &gt;= #CsVisitDetail.csvdAddTimeStart#
+			   <isEmpty property="CsVisitDetail.csvdAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdAddTimeEnd" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdAddTimeStart">$CsVisitDetail.csvdAddTimeNot$   (</isEmpty>
+			    cs_visit_detail$CsVisitDetail.suffix$.csvd_add_time &lt;= #CsVisitDetail.csvdAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsVisitDetail.csvdAddTime" prepend="and">
+			    $CsVisitDetail.csvdAddTimeNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_add_time = #CsVisitDetail.csvdAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdAddTimeNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdAddTimeStart"><isEmpty property="CsVisitDetail.csvdAddTimeEnd"><isEmpty property="CsVisitDetail.csvdAddTime">
+				$csvdAddTimeNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsVisitDetail.csvdStatus" prepend="and">
+			    $CsVisitDetail.csvdStatusNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_status = #CsVisitDetail.csvdStatus#
+			</isNotEmpty>
+			<isNotNull property="CsVisitDetail.csvdStatusNot" prepend="and">
+				<isEmpty property="CsVisitDetail.csvdStatus">
+				$csvdStatusNot$ cs_visit_detail$CsVisitDetail.suffix$.csvd_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

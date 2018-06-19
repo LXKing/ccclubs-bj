@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆照片之SQL映射 -->
+	<resultMap id="CsCarPhoto" class="com.ccclubs.model.CsCarPhoto">
+		<result property="cscpId" column="cscp_id"/>
+		<result property="cscpHost" column="cscp_host"/>
+		<result property="cscpCar" column="cscp_car"/>
+		<result property="cscpDate" column="cscp_date"/>
+		<result property="cscpImages" column="cscp_images"/>
+		<result property="cscpEditor" column="cscp_editor"/>
+		<result property="cscpRemark" column="cscp_remark"/>
+		<result property="cscpAddTime" column="cscp_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆照片 -->
+	<select id="getCsCarPhotoList" resultMap="CsCarPhoto">
+		select cs_car_photo$suffix$.* from cs_car_photo$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.cscp_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarPhoto_part.cs_car_photo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆照片分页 -->
+	<select id="getCsCarPhotoPage" parameterClass="java.util.HashMap" resultMap="CsCarPhoto">
+		select cs_car_photo$suffix$.* from cs_car_photo$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.cscp_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarPhoto_part.cs_car_photo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆照片总数 -->
+	<select id="getCsCarPhotoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car_photo$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.cscp_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarPhoto_part.cs_car_photo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆照片 -->
+	<select id="getCsCarPhotoById" parameterClass="java.util.HashMap" resultMap="CsCarPhoto">
+		select cs_car_photo$suffix$.* from cs_car_photo$suffix$
+		where cscp_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆照片 -->
+	<insert id="saveCsCarPhoto"  parameterClass="com.ccclubs.model.CsCarPhoto">
+		insert into cs_car_photo$suffix$
+		(
+			cs_car_photo$suffix$.cscp_host
+			,cs_car_photo$suffix$.cscp_car
+			,cs_car_photo$suffix$.cscp_date
+			,cs_car_photo$suffix$.cscp_images
+			,cs_car_photo$suffix$.cscp_editor
+			,cs_car_photo$suffix$.cscp_remark
+			,cs_car_photo$suffix$.cscp_add_time
+		)
+		values(
+			<isNotNull property="cscpHost" prepend="">
+				#cscpHost#
+			</isNotNull>
+			<isNull property="cscpHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscpCar" prepend=",">
+				#cscpCar#
+			</isNotNull>
+			<isNull property="cscpCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpDate" prepend=",">
+				#cscpDate#
+			</isNotNull>
+			<isNull property="cscpDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpImages" prepend=",">
+				#cscpImages#
+			</isNotNull>
+			<isNull property="cscpImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpEditor" prepend=",">
+				#cscpEditor#
+			</isNotNull>
+			<isNull property="cscpEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpRemark" prepend=",">
+				#cscpRemark#
+			</isNotNull>
+			<isNull property="cscpRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscpAddTime" prepend=",">
+				#cscpAddTime#
+			</isNotNull>
+			<isNull property="cscpAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆照片 -->
+	<update id="updateCsCarPhoto"  parameterClass="com.ccclubs.model.CsCarPhoto">
+		update cs_car_photo$suffix$ set
+			<isNotNull property="cscpHost" prepend="">
+				cs_car_photo$suffix$.cscp_host = #cscpHost#
+			</isNotNull>
+			<isNull property="cscpHost" prepend="">
+				cs_car_photo$suffix$.cscp_host = null
+			</isNull>				
+			<isNotNull property="cscpCar" prepend=",">
+				cs_car_photo$suffix$.cscp_car = #cscpCar#
+			</isNotNull>
+			<isNull property="cscpCar" prepend=",">
+				cs_car_photo$suffix$.cscp_car = null
+			</isNull>				
+			<isNotNull property="cscpDate" prepend=",">
+				cs_car_photo$suffix$.cscp_date = #cscpDate#
+			</isNotNull>
+			<isNull property="cscpDate" prepend=",">
+				cs_car_photo$suffix$.cscp_date = null
+			</isNull>				
+			<isNotNull property="cscpImages" prepend=",">
+				cs_car_photo$suffix$.cscp_images = #cscpImages#
+			</isNotNull>
+			<isNull property="cscpImages" prepend=",">
+				cs_car_photo$suffix$.cscp_images = null
+			</isNull>				
+			<isNotNull property="cscpEditor" prepend=",">
+				cs_car_photo$suffix$.cscp_editor = #cscpEditor#
+			</isNotNull>
+			<isNull property="cscpEditor" prepend=",">
+				cs_car_photo$suffix$.cscp_editor = null
+			</isNull>				
+			<isNotNull property="cscpRemark" prepend=",">
+				cs_car_photo$suffix$.cscp_remark = #cscpRemark#
+			</isNotNull>
+			<isNull property="cscpRemark" prepend=",">
+				cs_car_photo$suffix$.cscp_remark = null
+			</isNull>				
+			<isNotNull property="cscpAddTime" prepend=",">
+				cs_car_photo$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotNull>
+			<isNull property="cscpAddTime" prepend=",">
+				cs_car_photo$suffix$.cscp_add_time = null
+			</isNull>				
+		where
+			cscp_id=#cscpId#
+	</update>
+	
+	<!-- 更新车辆照片非空字段 -->
+	<update id="updateCsCarPhoto$NotNull"  parameterClass="com.ccclubs.model.CsCarPhoto">
+		update cs_car_photo$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscpHost" prepend=",">
+				cs_car_photo$suffix$.cscp_host = #cscpHost#
+			</isNotNull>		
+			<isNotNull property="cscpCar" prepend=",">
+				cs_car_photo$suffix$.cscp_car = #cscpCar#
+			</isNotNull>		
+			<isNotNull property="cscpDate" prepend=",">
+				cs_car_photo$suffix$.cscp_date = #cscpDate#
+			</isNotNull>		
+			<isNotNull property="cscpImages" prepend=",">
+				cs_car_photo$suffix$.cscp_images = #cscpImages#
+			</isNotNull>		
+			<isNotNull property="cscpEditor" prepend=",">
+				cs_car_photo$suffix$.cscp_editor = #cscpEditor#
+			</isNotNull>		
+			<isNotNull property="cscpRemark" prepend=",">
+				cs_car_photo$suffix$.cscp_remark = #cscpRemark#
+			</isNotNull>		
+			<isNotNull property="cscpAddTime" prepend=",">
+				cs_car_photo$suffix$.cscp_add_time = #cscpAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscp_id=#cscpId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆照片 -->
+	<delete id="deleteCsCarPhotoById" parameterClass="java.util.HashMap">
+		delete from cs_car_photo$suffix$ where cscp_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新车辆照片 -->
+	<update id="updateCsCarPhotoBy"  parameterClass="java.util.HashMap">
+		update cs_car_photo$suffix$ set		
+			cscp_id=cscp_id
+			<isNotNull property="V_cscpId" prepend=",">
+				cs_car_photo$suffix$.cscp_id = #V_cscpId#
+			</isNotNull>		
+			<isNotNull property="V_cscpHost" prepend=",">
+				cs_car_photo$suffix$.cscp_host = #V_cscpHost#
+			</isNotNull>		
+			<isNotNull property="V_cscpCar" prepend=",">
+				cs_car_photo$suffix$.cscp_car = #V_cscpCar#
+			</isNotNull>		
+			<isNotNull property="V_cscpDate" prepend=",">
+				cs_car_photo$suffix$.cscp_date = #V_cscpDate#
+			</isNotNull>		
+			<isNotNull property="V_cscpImages" prepend=",">
+				cs_car_photo$suffix$.cscp_images = #V_cscpImages#
+			</isNotNull>		
+			<isNotNull property="V_cscpEditor" prepend=",">
+				cs_car_photo$suffix$.cscp_editor = #V_cscpEditor#
+			</isNotNull>		
+			<isNotNull property="V_cscpRemark" prepend=",">
+				cs_car_photo$suffix$.cscp_remark = #V_cscpRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscpAddTime" prepend=",">
+				cs_car_photo$suffix$.cscp_add_time = #V_cscpAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.cscp_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_photo$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CscpCar"><!-- 调用一下CscpCar，把CsCar指向CscpCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCarPhoto_part.cs_car_photo_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆照片 -->
+	<update id="deleteCsCarPhotoBy"  parameterClass="java.util.HashMap">
+		delete from cs_car_photo$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCarPhoto_part.cs_car_photo_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

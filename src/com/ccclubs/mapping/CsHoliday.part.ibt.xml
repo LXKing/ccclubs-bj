@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsHoliday_part">	
+	<!-- 节假日条件sql片段  -->
+	<sql id="cs_holiday_dynamic">
+		<dynamic>
+			<isNotEmpty property="cshId" prepend="and">
+			    $cshIdNot$ cs_holiday$suffix$.csh_id = #cshId#
+			</isNotEmpty>
+			<isNotNull property="cshIdNot" prepend="and">
+				<isEmpty property="cshId">
+				$cshIdNot$ cs_holiday$suffix$.csh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cshName" prepend="and">			    
+			    (<isNotNull property="cshNameNot">
+			    cs_holiday$suffix$.csh_name is null or length(cs_holiday$suffix$.csh_name) &lt; 1 or
+			    </isNotNull>$cshNameNot$ cs_holiday$suffix$.csh_name = #cshName#)
+			</isNotEmpty>
+			<isNotNull property="cshNameNot" prepend="and">
+				<isEmpty property="cshName">
+				$cshNameNot$ (cs_holiday$suffix$.csh_name is null or length(cs_holiday$suffix$.csh_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cshDateStart" prepend="and">
+			    $cshDateNot$   (cs_holiday$suffix$.csh_date &gt;= #cshDateStart#
+			   <isEmpty property="cshDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cshDateEnd" prepend="and">
+				<isEmpty property="cshDateStart">$cshDateNot$   (</isEmpty>
+			    cs_holiday$suffix$.csh_date &lt;= #cshDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cshDate" prepend="and">
+			    $cshDateNot$ cs_holiday$suffix$.csh_date = #cshDate#
+			</isNotEmpty>
+			<isNotNull property="cshDateNot" prepend="and">
+				<isEmpty property="cshDateStart"><isEmpty property="cshDateEnd"><isEmpty property="cshDate">
+				$cshDateNot$ cs_holiday$suffix$.csh_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cshType" prepend="and">
+			    $cshTypeNot$ cs_holiday$suffix$.csh_type = #cshType#
+			</isNotEmpty>
+			<isNotNull property="cshTypeNot" prepend="and">
+				<isEmpty property="cshType">
+				$cshTypeNot$ cs_holiday$suffix$.csh_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cshIndex" prepend="and">
+			    $cshIndexNot$ cs_holiday$suffix$.csh_index = #cshIndex#
+			</isNotEmpty>
+			<isNotNull property="cshIndexNot" prepend="and">
+				<isEmpty property="cshIndex">
+				$cshIndexNot$ cs_holiday$suffix$.csh_index is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 节假日left join 条件sql片段 -->
+	<sql id="cs_holiday_join">
+		<dynamic>
+			<isNotEmpty property="CsHoliday.cshId" prepend="and">
+			    $CsHoliday.cshIdNot$ cs_holiday$CsHoliday.suffix$.csh_id = #CsHoliday.cshId#
+			</isNotEmpty>
+			<isNotNull property="CsHoliday.cshIdNot" prepend="and">
+				<isEmpty property="CsHoliday.cshId">
+				$cshIdNot$ cs_holiday$CsHoliday.suffix$.csh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsHoliday.cshName" prepend="and">
+				(<isNotNull property="CsHoliday.cshNameNot">
+			    cs_holiday$CsHoliday.suffix$.csh_name is null or length(cs_holiday$CsHoliday.suffix$.csh_name) &lt; 1 or
+			    </isNotNull>$CsHoliday.cshNameNot$ cs_holiday$CsHoliday.suffix$.csh_name = #CsHoliday.cshName#)
+			</isNotEmpty>
+			<isNotNull property="CsHoliday.cshNameNot" prepend="and">
+				<isEmpty property="CsHoliday.cshName">
+				$cshNameNot$ (cs_holiday$CsHoliday.suffix$.csh_name is null or length(cs_holiday$CsHoliday.suffix$.csh_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsHoliday.cshDateStart" prepend="and">
+			    $CsHoliday.cshDateNot$   (cs_holiday$CsHoliday.suffix$.csh_date &gt;= #CsHoliday.cshDateStart#
+			   <isEmpty property="CsHoliday.cshDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsHoliday.cshDateEnd" prepend="and">
+				<isEmpty property="CsHoliday.cshDateStart">$CsHoliday.cshDateNot$   (</isEmpty>
+			    cs_holiday$CsHoliday.suffix$.csh_date &lt;= #CsHoliday.cshDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsHoliday.cshDate" prepend="and">
+			    $CsHoliday.cshDateNot$ cs_holiday$CsHoliday.suffix$.csh_date = #CsHoliday.cshDate#
+			</isNotEmpty>
+			<isNotNull property="CsHoliday.cshDateNot" prepend="and">
+				<isEmpty property="CsHoliday.cshDateStart"><isEmpty property="CsHoliday.cshDateEnd"><isEmpty property="CsHoliday.cshDate">
+				$cshDateNot$ cs_holiday$CsHoliday.suffix$.csh_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsHoliday.cshType" prepend="and">
+			    $CsHoliday.cshTypeNot$ cs_holiday$CsHoliday.suffix$.csh_type = #CsHoliday.cshType#
+			</isNotEmpty>
+			<isNotNull property="CsHoliday.cshTypeNot" prepend="and">
+				<isEmpty property="CsHoliday.cshType">
+				$cshTypeNot$ cs_holiday$CsHoliday.suffix$.csh_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsHoliday.cshIndex" prepend="and">
+			    $CsHoliday.cshIndexNot$ cs_holiday$CsHoliday.suffix$.csh_index = #CsHoliday.cshIndex#
+			</isNotEmpty>
+			<isNotNull property="CsHoliday.cshIndexNot" prepend="and">
+				<isEmpty property="CsHoliday.cshIndex">
+				$cshIndexNot$ cs_holiday$CsHoliday.suffix$.csh_index is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

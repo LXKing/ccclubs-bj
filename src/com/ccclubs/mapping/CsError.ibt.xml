@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 错误信息之SQL映射 -->
+	<resultMap id="CsError" class="com.ccclubs.model.CsError">
+		<result property="cseId" column="cse_id"/>
+		<result property="cseTitle" column="cse_title"/>
+		<result property="cseContent" column="cse_content"/>
+		<result property="cseFlag" column="cse_flag"/>
+		<result property="cseUpdateTime" column="cse_update_time"/>
+		<result property="cseAddTime" column="cse_add_time"/>
+		<result property="cseStatus" column="cse_status"/>
+	</resultMap>
+		
+	<!-- 获取所有错误信息 -->
+	<select id="getCsErrorList" resultMap="CsError">
+		select cs_error$suffix$.* from cs_error$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsError_part.cs_error_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cse_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取错误信息分页 -->
+	<select id="getCsErrorPage" parameterClass="java.util.HashMap" resultMap="CsError">
+		select cs_error$suffix$.* from cs_error$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsError_part.cs_error_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cse_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取错误信息总数 -->
+	<select id="getCsErrorEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_error$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsError_part.cs_error_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取错误信息 -->
+	<select id="getCsErrorById" parameterClass="java.util.HashMap" resultMap="CsError">
+		select cs_error$suffix$.* from cs_error$suffix$
+		where cse_id=#id#
+	</select>
+	
+		
+	<!-- 保存错误信息 -->
+	<insert id="saveCsError"  parameterClass="com.ccclubs.model.CsError">
+		insert into cs_error$suffix$
+		(
+			cs_error$suffix$.cse_title
+			,cs_error$suffix$.cse_content
+			,cs_error$suffix$.cse_flag
+			,cs_error$suffix$.cse_update_time
+			,cs_error$suffix$.cse_add_time
+			,cs_error$suffix$.cse_status
+		)
+		values(
+			<isNotNull property="cseTitle" prepend="">
+				#cseTitle#
+			</isNotNull>
+			<isNull property="cseTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cseContent" prepend=",">
+				#cseContent#
+			</isNotNull>
+			<isNull property="cseContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseFlag" prepend=",">
+				#cseFlag#
+			</isNotNull>
+			<isNull property="cseFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseUpdateTime" prepend=",">
+				#cseUpdateTime#
+			</isNotNull>
+			<isNull property="cseUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseAddTime" prepend=",">
+				#cseAddTime#
+			</isNotNull>
+			<isNull property="cseAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cseStatus" prepend=",">
+				#cseStatus#
+			</isNotNull>
+			<isNull property="cseStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新错误信息 -->
+	<update id="updateCsError"  parameterClass="com.ccclubs.model.CsError">
+		update cs_error$suffix$ set
+			<isNotNull property="cseTitle" prepend="">
+				cs_error$suffix$.cse_title = #cseTitle#
+			</isNotNull>
+			<isNull property="cseTitle" prepend="">
+				cs_error$suffix$.cse_title = null
+			</isNull>				
+			<isNotNull property="cseContent" prepend=",">
+				cs_error$suffix$.cse_content = #cseContent#
+			</isNotNull>
+			<isNull property="cseContent" prepend=",">
+				cs_error$suffix$.cse_content = null
+			</isNull>				
+			<isNotNull property="cseFlag" prepend=",">
+				cs_error$suffix$.cse_flag = #cseFlag#
+			</isNotNull>
+			<isNull property="cseFlag" prepend=",">
+				cs_error$suffix$.cse_flag = null
+			</isNull>				
+			<isNotNull property="cseUpdateTime" prepend=",">
+				cs_error$suffix$.cse_update_time = #cseUpdateTime#
+			</isNotNull>
+			<isNull property="cseUpdateTime" prepend=",">
+				cs_error$suffix$.cse_update_time = null
+			</isNull>				
+			<isNotNull property="cseAddTime" prepend=",">
+				cs_error$suffix$.cse_add_time = #cseAddTime#
+			</isNotNull>
+			<isNull property="cseAddTime" prepend=",">
+				cs_error$suffix$.cse_add_time = null
+			</isNull>				
+			<isNotNull property="cseStatus" prepend=",">
+				cs_error$suffix$.cse_status = #cseStatus#
+			</isNotNull>
+			<isNull property="cseStatus" prepend=",">
+				cs_error$suffix$.cse_status = null
+			</isNull>				
+		where
+			cse_id=#cseId#
+	</update>
+	
+	<!-- 更新错误信息非空字段 -->
+	<update id="updateCsError$NotNull"  parameterClass="com.ccclubs.model.CsError">
+		update cs_error$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cseTitle" prepend=",">
+				cs_error$suffix$.cse_title = #cseTitle#
+			</isNotNull>		
+			<isNotNull property="cseContent" prepend=",">
+				cs_error$suffix$.cse_content = #cseContent#
+			</isNotNull>		
+			<isNotNull property="cseFlag" prepend=",">
+				cs_error$suffix$.cse_flag = #cseFlag#
+			</isNotNull>		
+			<isNotNull property="cseUpdateTime" prepend=",">
+				cs_error$suffix$.cse_update_time = #cseUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cseAddTime" prepend=",">
+				cs_error$suffix$.cse_add_time = #cseAddTime#
+			</isNotNull>		
+			<isNotNull property="cseStatus" prepend=",">
+				cs_error$suffix$.cse_status = #cseStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cse_id=#cseId#
+	</update>
+	
+
+	<!-- 根据ID删除一个错误信息 -->
+	<delete id="deleteCsErrorById" parameterClass="java.util.HashMap">
+		delete from cs_error$suffix$ where cse_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新错误信息 -->
+	<update id="updateCsErrorBy"  parameterClass="java.util.HashMap">
+		update cs_error$suffix$ set		
+			cse_id=cse_id
+			<isNotNull property="V_cseId" prepend=",">
+				cs_error$suffix$.cse_id = #V_cseId#
+			</isNotNull>		
+			<isNotNull property="V_cseTitle" prepend=",">
+				cs_error$suffix$.cse_title = #V_cseTitle#
+			</isNotNull>		
+			<isNotNull property="V_cseContent" prepend=",">
+				cs_error$suffix$.cse_content = #V_cseContent#
+			</isNotNull>		
+			<isNotNull property="V_cseFlag" prepend=",">
+				cs_error$suffix$.cse_flag = #V_cseFlag#
+			</isNotNull>		
+			<isNotNull property="V_cseUpdateTime" prepend=",">
+				cs_error$suffix$.cse_update_time = #V_cseUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cseAddTime" prepend=",">
+				cs_error$suffix$.cse_add_time = #V_cseAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cseStatus" prepend=",">
+				cs_error$suffix$.cse_status = #V_cseStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsError_part.cs_error_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除错误信息 -->
+	<update id="deleteCsErrorBy"  parameterClass="java.util.HashMap">
+		delete from cs_error$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsError_part.cs_error_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

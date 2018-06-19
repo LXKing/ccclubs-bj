@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>订单续订</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content" style="padding-bottom: 50px;">
+			<ul class="table-view padding-less confirm">
+				<li class="table-view-cell media">
+					<div class="media-body ">
+						<span class="tips-color">订单编号 ${csOrder.csoId}</span>
+					</div>
+				</li>
+				<li class="table-view-cell media min-dur">
+					<div class="media-body"></div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						车型
+					</div>
+					<div class="badge">
+						${csOrder.$csoModel.cscmName}
+						<span class="text-split"></span>${csOrder.$csoCar.cscCarNo}
+					</div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						取车网点
+					</div>
+					<span class="badge">${csOrder.$csoOutlets.csoName}</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						订单开始时间
+					</div>
+					<span class="badge">${lz:date(csOrder.csoStartTime,"yyyy年MM月dd日 HH:mm")}</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						订单结束时间
+					</div>
+					<span class="badge">${lz:date(csOrder.csoFinishTime,"yyyy年MM月dd日 HH:mm")}</span>
+				</li>
+				<li class="table-view-cell media bottom-dur">
+					<div class="media-body"></div>
+				</li>
+			</ul>
+
+			<div class="panel checkout" data-role="panel">
+			<s:iterator value="#request.listday" id="item" status="i">
+				<s:if test="#i.index==0">
+				<div class="panel-holder">
+					<div class="panel-header" >
+						${item}
+					</div>
+					<!-- <div class="panel-timebar">
+						<div class="reserve-timebar">
+							<div class="reserve-timebar-content">
+								<div class="reserve-timebar-bg">
+									<div class="reserve-timebar-des">
+										<span class="reserve-timebar-mask h0">0</span>
+										<span class="reserve-timebar-mask h3">3</span>
+										<span class="reserve-timebar-mask h6">6</span>
+										<span class="reserve-timebar-mask h9">9</span>
+										<span class="reserve-timebar-mask h12">12</span>
+										<span class="reserve-timebar-mask h15">15</span>
+										<span class="reserve-timebar-mask h18">18</span>
+										<span class="reserve-timebar-mask h21">21</span>
+										<span class="reserve-timebar-mask h24">24\h</span>
+									</div>
+								</div>
+								<div class="reserve-time-block" style="left: 0.00%; width: 24.96%;">
+								</div>
+								<div class="reserve-restricted-block" style="left: 25.00%; width: 33.3333%;">
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_0=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_0!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_0.size()>0">
+								<s:iterator value="#request.listtime_0" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_0.size()>0">
+								<s:iterator value="#request.listtime_0" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+				<s:if test="#i.index==1">
+				<div class="panel-holder hide">
+					<div class="panel-header" style="background-color: #389ADB; color:#fff;">
+						${item}
+					</div>
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_1=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_1!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_1.size()>0">
+								<s:iterator value="#request.listtime_1" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_1.size()>0">
+								<s:iterator value="#request.listtime_1" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+				<s:if test="#i.index==2">
+				<div class="panel-holder hide">
+					<div class="panel-header" style="background-color: #389ADB; color:#fff;">
+						${item}
+					</div>
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_2=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_2!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_2.size()>0">
+								<s:iterator value="#request.listtime_2" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_2.size()>0">
+								<s:iterator value="#request.listtime_2" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+				<s:if test="#i.index==3">
+				<div class="panel-holder hide">
+					<div class="panel-header" style="background-color: #389ADB; color:#fff;">
+						${item}
+					</div>
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_3=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_3!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_3.size()>0">
+								<s:iterator value="#request.listtime_3" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_3.size()>0">
+								<s:iterator value="#request.listtime_3" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+				<s:if test="#i.index==4">
+				<div class="panel-holder hide">
+					<div class="panel-header" style="background-color: #389ADB; color:#fff;">
+						${item}
+					</div>
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_4=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_4!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_4.size()>0">
+								<s:iterator value="#request.listtime_4" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_4.size()>0">
+								<s:iterator value="#request.listtime_4" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+				<s:if test="#i.index==5">
+				<div class="panel-holder hide">
+					<div class="panel-header" style="background-color: #389ADB; color:#fff;">
+						${item}
+					</div>
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_5=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_5!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_5.size()>0">
+								<s:iterator value="#request.listtime_5" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_5.size()>0">
+								<s:iterator value="#request.listtime_5" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+				<s:if test="#i.index==6">
+				<div class="panel-holder hide">
+					<div class="panel-header" style="background-color: #389ADB; color:#fff;">
+						${item}
+					</div>
+					<div class="panel-content hide">
+						<ul class="table-modal-view">
+							<s:if test="#request.full_6=='full'">
+							<div class="order-full">今天订单已满！</div>
+						</s:if>
+						<s:elseif test="#request.restriction_6!=-1">
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">07:00-09:00</span></li>
+							<li class="table-modal-view-cell"><span class="tag-limited"></span><span class="tag-text">16:30-18:30</span></li>
+							<s:if test="#request.listtime_6.size()>0">
+								<s:iterator value="#request.listtime_6" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div style="text-align: center;padding-top: 15px;font-size: 1.8rem;">全天都可以订车！</div>
+							</s:else>
+						</s:elseif>
+						<s:else>
+							<s:if test="#request.listtime_6.size()>0">
+								<s:iterator value="#request.listtime_6" id="timeitem" status="timei">
+									<li class="table-modal-view-cell"><span class="tag-usable"></span><span class="tag-text">${timeitem.start}-${timeitem.finish}</span></li>
+								</s:iterator>
+							</s:if>
+							<s:else>
+								<div class="order-empty">全天都可以订车！</div>
+							</s:else>
+						</s:else>
+						</ul>
+					</div>
+					<div class="panel-split"></div>
+				</div>
+				</s:if>
+			</s:iterator>
+				<a href="javascript:;" class="checkout-left order-reoleft"></a>
+				<a href="javascript:;" class="checkout-right order-reoright"></a>
+			</div>
+
+			<ul class="table-view mt15">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						快速续订
+					</div>
+					<div class="badge" id="dictime">
+						<span class="media-object pull-left icon-reserve-20m" id="re20m" data="20""></span>
+						<span class="media-object pull-left icon-reserve-40m" id="re40m" data="40""></span>
+						<span class="media-object pull-left icon-reserve-1h active" id="re1h" data="60""></span>
+						<span class="media-object pull-left icon-reserve-3h" id="re3h" data="180""></span>
+					</div>
+				</li>
+			</ul>
+			<ul class="table-view">
+				<li class="table-view-cell media">
+					<a id="ccc-finish" class="navigate-right">
+						<div class="media-body">
+							还车时间
+						</div> <span id="ccc-finish-time" data-value='${newFinish}' class="badge"></span> </a>
+				</li>
+			</ul>
+
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer">
+				<div id="ccc-overlay"></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<nav class="bar bar-tab bar-recharge">
+		<a class="tab-item" href="###" onclick="reordersubmit('${csOrder.csoId}')" id="reorderbtn"> <span class="tab-label">续订</span> </a>
+		</nav>
+		<div id="toast" style="z-index: 222;top:35%;">
+			正在加载...
+		</div>
+		
+		<input type="hidden" id="newFinish" value="${newFinish}">
+		<input type="hidden" id="orderid" value="${csOrder.csoId}">
+		
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/page-order-reorder.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/ccclubs-order-util.js?v=${lz:config('version')}"></script>
+		<!--<script type="text/javascript" src="js/index.js?v=132"></script>-->
+
+		<script type="text/javascript" src="../js/ccclubs-date.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/iscroll.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/ccclubs-date-utils.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		$("#dictime .media-object").click(function() {
+			$(this).addClass('active').siblings().removeClass('active');
+			var dt1 = new Date(Date.parse('${lz:date(csOrder.csoFinishTime,"yyyy/MM/dd HH:mm")}'));
+			var mins = $(this).attr('data');
+			dt1.setTime(dt1.getTime()+1000*60*mins);
+			var strDate=dt1.getFullYear()+(((dt1.getMonth()+1)<10)?"/0":"/")+(dt1.getMonth()+1)+((dt1.getDate()<10)?"/0":"/")+dt1.getDate();
+			var strHour=((dt1.getHours()<10)?"0":"")+dt1.getHours()+((dt1.getMinutes()<10)?":0":":")+dt1.getMinutes();
+			var newtime = strDate+" "+strHour+":00";
+			var _date = new Date(newtime);
+			setFinishTimeUI(_date.toStringL(), _date.toStringL('F'));
+			OrderInfoOperate.setFinishTime(_date.toStringL('F'));
+		});
+		</script>
+	</body>
+
+</html>

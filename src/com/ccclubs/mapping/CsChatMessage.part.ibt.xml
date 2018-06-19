@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsChatMessage_part">	
+	<!-- 客服消息条件sql片段  -->
+	<sql id="cs_chat_message_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscmId" prepend="and">
+			    $cscmIdNot$ cs_chat_message$suffix$.cscm_id = #cscmId#
+			</isNotEmpty>
+			<isNotNull property="cscmIdNot" prepend="and">
+				<isEmpty property="cscmId">
+				$cscmIdNot$ cs_chat_message$suffix$.cscm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_chat_message$suffix$.cscm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscmHost" prepend="and">
+			    $cscmHostNot$ cs_chat_message$suffix$.cscm_host = #cscmHost#
+			</isNotEmpty>
+			<isNotNull property="cscmHostNot" prepend="and">
+				<isEmpty property="cscmHost">
+				$cscmHostNot$ cs_chat_message$suffix$.cscm_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscmContent" prepend="and">			    
+			    (<isNotNull property="cscmContentNot">
+			    cs_chat_message$suffix$.cscm_content is null or length(cs_chat_message$suffix$.cscm_content) &lt; 1 or
+			    </isNotNull>$cscmContentNot$ cs_chat_message$suffix$.cscm_content like #cscmContent#)
+			</isNotEmpty>
+			<isNotNull property="cscmContentNot" prepend="and">
+				<isEmpty property="cscmContent">
+				$cscmContentNot$ (cs_chat_message$suffix$.cscm_content is null or length(cs_chat_message$suffix$.cscm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmType" prepend="and">
+			    $cscmTypeNot$ cs_chat_message$suffix$.cscm_type = #cscmType#
+			</isNotEmpty>
+			<isNotNull property="cscmTypeNot" prepend="and">
+				<isEmpty property="cscmType">
+				$cscmTypeNot$ cs_chat_message$suffix$.cscm_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmFrom" prepend="and">			    
+			    (<isNotNull property="cscmFromNot">
+			    cs_chat_message$suffix$.cscm_from is null or length(cs_chat_message$suffix$.cscm_from) &lt; 1 or
+			    </isNotNull>$cscmFromNot$ cs_chat_message$suffix$.cscm_from = #cscmFrom#)
+			</isNotEmpty>
+			<isNotNull property="cscmFromNot" prepend="and">
+				<isEmpty property="cscmFrom">
+				$cscmFromNot$ (cs_chat_message$suffix$.cscm_from is null or length(cs_chat_message$suffix$.cscm_from) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmTarget" prepend="and">			    
+			    (<isNotNull property="cscmTargetNot">
+			    cs_chat_message$suffix$.cscm_target is null or length(cs_chat_message$suffix$.cscm_target) &lt; 1 or
+			    </isNotNull>$cscmTargetNot$ cs_chat_message$suffix$.cscm_target = #cscmTarget#)
+			</isNotEmpty>
+			<isNotNull property="cscmTargetNot" prepend="and">
+				<isEmpty property="cscmTarget">
+				$cscmTargetNot$ (cs_chat_message$suffix$.cscm_target is null or length(cs_chat_message$suffix$.cscm_target) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmUpdateTimeStart" prepend="and">
+			    $cscmUpdateTimeNot$   (cs_chat_message$suffix$.cscm_update_time &gt;= #cscmUpdateTimeStart#
+			   <isEmpty property="cscmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscmUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscmUpdateTimeStart">$cscmUpdateTimeNot$   (</isEmpty>
+			    cs_chat_message$suffix$.cscm_update_time &lt;= #cscmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscmUpdateTime" prepend="and">
+			    $cscmUpdateTimeNot$ cs_chat_message$suffix$.cscm_update_time = #cscmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscmUpdateTimeNot" prepend="and">
+				<isEmpty property="cscmUpdateTimeStart"><isEmpty property="cscmUpdateTimeEnd"><isEmpty property="cscmUpdateTime">
+				$cscmUpdateTimeNot$ cs_chat_message$suffix$.cscm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmAddTimeStart" prepend="and">
+			    $cscmAddTimeNot$   (cs_chat_message$suffix$.cscm_add_time &gt;= #cscmAddTimeStart#
+			   <isEmpty property="cscmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscmAddTimeEnd" prepend="and">
+				<isEmpty property="cscmAddTimeStart">$cscmAddTimeNot$   (</isEmpty>
+			    cs_chat_message$suffix$.cscm_add_time &lt;= #cscmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscmAddTime" prepend="and">
+			    $cscmAddTimeNot$ cs_chat_message$suffix$.cscm_add_time = #cscmAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscmAddTimeNot" prepend="and">
+				<isEmpty property="cscmAddTimeStart"><isEmpty property="cscmAddTimeEnd"><isEmpty property="cscmAddTime">
+				$cscmAddTimeNot$ cs_chat_message$suffix$.cscm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmState" prepend="and">
+			    $cscmStateNot$ cs_chat_message$suffix$.cscm_state = #cscmState#
+			</isNotEmpty>
+			<isNotNull property="cscmStateNot" prepend="and">
+				<isEmpty property="cscmState">
+				$cscmStateNot$ cs_chat_message$suffix$.cscm_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscmStatus" prepend="and">
+			    $cscmStatusNot$ cs_chat_message$suffix$.cscm_status = #cscmStatus#
+			</isNotEmpty>
+			<isNotNull property="cscmStatusNot" prepend="and">
+				<isEmpty property="cscmStatus">
+				$cscmStatusNot$ cs_chat_message$suffix$.cscm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 客服消息left join 条件sql片段 -->
+	<sql id="cs_chat_message_join">
+		<dynamic>
+			<isNotEmpty property="CsChatMessage.cscmId" prepend="and">
+			    $CsChatMessage.cscmIdNot$ cs_chat_message$CsChatMessage.suffix$.cscm_id = #CsChatMessage.cscmId#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmIdNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmId">
+				$cscmIdNot$ cs_chat_message$CsChatMessage.suffix$.cscm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_chat_message$CsChatMessage.suffix$.cscm_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsChatMessage.cscmHost" prepend="and">
+			    $CsChatMessage.cscmHostNot$ cs_chat_message$CsChatMessage.suffix$.cscm_host = #CsChatMessage.cscmHost#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmHostNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmHost">
+				$cscmHostNot$ cs_chat_message$CsChatMessage.suffix$.cscm_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmContent" prepend="and">
+				(<isNotNull property="CsChatMessage.cscmContentNot">
+			    cs_chat_message$CsChatMessage.suffix$.cscm_content is null or length(cs_chat_message$CsChatMessage.suffix$.cscm_content) &lt; 1 or
+			    </isNotNull>$CsChatMessage.cscmContentNot$ cs_chat_message$CsChatMessage.suffix$.cscm_content like #CsChatMessage.cscmContent#)
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmContentNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmContent">
+				$cscmContentNot$ (cs_chat_message$CsChatMessage.suffix$.cscm_content is null or length(cs_chat_message$CsChatMessage.suffix$.cscm_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmType" prepend="and">
+			    $CsChatMessage.cscmTypeNot$ cs_chat_message$CsChatMessage.suffix$.cscm_type = #CsChatMessage.cscmType#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmTypeNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmType">
+				$cscmTypeNot$ cs_chat_message$CsChatMessage.suffix$.cscm_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmFrom" prepend="and">
+				(<isNotNull property="CsChatMessage.cscmFromNot">
+			    cs_chat_message$CsChatMessage.suffix$.cscm_from is null or length(cs_chat_message$CsChatMessage.suffix$.cscm_from) &lt; 1 or
+			    </isNotNull>$CsChatMessage.cscmFromNot$ cs_chat_message$CsChatMessage.suffix$.cscm_from = #CsChatMessage.cscmFrom#)
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmFromNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmFrom">
+				$cscmFromNot$ (cs_chat_message$CsChatMessage.suffix$.cscm_from is null or length(cs_chat_message$CsChatMessage.suffix$.cscm_from) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmTarget" prepend="and">
+				(<isNotNull property="CsChatMessage.cscmTargetNot">
+			    cs_chat_message$CsChatMessage.suffix$.cscm_target is null or length(cs_chat_message$CsChatMessage.suffix$.cscm_target) &lt; 1 or
+			    </isNotNull>$CsChatMessage.cscmTargetNot$ cs_chat_message$CsChatMessage.suffix$.cscm_target = #CsChatMessage.cscmTarget#)
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmTargetNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmTarget">
+				$cscmTargetNot$ (cs_chat_message$CsChatMessage.suffix$.cscm_target is null or length(cs_chat_message$CsChatMessage.suffix$.cscm_target) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmUpdateTimeStart" prepend="and">
+			    $CsChatMessage.cscmUpdateTimeNot$   (cs_chat_message$CsChatMessage.suffix$.cscm_update_time &gt;= #CsChatMessage.cscmUpdateTimeStart#
+			   <isEmpty property="CsChatMessage.cscmUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChatMessage.cscmUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsChatMessage.cscmUpdateTimeStart">$CsChatMessage.cscmUpdateTimeNot$   (</isEmpty>
+			    cs_chat_message$CsChatMessage.suffix$.cscm_update_time &lt;= #CsChatMessage.cscmUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChatMessage.cscmUpdateTime" prepend="and">
+			    $CsChatMessage.cscmUpdateTimeNot$ cs_chat_message$CsChatMessage.suffix$.cscm_update_time = #CsChatMessage.cscmUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmUpdateTimeNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmUpdateTimeStart"><isEmpty property="CsChatMessage.cscmUpdateTimeEnd"><isEmpty property="CsChatMessage.cscmUpdateTime">
+				$cscmUpdateTimeNot$ cs_chat_message$CsChatMessage.suffix$.cscm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmAddTimeStart" prepend="and">
+			    $CsChatMessage.cscmAddTimeNot$   (cs_chat_message$CsChatMessage.suffix$.cscm_add_time &gt;= #CsChatMessage.cscmAddTimeStart#
+			   <isEmpty property="CsChatMessage.cscmAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsChatMessage.cscmAddTimeEnd" prepend="and">
+				<isEmpty property="CsChatMessage.cscmAddTimeStart">$CsChatMessage.cscmAddTimeNot$   (</isEmpty>
+			    cs_chat_message$CsChatMessage.suffix$.cscm_add_time &lt;= #CsChatMessage.cscmAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsChatMessage.cscmAddTime" prepend="and">
+			    $CsChatMessage.cscmAddTimeNot$ cs_chat_message$CsChatMessage.suffix$.cscm_add_time = #CsChatMessage.cscmAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmAddTimeNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmAddTimeStart"><isEmpty property="CsChatMessage.cscmAddTimeEnd"><isEmpty property="CsChatMessage.cscmAddTime">
+				$cscmAddTimeNot$ cs_chat_message$CsChatMessage.suffix$.cscm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmState" prepend="and">
+			    $CsChatMessage.cscmStateNot$ cs_chat_message$CsChatMessage.suffix$.cscm_state = #CsChatMessage.cscmState#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmStateNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmState">
+				$cscmStateNot$ cs_chat_message$CsChatMessage.suffix$.cscm_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsChatMessage.cscmStatus" prepend="and">
+			    $CsChatMessage.cscmStatusNot$ cs_chat_message$CsChatMessage.suffix$.cscm_status = #CsChatMessage.cscmStatus#
+			</isNotEmpty>
+			<isNotNull property="CsChatMessage.cscmStatusNot" prepend="and">
+				<isEmpty property="CsChatMessage.cscmStatus">
+				$cscmStatusNot$ cs_chat_message$CsChatMessage.suffix$.cscm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

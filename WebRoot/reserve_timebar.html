@@ -1,0 +1,36 @@
+	<!-- 默认获取2天的时间轴 -->
+	<div  class="ccc-timebar-bg  day-${amount}">
+		<div class="ccc-time-marks"></div>
+		<s:iterator value="#request.dateList" id="dateItem" status="i">
+			<s:if test="#i.index ==0">
+				<span title="${lz:date(dateItem,"MM月d日 , E")}" class="ccc-date-label date-today"></span>
+			</s:if>
+			<s:if test="#i.index ==1">
+				<span title="${lz:date(dateItem,"MM月d日 , E")}" class="ccc-date-label date-tomorrow"></span>
+			</s:if>
+			<s:if test="#i.index>1">
+				<span title="${lz:date(dateItem,"MM月d日 , E")}" class="ccc-date-label date-${lz:date(dateItem,"d")}"></span>
+			</s:if>
+		</s:iterator>
+	</div>
+	<!-- 限行 -->
+	<s:if test="#request.restriction!=-1">
+	<s:if test="#request.restrictions.size>0">
+		<s:iterator value="#request.restrictions" id="dateItem" status="i">
+			<div class="ccc-time-block ccc-restricted-block" style="${cc:getLimitTimebar(dateItem,restriction,amount)}">
+			<i class="left-dot"></i><i class="right-dot"></i>
+			<div class="ccc-time-tips">
+				<b></b>${lz:date(dateItem.start,"HH:mm")} ~ ${lz:date(dateItem.finish,"HH:mm")} 错峰限行
+			</div>
+		</div>
+		</s:iterator>
+	</s:if>
+	</s:if>
+	<s:iterator value="#request.csCar.timelines[#request.amount]" id="item_or" status="i">
+		<div class="ccc-time-block" style="${cc:getTimebar(item_or.start, item_or.finish, amount)}">
+			<i class="left-dot"></i><i class="right-dot"></i>
+			<div class="ccc-time-tips">
+				<b></b><span class="ccc-font-lato">${lz:date(item_or.start,"MM-dd , HH:mm")} ~ ${lz:date(item_or.finish,"MM-dd , HH:mm")}</span> 已被预订
+			</div>
+		</div>
+	</s:iterator>

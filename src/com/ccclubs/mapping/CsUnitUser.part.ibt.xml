@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUnitUser_part">	
+	<!-- 企业车管条件sql片段  -->
+	<sql id="cs_unit_user_dynamic">
+		<dynamic>
+			<isNotEmpty property="csuuId" prepend="and">
+			    $csuuIdNot$ cs_unit_user$suffix$.csuu_id = #csuuId#
+			</isNotEmpty>
+			<isNotNull property="csuuIdNot" prepend="and">
+				<isEmpty property="csuuId">
+				$csuuIdNot$ cs_unit_user$suffix$.csuu_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_user$suffix$.csuu_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csuuHost" prepend="and">
+			    $csuuHostNot$ cs_unit_user$suffix$.csuu_host = #csuuHost#
+			</isNotEmpty>
+			<isNotNull property="csuuHostNot" prepend="and">
+				<isEmpty property="csuuHost">
+				$csuuHostNot$ cs_unit_user$suffix$.csuu_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csuuUsername" prepend="and">			    
+			    (<isNotNull property="csuuUsernameNot">
+			    cs_unit_user$suffix$.csuu_username is null or length(cs_unit_user$suffix$.csuu_username) &lt; 1 or
+			    </isNotNull>$csuuUsernameNot$ cs_unit_user$suffix$.csuu_username = #csuuUsername#)
+			</isNotEmpty>
+			<isNotNull property="csuuUsernameNot" prepend="and">
+				<isEmpty property="csuuUsername">
+				$csuuUsernameNot$ (cs_unit_user$suffix$.csuu_username is null or length(cs_unit_user$suffix$.csuu_username) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuPassword" prepend="and">			    
+			    (<isNotNull property="csuuPasswordNot">
+			    cs_unit_user$suffix$.csuu_password is null or length(cs_unit_user$suffix$.csuu_password) &lt; 1 or
+			    </isNotNull>$csuuPasswordNot$ cs_unit_user$suffix$.csuu_password = #csuuPassword#)
+			</isNotEmpty>
+			<isNotNull property="csuuPasswordNot" prepend="and">
+				<isEmpty property="csuuPassword">
+				$csuuPasswordNot$ (cs_unit_user$suffix$.csuu_password is null or length(cs_unit_user$suffix$.csuu_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuUnitInfo" prepend="and">
+			    $csuuUnitInfoNot$ cs_unit_user$suffix$.csuu_unit_info = #csuuUnitInfo#
+			</isNotEmpty>
+			<isNotNull property="csuuUnitInfoNot" prepend="and">
+				<isEmpty property="csuuUnitInfo">
+				$csuuUnitInfoNot$ cs_unit_user$suffix$.csuu_unit_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuIsRoot" prepend="and">
+			    $csuuIsRootNot$ cs_unit_user$suffix$.csuu_is_root = #csuuIsRoot#
+			</isNotEmpty>
+			<isNotNull property="csuuIsRootNot" prepend="and">
+				<isEmpty property="csuuIsRoot">
+				$csuuIsRootNot$ cs_unit_user$suffix$.csuu_is_root is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuLimit" prepend="and">			    
+			    (<isNotNull property="csuuLimitNot">
+			    cs_unit_user$suffix$.csuu_limit is null or length(cs_unit_user$suffix$.csuu_limit) &lt; 1 or
+			    </isNotNull>$csuuLimitNot$ cs_unit_user$suffix$.csuu_limit like #csuuLimit#)
+			</isNotEmpty>
+			<isNotNull property="csuuLimitNot" prepend="and">
+				<isEmpty property="csuuLimit">
+				$csuuLimitNot$ (cs_unit_user$suffix$.csuu_limit is null or length(cs_unit_user$suffix$.csuu_limit) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuRealname" prepend="and">			    
+			    (<isNotNull property="csuuRealnameNot">
+			    cs_unit_user$suffix$.csuu_realname is null or length(cs_unit_user$suffix$.csuu_realname) &lt; 1 or
+			    </isNotNull>$csuuRealnameNot$ cs_unit_user$suffix$.csuu_realname like #csuuRealname#)
+			</isNotEmpty>
+			<isNotNull property="csuuRealnameNot" prepend="and">
+				<isEmpty property="csuuRealname">
+				$csuuRealnameNot$ (cs_unit_user$suffix$.csuu_realname is null or length(cs_unit_user$suffix$.csuu_realname) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuMobile" prepend="and">			    
+			    (<isNotNull property="csuuMobileNot">
+			    cs_unit_user$suffix$.csuu_mobile is null or length(cs_unit_user$suffix$.csuu_mobile) &lt; 1 or
+			    </isNotNull>$csuuMobileNot$ cs_unit_user$suffix$.csuu_mobile like #csuuMobile#)
+			</isNotEmpty>
+			<isNotNull property="csuuMobileNot" prepend="and">
+				<isEmpty property="csuuMobile">
+				$csuuMobileNot$ (cs_unit_user$suffix$.csuu_mobile is null or length(cs_unit_user$suffix$.csuu_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuAddTimeStart" prepend="and">
+			    $csuuAddTimeNot$   (cs_unit_user$suffix$.csuu_add_time &gt;= #csuuAddTimeStart#
+			   <isEmpty property="csuuAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuuAddTimeEnd" prepend="and">
+				<isEmpty property="csuuAddTimeStart">$csuuAddTimeNot$   (</isEmpty>
+			    cs_unit_user$suffix$.csuu_add_time &lt;= #csuuAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csuuAddTime" prepend="and">
+			    $csuuAddTimeNot$ cs_unit_user$suffix$.csuu_add_time = #csuuAddTime#
+			</isNotEmpty>
+			<isNotNull property="csuuAddTimeNot" prepend="and">
+				<isEmpty property="csuuAddTimeStart"><isEmpty property="csuuAddTimeEnd"><isEmpty property="csuuAddTime">
+				$csuuAddTimeNot$ cs_unit_user$suffix$.csuu_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuLastIp" prepend="and">			    
+			    (<isNotNull property="csuuLastIpNot">
+			    cs_unit_user$suffix$.csuu_last_ip is null or length(cs_unit_user$suffix$.csuu_last_ip) &lt; 1 or
+			    </isNotNull>$csuuLastIpNot$ cs_unit_user$suffix$.csuu_last_ip = #csuuLastIp#)
+			</isNotEmpty>
+			<isNotNull property="csuuLastIpNot" prepend="and">
+				<isEmpty property="csuuLastIp">
+				$csuuLastIpNot$ (cs_unit_user$suffix$.csuu_last_ip is null or length(cs_unit_user$suffix$.csuu_last_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuLastTime" prepend="and">			    
+			    (<isNotNull property="csuuLastTimeNot">
+			    cs_unit_user$suffix$.csuu_last_time is null or length(cs_unit_user$suffix$.csuu_last_time) &lt; 1 or
+			    </isNotNull>$csuuLastTimeNot$ cs_unit_user$suffix$.csuu_last_time = #csuuLastTime#)
+			</isNotEmpty>
+			<isNotNull property="csuuLastTimeNot" prepend="and">
+				<isEmpty property="csuuLastTime">
+				$csuuLastTimeNot$ (cs_unit_user$suffix$.csuu_last_time is null or length(cs_unit_user$suffix$.csuu_last_time) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuuStatus" prepend="and">
+			    $csuuStatusNot$ cs_unit_user$suffix$.csuu_status = #csuuStatus#
+			</isNotEmpty>
+			<isNotNull property="csuuStatusNot" prepend="and">
+				<isEmpty property="csuuStatus">
+				$csuuStatusNot$ cs_unit_user$suffix$.csuu_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 企业车管left join 条件sql片段 -->
+	<sql id="cs_unit_user_join">
+		<dynamic>
+			<isNotEmpty property="CsUnitUser.csuuId" prepend="and">
+			    $CsUnitUser.csuuIdNot$ cs_unit_user$CsUnitUser.suffix$.csuu_id = #CsUnitUser.csuuId#
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuIdNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuId">
+				$csuuIdNot$ cs_unit_user$CsUnitUser.suffix$.csuu_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitUser.csuuHost" prepend="and">
+			    $CsUnitUser.csuuHostNot$ cs_unit_user$CsUnitUser.suffix$.csuu_host = #CsUnitUser.csuuHost#
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuHostNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuHost">
+				$csuuHostNot$ cs_unit_user$CsUnitUser.suffix$.csuu_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuUsername" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuUsernameNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_username is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_username) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuUsernameNot$ cs_unit_user$CsUnitUser.suffix$.csuu_username = #CsUnitUser.csuuUsername#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuUsernameNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuUsername">
+				$csuuUsernameNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_username is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_username) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuPassword" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuPasswordNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_password is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_password) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuPasswordNot$ cs_unit_user$CsUnitUser.suffix$.csuu_password = #CsUnitUser.csuuPassword#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuPasswordNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuPassword">
+				$csuuPasswordNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_password is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuUnitInfo" prepend="and">
+			    $CsUnitUser.csuuUnitInfoNot$ cs_unit_user$CsUnitUser.suffix$.csuu_unit_info = #CsUnitUser.csuuUnitInfo#
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuUnitInfoNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuUnitInfo">
+				$csuuUnitInfoNot$ cs_unit_user$CsUnitUser.suffix$.csuu_unit_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuIsRoot" prepend="and">
+			    $CsUnitUser.csuuIsRootNot$ cs_unit_user$CsUnitUser.suffix$.csuu_is_root = #CsUnitUser.csuuIsRoot#
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuIsRootNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuIsRoot">
+				$csuuIsRootNot$ cs_unit_user$CsUnitUser.suffix$.csuu_is_root is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuLimit" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuLimitNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_limit is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_limit) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuLimitNot$ cs_unit_user$CsUnitUser.suffix$.csuu_limit like #CsUnitUser.csuuLimit#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuLimitNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuLimit">
+				$csuuLimitNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_limit is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_limit) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuRealname" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuRealnameNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_realname is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_realname) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuRealnameNot$ cs_unit_user$CsUnitUser.suffix$.csuu_realname like #CsUnitUser.csuuRealname#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuRealnameNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuRealname">
+				$csuuRealnameNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_realname is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_realname) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuMobile" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuMobileNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_mobile is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_mobile) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuMobileNot$ cs_unit_user$CsUnitUser.suffix$.csuu_mobile like #CsUnitUser.csuuMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuMobileNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuMobile">
+				$csuuMobileNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_mobile is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuAddTimeStart" prepend="and">
+			    $CsUnitUser.csuuAddTimeNot$   (cs_unit_user$CsUnitUser.suffix$.csuu_add_time &gt;= #CsUnitUser.csuuAddTimeStart#
+			   <isEmpty property="CsUnitUser.csuuAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitUser.csuuAddTimeEnd" prepend="and">
+				<isEmpty property="CsUnitUser.csuuAddTimeStart">$CsUnitUser.csuuAddTimeNot$   (</isEmpty>
+			    cs_unit_user$CsUnitUser.suffix$.csuu_add_time &lt;= #CsUnitUser.csuuAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitUser.csuuAddTime" prepend="and">
+			    $CsUnitUser.csuuAddTimeNot$ cs_unit_user$CsUnitUser.suffix$.csuu_add_time = #CsUnitUser.csuuAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuAddTimeNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuAddTimeStart"><isEmpty property="CsUnitUser.csuuAddTimeEnd"><isEmpty property="CsUnitUser.csuuAddTime">
+				$csuuAddTimeNot$ cs_unit_user$CsUnitUser.suffix$.csuu_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuLastIp" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuLastIpNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_last_ip is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_last_ip) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuLastIpNot$ cs_unit_user$CsUnitUser.suffix$.csuu_last_ip = #CsUnitUser.csuuLastIp#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuLastIpNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuLastIp">
+				$csuuLastIpNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_last_ip is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_last_ip) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuLastTime" prepend="and">
+				(<isNotNull property="CsUnitUser.csuuLastTimeNot">
+			    cs_unit_user$CsUnitUser.suffix$.csuu_last_time is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_last_time) &lt; 1 or
+			    </isNotNull>$CsUnitUser.csuuLastTimeNot$ cs_unit_user$CsUnitUser.suffix$.csuu_last_time = #CsUnitUser.csuuLastTime#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuLastTimeNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuLastTime">
+				$csuuLastTimeNot$ (cs_unit_user$CsUnitUser.suffix$.csuu_last_time is null or length(cs_unit_user$CsUnitUser.suffix$.csuu_last_time) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitUser.csuuStatus" prepend="and">
+			    $CsUnitUser.csuuStatusNot$ cs_unit_user$CsUnitUser.suffix$.csuu_status = #CsUnitUser.csuuStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUnitUser.csuuStatusNot" prepend="and">
+				<isEmpty property="CsUnitUser.csuuStatus">
+				$csuuStatusNot$ cs_unit_user$CsUnitUser.suffix$.csuu_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

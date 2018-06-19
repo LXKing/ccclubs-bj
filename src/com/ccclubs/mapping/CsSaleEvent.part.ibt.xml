@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsSaleEvent_part">	
+	<!-- 销售活动条件sql片段  -->
+	<sql id="cs_sale_event_dynamic">
+		<dynamic>
+			<isNotEmpty property="csseId" prepend="and">
+			    $csseIdNot$ cs_sale_event$suffix$.csse_id = #csseId#
+			</isNotEmpty>
+			<isNotNull property="csseIdNot" prepend="and">
+				<isEmpty property="csseId">
+				$csseIdNot$ cs_sale_event$suffix$.csse_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_sale_event$suffix$.csse_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csseHost" prepend="and">
+			    $csseHostNot$ cs_sale_event$suffix$.csse_host = #csseHost#
+			</isNotEmpty>
+			<isNotNull property="csseHostNot" prepend="and">
+				<isEmpty property="csseHost">
+				$csseHostNot$ cs_sale_event$suffix$.csse_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csseSubject" prepend="and">			    
+			    (<isNotNull property="csseSubjectNot">
+			    cs_sale_event$suffix$.csse_subject is null or length(cs_sale_event$suffix$.csse_subject) &lt; 1 or
+			    </isNotNull>$csseSubjectNot$ cs_sale_event$suffix$.csse_subject like #csseSubject#)
+			</isNotEmpty>
+			<isNotNull property="csseSubjectNot" prepend="and">
+				<isEmpty property="csseSubject">
+				$csseSubjectNot$ (cs_sale_event$suffix$.csse_subject is null or length(cs_sale_event$suffix$.csse_subject) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseBattle" prepend="and">
+			    $csseBattleNot$ cs_sale_event$suffix$.csse_battle = #csseBattle#
+			</isNotEmpty>
+			<isNotNull property="csseBattleNot" prepend="and">
+				<isEmpty property="csseBattle">
+				$csseBattleNot$ cs_sale_event$suffix$.csse_battle is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseType" prepend="and">
+			    $csseTypeNot$ cs_sale_event$suffix$.csse_type = #csseType#
+			</isNotEmpty>
+			<isNotNull property="csseTypeNot" prepend="and">
+				<isEmpty property="csseType">
+				$csseTypeNot$ cs_sale_event$suffix$.csse_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssePerson" prepend="and">
+			    $cssePersonNot$ cs_sale_event$suffix$.csse_person = #cssePerson#
+			</isNotEmpty>
+			<isNotNull property="cssePersonNot" prepend="and">
+				<isEmpty property="cssePerson">
+				$cssePersonNot$ cs_sale_event$suffix$.csse_person is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssePostion" prepend="and">			    
+			    (<isNotNull property="cssePostionNot">
+			    cs_sale_event$suffix$.csse_postion is null or length(cs_sale_event$suffix$.csse_postion) &lt; 1 or
+			    </isNotNull>$cssePostionNot$ cs_sale_event$suffix$.csse_postion = #cssePostion#)
+			</isNotEmpty>
+			<isNotNull property="cssePostionNot" prepend="and">
+				<isEmpty property="cssePostion">
+				$cssePostionNot$ (cs_sale_event$suffix$.csse_postion is null or length(cs_sale_event$suffix$.csse_postion) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseAddress" prepend="and">			    
+			    (<isNotNull property="csseAddressNot">
+			    cs_sale_event$suffix$.csse_address is null or length(cs_sale_event$suffix$.csse_address) &lt; 1 or
+			    </isNotNull>$csseAddressNot$ cs_sale_event$suffix$.csse_address like #csseAddress#)
+			</isNotEmpty>
+			<isNotNull property="csseAddressNot" prepend="and">
+				<isEmpty property="csseAddress">
+				$csseAddressNot$ (cs_sale_event$suffix$.csse_address is null or length(cs_sale_event$suffix$.csse_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseDesc" prepend="and">			    
+			    (<isNotNull property="csseDescNot">
+			    cs_sale_event$suffix$.csse_desc is null or length(cs_sale_event$suffix$.csse_desc) &lt; 1 or
+			    </isNotNull>$csseDescNot$ cs_sale_event$suffix$.csse_desc like #csseDesc#)
+			</isNotEmpty>
+			<isNotNull property="csseDescNot" prepend="and">
+				<isEmpty property="csseDesc">
+				$csseDescNot$ (cs_sale_event$suffix$.csse_desc is null or length(cs_sale_event$suffix$.csse_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseStartStart" prepend="and">
+			    $csseStartNot$   (cs_sale_event$suffix$.csse_start &gt;= #csseStartStart#
+			   <isEmpty property="csseStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csseStartEnd" prepend="and">
+				<isEmpty property="csseStartStart">$csseStartNot$   (</isEmpty>
+			    cs_sale_event$suffix$.csse_start &lt;= #csseStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csseStart" prepend="and">
+			    $csseStartNot$ cs_sale_event$suffix$.csse_start = #csseStart#
+			</isNotEmpty>
+			<isNotNull property="csseStartNot" prepend="and">
+				<isEmpty property="csseStartStart"><isEmpty property="csseStartEnd"><isEmpty property="csseStart">
+				$csseStartNot$ cs_sale_event$suffix$.csse_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseFinishStart" prepend="and">
+			    $csseFinishNot$   (cs_sale_event$suffix$.csse_finish &gt;= #csseFinishStart#
+			   <isEmpty property="csseFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csseFinishEnd" prepend="and">
+				<isEmpty property="csseFinishStart">$csseFinishNot$   (</isEmpty>
+			    cs_sale_event$suffix$.csse_finish &lt;= #csseFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csseFinish" prepend="and">
+			    $csseFinishNot$ cs_sale_event$suffix$.csse_finish = #csseFinish#
+			</isNotEmpty>
+			<isNotNull property="csseFinishNot" prepend="and">
+				<isEmpty property="csseFinishStart"><isEmpty property="csseFinishEnd"><isEmpty property="csseFinish">
+				$csseFinishNot$ cs_sale_event$suffix$.csse_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseUpdateTimeStart" prepend="and">
+			    $csseUpdateTimeNot$   (cs_sale_event$suffix$.csse_update_time &gt;= #csseUpdateTimeStart#
+			   <isEmpty property="csseUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csseUpdateTimeEnd" prepend="and">
+				<isEmpty property="csseUpdateTimeStart">$csseUpdateTimeNot$   (</isEmpty>
+			    cs_sale_event$suffix$.csse_update_time &lt;= #csseUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csseUpdateTime" prepend="and">
+			    $csseUpdateTimeNot$ cs_sale_event$suffix$.csse_update_time = #csseUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csseUpdateTimeNot" prepend="and">
+				<isEmpty property="csseUpdateTimeStart"><isEmpty property="csseUpdateTimeEnd"><isEmpty property="csseUpdateTime">
+				$csseUpdateTimeNot$ cs_sale_event$suffix$.csse_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseAddTimeStart" prepend="and">
+			    $csseAddTimeNot$   (cs_sale_event$suffix$.csse_add_time &gt;= #csseAddTimeStart#
+			   <isEmpty property="csseAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csseAddTimeEnd" prepend="and">
+				<isEmpty property="csseAddTimeStart">$csseAddTimeNot$   (</isEmpty>
+			    cs_sale_event$suffix$.csse_add_time &lt;= #csseAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csseAddTime" prepend="and">
+			    $csseAddTimeNot$ cs_sale_event$suffix$.csse_add_time = #csseAddTime#
+			</isNotEmpty>
+			<isNotNull property="csseAddTimeNot" prepend="and">
+				<isEmpty property="csseAddTimeStart"><isEmpty property="csseAddTimeEnd"><isEmpty property="csseAddTime">
+				$csseAddTimeNot$ cs_sale_event$suffix$.csse_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseRemark" prepend="and">			    
+			    (<isNotNull property="csseRemarkNot">
+			    cs_sale_event$suffix$.csse_remark is null or length(cs_sale_event$suffix$.csse_remark) &lt; 1 or
+			    </isNotNull>$csseRemarkNot$ cs_sale_event$suffix$.csse_remark like #csseRemark#)
+			</isNotEmpty>
+			<isNotNull property="csseRemarkNot" prepend="and">
+				<isEmpty property="csseRemark">
+				$csseRemarkNot$ (cs_sale_event$suffix$.csse_remark is null or length(cs_sale_event$suffix$.csse_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csseStatus" prepend="and">
+			    $csseStatusNot$ cs_sale_event$suffix$.csse_status = #csseStatus#
+			</isNotEmpty>
+			<isNotNull property="csseStatusNot" prepend="and">
+				<isEmpty property="csseStatus">
+				$csseStatusNot$ cs_sale_event$suffix$.csse_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 销售活动left join 条件sql片段 -->
+	<sql id="cs_sale_event_join">
+		<dynamic>
+			<isNotEmpty property="CsSaleEvent.csseId" prepend="and">
+			    $CsSaleEvent.csseIdNot$ cs_sale_event$CsSaleEvent.suffix$.csse_id = #CsSaleEvent.csseId#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseIdNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseId">
+				$csseIdNot$ cs_sale_event$CsSaleEvent.suffix$.csse_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_sale_event$CsSaleEvent.suffix$.csse_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseHost" prepend="and">
+			    $CsSaleEvent.csseHostNot$ cs_sale_event$CsSaleEvent.suffix$.csse_host = #CsSaleEvent.csseHost#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseHostNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseHost">
+				$csseHostNot$ cs_sale_event$CsSaleEvent.suffix$.csse_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseSubject" prepend="and">
+				(<isNotNull property="CsSaleEvent.csseSubjectNot">
+			    cs_sale_event$CsSaleEvent.suffix$.csse_subject is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_subject) &lt; 1 or
+			    </isNotNull>$CsSaleEvent.csseSubjectNot$ cs_sale_event$CsSaleEvent.suffix$.csse_subject like #CsSaleEvent.csseSubject#)
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseSubjectNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseSubject">
+				$csseSubjectNot$ (cs_sale_event$CsSaleEvent.suffix$.csse_subject is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_subject) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseBattle" prepend="and">
+			    $CsSaleEvent.csseBattleNot$ cs_sale_event$CsSaleEvent.suffix$.csse_battle = #CsSaleEvent.csseBattle#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseBattleNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseBattle">
+				$csseBattleNot$ cs_sale_event$CsSaleEvent.suffix$.csse_battle is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseType" prepend="and">
+			    $CsSaleEvent.csseTypeNot$ cs_sale_event$CsSaleEvent.suffix$.csse_type = #CsSaleEvent.csseType#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseTypeNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseType">
+				$csseTypeNot$ cs_sale_event$CsSaleEvent.suffix$.csse_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.cssePerson" prepend="and">
+			    $CsSaleEvent.cssePersonNot$ cs_sale_event$CsSaleEvent.suffix$.csse_person = #CsSaleEvent.cssePerson#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.cssePersonNot" prepend="and">
+				<isEmpty property="CsSaleEvent.cssePerson">
+				$cssePersonNot$ cs_sale_event$CsSaleEvent.suffix$.csse_person is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.cssePostion" prepend="and">
+				(<isNotNull property="CsSaleEvent.cssePostionNot">
+			    cs_sale_event$CsSaleEvent.suffix$.csse_postion is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_postion) &lt; 1 or
+			    </isNotNull>$CsSaleEvent.cssePostionNot$ cs_sale_event$CsSaleEvent.suffix$.csse_postion = #CsSaleEvent.cssePostion#)
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.cssePostionNot" prepend="and">
+				<isEmpty property="CsSaleEvent.cssePostion">
+				$cssePostionNot$ (cs_sale_event$CsSaleEvent.suffix$.csse_postion is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_postion) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseAddress" prepend="and">
+				(<isNotNull property="CsSaleEvent.csseAddressNot">
+			    cs_sale_event$CsSaleEvent.suffix$.csse_address is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_address) &lt; 1 or
+			    </isNotNull>$CsSaleEvent.csseAddressNot$ cs_sale_event$CsSaleEvent.suffix$.csse_address like #CsSaleEvent.csseAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseAddressNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseAddress">
+				$csseAddressNot$ (cs_sale_event$CsSaleEvent.suffix$.csse_address is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseDesc" prepend="and">
+				(<isNotNull property="CsSaleEvent.csseDescNot">
+			    cs_sale_event$CsSaleEvent.suffix$.csse_desc is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_desc) &lt; 1 or
+			    </isNotNull>$CsSaleEvent.csseDescNot$ cs_sale_event$CsSaleEvent.suffix$.csse_desc like #CsSaleEvent.csseDesc#)
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseDescNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseDesc">
+				$csseDescNot$ (cs_sale_event$CsSaleEvent.suffix$.csse_desc is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseStartStart" prepend="and">
+			    $CsSaleEvent.csseStartNot$   (cs_sale_event$CsSaleEvent.suffix$.csse_start &gt;= #CsSaleEvent.csseStartStart#
+			   <isEmpty property="CsSaleEvent.csseStartEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseStartEnd" prepend="and">
+				<isEmpty property="CsSaleEvent.csseStartStart">$CsSaleEvent.csseStartNot$   (</isEmpty>
+			    cs_sale_event$CsSaleEvent.suffix$.csse_start &lt;= #CsSaleEvent.csseStartEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseStart" prepend="and">
+			    $CsSaleEvent.csseStartNot$ cs_sale_event$CsSaleEvent.suffix$.csse_start = #CsSaleEvent.csseStart#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseStartNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseStartStart"><isEmpty property="CsSaleEvent.csseStartEnd"><isEmpty property="CsSaleEvent.csseStart">
+				$csseStartNot$ cs_sale_event$CsSaleEvent.suffix$.csse_start is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseFinishStart" prepend="and">
+			    $CsSaleEvent.csseFinishNot$   (cs_sale_event$CsSaleEvent.suffix$.csse_finish &gt;= #CsSaleEvent.csseFinishStart#
+			   <isEmpty property="CsSaleEvent.csseFinishEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseFinishEnd" prepend="and">
+				<isEmpty property="CsSaleEvent.csseFinishStart">$CsSaleEvent.csseFinishNot$   (</isEmpty>
+			    cs_sale_event$CsSaleEvent.suffix$.csse_finish &lt;= #CsSaleEvent.csseFinishEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseFinish" prepend="and">
+			    $CsSaleEvent.csseFinishNot$ cs_sale_event$CsSaleEvent.suffix$.csse_finish = #CsSaleEvent.csseFinish#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseFinishNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseFinishStart"><isEmpty property="CsSaleEvent.csseFinishEnd"><isEmpty property="CsSaleEvent.csseFinish">
+				$csseFinishNot$ cs_sale_event$CsSaleEvent.suffix$.csse_finish is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseUpdateTimeStart" prepend="and">
+			    $CsSaleEvent.csseUpdateTimeNot$   (cs_sale_event$CsSaleEvent.suffix$.csse_update_time &gt;= #CsSaleEvent.csseUpdateTimeStart#
+			   <isEmpty property="CsSaleEvent.csseUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsSaleEvent.csseUpdateTimeStart">$CsSaleEvent.csseUpdateTimeNot$   (</isEmpty>
+			    cs_sale_event$CsSaleEvent.suffix$.csse_update_time &lt;= #CsSaleEvent.csseUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseUpdateTime" prepend="and">
+			    $CsSaleEvent.csseUpdateTimeNot$ cs_sale_event$CsSaleEvent.suffix$.csse_update_time = #CsSaleEvent.csseUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseUpdateTimeNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseUpdateTimeStart"><isEmpty property="CsSaleEvent.csseUpdateTimeEnd"><isEmpty property="CsSaleEvent.csseUpdateTime">
+				$csseUpdateTimeNot$ cs_sale_event$CsSaleEvent.suffix$.csse_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseAddTimeStart" prepend="and">
+			    $CsSaleEvent.csseAddTimeNot$   (cs_sale_event$CsSaleEvent.suffix$.csse_add_time &gt;= #CsSaleEvent.csseAddTimeStart#
+			   <isEmpty property="CsSaleEvent.csseAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseAddTimeEnd" prepend="and">
+				<isEmpty property="CsSaleEvent.csseAddTimeStart">$CsSaleEvent.csseAddTimeNot$   (</isEmpty>
+			    cs_sale_event$CsSaleEvent.suffix$.csse_add_time &lt;= #CsSaleEvent.csseAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsSaleEvent.csseAddTime" prepend="and">
+			    $CsSaleEvent.csseAddTimeNot$ cs_sale_event$CsSaleEvent.suffix$.csse_add_time = #CsSaleEvent.csseAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseAddTimeNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseAddTimeStart"><isEmpty property="CsSaleEvent.csseAddTimeEnd"><isEmpty property="CsSaleEvent.csseAddTime">
+				$csseAddTimeNot$ cs_sale_event$CsSaleEvent.suffix$.csse_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseRemark" prepend="and">
+				(<isNotNull property="CsSaleEvent.csseRemarkNot">
+			    cs_sale_event$CsSaleEvent.suffix$.csse_remark is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_remark) &lt; 1 or
+			    </isNotNull>$CsSaleEvent.csseRemarkNot$ cs_sale_event$CsSaleEvent.suffix$.csse_remark like #CsSaleEvent.csseRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseRemarkNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseRemark">
+				$csseRemarkNot$ (cs_sale_event$CsSaleEvent.suffix$.csse_remark is null or length(cs_sale_event$CsSaleEvent.suffix$.csse_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsSaleEvent.csseStatus" prepend="and">
+			    $CsSaleEvent.csseStatusNot$ cs_sale_event$CsSaleEvent.suffix$.csse_status = #CsSaleEvent.csseStatus#
+			</isNotEmpty>
+			<isNotNull property="CsSaleEvent.csseStatusNot" prepend="and">
+				<isEmpty property="CsSaleEvent.csseStatus">
+				$csseStatusNot$ cs_sale_event$CsSaleEvent.suffix$.csse_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsOper_part">	
+	<!-- 运营商条件sql片段  -->
+	<sql id="cs_oper_dynamic">
+		<dynamic>
+			<isNotEmpty property="csoId" prepend="and">
+			    $csoIdNot$ cs_oper$suffix$.cso_id = #csoId#
+			</isNotEmpty>
+			<isNotNull property="csoIdNot" prepend="and">
+				<isEmpty property="csoId">
+				$csoIdNot$ cs_oper$suffix$.cso_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoName" prepend="and">			    
+			    (<isNotNull property="csoNameNot">
+			    cs_oper$suffix$.cso_name is null or length(cs_oper$suffix$.cso_name) &lt; 1 or
+			    </isNotNull>$csoNameNot$ cs_oper$suffix$.cso_name = #csoName#)
+			</isNotEmpty>
+			<isNotNull property="csoNameNot" prepend="and">
+				<isEmpty property="csoName">
+				$csoNameNot$ (cs_oper$suffix$.cso_name is null or length(cs_oper$suffix$.cso_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoFullName" prepend="and">			    
+			    (<isNotNull property="csoFullNameNot">
+			    cs_oper$suffix$.cso_full_name is null or length(cs_oper$suffix$.cso_full_name) &lt; 1 or
+			    </isNotNull>$csoFullNameNot$ cs_oper$suffix$.cso_full_name like #csoFullName#)
+			</isNotEmpty>
+			<isNotNull property="csoFullNameNot" prepend="and">
+				<isEmpty property="csoFullName">
+				$csoFullNameNot$ (cs_oper$suffix$.cso_full_name is null or length(cs_oper$suffix$.cso_full_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoIcon" prepend="and">
+			    $csoIconNot$ cs_oper$suffix$.cso_icon = #csoIcon#
+			</isNotEmpty>
+			<isNotNull property="csoIconNot" prepend="and">
+				<isEmpty property="csoIcon">
+				$csoIconNot$ cs_oper$suffix$.cso_icon is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoSign" prepend="and">			    
+			    (<isNotNull property="csoSignNot">
+			    cs_oper$suffix$.cso_sign is null or length(cs_oper$suffix$.cso_sign) &lt; 1 or
+			    </isNotNull>$csoSignNot$ cs_oper$suffix$.cso_sign = #csoSign#)
+			</isNotEmpty>
+			<isNotNull property="csoSignNot" prepend="and">
+				<isEmpty property="csoSign">
+				$csoSignNot$ (cs_oper$suffix$.cso_sign is null or length(cs_oper$suffix$.cso_sign) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoPerson" prepend="and">			    
+			    (<isNotNull property="csoPersonNot">
+			    cs_oper$suffix$.cso_person is null or length(cs_oper$suffix$.cso_person) &lt; 1 or
+			    </isNotNull>$csoPersonNot$ cs_oper$suffix$.cso_person = #csoPerson#)
+			</isNotEmpty>
+			<isNotNull property="csoPersonNot" prepend="and">
+				<isEmpty property="csoPerson">
+				$csoPersonNot$ (cs_oper$suffix$.cso_person is null or length(cs_oper$suffix$.cso_person) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoMoneyMin" prepend="and">
+			    $csoMoneyNot$  ( cs_oper$suffix$.cso_money &gt;= #csoMoneyMin#
+			    <isEmpty property="csoMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoMoneyMax" prepend="and">
+				<isEmpty property="csoMoneyMin">$csoMoneyNot$   (</isEmpty>
+			    cs_oper$suffix$.cso_money &lt;= #csoMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csoMoney" prepend="and">
+			    $csoMoneyNot$ cs_oper$suffix$.cso_money = #csoMoney#
+			</isNotEmpty>
+			<isNotNull property="csoMoneyNot" prepend="and">
+				<isEmpty property="csoMoneyMax"><isEmpty property="csoMoneyMin"><isEmpty property="csoMoney">
+				$csoMoneyNot$ cs_oper$suffix$.cso_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csoAddress" prepend="and">			    
+			    (<isNotNull property="csoAddressNot">
+			    cs_oper$suffix$.cso_address is null or length(cs_oper$suffix$.cso_address) &lt; 1 or
+			    </isNotNull>$csoAddressNot$ cs_oper$suffix$.cso_address like #csoAddress#)
+			</isNotEmpty>
+			<isNotNull property="csoAddressNot" prepend="and">
+				<isEmpty property="csoAddress">
+				$csoAddressNot$ (cs_oper$suffix$.cso_address is null or length(cs_oper$suffix$.cso_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoContacts" prepend="and">			    
+			    (<isNotNull property="csoContactsNot">
+			    cs_oper$suffix$.cso_contacts is null or length(cs_oper$suffix$.cso_contacts) &lt; 1 or
+			    </isNotNull>$csoContactsNot$ cs_oper$suffix$.cso_contacts like #csoContacts#)
+			</isNotEmpty>
+			<isNotNull property="csoContactsNot" prepend="and">
+				<isEmpty property="csoContacts">
+				$csoContactsNot$ (cs_oper$suffix$.cso_contacts is null or length(cs_oper$suffix$.cso_contacts) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoAdder" prepend="and">
+			    $csoAdderNot$ cs_oper$suffix$.cso_adder = #csoAdder#
+			</isNotEmpty>
+			<isNotNull property="csoAdderNot" prepend="and">
+				<isEmpty property="csoAdder">
+				$csoAdderNot$ cs_oper$suffix$.cso_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoRemark" prepend="and">			    
+			    (<isNotNull property="csoRemarkNot">
+			    cs_oper$suffix$.cso_remark is null or length(cs_oper$suffix$.cso_remark) &lt; 1 or
+			    </isNotNull>$csoRemarkNot$ cs_oper$suffix$.cso_remark like #csoRemark#)
+			</isNotEmpty>
+			<isNotNull property="csoRemarkNot" prepend="and">
+				<isEmpty property="csoRemark">
+				$csoRemarkNot$ (cs_oper$suffix$.cso_remark is null or length(cs_oper$suffix$.cso_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoMemo" prepend="and">			    
+			    (<isNotNull property="csoMemoNot">
+			    cs_oper$suffix$.cso_memo is null or length(cs_oper$suffix$.cso_memo) &lt; 1 or
+			    </isNotNull>$csoMemoNot$ cs_oper$suffix$.cso_memo like #csoMemo#)
+			</isNotEmpty>
+			<isNotNull property="csoMemoNot" prepend="and">
+				<isEmpty property="csoMemo">
+				$csoMemoNot$ (cs_oper$suffix$.cso_memo is null or length(cs_oper$suffix$.cso_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoData" prepend="and">			    
+			    (<isNotNull property="csoDataNot">
+			    cs_oper$suffix$.cso_data is null or length(cs_oper$suffix$.cso_data) &lt; 1 or
+			    </isNotNull>$csoDataNot$ cs_oper$suffix$.cso_data like #csoData#)
+			</isNotEmpty>
+			<isNotNull property="csoDataNot" prepend="and">
+				<isEmpty property="csoData">
+				$csoDataNot$ (cs_oper$suffix$.cso_data is null or length(cs_oper$suffix$.cso_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoUpdateTimeStart" prepend="and">
+			    $csoUpdateTimeNot$   (cs_oper$suffix$.cso_update_time &gt;= #csoUpdateTimeStart#
+			   <isEmpty property="csoUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoUpdateTimeEnd" prepend="and">
+				<isEmpty property="csoUpdateTimeStart">$csoUpdateTimeNot$   (</isEmpty>
+			    cs_oper$suffix$.cso_update_time &lt;= #csoUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoUpdateTime" prepend="and">
+			    $csoUpdateTimeNot$ cs_oper$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csoUpdateTimeNot" prepend="and">
+				<isEmpty property="csoUpdateTimeStart"><isEmpty property="csoUpdateTimeEnd"><isEmpty property="csoUpdateTime">
+				$csoUpdateTimeNot$ cs_oper$suffix$.cso_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoAddTimeStart" prepend="and">
+			    $csoAddTimeNot$   (cs_oper$suffix$.cso_add_time &gt;= #csoAddTimeStart#
+			   <isEmpty property="csoAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csoAddTimeEnd" prepend="and">
+				<isEmpty property="csoAddTimeStart">$csoAddTimeNot$   (</isEmpty>
+			    cs_oper$suffix$.cso_add_time &lt;= #csoAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csoAddTime" prepend="and">
+			    $csoAddTimeNot$ cs_oper$suffix$.cso_add_time = #csoAddTime#
+			</isNotEmpty>
+			<isNotNull property="csoAddTimeNot" prepend="and">
+				<isEmpty property="csoAddTimeStart"><isEmpty property="csoAddTimeEnd"><isEmpty property="csoAddTime">
+				$csoAddTimeNot$ cs_oper$suffix$.cso_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csoStatus" prepend="and">
+			    $csoStatusNot$ cs_oper$suffix$.cso_status = #csoStatus#
+			</isNotEmpty>
+			<isNotNull property="csoStatusNot" prepend="and">
+				<isEmpty property="csoStatus">
+				$csoStatusNot$ cs_oper$suffix$.cso_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 运营商left join 条件sql片段 -->
+	<sql id="cs_oper_join">
+		<dynamic>
+			<isNotEmpty property="CsOper.csoId" prepend="and">
+			    $CsOper.csoIdNot$ cs_oper$CsOper.suffix$.cso_id = #CsOper.csoId#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoIdNot" prepend="and">
+				<isEmpty property="CsOper.csoId">
+				$csoIdNot$ cs_oper$CsOper.suffix$.cso_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoName" prepend="and">
+				(<isNotNull property="CsOper.csoNameNot">
+			    cs_oper$CsOper.suffix$.cso_name is null or length(cs_oper$CsOper.suffix$.cso_name) &lt; 1 or
+			    </isNotNull>$CsOper.csoNameNot$ cs_oper$CsOper.suffix$.cso_name = #CsOper.csoName#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoNameNot" prepend="and">
+				<isEmpty property="CsOper.csoName">
+				$csoNameNot$ (cs_oper$CsOper.suffix$.cso_name is null or length(cs_oper$CsOper.suffix$.cso_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoFullName" prepend="and">
+				(<isNotNull property="CsOper.csoFullNameNot">
+			    cs_oper$CsOper.suffix$.cso_full_name is null or length(cs_oper$CsOper.suffix$.cso_full_name) &lt; 1 or
+			    </isNotNull>$CsOper.csoFullNameNot$ cs_oper$CsOper.suffix$.cso_full_name like #CsOper.csoFullName#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoFullNameNot" prepend="and">
+				<isEmpty property="CsOper.csoFullName">
+				$csoFullNameNot$ (cs_oper$CsOper.suffix$.cso_full_name is null or length(cs_oper$CsOper.suffix$.cso_full_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoIcon" prepend="and">
+			    $CsOper.csoIconNot$ cs_oper$CsOper.suffix$.cso_icon = #CsOper.csoIcon#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoIconNot" prepend="and">
+				<isEmpty property="CsOper.csoIcon">
+				$csoIconNot$ cs_oper$CsOper.suffix$.cso_icon is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoSign" prepend="and">
+				(<isNotNull property="CsOper.csoSignNot">
+			    cs_oper$CsOper.suffix$.cso_sign is null or length(cs_oper$CsOper.suffix$.cso_sign) &lt; 1 or
+			    </isNotNull>$CsOper.csoSignNot$ cs_oper$CsOper.suffix$.cso_sign = #CsOper.csoSign#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoSignNot" prepend="and">
+				<isEmpty property="CsOper.csoSign">
+				$csoSignNot$ (cs_oper$CsOper.suffix$.cso_sign is null or length(cs_oper$CsOper.suffix$.cso_sign) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoPerson" prepend="and">
+				(<isNotNull property="CsOper.csoPersonNot">
+			    cs_oper$CsOper.suffix$.cso_person is null or length(cs_oper$CsOper.suffix$.cso_person) &lt; 1 or
+			    </isNotNull>$CsOper.csoPersonNot$ cs_oper$CsOper.suffix$.cso_person = #CsOper.csoPerson#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoPersonNot" prepend="and">
+				<isEmpty property="CsOper.csoPerson">
+				$csoPersonNot$ (cs_oper$CsOper.suffix$.cso_person is null or length(cs_oper$CsOper.suffix$.cso_person) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoMoneyMin" prepend="and">
+			    $CsOper.csoMoneyNot$  ( cs_oper$CsOper.suffix$.cso_money &gt;= #CsOper.csoMoneyMin#
+			    <isEmpty property="CsOper.csoMoneyMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOper.csoMoneyMax" prepend="and">
+				<isEmpty property="CsOper.csoMoneyMin">$CsOper.csoMoneyNot$   (</isEmpty>
+			    cs_oper$CsOper.suffix$.cso_money &lt;= #CsOper.csoMoneyMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOper.csoMoney" prepend="and">
+			    $CsOper.csoMoneyNot$ cs_oper$CsOper.suffix$.cso_money = #CsOper.csoMoney#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoMoneyNot" prepend="and">
+				<isEmpty property="CsOper.csoMoneyMax"><isEmpty property="CsOper.csoMoneyMin"><isEmpty property="CsOper.csoMoney">
+				$csoMoneyNot$ cs_oper$CsOper.suffix$.cso_money is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoAddress" prepend="and">
+				(<isNotNull property="CsOper.csoAddressNot">
+			    cs_oper$CsOper.suffix$.cso_address is null or length(cs_oper$CsOper.suffix$.cso_address) &lt; 1 or
+			    </isNotNull>$CsOper.csoAddressNot$ cs_oper$CsOper.suffix$.cso_address like #CsOper.csoAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoAddressNot" prepend="and">
+				<isEmpty property="CsOper.csoAddress">
+				$csoAddressNot$ (cs_oper$CsOper.suffix$.cso_address is null or length(cs_oper$CsOper.suffix$.cso_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoContacts" prepend="and">
+				(<isNotNull property="CsOper.csoContactsNot">
+			    cs_oper$CsOper.suffix$.cso_contacts is null or length(cs_oper$CsOper.suffix$.cso_contacts) &lt; 1 or
+			    </isNotNull>$CsOper.csoContactsNot$ cs_oper$CsOper.suffix$.cso_contacts like #CsOper.csoContacts#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoContactsNot" prepend="and">
+				<isEmpty property="CsOper.csoContacts">
+				$csoContactsNot$ (cs_oper$CsOper.suffix$.cso_contacts is null or length(cs_oper$CsOper.suffix$.cso_contacts) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoAdder" prepend="and">
+			    $CsOper.csoAdderNot$ cs_oper$CsOper.suffix$.cso_adder = #CsOper.csoAdder#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoAdderNot" prepend="and">
+				<isEmpty property="CsOper.csoAdder">
+				$csoAdderNot$ cs_oper$CsOper.suffix$.cso_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoRemark" prepend="and">
+				(<isNotNull property="CsOper.csoRemarkNot">
+			    cs_oper$CsOper.suffix$.cso_remark is null or length(cs_oper$CsOper.suffix$.cso_remark) &lt; 1 or
+			    </isNotNull>$CsOper.csoRemarkNot$ cs_oper$CsOper.suffix$.cso_remark like #CsOper.csoRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoRemarkNot" prepend="and">
+				<isEmpty property="CsOper.csoRemark">
+				$csoRemarkNot$ (cs_oper$CsOper.suffix$.cso_remark is null or length(cs_oper$CsOper.suffix$.cso_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoMemo" prepend="and">
+				(<isNotNull property="CsOper.csoMemoNot">
+			    cs_oper$CsOper.suffix$.cso_memo is null or length(cs_oper$CsOper.suffix$.cso_memo) &lt; 1 or
+			    </isNotNull>$CsOper.csoMemoNot$ cs_oper$CsOper.suffix$.cso_memo like #CsOper.csoMemo#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoMemoNot" prepend="and">
+				<isEmpty property="CsOper.csoMemo">
+				$csoMemoNot$ (cs_oper$CsOper.suffix$.cso_memo is null or length(cs_oper$CsOper.suffix$.cso_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoData" prepend="and">
+				(<isNotNull property="CsOper.csoDataNot">
+			    cs_oper$CsOper.suffix$.cso_data is null or length(cs_oper$CsOper.suffix$.cso_data) &lt; 1 or
+			    </isNotNull>$CsOper.csoDataNot$ cs_oper$CsOper.suffix$.cso_data like #CsOper.csoData#)
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoDataNot" prepend="and">
+				<isEmpty property="CsOper.csoData">
+				$csoDataNot$ (cs_oper$CsOper.suffix$.cso_data is null or length(cs_oper$CsOper.suffix$.cso_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoUpdateTimeStart" prepend="and">
+			    $CsOper.csoUpdateTimeNot$   (cs_oper$CsOper.suffix$.cso_update_time &gt;= #CsOper.csoUpdateTimeStart#
+			   <isEmpty property="CsOper.csoUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOper.csoUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsOper.csoUpdateTimeStart">$CsOper.csoUpdateTimeNot$   (</isEmpty>
+			    cs_oper$CsOper.suffix$.cso_update_time &lt;= #CsOper.csoUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOper.csoUpdateTime" prepend="and">
+			    $CsOper.csoUpdateTimeNot$ cs_oper$CsOper.suffix$.cso_update_time = #CsOper.csoUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoUpdateTimeNot" prepend="and">
+				<isEmpty property="CsOper.csoUpdateTimeStart"><isEmpty property="CsOper.csoUpdateTimeEnd"><isEmpty property="CsOper.csoUpdateTime">
+				$csoUpdateTimeNot$ cs_oper$CsOper.suffix$.cso_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoAddTimeStart" prepend="and">
+			    $CsOper.csoAddTimeNot$   (cs_oper$CsOper.suffix$.cso_add_time &gt;= #CsOper.csoAddTimeStart#
+			   <isEmpty property="CsOper.csoAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOper.csoAddTimeEnd" prepend="and">
+				<isEmpty property="CsOper.csoAddTimeStart">$CsOper.csoAddTimeNot$   (</isEmpty>
+			    cs_oper$CsOper.suffix$.cso_add_time &lt;= #CsOper.csoAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOper.csoAddTime" prepend="and">
+			    $CsOper.csoAddTimeNot$ cs_oper$CsOper.suffix$.cso_add_time = #CsOper.csoAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoAddTimeNot" prepend="and">
+				<isEmpty property="CsOper.csoAddTimeStart"><isEmpty property="CsOper.csoAddTimeEnd"><isEmpty property="CsOper.csoAddTime">
+				$csoAddTimeNot$ cs_oper$CsOper.suffix$.cso_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOper.csoStatus" prepend="and">
+			    $CsOper.csoStatusNot$ cs_oper$CsOper.suffix$.cso_status = #CsOper.csoStatus#
+			</isNotEmpty>
+			<isNotNull property="CsOper.csoStatusNot" prepend="and">
+				<isEmpty property="CsOper.csoStatus">
+				$csoStatusNot$ cs_oper$CsOper.suffix$.cso_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

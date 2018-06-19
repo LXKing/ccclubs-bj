@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsOperRecord_part">	
+	<!-- 收支记录条件sql片段  -->
+	<sql id="cs_oper_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csorId" prepend="and">
+			    $csorIdNot$ cs_oper_record$suffix$.csor_id = #csorId#
+			</isNotEmpty>
+			<isNotNull property="csorIdNot" prepend="and">
+				<isEmpty property="csorId">
+				$csorIdNot$ cs_oper_record$suffix$.csor_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_oper_record$suffix$.csor_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csorHost" prepend="and">
+			    $csorHostNot$ cs_oper_record$suffix$.csor_host = #csorHost#
+			</isNotEmpty>
+			<isNotNull property="csorHostNot" prepend="and">
+				<isEmpty property="csorHost">
+				$csorHostNot$ cs_oper_record$suffix$.csor_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csorTitle" prepend="and">			    
+			    (<isNotNull property="csorTitleNot">
+			    cs_oper_record$suffix$.csor_title is null or length(cs_oper_record$suffix$.csor_title) &lt; 1 or
+			    </isNotNull>$csorTitleNot$ cs_oper_record$suffix$.csor_title like #csorTitle#)
+			</isNotEmpty>
+			<isNotNull property="csorTitleNot" prepend="and">
+				<isEmpty property="csorTitle">
+				$csorTitleNot$ (cs_oper_record$suffix$.csor_title is null or length(cs_oper_record$suffix$.csor_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorMoneyType" prepend="and">
+			    $csorMoneyTypeNot$ cs_oper_record$suffix$.csor_money_type = #csorMoneyType#
+			</isNotEmpty>
+			<isNotNull property="csorMoneyTypeNot" prepend="and">
+				<isEmpty property="csorMoneyType">
+				$csorMoneyTypeNot$ cs_oper_record$suffix$.csor_money_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorRecordType" prepend="and">
+			    $csorRecordTypeNot$ cs_oper_record$suffix$.csor_record_type = #csorRecordType#
+			</isNotEmpty>
+			<isNotNull property="csorRecordTypeNot" prepend="and">
+				<isEmpty property="csorRecordType">
+				$csorRecordTypeNot$ cs_oper_record$suffix$.csor_record_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorInMin" prepend="and">
+			    $csorInNot$  ( cs_oper_record$suffix$.csor_in &gt;= #csorInMin#
+			    <isEmpty property="csorInMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csorInMax" prepend="and">
+				<isEmpty property="csorInMin">$csorInNot$   (</isEmpty>
+			    cs_oper_record$suffix$.csor_in &lt;= #csorInMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csorIn" prepend="and">
+			    $csorInNot$ cs_oper_record$suffix$.csor_in = #csorIn#
+			</isNotEmpty>
+			<isNotNull property="csorInNot" prepend="and">
+				<isEmpty property="csorInMax"><isEmpty property="csorInMin"><isEmpty property="csorIn">
+				$csorInNot$ cs_oper_record$suffix$.csor_in is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csorOutMin" prepend="and">
+			    $csorOutNot$  ( cs_oper_record$suffix$.csor_out &gt;= #csorOutMin#
+			    <isEmpty property="csorOutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csorOutMax" prepend="and">
+				<isEmpty property="csorOutMin">$csorOutNot$   (</isEmpty>
+			    cs_oper_record$suffix$.csor_out &lt;= #csorOutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csorOut" prepend="and">
+			    $csorOutNot$ cs_oper_record$suffix$.csor_out = #csorOut#
+			</isNotEmpty>
+			<isNotNull property="csorOutNot" prepend="and">
+				<isEmpty property="csorOutMax"><isEmpty property="csorOutMin"><isEmpty property="csorOut">
+				$csorOutNot$ cs_oper_record$suffix$.csor_out is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csorRecord" prepend="and">
+			    $csorRecordNot$ cs_oper_record$suffix$.csor_record = #csorRecord#
+			</isNotEmpty>
+			<isNotNull property="csorRecordNot" prepend="and">
+				<isEmpty property="csorRecord">
+				$csorRecordNot$ cs_oper_record$suffix$.csor_record is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorMember" prepend="and">
+			    $csorMemberNot$ cs_oper_record$suffix$.csor_member = #csorMember#
+			</isNotEmpty>
+			<isNotNull property="csorMemberNot" prepend="and">
+				<isEmpty property="csorMember">
+				$csorMemberNot$ cs_oper_record$suffix$.csor_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorOrder" prepend="and">
+			    $csorOrderNot$ cs_oper_record$suffix$.csor_order = #csorOrder#
+			</isNotEmpty>
+			<isNotNull property="csorOrderNot" prepend="and">
+				<isEmpty property="csorOrder">
+				$csorOrderNot$ cs_oper_record$suffix$.csor_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorObject" prepend="and">
+			    $csorObjectNot$ cs_oper_record$suffix$.csor_object = #csorObject#
+			</isNotEmpty>
+			<isNotNull property="csorObjectNot" prepend="and">
+				<isEmpty property="csorObject">
+				$csorObjectNot$ cs_oper_record$suffix$.csor_object is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorDateTimeStart" prepend="and">
+			    $csorDateTimeNot$   (cs_oper_record$suffix$.csor_date_time &gt;= #csorDateTimeStart#
+			   <isEmpty property="csorDateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csorDateTimeEnd" prepend="and">
+				<isEmpty property="csorDateTimeStart">$csorDateTimeNot$   (</isEmpty>
+			    cs_oper_record$suffix$.csor_date_time &lt;= #csorDateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csorDateTime" prepend="and">
+			    $csorDateTimeNot$ cs_oper_record$suffix$.csor_date_time = #csorDateTime#
+			</isNotEmpty>
+			<isNotNull property="csorDateTimeNot" prepend="and">
+				<isEmpty property="csorDateTimeStart"><isEmpty property="csorDateTimeEnd"><isEmpty property="csorDateTime">
+				$csorDateTimeNot$ cs_oper_record$suffix$.csor_date_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorCashNo" prepend="and">
+			    $csorCashNoNot$ cs_oper_record$suffix$.csor_cash_no = #csorCashNo#
+			</isNotEmpty>
+			<isNotNull property="csorCashNoNot" prepend="and">
+				<isEmpty property="csorCashNo">
+				$csorCashNoNot$ cs_oper_record$suffix$.csor_cash_no is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorAdder" prepend="and">
+			    $csorAdderNot$ cs_oper_record$suffix$.csor_adder = #csorAdder#
+			</isNotEmpty>
+			<isNotNull property="csorAdderNot" prepend="and">
+				<isEmpty property="csorAdder">
+				$csorAdderNot$ cs_oper_record$suffix$.csor_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csorStatus" prepend="and">
+			    $csorStatusNot$ cs_oper_record$suffix$.csor_status = #csorStatus#
+			</isNotEmpty>
+			<isNotNull property="csorStatusNot" prepend="and">
+				<isEmpty property="csorStatus">
+				$csorStatusNot$ cs_oper_record$suffix$.csor_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 收支记录left join 条件sql片段 -->
+	<sql id="cs_oper_record_join">
+		<dynamic>
+			<isNotEmpty property="CsOperRecord.csorId" prepend="and">
+			    $CsOperRecord.csorIdNot$ cs_oper_record$CsOperRecord.suffix$.csor_id = #CsOperRecord.csorId#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorIdNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorId">
+				$csorIdNot$ cs_oper_record$CsOperRecord.suffix$.csor_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_oper_record$CsOperRecord.suffix$.csor_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorHost" prepend="and">
+			    $CsOperRecord.csorHostNot$ cs_oper_record$CsOperRecord.suffix$.csor_host = #CsOperRecord.csorHost#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorHostNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorHost">
+				$csorHostNot$ cs_oper_record$CsOperRecord.suffix$.csor_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorTitle" prepend="and">
+				(<isNotNull property="CsOperRecord.csorTitleNot">
+			    cs_oper_record$CsOperRecord.suffix$.csor_title is null or length(cs_oper_record$CsOperRecord.suffix$.csor_title) &lt; 1 or
+			    </isNotNull>$CsOperRecord.csorTitleNot$ cs_oper_record$CsOperRecord.suffix$.csor_title like #CsOperRecord.csorTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorTitleNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorTitle">
+				$csorTitleNot$ (cs_oper_record$CsOperRecord.suffix$.csor_title is null or length(cs_oper_record$CsOperRecord.suffix$.csor_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorMoneyType" prepend="and">
+			    $CsOperRecord.csorMoneyTypeNot$ cs_oper_record$CsOperRecord.suffix$.csor_money_type = #CsOperRecord.csorMoneyType#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorMoneyTypeNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorMoneyType">
+				$csorMoneyTypeNot$ cs_oper_record$CsOperRecord.suffix$.csor_money_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorRecordType" prepend="and">
+			    $CsOperRecord.csorRecordTypeNot$ cs_oper_record$CsOperRecord.suffix$.csor_record_type = #CsOperRecord.csorRecordType#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorRecordTypeNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorRecordType">
+				$csorRecordTypeNot$ cs_oper_record$CsOperRecord.suffix$.csor_record_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorInMin" prepend="and">
+			    $CsOperRecord.csorInNot$  ( cs_oper_record$CsOperRecord.suffix$.csor_in &gt;= #CsOperRecord.csorInMin#
+			    <isEmpty property="CsOperRecord.csorInMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorInMax" prepend="and">
+				<isEmpty property="CsOperRecord.csorInMin">$CsOperRecord.csorInNot$   (</isEmpty>
+			    cs_oper_record$CsOperRecord.suffix$.csor_in &lt;= #CsOperRecord.csorInMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorIn" prepend="and">
+			    $CsOperRecord.csorInNot$ cs_oper_record$CsOperRecord.suffix$.csor_in = #CsOperRecord.csorIn#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorInNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorInMax"><isEmpty property="CsOperRecord.csorInMin"><isEmpty property="CsOperRecord.csorIn">
+				$csorInNot$ cs_oper_record$CsOperRecord.suffix$.csor_in is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorOutMin" prepend="and">
+			    $CsOperRecord.csorOutNot$  ( cs_oper_record$CsOperRecord.suffix$.csor_out &gt;= #CsOperRecord.csorOutMin#
+			    <isEmpty property="CsOperRecord.csorOutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorOutMax" prepend="and">
+				<isEmpty property="CsOperRecord.csorOutMin">$CsOperRecord.csorOutNot$   (</isEmpty>
+			    cs_oper_record$CsOperRecord.suffix$.csor_out &lt;= #CsOperRecord.csorOutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorOut" prepend="and">
+			    $CsOperRecord.csorOutNot$ cs_oper_record$CsOperRecord.suffix$.csor_out = #CsOperRecord.csorOut#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorOutNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorOutMax"><isEmpty property="CsOperRecord.csorOutMin"><isEmpty property="CsOperRecord.csorOut">
+				$csorOutNot$ cs_oper_record$CsOperRecord.suffix$.csor_out is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorRecord" prepend="and">
+			    $CsOperRecord.csorRecordNot$ cs_oper_record$CsOperRecord.suffix$.csor_record = #CsOperRecord.csorRecord#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorRecordNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorRecord">
+				$csorRecordNot$ cs_oper_record$CsOperRecord.suffix$.csor_record is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorMember" prepend="and">
+			    $CsOperRecord.csorMemberNot$ cs_oper_record$CsOperRecord.suffix$.csor_member = #CsOperRecord.csorMember#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorMemberNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorMember">
+				$csorMemberNot$ cs_oper_record$CsOperRecord.suffix$.csor_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorOrder" prepend="and">
+			    $CsOperRecord.csorOrderNot$ cs_oper_record$CsOperRecord.suffix$.csor_order = #CsOperRecord.csorOrder#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorOrderNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorOrder">
+				$csorOrderNot$ cs_oper_record$CsOperRecord.suffix$.csor_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorObject" prepend="and">
+			    $CsOperRecord.csorObjectNot$ cs_oper_record$CsOperRecord.suffix$.csor_object = #CsOperRecord.csorObject#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorObjectNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorObject">
+				$csorObjectNot$ cs_oper_record$CsOperRecord.suffix$.csor_object is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorDateTimeStart" prepend="and">
+			    $CsOperRecord.csorDateTimeNot$   (cs_oper_record$CsOperRecord.suffix$.csor_date_time &gt;= #CsOperRecord.csorDateTimeStart#
+			   <isEmpty property="CsOperRecord.csorDateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorDateTimeEnd" prepend="and">
+				<isEmpty property="CsOperRecord.csorDateTimeStart">$CsOperRecord.csorDateTimeNot$   (</isEmpty>
+			    cs_oper_record$CsOperRecord.suffix$.csor_date_time &lt;= #CsOperRecord.csorDateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOperRecord.csorDateTime" prepend="and">
+			    $CsOperRecord.csorDateTimeNot$ cs_oper_record$CsOperRecord.suffix$.csor_date_time = #CsOperRecord.csorDateTime#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorDateTimeNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorDateTimeStart"><isEmpty property="CsOperRecord.csorDateTimeEnd"><isEmpty property="CsOperRecord.csorDateTime">
+				$csorDateTimeNot$ cs_oper_record$CsOperRecord.suffix$.csor_date_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorCashNo" prepend="and">
+			    $CsOperRecord.csorCashNoNot$ cs_oper_record$CsOperRecord.suffix$.csor_cash_no = #CsOperRecord.csorCashNo#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorCashNoNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorCashNo">
+				$csorCashNoNot$ cs_oper_record$CsOperRecord.suffix$.csor_cash_no is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorAdder" prepend="and">
+			    $CsOperRecord.csorAdderNot$ cs_oper_record$CsOperRecord.suffix$.csor_adder = #CsOperRecord.csorAdder#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorAdderNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorAdder">
+				$csorAdderNot$ cs_oper_record$CsOperRecord.suffix$.csor_adder is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOperRecord.csorStatus" prepend="and">
+			    $CsOperRecord.csorStatusNot$ cs_oper_record$CsOperRecord.suffix$.csor_status = #CsOperRecord.csorStatus#
+			</isNotEmpty>
+			<isNotNull property="CsOperRecord.csorStatusNot" prepend="and">
+				<isEmpty property="CsOperRecord.csorStatus">
+				$csorStatusNot$ cs_oper_record$CsOperRecord.suffix$.csor_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

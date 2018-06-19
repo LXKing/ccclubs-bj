@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 接口日志之SQL映射 -->
+	<resultMap id="CsAlipayLog" class="com.ccclubs.model.CsAlipayLog">
+		<result property="csalId" column="csal_id"/>
+		<result property="csalBankType" column="csal_bank_type"/>
+		<result property="csalRecord" column="csal_record"/>
+		<result property="csalRefund" column="csal_refund"/>
+		<result property="csalOther" column="csal_other"/>
+		<result property="csalModelClass" column="csal_model_class"/>
+		<result property="csalType" column="csal_type"/>
+		<result property="csalLog" column="csal_log"/>
+		<result property="csalAddTime" column="csal_add_time"/>
+		<result property="csalStatus" column="csal_status"/>
+	</resultMap>
+		
+	<!-- 获取所有接口日志 -->
+	<select id="getCsAlipayLogList" resultMap="CsAlipayLog">
+		select cs_alipay_log$suffix$.* from cs_alipay_log$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[接口充值]查询-->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<isNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.csal_record=cs_alipay_record$CsAlipayRecord.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.$CsAlipayRecord.on$=cs_alipay_record$CsAlipayRecord.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询-->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<isNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.csal_refund=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.$CsAlipayRefund.on$=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_alipay_log$suffix$.csal_status!=-1
+		<!-- 多对一外链接[接口充值]查询条件sql片段 -->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<include refid="CsAlipayRecord_part.cs_alipay_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询条件sql片段 -->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<include refid="CsAlipayRefund_part.cs_alipay_refund_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAlipayLog_part.cs_alipay_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csal_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取接口日志分页 -->
+	<select id="getCsAlipayLogPage" parameterClass="java.util.HashMap" resultMap="CsAlipayLog">
+		select cs_alipay_log$suffix$.* from cs_alipay_log$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[接口充值]查询 -->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<isNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.csal_record=cs_alipay_record$CsAlipayRecord.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.$CsAlipayRecord.on$=cs_alipay_record$CsAlipayRecord.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询 -->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<isNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.csal_refund=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.$CsAlipayRefund.on$=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_alipay_log$suffix$.csal_status!=-1
+		<!-- 多对一外链接[接口充值]查询条件sql片段 -->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<include refid="CsAlipayRecord_part.cs_alipay_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询条件sql片段 -->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<include refid="CsAlipayRefund_part.cs_alipay_refund_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAlipayLog_part.cs_alipay_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csal_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取接口日志总数 -->
+	<select id="getCsAlipayLogEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_alipay_log$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[接口充值]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<isNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.csal_record=cs_alipay_record$CsAlipayRecord.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.$CsAlipayRecord.on$=cs_alipay_record$CsAlipayRecord.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<isNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.csal_refund=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.$CsAlipayRefund.on$=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_alipay_log$suffix$.csal_status!=-1
+		<!-- 多对一外链接[接口充值]查询条件sql片段 -->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<include refid="CsAlipayRecord_part.cs_alipay_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询条件sql片段 -->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<include refid="CsAlipayRefund_part.cs_alipay_refund_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAlipayLog_part.cs_alipay_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取接口日志 -->
+	<select id="getCsAlipayLogById" parameterClass="java.util.HashMap" resultMap="CsAlipayLog">
+		select cs_alipay_log$suffix$.* from cs_alipay_log$suffix$
+		where csal_id=#id#
+	</select>
+	
+		
+	<!-- 保存接口日志 -->
+	<insert id="saveCsAlipayLog"  parameterClass="com.ccclubs.model.CsAlipayLog">
+		insert into cs_alipay_log$suffix$
+		(
+			cs_alipay_log$suffix$.csal_bank_type
+			,cs_alipay_log$suffix$.csal_record
+			,cs_alipay_log$suffix$.csal_refund
+			,cs_alipay_log$suffix$.csal_other
+			,cs_alipay_log$suffix$.csal_model_class
+			,cs_alipay_log$suffix$.csal_type
+			,cs_alipay_log$suffix$.csal_log
+			,cs_alipay_log$suffix$.csal_add_time
+			,cs_alipay_log$suffix$.csal_status
+		)
+		values(
+			<isNotNull property="csalBankType" prepend="">
+				#csalBankType#
+			</isNotNull>
+			<isNull property="csalBankType" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csalRecord" prepend=",">
+				#csalRecord#
+			</isNotNull>
+			<isNull property="csalRecord" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalRefund" prepend=",">
+				#csalRefund#
+			</isNotNull>
+			<isNull property="csalRefund" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalOther" prepend=",">
+				#csalOther#
+			</isNotNull>
+			<isNull property="csalOther" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalModelClass" prepend=",">
+				#csalModelClass#
+			</isNotNull>
+			<isNull property="csalModelClass" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalType" prepend=",">
+				#csalType#
+			</isNotNull>
+			<isNull property="csalType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalLog" prepend=",">
+				#csalLog#
+			</isNotNull>
+			<isNull property="csalLog" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalAddTime" prepend=",">
+				#csalAddTime#
+			</isNotNull>
+			<isNull property="csalAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csalStatus" prepend=",">
+				#csalStatus#
+			</isNotNull>
+			<isNull property="csalStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新接口日志 -->
+	<update id="updateCsAlipayLog"  parameterClass="com.ccclubs.model.CsAlipayLog">
+		update cs_alipay_log$suffix$ set
+			<isNotNull property="csalBankType" prepend="">
+				cs_alipay_log$suffix$.csal_bank_type = #csalBankType#
+			</isNotNull>
+			<isNull property="csalBankType" prepend="">
+				cs_alipay_log$suffix$.csal_bank_type = null
+			</isNull>				
+			<isNotNull property="csalRecord" prepend=",">
+				cs_alipay_log$suffix$.csal_record = #csalRecord#
+			</isNotNull>
+			<isNull property="csalRecord" prepend=",">
+				cs_alipay_log$suffix$.csal_record = null
+			</isNull>				
+			<isNotNull property="csalRefund" prepend=",">
+				cs_alipay_log$suffix$.csal_refund = #csalRefund#
+			</isNotNull>
+			<isNull property="csalRefund" prepend=",">
+				cs_alipay_log$suffix$.csal_refund = null
+			</isNull>				
+			<isNotNull property="csalOther" prepend=",">
+				cs_alipay_log$suffix$.csal_other = #csalOther#
+			</isNotNull>
+			<isNull property="csalOther" prepend=",">
+				cs_alipay_log$suffix$.csal_other = null
+			</isNull>				
+			<isNotNull property="csalModelClass" prepend=",">
+				cs_alipay_log$suffix$.csal_model_class = #csalModelClass#
+			</isNotNull>
+			<isNull property="csalModelClass" prepend=",">
+				cs_alipay_log$suffix$.csal_model_class = null
+			</isNull>				
+			<isNotNull property="csalType" prepend=",">
+				cs_alipay_log$suffix$.csal_type = #csalType#
+			</isNotNull>
+			<isNull property="csalType" prepend=",">
+				cs_alipay_log$suffix$.csal_type = null
+			</isNull>				
+			<isNotNull property="csalLog" prepend=",">
+				cs_alipay_log$suffix$.csal_log = #csalLog#
+			</isNotNull>
+			<isNull property="csalLog" prepend=",">
+				cs_alipay_log$suffix$.csal_log = null
+			</isNull>				
+			<isNotNull property="csalAddTime" prepend=",">
+				cs_alipay_log$suffix$.csal_add_time = #csalAddTime#
+			</isNotNull>
+			<isNull property="csalAddTime" prepend=",">
+				cs_alipay_log$suffix$.csal_add_time = null
+			</isNull>				
+			<isNotNull property="csalStatus" prepend=",">
+				cs_alipay_log$suffix$.csal_status = #csalStatus#
+			</isNotNull>
+			<isNull property="csalStatus" prepend=",">
+				cs_alipay_log$suffix$.csal_status = null
+			</isNull>				
+		where
+			csal_id=#csalId#
+	</update>
+	
+	<!-- 更新接口日志非空字段 -->
+	<update id="updateCsAlipayLog$NotNull"  parameterClass="com.ccclubs.model.CsAlipayLog">
+		update cs_alipay_log$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csalBankType" prepend=",">
+				cs_alipay_log$suffix$.csal_bank_type = #csalBankType#
+			</isNotNull>		
+			<isNotNull property="csalRecord" prepend=",">
+				cs_alipay_log$suffix$.csal_record = #csalRecord#
+			</isNotNull>		
+			<isNotNull property="csalRefund" prepend=",">
+				cs_alipay_log$suffix$.csal_refund = #csalRefund#
+			</isNotNull>		
+			<isNotNull property="csalOther" prepend=",">
+				cs_alipay_log$suffix$.csal_other = #csalOther#
+			</isNotNull>		
+			<isNotNull property="csalModelClass" prepend=",">
+				cs_alipay_log$suffix$.csal_model_class = #csalModelClass#
+			</isNotNull>		
+			<isNotNull property="csalType" prepend=",">
+				cs_alipay_log$suffix$.csal_type = #csalType#
+			</isNotNull>		
+			<isNotNull property="csalLog" prepend=",">
+				cs_alipay_log$suffix$.csal_log = #csalLog#
+			</isNotNull>		
+			<isNotNull property="csalAddTime" prepend=",">
+				cs_alipay_log$suffix$.csal_add_time = #csalAddTime#
+			</isNotNull>		
+			<isNotNull property="csalStatus" prepend=",">
+				cs_alipay_log$suffix$.csal_status = #csalStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csal_id=#csalId#
+	</update>
+	
+
+	<!-- 根据ID删除一个接口日志 -->
+	<delete id="deleteCsAlipayLogById" parameterClass="java.util.HashMap">
+		delete from cs_alipay_log$suffix$ where csal_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个接口日志 -->
+	<update id="removeCsAlipayLogById" parameterClass="java.util.HashMap">
+		update cs_alipay_log$suffix$ set  cs_alipay_log$suffix$.csal_status=-1  where csal_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新接口日志 -->
+	<update id="updateCsAlipayLogBy"  parameterClass="java.util.HashMap">
+		update cs_alipay_log$suffix$ set		
+			csal_id=csal_id
+			<isNotNull property="V_csalId" prepend=",">
+				cs_alipay_log$suffix$.csal_id = #V_csalId#
+			</isNotNull>		
+			<isNotNull property="V_csalBankType" prepend=",">
+				cs_alipay_log$suffix$.csal_bank_type = #V_csalBankType#
+			</isNotNull>		
+			<isNotNull property="V_csalRecord" prepend=",">
+				cs_alipay_log$suffix$.csal_record = #V_csalRecord#
+			</isNotNull>		
+			<isNotNull property="V_csalRefund" prepend=",">
+				cs_alipay_log$suffix$.csal_refund = #V_csalRefund#
+			</isNotNull>		
+			<isNotNull property="V_csalOther" prepend=",">
+				cs_alipay_log$suffix$.csal_other = #V_csalOther#
+			</isNotNull>		
+			<isNotNull property="V_csalModelClass" prepend=",">
+				cs_alipay_log$suffix$.csal_model_class = #V_csalModelClass#
+			</isNotNull>		
+			<isNotNull property="V_csalType" prepend=",">
+				cs_alipay_log$suffix$.csal_type = #V_csalType#
+			</isNotNull>		
+			<isNotNull property="V_csalLog" prepend=",">
+				cs_alipay_log$suffix$.csal_log = #V_csalLog#
+			</isNotNull>		
+			<isNotNull property="V_csalAddTime" prepend=",">
+				cs_alipay_log$suffix$.csal_add_time = #V_csalAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csalStatus" prepend=",">
+				cs_alipay_log$suffix$.csal_status = #V_csalStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[接口充值]查询-->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<isNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.csal_record=cs_alipay_record$CsAlipayRecord.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRecord.on">
+				left join cs_alipay_record cs_alipay_record$CsAlipayRecord.suffix$ on cs_alipay_log$suffix$.$CsAlipayRecord.on$=cs_alipay_record$CsAlipayRecord.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询-->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<isNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.csal_refund=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id
+			</isNull>
+			<isNotNull property="CsAlipayRefund.on">
+				left join cs_alipay_refund cs_alipay_refund$CsAlipayRefund.suffix$ on cs_alipay_log$suffix$.$CsAlipayRefund.on$=cs_alipay_refund$CsAlipayRefund.suffix$.csar_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_alipay_log$suffix$.csal_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[接口充值]查询条件sql片段 -->
+		<isNotNull property="CsalRecord"><!-- 调用一下CsalRecord，把CsAlipayRecord指向CsalRecord --></isNotNull>
+		<isNotNull property="CsAlipayRecord">
+			<include refid="CsAlipayRecord_part.cs_alipay_record_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[接口退款]查询条件sql片段 -->
+		<isNotNull property="CsalRefund"><!-- 调用一下CsalRefund，把CsAlipayRefund指向CsalRefund --></isNotNull>
+		<isNotNull property="CsAlipayRefund">
+			<include refid="CsAlipayRefund_part.cs_alipay_refund_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsAlipayLog_part.cs_alipay_log_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除接口日志 -->
+	<update id="deleteCsAlipayLogBy"  parameterClass="java.util.HashMap">
+		delete from cs_alipay_log$suffix$ where 
+		cs_alipay_log$suffix$.csal_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsAlipayLog_part.cs_alipay_log_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

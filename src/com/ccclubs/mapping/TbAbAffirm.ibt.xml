@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 异借确认之SQL映射 -->
+	<resultMap id="TbAbAffirm" class="com.ccclubs.model.TbAbAffirm">
+		<result property="tbaaId" column="tbaa_id"/>
+		<result property="tbaaHost" column="tbaa_host"/>
+		<result property="tbaaCar" column="tbaa_car"/>
+		<result property="tbaaOrder" column="tbaa_order"/>
+		<result property="tbaaOut" column="tbaa_out"/>
+		<result property="tbaaRet" column="tbaa_ret"/>
+		<result property="tbaaRealRet" column="tbaa_real_ret"/>
+		<result property="tbaaTime" column="tbaa_time"/>
+		<result property="tbaaRealTime" column="tbaa_real_time"/>
+		<result property="tbaaConfirm" column="tbaa_confirm"/>
+		<result property="tbaaAdder" column="tbaa_adder"/>
+		<result property="tbaaEditor" column="tbaa_editor"/>
+		<result property="tbaaConfirmTime" column="tbaa_confirm_time"/>
+		<result property="tbaaUpdateTime" column="tbaa_update_time"/>
+		<result property="tbaaAddTime" column="tbaa_add_time"/>
+		<result property="tbaaRemark" column="tbaa_remark"/>
+		<result property="tbaaStatus" column="tbaa_status"/>
+	</resultMap>
+		
+	<!-- 获取所有异借确认 -->
+	<select id="getTbAbAffirmList" resultMap="TbAbAffirm">
+		select tb_ab_affirm$suffix$.* from tb_ab_affirm$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.tbaa_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.tbaa_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.tbaa_out=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_ab_affirm$suffix$.tbaa_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbAbAffirm_part.tb_ab_affirm_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbaa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取异借确认分页 -->
+	<select id="getTbAbAffirmPage" parameterClass="java.util.HashMap" resultMap="TbAbAffirm">
+		select tb_ab_affirm$suffix$.* from tb_ab_affirm$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.tbaa_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.tbaa_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.tbaa_out=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_ab_affirm$suffix$.tbaa_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbAbAffirm_part.tb_ab_affirm_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbaa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取异借确认总数 -->
+	<select id="getTbAbAffirmEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_ab_affirm$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.tbaa_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.tbaa_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.tbaa_out=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_ab_affirm$suffix$.tbaa_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbAbAffirm_part.tb_ab_affirm_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取异借确认 -->
+	<select id="getTbAbAffirmById" parameterClass="java.util.HashMap" resultMap="TbAbAffirm">
+		select tb_ab_affirm$suffix$.* from tb_ab_affirm$suffix$
+		where tbaa_id=#id#
+	</select>
+	
+		
+	<!-- 保存异借确认 -->
+	<insert id="saveTbAbAffirm"  parameterClass="com.ccclubs.model.TbAbAffirm">
+		insert into tb_ab_affirm$suffix$
+		(
+			tb_ab_affirm$suffix$.tbaa_host
+			,tb_ab_affirm$suffix$.tbaa_car
+			,tb_ab_affirm$suffix$.tbaa_order
+			,tb_ab_affirm$suffix$.tbaa_out
+			,tb_ab_affirm$suffix$.tbaa_ret
+			,tb_ab_affirm$suffix$.tbaa_real_ret
+			,tb_ab_affirm$suffix$.tbaa_time
+			,tb_ab_affirm$suffix$.tbaa_real_time
+			,tb_ab_affirm$suffix$.tbaa_confirm
+			,tb_ab_affirm$suffix$.tbaa_adder
+			,tb_ab_affirm$suffix$.tbaa_editor
+			,tb_ab_affirm$suffix$.tbaa_confirm_time
+			,tb_ab_affirm$suffix$.tbaa_update_time
+			,tb_ab_affirm$suffix$.tbaa_add_time
+			,tb_ab_affirm$suffix$.tbaa_remark
+			,tb_ab_affirm$suffix$.tbaa_status
+		)
+		values(
+			<isNotNull property="tbaaHost" prepend="">
+				#tbaaHost#
+			</isNotNull>
+			<isNull property="tbaaHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbaaCar" prepend=",">
+				#tbaaCar#
+			</isNotNull>
+			<isNull property="tbaaCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaOrder" prepend=",">
+				#tbaaOrder#
+			</isNotNull>
+			<isNull property="tbaaOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaOut" prepend=",">
+				#tbaaOut#
+			</isNotNull>
+			<isNull property="tbaaOut" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaRet" prepend=",">
+				#tbaaRet#
+			</isNotNull>
+			<isNull property="tbaaRet" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaRealRet" prepend=",">
+				#tbaaRealRet#
+			</isNotNull>
+			<isNull property="tbaaRealRet" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaTime" prepend=",">
+				#tbaaTime#
+			</isNotNull>
+			<isNull property="tbaaTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaRealTime" prepend=",">
+				#tbaaRealTime#
+			</isNotNull>
+			<isNull property="tbaaRealTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaConfirm" prepend=",">
+				#tbaaConfirm#
+			</isNotNull>
+			<isNull property="tbaaConfirm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaAdder" prepend=",">
+				#tbaaAdder#
+			</isNotNull>
+			<isNull property="tbaaAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaEditor" prepend=",">
+				#tbaaEditor#
+			</isNotNull>
+			<isNull property="tbaaEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaConfirmTime" prepend=",">
+				#tbaaConfirmTime#
+			</isNotNull>
+			<isNull property="tbaaConfirmTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaUpdateTime" prepend=",">
+				#tbaaUpdateTime#
+			</isNotNull>
+			<isNull property="tbaaUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaAddTime" prepend=",">
+				#tbaaAddTime#
+			</isNotNull>
+			<isNull property="tbaaAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaRemark" prepend=",">
+				#tbaaRemark#
+			</isNotNull>
+			<isNull property="tbaaRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbaaStatus" prepend=",">
+				#tbaaStatus#
+			</isNotNull>
+			<isNull property="tbaaStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新异借确认 -->
+	<update id="updateTbAbAffirm"  parameterClass="com.ccclubs.model.TbAbAffirm">
+		update tb_ab_affirm$suffix$ set
+			<isNotNull property="tbaaHost" prepend="">
+				tb_ab_affirm$suffix$.tbaa_host = #tbaaHost#
+			</isNotNull>
+			<isNull property="tbaaHost" prepend="">
+				tb_ab_affirm$suffix$.tbaa_host = null
+			</isNull>				
+			<isNotNull property="tbaaCar" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_car = #tbaaCar#
+			</isNotNull>
+			<isNull property="tbaaCar" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_car = null
+			</isNull>				
+			<isNotNull property="tbaaOrder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_order = #tbaaOrder#
+			</isNotNull>
+			<isNull property="tbaaOrder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_order = null
+			</isNull>				
+			<isNotNull property="tbaaOut" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_out = #tbaaOut#
+			</isNotNull>
+			<isNull property="tbaaOut" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_out = null
+			</isNull>				
+			<isNotNull property="tbaaRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_ret = #tbaaRet#
+			</isNotNull>
+			<isNull property="tbaaRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_ret = null
+			</isNull>				
+			<isNotNull property="tbaaRealRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_ret = #tbaaRealRet#
+			</isNotNull>
+			<isNull property="tbaaRealRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_ret = null
+			</isNull>				
+			<isNotNull property="tbaaTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_time = #tbaaTime#
+			</isNotNull>
+			<isNull property="tbaaTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_time = null
+			</isNull>				
+			<isNotNull property="tbaaRealTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_time = #tbaaRealTime#
+			</isNotNull>
+			<isNull property="tbaaRealTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_time = null
+			</isNull>				
+			<isNotNull property="tbaaConfirm" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm = #tbaaConfirm#
+			</isNotNull>
+			<isNull property="tbaaConfirm" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm = null
+			</isNull>				
+			<isNotNull property="tbaaAdder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_adder = #tbaaAdder#
+			</isNotNull>
+			<isNull property="tbaaAdder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_adder = null
+			</isNull>				
+			<isNotNull property="tbaaEditor" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_editor = #tbaaEditor#
+			</isNotNull>
+			<isNull property="tbaaEditor" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_editor = null
+			</isNull>				
+			<isNotNull property="tbaaConfirmTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm_time = #tbaaConfirmTime#
+			</isNotNull>
+			<isNull property="tbaaConfirmTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm_time = null
+			</isNull>				
+			<isNotNull property="tbaaUpdateTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_update_time = #tbaaUpdateTime#
+			</isNotNull>
+			<isNull property="tbaaUpdateTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_update_time = null
+			</isNull>				
+			<isNotNull property="tbaaAddTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_add_time = #tbaaAddTime#
+			</isNotNull>
+			<isNull property="tbaaAddTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_add_time = null
+			</isNull>				
+			<isNotNull property="tbaaRemark" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_remark = #tbaaRemark#
+			</isNotNull>
+			<isNull property="tbaaRemark" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_remark = null
+			</isNull>				
+			<isNotNull property="tbaaStatus" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_status = #tbaaStatus#
+			</isNotNull>
+			<isNull property="tbaaStatus" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_status = null
+			</isNull>				
+		where
+			tbaa_id=#tbaaId#
+	</update>
+	
+	<!-- 更新异借确认非空字段 -->
+	<update id="updateTbAbAffirm$NotNull"  parameterClass="com.ccclubs.model.TbAbAffirm">
+		update tb_ab_affirm$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbaaHost" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_host = #tbaaHost#
+			</isNotNull>		
+			<isNotNull property="tbaaCar" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_car = #tbaaCar#
+			</isNotNull>		
+			<isNotNull property="tbaaOrder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_order = #tbaaOrder#
+			</isNotNull>		
+			<isNotNull property="tbaaOut" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_out = #tbaaOut#
+			</isNotNull>		
+			<isNotNull property="tbaaRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_ret = #tbaaRet#
+			</isNotNull>		
+			<isNotNull property="tbaaRealRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_ret = #tbaaRealRet#
+			</isNotNull>		
+			<isNotNull property="tbaaTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_time = #tbaaTime#
+			</isNotNull>		
+			<isNotNull property="tbaaRealTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_time = #tbaaRealTime#
+			</isNotNull>		
+			<isNotNull property="tbaaConfirm" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm = #tbaaConfirm#
+			</isNotNull>		
+			<isNotNull property="tbaaAdder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_adder = #tbaaAdder#
+			</isNotNull>		
+			<isNotNull property="tbaaEditor" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_editor = #tbaaEditor#
+			</isNotNull>		
+			<isNotNull property="tbaaConfirmTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm_time = #tbaaConfirmTime#
+			</isNotNull>		
+			<isNotNull property="tbaaUpdateTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_update_time = #tbaaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbaaAddTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_add_time = #tbaaAddTime#
+			</isNotNull>		
+			<isNotNull property="tbaaRemark" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_remark = #tbaaRemark#
+			</isNotNull>		
+			<isNotNull property="tbaaStatus" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_status = #tbaaStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbaa_id=#tbaaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个异借确认 -->
+	<delete id="deleteTbAbAffirmById" parameterClass="java.util.HashMap">
+		delete from tb_ab_affirm$suffix$ where tbaa_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个异借确认 -->
+	<update id="removeTbAbAffirmById" parameterClass="java.util.HashMap">
+		update tb_ab_affirm$suffix$ set  tb_ab_affirm$suffix$.tbaa_status=-1  where tbaa_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新异借确认 -->
+	<update id="updateTbAbAffirmBy"  parameterClass="java.util.HashMap">
+		update tb_ab_affirm$suffix$ set		
+			tbaa_id=tbaa_id
+			<isNotNull property="V_tbaaId" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_id = #V_tbaaId#
+			</isNotNull>		
+			<isNotNull property="V_tbaaHost" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_host = #V_tbaaHost#
+			</isNotNull>		
+			<isNotNull property="V_tbaaCar" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_car = #V_tbaaCar#
+			</isNotNull>		
+			<isNotNull property="V_tbaaOrder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_order = #V_tbaaOrder#
+			</isNotNull>		
+			<isNotNull property="V_tbaaOut" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_out = #V_tbaaOut#
+			</isNotNull>		
+			<isNotNull property="V_tbaaRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_ret = #V_tbaaRet#
+			</isNotNull>		
+			<isNotNull property="V_tbaaRealRet" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_ret = #V_tbaaRealRet#
+			</isNotNull>		
+			<isNotNull property="V_tbaaTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_time = #V_tbaaTime#
+			</isNotNull>		
+			<isNotNull property="V_tbaaRealTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_real_time = #V_tbaaRealTime#
+			</isNotNull>		
+			<isNotNull property="V_tbaaConfirm" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm = #V_tbaaConfirm#
+			</isNotNull>		
+			<isNotNull property="V_tbaaAdder" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_adder = #V_tbaaAdder#
+			</isNotNull>		
+			<isNotNull property="V_tbaaEditor" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_editor = #V_tbaaEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbaaConfirmTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_confirm_time = #V_tbaaConfirmTime#
+			</isNotNull>		
+			<isNotNull property="V_tbaaUpdateTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_update_time = #V_tbaaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbaaAddTime" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_add_time = #V_tbaaAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbaaRemark" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_remark = #V_tbaaRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbaaStatus" prepend=",">
+				tb_ab_affirm$suffix$.tbaa_status = #V_tbaaStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.tbaa_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on tb_ab_affirm$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.tbaa_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on tb_ab_affirm$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.tbaa_out=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on tb_ab_affirm$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_ab_affirm$suffix$.tbaa_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="TbaaCar"><!-- 调用一下TbaaCar，把CsCar指向TbaaCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="TbaaOrder"><!-- 调用一下TbaaOrder，把CsOrder指向TbaaOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="TbaaOut"><!-- 调用一下TbaaOut，把CsOutlets指向TbaaOut --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbAbAffirm_part.tb_ab_affirm_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除异借确认 -->
+	<update id="deleteTbAbAffirmBy"  parameterClass="java.util.HashMap">
+		delete from tb_ab_affirm$suffix$ where 
+		tb_ab_affirm$suffix$.tbaa_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbAbAffirm_part.tb_ab_affirm_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

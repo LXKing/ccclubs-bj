@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 升级日志之SQL映射 -->
+	<resultMap id="CsUpgradeLog" class="com.ccclubs.model.CsUpgradeLog">
+		<result property="csulId" column="csul_id"/>
+		<result property="csulTitle" column="csul_title"/>
+		<result property="csulType" column="csul_type"/>
+		<result property="csulDescribe" column="csul_describe"/>
+		<result property="csulOnTime" column="csul_on_time"/>
+		<result property="csulAdder" column="csul_adder"/>
+		<result property="csulUpdateTime" column="csul_update_time"/>
+		<result property="csulAddTime" column="csul_add_time"/>
+		<result property="csulStatus" column="csul_status"/>
+	</resultMap>
+		
+	<!-- 获取所有升级日志 -->
+	<select id="getCsUpgradeLogList" resultMap="CsUpgradeLog">
+		select cs_upgrade_log$suffix$.* from cs_upgrade_log$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_upgrade_log$suffix$.csul_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUpgradeLog_part.cs_upgrade_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csul_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取升级日志分页 -->
+	<select id="getCsUpgradeLogPage" parameterClass="java.util.HashMap" resultMap="CsUpgradeLog">
+		select cs_upgrade_log$suffix$.* from cs_upgrade_log$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_upgrade_log$suffix$.csul_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUpgradeLog_part.cs_upgrade_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csul_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取升级日志总数 -->
+	<select id="getCsUpgradeLogEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_upgrade_log$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_upgrade_log$suffix$.csul_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUpgradeLog_part.cs_upgrade_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取升级日志 -->
+	<select id="getCsUpgradeLogById" parameterClass="java.util.HashMap" resultMap="CsUpgradeLog">
+		select cs_upgrade_log$suffix$.* from cs_upgrade_log$suffix$
+		where csul_id=#id#
+	</select>
+	
+		
+	<!-- 保存升级日志 -->
+	<insert id="saveCsUpgradeLog"  parameterClass="com.ccclubs.model.CsUpgradeLog">
+		insert into cs_upgrade_log$suffix$
+		(
+			cs_upgrade_log$suffix$.csul_title
+			,cs_upgrade_log$suffix$.csul_type
+			,cs_upgrade_log$suffix$.csul_describe
+			,cs_upgrade_log$suffix$.csul_on_time
+			,cs_upgrade_log$suffix$.csul_adder
+			,cs_upgrade_log$suffix$.csul_update_time
+			,cs_upgrade_log$suffix$.csul_add_time
+			,cs_upgrade_log$suffix$.csul_status
+		)
+		values(
+			<isNotNull property="csulTitle" prepend="">
+				#csulTitle#
+			</isNotNull>
+			<isNull property="csulTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csulType" prepend=",">
+				#csulType#
+			</isNotNull>
+			<isNull property="csulType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csulDescribe" prepend=",">
+				#csulDescribe#
+			</isNotNull>
+			<isNull property="csulDescribe" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csulOnTime" prepend=",">
+				#csulOnTime#
+			</isNotNull>
+			<isNull property="csulOnTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csulAdder" prepend=",">
+				#csulAdder#
+			</isNotNull>
+			<isNull property="csulAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csulUpdateTime" prepend=",">
+				#csulUpdateTime#
+			</isNotNull>
+			<isNull property="csulUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csulAddTime" prepend=",">
+				#csulAddTime#
+			</isNotNull>
+			<isNull property="csulAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csulStatus" prepend=",">
+				#csulStatus#
+			</isNotNull>
+			<isNull property="csulStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新升级日志 -->
+	<update id="updateCsUpgradeLog"  parameterClass="com.ccclubs.model.CsUpgradeLog">
+		update cs_upgrade_log$suffix$ set
+			<isNotNull property="csulTitle" prepend="">
+				cs_upgrade_log$suffix$.csul_title = #csulTitle#
+			</isNotNull>
+			<isNull property="csulTitle" prepend="">
+				cs_upgrade_log$suffix$.csul_title = null
+			</isNull>				
+			<isNotNull property="csulType" prepend=",">
+				cs_upgrade_log$suffix$.csul_type = #csulType#
+			</isNotNull>
+			<isNull property="csulType" prepend=",">
+				cs_upgrade_log$suffix$.csul_type = null
+			</isNull>				
+			<isNotNull property="csulDescribe" prepend=",">
+				cs_upgrade_log$suffix$.csul_describe = #csulDescribe#
+			</isNotNull>
+			<isNull property="csulDescribe" prepend=",">
+				cs_upgrade_log$suffix$.csul_describe = null
+			</isNull>				
+			<isNotNull property="csulOnTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_on_time = #csulOnTime#
+			</isNotNull>
+			<isNull property="csulOnTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_on_time = null
+			</isNull>				
+			<isNotNull property="csulAdder" prepend=",">
+				cs_upgrade_log$suffix$.csul_adder = #csulAdder#
+			</isNotNull>
+			<isNull property="csulAdder" prepend=",">
+				cs_upgrade_log$suffix$.csul_adder = null
+			</isNull>				
+			<isNotNull property="csulUpdateTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_update_time = #csulUpdateTime#
+			</isNotNull>
+			<isNull property="csulUpdateTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_update_time = null
+			</isNull>				
+			<isNotNull property="csulAddTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_add_time = #csulAddTime#
+			</isNotNull>
+			<isNull property="csulAddTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_add_time = null
+			</isNull>				
+			<isNotNull property="csulStatus" prepend=",">
+				cs_upgrade_log$suffix$.csul_status = #csulStatus#
+			</isNotNull>
+			<isNull property="csulStatus" prepend=",">
+				cs_upgrade_log$suffix$.csul_status = null
+			</isNull>				
+		where
+			csul_id=#csulId#
+	</update>
+	
+	<!-- 更新升级日志非空字段 -->
+	<update id="updateCsUpgradeLog$NotNull"  parameterClass="com.ccclubs.model.CsUpgradeLog">
+		update cs_upgrade_log$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csulTitle" prepend=",">
+				cs_upgrade_log$suffix$.csul_title = #csulTitle#
+			</isNotNull>		
+			<isNotNull property="csulType" prepend=",">
+				cs_upgrade_log$suffix$.csul_type = #csulType#
+			</isNotNull>		
+			<isNotNull property="csulDescribe" prepend=",">
+				cs_upgrade_log$suffix$.csul_describe = #csulDescribe#
+			</isNotNull>		
+			<isNotNull property="csulOnTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_on_time = #csulOnTime#
+			</isNotNull>		
+			<isNotNull property="csulAdder" prepend=",">
+				cs_upgrade_log$suffix$.csul_adder = #csulAdder#
+			</isNotNull>		
+			<isNotNull property="csulUpdateTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_update_time = #csulUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csulAddTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_add_time = #csulAddTime#
+			</isNotNull>		
+			<isNotNull property="csulStatus" prepend=",">
+				cs_upgrade_log$suffix$.csul_status = #csulStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csul_id=#csulId#
+	</update>
+	
+
+	<!-- 根据ID删除一个升级日志 -->
+	<delete id="deleteCsUpgradeLogById" parameterClass="java.util.HashMap">
+		delete from cs_upgrade_log$suffix$ where csul_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个升级日志 -->
+	<update id="removeCsUpgradeLogById" parameterClass="java.util.HashMap">
+		update cs_upgrade_log$suffix$ set  cs_upgrade_log$suffix$.csul_status=-1  where csul_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新升级日志 -->
+	<update id="updateCsUpgradeLogBy"  parameterClass="java.util.HashMap">
+		update cs_upgrade_log$suffix$ set		
+			csul_id=csul_id
+			<isNotNull property="V_csulId" prepend=",">
+				cs_upgrade_log$suffix$.csul_id = #V_csulId#
+			</isNotNull>		
+			<isNotNull property="V_csulTitle" prepend=",">
+				cs_upgrade_log$suffix$.csul_title = #V_csulTitle#
+			</isNotNull>		
+			<isNotNull property="V_csulType" prepend=",">
+				cs_upgrade_log$suffix$.csul_type = #V_csulType#
+			</isNotNull>		
+			<isNotNull property="V_csulDescribe" prepend=",">
+				cs_upgrade_log$suffix$.csul_describe = #V_csulDescribe#
+			</isNotNull>		
+			<isNotNull property="V_csulOnTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_on_time = #V_csulOnTime#
+			</isNotNull>		
+			<isNotNull property="V_csulAdder" prepend=",">
+				cs_upgrade_log$suffix$.csul_adder = #V_csulAdder#
+			</isNotNull>		
+			<isNotNull property="V_csulUpdateTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_update_time = #V_csulUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csulAddTime" prepend=",">
+				cs_upgrade_log$suffix$.csul_add_time = #V_csulAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csulStatus" prepend=",">
+				cs_upgrade_log$suffix$.csul_status = #V_csulStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_upgrade_log$suffix$.csul_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUpgradeLog_part.cs_upgrade_log_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除升级日志 -->
+	<update id="deleteCsUpgradeLogBy"  parameterClass="java.util.HashMap">
+		delete from cs_upgrade_log$suffix$ where 
+		cs_upgrade_log$suffix$.csul_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUpgradeLog_part.cs_upgrade_log_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

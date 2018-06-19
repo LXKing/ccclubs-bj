@@ -1,0 +1,90 @@
+<header id="activity-header">
+	<div class="ccc-grid-980 ccc-clearfix">
+		<a href="${basePath}"><div class="logo"></div></a>
+		<div class="activity-bar">
+			<s:if test="#session.ccclubs_web_login==null">
+				<a class="ccc-link" href="/login.html?from=/activity/newyear2015/activity.html" style="font-weight: bold;letter-spacing: 3px;text-decoration: none;">[登录]</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<a class="ccc-link" style="margin-right: 15px; text-decoration: none;" href="/register.html?src=topbar"><font color="#B701100" style="font-weight: bold;letter-spacing: 3px;">[注册]</font></a>
+		    </s:if>
+		    <s:else>
+		      ${cc:getTimeDisplay()}，${ccclubs_web_login.csmName==null ? cc:mobile2Star(ccclubs_web_login.csmMobile) : ccclubs_web_login.csmName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		      <a class="ccc-link" style="margin-right: 15px; text-decoration: none;" href="/login_logout.html?from=/activity/newyear2015/activity.html"><font style="font-weight: bold;letter-spacing: 3px;">[注销]</font></a>
+		    </s:else>
+		</div>
+	</div>
+</header>
+<div class="activity-banner-cont">
+	<div class="activity-banner-bg-body">
+		<div class="activity-banner-bg">
+			<div class="activity-banner-bg-bottom">
+				<div class="activity-banner"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="activity-status">
+	<div class="cont">
+		<div id="state1" class="ongoing" style="margin-left: 27px;">
+			<font style="font-size: 20px; font-weight: bold;">报名活动</font><br/>
+			(2015年1月7日-2015年1月11日)
+		</div>
+		<div id="state2" class="upcoming" style="margin-left: 27px;">
+			<font style="font-size: 20px; font-weight: bold;">套餐抢购活动</font><br/>
+			(2015年1月12日-2015年1月17日)
+		</div>
+		<div id="state3" class="upcoming" style="margin-left: 27px;">
+			<font style="font-size: 20px; font-weight: bold;">抢车活动</font><br/>
+			(2015年2月1日-2015年2月7日)
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+		$(document).ready(function() {
+		
+			var cls_ongoing = "ongoing";
+			var cls_over = "over";
+			var cls_upcoming = "upcoming";
+			//初始化活动状态    
+			var state = "${activity_state}";
+			if(state == 1){			//活动报名中
+				//默认
+				//火爆进行中 -> 即将开始 ->即将开始
+			}else if(state == 2){	//活动抢套餐中
+				//报名结束 -> 火爆进行中 ->即将开始	1->2
+				$("#state1").removeClass(cls_ongoing);
+				$("#state1").addClass(cls_over);
+				
+				$("#state2").removeClass(cls_upcoming);
+				$("#state2").addClass(cls_ongoing);
+			}else if(state == 3){	//活动抢车中
+				//报名结束 -> 结束 -> 结束  1->3
+				$("#state1").removeClass(cls_ongoing);
+				$("#state1").addClass(cls_over);
+				
+				$("#state2").removeClass(cls_upcoming);
+				$("#state2").addClass(cls_over);
+				
+				$("#state3").removeClass(cls_upcoming);
+				$("#state3").addClass(cls_ongoing);
+			}else if(state ==4){	//活动结束
+				$("#state1").removeClass(cls_ongoing);
+				$("#state1").addClass(cls_over);
+				
+				$("#state2").removeClass(cls_upcoming);
+				$("#state2").addClass(cls_over);
+				
+			}else if(state ==5){	//活动结束
+				$("#state1").removeClass(cls_ongoing);
+				$("#state1").addClass(cls_over);
+				
+				$("#state2").removeClass(cls_upcoming);
+				$("#state2").addClass(cls_over);
+				
+				$("#state3").removeClass(cls_upcoming);
+				$("#state3").addClass(cls_over);
+			}
+			
+		});
+</script>

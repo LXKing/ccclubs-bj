@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 积分规则之SQL映射 -->
+	<resultMap id="CsIntegralRule" class="com.ccclubs.model.CsIntegralRule">
+		<result property="csirId" column="csir_id"/>
+		<result property="csirName" column="csir_name"/>
+		<result property="csirFlag" column="csir_flag"/>
+		<result property="csirDepict" column="csir_depict"/>
+		<result property="csirIntegral" column="csir_integral"/>
+		<result property="csirUpdateTime" column="csir_update_time"/>
+		<result property="csirAddTime" column="csir_add_time"/>
+		<result property="csirStatus" column="csir_status"/>
+	</resultMap>
+		
+	<!-- 获取所有积分规则 -->
+	<select id="getCsIntegralRuleList" resultMap="CsIntegralRule">
+		select cs_integral_rule$suffix$.* from cs_integral_rule$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_integral_rule$suffix$.csir_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsIntegralRule_part.cs_integral_rule_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csir_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取积分规则分页 -->
+	<select id="getCsIntegralRulePage" parameterClass="java.util.HashMap" resultMap="CsIntegralRule">
+		select cs_integral_rule$suffix$.* from cs_integral_rule$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_integral_rule$suffix$.csir_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsIntegralRule_part.cs_integral_rule_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csir_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取积分规则总数 -->
+	<select id="getCsIntegralRuleEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_integral_rule$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_integral_rule$suffix$.csir_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsIntegralRule_part.cs_integral_rule_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取积分规则 -->
+	<select id="getCsIntegralRuleById" parameterClass="java.util.HashMap" resultMap="CsIntegralRule">
+		select cs_integral_rule$suffix$.* from cs_integral_rule$suffix$
+		where csir_id=#id#
+	</select>
+	
+		
+	<!-- 保存积分规则 -->
+	<insert id="saveCsIntegralRule"  parameterClass="com.ccclubs.model.CsIntegralRule">
+		insert into cs_integral_rule$suffix$
+		(
+			cs_integral_rule$suffix$.csir_name
+			,cs_integral_rule$suffix$.csir_flag
+			,cs_integral_rule$suffix$.csir_depict
+			,cs_integral_rule$suffix$.csir_integral
+			,cs_integral_rule$suffix$.csir_update_time
+			,cs_integral_rule$suffix$.csir_add_time
+			,cs_integral_rule$suffix$.csir_status
+		)
+		values(
+			<isNotNull property="csirName" prepend="">
+				#csirName#
+			</isNotNull>
+			<isNull property="csirName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csirFlag" prepend=",">
+				#csirFlag#
+			</isNotNull>
+			<isNull property="csirFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csirDepict" prepend=",">
+				#csirDepict#
+			</isNotNull>
+			<isNull property="csirDepict" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csirIntegral" prepend=",">
+				#csirIntegral#
+			</isNotNull>
+			<isNull property="csirIntegral" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csirUpdateTime" prepend=",">
+				#csirUpdateTime#
+			</isNotNull>
+			<isNull property="csirUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csirAddTime" prepend=",">
+				#csirAddTime#
+			</isNotNull>
+			<isNull property="csirAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csirStatus" prepend=",">
+				#csirStatus#
+			</isNotNull>
+			<isNull property="csirStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新积分规则 -->
+	<update id="updateCsIntegralRule"  parameterClass="com.ccclubs.model.CsIntegralRule">
+		update cs_integral_rule$suffix$ set
+			<isNotNull property="csirName" prepend="">
+				cs_integral_rule$suffix$.csir_name = #csirName#
+			</isNotNull>
+			<isNull property="csirName" prepend="">
+				cs_integral_rule$suffix$.csir_name = null
+			</isNull>				
+			<isNotNull property="csirFlag" prepend=",">
+				cs_integral_rule$suffix$.csir_flag = #csirFlag#
+			</isNotNull>
+			<isNull property="csirFlag" prepend=",">
+				cs_integral_rule$suffix$.csir_flag = null
+			</isNull>				
+			<isNotNull property="csirDepict" prepend=",">
+				cs_integral_rule$suffix$.csir_depict = #csirDepict#
+			</isNotNull>
+			<isNull property="csirDepict" prepend=",">
+				cs_integral_rule$suffix$.csir_depict = null
+			</isNull>				
+			<isNotNull property="csirIntegral" prepend=",">
+				cs_integral_rule$suffix$.csir_integral = #csirIntegral#
+			</isNotNull>
+			<isNull property="csirIntegral" prepend=",">
+				cs_integral_rule$suffix$.csir_integral = null
+			</isNull>				
+			<isNotNull property="csirUpdateTime" prepend=",">
+				cs_integral_rule$suffix$.csir_update_time = #csirUpdateTime#
+			</isNotNull>
+			<isNull property="csirUpdateTime" prepend=",">
+				cs_integral_rule$suffix$.csir_update_time = null
+			</isNull>				
+			<isNotNull property="csirAddTime" prepend=",">
+				cs_integral_rule$suffix$.csir_add_time = #csirAddTime#
+			</isNotNull>
+			<isNull property="csirAddTime" prepend=",">
+				cs_integral_rule$suffix$.csir_add_time = null
+			</isNull>				
+			<isNotNull property="csirStatus" prepend=",">
+				cs_integral_rule$suffix$.csir_status = #csirStatus#
+			</isNotNull>
+			<isNull property="csirStatus" prepend=",">
+				cs_integral_rule$suffix$.csir_status = null
+			</isNull>				
+		where
+			csir_id=#csirId#
+	</update>
+	
+	<!-- 更新积分规则非空字段 -->
+	<update id="updateCsIntegralRule$NotNull"  parameterClass="com.ccclubs.model.CsIntegralRule">
+		update cs_integral_rule$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csirName" prepend=",">
+				cs_integral_rule$suffix$.csir_name = #csirName#
+			</isNotNull>		
+			<isNotNull property="csirFlag" prepend=",">
+				cs_integral_rule$suffix$.csir_flag = #csirFlag#
+			</isNotNull>		
+			<isNotNull property="csirDepict" prepend=",">
+				cs_integral_rule$suffix$.csir_depict = #csirDepict#
+			</isNotNull>		
+			<isNotNull property="csirIntegral" prepend=",">
+				cs_integral_rule$suffix$.csir_integral = #csirIntegral#
+			</isNotNull>		
+			<isNotNull property="csirUpdateTime" prepend=",">
+				cs_integral_rule$suffix$.csir_update_time = #csirUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csirAddTime" prepend=",">
+				cs_integral_rule$suffix$.csir_add_time = #csirAddTime#
+			</isNotNull>		
+			<isNotNull property="csirStatus" prepend=",">
+				cs_integral_rule$suffix$.csir_status = #csirStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csir_id=#csirId#
+	</update>
+	
+
+	<!-- 根据ID删除一个积分规则 -->
+	<delete id="deleteCsIntegralRuleById" parameterClass="java.util.HashMap">
+		delete from cs_integral_rule$suffix$ where csir_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个积分规则 -->
+	<update id="removeCsIntegralRuleById" parameterClass="java.util.HashMap">
+		update cs_integral_rule$suffix$ set  cs_integral_rule$suffix$.csir_status=-1  where csir_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新积分规则 -->
+	<update id="updateCsIntegralRuleBy"  parameterClass="java.util.HashMap">
+		update cs_integral_rule$suffix$ set		
+			csir_id=csir_id
+			<isNotNull property="V_csirId" prepend=",">
+				cs_integral_rule$suffix$.csir_id = #V_csirId#
+			</isNotNull>		
+			<isNotNull property="V_csirName" prepend=",">
+				cs_integral_rule$suffix$.csir_name = #V_csirName#
+			</isNotNull>		
+			<isNotNull property="V_csirFlag" prepend=",">
+				cs_integral_rule$suffix$.csir_flag = #V_csirFlag#
+			</isNotNull>		
+			<isNotNull property="V_csirDepict" prepend=",">
+				cs_integral_rule$suffix$.csir_depict = #V_csirDepict#
+			</isNotNull>		
+			<isNotNull property="V_csirIntegral" prepend=",">
+				cs_integral_rule$suffix$.csir_integral = #V_csirIntegral#
+			</isNotNull>		
+			<isNotNull property="V_csirUpdateTime" prepend=",">
+				cs_integral_rule$suffix$.csir_update_time = #V_csirUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csirAddTime" prepend=",">
+				cs_integral_rule$suffix$.csir_add_time = #V_csirAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csirStatus" prepend=",">
+				cs_integral_rule$suffix$.csir_status = #V_csirStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_integral_rule$suffix$.csir_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsIntegralRule_part.cs_integral_rule_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除积分规则 -->
+	<update id="deleteCsIntegralRuleBy"  parameterClass="java.util.HashMap">
+		delete from cs_integral_rule$suffix$ where 
+		cs_integral_rule$suffix$.csir_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsIntegralRule_part.cs_integral_rule_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

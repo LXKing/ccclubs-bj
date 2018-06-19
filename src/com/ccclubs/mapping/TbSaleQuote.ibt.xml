@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 跟单报价之SQL映射 -->
+	<resultMap id="TbSaleQuote" class="com.ccclubs.model.TbSaleQuote">
+		<result property="tbsqId" column="tbsq_id"/>
+		<result property="tbsqHost" column="tbsq_host"/>
+		<result property="tbsqTitle" column="tbsq_title"/>
+		<result property="tbsqOpport" column="tbsq_opport"/>
+		<result property="tbsqDetail" column="tbsq_detail"/>
+		<result property="tbsqFile" column="tbsq_file"/>
+		<result property="tbsqOnwer" column="tbsq_onwer"/>
+		<result property="tbsqAdder" column="tbsq_adder"/>
+		<result property="tbsqEditor" column="tbsq_editor"/>
+		<result property="tbsqUpdateTime" column="tbsq_update_time"/>
+		<result property="tbsqAddTime" column="tbsq_add_time"/>
+		<result property="tbsqStatus" column="tbsq_status"/>
+	</resultMap>
+		
+	<!-- 获取所有跟单报价 -->
+	<select id="getTbSaleQuoteList" resultMap="TbSaleQuote">
+		select tb_sale_quote$suffix$.* from tb_sale_quote$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售机会]查询-->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.tbsq_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_quote$suffix$.tbsq_status!=-1
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleQuote_part.tb_sale_quote_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsq_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取跟单报价分页 -->
+	<select id="getTbSaleQuotePage" parameterClass="java.util.HashMap" resultMap="TbSaleQuote">
+		select tb_sale_quote$suffix$.* from tb_sale_quote$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售机会]查询 -->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.tbsq_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_quote$suffix$.tbsq_status!=-1
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleQuote_part.tb_sale_quote_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsq_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取跟单报价总数 -->
+	<select id="getTbSaleQuoteEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_sale_quote$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售机会]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.tbsq_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_quote$suffix$.tbsq_status!=-1
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleQuote_part.tb_sale_quote_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取跟单报价 -->
+	<select id="getTbSaleQuoteById" parameterClass="java.util.HashMap" resultMap="TbSaleQuote">
+		select tb_sale_quote$suffix$.* from tb_sale_quote$suffix$
+		where tbsq_id=#id#
+	</select>
+	
+		
+	<!-- 保存跟单报价 -->
+	<insert id="saveTbSaleQuote"  parameterClass="com.ccclubs.model.TbSaleQuote">
+		insert into tb_sale_quote$suffix$
+		(
+			tb_sale_quote$suffix$.tbsq_host
+			,tb_sale_quote$suffix$.tbsq_title
+			,tb_sale_quote$suffix$.tbsq_opport
+			,tb_sale_quote$suffix$.tbsq_detail
+			,tb_sale_quote$suffix$.tbsq_file
+			,tb_sale_quote$suffix$.tbsq_onwer
+			,tb_sale_quote$suffix$.tbsq_adder
+			,tb_sale_quote$suffix$.tbsq_editor
+			,tb_sale_quote$suffix$.tbsq_update_time
+			,tb_sale_quote$suffix$.tbsq_add_time
+			,tb_sale_quote$suffix$.tbsq_status
+		)
+		values(
+			<isNotNull property="tbsqHost" prepend="">
+				#tbsqHost#
+			</isNotNull>
+			<isNull property="tbsqHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbsqTitle" prepend=",">
+				#tbsqTitle#
+			</isNotNull>
+			<isNull property="tbsqTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqOpport" prepend=",">
+				#tbsqOpport#
+			</isNotNull>
+			<isNull property="tbsqOpport" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqDetail" prepend=",">
+				#tbsqDetail#
+			</isNotNull>
+			<isNull property="tbsqDetail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqFile" prepend=",">
+				#tbsqFile#
+			</isNotNull>
+			<isNull property="tbsqFile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqOnwer" prepend=",">
+				#tbsqOnwer#
+			</isNotNull>
+			<isNull property="tbsqOnwer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqAdder" prepend=",">
+				#tbsqAdder#
+			</isNotNull>
+			<isNull property="tbsqAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqEditor" prepend=",">
+				#tbsqEditor#
+			</isNotNull>
+			<isNull property="tbsqEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqUpdateTime" prepend=",">
+				#tbsqUpdateTime#
+			</isNotNull>
+			<isNull property="tbsqUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqAddTime" prepend=",">
+				#tbsqAddTime#
+			</isNotNull>
+			<isNull property="tbsqAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsqStatus" prepend=",">
+				#tbsqStatus#
+			</isNotNull>
+			<isNull property="tbsqStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新跟单报价 -->
+	<update id="updateTbSaleQuote"  parameterClass="com.ccclubs.model.TbSaleQuote">
+		update tb_sale_quote$suffix$ set
+			<isNotNull property="tbsqHost" prepend="">
+				tb_sale_quote$suffix$.tbsq_host = #tbsqHost#
+			</isNotNull>
+			<isNull property="tbsqHost" prepend="">
+				tb_sale_quote$suffix$.tbsq_host = null
+			</isNull>				
+			<isNotNull property="tbsqTitle" prepend=",">
+				tb_sale_quote$suffix$.tbsq_title = #tbsqTitle#
+			</isNotNull>
+			<isNull property="tbsqTitle" prepend=",">
+				tb_sale_quote$suffix$.tbsq_title = null
+			</isNull>				
+			<isNotNull property="tbsqOpport" prepend=",">
+				tb_sale_quote$suffix$.tbsq_opport = #tbsqOpport#
+			</isNotNull>
+			<isNull property="tbsqOpport" prepend=",">
+				tb_sale_quote$suffix$.tbsq_opport = null
+			</isNull>				
+			<isNotNull property="tbsqDetail" prepend=",">
+				tb_sale_quote$suffix$.tbsq_detail = #tbsqDetail#
+			</isNotNull>
+			<isNull property="tbsqDetail" prepend=",">
+				tb_sale_quote$suffix$.tbsq_detail = null
+			</isNull>				
+			<isNotNull property="tbsqFile" prepend=",">
+				tb_sale_quote$suffix$.tbsq_file = #tbsqFile#
+			</isNotNull>
+			<isNull property="tbsqFile" prepend=",">
+				tb_sale_quote$suffix$.tbsq_file = null
+			</isNull>				
+			<isNotNull property="tbsqOnwer" prepend=",">
+				tb_sale_quote$suffix$.tbsq_onwer = #tbsqOnwer#
+			</isNotNull>
+			<isNull property="tbsqOnwer" prepend=",">
+				tb_sale_quote$suffix$.tbsq_onwer = null
+			</isNull>				
+			<isNotNull property="tbsqAdder" prepend=",">
+				tb_sale_quote$suffix$.tbsq_adder = #tbsqAdder#
+			</isNotNull>
+			<isNull property="tbsqAdder" prepend=",">
+				tb_sale_quote$suffix$.tbsq_adder = null
+			</isNull>				
+			<isNotNull property="tbsqEditor" prepend=",">
+				tb_sale_quote$suffix$.tbsq_editor = #tbsqEditor#
+			</isNotNull>
+			<isNull property="tbsqEditor" prepend=",">
+				tb_sale_quote$suffix$.tbsq_editor = null
+			</isNull>				
+			<isNotNull property="tbsqUpdateTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_update_time = #tbsqUpdateTime#
+			</isNotNull>
+			<isNull property="tbsqUpdateTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_update_time = null
+			</isNull>				
+			<isNotNull property="tbsqAddTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_add_time = #tbsqAddTime#
+			</isNotNull>
+			<isNull property="tbsqAddTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_add_time = null
+			</isNull>				
+			<isNotNull property="tbsqStatus" prepend=",">
+				tb_sale_quote$suffix$.tbsq_status = #tbsqStatus#
+			</isNotNull>
+			<isNull property="tbsqStatus" prepend=",">
+				tb_sale_quote$suffix$.tbsq_status = null
+			</isNull>				
+		where
+			tbsq_id=#tbsqId#
+	</update>
+	
+	<!-- 更新跟单报价非空字段 -->
+	<update id="updateTbSaleQuote$NotNull"  parameterClass="com.ccclubs.model.TbSaleQuote">
+		update tb_sale_quote$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbsqHost" prepend=",">
+				tb_sale_quote$suffix$.tbsq_host = #tbsqHost#
+			</isNotNull>		
+			<isNotNull property="tbsqTitle" prepend=",">
+				tb_sale_quote$suffix$.tbsq_title = #tbsqTitle#
+			</isNotNull>		
+			<isNotNull property="tbsqOpport" prepend=",">
+				tb_sale_quote$suffix$.tbsq_opport = #tbsqOpport#
+			</isNotNull>		
+			<isNotNull property="tbsqDetail" prepend=",">
+				tb_sale_quote$suffix$.tbsq_detail = #tbsqDetail#
+			</isNotNull>		
+			<isNotNull property="tbsqFile" prepend=",">
+				tb_sale_quote$suffix$.tbsq_file = #tbsqFile#
+			</isNotNull>		
+			<isNotNull property="tbsqOnwer" prepend=",">
+				tb_sale_quote$suffix$.tbsq_onwer = #tbsqOnwer#
+			</isNotNull>		
+			<isNotNull property="tbsqAdder" prepend=",">
+				tb_sale_quote$suffix$.tbsq_adder = #tbsqAdder#
+			</isNotNull>		
+			<isNotNull property="tbsqEditor" prepend=",">
+				tb_sale_quote$suffix$.tbsq_editor = #tbsqEditor#
+			</isNotNull>		
+			<isNotNull property="tbsqUpdateTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_update_time = #tbsqUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbsqAddTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_add_time = #tbsqAddTime#
+			</isNotNull>		
+			<isNotNull property="tbsqStatus" prepend=",">
+				tb_sale_quote$suffix$.tbsq_status = #tbsqStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbsq_id=#tbsqId#
+	</update>
+	
+
+	<!-- 根据ID删除一个跟单报价 -->
+	<delete id="deleteTbSaleQuoteById" parameterClass="java.util.HashMap">
+		delete from tb_sale_quote$suffix$ where tbsq_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个跟单报价 -->
+	<update id="removeTbSaleQuoteById" parameterClass="java.util.HashMap">
+		update tb_sale_quote$suffix$ set  tb_sale_quote$suffix$.tbsq_status=-1  where tbsq_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新跟单报价 -->
+	<update id="updateTbSaleQuoteBy"  parameterClass="java.util.HashMap">
+		update tb_sale_quote$suffix$ set		
+			tbsq_id=tbsq_id
+			<isNotNull property="V_tbsqId" prepend=",">
+				tb_sale_quote$suffix$.tbsq_id = #V_tbsqId#
+			</isNotNull>		
+			<isNotNull property="V_tbsqHost" prepend=",">
+				tb_sale_quote$suffix$.tbsq_host = #V_tbsqHost#
+			</isNotNull>		
+			<isNotNull property="V_tbsqTitle" prepend=",">
+				tb_sale_quote$suffix$.tbsq_title = #V_tbsqTitle#
+			</isNotNull>		
+			<isNotNull property="V_tbsqOpport" prepend=",">
+				tb_sale_quote$suffix$.tbsq_opport = #V_tbsqOpport#
+			</isNotNull>		
+			<isNotNull property="V_tbsqDetail" prepend=",">
+				tb_sale_quote$suffix$.tbsq_detail = #V_tbsqDetail#
+			</isNotNull>		
+			<isNotNull property="V_tbsqFile" prepend=",">
+				tb_sale_quote$suffix$.tbsq_file = #V_tbsqFile#
+			</isNotNull>		
+			<isNotNull property="V_tbsqOnwer" prepend=",">
+				tb_sale_quote$suffix$.tbsq_onwer = #V_tbsqOnwer#
+			</isNotNull>		
+			<isNotNull property="V_tbsqAdder" prepend=",">
+				tb_sale_quote$suffix$.tbsq_adder = #V_tbsqAdder#
+			</isNotNull>		
+			<isNotNull property="V_tbsqEditor" prepend=",">
+				tb_sale_quote$suffix$.tbsq_editor = #V_tbsqEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbsqUpdateTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_update_time = #V_tbsqUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbsqAddTime" prepend=",">
+				tb_sale_quote$suffix$.tbsq_add_time = #V_tbsqAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbsqStatus" prepend=",">
+				tb_sale_quote$suffix$.tbsq_status = #V_tbsqStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[销售机会]查询-->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<isNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.tbsq_opport=cs_sale_opport$CsSaleOpport.suffix$.csso_id
+			</isNull>
+			<isNotNull property="CsSaleOpport.on">
+				left join cs_sale_opport cs_sale_opport$CsSaleOpport.suffix$ on tb_sale_quote$suffix$.$CsSaleOpport.on$=cs_sale_opport$CsSaleOpport.suffix$.csso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_sale_quote$suffix$.tbsq_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[销售机会]查询条件sql片段 -->
+		<isNotNull property="TbsqOpport"><!-- 调用一下TbsqOpport，把CsSaleOpport指向TbsqOpport --></isNotNull>
+		<isNotNull property="CsSaleOpport">
+			<include refid="CsSaleOpport_part.cs_sale_opport_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbSaleQuote_part.tb_sale_quote_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除跟单报价 -->
+	<update id="deleteTbSaleQuoteBy"  parameterClass="java.util.HashMap">
+		delete from tb_sale_quote$suffix$ where 
+		tb_sale_quote$suffix$.tbsq_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbSaleQuote_part.tb_sale_quote_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

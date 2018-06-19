@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 充电桩之SQL映射 -->
+	<resultMap id="CsPowerPile" class="com.ccclubs.model.CsPowerPile">
+		<result property="csppId" column="cspp_id"/>
+		<result property="csppHost" column="cspp_host"/>
+		<result property="csppNo" column="cspp_no"/>
+		<result property="csppIndex" column="cspp_index"/>
+		<result property="csppOutlets" column="cspp_outlets"/>
+		<result property="csppCharge" column="cspp_charge"/>
+		<result property="csppPerson" column="cspp_person"/>
+		<result property="csppTel" column="cspp_tel"/>
+		<result property="csppImage" column="cspp_image"/>
+		<result property="csppLocation" column="cspp_location"/>
+		<result property="csppRemark" column="cspp_remark"/>
+		<result property="csppUpdateTime" column="cspp_update_time"/>
+		<result property="csppAddTime" column="cspp_add_time"/>
+		<result property="csppStatus" column="cspp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有充电桩 -->
+	<select id="getCsPowerPileList" resultMap="CsPowerPile">
+		select cs_power_pile$suffix$.* from cs_power_pile$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.cspp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_power_pile$suffix$.cspp_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPowerPile_part.cs_power_pile_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cspp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取充电桩分页 -->
+	<select id="getCsPowerPilePage" parameterClass="java.util.HashMap" resultMap="CsPowerPile">
+		select cs_power_pile$suffix$.* from cs_power_pile$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.cspp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_power_pile$suffix$.cspp_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPowerPile_part.cs_power_pile_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cspp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取充电桩总数 -->
+	<select id="getCsPowerPileEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_power_pile$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.cspp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_power_pile$suffix$.cspp_status!=-1
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPowerPile_part.cs_power_pile_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取充电桩 -->
+	<select id="getCsPowerPileById" parameterClass="java.util.HashMap" resultMap="CsPowerPile">
+		select cs_power_pile$suffix$.* from cs_power_pile$suffix$
+		where cspp_id=#id#
+	</select>
+	
+		
+	<!-- 保存充电桩 -->
+	<insert id="saveCsPowerPile"  parameterClass="com.ccclubs.model.CsPowerPile">
+		insert into cs_power_pile$suffix$
+		(
+			cs_power_pile$suffix$.cspp_host
+			,cs_power_pile$suffix$.cspp_no
+			,cs_power_pile$suffix$.cspp_index
+			,cs_power_pile$suffix$.cspp_outlets
+			,cs_power_pile$suffix$.cspp_charge
+			,cs_power_pile$suffix$.cspp_person
+			,cs_power_pile$suffix$.cspp_tel
+			,cs_power_pile$suffix$.cspp_image
+			,cs_power_pile$suffix$.cspp_location
+			,cs_power_pile$suffix$.cspp_remark
+			,cs_power_pile$suffix$.cspp_update_time
+			,cs_power_pile$suffix$.cspp_add_time
+			,cs_power_pile$suffix$.cspp_status
+		)
+		values(
+			<isNotNull property="csppHost" prepend="">
+				#csppHost#
+			</isNotNull>
+			<isNull property="csppHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csppNo" prepend=",">
+				#csppNo#
+			</isNotNull>
+			<isNull property="csppNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppIndex" prepend=",">
+				#csppIndex#
+			</isNotNull>
+			<isNull property="csppIndex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppOutlets" prepend=",">
+				#csppOutlets#
+			</isNotNull>
+			<isNull property="csppOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppCharge" prepend=",">
+				#csppCharge#
+			</isNotNull>
+			<isNull property="csppCharge" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppPerson" prepend=",">
+				#csppPerson#
+			</isNotNull>
+			<isNull property="csppPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppTel" prepend=",">
+				#csppTel#
+			</isNotNull>
+			<isNull property="csppTel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppImage" prepend=",">
+				#csppImage#
+			</isNotNull>
+			<isNull property="csppImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppLocation" prepend=",">
+				#csppLocation#
+			</isNotNull>
+			<isNull property="csppLocation" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppRemark" prepend=",">
+				#csppRemark#
+			</isNotNull>
+			<isNull property="csppRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppUpdateTime" prepend=",">
+				#csppUpdateTime#
+			</isNotNull>
+			<isNull property="csppUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppAddTime" prepend=",">
+				#csppAddTime#
+			</isNotNull>
+			<isNull property="csppAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csppStatus" prepend=",">
+				#csppStatus#
+			</isNotNull>
+			<isNull property="csppStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新充电桩 -->
+	<update id="updateCsPowerPile"  parameterClass="com.ccclubs.model.CsPowerPile">
+		update cs_power_pile$suffix$ set
+			<isNotNull property="csppHost" prepend="">
+				cs_power_pile$suffix$.cspp_host = #csppHost#
+			</isNotNull>
+			<isNull property="csppHost" prepend="">
+				cs_power_pile$suffix$.cspp_host = null
+			</isNull>				
+			<isNotNull property="csppNo" prepend=",">
+				cs_power_pile$suffix$.cspp_no = #csppNo#
+			</isNotNull>
+			<isNull property="csppNo" prepend=",">
+				cs_power_pile$suffix$.cspp_no = null
+			</isNull>				
+			<isNotNull property="csppIndex" prepend=",">
+				cs_power_pile$suffix$.cspp_index = #csppIndex#
+			</isNotNull>
+			<isNull property="csppIndex" prepend=",">
+				cs_power_pile$suffix$.cspp_index = null
+			</isNull>				
+			<isNotNull property="csppOutlets" prepend=",">
+				cs_power_pile$suffix$.cspp_outlets = #csppOutlets#
+			</isNotNull>
+			<isNull property="csppOutlets" prepend=",">
+				cs_power_pile$suffix$.cspp_outlets = null
+			</isNull>				
+			<isNotNull property="csppCharge" prepend=",">
+				cs_power_pile$suffix$.cspp_charge = #csppCharge#
+			</isNotNull>
+			<isNull property="csppCharge" prepend=",">
+				cs_power_pile$suffix$.cspp_charge = null
+			</isNull>				
+			<isNotNull property="csppPerson" prepend=",">
+				cs_power_pile$suffix$.cspp_person = #csppPerson#
+			</isNotNull>
+			<isNull property="csppPerson" prepend=",">
+				cs_power_pile$suffix$.cspp_person = null
+			</isNull>				
+			<isNotNull property="csppTel" prepend=",">
+				cs_power_pile$suffix$.cspp_tel = #csppTel#
+			</isNotNull>
+			<isNull property="csppTel" prepend=",">
+				cs_power_pile$suffix$.cspp_tel = null
+			</isNull>				
+			<isNotNull property="csppImage" prepend=",">
+				cs_power_pile$suffix$.cspp_image = #csppImage#
+			</isNotNull>
+			<isNull property="csppImage" prepend=",">
+				cs_power_pile$suffix$.cspp_image = null
+			</isNull>				
+			<isNotNull property="csppLocation" prepend=",">
+				cs_power_pile$suffix$.cspp_location = #csppLocation#
+			</isNotNull>
+			<isNull property="csppLocation" prepend=",">
+				cs_power_pile$suffix$.cspp_location = null
+			</isNull>				
+			<isNotNull property="csppRemark" prepend=",">
+				cs_power_pile$suffix$.cspp_remark = #csppRemark#
+			</isNotNull>
+			<isNull property="csppRemark" prepend=",">
+				cs_power_pile$suffix$.cspp_remark = null
+			</isNull>				
+			<isNotNull property="csppUpdateTime" prepend=",">
+				cs_power_pile$suffix$.cspp_update_time = #csppUpdateTime#
+			</isNotNull>
+			<isNull property="csppUpdateTime" prepend=",">
+				cs_power_pile$suffix$.cspp_update_time = null
+			</isNull>				
+			<isNotNull property="csppAddTime" prepend=",">
+				cs_power_pile$suffix$.cspp_add_time = #csppAddTime#
+			</isNotNull>
+			<isNull property="csppAddTime" prepend=",">
+				cs_power_pile$suffix$.cspp_add_time = null
+			</isNull>				
+			<isNotNull property="csppStatus" prepend=",">
+				cs_power_pile$suffix$.cspp_status = #csppStatus#
+			</isNotNull>
+			<isNull property="csppStatus" prepend=",">
+				cs_power_pile$suffix$.cspp_status = null
+			</isNull>				
+		where
+			cspp_id=#csppId#
+	</update>
+	
+	<!-- 更新充电桩非空字段 -->
+	<update id="updateCsPowerPile$NotNull"  parameterClass="com.ccclubs.model.CsPowerPile">
+		update cs_power_pile$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csppHost" prepend=",">
+				cs_power_pile$suffix$.cspp_host = #csppHost#
+			</isNotNull>		
+			<isNotNull property="csppNo" prepend=",">
+				cs_power_pile$suffix$.cspp_no = #csppNo#
+			</isNotNull>		
+			<isNotNull property="csppIndex" prepend=",">
+				cs_power_pile$suffix$.cspp_index = #csppIndex#
+			</isNotNull>		
+			<isNotNull property="csppOutlets" prepend=",">
+				cs_power_pile$suffix$.cspp_outlets = #csppOutlets#
+			</isNotNull>		
+			<isNotNull property="csppCharge" prepend=",">
+				cs_power_pile$suffix$.cspp_charge = #csppCharge#
+			</isNotNull>		
+			<isNotNull property="csppPerson" prepend=",">
+				cs_power_pile$suffix$.cspp_person = #csppPerson#
+			</isNotNull>		
+			<isNotNull property="csppTel" prepend=",">
+				cs_power_pile$suffix$.cspp_tel = #csppTel#
+			</isNotNull>		
+			<isNotNull property="csppImage" prepend=",">
+				cs_power_pile$suffix$.cspp_image = #csppImage#
+			</isNotNull>		
+			<isNotNull property="csppLocation" prepend=",">
+				cs_power_pile$suffix$.cspp_location = #csppLocation#
+			</isNotNull>		
+			<isNotNull property="csppRemark" prepend=",">
+				cs_power_pile$suffix$.cspp_remark = #csppRemark#
+			</isNotNull>		
+			<isNotNull property="csppUpdateTime" prepend=",">
+				cs_power_pile$suffix$.cspp_update_time = #csppUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csppAddTime" prepend=",">
+				cs_power_pile$suffix$.cspp_add_time = #csppAddTime#
+			</isNotNull>		
+			<isNotNull property="csppStatus" prepend=",">
+				cs_power_pile$suffix$.cspp_status = #csppStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cspp_id=#csppId#
+	</update>
+	
+
+	<!-- 根据ID删除一个充电桩 -->
+	<delete id="deleteCsPowerPileById" parameterClass="java.util.HashMap">
+		delete from cs_power_pile$suffix$ where cspp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个充电桩 -->
+	<update id="removeCsPowerPileById" parameterClass="java.util.HashMap">
+		update cs_power_pile$suffix$ set  cs_power_pile$suffix$.cspp_status=-1  where cspp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新充电桩 -->
+	<update id="updateCsPowerPileBy"  parameterClass="java.util.HashMap">
+		update cs_power_pile$suffix$ set		
+			cspp_id=cspp_id
+			<isNotNull property="V_csppId" prepend=",">
+				cs_power_pile$suffix$.cspp_id = #V_csppId#
+			</isNotNull>		
+			<isNotNull property="V_csppHost" prepend=",">
+				cs_power_pile$suffix$.cspp_host = #V_csppHost#
+			</isNotNull>		
+			<isNotNull property="V_csppNo" prepend=",">
+				cs_power_pile$suffix$.cspp_no = #V_csppNo#
+			</isNotNull>		
+			<isNotNull property="V_csppIndex" prepend=",">
+				cs_power_pile$suffix$.cspp_index = #V_csppIndex#
+			</isNotNull>		
+			<isNotNull property="V_csppOutlets" prepend=",">
+				cs_power_pile$suffix$.cspp_outlets = #V_csppOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csppCharge" prepend=",">
+				cs_power_pile$suffix$.cspp_charge = #V_csppCharge#
+			</isNotNull>		
+			<isNotNull property="V_csppPerson" prepend=",">
+				cs_power_pile$suffix$.cspp_person = #V_csppPerson#
+			</isNotNull>		
+			<isNotNull property="V_csppTel" prepend=",">
+				cs_power_pile$suffix$.cspp_tel = #V_csppTel#
+			</isNotNull>		
+			<isNotNull property="V_csppImage" prepend=",">
+				cs_power_pile$suffix$.cspp_image = #V_csppImage#
+			</isNotNull>		
+			<isNotNull property="V_csppLocation" prepend=",">
+				cs_power_pile$suffix$.cspp_location = #V_csppLocation#
+			</isNotNull>		
+			<isNotNull property="V_csppRemark" prepend=",">
+				cs_power_pile$suffix$.cspp_remark = #V_csppRemark#
+			</isNotNull>		
+			<isNotNull property="V_csppUpdateTime" prepend=",">
+				cs_power_pile$suffix$.cspp_update_time = #V_csppUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csppAddTime" prepend=",">
+				cs_power_pile$suffix$.cspp_add_time = #V_csppAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csppStatus" prepend=",">
+				cs_power_pile$suffix$.cspp_status = #V_csppStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.cspp_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_power_pile$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_power_pile$suffix$.cspp_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsppOutlets"><!-- 调用一下CsppOutlets，把CsOutlets指向CsppOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsPowerPile_part.cs_power_pile_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除充电桩 -->
+	<update id="deleteCsPowerPileBy"  parameterClass="java.util.HashMap">
+		delete from cs_power_pile$suffix$ where 
+		cs_power_pile$suffix$.cspp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsPowerPile_part.cs_power_pile_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

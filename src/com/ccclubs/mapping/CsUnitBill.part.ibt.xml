@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsUnitBill_part">	
+	<!-- 企业对账条件sql片段  -->
+	<sql id="cs_unit_bill_dynamic">
+		<dynamic>
+			<isNotEmpty property="csubId" prepend="and">
+			    $csubIdNot$ cs_unit_bill$suffix$.csub_id = #csubId#
+			</isNotEmpty>
+			<isNotNull property="csubIdNot" prepend="and">
+				<isEmpty property="csubId">
+				$csubIdNot$ cs_unit_bill$suffix$.csub_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_bill$suffix$.csub_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csubHost" prepend="and">
+			    $csubHostNot$ cs_unit_bill$suffix$.csub_host = #csubHost#
+			</isNotEmpty>
+			<isNotNull property="csubHostNot" prepend="and">
+				<isEmpty property="csubHost">
+				$csubHostNot$ cs_unit_bill$suffix$.csub_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubMonth" prepend="and">			    
+			    (<isNotNull property="csubMonthNot">
+			    cs_unit_bill$suffix$.csub_month is null or length(cs_unit_bill$suffix$.csub_month) &lt; 1 or
+			    </isNotNull>$csubMonthNot$ cs_unit_bill$suffix$.csub_month = #csubMonth#)
+			</isNotEmpty>
+			<isNotNull property="csubMonthNot" prepend="and">
+				<isEmpty property="csubMonth">
+				$csubMonthNot$ (cs_unit_bill$suffix$.csub_month is null or length(cs_unit_bill$suffix$.csub_month) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubUnit" prepend="and">
+			    $csubUnitNot$ cs_unit_bill$suffix$.csub_unit = #csubUnit#
+			</isNotEmpty>
+			<isNotNull property="csubUnitNot" prepend="and">
+				<isEmpty property="csubUnit">
+				$csubUnitNot$ cs_unit_bill$suffix$.csub_unit is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubAirSMin" prepend="and">
+			    $csubAirSNot$  ( cs_unit_bill$suffix$.csub_air_s &gt;= #csubAirSMin#
+			    <isEmpty property="csubAirSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubAirSMax" prepend="and">
+				<isEmpty property="csubAirSMin">$csubAirSNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_air_s &lt;= #csubAirSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubAirS" prepend="and">
+			    $csubAirSNot$ cs_unit_bill$suffix$.csub_air_s = #csubAirS#
+			</isNotEmpty>
+			<isNotNull property="csubAirSNot" prepend="and">
+				<isEmpty property="csubAirSMax"><isEmpty property="csubAirSMin"><isEmpty property="csubAirS">
+				$csubAirSNot$ cs_unit_bill$suffix$.csub_air_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubOrderSMin" prepend="and">
+			    $csubOrderSNot$  ( cs_unit_bill$suffix$.csub_order_s &gt;= #csubOrderSMin#
+			    <isEmpty property="csubOrderSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubOrderSMax" prepend="and">
+				<isEmpty property="csubOrderSMin">$csubOrderSNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_order_s &lt;= #csubOrderSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubOrderS" prepend="and">
+			    $csubOrderSNot$ cs_unit_bill$suffix$.csub_order_s = #csubOrderS#
+			</isNotEmpty>
+			<isNotNull property="csubOrderSNot" prepend="and">
+				<isEmpty property="csubOrderSMax"><isEmpty property="csubOrderSMin"><isEmpty property="csubOrderS">
+				$csubOrderSNot$ cs_unit_bill$suffix$.csub_order_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubSpecialSMin" prepend="and">
+			    $csubSpecialSNot$  ( cs_unit_bill$suffix$.csub_special_s &gt;= #csubSpecialSMin#
+			    <isEmpty property="csubSpecialSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubSpecialSMax" prepend="and">
+				<isEmpty property="csubSpecialSMin">$csubSpecialSNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_special_s &lt;= #csubSpecialSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubSpecialS" prepend="and">
+			    $csubSpecialSNot$ cs_unit_bill$suffix$.csub_special_s = #csubSpecialS#
+			</isNotEmpty>
+			<isNotNull property="csubSpecialSNot" prepend="and">
+				<isEmpty property="csubSpecialSMax"><isEmpty property="csubSpecialSMin"><isEmpty property="csubSpecialS">
+				$csubSpecialSNot$ cs_unit_bill$suffix$.csub_special_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubFeeAirMin" prepend="and">
+			    $csubFeeAirNot$  ( cs_unit_bill$suffix$.csub_fee_air &gt;= #csubFeeAirMin#
+			    <isEmpty property="csubFeeAirMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubFeeAirMax" prepend="and">
+				<isEmpty property="csubFeeAirMin">$csubFeeAirNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_fee_air &lt;= #csubFeeAirMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubFeeAir" prepend="and">
+			    $csubFeeAirNot$ cs_unit_bill$suffix$.csub_fee_air = #csubFeeAir#
+			</isNotEmpty>
+			<isNotNull property="csubFeeAirNot" prepend="and">
+				<isEmpty property="csubFeeAirMax"><isEmpty property="csubFeeAirMin"><isEmpty property="csubFeeAir">
+				$csubFeeAirNot$ cs_unit_bill$suffix$.csub_fee_air is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubFeeOrderMin" prepend="and">
+			    $csubFeeOrderNot$  ( cs_unit_bill$suffix$.csub_fee_order &gt;= #csubFeeOrderMin#
+			    <isEmpty property="csubFeeOrderMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubFeeOrderMax" prepend="and">
+				<isEmpty property="csubFeeOrderMin">$csubFeeOrderNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_fee_order &lt;= #csubFeeOrderMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubFeeOrder" prepend="and">
+			    $csubFeeOrderNot$ cs_unit_bill$suffix$.csub_fee_order = #csubFeeOrder#
+			</isNotEmpty>
+			<isNotNull property="csubFeeOrderNot" prepend="and">
+				<isEmpty property="csubFeeOrderMax"><isEmpty property="csubFeeOrderMin"><isEmpty property="csubFeeOrder">
+				$csubFeeOrderNot$ cs_unit_bill$suffix$.csub_fee_order is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubFeeSpecialMin" prepend="and">
+			    $csubFeeSpecialNot$  ( cs_unit_bill$suffix$.csub_fee_special &gt;= #csubFeeSpecialMin#
+			    <isEmpty property="csubFeeSpecialMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubFeeSpecialMax" prepend="and">
+				<isEmpty property="csubFeeSpecialMin">$csubFeeSpecialNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_fee_special &lt;= #csubFeeSpecialMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubFeeSpecial" prepend="and">
+			    $csubFeeSpecialNot$ cs_unit_bill$suffix$.csub_fee_special = #csubFeeSpecial#
+			</isNotEmpty>
+			<isNotNull property="csubFeeSpecialNot" prepend="and">
+				<isEmpty property="csubFeeSpecialMax"><isEmpty property="csubFeeSpecialMin"><isEmpty property="csubFeeSpecial">
+				$csubFeeSpecialNot$ cs_unit_bill$suffix$.csub_fee_special is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubNeedPayMin" prepend="and">
+			    $csubNeedPayNot$  ( cs_unit_bill$suffix$.csub_need_pay &gt;= #csubNeedPayMin#
+			    <isEmpty property="csubNeedPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubNeedPayMax" prepend="and">
+				<isEmpty property="csubNeedPayMin">$csubNeedPayNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_need_pay &lt;= #csubNeedPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubNeedPay" prepend="and">
+			    $csubNeedPayNot$ cs_unit_bill$suffix$.csub_need_pay = #csubNeedPay#
+			</isNotEmpty>
+			<isNotNull property="csubNeedPayNot" prepend="and">
+				<isEmpty property="csubNeedPayMax"><isEmpty property="csubNeedPayMin"><isEmpty property="csubNeedPay">
+				$csubNeedPayNot$ cs_unit_bill$suffix$.csub_need_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubRealPayMin" prepend="and">
+			    $csubRealPayNot$  ( cs_unit_bill$suffix$.csub_real_pay &gt;= #csubRealPayMin#
+			    <isEmpty property="csubRealPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubRealPayMax" prepend="and">
+				<isEmpty property="csubRealPayMin">$csubRealPayNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_real_pay &lt;= #csubRealPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubRealPay" prepend="and">
+			    $csubRealPayNot$ cs_unit_bill$suffix$.csub_real_pay = #csubRealPay#
+			</isNotEmpty>
+			<isNotNull property="csubRealPayNot" prepend="and">
+				<isEmpty property="csubRealPayMax"><isEmpty property="csubRealPayMin"><isEmpty property="csubRealPay">
+				$csubRealPayNot$ cs_unit_bill$suffix$.csub_real_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubEditor" prepend="and">
+			    $csubEditorNot$ cs_unit_bill$suffix$.csub_editor = #csubEditor#
+			</isNotEmpty>
+			<isNotNull property="csubEditorNot" prepend="and">
+				<isEmpty property="csubEditor">
+				$csubEditorNot$ cs_unit_bill$suffix$.csub_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubUpdateTimeStart" prepend="and">
+			    $csubUpdateTimeNot$   (cs_unit_bill$suffix$.csub_update_time &gt;= #csubUpdateTimeStart#
+			   <isEmpty property="csubUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubUpdateTimeEnd" prepend="and">
+				<isEmpty property="csubUpdateTimeStart">$csubUpdateTimeNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_update_time &lt;= #csubUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csubUpdateTime" prepend="and">
+			    $csubUpdateTimeNot$ cs_unit_bill$suffix$.csub_update_time = #csubUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csubUpdateTimeNot" prepend="and">
+				<isEmpty property="csubUpdateTimeStart"><isEmpty property="csubUpdateTimeEnd"><isEmpty property="csubUpdateTime">
+				$csubUpdateTimeNot$ cs_unit_bill$suffix$.csub_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubAddTimeStart" prepend="and">
+			    $csubAddTimeNot$   (cs_unit_bill$suffix$.csub_add_time &gt;= #csubAddTimeStart#
+			   <isEmpty property="csubAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubAddTimeEnd" prepend="and">
+				<isEmpty property="csubAddTimeStart">$csubAddTimeNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_add_time &lt;= #csubAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csubAddTime" prepend="and">
+			    $csubAddTimeNot$ cs_unit_bill$suffix$.csub_add_time = #csubAddTime#
+			</isNotEmpty>
+			<isNotNull property="csubAddTimeNot" prepend="and">
+				<isEmpty property="csubAddTimeStart"><isEmpty property="csubAddTimeEnd"><isEmpty property="csubAddTime">
+				$csubAddTimeNot$ cs_unit_bill$suffix$.csub_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubSummary" prepend="and">			    
+			    (<isNotNull property="csubSummaryNot">
+			    cs_unit_bill$suffix$.csub_summary is null or length(cs_unit_bill$suffix$.csub_summary) &lt; 1 or
+			    </isNotNull>$csubSummaryNot$ cs_unit_bill$suffix$.csub_summary = #csubSummary#)
+			</isNotEmpty>
+			<isNotNull property="csubSummaryNot" prepend="and">
+				<isEmpty property="csubSummary">
+				$csubSummaryNot$ (cs_unit_bill$suffix$.csub_summary is null or length(cs_unit_bill$suffix$.csub_summary) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubStatusMin" prepend="and">
+			    $csubStatusNot$  ( cs_unit_bill$suffix$.csub_status &gt;= #csubStatusMin#
+			    <isEmpty property="csubStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubStatusMax" prepend="and">
+				<isEmpty property="csubStatusMin">$csubStatusNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_status &lt;= #csubStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubStatus" prepend="and">
+			    $csubStatusNot$ cs_unit_bill$suffix$.csub_status = #csubStatus#
+			</isNotEmpty>
+			<isNotNull property="csubStatusNot" prepend="and">
+				<isEmpty property="csubStatusMax"><isEmpty property="csubStatusMin"><isEmpty property="csubStatus">
+				$csubStatusNot$ cs_unit_bill$suffix$.csub_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubIncomeMin" prepend="and">
+			    $csubIncomeNot$  ( cs_unit_bill$suffix$.csub_income &gt;= #csubIncomeMin#
+			    <isEmpty property="csubIncomeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubIncomeMax" prepend="and">
+				<isEmpty property="csubIncomeMin">$csubIncomeNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_income &lt;= #csubIncomeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubIncome" prepend="and">
+			    $csubIncomeNot$ cs_unit_bill$suffix$.csub_income = #csubIncome#
+			</isNotEmpty>
+			<isNotNull property="csubIncomeNot" prepend="and">
+				<isEmpty property="csubIncomeMax"><isEmpty property="csubIncomeMin"><isEmpty property="csubIncome">
+				$csubIncomeNot$ cs_unit_bill$suffix$.csub_income is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubPayoutMin" prepend="and">
+			    $csubPayoutNot$  ( cs_unit_bill$suffix$.csub_payout &gt;= #csubPayoutMin#
+			    <isEmpty property="csubPayoutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubPayoutMax" prepend="and">
+				<isEmpty property="csubPayoutMin">$csubPayoutNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_payout &lt;= #csubPayoutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubPayout" prepend="and">
+			    $csubPayoutNot$ cs_unit_bill$suffix$.csub_payout = #csubPayout#
+			</isNotEmpty>
+			<isNotNull property="csubPayoutNot" prepend="and">
+				<isEmpty property="csubPayoutMax"><isEmpty property="csubPayoutMin"><isEmpty property="csubPayout">
+				$csubPayoutNot$ cs_unit_bill$suffix$.csub_payout is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubGroup" prepend="and">
+			    $csubGroupNot$ cs_unit_bill$suffix$.csub_group = #csubGroup#
+			</isNotEmpty>
+			<isNotNull property="csubGroupNot" prepend="and">
+				<isEmpty property="csubGroup">
+				$csubGroupNot$ cs_unit_bill$suffix$.csub_group is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubMileageMin" prepend="and">
+			    $csubMileageNot$  ( cs_unit_bill$suffix$.csub_mileage &gt;= #csubMileageMin#
+			    <isEmpty property="csubMileageMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubMileageMax" prepend="and">
+				<isEmpty property="csubMileageMin">$csubMileageNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_mileage &lt;= #csubMileageMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubMileage" prepend="and">
+			    $csubMileageNot$ cs_unit_bill$suffix$.csub_mileage = #csubMileage#
+			</isNotEmpty>
+			<isNotNull property="csubMileageNot" prepend="and">
+				<isEmpty property="csubMileageMax"><isEmpty property="csubMileageMin"><isEmpty property="csubMileage">
+				$csubMileageNot$ cs_unit_bill$suffix$.csub_mileage is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csubDurationMin" prepend="and">
+			    $csubDurationNot$  ( cs_unit_bill$suffix$.csub_duration &gt;= #csubDurationMin#
+			    <isEmpty property="csubDurationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csubDurationMax" prepend="and">
+				<isEmpty property="csubDurationMin">$csubDurationNot$   (</isEmpty>
+			    cs_unit_bill$suffix$.csub_duration &lt;= #csubDurationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csubDuration" prepend="and">
+			    $csubDurationNot$ cs_unit_bill$suffix$.csub_duration = #csubDuration#
+			</isNotEmpty>
+			<isNotNull property="csubDurationNot" prepend="and">
+				<isEmpty property="csubDurationMax"><isEmpty property="csubDurationMin"><isEmpty property="csubDuration">
+				$csubDurationNot$ cs_unit_bill$suffix$.csub_duration is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 企业对账left join 条件sql片段 -->
+	<sql id="cs_unit_bill_join">
+		<dynamic>
+			<isNotEmpty property="CsUnitBill.csubId" prepend="and">
+			    $CsUnitBill.csubIdNot$ cs_unit_bill$CsUnitBill.suffix$.csub_id = #CsUnitBill.csubId#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubIdNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubId">
+				$csubIdNot$ cs_unit_bill$CsUnitBill.suffix$.csub_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_bill$CsUnitBill.suffix$.csub_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubHost" prepend="and">
+			    $CsUnitBill.csubHostNot$ cs_unit_bill$CsUnitBill.suffix$.csub_host = #CsUnitBill.csubHost#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubHostNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubHost">
+				$csubHostNot$ cs_unit_bill$CsUnitBill.suffix$.csub_host is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsUnitBill.csubMonth" prepend="and">			    
+				    (<isNotNull property="CsUnitBill.csubMonthNot">
+				    cs_unit_bill$CsUnitBill.suffix$.csub_month is null or length(cs_unit_bill$CsUnitBill.suffix$.csub_month) &lt; 1 or
+				    </isNotNull>$CsUnitBill.csubMonthNot$ cs_unit_bill$CsUnitBill.suffix$.csub_month = #CsUnitBill.csubMonth#)
+				</isNotEmpty>
+				<isNotNull property="CsUnitBill.csubMonthNot" prepend="and">
+					<isEmpty property="CsUnitBill.csubMonth">
+					$csubMonthNot$ (cs_unit_bill$CsUnitBill.suffix$.csub_month is null or length(cs_unit_bill$CsUnitBill.suffix$.csub_month) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubUnit" prepend="and">
+			    $CsUnitBill.csubUnitNot$ cs_unit_bill$CsUnitBill.suffix$.csub_unit = #CsUnitBill.csubUnit#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubUnitNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubUnit">
+				$csubUnitNot$ cs_unit_bill$CsUnitBill.suffix$.csub_unit is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsUnitBill.csubAirSMin" prepend="and">
+			    $CsUnitBill.csubAirSNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_air_s &gt;= #CsUnitBill.csubAirSMin#
+			    <isEmpty property="CsUnitBill.csubAirSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubAirSMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubAirSMin">$CsUnitBill.csubAirSNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_air_s &lt;= #CsUnitBill.csubAirSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubAirS" prepend="and">
+			    $CsUnitBill.csubAirSNot$ cs_unit_bill$CsUnitBill.suffix$.csub_air_s = #CsUnitBill.csubAirS#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubAirSNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubAirSMax"><isEmpty property="CsUnitBill.csubAirSMin"><isEmpty property="CsUnitBill.csubAirS">
+				$csubAirSNot$ cs_unit_bill$CsUnitBill.suffix$.csub_air_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubOrderSMin" prepend="and">
+			    $CsUnitBill.csubOrderSNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_order_s &gt;= #CsUnitBill.csubOrderSMin#
+			    <isEmpty property="CsUnitBill.csubOrderSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubOrderSMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubOrderSMin">$CsUnitBill.csubOrderSNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_order_s &lt;= #CsUnitBill.csubOrderSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubOrderS" prepend="and">
+			    $CsUnitBill.csubOrderSNot$ cs_unit_bill$CsUnitBill.suffix$.csub_order_s = #CsUnitBill.csubOrderS#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubOrderSNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubOrderSMax"><isEmpty property="CsUnitBill.csubOrderSMin"><isEmpty property="CsUnitBill.csubOrderS">
+				$csubOrderSNot$ cs_unit_bill$CsUnitBill.suffix$.csub_order_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubSpecialSMin" prepend="and">
+			    $CsUnitBill.csubSpecialSNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_special_s &gt;= #CsUnitBill.csubSpecialSMin#
+			    <isEmpty property="CsUnitBill.csubSpecialSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubSpecialSMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubSpecialSMin">$CsUnitBill.csubSpecialSNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_special_s &lt;= #CsUnitBill.csubSpecialSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubSpecialS" prepend="and">
+			    $CsUnitBill.csubSpecialSNot$ cs_unit_bill$CsUnitBill.suffix$.csub_special_s = #CsUnitBill.csubSpecialS#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubSpecialSNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubSpecialSMax"><isEmpty property="CsUnitBill.csubSpecialSMin"><isEmpty property="CsUnitBill.csubSpecialS">
+				$csubSpecialSNot$ cs_unit_bill$CsUnitBill.suffix$.csub_special_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubFeeAirMin" prepend="and">
+			    $CsUnitBill.csubFeeAirNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_fee_air &gt;= #CsUnitBill.csubFeeAirMin#
+			    <isEmpty property="CsUnitBill.csubFeeAirMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubFeeAirMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubFeeAirMin">$CsUnitBill.csubFeeAirNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_fee_air &lt;= #CsUnitBill.csubFeeAirMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubFeeAir" prepend="and">
+			    $CsUnitBill.csubFeeAirNot$ cs_unit_bill$CsUnitBill.suffix$.csub_fee_air = #CsUnitBill.csubFeeAir#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubFeeAirNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubFeeAirMax"><isEmpty property="CsUnitBill.csubFeeAirMin"><isEmpty property="CsUnitBill.csubFeeAir">
+				$csubFeeAirNot$ cs_unit_bill$CsUnitBill.suffix$.csub_fee_air is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubFeeOrderMin" prepend="and">
+			    $CsUnitBill.csubFeeOrderNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_fee_order &gt;= #CsUnitBill.csubFeeOrderMin#
+			    <isEmpty property="CsUnitBill.csubFeeOrderMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubFeeOrderMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubFeeOrderMin">$CsUnitBill.csubFeeOrderNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_fee_order &lt;= #CsUnitBill.csubFeeOrderMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubFeeOrder" prepend="and">
+			    $CsUnitBill.csubFeeOrderNot$ cs_unit_bill$CsUnitBill.suffix$.csub_fee_order = #CsUnitBill.csubFeeOrder#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubFeeOrderNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubFeeOrderMax"><isEmpty property="CsUnitBill.csubFeeOrderMin"><isEmpty property="CsUnitBill.csubFeeOrder">
+				$csubFeeOrderNot$ cs_unit_bill$CsUnitBill.suffix$.csub_fee_order is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubFeeSpecialMin" prepend="and">
+			    $CsUnitBill.csubFeeSpecialNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_fee_special &gt;= #CsUnitBill.csubFeeSpecialMin#
+			    <isEmpty property="CsUnitBill.csubFeeSpecialMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubFeeSpecialMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubFeeSpecialMin">$CsUnitBill.csubFeeSpecialNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_fee_special &lt;= #CsUnitBill.csubFeeSpecialMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubFeeSpecial" prepend="and">
+			    $CsUnitBill.csubFeeSpecialNot$ cs_unit_bill$CsUnitBill.suffix$.csub_fee_special = #CsUnitBill.csubFeeSpecial#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubFeeSpecialNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubFeeSpecialMax"><isEmpty property="CsUnitBill.csubFeeSpecialMin"><isEmpty property="CsUnitBill.csubFeeSpecial">
+				$csubFeeSpecialNot$ cs_unit_bill$CsUnitBill.suffix$.csub_fee_special is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubNeedPayMin" prepend="and">
+			    $CsUnitBill.csubNeedPayNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_need_pay &gt;= #CsUnitBill.csubNeedPayMin#
+			    <isEmpty property="CsUnitBill.csubNeedPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubNeedPayMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubNeedPayMin">$CsUnitBill.csubNeedPayNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_need_pay &lt;= #CsUnitBill.csubNeedPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubNeedPay" prepend="and">
+			    $CsUnitBill.csubNeedPayNot$ cs_unit_bill$CsUnitBill.suffix$.csub_need_pay = #CsUnitBill.csubNeedPay#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubNeedPayNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubNeedPayMax"><isEmpty property="CsUnitBill.csubNeedPayMin"><isEmpty property="CsUnitBill.csubNeedPay">
+				$csubNeedPayNot$ cs_unit_bill$CsUnitBill.suffix$.csub_need_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubRealPayMin" prepend="and">
+			    $CsUnitBill.csubRealPayNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_real_pay &gt;= #CsUnitBill.csubRealPayMin#
+			    <isEmpty property="CsUnitBill.csubRealPayMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubRealPayMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubRealPayMin">$CsUnitBill.csubRealPayNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_real_pay &lt;= #CsUnitBill.csubRealPayMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubRealPay" prepend="and">
+			    $CsUnitBill.csubRealPayNot$ cs_unit_bill$CsUnitBill.suffix$.csub_real_pay = #CsUnitBill.csubRealPay#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubRealPayNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubRealPayMax"><isEmpty property="CsUnitBill.csubRealPayMin"><isEmpty property="CsUnitBill.csubRealPay">
+				$csubRealPayNot$ cs_unit_bill$CsUnitBill.suffix$.csub_real_pay is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubEditor" prepend="and">
+			    $CsUnitBill.csubEditorNot$ cs_unit_bill$CsUnitBill.suffix$.csub_editor = #CsUnitBill.csubEditor#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubEditorNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubEditor">
+				$csubEditorNot$ cs_unit_bill$CsUnitBill.suffix$.csub_editor is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsUnitBill.csubUpdateTimeStart" prepend="and">
+				    $CsUnitBill.csubUpdateTimeNot$   (cs_unit_bill$CsUnitBill.suffix$.csub_update_time &gt;= #CsUnitBill.csubUpdateTimeStart#
+				   <isEmpty property="CsUnitBill.csubUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsUnitBill.csubUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsUnitBill.csubUpdateTimeStart">$CsUnitBill.csubUpdateTimeNot$   (</isEmpty>
+				    cs_unit_bill$CsUnitBill.suffix$.csub_update_time &lt;= #CsUnitBill.csubUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsUnitBill.csubUpdateTime" prepend="and">
+				    $CsUnitBill.csubUpdateTimeNot$ cs_unit_bill$CsUnitBill.suffix$.csub_update_time = #CsUnitBill.csubUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsUnitBill.csubUpdateTimeNot" prepend="and">
+					<isEmpty property="CsUnitBill.csubUpdateTimeStart"><isEmpty property="CsUnitBill.csubUpdateTimeEnd"><isEmpty property="CsUnitBill.csubUpdateTime">
+					$csubUpdateTimeNot$ cs_unit_bill$CsUnitBill.suffix$.csub_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsUnitBill.csubAddTimeStart" prepend="and">
+				    $CsUnitBill.csubAddTimeNot$   (cs_unit_bill$CsUnitBill.suffix$.csub_add_time &gt;= #CsUnitBill.csubAddTimeStart#
+				   <isEmpty property="CsUnitBill.csubAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsUnitBill.csubAddTimeEnd" prepend="and">
+					<isEmpty property="CsUnitBill.csubAddTimeStart">$CsUnitBill.csubAddTimeNot$   (</isEmpty>
+				    cs_unit_bill$CsUnitBill.suffix$.csub_add_time &lt;= #CsUnitBill.csubAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsUnitBill.csubAddTime" prepend="and">
+				    $CsUnitBill.csubAddTimeNot$ cs_unit_bill$CsUnitBill.suffix$.csub_add_time = #CsUnitBill.csubAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsUnitBill.csubAddTimeNot" prepend="and">
+					<isEmpty property="CsUnitBill.csubAddTimeStart"><isEmpty property="CsUnitBill.csubAddTimeEnd"><isEmpty property="CsUnitBill.csubAddTime">
+					$csubAddTimeNot$ cs_unit_bill$CsUnitBill.suffix$.csub_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsUnitBill.csubSummary" prepend="and">			    
+				    (<isNotNull property="CsUnitBill.csubSummaryNot">
+				    cs_unit_bill$CsUnitBill.suffix$.csub_summary is null or length(cs_unit_bill$CsUnitBill.suffix$.csub_summary) &lt; 1 or
+				    </isNotNull>$CsUnitBill.csubSummaryNot$ cs_unit_bill$CsUnitBill.suffix$.csub_summary = #CsUnitBill.csubSummary#)
+				</isNotEmpty>
+				<isNotNull property="CsUnitBill.csubSummaryNot" prepend="and">
+					<isEmpty property="CsUnitBill.csubSummary">
+					$csubSummaryNot$ (cs_unit_bill$CsUnitBill.suffix$.csub_summary is null or length(cs_unit_bill$CsUnitBill.suffix$.csub_summary) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubStatusMin" prepend="and">
+			    $CsUnitBill.csubStatusNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_status &gt;= #CsUnitBill.csubStatusMin#
+			    <isEmpty property="CsUnitBill.csubStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubStatusMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubStatusMin">$CsUnitBill.csubStatusNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_status &lt;= #CsUnitBill.csubStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubStatus" prepend="and">
+			    $CsUnitBill.csubStatusNot$ cs_unit_bill$CsUnitBill.suffix$.csub_status = #CsUnitBill.csubStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubStatusNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubStatusMax"><isEmpty property="CsUnitBill.csubStatusMin"><isEmpty property="CsUnitBill.csubStatus">
+				$csubStatusNot$ cs_unit_bill$CsUnitBill.suffix$.csub_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubIncomeMin" prepend="and">
+			    $CsUnitBill.csubIncomeNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_income &gt;= #CsUnitBill.csubIncomeMin#
+			    <isEmpty property="CsUnitBill.csubIncomeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubIncomeMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubIncomeMin">$CsUnitBill.csubIncomeNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_income &lt;= #CsUnitBill.csubIncomeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubIncome" prepend="and">
+			    $CsUnitBill.csubIncomeNot$ cs_unit_bill$CsUnitBill.suffix$.csub_income = #CsUnitBill.csubIncome#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubIncomeNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubIncomeMax"><isEmpty property="CsUnitBill.csubIncomeMin"><isEmpty property="CsUnitBill.csubIncome">
+				$csubIncomeNot$ cs_unit_bill$CsUnitBill.suffix$.csub_income is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubPayoutMin" prepend="and">
+			    $CsUnitBill.csubPayoutNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_payout &gt;= #CsUnitBill.csubPayoutMin#
+			    <isEmpty property="CsUnitBill.csubPayoutMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubPayoutMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubPayoutMin">$CsUnitBill.csubPayoutNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_payout &lt;= #CsUnitBill.csubPayoutMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubPayout" prepend="and">
+			    $CsUnitBill.csubPayoutNot$ cs_unit_bill$CsUnitBill.suffix$.csub_payout = #CsUnitBill.csubPayout#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubPayoutNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubPayoutMax"><isEmpty property="CsUnitBill.csubPayoutMin"><isEmpty property="CsUnitBill.csubPayout">
+				$csubPayoutNot$ cs_unit_bill$CsUnitBill.suffix$.csub_payout is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubGroup" prepend="and">
+			    $CsUnitBill.csubGroupNot$ cs_unit_bill$CsUnitBill.suffix$.csub_group = #CsUnitBill.csubGroup#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubGroupNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubGroup">
+				$csubGroupNot$ cs_unit_bill$CsUnitBill.suffix$.csub_group is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsUnitBill.csubMileageMin" prepend="and">
+			    $CsUnitBill.csubMileageNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_mileage &gt;= #CsUnitBill.csubMileageMin#
+			    <isEmpty property="CsUnitBill.csubMileageMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubMileageMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubMileageMin">$CsUnitBill.csubMileageNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_mileage &lt;= #CsUnitBill.csubMileageMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubMileage" prepend="and">
+			    $CsUnitBill.csubMileageNot$ cs_unit_bill$CsUnitBill.suffix$.csub_mileage = #CsUnitBill.csubMileage#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubMileageNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubMileageMax"><isEmpty property="CsUnitBill.csubMileageMin"><isEmpty property="CsUnitBill.csubMileage">
+				$csubMileageNot$ cs_unit_bill$CsUnitBill.suffix$.csub_mileage is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitBill.csubDurationMin" prepend="and">
+			    $CsUnitBill.csubDurationNot$  ( cs_unit_bill$CsUnitBill.suffix$.csub_duration &gt;= #CsUnitBill.csubDurationMin#
+			    <isEmpty property="CsUnitBill.csubDurationMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubDurationMax" prepend="and">
+				<isEmpty property="CsUnitBill.csubDurationMin">$CsUnitBill.csubDurationNot$   (</isEmpty>
+			    cs_unit_bill$CsUnitBill.suffix$.csub_duration &lt;= #CsUnitBill.csubDurationMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitBill.csubDuration" prepend="and">
+			    $CsUnitBill.csubDurationNot$ cs_unit_bill$CsUnitBill.suffix$.csub_duration = #CsUnitBill.csubDuration#
+			</isNotEmpty>
+			<isNotNull property="CsUnitBill.csubDurationNot" prepend="and">
+				<isEmpty property="CsUnitBill.csubDurationMax"><isEmpty property="CsUnitBill.csubDurationMin"><isEmpty property="CsUnitBill.csubDuration">
+				$csubDurationNot$ cs_unit_bill$CsUnitBill.suffix$.csub_duration is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

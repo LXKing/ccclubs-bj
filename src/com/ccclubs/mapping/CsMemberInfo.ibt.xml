@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 会员信息之SQL映射 -->
+	<resultMap id="CsMemberInfo" class="com.ccclubs.model.CsMemberInfo">
+		<result property="csmiId" column="csmi_id"/>
+		<result property="csmiHost" column="csmi_host"/>
+		<result property="csmiName" column="csmi_name"/>
+		<result property="csmiMemberId" column="csmi_member_id"/>
+		<result property="csmiCertifyType" column="csmi_certify_type"/>
+		<result property="csmiCertifyNum" column="csmi_certify_num"/>
+		<result property="csmiCertifyImage" column="csmi_certify_image"/>
+		<result property="csmiDriverNum" column="csmi_driver_num"/>
+		<result property="csmiDriverImage" column="csmi_driver_image"/>
+		<result property="csmiSex" column="csmi_sex"/>
+		<result property="csmiBirthday" column="csmi_birthday"/>
+		<result property="csmiQq" column="csmi_qq"/>
+		<result property="csmiNation" column="csmi_nation"/>
+		<result property="csmiAddress" column="csmi_address"/>
+		<result property="csmiCompany" column="csmi_company"/>
+		<result property="csmiPlace" column="csmi_place"/>
+		<result property="csmiPerson" column="csmi_person"/>
+		<result property="csmiContact" column="csmi_contact"/>
+		<result property="csmiRelation" column="csmi_relation"/>
+		<result property="csmiUpdateTime" column="csmi_update_time"/>
+		<result property="csmiAddTime" column="csmi_add_time"/>
+		<result property="csmiStatus" column="csmi_status"/>
+		<result property="csmiOnCertifyImage" column="csmi_on_certify_image"/>
+	</resultMap>
+		
+	<!-- 获取所有会员信息 -->
+	<select id="getCsMemberInfoList" resultMap="CsMemberInfo">
+		select cs_member_info$suffix$.* from cs_member_info$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.csmi_member_id=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_info$suffix$.csmi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberInfo_part.cs_member_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员信息分页 -->
+	<select id="getCsMemberInfoPage" parameterClass="java.util.HashMap" resultMap="CsMemberInfo">
+		select cs_member_info$suffix$.* from cs_member_info$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.csmi_member_id=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_info$suffix$.csmi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberInfo_part.cs_member_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员信息总数 -->
+	<select id="getCsMemberInfoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_member_info$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.csmi_member_id=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_info$suffix$.csmi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberInfo_part.cs_member_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员信息 -->
+	<select id="getCsMemberInfoById" parameterClass="java.util.HashMap" resultMap="CsMemberInfo">
+		select cs_member_info$suffix$.* from cs_member_info$suffix$
+		where csmi_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员信息 -->
+	<insert id="saveCsMemberInfo"  parameterClass="com.ccclubs.model.CsMemberInfo">
+		insert into cs_member_info$suffix$
+		(
+			cs_member_info$suffix$.csmi_host
+			,cs_member_info$suffix$.csmi_name
+			,cs_member_info$suffix$.csmi_member_id
+			,cs_member_info$suffix$.csmi_certify_type
+			,cs_member_info$suffix$.csmi_certify_num
+			,cs_member_info$suffix$.csmi_certify_image
+			,cs_member_info$suffix$.csmi_driver_num
+			,cs_member_info$suffix$.csmi_driver_image
+			,cs_member_info$suffix$.csmi_sex
+			,cs_member_info$suffix$.csmi_birthday
+			,cs_member_info$suffix$.csmi_qq
+			,cs_member_info$suffix$.csmi_nation
+			,cs_member_info$suffix$.csmi_address
+			,cs_member_info$suffix$.csmi_company
+			,cs_member_info$suffix$.csmi_place
+			,cs_member_info$suffix$.csmi_person
+			,cs_member_info$suffix$.csmi_contact
+			,cs_member_info$suffix$.csmi_relation
+			,cs_member_info$suffix$.csmi_update_time
+			,cs_member_info$suffix$.csmi_add_time
+			,cs_member_info$suffix$.csmi_status
+			,cs_member_info$suffix$.csmi_on_certify_image
+		)
+		values(
+			<isNotNull property="csmiHost" prepend="">
+				#csmiHost#
+			</isNotNull>
+			<isNull property="csmiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmiName" prepend=",">
+				#csmiName#
+			</isNotNull>
+			<isNull property="csmiName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiMemberId" prepend=",">
+				#csmiMemberId#
+			</isNotNull>
+			<isNull property="csmiMemberId" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiCertifyType" prepend=",">
+				#csmiCertifyType#
+			</isNotNull>
+			<isNull property="csmiCertifyType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiCertifyNum" prepend=",">
+				#csmiCertifyNum#
+			</isNotNull>
+			<isNull property="csmiCertifyNum" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiCertifyImage" prepend=",">
+				#csmiCertifyImage#
+			</isNotNull>
+			<isNull property="csmiCertifyImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiDriverNum" prepend=",">
+				#csmiDriverNum#
+			</isNotNull>
+			<isNull property="csmiDriverNum" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiDriverImage" prepend=",">
+				#csmiDriverImage#
+			</isNotNull>
+			<isNull property="csmiDriverImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiSex" prepend=",">
+				#csmiSex#
+			</isNotNull>
+			<isNull property="csmiSex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiBirthday" prepend=",">
+				#csmiBirthday#
+			</isNotNull>
+			<isNull property="csmiBirthday" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiQq" prepend=",">
+				#csmiQq#
+			</isNotNull>
+			<isNull property="csmiQq" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiNation" prepend=",">
+				#csmiNation#
+			</isNotNull>
+			<isNull property="csmiNation" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiAddress" prepend=",">
+				#csmiAddress#
+			</isNotNull>
+			<isNull property="csmiAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiCompany" prepend=",">
+				#csmiCompany#
+			</isNotNull>
+			<isNull property="csmiCompany" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiPlace" prepend=",">
+				#csmiPlace#
+			</isNotNull>
+			<isNull property="csmiPlace" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiPerson" prepend=",">
+				#csmiPerson#
+			</isNotNull>
+			<isNull property="csmiPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiContact" prepend=",">
+				#csmiContact#
+			</isNotNull>
+			<isNull property="csmiContact" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiRelation" prepend=",">
+				#csmiRelation#
+			</isNotNull>
+			<isNull property="csmiRelation" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiUpdateTime" prepend=",">
+				#csmiUpdateTime#
+			</isNotNull>
+			<isNull property="csmiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiAddTime" prepend=",">
+				#csmiAddTime#
+			</isNotNull>
+			<isNull property="csmiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiStatus" prepend=",">
+				#csmiStatus#
+			</isNotNull>
+			<isNull property="csmiStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiOnCertifyImage" prepend=",">
+				#csmiOnCertifyImage#
+			</isNotNull>
+			<isNull property="csmiOnCertifyImage" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员信息 -->
+	<update id="updateCsMemberInfo"  parameterClass="com.ccclubs.model.CsMemberInfo">
+		update cs_member_info$suffix$ set
+			<isNotNull property="csmiHost" prepend="">
+				cs_member_info$suffix$.csmi_host = #csmiHost#
+			</isNotNull>
+			<isNull property="csmiHost" prepend="">
+				cs_member_info$suffix$.csmi_host = null
+			</isNull>				
+			<isNotNull property="csmiName" prepend=",">
+				cs_member_info$suffix$.csmi_name = #csmiName#
+			</isNotNull>
+			<isNull property="csmiName" prepend=",">
+				cs_member_info$suffix$.csmi_name = null
+			</isNull>				
+			<isNotNull property="csmiMemberId" prepend=",">
+				cs_member_info$suffix$.csmi_member_id = #csmiMemberId#
+			</isNotNull>
+			<isNull property="csmiMemberId" prepend=",">
+				cs_member_info$suffix$.csmi_member_id = null
+			</isNull>				
+			<isNotNull property="csmiCertifyType" prepend=",">
+				cs_member_info$suffix$.csmi_certify_type = #csmiCertifyType#
+			</isNotNull>
+			<isNull property="csmiCertifyType" prepend=",">
+				cs_member_info$suffix$.csmi_certify_type = null
+			</isNull>				
+			<isNotNull property="csmiCertifyNum" prepend=",">
+				cs_member_info$suffix$.csmi_certify_num = #csmiCertifyNum#
+			</isNotNull>
+			<isNull property="csmiCertifyNum" prepend=",">
+				cs_member_info$suffix$.csmi_certify_num = null
+			</isNull>				
+			<isNotNull property="csmiCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_certify_image = #csmiCertifyImage#
+			</isNotNull>
+			<isNull property="csmiCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_certify_image = null
+			</isNull>				
+			<isNotNull property="csmiDriverNum" prepend=",">
+				cs_member_info$suffix$.csmi_driver_num = #csmiDriverNum#
+			</isNotNull>
+			<isNull property="csmiDriverNum" prepend=",">
+				cs_member_info$suffix$.csmi_driver_num = null
+			</isNull>				
+			<isNotNull property="csmiDriverImage" prepend=",">
+				cs_member_info$suffix$.csmi_driver_image = #csmiDriverImage#
+			</isNotNull>
+			<isNull property="csmiDriverImage" prepend=",">
+				cs_member_info$suffix$.csmi_driver_image = null
+			</isNull>				
+			<isNotNull property="csmiSex" prepend=",">
+				cs_member_info$suffix$.csmi_sex = #csmiSex#
+			</isNotNull>
+			<isNull property="csmiSex" prepend=",">
+				cs_member_info$suffix$.csmi_sex = null
+			</isNull>				
+			<isNotNull property="csmiBirthday" prepend=",">
+				cs_member_info$suffix$.csmi_birthday = #csmiBirthday#
+			</isNotNull>
+			<isNull property="csmiBirthday" prepend=",">
+				cs_member_info$suffix$.csmi_birthday = null
+			</isNull>				
+			<isNotNull property="csmiQq" prepend=",">
+				cs_member_info$suffix$.csmi_qq = #csmiQq#
+			</isNotNull>
+			<isNull property="csmiQq" prepend=",">
+				cs_member_info$suffix$.csmi_qq = null
+			</isNull>				
+			<isNotNull property="csmiNation" prepend=",">
+				cs_member_info$suffix$.csmi_nation = #csmiNation#
+			</isNotNull>
+			<isNull property="csmiNation" prepend=",">
+				cs_member_info$suffix$.csmi_nation = null
+			</isNull>				
+			<isNotNull property="csmiAddress" prepend=",">
+				cs_member_info$suffix$.csmi_address = #csmiAddress#
+			</isNotNull>
+			<isNull property="csmiAddress" prepend=",">
+				cs_member_info$suffix$.csmi_address = null
+			</isNull>				
+			<isNotNull property="csmiCompany" prepend=",">
+				cs_member_info$suffix$.csmi_company = #csmiCompany#
+			</isNotNull>
+			<isNull property="csmiCompany" prepend=",">
+				cs_member_info$suffix$.csmi_company = null
+			</isNull>				
+			<isNotNull property="csmiPlace" prepend=",">
+				cs_member_info$suffix$.csmi_place = #csmiPlace#
+			</isNotNull>
+			<isNull property="csmiPlace" prepend=",">
+				cs_member_info$suffix$.csmi_place = null
+			</isNull>				
+			<isNotNull property="csmiPerson" prepend=",">
+				cs_member_info$suffix$.csmi_person = #csmiPerson#
+			</isNotNull>
+			<isNull property="csmiPerson" prepend=",">
+				cs_member_info$suffix$.csmi_person = null
+			</isNull>				
+			<isNotNull property="csmiContact" prepend=",">
+				cs_member_info$suffix$.csmi_contact = #csmiContact#
+			</isNotNull>
+			<isNull property="csmiContact" prepend=",">
+				cs_member_info$suffix$.csmi_contact = null
+			</isNull>				
+			<isNotNull property="csmiRelation" prepend=",">
+				cs_member_info$suffix$.csmi_relation = #csmiRelation#
+			</isNotNull>
+			<isNull property="csmiRelation" prepend=",">
+				cs_member_info$suffix$.csmi_relation = null
+			</isNull>				
+			<isNotNull property="csmiUpdateTime" prepend=",">
+				cs_member_info$suffix$.csmi_update_time = #csmiUpdateTime#
+			</isNotNull>
+			<isNull property="csmiUpdateTime" prepend=",">
+				cs_member_info$suffix$.csmi_update_time = null
+			</isNull>				
+			<isNotNull property="csmiAddTime" prepend=",">
+				cs_member_info$suffix$.csmi_add_time = #csmiAddTime#
+			</isNotNull>
+			<isNull property="csmiAddTime" prepend=",">
+				cs_member_info$suffix$.csmi_add_time = null
+			</isNull>				
+			<isNotNull property="csmiStatus" prepend=",">
+				cs_member_info$suffix$.csmi_status = #csmiStatus#
+			</isNotNull>
+			<isNull property="csmiStatus" prepend=",">
+				cs_member_info$suffix$.csmi_status = null
+			</isNull>				
+			<isNotNull property="csmiOnCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_on_certify_image = #csmiOnCertifyImage#
+			</isNotNull>
+			<isNull property="csmiOnCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_on_certify_image = null
+			</isNull>				
+		where
+			csmi_id=#csmiId#
+	</update>
+	
+	<!-- 更新会员信息非空字段 -->
+	<update id="updateCsMemberInfo$NotNull"  parameterClass="com.ccclubs.model.CsMemberInfo">
+		update cs_member_info$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmiHost" prepend=",">
+				cs_member_info$suffix$.csmi_host = #csmiHost#
+			</isNotNull>		
+			<isNotNull property="csmiName" prepend=",">
+				cs_member_info$suffix$.csmi_name = #csmiName#
+			</isNotNull>		
+			<isNotNull property="csmiMemberId" prepend=",">
+				cs_member_info$suffix$.csmi_member_id = #csmiMemberId#
+			</isNotNull>		
+			<isNotNull property="csmiCertifyType" prepend=",">
+				cs_member_info$suffix$.csmi_certify_type = #csmiCertifyType#
+			</isNotNull>		
+			<isNotNull property="csmiCertifyNum" prepend=",">
+				cs_member_info$suffix$.csmi_certify_num = #csmiCertifyNum#
+			</isNotNull>		
+			<isNotNull property="csmiCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_certify_image = #csmiCertifyImage#
+			</isNotNull>		
+			<isNotNull property="csmiDriverNum" prepend=",">
+				cs_member_info$suffix$.csmi_driver_num = #csmiDriverNum#
+			</isNotNull>		
+			<isNotNull property="csmiDriverImage" prepend=",">
+				cs_member_info$suffix$.csmi_driver_image = #csmiDriverImage#
+			</isNotNull>		
+			<isNotNull property="csmiSex" prepend=",">
+				cs_member_info$suffix$.csmi_sex = #csmiSex#
+			</isNotNull>		
+			<isNotNull property="csmiBirthday" prepend=",">
+				cs_member_info$suffix$.csmi_birthday = #csmiBirthday#
+			</isNotNull>		
+			<isNotNull property="csmiQq" prepend=",">
+				cs_member_info$suffix$.csmi_qq = #csmiQq#
+			</isNotNull>		
+			<isNotNull property="csmiNation" prepend=",">
+				cs_member_info$suffix$.csmi_nation = #csmiNation#
+			</isNotNull>		
+			<isNotNull property="csmiAddress" prepend=",">
+				cs_member_info$suffix$.csmi_address = #csmiAddress#
+			</isNotNull>		
+			<isNotNull property="csmiCompany" prepend=",">
+				cs_member_info$suffix$.csmi_company = #csmiCompany#
+			</isNotNull>		
+			<isNotNull property="csmiPlace" prepend=",">
+				cs_member_info$suffix$.csmi_place = #csmiPlace#
+			</isNotNull>		
+			<isNotNull property="csmiPerson" prepend=",">
+				cs_member_info$suffix$.csmi_person = #csmiPerson#
+			</isNotNull>		
+			<isNotNull property="csmiContact" prepend=",">
+				cs_member_info$suffix$.csmi_contact = #csmiContact#
+			</isNotNull>		
+			<isNotNull property="csmiRelation" prepend=",">
+				cs_member_info$suffix$.csmi_relation = #csmiRelation#
+			</isNotNull>		
+			<isNotNull property="csmiUpdateTime" prepend=",">
+				cs_member_info$suffix$.csmi_update_time = #csmiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csmiAddTime" prepend=",">
+				cs_member_info$suffix$.csmi_add_time = #csmiAddTime#
+			</isNotNull>		
+			<isNotNull property="csmiStatus" prepend=",">
+				cs_member_info$suffix$.csmi_status = #csmiStatus#
+			</isNotNull>		
+			<isNotNull property="csmiOnCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_on_certify_image = #csmiOnCertifyImage#
+			</isNotNull>		
+			</dynamic>
+		where
+			csmi_id=#csmiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员信息 -->
+	<delete id="deleteCsMemberInfoById" parameterClass="java.util.HashMap">
+		delete from cs_member_info$suffix$ where csmi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员信息 -->
+	<update id="removeCsMemberInfoById" parameterClass="java.util.HashMap">
+		update cs_member_info$suffix$ set  cs_member_info$suffix$.csmi_status=-1  where csmi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员信息 -->
+	<update id="updateCsMemberInfoBy"  parameterClass="java.util.HashMap">
+		update cs_member_info$suffix$ set		
+			csmi_id=csmi_id
+			<isNotNull property="V_csmiId" prepend=",">
+				cs_member_info$suffix$.csmi_id = #V_csmiId#
+			</isNotNull>		
+			<isNotNull property="V_csmiHost" prepend=",">
+				cs_member_info$suffix$.csmi_host = #V_csmiHost#
+			</isNotNull>		
+			<isNotNull property="V_csmiName" prepend=",">
+				cs_member_info$suffix$.csmi_name = #V_csmiName#
+			</isNotNull>		
+			<isNotNull property="V_csmiMemberId" prepend=",">
+				cs_member_info$suffix$.csmi_member_id = #V_csmiMemberId#
+			</isNotNull>		
+			<isNotNull property="V_csmiCertifyType" prepend=",">
+				cs_member_info$suffix$.csmi_certify_type = #V_csmiCertifyType#
+			</isNotNull>		
+			<isNotNull property="V_csmiCertifyNum" prepend=",">
+				cs_member_info$suffix$.csmi_certify_num = #V_csmiCertifyNum#
+			</isNotNull>		
+			<isNotNull property="V_csmiCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_certify_image = #V_csmiCertifyImage#
+			</isNotNull>		
+			<isNotNull property="V_csmiDriverNum" prepend=",">
+				cs_member_info$suffix$.csmi_driver_num = #V_csmiDriverNum#
+			</isNotNull>		
+			<isNotNull property="V_csmiDriverImage" prepend=",">
+				cs_member_info$suffix$.csmi_driver_image = #V_csmiDriverImage#
+			</isNotNull>		
+			<isNotNull property="V_csmiSex" prepend=",">
+				cs_member_info$suffix$.csmi_sex = #V_csmiSex#
+			</isNotNull>		
+			<isNotNull property="V_csmiBirthday" prepend=",">
+				cs_member_info$suffix$.csmi_birthday = #V_csmiBirthday#
+			</isNotNull>		
+			<isNotNull property="V_csmiQq" prepend=",">
+				cs_member_info$suffix$.csmi_qq = #V_csmiQq#
+			</isNotNull>		
+			<isNotNull property="V_csmiNation" prepend=",">
+				cs_member_info$suffix$.csmi_nation = #V_csmiNation#
+			</isNotNull>		
+			<isNotNull property="V_csmiAddress" prepend=",">
+				cs_member_info$suffix$.csmi_address = #V_csmiAddress#
+			</isNotNull>		
+			<isNotNull property="V_csmiCompany" prepend=",">
+				cs_member_info$suffix$.csmi_company = #V_csmiCompany#
+			</isNotNull>		
+			<isNotNull property="V_csmiPlace" prepend=",">
+				cs_member_info$suffix$.csmi_place = #V_csmiPlace#
+			</isNotNull>		
+			<isNotNull property="V_csmiPerson" prepend=",">
+				cs_member_info$suffix$.csmi_person = #V_csmiPerson#
+			</isNotNull>		
+			<isNotNull property="V_csmiContact" prepend=",">
+				cs_member_info$suffix$.csmi_contact = #V_csmiContact#
+			</isNotNull>		
+			<isNotNull property="V_csmiRelation" prepend=",">
+				cs_member_info$suffix$.csmi_relation = #V_csmiRelation#
+			</isNotNull>		
+			<isNotNull property="V_csmiUpdateTime" prepend=",">
+				cs_member_info$suffix$.csmi_update_time = #V_csmiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csmiAddTime" prepend=",">
+				cs_member_info$suffix$.csmi_add_time = #V_csmiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmiStatus" prepend=",">
+				cs_member_info$suffix$.csmi_status = #V_csmiStatus#
+			</isNotNull>		
+			<isNotNull property="V_csmiOnCertifyImage" prepend=",">
+				cs_member_info$suffix$.csmi_on_certify_image = #V_csmiOnCertifyImage#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.csmi_member_id=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_member_info$suffix$.csmi_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmiMemberId"><!-- 调用一下CsmiMemberId，把CsMember指向CsmiMemberId --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMemberInfo_part.cs_member_info_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员信息 -->
+	<update id="deleteCsMemberInfoBy"  parameterClass="java.util.HashMap">
+		delete from cs_member_info$suffix$ where 
+		cs_member_info$suffix$.csmi_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMemberInfo_part.cs_member_info_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

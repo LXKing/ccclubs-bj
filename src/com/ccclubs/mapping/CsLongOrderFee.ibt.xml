@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 长单缴费之SQL映射 -->
+	<resultMap id="CsLongOrderFee" class="com.ccclubs.model.CsLongOrderFee">
+		<result property="cslofId" column="cslof_id"/>
+		<result property="cslofHost" column="cslof_host"/>
+		<result property="cslofLongorder" column="cslof_longorder"/>
+		<result property="cslofName" column="cslof_name"/>
+		<result property="cslofType" column="cslof_type"/>
+		<result property="cslofPayType" column="cslof_pay_type"/>
+		<result property="cslofAmmount" column="cslof_ammount"/>
+		<result property="cslofRemark" column="cslof_remark"/>
+		<result property="cslofUpdateTime" column="cslof_update_time"/>
+		<result property="cslofAddTime" column="cslof_add_time"/>
+		<result property="cslofStateInfo" column="cslof_state_info"/>
+		<result property="cslofState" column="cslof_state"/>
+		<result property="cslofStatus" column="cslof_status"/>
+	</resultMap>
+		
+	<!-- 获取所有长单缴费 -->
+	<select id="getCsLongOrderFeeList" resultMap="CsLongOrderFee">
+		select cs_long_order_fee$suffix$.* from cs_long_order_fee$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询-->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.cslof_longorder=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order_fee$suffix$.cslof_status!=-1
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrderFee_part.cs_long_order_fee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslof_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取长单缴费分页 -->
+	<select id="getCsLongOrderFeePage" parameterClass="java.util.HashMap" resultMap="CsLongOrderFee">
+		select cs_long_order_fee$suffix$.* from cs_long_order_fee$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询 -->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.cslof_longorder=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order_fee$suffix$.cslof_status!=-1
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrderFee_part.cs_long_order_fee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslof_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取长单缴费总数 -->
+	<select id="getCsLongOrderFeeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_long_order_fee$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.cslof_longorder=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_long_order_fee$suffix$.cslof_status!=-1
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLongOrderFee_part.cs_long_order_fee_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取长单缴费 -->
+	<select id="getCsLongOrderFeeById" parameterClass="java.util.HashMap" resultMap="CsLongOrderFee">
+		select cs_long_order_fee$suffix$.* from cs_long_order_fee$suffix$
+		where cslof_id=#id#
+	</select>
+	
+		
+	<!-- 保存长单缴费 -->
+	<insert id="saveCsLongOrderFee"  parameterClass="com.ccclubs.model.CsLongOrderFee">
+		insert into cs_long_order_fee$suffix$
+		(
+			cs_long_order_fee$suffix$.cslof_host
+			,cs_long_order_fee$suffix$.cslof_longorder
+			,cs_long_order_fee$suffix$.cslof_name
+			,cs_long_order_fee$suffix$.cslof_type
+			,cs_long_order_fee$suffix$.cslof_pay_type
+			,cs_long_order_fee$suffix$.cslof_ammount
+			,cs_long_order_fee$suffix$.cslof_remark
+			,cs_long_order_fee$suffix$.cslof_update_time
+			,cs_long_order_fee$suffix$.cslof_add_time
+			,cs_long_order_fee$suffix$.cslof_state_info
+			,cs_long_order_fee$suffix$.cslof_state
+			,cs_long_order_fee$suffix$.cslof_status
+		)
+		values(
+			<isNotNull property="cslofHost" prepend="">
+				#cslofHost#
+			</isNotNull>
+			<isNull property="cslofHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cslofLongorder" prepend=",">
+				#cslofLongorder#
+			</isNotNull>
+			<isNull property="cslofLongorder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofName" prepend=",">
+				#cslofName#
+			</isNotNull>
+			<isNull property="cslofName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofType" prepend=",">
+				#cslofType#
+			</isNotNull>
+			<isNull property="cslofType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofPayType" prepend=",">
+				#cslofPayType#
+			</isNotNull>
+			<isNull property="cslofPayType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofAmmount" prepend=",">
+				#cslofAmmount#
+			</isNotNull>
+			<isNull property="cslofAmmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofRemark" prepend=",">
+				#cslofRemark#
+			</isNotNull>
+			<isNull property="cslofRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofUpdateTime" prepend=",">
+				#cslofUpdateTime#
+			</isNotNull>
+			<isNull property="cslofUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofAddTime" prepend=",">
+				#cslofAddTime#
+			</isNotNull>
+			<isNull property="cslofAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofStateInfo" prepend=",">
+				#cslofStateInfo#
+			</isNotNull>
+			<isNull property="cslofStateInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofState" prepend=",">
+				#cslofState#
+			</isNotNull>
+			<isNull property="cslofState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslofStatus" prepend=",">
+				#cslofStatus#
+			</isNotNull>
+			<isNull property="cslofStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新长单缴费 -->
+	<update id="updateCsLongOrderFee"  parameterClass="com.ccclubs.model.CsLongOrderFee">
+		update cs_long_order_fee$suffix$ set
+			<isNotNull property="cslofHost" prepend="">
+				cs_long_order_fee$suffix$.cslof_host = #cslofHost#
+			</isNotNull>
+			<isNull property="cslofHost" prepend="">
+				cs_long_order_fee$suffix$.cslof_host = null
+			</isNull>				
+			<isNotNull property="cslofLongorder" prepend=",">
+				cs_long_order_fee$suffix$.cslof_longorder = #cslofLongorder#
+			</isNotNull>
+			<isNull property="cslofLongorder" prepend=",">
+				cs_long_order_fee$suffix$.cslof_longorder = null
+			</isNull>				
+			<isNotNull property="cslofName" prepend=",">
+				cs_long_order_fee$suffix$.cslof_name = #cslofName#
+			</isNotNull>
+			<isNull property="cslofName" prepend=",">
+				cs_long_order_fee$suffix$.cslof_name = null
+			</isNull>				
+			<isNotNull property="cslofType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_type = #cslofType#
+			</isNotNull>
+			<isNull property="cslofType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_type = null
+			</isNull>				
+			<isNotNull property="cslofPayType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_pay_type = #cslofPayType#
+			</isNotNull>
+			<isNull property="cslofPayType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_pay_type = null
+			</isNull>				
+			<isNotNull property="cslofAmmount" prepend=",">
+				cs_long_order_fee$suffix$.cslof_ammount = #cslofAmmount#
+			</isNotNull>
+			<isNull property="cslofAmmount" prepend=",">
+				cs_long_order_fee$suffix$.cslof_ammount = null
+			</isNull>				
+			<isNotNull property="cslofRemark" prepend=",">
+				cs_long_order_fee$suffix$.cslof_remark = #cslofRemark#
+			</isNotNull>
+			<isNull property="cslofRemark" prepend=",">
+				cs_long_order_fee$suffix$.cslof_remark = null
+			</isNull>				
+			<isNotNull property="cslofUpdateTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_update_time = #cslofUpdateTime#
+			</isNotNull>
+			<isNull property="cslofUpdateTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_update_time = null
+			</isNull>				
+			<isNotNull property="cslofAddTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_add_time = #cslofAddTime#
+			</isNotNull>
+			<isNull property="cslofAddTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_add_time = null
+			</isNull>				
+			<isNotNull property="cslofStateInfo" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state_info = #cslofStateInfo#
+			</isNotNull>
+			<isNull property="cslofStateInfo" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state_info = null
+			</isNull>				
+			<isNotNull property="cslofState" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state = #cslofState#
+			</isNotNull>
+			<isNull property="cslofState" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state = null
+			</isNull>				
+			<isNotNull property="cslofStatus" prepend=",">
+				cs_long_order_fee$suffix$.cslof_status = #cslofStatus#
+			</isNotNull>
+			<isNull property="cslofStatus" prepend=",">
+				cs_long_order_fee$suffix$.cslof_status = null
+			</isNull>				
+		where
+			cslof_id=#cslofId#
+	</update>
+	
+	<!-- 更新长单缴费非空字段 -->
+	<update id="updateCsLongOrderFee$NotNull"  parameterClass="com.ccclubs.model.CsLongOrderFee">
+		update cs_long_order_fee$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cslofHost" prepend=",">
+				cs_long_order_fee$suffix$.cslof_host = #cslofHost#
+			</isNotNull>		
+			<isNotNull property="cslofLongorder" prepend=",">
+				cs_long_order_fee$suffix$.cslof_longorder = #cslofLongorder#
+			</isNotNull>		
+			<isNotNull property="cslofName" prepend=",">
+				cs_long_order_fee$suffix$.cslof_name = #cslofName#
+			</isNotNull>		
+			<isNotNull property="cslofType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_type = #cslofType#
+			</isNotNull>		
+			<isNotNull property="cslofPayType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_pay_type = #cslofPayType#
+			</isNotNull>		
+			<isNotNull property="cslofAmmount" prepend=",">
+				cs_long_order_fee$suffix$.cslof_ammount = #cslofAmmount#
+			</isNotNull>		
+			<isNotNull property="cslofRemark" prepend=",">
+				cs_long_order_fee$suffix$.cslof_remark = #cslofRemark#
+			</isNotNull>		
+			<isNotNull property="cslofUpdateTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_update_time = #cslofUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cslofAddTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_add_time = #cslofAddTime#
+			</isNotNull>		
+			<isNotNull property="cslofStateInfo" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state_info = #cslofStateInfo#
+			</isNotNull>		
+			<isNotNull property="cslofState" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state = #cslofState#
+			</isNotNull>		
+			<isNotNull property="cslofStatus" prepend=",">
+				cs_long_order_fee$suffix$.cslof_status = #cslofStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cslof_id=#cslofId#
+	</update>
+	
+
+	<!-- 根据ID删除一个长单缴费 -->
+	<delete id="deleteCsLongOrderFeeById" parameterClass="java.util.HashMap">
+		delete from cs_long_order_fee$suffix$ where cslof_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个长单缴费 -->
+	<update id="removeCsLongOrderFeeById" parameterClass="java.util.HashMap">
+		update cs_long_order_fee$suffix$ set  cs_long_order_fee$suffix$.cslof_status=-1  where cslof_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新长单缴费 -->
+	<update id="updateCsLongOrderFeeBy"  parameterClass="java.util.HashMap">
+		update cs_long_order_fee$suffix$ set		
+			cslof_id=cslof_id
+			<isNotNull property="V_cslofId" prepend=",">
+				cs_long_order_fee$suffix$.cslof_id = #V_cslofId#
+			</isNotNull>		
+			<isNotNull property="V_cslofHost" prepend=",">
+				cs_long_order_fee$suffix$.cslof_host = #V_cslofHost#
+			</isNotNull>		
+			<isNotNull property="V_cslofLongorder" prepend=",">
+				cs_long_order_fee$suffix$.cslof_longorder = #V_cslofLongorder#
+			</isNotNull>		
+			<isNotNull property="V_cslofName" prepend=",">
+				cs_long_order_fee$suffix$.cslof_name = #V_cslofName#
+			</isNotNull>		
+			<isNotNull property="V_cslofType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_type = #V_cslofType#
+			</isNotNull>		
+			<isNotNull property="V_cslofPayType" prepend=",">
+				cs_long_order_fee$suffix$.cslof_pay_type = #V_cslofPayType#
+			</isNotNull>		
+			<isNotNull property="V_cslofAmmount" prepend=",">
+				cs_long_order_fee$suffix$.cslof_ammount = #V_cslofAmmount#
+			</isNotNull>		
+			<isNotNull property="V_cslofRemark" prepend=",">
+				cs_long_order_fee$suffix$.cslof_remark = #V_cslofRemark#
+			</isNotNull>		
+			<isNotNull property="V_cslofUpdateTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_update_time = #V_cslofUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cslofAddTime" prepend=",">
+				cs_long_order_fee$suffix$.cslof_add_time = #V_cslofAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cslofStateInfo" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state_info = #V_cslofStateInfo#
+			</isNotNull>		
+			<isNotNull property="V_cslofState" prepend=",">
+				cs_long_order_fee$suffix$.cslof_state = #V_cslofState#
+			</isNotNull>		
+			<isNotNull property="V_cslofStatus" prepend=",">
+				cs_long_order_fee$suffix$.cslof_status = #V_cslofStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[长租订单]查询-->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<isNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.cslof_longorder=cs_long_order$CsLongOrder.suffix$.cslo_id
+			</isNull>
+			<isNotNull property="CsLongOrder.on">
+				left join cs_long_order cs_long_order$CsLongOrder.suffix$ on cs_long_order_fee$suffix$.$CsLongOrder.on$=cs_long_order$CsLongOrder.suffix$.cslo_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_long_order_fee$suffix$.cslof_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[长租订单]查询条件sql片段 -->
+		<isNotNull property="CslofLongorder"><!-- 调用一下CslofLongorder，把CsLongOrder指向CslofLongorder --></isNotNull>
+		<isNotNull property="CsLongOrder">
+			<include refid="CsLongOrder_part.cs_long_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLongOrderFee_part.cs_long_order_fee_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除长单缴费 -->
+	<update id="deleteCsLongOrderFeeBy"  parameterClass="java.util.HashMap">
+		delete from cs_long_order_fee$suffix$ where 
+		cs_long_order_fee$suffix$.cslof_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLongOrderFee_part.cs_long_order_fee_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

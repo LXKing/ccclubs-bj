@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsAddress_part">	
+	<!-- 会员地址条件sql片段  -->
+	<sql id="cs_address_dynamic">
+		<dynamic>
+			<isNotEmpty property="csaId" prepend="and">
+			    $csaIdNot$ cs_address$suffix$.csa_id = #csaId#
+			</isNotEmpty>
+			<isNotNull property="csaIdNot" prepend="and">
+				<isEmpty property="csaId">
+				$csaIdNot$ cs_address$suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaAddress" prepend="and">			    
+			    (<isNotNull property="csaAddressNot">
+			    cs_address$suffix$.csa_address is null or length(cs_address$suffix$.csa_address) &lt; 1 or
+			    </isNotNull>$csaAddressNot$ cs_address$suffix$.csa_address like #csaAddress#)
+			</isNotEmpty>
+			<isNotNull property="csaAddressNot" prepend="and">
+				<isEmpty property="csaAddress">
+				$csaAddressNot$ (cs_address$suffix$.csa_address is null or length(cs_address$suffix$.csa_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaName" prepend="and">			    
+			    (<isNotNull property="csaNameNot">
+			    cs_address$suffix$.csa_name is null or length(cs_address$suffix$.csa_name) &lt; 1 or
+			    </isNotNull>$csaNameNot$ cs_address$suffix$.csa_name = #csaName#)
+			</isNotEmpty>
+			<isNotNull property="csaNameNot" prepend="and">
+				<isEmpty property="csaName">
+				$csaNameNot$ (cs_address$suffix$.csa_name is null or length(cs_address$suffix$.csa_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaDefault" prepend="and">
+			    $csaDefaultNot$ cs_address$suffix$.csa_default = #csaDefault#
+			</isNotEmpty>
+			<isNotNull property="csaDefaultNot" prepend="and">
+				<isEmpty property="csaDefault">
+				$csaDefaultNot$ cs_address$suffix$.csa_default is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaMember" prepend="and">
+			    $csaMemberNot$ cs_address$suffix$.csa_member = #csaMember#
+			</isNotEmpty>
+			<isNotNull property="csaMemberNot" prepend="and">
+				<isEmpty property="csaMember">
+				$csaMemberNot$ cs_address$suffix$.csa_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaPostCode" prepend="and">			    
+			    (<isNotNull property="csaPostCodeNot">
+			    cs_address$suffix$.csa_post_code is null or length(cs_address$suffix$.csa_post_code) &lt; 1 or
+			    </isNotNull>$csaPostCodeNot$ cs_address$suffix$.csa_post_code = #csaPostCode#)
+			</isNotEmpty>
+			<isNotNull property="csaPostCodeNot" prepend="and">
+				<isEmpty property="csaPostCode">
+				$csaPostCodeNot$ (cs_address$suffix$.csa_post_code is null or length(cs_address$suffix$.csa_post_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaContact" prepend="and">			    
+			    (<isNotNull property="csaContactNot">
+			    cs_address$suffix$.csa_contact is null or length(cs_address$suffix$.csa_contact) &lt; 1 or
+			    </isNotNull>$csaContactNot$ cs_address$suffix$.csa_contact = #csaContact#)
+			</isNotEmpty>
+			<isNotNull property="csaContactNot" prepend="and">
+				<isEmpty property="csaContact">
+				$csaContactNot$ (cs_address$suffix$.csa_contact is null or length(cs_address$suffix$.csa_contact) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaRemark" prepend="and">			    
+			    (<isNotNull property="csaRemarkNot">
+			    cs_address$suffix$.csa_remark is null or length(cs_address$suffix$.csa_remark) &lt; 1 or
+			    </isNotNull>$csaRemarkNot$ cs_address$suffix$.csa_remark like #csaRemark#)
+			</isNotEmpty>
+			<isNotNull property="csaRemarkNot" prepend="and">
+				<isEmpty property="csaRemark">
+				$csaRemarkNot$ (cs_address$suffix$.csa_remark is null or length(cs_address$suffix$.csa_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaUpdateTimeStart" prepend="and">
+			    $csaUpdateTimeNot$   (cs_address$suffix$.csa_update_time &gt;= #csaUpdateTimeStart#
+			   <isEmpty property="csaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaUpdateTimeEnd" prepend="and">
+				<isEmpty property="csaUpdateTimeStart">$csaUpdateTimeNot$   (</isEmpty>
+			    cs_address$suffix$.csa_update_time &lt;= #csaUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaUpdateTime" prepend="and">
+			    $csaUpdateTimeNot$ cs_address$suffix$.csa_update_time = #csaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csaUpdateTimeNot" prepend="and">
+				<isEmpty property="csaUpdateTimeStart"><isEmpty property="csaUpdateTimeEnd"><isEmpty property="csaUpdateTime">
+				$csaUpdateTimeNot$ cs_address$suffix$.csa_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaAddTimeStart" prepend="and">
+			    $csaAddTimeNot$   (cs_address$suffix$.csa_add_time &gt;= #csaAddTimeStart#
+			   <isEmpty property="csaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csaAddTimeEnd" prepend="and">
+				<isEmpty property="csaAddTimeStart">$csaAddTimeNot$   (</isEmpty>
+			    cs_address$suffix$.csa_add_time &lt;= #csaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csaAddTime" prepend="and">
+			    $csaAddTimeNot$ cs_address$suffix$.csa_add_time = #csaAddTime#
+			</isNotEmpty>
+			<isNotNull property="csaAddTimeNot" prepend="and">
+				<isEmpty property="csaAddTimeStart"><isEmpty property="csaAddTimeEnd"><isEmpty property="csaAddTime">
+				$csaAddTimeNot$ cs_address$suffix$.csa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csaStatus" prepend="and">
+			    $csaStatusNot$ cs_address$suffix$.csa_status = #csaStatus#
+			</isNotEmpty>
+			<isNotNull property="csaStatusNot" prepend="and">
+				<isEmpty property="csaStatus">
+				$csaStatusNot$ cs_address$suffix$.csa_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员地址left join 条件sql片段 -->
+	<sql id="cs_address_join">
+		<dynamic>
+			<isNotEmpty property="CsAddress.csaId" prepend="and">
+			    $CsAddress.csaIdNot$ cs_address$CsAddress.suffix$.csa_id = #CsAddress.csaId#
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaIdNot" prepend="and">
+				<isEmpty property="CsAddress.csaId">
+				$csaIdNot$ cs_address$CsAddress.suffix$.csa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaAddress" prepend="and">
+				(<isNotNull property="CsAddress.csaAddressNot">
+			    cs_address$CsAddress.suffix$.csa_address is null or length(cs_address$CsAddress.suffix$.csa_address) &lt; 1 or
+			    </isNotNull>$CsAddress.csaAddressNot$ cs_address$CsAddress.suffix$.csa_address like #CsAddress.csaAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaAddressNot" prepend="and">
+				<isEmpty property="CsAddress.csaAddress">
+				$csaAddressNot$ (cs_address$CsAddress.suffix$.csa_address is null or length(cs_address$CsAddress.suffix$.csa_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaName" prepend="and">
+				(<isNotNull property="CsAddress.csaNameNot">
+			    cs_address$CsAddress.suffix$.csa_name is null or length(cs_address$CsAddress.suffix$.csa_name) &lt; 1 or
+			    </isNotNull>$CsAddress.csaNameNot$ cs_address$CsAddress.suffix$.csa_name = #CsAddress.csaName#)
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaNameNot" prepend="and">
+				<isEmpty property="CsAddress.csaName">
+				$csaNameNot$ (cs_address$CsAddress.suffix$.csa_name is null or length(cs_address$CsAddress.suffix$.csa_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaDefault" prepend="and">
+			    $CsAddress.csaDefaultNot$ cs_address$CsAddress.suffix$.csa_default = #CsAddress.csaDefault#
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaDefaultNot" prepend="and">
+				<isEmpty property="CsAddress.csaDefault">
+				$csaDefaultNot$ cs_address$CsAddress.suffix$.csa_default is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaMember" prepend="and">
+			    $CsAddress.csaMemberNot$ cs_address$CsAddress.suffix$.csa_member = #CsAddress.csaMember#
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaMemberNot" prepend="and">
+				<isEmpty property="CsAddress.csaMember">
+				$csaMemberNot$ cs_address$CsAddress.suffix$.csa_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaPostCode" prepend="and">
+				(<isNotNull property="CsAddress.csaPostCodeNot">
+			    cs_address$CsAddress.suffix$.csa_post_code is null or length(cs_address$CsAddress.suffix$.csa_post_code) &lt; 1 or
+			    </isNotNull>$CsAddress.csaPostCodeNot$ cs_address$CsAddress.suffix$.csa_post_code = #CsAddress.csaPostCode#)
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaPostCodeNot" prepend="and">
+				<isEmpty property="CsAddress.csaPostCode">
+				$csaPostCodeNot$ (cs_address$CsAddress.suffix$.csa_post_code is null or length(cs_address$CsAddress.suffix$.csa_post_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaContact" prepend="and">
+				(<isNotNull property="CsAddress.csaContactNot">
+			    cs_address$CsAddress.suffix$.csa_contact is null or length(cs_address$CsAddress.suffix$.csa_contact) &lt; 1 or
+			    </isNotNull>$CsAddress.csaContactNot$ cs_address$CsAddress.suffix$.csa_contact = #CsAddress.csaContact#)
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaContactNot" prepend="and">
+				<isEmpty property="CsAddress.csaContact">
+				$csaContactNot$ (cs_address$CsAddress.suffix$.csa_contact is null or length(cs_address$CsAddress.suffix$.csa_contact) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaRemark" prepend="and">
+				(<isNotNull property="CsAddress.csaRemarkNot">
+			    cs_address$CsAddress.suffix$.csa_remark is null or length(cs_address$CsAddress.suffix$.csa_remark) &lt; 1 or
+			    </isNotNull>$CsAddress.csaRemarkNot$ cs_address$CsAddress.suffix$.csa_remark like #CsAddress.csaRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaRemarkNot" prepend="and">
+				<isEmpty property="CsAddress.csaRemark">
+				$csaRemarkNot$ (cs_address$CsAddress.suffix$.csa_remark is null or length(cs_address$CsAddress.suffix$.csa_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaUpdateTimeStart" prepend="and">
+			    $CsAddress.csaUpdateTimeNot$   (cs_address$CsAddress.suffix$.csa_update_time &gt;= #CsAddress.csaUpdateTimeStart#
+			   <isEmpty property="CsAddress.csaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAddress.csaUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsAddress.csaUpdateTimeStart">$CsAddress.csaUpdateTimeNot$   (</isEmpty>
+			    cs_address$CsAddress.suffix$.csa_update_time &lt;= #CsAddress.csaUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAddress.csaUpdateTime" prepend="and">
+			    $CsAddress.csaUpdateTimeNot$ cs_address$CsAddress.suffix$.csa_update_time = #CsAddress.csaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaUpdateTimeNot" prepend="and">
+				<isEmpty property="CsAddress.csaUpdateTimeStart"><isEmpty property="CsAddress.csaUpdateTimeEnd"><isEmpty property="CsAddress.csaUpdateTime">
+				$csaUpdateTimeNot$ cs_address$CsAddress.suffix$.csa_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaAddTimeStart" prepend="and">
+			    $CsAddress.csaAddTimeNot$   (cs_address$CsAddress.suffix$.csa_add_time &gt;= #CsAddress.csaAddTimeStart#
+			   <isEmpty property="CsAddress.csaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAddress.csaAddTimeEnd" prepend="and">
+				<isEmpty property="CsAddress.csaAddTimeStart">$CsAddress.csaAddTimeNot$   (</isEmpty>
+			    cs_address$CsAddress.suffix$.csa_add_time &lt;= #CsAddress.csaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAddress.csaAddTime" prepend="and">
+			    $CsAddress.csaAddTimeNot$ cs_address$CsAddress.suffix$.csa_add_time = #CsAddress.csaAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaAddTimeNot" prepend="and">
+				<isEmpty property="CsAddress.csaAddTimeStart"><isEmpty property="CsAddress.csaAddTimeEnd"><isEmpty property="CsAddress.csaAddTime">
+				$csaAddTimeNot$ cs_address$CsAddress.suffix$.csa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAddress.csaStatus" prepend="and">
+			    $CsAddress.csaStatusNot$ cs_address$CsAddress.suffix$.csa_status = #CsAddress.csaStatus#
+			</isNotEmpty>
+			<isNotNull property="CsAddress.csaStatusNot" prepend="and">
+				<isEmpty property="CsAddress.csaStatus">
+				$csaStatusNot$ cs_address$CsAddress.suffix$.csa_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

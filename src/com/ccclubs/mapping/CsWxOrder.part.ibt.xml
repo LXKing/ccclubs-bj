@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsWxOrder_part">	
+	<!-- 微信指令条件sql片段  -->
+	<sql id="cs_wx_order_dynamic">
+		<dynamic>
+			<isNotEmpty property="cswoId" prepend="and">
+			    $cswoIdNot$ cs_wx_order$suffix$.cswo_id = #cswoId#
+			</isNotEmpty>
+			<isNotNull property="cswoIdNot" prepend="and">
+				<isEmpty property="cswoId">
+				$cswoIdNot$ cs_wx_order$suffix$.cswo_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoName" prepend="and">			    
+			    (<isNotNull property="cswoNameNot">
+			    cs_wx_order$suffix$.cswo_name is null or length(cs_wx_order$suffix$.cswo_name) &lt; 1 or
+			    </isNotNull>$cswoNameNot$ cs_wx_order$suffix$.cswo_name = #cswoName#)
+			</isNotEmpty>
+			<isNotNull property="cswoNameNot" prepend="and">
+				<isEmpty property="cswoName">
+				$cswoNameNot$ (cs_wx_order$suffix$.cswo_name is null or length(cs_wx_order$suffix$.cswo_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoType" prepend="and">
+			    $cswoTypeNot$ cs_wx_order$suffix$.cswo_type = #cswoType#
+			</isNotEmpty>
+			<isNotNull property="cswoTypeNot" prepend="and">
+				<isEmpty property="cswoType">
+				$cswoTypeNot$ cs_wx_order$suffix$.cswo_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoRtype" prepend="and">
+			    $cswoRtypeNot$ cs_wx_order$suffix$.cswo_rtype = #cswoRtype#
+			</isNotEmpty>
+			<isNotNull property="cswoRtypeNot" prepend="and">
+				<isEmpty property="cswoRtype">
+				$cswoRtypeNot$ cs_wx_order$suffix$.cswo_rtype is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoContent" prepend="and">			    
+			    (<isNotNull property="cswoContentNot">
+			    cs_wx_order$suffix$.cswo_content is null or length(cs_wx_order$suffix$.cswo_content) &lt; 1 or
+			    </isNotNull>$cswoContentNot$ cs_wx_order$suffix$.cswo_content like #cswoContent#)
+			</isNotEmpty>
+			<isNotNull property="cswoContentNot" prepend="and">
+				<isEmpty property="cswoContent">
+				$cswoContentNot$ (cs_wx_order$suffix$.cswo_content is null or length(cs_wx_order$suffix$.cswo_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoClass" prepend="and">
+			    $cswoClassNot$ cs_wx_order$suffix$.cswo_class = #cswoClass#
+			</isNotEmpty>
+			<isNotNull property="cswoClassNot" prepend="and">
+				<isEmpty property="cswoClass">
+				$cswoClassNot$ cs_wx_order$suffix$.cswo_class is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoPriorityMin" prepend="and">
+			    $cswoPriorityNot$  ( cs_wx_order$suffix$.cswo_priority &gt;= #cswoPriorityMin#
+			    <isEmpty property="cswoPriorityMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswoPriorityMax" prepend="and">
+				<isEmpty property="cswoPriorityMin">$cswoPriorityNot$   (</isEmpty>
+			    cs_wx_order$suffix$.cswo_priority &lt;= #cswoPriorityMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cswoPriority" prepend="and">
+			    $cswoPriorityNot$ cs_wx_order$suffix$.cswo_priority = #cswoPriority#
+			</isNotEmpty>
+			<isNotNull property="cswoPriorityNot" prepend="and">
+				<isEmpty property="cswoPriorityMax"><isEmpty property="cswoPriorityMin"><isEmpty property="cswoPriority">
+				$cswoPriorityNot$ cs_wx_order$suffix$.cswo_priority is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cswoTimeStart" prepend="and">
+			    $cswoTimeNot$   (cs_wx_order$suffix$.cswo_time &gt;= #cswoTimeStart#
+			   <isEmpty property="cswoTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cswoTimeEnd" prepend="and">
+				<isEmpty property="cswoTimeStart">$cswoTimeNot$   (</isEmpty>
+			    cs_wx_order$suffix$.cswo_time &lt;= #cswoTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cswoTime" prepend="and">
+			    $cswoTimeNot$ cs_wx_order$suffix$.cswo_time = #cswoTime#
+			</isNotEmpty>
+			<isNotNull property="cswoTimeNot" prepend="and">
+				<isEmpty property="cswoTimeStart"><isEmpty property="cswoTimeEnd"><isEmpty property="cswoTime">
+				$cswoTimeNot$ cs_wx_order$suffix$.cswo_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cswoStatus" prepend="and">
+			    $cswoStatusNot$ cs_wx_order$suffix$.cswo_status = #cswoStatus#
+			</isNotEmpty>
+			<isNotNull property="cswoStatusNot" prepend="and">
+				<isEmpty property="cswoStatus">
+				$cswoStatusNot$ cs_wx_order$suffix$.cswo_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 微信指令left join 条件sql片段 -->
+	<sql id="cs_wx_order_join">
+		<dynamic>
+			<isNotEmpty property="CsWxOrder.cswoId" prepend="and">
+			    $CsWxOrder.cswoIdNot$ cs_wx_order$CsWxOrder.suffix$.cswo_id = #CsWxOrder.cswoId#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoIdNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoId">
+				$cswoIdNot$ cs_wx_order$CsWxOrder.suffix$.cswo_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoName" prepend="and">
+				(<isNotNull property="CsWxOrder.cswoNameNot">
+			    cs_wx_order$CsWxOrder.suffix$.cswo_name is null or length(cs_wx_order$CsWxOrder.suffix$.cswo_name) &lt; 1 or
+			    </isNotNull>$CsWxOrder.cswoNameNot$ cs_wx_order$CsWxOrder.suffix$.cswo_name = #CsWxOrder.cswoName#)
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoNameNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoName">
+				$cswoNameNot$ (cs_wx_order$CsWxOrder.suffix$.cswo_name is null or length(cs_wx_order$CsWxOrder.suffix$.cswo_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoType" prepend="and">
+			    $CsWxOrder.cswoTypeNot$ cs_wx_order$CsWxOrder.suffix$.cswo_type = #CsWxOrder.cswoType#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoTypeNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoType">
+				$cswoTypeNot$ cs_wx_order$CsWxOrder.suffix$.cswo_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoRtype" prepend="and">
+			    $CsWxOrder.cswoRtypeNot$ cs_wx_order$CsWxOrder.suffix$.cswo_rtype = #CsWxOrder.cswoRtype#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoRtypeNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoRtype">
+				$cswoRtypeNot$ cs_wx_order$CsWxOrder.suffix$.cswo_rtype is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoContent" prepend="and">
+				(<isNotNull property="CsWxOrder.cswoContentNot">
+			    cs_wx_order$CsWxOrder.suffix$.cswo_content is null or length(cs_wx_order$CsWxOrder.suffix$.cswo_content) &lt; 1 or
+			    </isNotNull>$CsWxOrder.cswoContentNot$ cs_wx_order$CsWxOrder.suffix$.cswo_content like #CsWxOrder.cswoContent#)
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoContentNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoContent">
+				$cswoContentNot$ (cs_wx_order$CsWxOrder.suffix$.cswo_content is null or length(cs_wx_order$CsWxOrder.suffix$.cswo_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoClass" prepend="and">
+			    $CsWxOrder.cswoClassNot$ cs_wx_order$CsWxOrder.suffix$.cswo_class = #CsWxOrder.cswoClass#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoClassNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoClass">
+				$cswoClassNot$ cs_wx_order$CsWxOrder.suffix$.cswo_class is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoPriorityMin" prepend="and">
+			    $CsWxOrder.cswoPriorityNot$  ( cs_wx_order$CsWxOrder.suffix$.cswo_priority &gt;= #CsWxOrder.cswoPriorityMin#
+			    <isEmpty property="CsWxOrder.cswoPriorityMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWxOrder.cswoPriorityMax" prepend="and">
+				<isEmpty property="CsWxOrder.cswoPriorityMin">$CsWxOrder.cswoPriorityNot$   (</isEmpty>
+			    cs_wx_order$CsWxOrder.suffix$.cswo_priority &lt;= #CsWxOrder.cswoPriorityMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsWxOrder.cswoPriority" prepend="and">
+			    $CsWxOrder.cswoPriorityNot$ cs_wx_order$CsWxOrder.suffix$.cswo_priority = #CsWxOrder.cswoPriority#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoPriorityNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoPriorityMax"><isEmpty property="CsWxOrder.cswoPriorityMin"><isEmpty property="CsWxOrder.cswoPriority">
+				$cswoPriorityNot$ cs_wx_order$CsWxOrder.suffix$.cswo_priority is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoTimeStart" prepend="and">
+			    $CsWxOrder.cswoTimeNot$   (cs_wx_order$CsWxOrder.suffix$.cswo_time &gt;= #CsWxOrder.cswoTimeStart#
+			   <isEmpty property="CsWxOrder.cswoTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsWxOrder.cswoTimeEnd" prepend="and">
+				<isEmpty property="CsWxOrder.cswoTimeStart">$CsWxOrder.cswoTimeNot$   (</isEmpty>
+			    cs_wx_order$CsWxOrder.suffix$.cswo_time &lt;= #CsWxOrder.cswoTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsWxOrder.cswoTime" prepend="and">
+			    $CsWxOrder.cswoTimeNot$ cs_wx_order$CsWxOrder.suffix$.cswo_time = #CsWxOrder.cswoTime#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoTimeNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoTimeStart"><isEmpty property="CsWxOrder.cswoTimeEnd"><isEmpty property="CsWxOrder.cswoTime">
+				$cswoTimeNot$ cs_wx_order$CsWxOrder.suffix$.cswo_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsWxOrder.cswoStatus" prepend="and">
+			    $CsWxOrder.cswoStatusNot$ cs_wx_order$CsWxOrder.suffix$.cswo_status = #CsWxOrder.cswoStatus#
+			</isNotEmpty>
+			<isNotNull property="CsWxOrder.cswoStatusNot" prepend="and">
+				<isEmpty property="CsWxOrder.cswoStatus">
+				$cswoStatusNot$ cs_wx_order$CsWxOrder.suffix$.cswo_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

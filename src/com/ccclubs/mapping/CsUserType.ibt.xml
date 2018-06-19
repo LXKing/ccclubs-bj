@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 计费方式之SQL映射 -->
+	<resultMap id="CsUserType" class="com.ccclubs.model.CsUserType">
+		<result property="csutId" column="csut_id"/>
+		<result property="csutName" column="csut_name"/>
+		<result property="csutProfile" column="csut_profile"/>
+		<result property="csutFlag" column="csut_flag"/>
+		<result property="csutStatus" column="csut_status"/>
+	</resultMap>
+		
+	<!-- 获取所有计费方式 -->
+	<select id="getCsUserTypeList" resultMap="CsUserType">
+		select cs_user_type$suffix$.* from cs_user_type$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_user_type$suffix$.csut_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUserType_part.cs_user_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csut_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取计费方式分页 -->
+	<select id="getCsUserTypePage" parameterClass="java.util.HashMap" resultMap="CsUserType">
+		select cs_user_type$suffix$.* from cs_user_type$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_user_type$suffix$.csut_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUserType_part.cs_user_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csut_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取计费方式总数 -->
+	<select id="getCsUserTypeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_user_type$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_user_type$suffix$.csut_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUserType_part.cs_user_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取计费方式 -->
+	<select id="getCsUserTypeById" parameterClass="java.util.HashMap" resultMap="CsUserType">
+		select cs_user_type$suffix$.* from cs_user_type$suffix$
+		where csut_id=#id#
+	</select>
+	
+		
+	<!-- 保存计费方式 -->
+	<insert id="saveCsUserType"  parameterClass="com.ccclubs.model.CsUserType">
+		insert into cs_user_type$suffix$
+		(
+			cs_user_type$suffix$.csut_name
+			,cs_user_type$suffix$.csut_profile
+			,cs_user_type$suffix$.csut_flag
+			,cs_user_type$suffix$.csut_status
+		)
+		values(
+			<isNotNull property="csutName" prepend="">
+				#csutName#
+			</isNotNull>
+			<isNull property="csutName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csutProfile" prepend=",">
+				#csutProfile#
+			</isNotNull>
+			<isNull property="csutProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csutFlag" prepend=",">
+				#csutFlag#
+			</isNotNull>
+			<isNull property="csutFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csutStatus" prepend=",">
+				#csutStatus#
+			</isNotNull>
+			<isNull property="csutStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新计费方式 -->
+	<update id="updateCsUserType"  parameterClass="com.ccclubs.model.CsUserType">
+		update cs_user_type$suffix$ set
+			<isNotNull property="csutName" prepend="">
+				cs_user_type$suffix$.csut_name = #csutName#
+			</isNotNull>
+			<isNull property="csutName" prepend="">
+				cs_user_type$suffix$.csut_name = null
+			</isNull>				
+			<isNotNull property="csutProfile" prepend=",">
+				cs_user_type$suffix$.csut_profile = #csutProfile#
+			</isNotNull>
+			<isNull property="csutProfile" prepend=",">
+				cs_user_type$suffix$.csut_profile = null
+			</isNull>				
+			<isNotNull property="csutFlag" prepend=",">
+				cs_user_type$suffix$.csut_flag = #csutFlag#
+			</isNotNull>
+			<isNull property="csutFlag" prepend=",">
+				cs_user_type$suffix$.csut_flag = null
+			</isNull>				
+			<isNotNull property="csutStatus" prepend=",">
+				cs_user_type$suffix$.csut_status = #csutStatus#
+			</isNotNull>
+			<isNull property="csutStatus" prepend=",">
+				cs_user_type$suffix$.csut_status = null
+			</isNull>				
+		where
+			csut_id=#csutId#
+	</update>
+	
+	<!-- 更新计费方式非空字段 -->
+	<update id="updateCsUserType$NotNull"  parameterClass="com.ccclubs.model.CsUserType">
+		update cs_user_type$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csutName" prepend=",">
+				cs_user_type$suffix$.csut_name = #csutName#
+			</isNotNull>		
+			<isNotNull property="csutProfile" prepend=",">
+				cs_user_type$suffix$.csut_profile = #csutProfile#
+			</isNotNull>		
+			<isNotNull property="csutFlag" prepend=",">
+				cs_user_type$suffix$.csut_flag = #csutFlag#
+			</isNotNull>		
+			<isNotNull property="csutStatus" prepend=",">
+				cs_user_type$suffix$.csut_status = #csutStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csut_id=#csutId#
+	</update>
+	
+
+	<!-- 根据ID删除一个计费方式 -->
+	<delete id="deleteCsUserTypeById" parameterClass="java.util.HashMap">
+		delete from cs_user_type$suffix$ where csut_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个计费方式 -->
+	<update id="removeCsUserTypeById" parameterClass="java.util.HashMap">
+		update cs_user_type$suffix$ set  cs_user_type$suffix$.csut_status=-1  where csut_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新计费方式 -->
+	<update id="updateCsUserTypeBy"  parameterClass="java.util.HashMap">
+		update cs_user_type$suffix$ set		
+			csut_id=csut_id
+			<isNotNull property="V_csutId" prepend=",">
+				cs_user_type$suffix$.csut_id = #V_csutId#
+			</isNotNull>		
+			<isNotNull property="V_csutName" prepend=",">
+				cs_user_type$suffix$.csut_name = #V_csutName#
+			</isNotNull>		
+			<isNotNull property="V_csutProfile" prepend=",">
+				cs_user_type$suffix$.csut_profile = #V_csutProfile#
+			</isNotNull>		
+			<isNotNull property="V_csutFlag" prepend=",">
+				cs_user_type$suffix$.csut_flag = #V_csutFlag#
+			</isNotNull>		
+			<isNotNull property="V_csutStatus" prepend=",">
+				cs_user_type$suffix$.csut_status = #V_csutStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_user_type$suffix$.csut_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUserType_part.cs_user_type_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除计费方式 -->
+	<update id="deleteCsUserTypeBy"  parameterClass="java.util.HashMap">
+		delete from cs_user_type$suffix$ where 
+		cs_user_type$suffix$.csut_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUserType_part.cs_user_type_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

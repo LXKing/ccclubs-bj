@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- API日志之SQL映射 -->
+	<resultMap id="SrvApiLog" class="com.ccclubs.model.SrvApiLog">
+		<result property="salId" column="sal_id"/>
+		<result property="salClient" column="sal_client"/>
+		<result property="salApi" column="sal_api"/>
+		<result property="salParams" column="sal_params"/>
+		<result property="salReturn" column="sal_return"/>
+		<result property="salInvokeTime" column="sal_invoke_time"/>
+		<result property="salStatus" column="sal_status"/>
+	</resultMap>
+		
+	<!-- 获取所有API日志 -->
+	<select id="getSrvApiLogList" resultMap="SrvApiLog">
+		select srv_api_log$suffix$.* from srv_api_log$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询-->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.sal_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询-->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<isNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.sal_api=srv_api$SrvApi.suffix$.sa_id
+			</isNull>
+			<isNotNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.$SrvApi.on$=srv_api$SrvApi.suffix$.sa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and srv_api_log$suffix$.sal_status!=-1
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询条件sql片段 -->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<include refid="SrvApi_part.srv_api_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApiLog_part.srv_api_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sal_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取API日志分页 -->
+	<select id="getSrvApiLogPage" parameterClass="java.util.HashMap" resultMap="SrvApiLog">
+		select srv_api_log$suffix$.* from srv_api_log$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询 -->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.sal_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询 -->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<isNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.sal_api=srv_api$SrvApi.suffix$.sa_id
+			</isNull>
+			<isNotNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.$SrvApi.on$=srv_api$SrvApi.suffix$.sa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and srv_api_log$suffix$.sal_status!=-1
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询条件sql片段 -->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<include refid="SrvApi_part.srv_api_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApiLog_part.srv_api_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sal_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取API日志总数 -->
+	<select id="getSrvApiLogEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_api_log$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询,同张表只能外链接一次 -->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.sal_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询,同张表只能外链接一次 -->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<isNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.sal_api=srv_api$SrvApi.suffix$.sa_id
+			</isNull>
+			<isNotNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.$SrvApi.on$=srv_api$SrvApi.suffix$.sa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and srv_api_log$suffix$.sal_status!=-1
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询条件sql片段 -->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<include refid="SrvApi_part.srv_api_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvApiLog_part.srv_api_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取API日志 -->
+	<select id="getSrvApiLogById" parameterClass="java.util.HashMap" resultMap="SrvApiLog">
+		select srv_api_log$suffix$.* from srv_api_log$suffix$
+		where sal_id=#id#
+	</select>
+	
+		
+	<!-- 保存API日志 -->
+	<insert id="saveSrvApiLog"  parameterClass="com.ccclubs.model.SrvApiLog">
+		insert into srv_api_log$suffix$
+		(
+			srv_api_log$suffix$.sal_client
+			,srv_api_log$suffix$.sal_api
+			,srv_api_log$suffix$.sal_params
+			,srv_api_log$suffix$.sal_return
+			,srv_api_log$suffix$.sal_invoke_time
+			,srv_api_log$suffix$.sal_status
+		)
+		values(
+			<isNotNull property="salClient" prepend="">
+				#salClient#
+			</isNotNull>
+			<isNull property="salClient" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="salApi" prepend=",">
+				#salApi#
+			</isNotNull>
+			<isNull property="salApi" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="salParams" prepend=",">
+				#salParams#
+			</isNotNull>
+			<isNull property="salParams" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="salReturn" prepend=",">
+				#salReturn#
+			</isNotNull>
+			<isNull property="salReturn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="salInvokeTime" prepend=",">
+				#salInvokeTime#
+			</isNotNull>
+			<isNull property="salInvokeTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="salStatus" prepend=",">
+				#salStatus#
+			</isNotNull>
+			<isNull property="salStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新API日志 -->
+	<update id="updateSrvApiLog"  parameterClass="com.ccclubs.model.SrvApiLog">
+		update srv_api_log$suffix$ set
+			<isNotNull property="salClient" prepend="">
+				srv_api_log$suffix$.sal_client = #salClient#
+			</isNotNull>
+			<isNull property="salClient" prepend="">
+				srv_api_log$suffix$.sal_client = null
+			</isNull>				
+			<isNotNull property="salApi" prepend=",">
+				srv_api_log$suffix$.sal_api = #salApi#
+			</isNotNull>
+			<isNull property="salApi" prepend=",">
+				srv_api_log$suffix$.sal_api = null
+			</isNull>				
+			<isNotNull property="salParams" prepend=",">
+				srv_api_log$suffix$.sal_params = #salParams#
+			</isNotNull>
+			<isNull property="salParams" prepend=",">
+				srv_api_log$suffix$.sal_params = null
+			</isNull>				
+			<isNotNull property="salReturn" prepend=",">
+				srv_api_log$suffix$.sal_return = #salReturn#
+			</isNotNull>
+			<isNull property="salReturn" prepend=",">
+				srv_api_log$suffix$.sal_return = null
+			</isNull>				
+			<isNotNull property="salInvokeTime" prepend=",">
+				srv_api_log$suffix$.sal_invoke_time = #salInvokeTime#
+			</isNotNull>
+			<isNull property="salInvokeTime" prepend=",">
+				srv_api_log$suffix$.sal_invoke_time = null
+			</isNull>				
+			<isNotNull property="salStatus" prepend=",">
+				srv_api_log$suffix$.sal_status = #salStatus#
+			</isNotNull>
+			<isNull property="salStatus" prepend=",">
+				srv_api_log$suffix$.sal_status = null
+			</isNull>				
+		where
+			sal_id=#salId#
+	</update>
+	
+	<!-- 更新API日志非空字段 -->
+	<update id="updateSrvApiLog$NotNull"  parameterClass="com.ccclubs.model.SrvApiLog">
+		update srv_api_log$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="salClient" prepend=",">
+				srv_api_log$suffix$.sal_client = #salClient#
+			</isNotNull>		
+			<isNotNull property="salApi" prepend=",">
+				srv_api_log$suffix$.sal_api = #salApi#
+			</isNotNull>		
+			<isNotNull property="salParams" prepend=",">
+				srv_api_log$suffix$.sal_params = #salParams#
+			</isNotNull>		
+			<isNotNull property="salReturn" prepend=",">
+				srv_api_log$suffix$.sal_return = #salReturn#
+			</isNotNull>		
+			<isNotNull property="salInvokeTime" prepend=",">
+				srv_api_log$suffix$.sal_invoke_time = #salInvokeTime#
+			</isNotNull>		
+			<isNotNull property="salStatus" prepend=",">
+				srv_api_log$suffix$.sal_status = #salStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sal_id=#salId#
+	</update>
+	
+
+	<!-- 根据ID删除一个API日志 -->
+	<delete id="deleteSrvApiLogById" parameterClass="java.util.HashMap">
+		delete from srv_api_log$suffix$ where sal_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个API日志 -->
+	<update id="removeSrvApiLogById" parameterClass="java.util.HashMap">
+		update srv_api_log$suffix$ set  srv_api_log$suffix$.sal_status=-1  where sal_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新API日志 -->
+	<update id="updateSrvApiLogBy"  parameterClass="java.util.HashMap">
+		update srv_api_log$suffix$ set		
+			sal_id=sal_id
+			<isNotNull property="V_salId" prepend=",">
+				srv_api_log$suffix$.sal_id = #V_salId#
+			</isNotNull>		
+			<isNotNull property="V_salClient" prepend=",">
+				srv_api_log$suffix$.sal_client = #V_salClient#
+			</isNotNull>		
+			<isNotNull property="V_salApi" prepend=",">
+				srv_api_log$suffix$.sal_api = #V_salApi#
+			</isNotNull>		
+			<isNotNull property="V_salParams" prepend=",">
+				srv_api_log$suffix$.sal_params = #V_salParams#
+			</isNotNull>		
+			<isNotNull property="V_salReturn" prepend=",">
+				srv_api_log$suffix$.sal_return = #V_salReturn#
+			</isNotNull>		
+			<isNotNull property="V_salInvokeTime" prepend=",">
+				srv_api_log$suffix$.sal_invoke_time = #V_salInvokeTime#
+			</isNotNull>		
+			<isNotNull property="V_salStatus" prepend=",">
+				srv_api_log$suffix$.sal_status = #V_salStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询-->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.sal_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_api_log$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询-->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<isNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.sal_api=srv_api$SrvApi.suffix$.sa_id
+			</isNull>
+			<isNotNull property="SrvApi.on">
+				left join srv_api srv_api$SrvApi.suffix$ on srv_api_log$suffix$.$SrvApi.on$=srv_api$SrvApi.suffix$.sa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		srv_api_log$suffix$.sal_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SalClient"><!-- 调用一下SalClient，把SrvApiClient指向SalClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[API接口]查询条件sql片段 -->
+		<isNotNull property="SalApi"><!-- 调用一下SalApi，把SrvApi指向SalApi --></isNotNull>
+		<isNotNull property="SrvApi">
+			<include refid="SrvApi_part.srv_api_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvApiLog_part.srv_api_log_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除API日志 -->
+	<update id="deleteSrvApiLogBy"  parameterClass="java.util.HashMap">
+		delete from srv_api_log$suffix$ where 
+		srv_api_log$suffix$.sal_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvApiLog_part.srv_api_log_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

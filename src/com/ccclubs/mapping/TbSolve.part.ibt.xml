@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="TbSolve_part">	
+	<!-- 问题处理记录条件sql片段  -->
+	<sql id="tb_solve_dynamic">
+		<dynamic>
+			<isNotEmpty property="tbsId" prepend="and">
+			    $tbsIdNot$ tb_solve$suffix$.tbs_id = #tbsId#
+			</isNotEmpty>
+			<isNotNull property="tbsIdNot" prepend="and">
+				<isEmpty property="tbsId">
+				$tbsIdNot$ tb_solve$suffix$.tbs_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_solve$suffix$.tbs_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="tbsHost" prepend="and">
+			    $tbsHostNot$ tb_solve$suffix$.tbs_host = #tbsHost#
+			</isNotEmpty>
+			<isNotNull property="tbsHostNot" prepend="and">
+				<isEmpty property="tbsHost">
+				$tbsHostNot$ tb_solve$suffix$.tbs_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="tbsDesc" prepend="and">			    
+			    (<isNotNull property="tbsDescNot">
+			    tb_solve$suffix$.tbs_desc is null or length(tb_solve$suffix$.tbs_desc) &lt; 1 or
+			    </isNotNull>$tbsDescNot$ tb_solve$suffix$.tbs_desc like #tbsDesc#)
+			</isNotEmpty>
+			<isNotNull property="tbsDescNot" prepend="and">
+				<isEmpty property="tbsDesc">
+				$tbsDescNot$ (tb_solve$suffix$.tbs_desc is null or length(tb_solve$suffix$.tbs_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsProplem" prepend="and">
+			    $tbsProplemNot$ tb_solve$suffix$.tbs_proplem = #tbsProplem#
+			</isNotEmpty>
+			<isNotNull property="tbsProplemNot" prepend="and">
+				<isEmpty property="tbsProplem">
+				$tbsProplemNot$ tb_solve$suffix$.tbs_proplem is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsUser" prepend="and">
+			    $tbsUserNot$ tb_solve$suffix$.tbs_user = #tbsUser#
+			</isNotEmpty>
+			<isNotNull property="tbsUserNot" prepend="and">
+				<isEmpty property="tbsUser">
+				$tbsUserNot$ tb_solve$suffix$.tbs_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbsRedirectMin" prepend="and">
+			    $tbsRedirectNot$  ( tb_solve$suffix$.tbs_redirect &gt;= #tbsRedirectMin#
+			    <isEmpty property="tbsRedirectMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="tbsRedirectMax" prepend="and">
+				<isEmpty property="tbsRedirectMin">$tbsRedirectNot$   (</isEmpty>
+			    tb_solve$suffix$.tbs_redirect &lt;= #tbsRedirectMax# )
+			</isNotEmpty>
+			<isNotEmpty property="tbsRedirect" prepend="and">
+			    $tbsRedirectNot$ tb_solve$suffix$.tbs_redirect = #tbsRedirect#
+			</isNotEmpty>
+			<isNotNull property="tbsRedirectNot" prepend="and">
+				<isEmpty property="tbsRedirectMax"><isEmpty property="tbsRedirectMin"><isEmpty property="tbsRedirect">
+				$tbsRedirectNot$ tb_solve$suffix$.tbs_redirect is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="tbsStatus" prepend="and">
+			    $tbsStatusNot$ tb_solve$suffix$.tbs_status = #tbsStatus#
+			</isNotEmpty>
+			<isNotNull property="tbsStatusNot" prepend="and">
+				<isEmpty property="tbsStatus">
+				$tbsStatusNot$ tb_solve$suffix$.tbs_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 问题处理记录left join 条件sql片段 -->
+	<sql id="tb_solve_join">
+		<dynamic>
+			<isNotEmpty property="TbSolve.tbsId" prepend="and">
+			    $TbSolve.tbsIdNot$ tb_solve$TbSolve.suffix$.tbs_id = #TbSolve.tbsId#
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsIdNot" prepend="and">
+				<isEmpty property="TbSolve.tbsId">
+				$tbsIdNot$ tb_solve$TbSolve.suffix$.tbs_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_solve$TbSolve.suffix$.tbs_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="TbSolve.tbsHost" prepend="and">
+			    $TbSolve.tbsHostNot$ tb_solve$TbSolve.suffix$.tbs_host = #TbSolve.tbsHost#
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsHostNot" prepend="and">
+				<isEmpty property="TbSolve.tbsHost">
+				$tbsHostNot$ tb_solve$TbSolve.suffix$.tbs_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSolve.tbsDesc" prepend="and">
+				(<isNotNull property="TbSolve.tbsDescNot">
+			    tb_solve$TbSolve.suffix$.tbs_desc is null or length(tb_solve$TbSolve.suffix$.tbs_desc) &lt; 1 or
+			    </isNotNull>$TbSolve.tbsDescNot$ tb_solve$TbSolve.suffix$.tbs_desc like #TbSolve.tbsDesc#)
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsDescNot" prepend="and">
+				<isEmpty property="TbSolve.tbsDesc">
+				$tbsDescNot$ (tb_solve$TbSolve.suffix$.tbs_desc is null or length(tb_solve$TbSolve.suffix$.tbs_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSolve.tbsProplem" prepend="and">
+			    $TbSolve.tbsProplemNot$ tb_solve$TbSolve.suffix$.tbs_proplem = #TbSolve.tbsProplem#
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsProplemNot" prepend="and">
+				<isEmpty property="TbSolve.tbsProplem">
+				$tbsProplemNot$ tb_solve$TbSolve.suffix$.tbs_proplem is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSolve.tbsUser" prepend="and">
+			    $TbSolve.tbsUserNot$ tb_solve$TbSolve.suffix$.tbs_user = #TbSolve.tbsUser#
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsUserNot" prepend="and">
+				<isEmpty property="TbSolve.tbsUser">
+				$tbsUserNot$ tb_solve$TbSolve.suffix$.tbs_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSolve.tbsRedirectMin" prepend="and">
+			    $TbSolve.tbsRedirectNot$  ( tb_solve$TbSolve.suffix$.tbs_redirect &gt;= #TbSolve.tbsRedirectMin#
+			    <isEmpty property="TbSolve.tbsRedirectMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="TbSolve.tbsRedirectMax" prepend="and">
+				<isEmpty property="TbSolve.tbsRedirectMin">$TbSolve.tbsRedirectNot$   (</isEmpty>
+			    tb_solve$TbSolve.suffix$.tbs_redirect &lt;= #TbSolve.tbsRedirectMax# )
+			</isNotEmpty>
+			<isNotEmpty property="TbSolve.tbsRedirect" prepend="and">
+			    $TbSolve.tbsRedirectNot$ tb_solve$TbSolve.suffix$.tbs_redirect = #TbSolve.tbsRedirect#
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsRedirectNot" prepend="and">
+				<isEmpty property="TbSolve.tbsRedirectMax"><isEmpty property="TbSolve.tbsRedirectMin"><isEmpty property="TbSolve.tbsRedirect">
+				$tbsRedirectNot$ tb_solve$TbSolve.suffix$.tbs_redirect is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbSolve.tbsStatus" prepend="and">
+			    $TbSolve.tbsStatusNot$ tb_solve$TbSolve.suffix$.tbs_status = #TbSolve.tbsStatus#
+			</isNotEmpty>
+			<isNotNull property="TbSolve.tbsStatusNot" prepend="and">
+				<isEmpty property="TbSolve.tbsStatus">
+				$tbsStatusNot$ tb_solve$TbSolve.suffix$.tbs_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

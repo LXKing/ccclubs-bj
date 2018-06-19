@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆历史状态之SQL映射 -->
+	<resultMap id="CsHistoryState" class="com.ccclubs.model.CsHistoryState">
+		<result property="cshsId" column="cshs_id"/>
+		<result property="cshsHost" column="cshs_host"/>
+		<result property="cshsNumber" column="cshs_number"/>
+		<result property="cshsAddTime" column="cshs_add_time"/>
+		<result property="cshsCurrentTime" column="cshs_current_time"/>
+		<result property="cshsRented" column="cshs_rented"/>
+		<result property="cshsWarn" column="cshs_warn"/>
+		<result property="cshsRfid" column="cshs_rfid"/>
+		<result property="cshsRfidDte" column="cshs_rfid_dte"/>
+		<result property="cshsObdMile" column="cshs_obd_mile"/>
+		<result property="cshsEngineT" column="cshs_engine_t"/>
+		<result property="cshsMileage" column="cshs_mileage"/>
+		<result property="cshsSpeed" column="cshs_speed"/>
+		<result property="cshsMotor" column="cshs_motor"/>
+		<result property="cshsOil" column="cshs_oil"/>
+		<result property="cshsPower" column="cshs_power"/>
+		<result property="cshsEvBattery" column="cshs_ev_battery"/>
+		<result property="cshsCharging" column="cshs_charging"/>
+		<result property="cshsFuelMileage" column="cshs_fuel_mileage"/>
+		<result property="cshsElectricMileage" column="cshs_electric_mileage"/>
+		<result property="cshsEndurance" column="cshs_endurance"/>
+		<result property="cshsTemperature" column="cshs_temperature"/>
+		<result property="cshsCsq" column="cshs_csq"/>
+		<result property="cshsPowerConsumption" column="cshs_power_consumption"/>
+		<result property="cshsLongitude" column="cshs_longitude"/>
+		<result property="cshsLatitude" column="cshs_latitude"/>
+		<result property="cshsOrder" column="cshs_order"/>
+		<result property="cshsMoData" column="cshs_mo_data"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆历史状态 -->
+	<select id="getCsHistoryStateList" resultMap="CsHistoryState">
+		select cs_history_state$suffix$.* from cs_history_state$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsHistoryState_part.cs_history_state_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cshs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆历史状态分页 -->
+	<select id="getCsHistoryStatePage" parameterClass="java.util.HashMap" resultMap="CsHistoryState">
+		select cs_history_state$suffix$.* from cs_history_state$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsHistoryState_part.cs_history_state_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cshs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆历史状态总数 -->
+	<select id="getCsHistoryStateEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_history_state$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsHistoryState_part.cs_history_state_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆历史状态 -->
+	<select id="getCsHistoryStateById" parameterClass="java.util.HashMap" resultMap="CsHistoryState">
+		select cs_history_state$suffix$.* from cs_history_state$suffix$
+		where cshs_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆历史状态 -->
+	<insert id="saveCsHistoryState"  parameterClass="com.ccclubs.model.CsHistoryState">
+		insert into cs_history_state$suffix$
+		(
+			cs_history_state$suffix$.cshs_host
+			,cs_history_state$suffix$.cshs_number
+			,cs_history_state$suffix$.cshs_add_time
+			,cs_history_state$suffix$.cshs_current_time
+			,cs_history_state$suffix$.cshs_rented
+			,cs_history_state$suffix$.cshs_warn
+			,cs_history_state$suffix$.cshs_rfid
+			,cs_history_state$suffix$.cshs_rfid_dte
+			,cs_history_state$suffix$.cshs_obd_mile
+			,cs_history_state$suffix$.cshs_engine_t
+			,cs_history_state$suffix$.cshs_mileage
+			,cs_history_state$suffix$.cshs_speed
+			,cs_history_state$suffix$.cshs_motor
+			,cs_history_state$suffix$.cshs_oil
+			,cs_history_state$suffix$.cshs_power
+			,cs_history_state$suffix$.cshs_ev_battery
+			,cs_history_state$suffix$.cshs_charging
+			,cs_history_state$suffix$.cshs_fuel_mileage
+			,cs_history_state$suffix$.cshs_electric_mileage
+			,cs_history_state$suffix$.cshs_endurance
+			,cs_history_state$suffix$.cshs_temperature
+			,cs_history_state$suffix$.cshs_csq
+			,cs_history_state$suffix$.cshs_power_consumption
+			,cs_history_state$suffix$.cshs_longitude
+			,cs_history_state$suffix$.cshs_latitude
+			,cs_history_state$suffix$.cshs_order
+			,cs_history_state$suffix$.cshs_mo_data
+		)
+		values(
+			<isNotNull property="cshsHost" prepend="">
+				#cshsHost#
+			</isNotNull>
+			<isNull property="cshsHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cshsNumber" prepend=",">
+				#cshsNumber#
+			</isNotNull>
+			<isNull property="cshsNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsAddTime" prepend=",">
+				#cshsAddTime#
+			</isNotNull>
+			<isNull property="cshsAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsCurrentTime" prepend=",">
+				#cshsCurrentTime#
+			</isNotNull>
+			<isNull property="cshsCurrentTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsRented" prepend=",">
+				#cshsRented#
+			</isNotNull>
+			<isNull property="cshsRented" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsWarn" prepend=",">
+				#cshsWarn#
+			</isNotNull>
+			<isNull property="cshsWarn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsRfid" prepend=",">
+				#cshsRfid#
+			</isNotNull>
+			<isNull property="cshsRfid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsRfidDte" prepend=",">
+				#cshsRfidDte#
+			</isNotNull>
+			<isNull property="cshsRfidDte" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsObdMile" prepend=",">
+				#cshsObdMile#
+			</isNotNull>
+			<isNull property="cshsObdMile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsEngineT" prepend=",">
+				#cshsEngineT#
+			</isNotNull>
+			<isNull property="cshsEngineT" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsMileage" prepend=",">
+				#cshsMileage#
+			</isNotNull>
+			<isNull property="cshsMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsSpeed" prepend=",">
+				#cshsSpeed#
+			</isNotNull>
+			<isNull property="cshsSpeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsMotor" prepend=",">
+				#cshsMotor#
+			</isNotNull>
+			<isNull property="cshsMotor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsOil" prepend=",">
+				#cshsOil#
+			</isNotNull>
+			<isNull property="cshsOil" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsPower" prepend=",">
+				#cshsPower#
+			</isNotNull>
+			<isNull property="cshsPower" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsEvBattery" prepend=",">
+				#cshsEvBattery#
+			</isNotNull>
+			<isNull property="cshsEvBattery" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsCharging" prepend=",">
+				#cshsCharging#
+			</isNotNull>
+			<isNull property="cshsCharging" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsFuelMileage" prepend=",">
+				#cshsFuelMileage#
+			</isNotNull>
+			<isNull property="cshsFuelMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsElectricMileage" prepend=",">
+				#cshsElectricMileage#
+			</isNotNull>
+			<isNull property="cshsElectricMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsEndurance" prepend=",">
+				#cshsEndurance#
+			</isNotNull>
+			<isNull property="cshsEndurance" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsTemperature" prepend=",">
+				#cshsTemperature#
+			</isNotNull>
+			<isNull property="cshsTemperature" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsCsq" prepend=",">
+				#cshsCsq#
+			</isNotNull>
+			<isNull property="cshsCsq" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsPowerConsumption" prepend=",">
+				#cshsPowerConsumption#
+			</isNotNull>
+			<isNull property="cshsPowerConsumption" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsLongitude" prepend=",">
+				#cshsLongitude#
+			</isNotNull>
+			<isNull property="cshsLongitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsLatitude" prepend=",">
+				#cshsLatitude#
+			</isNotNull>
+			<isNull property="cshsLatitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsOrder" prepend=",">
+				#cshsOrder#
+			</isNotNull>
+			<isNull property="cshsOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshsMoData" prepend=",">
+				#cshsMoData#
+			</isNotNull>
+			<isNull property="cshsMoData" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆历史状态 -->
+	<update id="updateCsHistoryState"  parameterClass="com.ccclubs.model.CsHistoryState">
+		update cs_history_state$suffix$ set
+			<isNotNull property="cshsHost" prepend="">
+				cs_history_state$suffix$.cshs_host = #cshsHost#
+			</isNotNull>
+			<isNull property="cshsHost" prepend="">
+				cs_history_state$suffix$.cshs_host = null
+			</isNull>				
+			<isNotNull property="cshsNumber" prepend=",">
+				cs_history_state$suffix$.cshs_number = #cshsNumber#
+			</isNotNull>
+			<isNull property="cshsNumber" prepend=",">
+				cs_history_state$suffix$.cshs_number = null
+			</isNull>				
+			<isNotNull property="cshsAddTime" prepend=",">
+				cs_history_state$suffix$.cshs_add_time = #cshsAddTime#
+			</isNotNull>
+			<isNull property="cshsAddTime" prepend=",">
+				cs_history_state$suffix$.cshs_add_time = null
+			</isNull>				
+			<isNotNull property="cshsCurrentTime" prepend=",">
+				cs_history_state$suffix$.cshs_current_time = #cshsCurrentTime#
+			</isNotNull>
+			<isNull property="cshsCurrentTime" prepend=",">
+				cs_history_state$suffix$.cshs_current_time = null
+			</isNull>				
+			<isNotNull property="cshsRented" prepend=",">
+				cs_history_state$suffix$.cshs_rented = #cshsRented#
+			</isNotNull>
+			<isNull property="cshsRented" prepend=",">
+				cs_history_state$suffix$.cshs_rented = null
+			</isNull>				
+			<isNotNull property="cshsWarn" prepend=",">
+				cs_history_state$suffix$.cshs_warn = #cshsWarn#
+			</isNotNull>
+			<isNull property="cshsWarn" prepend=",">
+				cs_history_state$suffix$.cshs_warn = null
+			</isNull>				
+			<isNotNull property="cshsRfid" prepend=",">
+				cs_history_state$suffix$.cshs_rfid = #cshsRfid#
+			</isNotNull>
+			<isNull property="cshsRfid" prepend=",">
+				cs_history_state$suffix$.cshs_rfid = null
+			</isNull>				
+			<isNotNull property="cshsRfidDte" prepend=",">
+				cs_history_state$suffix$.cshs_rfid_dte = #cshsRfidDte#
+			</isNotNull>
+			<isNull property="cshsRfidDte" prepend=",">
+				cs_history_state$suffix$.cshs_rfid_dte = null
+			</isNull>				
+			<isNotNull property="cshsObdMile" prepend=",">
+				cs_history_state$suffix$.cshs_obd_mile = #cshsObdMile#
+			</isNotNull>
+			<isNull property="cshsObdMile" prepend=",">
+				cs_history_state$suffix$.cshs_obd_mile = null
+			</isNull>				
+			<isNotNull property="cshsEngineT" prepend=",">
+				cs_history_state$suffix$.cshs_engine_t = #cshsEngineT#
+			</isNotNull>
+			<isNull property="cshsEngineT" prepend=",">
+				cs_history_state$suffix$.cshs_engine_t = null
+			</isNull>				
+			<isNotNull property="cshsMileage" prepend=",">
+				cs_history_state$suffix$.cshs_mileage = #cshsMileage#
+			</isNotNull>
+			<isNull property="cshsMileage" prepend=",">
+				cs_history_state$suffix$.cshs_mileage = null
+			</isNull>				
+			<isNotNull property="cshsSpeed" prepend=",">
+				cs_history_state$suffix$.cshs_speed = #cshsSpeed#
+			</isNotNull>
+			<isNull property="cshsSpeed" prepend=",">
+				cs_history_state$suffix$.cshs_speed = null
+			</isNull>				
+			<isNotNull property="cshsMotor" prepend=",">
+				cs_history_state$suffix$.cshs_motor = #cshsMotor#
+			</isNotNull>
+			<isNull property="cshsMotor" prepend=",">
+				cs_history_state$suffix$.cshs_motor = null
+			</isNull>				
+			<isNotNull property="cshsOil" prepend=",">
+				cs_history_state$suffix$.cshs_oil = #cshsOil#
+			</isNotNull>
+			<isNull property="cshsOil" prepend=",">
+				cs_history_state$suffix$.cshs_oil = null
+			</isNull>				
+			<isNotNull property="cshsPower" prepend=",">
+				cs_history_state$suffix$.cshs_power = #cshsPower#
+			</isNotNull>
+			<isNull property="cshsPower" prepend=",">
+				cs_history_state$suffix$.cshs_power = null
+			</isNull>				
+			<isNotNull property="cshsEvBattery" prepend=",">
+				cs_history_state$suffix$.cshs_ev_battery = #cshsEvBattery#
+			</isNotNull>
+			<isNull property="cshsEvBattery" prepend=",">
+				cs_history_state$suffix$.cshs_ev_battery = null
+			</isNull>				
+			<isNotNull property="cshsCharging" prepend=",">
+				cs_history_state$suffix$.cshs_charging = #cshsCharging#
+			</isNotNull>
+			<isNull property="cshsCharging" prepend=",">
+				cs_history_state$suffix$.cshs_charging = null
+			</isNull>				
+			<isNotNull property="cshsFuelMileage" prepend=",">
+				cs_history_state$suffix$.cshs_fuel_mileage = #cshsFuelMileage#
+			</isNotNull>
+			<isNull property="cshsFuelMileage" prepend=",">
+				cs_history_state$suffix$.cshs_fuel_mileage = null
+			</isNull>				
+			<isNotNull property="cshsElectricMileage" prepend=",">
+				cs_history_state$suffix$.cshs_electric_mileage = #cshsElectricMileage#
+			</isNotNull>
+			<isNull property="cshsElectricMileage" prepend=",">
+				cs_history_state$suffix$.cshs_electric_mileage = null
+			</isNull>				
+			<isNotNull property="cshsEndurance" prepend=",">
+				cs_history_state$suffix$.cshs_endurance = #cshsEndurance#
+			</isNotNull>
+			<isNull property="cshsEndurance" prepend=",">
+				cs_history_state$suffix$.cshs_endurance = null
+			</isNull>				
+			<isNotNull property="cshsTemperature" prepend=",">
+				cs_history_state$suffix$.cshs_temperature = #cshsTemperature#
+			</isNotNull>
+			<isNull property="cshsTemperature" prepend=",">
+				cs_history_state$suffix$.cshs_temperature = null
+			</isNull>				
+			<isNotNull property="cshsCsq" prepend=",">
+				cs_history_state$suffix$.cshs_csq = #cshsCsq#
+			</isNotNull>
+			<isNull property="cshsCsq" prepend=",">
+				cs_history_state$suffix$.cshs_csq = null
+			</isNull>				
+			<isNotNull property="cshsPowerConsumption" prepend=",">
+				cs_history_state$suffix$.cshs_power_consumption = #cshsPowerConsumption#
+			</isNotNull>
+			<isNull property="cshsPowerConsumption" prepend=",">
+				cs_history_state$suffix$.cshs_power_consumption = null
+			</isNull>				
+			<isNotNull property="cshsLongitude" prepend=",">
+				cs_history_state$suffix$.cshs_longitude = #cshsLongitude#
+			</isNotNull>
+			<isNull property="cshsLongitude" prepend=",">
+				cs_history_state$suffix$.cshs_longitude = null
+			</isNull>				
+			<isNotNull property="cshsLatitude" prepend=",">
+				cs_history_state$suffix$.cshs_latitude = #cshsLatitude#
+			</isNotNull>
+			<isNull property="cshsLatitude" prepend=",">
+				cs_history_state$suffix$.cshs_latitude = null
+			</isNull>				
+			<isNotNull property="cshsOrder" prepend=",">
+				cs_history_state$suffix$.cshs_order = #cshsOrder#
+			</isNotNull>
+			<isNull property="cshsOrder" prepend=",">
+				cs_history_state$suffix$.cshs_order = null
+			</isNull>				
+			<isNotNull property="cshsMoData" prepend=",">
+				cs_history_state$suffix$.cshs_mo_data = #cshsMoData#
+			</isNotNull>
+			<isNull property="cshsMoData" prepend=",">
+				cs_history_state$suffix$.cshs_mo_data = null
+			</isNull>				
+		where
+			cshs_id=#cshsId#
+	</update>
+	
+	<!-- 更新车辆历史状态非空字段 -->
+	<update id="updateCsHistoryState$NotNull"  parameterClass="com.ccclubs.model.CsHistoryState">
+		update cs_history_state$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cshsHost" prepend=",">
+				cs_history_state$suffix$.cshs_host = #cshsHost#
+			</isNotNull>		
+			<isNotNull property="cshsNumber" prepend=",">
+				cs_history_state$suffix$.cshs_number = #cshsNumber#
+			</isNotNull>		
+			<isNotNull property="cshsAddTime" prepend=",">
+				cs_history_state$suffix$.cshs_add_time = #cshsAddTime#
+			</isNotNull>		
+			<isNotNull property="cshsCurrentTime" prepend=",">
+				cs_history_state$suffix$.cshs_current_time = #cshsCurrentTime#
+			</isNotNull>		
+			<isNotNull property="cshsRented" prepend=",">
+				cs_history_state$suffix$.cshs_rented = #cshsRented#
+			</isNotNull>		
+			<isNotNull property="cshsWarn" prepend=",">
+				cs_history_state$suffix$.cshs_warn = #cshsWarn#
+			</isNotNull>		
+			<isNotNull property="cshsRfid" prepend=",">
+				cs_history_state$suffix$.cshs_rfid = #cshsRfid#
+			</isNotNull>		
+			<isNotNull property="cshsRfidDte" prepend=",">
+				cs_history_state$suffix$.cshs_rfid_dte = #cshsRfidDte#
+			</isNotNull>		
+			<isNotNull property="cshsObdMile" prepend=",">
+				cs_history_state$suffix$.cshs_obd_mile = #cshsObdMile#
+			</isNotNull>		
+			<isNotNull property="cshsEngineT" prepend=",">
+				cs_history_state$suffix$.cshs_engine_t = #cshsEngineT#
+			</isNotNull>		
+			<isNotNull property="cshsMileage" prepend=",">
+				cs_history_state$suffix$.cshs_mileage = #cshsMileage#
+			</isNotNull>		
+			<isNotNull property="cshsSpeed" prepend=",">
+				cs_history_state$suffix$.cshs_speed = #cshsSpeed#
+			</isNotNull>		
+			<isNotNull property="cshsMotor" prepend=",">
+				cs_history_state$suffix$.cshs_motor = #cshsMotor#
+			</isNotNull>		
+			<isNotNull property="cshsOil" prepend=",">
+				cs_history_state$suffix$.cshs_oil = #cshsOil#
+			</isNotNull>		
+			<isNotNull property="cshsPower" prepend=",">
+				cs_history_state$suffix$.cshs_power = #cshsPower#
+			</isNotNull>		
+			<isNotNull property="cshsEvBattery" prepend=",">
+				cs_history_state$suffix$.cshs_ev_battery = #cshsEvBattery#
+			</isNotNull>		
+			<isNotNull property="cshsCharging" prepend=",">
+				cs_history_state$suffix$.cshs_charging = #cshsCharging#
+			</isNotNull>		
+			<isNotNull property="cshsFuelMileage" prepend=",">
+				cs_history_state$suffix$.cshs_fuel_mileage = #cshsFuelMileage#
+			</isNotNull>		
+			<isNotNull property="cshsElectricMileage" prepend=",">
+				cs_history_state$suffix$.cshs_electric_mileage = #cshsElectricMileage#
+			</isNotNull>		
+			<isNotNull property="cshsEndurance" prepend=",">
+				cs_history_state$suffix$.cshs_endurance = #cshsEndurance#
+			</isNotNull>		
+			<isNotNull property="cshsTemperature" prepend=",">
+				cs_history_state$suffix$.cshs_temperature = #cshsTemperature#
+			</isNotNull>		
+			<isNotNull property="cshsCsq" prepend=",">
+				cs_history_state$suffix$.cshs_csq = #cshsCsq#
+			</isNotNull>		
+			<isNotNull property="cshsPowerConsumption" prepend=",">
+				cs_history_state$suffix$.cshs_power_consumption = #cshsPowerConsumption#
+			</isNotNull>		
+			<isNotNull property="cshsLongitude" prepend=",">
+				cs_history_state$suffix$.cshs_longitude = #cshsLongitude#
+			</isNotNull>		
+			<isNotNull property="cshsLatitude" prepend=",">
+				cs_history_state$suffix$.cshs_latitude = #cshsLatitude#
+			</isNotNull>		
+			<isNotNull property="cshsOrder" prepend=",">
+				cs_history_state$suffix$.cshs_order = #cshsOrder#
+			</isNotNull>		
+			<isNotNull property="cshsMoData" prepend=",">
+				cs_history_state$suffix$.cshs_mo_data = #cshsMoData#
+			</isNotNull>		
+			</dynamic>
+		where
+			cshs_id=#cshsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆历史状态 -->
+	<delete id="deleteCsHistoryStateById" parameterClass="java.util.HashMap">
+		delete from cs_history_state$suffix$ where cshs_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新车辆历史状态 -->
+	<update id="updateCsHistoryStateBy"  parameterClass="java.util.HashMap">
+		update cs_history_state$suffix$ set		
+			cshs_id=cshs_id
+			<isNotNull property="V_cshsId" prepend=",">
+				cs_history_state$suffix$.cshs_id = #V_cshsId#
+			</isNotNull>		
+			<isNotNull property="V_cshsHost" prepend=",">
+				cs_history_state$suffix$.cshs_host = #V_cshsHost#
+			</isNotNull>		
+			<isNotNull property="V_cshsNumber" prepend=",">
+				cs_history_state$suffix$.cshs_number = #V_cshsNumber#
+			</isNotNull>		
+			<isNotNull property="V_cshsAddTime" prepend=",">
+				cs_history_state$suffix$.cshs_add_time = #V_cshsAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cshsCurrentTime" prepend=",">
+				cs_history_state$suffix$.cshs_current_time = #V_cshsCurrentTime#
+			</isNotNull>		
+			<isNotNull property="V_cshsRented" prepend=",">
+				cs_history_state$suffix$.cshs_rented = #V_cshsRented#
+			</isNotNull>		
+			<isNotNull property="V_cshsWarn" prepend=",">
+				cs_history_state$suffix$.cshs_warn = #V_cshsWarn#
+			</isNotNull>		
+			<isNotNull property="V_cshsRfid" prepend=",">
+				cs_history_state$suffix$.cshs_rfid = #V_cshsRfid#
+			</isNotNull>		
+			<isNotNull property="V_cshsRfidDte" prepend=",">
+				cs_history_state$suffix$.cshs_rfid_dte = #V_cshsRfidDte#
+			</isNotNull>		
+			<isNotNull property="V_cshsObdMile" prepend=",">
+				cs_history_state$suffix$.cshs_obd_mile = #V_cshsObdMile#
+			</isNotNull>		
+			<isNotNull property="V_cshsEngineT" prepend=",">
+				cs_history_state$suffix$.cshs_engine_t = #V_cshsEngineT#
+			</isNotNull>		
+			<isNotNull property="V_cshsMileage" prepend=",">
+				cs_history_state$suffix$.cshs_mileage = #V_cshsMileage#
+			</isNotNull>		
+			<isNotNull property="V_cshsSpeed" prepend=",">
+				cs_history_state$suffix$.cshs_speed = #V_cshsSpeed#
+			</isNotNull>		
+			<isNotNull property="V_cshsMotor" prepend=",">
+				cs_history_state$suffix$.cshs_motor = #V_cshsMotor#
+			</isNotNull>		
+			<isNotNull property="V_cshsOil" prepend=",">
+				cs_history_state$suffix$.cshs_oil = #V_cshsOil#
+			</isNotNull>		
+			<isNotNull property="V_cshsPower" prepend=",">
+				cs_history_state$suffix$.cshs_power = #V_cshsPower#
+			</isNotNull>		
+			<isNotNull property="V_cshsEvBattery" prepend=",">
+				cs_history_state$suffix$.cshs_ev_battery = #V_cshsEvBattery#
+			</isNotNull>		
+			<isNotNull property="V_cshsCharging" prepend=",">
+				cs_history_state$suffix$.cshs_charging = #V_cshsCharging#
+			</isNotNull>		
+			<isNotNull property="V_cshsFuelMileage" prepend=",">
+				cs_history_state$suffix$.cshs_fuel_mileage = #V_cshsFuelMileage#
+			</isNotNull>		
+			<isNotNull property="V_cshsElectricMileage" prepend=",">
+				cs_history_state$suffix$.cshs_electric_mileage = #V_cshsElectricMileage#
+			</isNotNull>		
+			<isNotNull property="V_cshsEndurance" prepend=",">
+				cs_history_state$suffix$.cshs_endurance = #V_cshsEndurance#
+			</isNotNull>		
+			<isNotNull property="V_cshsTemperature" prepend=",">
+				cs_history_state$suffix$.cshs_temperature = #V_cshsTemperature#
+			</isNotNull>		
+			<isNotNull property="V_cshsCsq" prepend=",">
+				cs_history_state$suffix$.cshs_csq = #V_cshsCsq#
+			</isNotNull>		
+			<isNotNull property="V_cshsPowerConsumption" prepend=",">
+				cs_history_state$suffix$.cshs_power_consumption = #V_cshsPowerConsumption#
+			</isNotNull>		
+			<isNotNull property="V_cshsLongitude" prepend=",">
+				cs_history_state$suffix$.cshs_longitude = #V_cshsLongitude#
+			</isNotNull>		
+			<isNotNull property="V_cshsLatitude" prepend=",">
+				cs_history_state$suffix$.cshs_latitude = #V_cshsLatitude#
+			</isNotNull>		
+			<isNotNull property="V_cshsOrder" prepend=",">
+				cs_history_state$suffix$.cshs_order = #V_cshsOrder#
+			</isNotNull>		
+			<isNotNull property="V_cshsMoData" prepend=",">
+				cs_history_state$suffix$.cshs_mo_data = #V_cshsMoData#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsHistoryState_part.cs_history_state_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆历史状态 -->
+	<update id="deleteCsHistoryStateBy"  parameterClass="java.util.HashMap">
+		delete from cs_history_state$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsHistoryState_part.cs_history_state_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

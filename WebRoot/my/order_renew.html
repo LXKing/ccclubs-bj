@@ -1,0 +1,164 @@
+<div id="ccc-reserve" class="ccc-view-car">
+	<div class="ccc-view-car-inner">
+		<div class="ccc-car-thumb">
+			${lz:set("car",(get:CsCar(csOrder.csoCar)))}
+			<img src="${cc:preview(car)}" />
+			<s:if test="#item.csoIsAdCar==null">
+					${csOrder.$csoCar.cscIsAd == true ? "<i class='ad'></i>" : ""}
+			</s:if>
+			<s:else>${csOrder.csoIsAdCar == true ? "<i class='ad'></i>" : ""}</s:else>
+			<!--if 宣传车-->
+			<span class="ccc-thumb-shadow"></span>
+			<span class="ccc-thumb-cover"></span>
+			<div class="ccc-plate-number">
+				${csOrder.$csoCar.cscCarNo}
+				<em></em>
+			</div>
+		</div>
+		<div class="ccc-view-car-detail">
+			<div class="ccc-view-car-desc">
+				<div class="ccc-car-model">
+					${csOrder.$csoModel.cscmName}
+				</div>
+				<p>
+					${cc:convertColor(csOrder.$csoCar.cscColor)} / ${csOrder.$csoModel.cscmFile==0?'自动档':'手动档'} / ${csOrder.$csoModel.cscmType==0?'汽油车':'电动车'}
+				</p>
+			</div>
+
+			<div class="ccc-view-car-times">
+				<p>
+					取车时间：
+					<span class="ccc-font-lato">${lz:date(csOrder.csoStartTime,"yyyy-MM-dd , HH:mm")}</span>
+				</p>
+				<p>
+					还车时间：
+					<span class="ccc-font-lato">${lz:date(csOrder.csoFinishTime,"yyyy-MM-dd , HH:mm")}</span>
+				</p>
+			</div>
+		</div>
+		
+		<div class="ccc-view-car-seltime ccc-clearfix">
+			<img src="/images/icons/divider-top.png" class="ccc-my-divider top-deco">
+			<div class="ccc-order-sel-item">
+				<label for="time1">
+					还车时间：
+				</label>
+				<div class="ccc-time-sel-item">
+					<input type="text" placeholder="2013-09-30 , 17:00" value="${lz:date(newFinish,'yyyy-MM-dd , HH:mm')}" id="finish" class="ccc-input ccc-font-lato ccc-time-picker" />
+					<em></em>
+				</div>
+			</div>
+			<div class="ccc-order-sel-item ccc-item-right">
+				<div id="qicTime" class="ccc-qic-time-pick">
+					<a href="javascript:;" class="ccc-qic-time-picker cur" data="1"><b></b><i></i><span>1</span> </a>
+					<a href="javascript:;" class="ccc-qic-time-picker" data="2"><b></b><i></i><span>2</span> </a>
+					<a href="javascript:;" class="ccc-qic-time-picker" data="12"><b></b><i></i><span>12</span> </a>
+					<a href="javascript:;" class="ccc-qic-time-picker" data="24"><b></b><i></i><span>24</span> </a>
+					<span class="ccc-qic-time-unit">小时</span>
+				</div>
+			</div>
+			<img src="/images/icons/simple-divider-slim.png" class="ccc-my-divider bottom-deco">
+		</div>
+		<div class="ccc-timebar-panel">
+			<div class="ccc-timebar ccc-clearfix">
+				<s:action name="reserve_timebar" executeResult="true" namespace="/">
+					<s:param name="car">${csOrder.csoCar}</s:param>
+					<s:param name="amount">2</s:param>
+				</s:action>
+			</div>
+		</div>
+		<s:if test="#request.csLastOrder!=null">
+			<div id="timeConflicts" class="ccc-time-conflicts" style="display: block;">
+				<i></i><span>后续订单开始时间是 <span class="time">${lz:date(csLastOrder.csoStartTime,"MM-dd , HH:mm")}</span>（订单信息实时变化，仅作参考，以最终提交为准）</span>
+			</div>
+		</s:if>
+		<s:else>
+			<div id="timeConflicts" class="ccc-time-conflicts" style="display: block;">
+				<i></i><span>暂时没有后续订单（订单信息实时变化，仅作参考，以最终提交为准）</span>
+			</div>
+		</s:else>
+		<div class="ccc-view-car-opt">
+			<a href="javascript:;" onclick="checkout(${csOrder.csoId})" class="ccc-btn ccc-btn-green">立即续订</a>
+			<a href="javascript:closeLayer();" class="ccc-btn ccc-btn-white">关闭</a>
+			<!--  <a href="###" class="ccc-btn ccc-btn-white">价格详情</a>-->
+			<div class="ccc-res-view-location">
+				<!-- <div class="ccc-res-dist">
+					1.2公里
+					<i></i>
+				</div>-->
+				<a href="javascript:;" title="“${csOrder.$csoOutlets.csoName}”">${csOrder.$csoOutlets.csoName}</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+		$(document).ready(function() {		
+				/* Time Picker */
+				var timeCur = new Date();
+				// CCClubs Customization
+				$.timepicker.regional['CCClubs']={
+					minDate: new Date(timeCur.getFullYear(), timeCur.getMonth(), timeCur.getDate(), 0, 0)
+				};
+				$.timepicker.setDefaults($.timepicker.regional['CCClubs']);
+				
+				$(document).on('click','#qicTime .ccc-qic-time-picker',function() {
+						$(this).addClass('cur').siblings().removeClass('cur');
+						var dt1 = new Date(Date.parse('${lz:date(csOrder.csoFinishTime,"yyyy/MM/dd HH:mm")}'));
+						var hours= $(this).attr('data');
+						dt1.setTime(dt1.getTime()+1000*60*60*hours);
+						var str=dt1.getFullYear()+(((dt1.getMonth()+1)<10)?"-0":"-")+(dt1.getMonth()+1)+((dt1.getDate()<10)?"-0":"-")+dt1.getDate()+((dt1.getHours()<10)?" , 0":" , ")+dt1.getHours()+((dt1.getMinutes()<10)?":0":":")+dt1.getMinutes();
+						$('#finish').val(str);
+						return false;
+				});
+				
+				$('.ccc-time-picker').datetimepicker().attr('readonly','readonly');
+				$(document).on('mouseenter','.ccc-timebar .ccc-time-block',function() {
+						$(this).children('.ccc-time-tips').show(120); 
+				});
+				$(document).on('mouseleave','.ccc-timebar .ccc-time-block',function() {
+						$(this).children('.ccc-time-tips').hide(100);
+				});
+		});
+		function checkout(order){
+			var finish = $.trim($('#finish').val()).replace(' , ',' ');
+			if (dateDiff('M', '${lz:date(csOrder.csoFinishTime,"yyyy-MM-dd HH:mm")}', finish) <= 0) {
+				showTips("新的续订时间应该比预计还车时间晚！","error",5);
+				return false;
+			}
+			var ajax = {
+			url: "/checkout_renewSubmit.html?t="+new Date().getTime(),
+			type: "POST",
+			data: {
+				newFinishDate: finish+":00",
+				order: order
+			},
+				async: true,
+				success: function(data) {
+					switch (data) {
+						case "100":
+							showTips("订单续订成功！","succ",3,function(){
+										location.href =  '/my/order.html';
+									});
+							break;
+						case "101":
+							location.href = '/login.html?from=/my/order.html';
+							break;
+						case "102":
+							showTips("亲，只有本人才能续订订单哦～","error",5);
+							break;
+						case "false":
+							showTips("亲，请选择一个新的还车时间～","error",5);
+							break;
+						case "9999":
+							showTips("系统出问题啦，请联系客服！","error",5);
+							break;
+						default:
+							showTips(data,"error",5);
+							return;
+					}
+				}
+			}
+			$.ajax(ajax);
+			return false;
+	   }
+	</script>

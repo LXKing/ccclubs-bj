@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 用户授权之SQL映射 -->
+	<resultMap id="SrvOauth" class="com.ccclubs.model.SrvOauth">
+		<result property="soId" column="so_id"/>
+		<result property="soToken" column="so_token"/>
+		<result property="soUserId" column="so_user_id"/>
+		<result property="soApiClient" column="so_api_client"/>
+		<result property="soTicket" column="so_ticket"/>
+		<result property="soUpdateTime" column="so_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有用户授权 -->
+	<select id="getSrvOauthList" resultMap="SrvOauth">
+		select srv_oauth$suffix$.* from srv_oauth$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询-->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.so_api_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvOauth_part.srv_oauth_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by so_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取用户授权分页 -->
+	<select id="getSrvOauthPage" parameterClass="java.util.HashMap" resultMap="SrvOauth">
+		select srv_oauth$suffix$.* from srv_oauth$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询 -->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.so_api_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvOauth_part.srv_oauth_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by so_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取用户授权总数 -->
+	<select id="getSrvOauthEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_oauth$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询,同张表只能外链接一次 -->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.so_api_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvOauth_part.srv_oauth_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取用户授权 -->
+	<select id="getSrvOauthById" parameterClass="java.util.HashMap" resultMap="SrvOauth">
+		select srv_oauth$suffix$.* from srv_oauth$suffix$
+		where so_id=#id#
+	</select>
+	
+		
+	<!-- 保存用户授权 -->
+	<insert id="saveSrvOauth"  parameterClass="com.ccclubs.model.SrvOauth">
+		insert into srv_oauth$suffix$
+		(
+			srv_oauth$suffix$.so_token
+			,srv_oauth$suffix$.so_user_id
+			,srv_oauth$suffix$.so_api_client
+			,srv_oauth$suffix$.so_ticket
+			,srv_oauth$suffix$.so_update_time
+		)
+		values(
+			<isNotNull property="soToken" prepend="">
+				#soToken#
+			</isNotNull>
+			<isNull property="soToken" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="soUserId" prepend=",">
+				#soUserId#
+			</isNotNull>
+			<isNull property="soUserId" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="soApiClient" prepend=",">
+				#soApiClient#
+			</isNotNull>
+			<isNull property="soApiClient" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="soTicket" prepend=",">
+				#soTicket#
+			</isNotNull>
+			<isNull property="soTicket" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="soUpdateTime" prepend=",">
+				#soUpdateTime#
+			</isNotNull>
+			<isNull property="soUpdateTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新用户授权 -->
+	<update id="updateSrvOauth"  parameterClass="com.ccclubs.model.SrvOauth">
+		update srv_oauth$suffix$ set
+			<isNotNull property="soToken" prepend="">
+				srv_oauth$suffix$.so_token = #soToken#
+			</isNotNull>
+			<isNull property="soToken" prepend="">
+				srv_oauth$suffix$.so_token = null
+			</isNull>				
+			<isNotNull property="soUserId" prepend=",">
+				srv_oauth$suffix$.so_user_id = #soUserId#
+			</isNotNull>
+			<isNull property="soUserId" prepend=",">
+				srv_oauth$suffix$.so_user_id = null
+			</isNull>				
+			<isNotNull property="soApiClient" prepend=",">
+				srv_oauth$suffix$.so_api_client = #soApiClient#
+			</isNotNull>
+			<isNull property="soApiClient" prepend=",">
+				srv_oauth$suffix$.so_api_client = null
+			</isNull>				
+			<isNotNull property="soTicket" prepend=",">
+				srv_oauth$suffix$.so_ticket = #soTicket#
+			</isNotNull>
+			<isNull property="soTicket" prepend=",">
+				srv_oauth$suffix$.so_ticket = null
+			</isNull>				
+			<isNotNull property="soUpdateTime" prepend=",">
+				srv_oauth$suffix$.so_update_time = #soUpdateTime#
+			</isNotNull>
+			<isNull property="soUpdateTime" prepend=",">
+				srv_oauth$suffix$.so_update_time = null
+			</isNull>				
+		where
+			so_id=#soId#
+	</update>
+	
+	<!-- 更新用户授权非空字段 -->
+	<update id="updateSrvOauth$NotNull"  parameterClass="com.ccclubs.model.SrvOauth">
+		update srv_oauth$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="soToken" prepend=",">
+				srv_oauth$suffix$.so_token = #soToken#
+			</isNotNull>		
+			<isNotNull property="soUserId" prepend=",">
+				srv_oauth$suffix$.so_user_id = #soUserId#
+			</isNotNull>		
+			<isNotNull property="soApiClient" prepend=",">
+				srv_oauth$suffix$.so_api_client = #soApiClient#
+			</isNotNull>		
+			<isNotNull property="soTicket" prepend=",">
+				srv_oauth$suffix$.so_ticket = #soTicket#
+			</isNotNull>		
+			<isNotNull property="soUpdateTime" prepend=",">
+				srv_oauth$suffix$.so_update_time = #soUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			so_id=#soId#
+	</update>
+	
+
+	<!-- 根据ID删除一个用户授权 -->
+	<delete id="deleteSrvOauthById" parameterClass="java.util.HashMap">
+		delete from srv_oauth$suffix$ where so_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新用户授权 -->
+	<update id="updateSrvOauthBy"  parameterClass="java.util.HashMap">
+		update srv_oauth$suffix$ set		
+			so_id=so_id
+			<isNotNull property="V_soId" prepend=",">
+				srv_oauth$suffix$.so_id = #V_soId#
+			</isNotNull>		
+			<isNotNull property="V_soToken" prepend=",">
+				srv_oauth$suffix$.so_token = #V_soToken#
+			</isNotNull>		
+			<isNotNull property="V_soUserId" prepend=",">
+				srv_oauth$suffix$.so_user_id = #V_soUserId#
+			</isNotNull>		
+			<isNotNull property="V_soApiClient" prepend=",">
+				srv_oauth$suffix$.so_api_client = #V_soApiClient#
+			</isNotNull>		
+			<isNotNull property="V_soTicket" prepend=",">
+				srv_oauth$suffix$.so_ticket = #V_soTicket#
+			</isNotNull>		
+			<isNotNull property="V_soUpdateTime" prepend=",">
+				srv_oauth$suffix$.so_update_time = #V_soUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[API客户端]查询-->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<isNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.so_api_client=srv_api_client$SrvApiClient.suffix$.sac_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join srv_api_client srv_api_client$SrvApiClient.suffix$ on srv_oauth$suffix$.$SrvApiClient.on$=srv_api_client$SrvApiClient.suffix$.sac_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[API客户端]查询条件sql片段 -->
+		<isNotNull property="SoApiClient"><!-- 调用一下SoApiClient，把SrvApiClient指向SoApiClient --></isNotNull>
+		<isNotNull property="SrvApiClient">
+			<include refid="SrvApiClient_part.srv_api_client_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvOauth_part.srv_oauth_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除用户授权 -->
+	<update id="deleteSrvOauthBy"  parameterClass="java.util.HashMap">
+		delete from srv_oauth$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvOauth_part.srv_oauth_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

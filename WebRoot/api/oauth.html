@@ -1,0 +1,140 @@
+﻿${lz:set("sitename","")}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>${sitename} - 用户授权</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	</head>
+	<style>
+	body,html{ margin:0px; padding:0px; width:100%; height:100%;background:#ffffff;}
+	body,td,div,span{ font-size:12px;color:#4c4c4c;}
+	form{ margin:0px; padding:0px;}
+	.clear{clear:both;}
+	body{background:#f4f4f4;}
+	#hd{height:70px;background:#1f4e8c;}
+	#hd span,#hd div,#hd td,#hd a,#hd *{color:#ffffff; font-family:"Microsoft YaHei"; }
+	#bd{background:#ffffff;box-shadow:0px 0px 3px #333333;padding:5px 0px;}
+	#ft{clear:both;}
+	.table{max-width:400px;}
+	.input{background:#FFFFFF; width:100%;border:1px solid #dddddd; height:32px; line-height:normal;}
+	.loginbtn{background:#ee0000; color:#ffffff; width:100%;border:0px; height:40px; }
+	.message{display:block;margin:10px auto;text-align:center;padding:20px 0px;max-width:320px;color:red;font-size:14px;border: 1px solid #fcd113; background: #f8da4e; color: #915608;}
+	.reg a{color: #f60;font-size: 13px;text-decoration: none;}
+	.reg a:hover {color: #f60;text-decoration: underline;}
+	</style>
+	<body>
+	
+	<script>
+	<s:if test="#request.success==true">
+		try{
+			if(window.opener && window.opener.onOauthCallback){
+				window.opener.onOauthCallback("${token}", "${type}");
+				window.close();
+			}
+		}catch(ex){
+		}
+		${lz:set("emptyDirect",(empty direct))}
+		<s:if test="#request.emptyDirect==false">
+		window.location.href="${direct}${lz:indexOf(direct,"?")>-1?"&":"?"}token=${token}&type=${type}";
+		</s:if>
+		<s:else>
+		window.location.href="oauth.success.do?token=${token}&type=${type}";
+		</s:else>
+	</s:if>
+	</script>
+	
+	<!-- 头部 -->
+	<!-- 
+	<div id="hd">
+		<center>
+			<span style='font-size:22px;line-height:70px;'>会员授权</<span>
+		</center>
+	</div>
+	 -->
+	
+	
+	<!-- 体部 -->
+	<div id="bd">
+		<br/>
+		<center style='line-height:25px;'>
+			<!-- 您正在使用${sitename}账户名访问${srvAppClient.sacName}<br/> -->
+			登录后${srvAppClient.sacName}可获得您的个人信息，为您提供更加优质的服务！
+		</center>
+		<table align="center" border="0" cellspacing="20" cellpadding="0" class="table">
+            <tbody>
+                <tr>
+                    <td width="25%" align="center">
+						<img src="${basePath}api/icon.png"/>
+					</td>
+                    <td width="50%" align="center">
+                        提供授权的账户信息<br/>
+                     <center><img src="${basePath}api/from.png"/></center>
+                     <br/>
+                     <center><img src="${basePath}api/to.png"/></center>
+                        提供更加优质的服务
+                    </td>
+                    <td width="25%" align="center">
+						<img src="${basePath}api/user.png"/>
+					</td>
+                </tr>
+            </tbody>
+        </table>
+		<br/>
+	</div>
+	
+	
+	<div id="ft">
+		<br/><br/>
+		<s:if test="#request.success==true">
+			<center style='color:red;font-size:14px;'>
+				登录成功!系统正在进行转跳
+			</center>
+		</s:if>
+		<s:elseif test="#request.error!=null">
+			<div class='message'>[错误提示]:${error}</div>
+		</s:elseif>
+		<s:else>
+			<center style='color:red;font-size:14px;'>${message}</center>
+			<form name="loginForm" id="loginForm" onSubmit="return vaildForm()" action="oauth.submit.do" method="post">
+	               <input type="hidden" name="direct" value="${direct}" />
+	               <input type="hidden" name="appid" value="${appid}" />
+	               <input type="hidden" name="flag" value="${flag}" />
+	               <input type="hidden" name="timestamp" value="${timestamp}" />
+	               <input type="hidden" name="sign" value="${sign}" />
+	               
+	               <table align="center" border="0" cellspacing="20" cellpadding="0" class="table">
+	                   <tbody>
+	                       <tr>
+	                           <td width="19%" align="right">用户名：</td>
+	                           <td>
+	                               <input type="text" placeholder="请输入您的登录帐号" class="input" size="32" name="username" id="username" maxlength="32" />
+	                           </td>
+	                       </tr>
+	                       <tr>
+	                           <td align="right">密&#12288;码：</td>
+	                           <td><input type="password" placeholder="请输入您的登录密码" class="input" size="32" name="password" id="password" maxlength="32" /></td>
+	                       </tr>
+	                       <tr>
+	                           <td>&nbsp;</td>
+	                           <td>
+	                               <button type="submit" class="loginbtn">&nbsp;登录&nbsp;</button>
+	                           </td>
+	                       </tr>
+	                       <tr>
+	                           <td>&nbsp;</td>
+	                           <td class="reg">
+	                               还没有帐号？ <a href="oauth.register.do?appid=${appid}&timestamp=${timestamp}&sign=${sign}">免费注册</a>
+	                           </td>
+	                       </tr>
+	                   </tbody>
+	               </table>
+	        </form>
+	     </s:else>
+	</div>
+	
+		
+	</body>
+</html>

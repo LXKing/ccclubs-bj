@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 加油站之SQL映射 -->
+	<resultMap id="CsGasStation" class="com.ccclubs.model.CsGasStation">
+		<result property="csgsId" column="csgs_id"/>
+		<result property="csgsHost" column="csgs_host"/>
+		<result property="csgsName" column="csgs_name"/>
+		<result property="csgsArea" column="csgs_area"/>
+		<result property="csgsLocation" column="csgs_location"/>
+		<result property="csgsAddress" column="csgs_address"/>
+		<result property="csgsAddTime" column="csgs_add_time"/>
+		<result property="csgsStatus" column="csgs_status"/>
+	</resultMap>
+		
+	<!-- 获取所有加油站 -->
+	<select id="getCsGasStationList" resultMap="CsGasStation">
+		select cs_gas_station$suffix$.* from cs_gas_station$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询-->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.csgs_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_gas_station$suffix$.csgs_status!=-1
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGasStation_part.cs_gas_station_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csgs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取加油站分页 -->
+	<select id="getCsGasStationPage" parameterClass="java.util.HashMap" resultMap="CsGasStation">
+		select cs_gas_station$suffix$.* from cs_gas_station$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询 -->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.csgs_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_gas_station$suffix$.csgs_status!=-1
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGasStation_part.cs_gas_station_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csgs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取加油站总数 -->
+	<select id="getCsGasStationEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_gas_station$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.csgs_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_gas_station$suffix$.csgs_status!=-1
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGasStation_part.cs_gas_station_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取加油站 -->
+	<select id="getCsGasStationById" parameterClass="java.util.HashMap" resultMap="CsGasStation">
+		select cs_gas_station$suffix$.* from cs_gas_station$suffix$
+		where csgs_id=#id#
+	</select>
+	
+		
+	<!-- 保存加油站 -->
+	<insert id="saveCsGasStation"  parameterClass="com.ccclubs.model.CsGasStation">
+		insert into cs_gas_station$suffix$
+		(
+			cs_gas_station$suffix$.csgs_host
+			,cs_gas_station$suffix$.csgs_name
+			,cs_gas_station$suffix$.csgs_area
+			,cs_gas_station$suffix$.csgs_location
+			,cs_gas_station$suffix$.csgs_address
+			,cs_gas_station$suffix$.csgs_add_time
+			,cs_gas_station$suffix$.csgs_status
+		)
+		values(
+			<isNotNull property="csgsHost" prepend="">
+				#csgsHost#
+			</isNotNull>
+			<isNull property="csgsHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csgsName" prepend=",">
+				#csgsName#
+			</isNotNull>
+			<isNull property="csgsName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgsArea" prepend=",">
+				#csgsArea#
+			</isNotNull>
+			<isNull property="csgsArea" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgsLocation" prepend=",">
+				#csgsLocation#
+			</isNotNull>
+			<isNull property="csgsLocation" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgsAddress" prepend=",">
+				#csgsAddress#
+			</isNotNull>
+			<isNull property="csgsAddress" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgsAddTime" prepend=",">
+				#csgsAddTime#
+			</isNotNull>
+			<isNull property="csgsAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgsStatus" prepend=",">
+				#csgsStatus#
+			</isNotNull>
+			<isNull property="csgsStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新加油站 -->
+	<update id="updateCsGasStation"  parameterClass="com.ccclubs.model.CsGasStation">
+		update cs_gas_station$suffix$ set
+			<isNotNull property="csgsHost" prepend="">
+				cs_gas_station$suffix$.csgs_host = #csgsHost#
+			</isNotNull>
+			<isNull property="csgsHost" prepend="">
+				cs_gas_station$suffix$.csgs_host = null
+			</isNull>				
+			<isNotNull property="csgsName" prepend=",">
+				cs_gas_station$suffix$.csgs_name = #csgsName#
+			</isNotNull>
+			<isNull property="csgsName" prepend=",">
+				cs_gas_station$suffix$.csgs_name = null
+			</isNull>				
+			<isNotNull property="csgsArea" prepend=",">
+				cs_gas_station$suffix$.csgs_area = #csgsArea#
+			</isNotNull>
+			<isNull property="csgsArea" prepend=",">
+				cs_gas_station$suffix$.csgs_area = null
+			</isNull>				
+			<isNotNull property="csgsLocation" prepend=",">
+				cs_gas_station$suffix$.csgs_location = #csgsLocation#
+			</isNotNull>
+			<isNull property="csgsLocation" prepend=",">
+				cs_gas_station$suffix$.csgs_location = null
+			</isNull>				
+			<isNotNull property="csgsAddress" prepend=",">
+				cs_gas_station$suffix$.csgs_address = #csgsAddress#
+			</isNotNull>
+			<isNull property="csgsAddress" prepend=",">
+				cs_gas_station$suffix$.csgs_address = null
+			</isNull>				
+			<isNotNull property="csgsAddTime" prepend=",">
+				cs_gas_station$suffix$.csgs_add_time = #csgsAddTime#
+			</isNotNull>
+			<isNull property="csgsAddTime" prepend=",">
+				cs_gas_station$suffix$.csgs_add_time = null
+			</isNull>				
+			<isNotNull property="csgsStatus" prepend=",">
+				cs_gas_station$suffix$.csgs_status = #csgsStatus#
+			</isNotNull>
+			<isNull property="csgsStatus" prepend=",">
+				cs_gas_station$suffix$.csgs_status = null
+			</isNull>				
+		where
+			csgs_id=#csgsId#
+	</update>
+	
+	<!-- 更新加油站非空字段 -->
+	<update id="updateCsGasStation$NotNull"  parameterClass="com.ccclubs.model.CsGasStation">
+		update cs_gas_station$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csgsHost" prepend=",">
+				cs_gas_station$suffix$.csgs_host = #csgsHost#
+			</isNotNull>		
+			<isNotNull property="csgsName" prepend=",">
+				cs_gas_station$suffix$.csgs_name = #csgsName#
+			</isNotNull>		
+			<isNotNull property="csgsArea" prepend=",">
+				cs_gas_station$suffix$.csgs_area = #csgsArea#
+			</isNotNull>		
+			<isNotNull property="csgsLocation" prepend=",">
+				cs_gas_station$suffix$.csgs_location = #csgsLocation#
+			</isNotNull>		
+			<isNotNull property="csgsAddress" prepend=",">
+				cs_gas_station$suffix$.csgs_address = #csgsAddress#
+			</isNotNull>		
+			<isNotNull property="csgsAddTime" prepend=",">
+				cs_gas_station$suffix$.csgs_add_time = #csgsAddTime#
+			</isNotNull>		
+			<isNotNull property="csgsStatus" prepend=",">
+				cs_gas_station$suffix$.csgs_status = #csgsStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csgs_id=#csgsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个加油站 -->
+	<delete id="deleteCsGasStationById" parameterClass="java.util.HashMap">
+		delete from cs_gas_station$suffix$ where csgs_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个加油站 -->
+	<update id="removeCsGasStationById" parameterClass="java.util.HashMap">
+		update cs_gas_station$suffix$ set  cs_gas_station$suffix$.csgs_status=-1  where csgs_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新加油站 -->
+	<update id="updateCsGasStationBy"  parameterClass="java.util.HashMap">
+		update cs_gas_station$suffix$ set		
+			csgs_id=csgs_id
+			<isNotNull property="V_csgsId" prepend=",">
+				cs_gas_station$suffix$.csgs_id = #V_csgsId#
+			</isNotNull>		
+			<isNotNull property="V_csgsHost" prepend=",">
+				cs_gas_station$suffix$.csgs_host = #V_csgsHost#
+			</isNotNull>		
+			<isNotNull property="V_csgsName" prepend=",">
+				cs_gas_station$suffix$.csgs_name = #V_csgsName#
+			</isNotNull>		
+			<isNotNull property="V_csgsArea" prepend=",">
+				cs_gas_station$suffix$.csgs_area = #V_csgsArea#
+			</isNotNull>		
+			<isNotNull property="V_csgsLocation" prepend=",">
+				cs_gas_station$suffix$.csgs_location = #V_csgsLocation#
+			</isNotNull>		
+			<isNotNull property="V_csgsAddress" prepend=",">
+				cs_gas_station$suffix$.csgs_address = #V_csgsAddress#
+			</isNotNull>		
+			<isNotNull property="V_csgsAddTime" prepend=",">
+				cs_gas_station$suffix$.csgs_add_time = #V_csgsAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csgsStatus" prepend=",">
+				cs_gas_station$suffix$.csgs_status = #V_csgsStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[网点区域]查询-->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.csgs_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_gas_station$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_gas_station$suffix$.csgs_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsgsArea"><!-- 调用一下CsgsArea，把CsArea指向CsgsArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsGasStation_part.cs_gas_station_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除加油站 -->
+	<update id="deleteCsGasStationBy"  parameterClass="java.util.HashMap">
+		delete from cs_gas_station$suffix$ where 
+		cs_gas_station$suffix$.csgs_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsGasStation_part.cs_gas_station_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

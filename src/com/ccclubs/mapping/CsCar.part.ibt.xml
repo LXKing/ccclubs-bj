@@ -1,0 +1,1207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCar_part">	
+	<!-- 车辆条件sql片段  -->
+	<sql id="cs_car_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_car$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_car$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_car$suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscHost" prepend="and">
+			    $cscHostNot$ cs_car$suffix$.csc_host = #cscHost#
+			</isNotEmpty>
+			<isNotNull property="cscHostNot" prepend="and">
+				<isEmpty property="cscHost">
+				$cscHostNot$ cs_car$suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscNumber" prepend="and">			    
+			    (<isNotNull property="cscNumberNot">
+			    cs_car$suffix$.csc_number is null or length(cs_car$suffix$.csc_number) &lt; 1 or
+			    </isNotNull>$cscNumberNot$ cs_car$suffix$.csc_number like #cscNumber#)
+			</isNotEmpty>
+			<isNotNull property="cscNumberNot" prepend="and">
+				<isEmpty property="cscNumber">
+				$cscNumberNot$ (cs_car$suffix$.csc_number is null or length(cs_car$suffix$.csc_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscCarNo" prepend="and">			    
+			    (<isNotNull property="cscCarNoNot">
+			    cs_car$suffix$.csc_car_no is null or length(cs_car$suffix$.csc_car_no) &lt; 1 or
+			    </isNotNull>$cscCarNoNot$ cs_car$suffix$.csc_car_no like #cscCarNo#)
+			</isNotEmpty>
+			<isNotNull property="cscCarNoNot" prepend="and">
+				<isEmpty property="cscCarNo">
+				$cscCarNoNot$ (cs_car$suffix$.csc_car_no is null or length(cs_car$suffix$.csc_car_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscModel" prepend="and">
+			    $cscModelNot$ cs_car$suffix$.csc_model = #cscModel#
+			</isNotEmpty>
+			<isNotNull property="cscModelNot" prepend="and">
+				<isEmpty property="cscModel">
+				$cscModelNot$ cs_car$suffix$.csc_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscOutlets" prepend="and">
+			    $cscOutletsNot$ cs_car$suffix$.csc_outlets = #cscOutlets#
+			</isNotEmpty>
+			<isNotNull property="cscOutletsNot" prepend="and">
+				<isEmpty property="cscOutlets">
+				$cscOutletsNot$ cs_car$suffix$.csc_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscProvid" prepend="and">
+			    $cscProvidNot$ cs_car$suffix$.csc_provid = #cscProvid#
+			</isNotEmpty>
+			<isNotNull property="cscProvidNot" prepend="and">
+				<isEmpty property="cscProvid">
+				$cscProvidNot$ cs_car$suffix$.csc_provid is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscRebateMin" prepend="and">
+			    $cscRebateNot$  ( cs_car$suffix$.csc_rebate &gt;= #cscRebateMin#
+			    <isEmpty property="cscRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscRebateMax" prepend="and">
+				<isEmpty property="cscRebateMin">$cscRebateNot$   (</isEmpty>
+			    cs_car$suffix$.csc_rebate &lt;= #cscRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscRebate" prepend="and">
+			    $cscRebateNot$ cs_car$suffix$.csc_rebate = #cscRebate#
+			</isNotEmpty>
+			<isNotNull property="cscRebateNot" prepend="and">
+				<isEmpty property="cscRebateMax"><isEmpty property="cscRebateMin"><isEmpty property="cscRebate">
+				$cscRebateNot$ cs_car$suffix$.csc_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscIsAd" prepend="and">
+			    $cscIsAdNot$ cs_car$suffix$.csc_is_ad = #cscIsAd#
+			</isNotEmpty>
+			<isNotNull property="cscIsAdNot" prepend="and">
+				<isEmpty property="cscIsAd">
+				$cscIsAdNot$ cs_car$suffix$.csc_is_ad is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscLongitudeMin" prepend="and">
+			    $cscLongitudeNot$  ( cs_car$suffix$.csc_longitude &gt;= #cscLongitudeMin#
+			    <isEmpty property="cscLongitudeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscLongitudeMax" prepend="and">
+				<isEmpty property="cscLongitudeMin">$cscLongitudeNot$   (</isEmpty>
+			    cs_car$suffix$.csc_longitude &lt;= #cscLongitudeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscLongitude" prepend="and">
+			    $cscLongitudeNot$ cs_car$suffix$.csc_longitude = #cscLongitude#
+			</isNotEmpty>
+			<isNotNull property="cscLongitudeNot" prepend="and">
+				<isEmpty property="cscLongitudeMax"><isEmpty property="cscLongitudeMin"><isEmpty property="cscLongitude">
+				$cscLongitudeNot$ cs_car$suffix$.csc_longitude is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscLatitudeMin" prepend="and">
+			    $cscLatitudeNot$  ( cs_car$suffix$.csc_latitude &gt;= #cscLatitudeMin#
+			    <isEmpty property="cscLatitudeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscLatitudeMax" prepend="and">
+				<isEmpty property="cscLatitudeMin">$cscLatitudeNot$   (</isEmpty>
+			    cs_car$suffix$.csc_latitude &lt;= #cscLatitudeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscLatitude" prepend="and">
+			    $cscLatitudeNot$ cs_car$suffix$.csc_latitude = #cscLatitude#
+			</isNotEmpty>
+			<isNotNull property="cscLatitudeNot" prepend="and">
+				<isEmpty property="cscLatitudeMax"><isEmpty property="cscLatitudeMin"><isEmpty property="cscLatitude">
+				$cscLatitudeNot$ cs_car$suffix$.csc_latitude is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscMobile" prepend="and">			    
+			    (<isNotNull property="cscMobileNot">
+			    cs_car$suffix$.csc_mobile is null or length(cs_car$suffix$.csc_mobile) &lt; 1 or
+			    </isNotNull>$cscMobileNot$ cs_car$suffix$.csc_mobile = #cscMobile#)
+			</isNotEmpty>
+			<isNotNull property="cscMobileNot" prepend="and">
+				<isEmpty property="cscMobile">
+				$cscMobileNot$ (cs_car$suffix$.csc_mobile is null or length(cs_car$suffix$.csc_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscPassword" prepend="and">			    
+			    (<isNotNull property="cscPasswordNot">
+			    cs_car$suffix$.csc_password is null or length(cs_car$suffix$.csc_password) &lt; 1 or
+			    </isNotNull>$cscPasswordNot$ cs_car$suffix$.csc_password = #cscPassword#)
+			</isNotEmpty>
+			<isNotNull property="cscPasswordNot" prepend="and">
+				<isEmpty property="cscPassword">
+				$cscPasswordNot$ (cs_car$suffix$.csc_password is null or length(cs_car$suffix$.csc_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscOilCard" prepend="and">			    
+			    (<isNotNull property="cscOilCardNot">
+			    cs_car$suffix$.csc_oil_card is null or length(cs_car$suffix$.csc_oil_card) &lt; 1 or
+			    </isNotNull>$cscOilCardNot$ cs_car$suffix$.csc_oil_card = #cscOilCard#)
+			</isNotEmpty>
+			<isNotNull property="cscOilCardNot" prepend="and">
+				<isEmpty property="cscOilCard">
+				$cscOilCardNot$ (cs_car$suffix$.csc_oil_card is null or length(cs_car$suffix$.csc_oil_card) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscVin" prepend="and">			    
+			    (<isNotNull property="cscVinNot">
+			    cs_car$suffix$.csc_vin is null or length(cs_car$suffix$.csc_vin) &lt; 1 or
+			    </isNotNull>$cscVinNot$ cs_car$suffix$.csc_vin like #cscVin#)
+			</isNotEmpty>
+			<isNotNull property="cscVinNot" prepend="and">
+				<isEmpty property="cscVin">
+				$cscVinNot$ (cs_car$suffix$.csc_vin is null or length(cs_car$suffix$.csc_vin) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscEngineNo" prepend="and">			    
+			    (<isNotNull property="cscEngineNoNot">
+			    cs_car$suffix$.csc_engine_no is null or length(cs_car$suffix$.csc_engine_no) &lt; 1 or
+			    </isNotNull>$cscEngineNoNot$ cs_car$suffix$.csc_engine_no like #cscEngineNo#)
+			</isNotEmpty>
+			<isNotNull property="cscEngineNoNot" prepend="and">
+				<isEmpty property="cscEngineNo">
+				$cscEngineNoNot$ (cs_car$suffix$.csc_engine_no is null or length(cs_car$suffix$.csc_engine_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBuyDateStart" prepend="and">
+			    $cscBuyDateNot$   (cs_car$suffix$.csc_buy_date &gt;= #cscBuyDateStart#
+			   <isEmpty property="cscBuyDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscBuyDateEnd" prepend="and">
+				<isEmpty property="cscBuyDateStart">$cscBuyDateNot$   (</isEmpty>
+			    cs_car$suffix$.csc_buy_date &lt;= #cscBuyDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscBuyDate" prepend="and">
+			    $cscBuyDateNot$ cs_car$suffix$.csc_buy_date = #cscBuyDate#
+			</isNotEmpty>
+			<isNotNull property="cscBuyDateNot" prepend="and">
+				<isEmpty property="cscBuyDateStart"><isEmpty property="cscBuyDateEnd"><isEmpty property="cscBuyDate">
+				$cscBuyDateNot$ cs_car$suffix$.csc_buy_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBargainNo" prepend="and">			    
+			    (<isNotNull property="cscBargainNoNot">
+			    cs_car$suffix$.csc_bargain_no is null or length(cs_car$suffix$.csc_bargain_no) &lt; 1 or
+			    </isNotNull>$cscBargainNoNot$ cs_car$suffix$.csc_bargain_no = #cscBargainNo#)
+			</isNotEmpty>
+			<isNotNull property="cscBargainNoNot" prepend="and">
+				<isEmpty property="cscBargainNo">
+				$cscBargainNoNot$ (cs_car$suffix$.csc_bargain_no is null or length(cs_car$suffix$.csc_bargain_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTaxPriceMin" prepend="and">
+			    $cscTaxPriceNot$  ( cs_car$suffix$.csc_tax_price &gt;= #cscTaxPriceMin#
+			    <isEmpty property="cscTaxPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscTaxPriceMax" prepend="and">
+				<isEmpty property="cscTaxPriceMin">$cscTaxPriceNot$   (</isEmpty>
+			    cs_car$suffix$.csc_tax_price &lt;= #cscTaxPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscTaxPrice" prepend="and">
+			    $cscTaxPriceNot$ cs_car$suffix$.csc_tax_price = #cscTaxPrice#
+			</isNotEmpty>
+			<isNotNull property="cscTaxPriceNot" prepend="and">
+				<isEmpty property="cscTaxPriceMax"><isEmpty property="cscTaxPriceMin"><isEmpty property="cscTaxPrice">
+				$cscTaxPriceNot$ cs_car$suffix$.csc_tax_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscBuyPriceMin" prepend="and">
+			    $cscBuyPriceNot$  ( cs_car$suffix$.csc_buy_price &gt;= #cscBuyPriceMin#
+			    <isEmpty property="cscBuyPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscBuyPriceMax" prepend="and">
+				<isEmpty property="cscBuyPriceMin">$cscBuyPriceNot$   (</isEmpty>
+			    cs_car$suffix$.csc_buy_price &lt;= #cscBuyPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscBuyPrice" prepend="and">
+			    $cscBuyPriceNot$ cs_car$suffix$.csc_buy_price = #cscBuyPrice#
+			</isNotEmpty>
+			<isNotNull property="cscBuyPriceNot" prepend="and">
+				<isEmpty property="cscBuyPriceMax"><isEmpty property="cscBuyPriceMin"><isEmpty property="cscBuyPrice">
+				$cscBuyPriceNot$ cs_car$suffix$.csc_buy_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscCertific" prepend="and">			    
+			    (<isNotNull property="cscCertificNot">
+			    cs_car$suffix$.csc_certific is null or length(cs_car$suffix$.csc_certific) &lt; 1 or
+			    </isNotNull>$cscCertificNot$ cs_car$suffix$.csc_certific = #cscCertific#)
+			</isNotEmpty>
+			<isNotNull property="cscCertificNot" prepend="and">
+				<isEmpty property="cscCertific">
+				$cscCertificNot$ (cs_car$suffix$.csc_certific is null or length(cs_car$suffix$.csc_certific) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscFactoryNo" prepend="and">			    
+			    (<isNotNull property="cscFactoryNoNot">
+			    cs_car$suffix$.csc_factory_no is null or length(cs_car$suffix$.csc_factory_no) &lt; 1 or
+			    </isNotNull>$cscFactoryNoNot$ cs_car$suffix$.csc_factory_no = #cscFactoryNo#)
+			</isNotEmpty>
+			<isNotNull property="cscFactoryNoNot" prepend="and">
+				<isEmpty property="cscFactoryNo">
+				$cscFactoryNoNot$ (cs_car$suffix$.csc_factory_no is null or length(cs_car$suffix$.csc_factory_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscColor" prepend="and">
+			    $cscColorNot$ cs_car$suffix$.csc_color = #cscColor#
+			</isNotEmpty>
+			<isNotNull property="cscColorNot" prepend="and">
+				<isEmpty property="cscColor">
+				$cscColorNot$ cs_car$suffix$.csc_color is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscPreview" prepend="and">
+			    $cscPreviewNot$ cs_car$suffix$.csc_preview = #cscPreview#
+			</isNotEmpty>
+			<isNotNull property="cscPreviewNot" prepend="and">
+				<isEmpty property="cscPreview">
+				$cscPreviewNot$ cs_car$suffix$.csc_preview is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscImages" prepend="and">
+			    $cscImagesNot$ cs_car$suffix$.csc_images = #cscImages#
+			</isNotEmpty>
+			<isNotNull property="cscImagesNot" prepend="and">
+				<isEmpty property="cscImages">
+				$cscImagesNot$ cs_car$suffix$.csc_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscMaintKmMin" prepend="and">
+			    $cscMaintKmNot$  ( cs_car$suffix$.csc_maint_km &gt;= #cscMaintKmMin#
+			    <isEmpty property="cscMaintKmMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscMaintKmMax" prepend="and">
+				<isEmpty property="cscMaintKmMin">$cscMaintKmNot$   (</isEmpty>
+			    cs_car$suffix$.csc_maint_km &lt;= #cscMaintKmMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscMaintKm" prepend="and">
+			    $cscMaintKmNot$ cs_car$suffix$.csc_maint_km = #cscMaintKm#
+			</isNotEmpty>
+			<isNotNull property="cscMaintKmNot" prepend="and">
+				<isEmpty property="cscMaintKmMax"><isEmpty property="cscMaintKmMin"><isEmpty property="cscMaintKm">
+				$cscMaintKmNot$ cs_car$suffix$.csc_maint_km is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscCheckInStart" prepend="and">
+			    $cscCheckInNot$   (cs_car$suffix$.csc_check_in &gt;= #cscCheckInStart#
+			   <isEmpty property="cscCheckInEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscCheckInEnd" prepend="and">
+				<isEmpty property="cscCheckInStart">$cscCheckInNot$   (</isEmpty>
+			    cs_car$suffix$.csc_check_in &lt;= #cscCheckInEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscCheckIn" prepend="and">
+			    $cscCheckInNot$ cs_car$suffix$.csc_check_in = #cscCheckIn#
+			</isNotEmpty>
+			<isNotNull property="cscCheckInNot" prepend="and">
+				<isEmpty property="cscCheckInStart"><isEmpty property="cscCheckInEnd"><isEmpty property="cscCheckIn">
+				$cscCheckInNot$ cs_car$suffix$.csc_check_in is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAnnualPreStart" prepend="and">
+			    $cscAnnualPreNot$   (cs_car$suffix$.csc_annual_pre &gt;= #cscAnnualPreStart#
+			   <isEmpty property="cscAnnualPreEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAnnualPreEnd" prepend="and">
+				<isEmpty property="cscAnnualPreStart">$cscAnnualPreNot$   (</isEmpty>
+			    cs_car$suffix$.csc_annual_pre &lt;= #cscAnnualPreEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAnnualPre" prepend="and">
+			    $cscAnnualPreNot$ cs_car$suffix$.csc_annual_pre = #cscAnnualPre#
+			</isNotEmpty>
+			<isNotNull property="cscAnnualPreNot" prepend="and">
+				<isEmpty property="cscAnnualPreStart"><isEmpty property="cscAnnualPreEnd"><isEmpty property="cscAnnualPre">
+				$cscAnnualPreNot$ cs_car$suffix$.csc_annual_pre is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAnnualStart" prepend="and">
+			    $cscAnnualNot$   (cs_car$suffix$.csc_annual &gt;= #cscAnnualStart#
+			   <isEmpty property="cscAnnualEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAnnualEnd" prepend="and">
+				<isEmpty property="cscAnnualStart">$cscAnnualNot$   (</isEmpty>
+			    cs_car$suffix$.csc_annual &lt;= #cscAnnualEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAnnual" prepend="and">
+			    $cscAnnualNot$ cs_car$suffix$.csc_annual = #cscAnnual#
+			</isNotEmpty>
+			<isNotNull property="cscAnnualNot" prepend="and">
+				<isEmpty property="cscAnnualStart"><isEmpty property="cscAnnualEnd"><isEmpty property="cscAnnual">
+				$cscAnnualNot$ cs_car$suffix$.csc_annual is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAnnualInfo" prepend="and">			    
+			    (<isNotNull property="cscAnnualInfoNot">
+			    cs_car$suffix$.csc_annual_info is null or length(cs_car$suffix$.csc_annual_info) &lt; 1 or
+			    </isNotNull>$cscAnnualInfoNot$ cs_car$suffix$.csc_annual_info like #cscAnnualInfo#)
+			</isNotEmpty>
+			<isNotNull property="cscAnnualInfoNot" prepend="and">
+				<isEmpty property="cscAnnualInfo">
+				$cscAnnualInfoNot$ (cs_car$suffix$.csc_annual_info is null or length(cs_car$suffix$.csc_annual_info) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAnnualNextStart" prepend="and">
+			    $cscAnnualNextNot$   (cs_car$suffix$.csc_annual_next &gt;= #cscAnnualNextStart#
+			   <isEmpty property="cscAnnualNextEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAnnualNextEnd" prepend="and">
+				<isEmpty property="cscAnnualNextStart">$cscAnnualNextNot$   (</isEmpty>
+			    cs_car$suffix$.csc_annual_next &lt;= #cscAnnualNextEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAnnualNext" prepend="and">
+			    $cscAnnualNextNot$ cs_car$suffix$.csc_annual_next = #cscAnnualNext#
+			</isNotEmpty>
+			<isNotNull property="cscAnnualNextNot" prepend="and">
+				<isEmpty property="cscAnnualNextStart"><isEmpty property="cscAnnualNextEnd"><isEmpty property="cscAnnualNext">
+				$cscAnnualNextNot$ cs_car$suffix$.csc_annual_next is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTiDateStart" prepend="and">
+			    $cscTiDateNot$   (cs_car$suffix$.csc_ti_date &gt;= #cscTiDateStart#
+			   <isEmpty property="cscTiDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscTiDateEnd" prepend="and">
+				<isEmpty property="cscTiDateStart">$cscTiDateNot$   (</isEmpty>
+			    cs_car$suffix$.csc_ti_date &lt;= #cscTiDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscTiDate" prepend="and">
+			    $cscTiDateNot$ cs_car$suffix$.csc_ti_date = #cscTiDate#
+			</isNotEmpty>
+			<isNotNull property="cscTiDateNot" prepend="and">
+				<isEmpty property="cscTiDateStart"><isEmpty property="cscTiDateEnd"><isEmpty property="cscTiDate">
+				$cscTiDateNot$ cs_car$suffix$.csc_ti_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTiUnitStart" prepend="and">
+			    $cscTiUnitNot$   (cs_car$suffix$.csc_ti_unit &gt;= #cscTiUnitStart#
+			   <isEmpty property="cscTiUnitEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscTiUnitEnd" prepend="and">
+				<isEmpty property="cscTiUnitStart">$cscTiUnitNot$   (</isEmpty>
+			    cs_car$suffix$.csc_ti_unit &lt;= #cscTiUnitEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscTiUnit" prepend="and">
+			    $cscTiUnitNot$ cs_car$suffix$.csc_ti_unit = #cscTiUnit#
+			</isNotEmpty>
+			<isNotNull property="cscTiUnitNot" prepend="and">
+				<isEmpty property="cscTiUnitStart"><isEmpty property="cscTiUnitEnd"><isEmpty property="cscTiUnit">
+				$cscTiUnitNot$ cs_car$suffix$.csc_ti_unit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTiNo" prepend="and">			    
+			    (<isNotNull property="cscTiNoNot">
+			    cs_car$suffix$.csc_ti_no is null or length(cs_car$suffix$.csc_ti_no) &lt; 1 or
+			    </isNotNull>$cscTiNoNot$ cs_car$suffix$.csc_ti_no = #cscTiNo#)
+			</isNotEmpty>
+			<isNotNull property="cscTiNoNot" prepend="and">
+				<isEmpty property="cscTiNo">
+				$cscTiNoNot$ (cs_car$suffix$.csc_ti_no is null or length(cs_car$suffix$.csc_ti_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBiDateStart" prepend="and">
+			    $cscBiDateNot$   (cs_car$suffix$.csc_bi_date &gt;= #cscBiDateStart#
+			   <isEmpty property="cscBiDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscBiDateEnd" prepend="and">
+				<isEmpty property="cscBiDateStart">$cscBiDateNot$   (</isEmpty>
+			    cs_car$suffix$.csc_bi_date &lt;= #cscBiDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscBiDate" prepend="and">
+			    $cscBiDateNot$ cs_car$suffix$.csc_bi_date = #cscBiDate#
+			</isNotEmpty>
+			<isNotNull property="cscBiDateNot" prepend="and">
+				<isEmpty property="cscBiDateStart"><isEmpty property="cscBiDateEnd"><isEmpty property="cscBiDate">
+				$cscBiDateNot$ cs_car$suffix$.csc_bi_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBiUnitStart" prepend="and">
+			    $cscBiUnitNot$   (cs_car$suffix$.csc_bi_unit &gt;= #cscBiUnitStart#
+			   <isEmpty property="cscBiUnitEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscBiUnitEnd" prepend="and">
+				<isEmpty property="cscBiUnitStart">$cscBiUnitNot$   (</isEmpty>
+			    cs_car$suffix$.csc_bi_unit &lt;= #cscBiUnitEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscBiUnit" prepend="and">
+			    $cscBiUnitNot$ cs_car$suffix$.csc_bi_unit = #cscBiUnit#
+			</isNotEmpty>
+			<isNotNull property="cscBiUnitNot" prepend="and">
+				<isEmpty property="cscBiUnitStart"><isEmpty property="cscBiUnitEnd"><isEmpty property="cscBiUnit">
+				$cscBiUnitNot$ cs_car$suffix$.csc_bi_unit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBiNo" prepend="and">			    
+			    (<isNotNull property="cscBiNoNot">
+			    cs_car$suffix$.csc_bi_no is null or length(cs_car$suffix$.csc_bi_no) &lt; 1 or
+			    </isNotNull>$cscBiNoNot$ cs_car$suffix$.csc_bi_no = #cscBiNo#)
+			</isNotEmpty>
+			<isNotNull property="cscBiNoNot" prepend="and">
+				<isEmpty property="cscBiNo">
+				$cscBiNoNot$ (cs_car$suffix$.csc_bi_no is null or length(cs_car$suffix$.csc_bi_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBiType" prepend="and">			    
+			    (<isNotNull property="cscBiTypeNot">
+			    cs_car$suffix$.csc_bi_type is null or length(cs_car$suffix$.csc_bi_type) &lt; 1 or
+			    </isNotNull>$cscBiTypeNot$ cs_car$suffix$.csc_bi_type = #cscBiType#)
+			</isNotEmpty>
+			<isNotNull property="cscBiTypeNot" prepend="and">
+				<isEmpty property="cscBiType">
+				$cscBiTypeNot$ (cs_car$suffix$.csc_bi_type is null or length(cs_car$suffix$.csc_bi_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscBiLimitMin" prepend="and">
+			    $cscBiLimitNot$  ( cs_car$suffix$.csc_bi_limit &gt;= #cscBiLimitMin#
+			    <isEmpty property="cscBiLimitMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscBiLimitMax" prepend="and">
+				<isEmpty property="cscBiLimitMin">$cscBiLimitNot$   (</isEmpty>
+			    cs_car$suffix$.csc_bi_limit &lt;= #cscBiLimitMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscBiLimit" prepend="and">
+			    $cscBiLimitNot$ cs_car$suffix$.csc_bi_limit = #cscBiLimit#
+			</isNotEmpty>
+			<isNotNull property="cscBiLimitNot" prepend="and">
+				<isEmpty property="cscBiLimitMax"><isEmpty property="cscBiLimitMin"><isEmpty property="cscBiLimit">
+				$cscBiLimitNot$ cs_car$suffix$.csc_bi_limit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscBiCompany" prepend="and">			    
+			    (<isNotNull property="cscBiCompanyNot">
+			    cs_car$suffix$.csc_bi_company is null or length(cs_car$suffix$.csc_bi_company) &lt; 1 or
+			    </isNotNull>$cscBiCompanyNot$ cs_car$suffix$.csc_bi_company = #cscBiCompany#)
+			</isNotEmpty>
+			<isNotNull property="cscBiCompanyNot" prepend="and">
+				<isEmpty property="cscBiCompany">
+				$cscBiCompanyNot$ (cs_car$suffix$.csc_bi_company is null or length(cs_car$suffix$.csc_bi_company) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscEditor" prepend="and">
+			    $cscEditorNot$ cs_car$suffix$.csc_editor = #cscEditor#
+			</isNotEmpty>
+			<isNotNull property="cscEditorNot" prepend="and">
+				<isEmpty property="cscEditor">
+				$cscEditorNot$ cs_car$suffix$.csc_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUpdateTimeStart" prepend="and">
+			    $cscUpdateTimeNot$   (cs_car$suffix$.csc_update_time &gt;= #cscUpdateTimeStart#
+			   <isEmpty property="cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscUpdateTimeStart">$cscUpdateTimeNot$   (</isEmpty>
+			    cs_car$suffix$.csc_update_time &lt;= #cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTime" prepend="and">
+			    $cscUpdateTimeNot$ cs_car$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscUpdateTimeNot" prepend="and">
+				<isEmpty property="cscUpdateTimeStart"><isEmpty property="cscUpdateTimeEnd"><isEmpty property="cscUpdateTime">
+				$cscUpdateTimeNot$ cs_car$suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddTimeStart" prepend="and">
+			    $cscAddTimeNot$   (cs_car$suffix$.csc_add_time &gt;= #cscAddTimeStart#
+			   <isEmpty property="cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTimeEnd" prepend="and">
+				<isEmpty property="cscAddTimeStart">$cscAddTimeNot$   (</isEmpty>
+			    cs_car$suffix$.csc_add_time &lt;= #cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTime" prepend="and">
+			    $cscAddTimeNot$ cs_car$suffix$.csc_add_time = #cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscAddTimeNot" prepend="and">
+				<isEmpty property="cscAddTimeStart"><isEmpty property="cscAddTimeEnd"><isEmpty property="cscAddTime">
+				$cscAddTimeNot$ cs_car$suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscRemark" prepend="and">			    
+			    (<isNotNull property="cscRemarkNot">
+			    cs_car$suffix$.csc_remark is null or length(cs_car$suffix$.csc_remark) &lt; 1 or
+			    </isNotNull>$cscRemarkNot$ cs_car$suffix$.csc_remark like #cscRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscRemarkNot" prepend="and">
+				<isEmpty property="cscRemark">
+				$cscRemarkNot$ (cs_car$suffix$.csc_remark is null or length(cs_car$suffix$.csc_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscMemo" prepend="and">			    
+			    (<isNotNull property="cscMemoNot">
+			    cs_car$suffix$.csc_memo is null or length(cs_car$suffix$.csc_memo) &lt; 1 or
+			    </isNotNull>$cscMemoNot$ cs_car$suffix$.csc_memo like #cscMemo#)
+			</isNotEmpty>
+			<isNotNull property="cscMemoNot" prepend="and">
+				<isEmpty property="cscMemo">
+				$cscMemoNot$ (cs_car$suffix$.csc_memo is null or length(cs_car$suffix$.csc_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscOnPsd" prepend="and">			    
+			    (<isNotNull property="cscOnPsdNot">
+			    cs_car$suffix$.csc_on_psd is null or length(cs_car$suffix$.csc_on_psd) &lt; 1 or
+			    </isNotNull>$cscOnPsdNot$ cs_car$suffix$.csc_on_psd = #cscOnPsd#)
+			</isNotEmpty>
+			<isNotNull property="cscOnPsdNot" prepend="and">
+				<isEmpty property="cscOnPsd">
+				$cscOnPsdNot$ (cs_car$suffix$.csc_on_psd is null or length(cs_car$suffix$.csc_on_psd) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscSetup" prepend="and">
+			    $cscSetupNot$ cs_car$suffix$.csc_setup = #cscSetup#
+			</isNotEmpty>
+			<isNotNull property="cscSetupNot" prepend="and">
+				<isEmpty property="cscSetup">
+				$cscSetupNot$ cs_car$suffix$.csc_setup is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscDeviceVesion" prepend="and">
+			    $cscDeviceVesionNot$ cs_car$suffix$.csc_device_vesion = #cscDeviceVesion#
+			</isNotEmpty>
+			<isNotNull property="cscDeviceVesionNot" prepend="and">
+				<isEmpty property="cscDeviceVesion">
+				$cscDeviceVesionNot$ cs_car$suffix$.csc_device_vesion is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscMqttFlag" prepend="and">			    
+			    (<isNotNull property="cscMqttFlagNot">
+			    cs_car$suffix$.csc_mqtt_flag is null or length(cs_car$suffix$.csc_mqtt_flag) &lt; 1 or
+			    </isNotNull>$cscMqttFlagNot$ cs_car$suffix$.csc_mqtt_flag = #cscMqttFlag#)
+			</isNotEmpty>
+			<isNotNull property="cscMqttFlagNot" prepend="and">
+				<isEmpty property="cscMqttFlag">
+				$cscMqttFlagNot$ (cs_car$suffix$.csc_mqtt_flag is null or length(cs_car$suffix$.csc_mqtt_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscMask" prepend="and">
+			    $cscMaskNot$ (cs_car$suffix$.csc_mask &amp; #cscMask#) = #cscMask#
+			</isNotEmpty>
+			<isNotNull property="cscMaskNot" prepend="and">
+				<isEmpty property="cscMask">
+				$cscMaskNot$ cs_car$suffix$.csc_mask is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscStatus" prepend="and">
+			    $cscStatusNot$ cs_car$suffix$.csc_status = #cscStatus#
+			</isNotEmpty>
+			<isNotNull property="cscStatusNot" prepend="and">
+				<isEmpty property="cscStatus">
+				$cscStatusNot$ cs_car$suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆left join 条件sql片段 -->
+	<sql id="cs_car_join">
+		<dynamic>
+			<isNotEmpty property="CsCar.cscId" prepend="and">
+			    $CsCar.cscIdNot$ cs_car$CsCar.suffix$.csc_id = #CsCar.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscIdNot" prepend="and">
+				<isEmpty property="CsCar.cscId">
+				$cscIdNot$ cs_car$CsCar.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_car$CsCar.suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscHost" prepend="and">
+			    $CsCar.cscHostNot$ cs_car$CsCar.suffix$.csc_host = #CsCar.cscHost#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscHostNot" prepend="and">
+				<isEmpty property="CsCar.cscHost">
+				$cscHostNot$ cs_car$CsCar.suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscNumber" prepend="and">
+				(<isNotNull property="CsCar.cscNumberNot">
+			    cs_car$CsCar.suffix$.csc_number is null or length(cs_car$CsCar.suffix$.csc_number) &lt; 1 or
+			    </isNotNull>$CsCar.cscNumberNot$ cs_car$CsCar.suffix$.csc_number like #CsCar.cscNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscNumberNot" prepend="and">
+				<isEmpty property="CsCar.cscNumber">
+				$cscNumberNot$ (cs_car$CsCar.suffix$.csc_number is null or length(cs_car$CsCar.suffix$.csc_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscCarNo" prepend="and">
+				(<isNotNull property="CsCar.cscCarNoNot">
+			    cs_car$CsCar.suffix$.csc_car_no is null or length(cs_car$CsCar.suffix$.csc_car_no) &lt; 1 or
+			    </isNotNull>$CsCar.cscCarNoNot$ cs_car$CsCar.suffix$.csc_car_no like #CsCar.cscCarNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscCarNoNot" prepend="and">
+				<isEmpty property="CsCar.cscCarNo">
+				$cscCarNoNot$ (cs_car$CsCar.suffix$.csc_car_no is null or length(cs_car$CsCar.suffix$.csc_car_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscModel" prepend="and">
+			    $CsCar.cscModelNot$ cs_car$CsCar.suffix$.csc_model = #CsCar.cscModel#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscModelNot" prepend="and">
+				<isEmpty property="CsCar.cscModel">
+				$cscModelNot$ cs_car$CsCar.suffix$.csc_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscOutlets" prepend="and">
+			    $CsCar.cscOutletsNot$ cs_car$CsCar.suffix$.csc_outlets = #CsCar.cscOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscOutletsNot" prepend="and">
+				<isEmpty property="CsCar.cscOutlets">
+				$cscOutletsNot$ cs_car$CsCar.suffix$.csc_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscProvid" prepend="and">
+			    $CsCar.cscProvidNot$ cs_car$CsCar.suffix$.csc_provid = #CsCar.cscProvid#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscProvidNot" prepend="and">
+				<isEmpty property="CsCar.cscProvid">
+				$cscProvidNot$ cs_car$CsCar.suffix$.csc_provid is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscRebateMin" prepend="and">
+			    $CsCar.cscRebateNot$  ( cs_car$CsCar.suffix$.csc_rebate &gt;= #CsCar.cscRebateMin#
+			    <isEmpty property="CsCar.cscRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscRebateMax" prepend="and">
+				<isEmpty property="CsCar.cscRebateMin">$CsCar.cscRebateNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_rebate &lt;= #CsCar.cscRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscRebate" prepend="and">
+			    $CsCar.cscRebateNot$ cs_car$CsCar.suffix$.csc_rebate = #CsCar.cscRebate#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscRebateNot" prepend="and">
+				<isEmpty property="CsCar.cscRebateMax"><isEmpty property="CsCar.cscRebateMin"><isEmpty property="CsCar.cscRebate">
+				$cscRebateNot$ cs_car$CsCar.suffix$.csc_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscIsAd" prepend="and">
+			    $CsCar.cscIsAdNot$ cs_car$CsCar.suffix$.csc_is_ad = #CsCar.cscIsAd#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscIsAdNot" prepend="and">
+				<isEmpty property="CsCar.cscIsAd">
+				$cscIsAdNot$ cs_car$CsCar.suffix$.csc_is_ad is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscLongitudeMin" prepend="and">
+			    $CsCar.cscLongitudeNot$  ( cs_car$CsCar.suffix$.csc_longitude &gt;= #CsCar.cscLongitudeMin#
+			    <isEmpty property="CsCar.cscLongitudeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscLongitudeMax" prepend="and">
+				<isEmpty property="CsCar.cscLongitudeMin">$CsCar.cscLongitudeNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_longitude &lt;= #CsCar.cscLongitudeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscLongitude" prepend="and">
+			    $CsCar.cscLongitudeNot$ cs_car$CsCar.suffix$.csc_longitude = #CsCar.cscLongitude#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscLongitudeNot" prepend="and">
+				<isEmpty property="CsCar.cscLongitudeMax"><isEmpty property="CsCar.cscLongitudeMin"><isEmpty property="CsCar.cscLongitude">
+				$cscLongitudeNot$ cs_car$CsCar.suffix$.csc_longitude is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscLatitudeMin" prepend="and">
+			    $CsCar.cscLatitudeNot$  ( cs_car$CsCar.suffix$.csc_latitude &gt;= #CsCar.cscLatitudeMin#
+			    <isEmpty property="CsCar.cscLatitudeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscLatitudeMax" prepend="and">
+				<isEmpty property="CsCar.cscLatitudeMin">$CsCar.cscLatitudeNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_latitude &lt;= #CsCar.cscLatitudeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscLatitude" prepend="and">
+			    $CsCar.cscLatitudeNot$ cs_car$CsCar.suffix$.csc_latitude = #CsCar.cscLatitude#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscLatitudeNot" prepend="and">
+				<isEmpty property="CsCar.cscLatitudeMax"><isEmpty property="CsCar.cscLatitudeMin"><isEmpty property="CsCar.cscLatitude">
+				$cscLatitudeNot$ cs_car$CsCar.suffix$.csc_latitude is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscMobile" prepend="and">
+				(<isNotNull property="CsCar.cscMobileNot">
+			    cs_car$CsCar.suffix$.csc_mobile is null or length(cs_car$CsCar.suffix$.csc_mobile) &lt; 1 or
+			    </isNotNull>$CsCar.cscMobileNot$ cs_car$CsCar.suffix$.csc_mobile = #CsCar.cscMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscMobileNot" prepend="and">
+				<isEmpty property="CsCar.cscMobile">
+				$cscMobileNot$ (cs_car$CsCar.suffix$.csc_mobile is null or length(cs_car$CsCar.suffix$.csc_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscPassword" prepend="and">
+				(<isNotNull property="CsCar.cscPasswordNot">
+			    cs_car$CsCar.suffix$.csc_password is null or length(cs_car$CsCar.suffix$.csc_password) &lt; 1 or
+			    </isNotNull>$CsCar.cscPasswordNot$ cs_car$CsCar.suffix$.csc_password = #CsCar.cscPassword#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscPasswordNot" prepend="and">
+				<isEmpty property="CsCar.cscPassword">
+				$cscPasswordNot$ (cs_car$CsCar.suffix$.csc_password is null or length(cs_car$CsCar.suffix$.csc_password) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscOilCard" prepend="and">
+				(<isNotNull property="CsCar.cscOilCardNot">
+			    cs_car$CsCar.suffix$.csc_oil_card is null or length(cs_car$CsCar.suffix$.csc_oil_card) &lt; 1 or
+			    </isNotNull>$CsCar.cscOilCardNot$ cs_car$CsCar.suffix$.csc_oil_card = #CsCar.cscOilCard#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscOilCardNot" prepend="and">
+				<isEmpty property="CsCar.cscOilCard">
+				$cscOilCardNot$ (cs_car$CsCar.suffix$.csc_oil_card is null or length(cs_car$CsCar.suffix$.csc_oil_card) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscVin" prepend="and">
+				(<isNotNull property="CsCar.cscVinNot">
+			    cs_car$CsCar.suffix$.csc_vin is null or length(cs_car$CsCar.suffix$.csc_vin) &lt; 1 or
+			    </isNotNull>$CsCar.cscVinNot$ cs_car$CsCar.suffix$.csc_vin like #CsCar.cscVin#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscVinNot" prepend="and">
+				<isEmpty property="CsCar.cscVin">
+				$cscVinNot$ (cs_car$CsCar.suffix$.csc_vin is null or length(cs_car$CsCar.suffix$.csc_vin) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscEngineNo" prepend="and">
+				(<isNotNull property="CsCar.cscEngineNoNot">
+			    cs_car$CsCar.suffix$.csc_engine_no is null or length(cs_car$CsCar.suffix$.csc_engine_no) &lt; 1 or
+			    </isNotNull>$CsCar.cscEngineNoNot$ cs_car$CsCar.suffix$.csc_engine_no like #CsCar.cscEngineNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscEngineNoNot" prepend="and">
+				<isEmpty property="CsCar.cscEngineNo">
+				$cscEngineNoNot$ (cs_car$CsCar.suffix$.csc_engine_no is null or length(cs_car$CsCar.suffix$.csc_engine_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBuyDateStart" prepend="and">
+			    $CsCar.cscBuyDateNot$   (cs_car$CsCar.suffix$.csc_buy_date &gt;= #CsCar.cscBuyDateStart#
+			   <isEmpty property="CsCar.cscBuyDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBuyDateEnd" prepend="and">
+				<isEmpty property="CsCar.cscBuyDateStart">$CsCar.cscBuyDateNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_buy_date &lt;= #CsCar.cscBuyDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBuyDate" prepend="and">
+			    $CsCar.cscBuyDateNot$ cs_car$CsCar.suffix$.csc_buy_date = #CsCar.cscBuyDate#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBuyDateNot" prepend="and">
+				<isEmpty property="CsCar.cscBuyDateStart"><isEmpty property="CsCar.cscBuyDateEnd"><isEmpty property="CsCar.cscBuyDate">
+				$cscBuyDateNot$ cs_car$CsCar.suffix$.csc_buy_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBargainNo" prepend="and">
+				(<isNotNull property="CsCar.cscBargainNoNot">
+			    cs_car$CsCar.suffix$.csc_bargain_no is null or length(cs_car$CsCar.suffix$.csc_bargain_no) &lt; 1 or
+			    </isNotNull>$CsCar.cscBargainNoNot$ cs_car$CsCar.suffix$.csc_bargain_no = #CsCar.cscBargainNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBargainNoNot" prepend="and">
+				<isEmpty property="CsCar.cscBargainNo">
+				$cscBargainNoNot$ (cs_car$CsCar.suffix$.csc_bargain_no is null or length(cs_car$CsCar.suffix$.csc_bargain_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscTaxPriceMin" prepend="and">
+			    $CsCar.cscTaxPriceNot$  ( cs_car$CsCar.suffix$.csc_tax_price &gt;= #CsCar.cscTaxPriceMin#
+			    <isEmpty property="CsCar.cscTaxPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscTaxPriceMax" prepend="and">
+				<isEmpty property="CsCar.cscTaxPriceMin">$CsCar.cscTaxPriceNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_tax_price &lt;= #CsCar.cscTaxPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscTaxPrice" prepend="and">
+			    $CsCar.cscTaxPriceNot$ cs_car$CsCar.suffix$.csc_tax_price = #CsCar.cscTaxPrice#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscTaxPriceNot" prepend="and">
+				<isEmpty property="CsCar.cscTaxPriceMax"><isEmpty property="CsCar.cscTaxPriceMin"><isEmpty property="CsCar.cscTaxPrice">
+				$cscTaxPriceNot$ cs_car$CsCar.suffix$.csc_tax_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBuyPriceMin" prepend="and">
+			    $CsCar.cscBuyPriceNot$  ( cs_car$CsCar.suffix$.csc_buy_price &gt;= #CsCar.cscBuyPriceMin#
+			    <isEmpty property="CsCar.cscBuyPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBuyPriceMax" prepend="and">
+				<isEmpty property="CsCar.cscBuyPriceMin">$CsCar.cscBuyPriceNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_buy_price &lt;= #CsCar.cscBuyPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBuyPrice" prepend="and">
+			    $CsCar.cscBuyPriceNot$ cs_car$CsCar.suffix$.csc_buy_price = #CsCar.cscBuyPrice#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBuyPriceNot" prepend="and">
+				<isEmpty property="CsCar.cscBuyPriceMax"><isEmpty property="CsCar.cscBuyPriceMin"><isEmpty property="CsCar.cscBuyPrice">
+				$cscBuyPriceNot$ cs_car$CsCar.suffix$.csc_buy_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscCertific" prepend="and">
+				(<isNotNull property="CsCar.cscCertificNot">
+			    cs_car$CsCar.suffix$.csc_certific is null or length(cs_car$CsCar.suffix$.csc_certific) &lt; 1 or
+			    </isNotNull>$CsCar.cscCertificNot$ cs_car$CsCar.suffix$.csc_certific = #CsCar.cscCertific#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscCertificNot" prepend="and">
+				<isEmpty property="CsCar.cscCertific">
+				$cscCertificNot$ (cs_car$CsCar.suffix$.csc_certific is null or length(cs_car$CsCar.suffix$.csc_certific) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscFactoryNo" prepend="and">
+				(<isNotNull property="CsCar.cscFactoryNoNot">
+			    cs_car$CsCar.suffix$.csc_factory_no is null or length(cs_car$CsCar.suffix$.csc_factory_no) &lt; 1 or
+			    </isNotNull>$CsCar.cscFactoryNoNot$ cs_car$CsCar.suffix$.csc_factory_no = #CsCar.cscFactoryNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscFactoryNoNot" prepend="and">
+				<isEmpty property="CsCar.cscFactoryNo">
+				$cscFactoryNoNot$ (cs_car$CsCar.suffix$.csc_factory_no is null or length(cs_car$CsCar.suffix$.csc_factory_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscColor" prepend="and">
+			    $CsCar.cscColorNot$ cs_car$CsCar.suffix$.csc_color = #CsCar.cscColor#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscColorNot" prepend="and">
+				<isEmpty property="CsCar.cscColor">
+				$cscColorNot$ cs_car$CsCar.suffix$.csc_color is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscPreview" prepend="and">
+			    $CsCar.cscPreviewNot$ cs_car$CsCar.suffix$.csc_preview = #CsCar.cscPreview#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscPreviewNot" prepend="and">
+				<isEmpty property="CsCar.cscPreview">
+				$cscPreviewNot$ cs_car$CsCar.suffix$.csc_preview is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscImages" prepend="and">
+			    $CsCar.cscImagesNot$ cs_car$CsCar.suffix$.csc_images = #CsCar.cscImages#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscImagesNot" prepend="and">
+				<isEmpty property="CsCar.cscImages">
+				$cscImagesNot$ cs_car$CsCar.suffix$.csc_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscMaintKmMin" prepend="and">
+			    $CsCar.cscMaintKmNot$  ( cs_car$CsCar.suffix$.csc_maint_km &gt;= #CsCar.cscMaintKmMin#
+			    <isEmpty property="CsCar.cscMaintKmMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscMaintKmMax" prepend="and">
+				<isEmpty property="CsCar.cscMaintKmMin">$CsCar.cscMaintKmNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_maint_km &lt;= #CsCar.cscMaintKmMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscMaintKm" prepend="and">
+			    $CsCar.cscMaintKmNot$ cs_car$CsCar.suffix$.csc_maint_km = #CsCar.cscMaintKm#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscMaintKmNot" prepend="and">
+				<isEmpty property="CsCar.cscMaintKmMax"><isEmpty property="CsCar.cscMaintKmMin"><isEmpty property="CsCar.cscMaintKm">
+				$cscMaintKmNot$ cs_car$CsCar.suffix$.csc_maint_km is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscCheckInStart" prepend="and">
+			    $CsCar.cscCheckInNot$   (cs_car$CsCar.suffix$.csc_check_in &gt;= #CsCar.cscCheckInStart#
+			   <isEmpty property="CsCar.cscCheckInEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscCheckInEnd" prepend="and">
+				<isEmpty property="CsCar.cscCheckInStart">$CsCar.cscCheckInNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_check_in &lt;= #CsCar.cscCheckInEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscCheckIn" prepend="and">
+			    $CsCar.cscCheckInNot$ cs_car$CsCar.suffix$.csc_check_in = #CsCar.cscCheckIn#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscCheckInNot" prepend="and">
+				<isEmpty property="CsCar.cscCheckInStart"><isEmpty property="CsCar.cscCheckInEnd"><isEmpty property="CsCar.cscCheckIn">
+				$cscCheckInNot$ cs_car$CsCar.suffix$.csc_check_in is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscAnnualPreStart" prepend="and">
+			    $CsCar.cscAnnualPreNot$   (cs_car$CsCar.suffix$.csc_annual_pre &gt;= #CsCar.cscAnnualPreStart#
+			   <isEmpty property="CsCar.cscAnnualPreEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAnnualPreEnd" prepend="and">
+				<isEmpty property="CsCar.cscAnnualPreStart">$CsCar.cscAnnualPreNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_annual_pre &lt;= #CsCar.cscAnnualPreEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAnnualPre" prepend="and">
+			    $CsCar.cscAnnualPreNot$ cs_car$CsCar.suffix$.csc_annual_pre = #CsCar.cscAnnualPre#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscAnnualPreNot" prepend="and">
+				<isEmpty property="CsCar.cscAnnualPreStart"><isEmpty property="CsCar.cscAnnualPreEnd"><isEmpty property="CsCar.cscAnnualPre">
+				$cscAnnualPreNot$ cs_car$CsCar.suffix$.csc_annual_pre is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscAnnualStart" prepend="and">
+			    $CsCar.cscAnnualNot$   (cs_car$CsCar.suffix$.csc_annual &gt;= #CsCar.cscAnnualStart#
+			   <isEmpty property="CsCar.cscAnnualEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAnnualEnd" prepend="and">
+				<isEmpty property="CsCar.cscAnnualStart">$CsCar.cscAnnualNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_annual &lt;= #CsCar.cscAnnualEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAnnual" prepend="and">
+			    $CsCar.cscAnnualNot$ cs_car$CsCar.suffix$.csc_annual = #CsCar.cscAnnual#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscAnnualNot" prepend="and">
+				<isEmpty property="CsCar.cscAnnualStart"><isEmpty property="CsCar.cscAnnualEnd"><isEmpty property="CsCar.cscAnnual">
+				$cscAnnualNot$ cs_car$CsCar.suffix$.csc_annual is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscAnnualInfo" prepend="and">
+				(<isNotNull property="CsCar.cscAnnualInfoNot">
+			    cs_car$CsCar.suffix$.csc_annual_info is null or length(cs_car$CsCar.suffix$.csc_annual_info) &lt; 1 or
+			    </isNotNull>$CsCar.cscAnnualInfoNot$ cs_car$CsCar.suffix$.csc_annual_info like #CsCar.cscAnnualInfo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscAnnualInfoNot" prepend="and">
+				<isEmpty property="CsCar.cscAnnualInfo">
+				$cscAnnualInfoNot$ (cs_car$CsCar.suffix$.csc_annual_info is null or length(cs_car$CsCar.suffix$.csc_annual_info) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscAnnualNextStart" prepend="and">
+			    $CsCar.cscAnnualNextNot$   (cs_car$CsCar.suffix$.csc_annual_next &gt;= #CsCar.cscAnnualNextStart#
+			   <isEmpty property="CsCar.cscAnnualNextEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAnnualNextEnd" prepend="and">
+				<isEmpty property="CsCar.cscAnnualNextStart">$CsCar.cscAnnualNextNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_annual_next &lt;= #CsCar.cscAnnualNextEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAnnualNext" prepend="and">
+			    $CsCar.cscAnnualNextNot$ cs_car$CsCar.suffix$.csc_annual_next = #CsCar.cscAnnualNext#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscAnnualNextNot" prepend="and">
+				<isEmpty property="CsCar.cscAnnualNextStart"><isEmpty property="CsCar.cscAnnualNextEnd"><isEmpty property="CsCar.cscAnnualNext">
+				$cscAnnualNextNot$ cs_car$CsCar.suffix$.csc_annual_next is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscTiDateStart" prepend="and">
+			    $CsCar.cscTiDateNot$   (cs_car$CsCar.suffix$.csc_ti_date &gt;= #CsCar.cscTiDateStart#
+			   <isEmpty property="CsCar.cscTiDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscTiDateEnd" prepend="and">
+				<isEmpty property="CsCar.cscTiDateStart">$CsCar.cscTiDateNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_ti_date &lt;= #CsCar.cscTiDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscTiDate" prepend="and">
+			    $CsCar.cscTiDateNot$ cs_car$CsCar.suffix$.csc_ti_date = #CsCar.cscTiDate#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscTiDateNot" prepend="and">
+				<isEmpty property="CsCar.cscTiDateStart"><isEmpty property="CsCar.cscTiDateEnd"><isEmpty property="CsCar.cscTiDate">
+				$cscTiDateNot$ cs_car$CsCar.suffix$.csc_ti_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscTiUnitStart" prepend="and">
+			    $CsCar.cscTiUnitNot$   (cs_car$CsCar.suffix$.csc_ti_unit &gt;= #CsCar.cscTiUnitStart#
+			   <isEmpty property="CsCar.cscTiUnitEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscTiUnitEnd" prepend="and">
+				<isEmpty property="CsCar.cscTiUnitStart">$CsCar.cscTiUnitNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_ti_unit &lt;= #CsCar.cscTiUnitEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscTiUnit" prepend="and">
+			    $CsCar.cscTiUnitNot$ cs_car$CsCar.suffix$.csc_ti_unit = #CsCar.cscTiUnit#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscTiUnitNot" prepend="and">
+				<isEmpty property="CsCar.cscTiUnitStart"><isEmpty property="CsCar.cscTiUnitEnd"><isEmpty property="CsCar.cscTiUnit">
+				$cscTiUnitNot$ cs_car$CsCar.suffix$.csc_ti_unit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscTiNo" prepend="and">
+				(<isNotNull property="CsCar.cscTiNoNot">
+			    cs_car$CsCar.suffix$.csc_ti_no is null or length(cs_car$CsCar.suffix$.csc_ti_no) &lt; 1 or
+			    </isNotNull>$CsCar.cscTiNoNot$ cs_car$CsCar.suffix$.csc_ti_no = #CsCar.cscTiNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscTiNoNot" prepend="and">
+				<isEmpty property="CsCar.cscTiNo">
+				$cscTiNoNot$ (cs_car$CsCar.suffix$.csc_ti_no is null or length(cs_car$CsCar.suffix$.csc_ti_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBiDateStart" prepend="and">
+			    $CsCar.cscBiDateNot$   (cs_car$CsCar.suffix$.csc_bi_date &gt;= #CsCar.cscBiDateStart#
+			   <isEmpty property="CsCar.cscBiDateEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBiDateEnd" prepend="and">
+				<isEmpty property="CsCar.cscBiDateStart">$CsCar.cscBiDateNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_bi_date &lt;= #CsCar.cscBiDateEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBiDate" prepend="and">
+			    $CsCar.cscBiDateNot$ cs_car$CsCar.suffix$.csc_bi_date = #CsCar.cscBiDate#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBiDateNot" prepend="and">
+				<isEmpty property="CsCar.cscBiDateStart"><isEmpty property="CsCar.cscBiDateEnd"><isEmpty property="CsCar.cscBiDate">
+				$cscBiDateNot$ cs_car$CsCar.suffix$.csc_bi_date is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBiUnitStart" prepend="and">
+			    $CsCar.cscBiUnitNot$   (cs_car$CsCar.suffix$.csc_bi_unit &gt;= #CsCar.cscBiUnitStart#
+			   <isEmpty property="CsCar.cscBiUnitEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBiUnitEnd" prepend="and">
+				<isEmpty property="CsCar.cscBiUnitStart">$CsCar.cscBiUnitNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_bi_unit &lt;= #CsCar.cscBiUnitEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBiUnit" prepend="and">
+			    $CsCar.cscBiUnitNot$ cs_car$CsCar.suffix$.csc_bi_unit = #CsCar.cscBiUnit#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBiUnitNot" prepend="and">
+				<isEmpty property="CsCar.cscBiUnitStart"><isEmpty property="CsCar.cscBiUnitEnd"><isEmpty property="CsCar.cscBiUnit">
+				$cscBiUnitNot$ cs_car$CsCar.suffix$.csc_bi_unit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBiNo" prepend="and">
+				(<isNotNull property="CsCar.cscBiNoNot">
+			    cs_car$CsCar.suffix$.csc_bi_no is null or length(cs_car$CsCar.suffix$.csc_bi_no) &lt; 1 or
+			    </isNotNull>$CsCar.cscBiNoNot$ cs_car$CsCar.suffix$.csc_bi_no = #CsCar.cscBiNo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBiNoNot" prepend="and">
+				<isEmpty property="CsCar.cscBiNo">
+				$cscBiNoNot$ (cs_car$CsCar.suffix$.csc_bi_no is null or length(cs_car$CsCar.suffix$.csc_bi_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBiType" prepend="and">
+				(<isNotNull property="CsCar.cscBiTypeNot">
+			    cs_car$CsCar.suffix$.csc_bi_type is null or length(cs_car$CsCar.suffix$.csc_bi_type) &lt; 1 or
+			    </isNotNull>$CsCar.cscBiTypeNot$ cs_car$CsCar.suffix$.csc_bi_type = #CsCar.cscBiType#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBiTypeNot" prepend="and">
+				<isEmpty property="CsCar.cscBiType">
+				$cscBiTypeNot$ (cs_car$CsCar.suffix$.csc_bi_type is null or length(cs_car$CsCar.suffix$.csc_bi_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBiLimitMin" prepend="and">
+			    $CsCar.cscBiLimitNot$  ( cs_car$CsCar.suffix$.csc_bi_limit &gt;= #CsCar.cscBiLimitMin#
+			    <isEmpty property="CsCar.cscBiLimitMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBiLimitMax" prepend="and">
+				<isEmpty property="CsCar.cscBiLimitMin">$CsCar.cscBiLimitNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_bi_limit &lt;= #CsCar.cscBiLimitMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscBiLimit" prepend="and">
+			    $CsCar.cscBiLimitNot$ cs_car$CsCar.suffix$.csc_bi_limit = #CsCar.cscBiLimit#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBiLimitNot" prepend="and">
+				<isEmpty property="CsCar.cscBiLimitMax"><isEmpty property="CsCar.cscBiLimitMin"><isEmpty property="CsCar.cscBiLimit">
+				$cscBiLimitNot$ cs_car$CsCar.suffix$.csc_bi_limit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscBiCompany" prepend="and">
+				(<isNotNull property="CsCar.cscBiCompanyNot">
+			    cs_car$CsCar.suffix$.csc_bi_company is null or length(cs_car$CsCar.suffix$.csc_bi_company) &lt; 1 or
+			    </isNotNull>$CsCar.cscBiCompanyNot$ cs_car$CsCar.suffix$.csc_bi_company = #CsCar.cscBiCompany#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscBiCompanyNot" prepend="and">
+				<isEmpty property="CsCar.cscBiCompany">
+				$cscBiCompanyNot$ (cs_car$CsCar.suffix$.csc_bi_company is null or length(cs_car$CsCar.suffix$.csc_bi_company) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscEditor" prepend="and">
+			    $CsCar.cscEditorNot$ cs_car$CsCar.suffix$.csc_editor = #CsCar.cscEditor#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscEditorNot" prepend="and">
+				<isEmpty property="CsCar.cscEditor">
+				$cscEditorNot$ cs_car$CsCar.suffix$.csc_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscUpdateTimeStart" prepend="and">
+			    $CsCar.cscUpdateTimeNot$   (cs_car$CsCar.suffix$.csc_update_time &gt;= #CsCar.cscUpdateTimeStart#
+			   <isEmpty property="CsCar.cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsCar.cscUpdateTimeStart">$CsCar.cscUpdateTimeNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_update_time &lt;= #CsCar.cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscUpdateTime" prepend="and">
+			    $CsCar.cscUpdateTimeNot$ cs_car$CsCar.suffix$.csc_update_time = #CsCar.cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscUpdateTimeNot" prepend="and">
+				<isEmpty property="CsCar.cscUpdateTimeStart"><isEmpty property="CsCar.cscUpdateTimeEnd"><isEmpty property="CsCar.cscUpdateTime">
+				$cscUpdateTimeNot$ cs_car$CsCar.suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscAddTimeStart" prepend="and">
+			    $CsCar.cscAddTimeNot$   (cs_car$CsCar.suffix$.csc_add_time &gt;= #CsCar.cscAddTimeStart#
+			   <isEmpty property="CsCar.cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAddTimeEnd" prepend="and">
+				<isEmpty property="CsCar.cscAddTimeStart">$CsCar.cscAddTimeNot$   (</isEmpty>
+			    cs_car$CsCar.suffix$.csc_add_time &lt;= #CsCar.cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCar.cscAddTime" prepend="and">
+			    $CsCar.cscAddTimeNot$ cs_car$CsCar.suffix$.csc_add_time = #CsCar.cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscAddTimeNot" prepend="and">
+				<isEmpty property="CsCar.cscAddTimeStart"><isEmpty property="CsCar.cscAddTimeEnd"><isEmpty property="CsCar.cscAddTime">
+				$cscAddTimeNot$ cs_car$CsCar.suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscRemark" prepend="and">
+				(<isNotNull property="CsCar.cscRemarkNot">
+			    cs_car$CsCar.suffix$.csc_remark is null or length(cs_car$CsCar.suffix$.csc_remark) &lt; 1 or
+			    </isNotNull>$CsCar.cscRemarkNot$ cs_car$CsCar.suffix$.csc_remark like #CsCar.cscRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscRemarkNot" prepend="and">
+				<isEmpty property="CsCar.cscRemark">
+				$cscRemarkNot$ (cs_car$CsCar.suffix$.csc_remark is null or length(cs_car$CsCar.suffix$.csc_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscMemo" prepend="and">
+				(<isNotNull property="CsCar.cscMemoNot">
+			    cs_car$CsCar.suffix$.csc_memo is null or length(cs_car$CsCar.suffix$.csc_memo) &lt; 1 or
+			    </isNotNull>$CsCar.cscMemoNot$ cs_car$CsCar.suffix$.csc_memo like #CsCar.cscMemo#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscMemoNot" prepend="and">
+				<isEmpty property="CsCar.cscMemo">
+				$cscMemoNot$ (cs_car$CsCar.suffix$.csc_memo is null or length(cs_car$CsCar.suffix$.csc_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscOnPsd" prepend="and">
+				(<isNotNull property="CsCar.cscOnPsdNot">
+			    cs_car$CsCar.suffix$.csc_on_psd is null or length(cs_car$CsCar.suffix$.csc_on_psd) &lt; 1 or
+			    </isNotNull>$CsCar.cscOnPsdNot$ cs_car$CsCar.suffix$.csc_on_psd = #CsCar.cscOnPsd#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscOnPsdNot" prepend="and">
+				<isEmpty property="CsCar.cscOnPsd">
+				$cscOnPsdNot$ (cs_car$CsCar.suffix$.csc_on_psd is null or length(cs_car$CsCar.suffix$.csc_on_psd) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscSetup" prepend="and">
+			    $CsCar.cscSetupNot$ cs_car$CsCar.suffix$.csc_setup = #CsCar.cscSetup#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscSetupNot" prepend="and">
+				<isEmpty property="CsCar.cscSetup">
+				$cscSetupNot$ cs_car$CsCar.suffix$.csc_setup is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscDeviceVesion" prepend="and">
+			    $CsCar.cscDeviceVesionNot$ cs_car$CsCar.suffix$.csc_device_vesion = #CsCar.cscDeviceVesion#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscDeviceVesionNot" prepend="and">
+				<isEmpty property="CsCar.cscDeviceVesion">
+				$cscDeviceVesionNot$ cs_car$CsCar.suffix$.csc_device_vesion is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscMqttFlag" prepend="and">
+				(<isNotNull property="CsCar.cscMqttFlagNot">
+			    cs_car$CsCar.suffix$.csc_mqtt_flag is null or length(cs_car$CsCar.suffix$.csc_mqtt_flag) &lt; 1 or
+			    </isNotNull>$CsCar.cscMqttFlagNot$ cs_car$CsCar.suffix$.csc_mqtt_flag = #CsCar.cscMqttFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscMqttFlagNot" prepend="and">
+				<isEmpty property="CsCar.cscMqttFlag">
+				$cscMqttFlagNot$ (cs_car$CsCar.suffix$.csc_mqtt_flag is null or length(cs_car$CsCar.suffix$.csc_mqtt_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscMask" prepend="and">
+			    $CsCar.cscMaskNot$ (cs_car$CsCar.suffix$.csc_mask &amp; #CsCar.cscMask#) = #CsCar.cscMask#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscMaskNot" prepend="and">
+				<isEmpty property="CsCar.cscMask">
+				$cscMaskNot$ cs_car$CsCar.suffix$.csc_mask is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCar.cscStatus" prepend="and">
+			    $CsCar.cscStatusNot$ cs_car$CsCar.suffix$.csc_status = #CsCar.cscStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCar.cscStatusNot" prepend="and">
+				<isEmpty property="CsCar.cscStatus">
+				$cscStatusNot$ cs_car$CsCar.suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

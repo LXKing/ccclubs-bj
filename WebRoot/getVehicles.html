@@ -1,0 +1,34 @@
+<s:if test="#request.records.size()>0">
+	<ul>
+		<s:iterator value="#request.records" id="item" status="i">
+			<s:if test="#i.isLast() == true">
+				<li class="omega">
+			</s:if>
+			<s:else>
+				<li>
+			</s:else>
+			${lz:set("car",(get:CsCar(item.cscId)))}
+			<a href="#" class="ccc-car-thumb"> <img src="${cc:thumb(car)}" /> <s:if test="#item.cscIsAd == 1">
+					<i class="ad"></i>
+					<!--if 宣传车-->
+				</s:if> <span class="ccc-thumb-cover"></span> </a>
+			<div class="ccc-desc">
+				<span class="model">${item.cscmName}</span>
+				<span class="price">天租：￥${item.pricesDay}元</span>
+				<span class="price">小时：￥${item.pricesHour}元</span>
+				<button class="reserve" onclick="rereserve(${csOutlets.csoArea},${csOutlets.csoId},${csOutlets.csoHost})"></button>
+			</div>
+			</li>
+		</s:iterator>
+	</ul>
+</s:if>
+<s:else>
+	<div id='ccc-tooltip'>
+		没有可租车辆
+	</div>
+</s:else>
+<script type="text/javascript">
+	function rereserve(area,csoid,csoHost){
+			location.href = '/reserve.html?csoHost='+csoHost+'&csoArea='+area+'&csoOutlets='+csoid+'&src=map';
+		};
+</script>

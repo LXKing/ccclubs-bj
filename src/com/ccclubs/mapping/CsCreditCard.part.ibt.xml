@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsCreditCard_part">	
+	<!-- 信用卡条件sql片段  -->
+	<sql id="cs_credit_card_dynamic">
+		<dynamic>
+			<isNotEmpty property="csccId" prepend="and">
+			    $csccIdNot$ cs_credit_card$suffix$.cscc_id = #csccId#
+			</isNotEmpty>
+			<isNotNull property="csccIdNot" prepend="and">
+				<isEmpty property="csccId">
+				$csccIdNot$ cs_credit_card$suffix$.cscc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccNo" prepend="and">			    
+			    (<isNotNull property="csccNoNot">
+			    cs_credit_card$suffix$.cscc_no is null or length(cs_credit_card$suffix$.cscc_no) &lt; 1 or
+			    </isNotNull>$csccNoNot$ cs_credit_card$suffix$.cscc_no = #csccNo#)
+			</isNotEmpty>
+			<isNotNull property="csccNoNot" prepend="and">
+				<isEmpty property="csccNo">
+				$csccNoNot$ (cs_credit_card$suffix$.cscc_no is null or length(cs_credit_card$suffix$.cscc_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccMember" prepend="and">
+			    $csccMemberNot$ cs_credit_card$suffix$.cscc_member = #csccMember#
+			</isNotEmpty>
+			<isNotNull property="csccMemberNot" prepend="and">
+				<isEmpty property="csccMember">
+				$csccMemberNot$ cs_credit_card$suffix$.cscc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccLimitMin" prepend="and">
+			    $csccLimitNot$  ( cs_credit_card$suffix$.cscc_limit &gt;= #csccLimitMin#
+			    <isEmpty property="csccLimitMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csccLimitMax" prepend="and">
+				<isEmpty property="csccLimitMin">$csccLimitNot$   (</isEmpty>
+			    cs_credit_card$suffix$.cscc_limit &lt;= #csccLimitMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csccLimit" prepend="and">
+			    $csccLimitNot$ cs_credit_card$suffix$.cscc_limit = #csccLimit#
+			</isNotEmpty>
+			<isNotNull property="csccLimitNot" prepend="and">
+				<isEmpty property="csccLimitMax"><isEmpty property="csccLimitMin"><isEmpty property="csccLimit">
+				$csccLimitNot$ cs_credit_card$suffix$.cscc_limit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccScopeMin" prepend="and">
+			    $csccScopeNot$  ( cs_credit_card$suffix$.cscc_scope &gt;= #csccScopeMin#
+			    <isEmpty property="csccScopeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csccScopeMax" prepend="and">
+				<isEmpty property="csccScopeMin">$csccScopeNot$   (</isEmpty>
+			    cs_credit_card$suffix$.cscc_scope &lt;= #csccScopeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csccScope" prepend="and">
+			    $csccScopeNot$ cs_credit_card$suffix$.cscc_scope = #csccScope#
+			</isNotEmpty>
+			<isNotNull property="csccScopeNot" prepend="and">
+				<isEmpty property="csccScopeMax"><isEmpty property="csccScopeMin"><isEmpty property="csccScope">
+				$csccScopeNot$ cs_credit_card$suffix$.cscc_scope is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccTypeMin" prepend="and">
+			    $csccTypeNot$  ( cs_credit_card$suffix$.cscc_type &gt;= #csccTypeMin#
+			    <isEmpty property="csccTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csccTypeMax" prepend="and">
+				<isEmpty property="csccTypeMin">$csccTypeNot$   (</isEmpty>
+			    cs_credit_card$suffix$.cscc_type &lt;= #csccTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csccType" prepend="and">
+			    $csccTypeNot$ cs_credit_card$suffix$.cscc_type = #csccType#
+			</isNotEmpty>
+			<isNotNull property="csccTypeNot" prepend="and">
+				<isEmpty property="csccTypeMax"><isEmpty property="csccTypeMin"><isEmpty property="csccType">
+				$csccTypeNot$ cs_credit_card$suffix$.cscc_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccRemark" prepend="and">			    
+			    (<isNotNull property="csccRemarkNot">
+			    cs_credit_card$suffix$.cscc_remark is null or length(cs_credit_card$suffix$.cscc_remark) &lt; 1 or
+			    </isNotNull>$csccRemarkNot$ cs_credit_card$suffix$.cscc_remark like #csccRemark#)
+			</isNotEmpty>
+			<isNotNull property="csccRemarkNot" prepend="and">
+				<isEmpty property="csccRemark">
+				$csccRemarkNot$ (cs_credit_card$suffix$.cscc_remark is null or length(cs_credit_card$suffix$.cscc_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccData" prepend="and">			    
+			    (<isNotNull property="csccDataNot">
+			    cs_credit_card$suffix$.cscc_data is null or length(cs_credit_card$suffix$.cscc_data) &lt; 1 or
+			    </isNotNull>$csccDataNot$ cs_credit_card$suffix$.cscc_data = #csccData#)
+			</isNotEmpty>
+			<isNotNull property="csccDataNot" prepend="and">
+				<isEmpty property="csccData">
+				$csccDataNot$ (cs_credit_card$suffix$.cscc_data is null or length(cs_credit_card$suffix$.cscc_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccMaskMin" prepend="and">
+			    $csccMaskNot$  ( cs_credit_card$suffix$.cscc_mask &gt;= #csccMaskMin#
+			    <isEmpty property="csccMaskMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csccMaskMax" prepend="and">
+				<isEmpty property="csccMaskMin">$csccMaskNot$   (</isEmpty>
+			    cs_credit_card$suffix$.cscc_mask &lt;= #csccMaskMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csccMask" prepend="and">
+			    $csccMaskNot$ cs_credit_card$suffix$.cscc_mask = #csccMask#
+			</isNotEmpty>
+			<isNotNull property="csccMaskNot" prepend="and">
+				<isEmpty property="csccMaskMax"><isEmpty property="csccMaskMin"><isEmpty property="csccMask">
+				$csccMaskNot$ cs_credit_card$suffix$.cscc_mask is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccUpdateTimeStart" prepend="and">
+			    $csccUpdateTimeNot$   (cs_credit_card$suffix$.cscc_update_time &gt;= #csccUpdateTimeStart#
+			   <isEmpty property="csccUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csccUpdateTimeEnd" prepend="and">
+				<isEmpty property="csccUpdateTimeStart">$csccUpdateTimeNot$   (</isEmpty>
+			    cs_credit_card$suffix$.cscc_update_time &lt;= #csccUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csccUpdateTime" prepend="and">
+			    $csccUpdateTimeNot$ cs_credit_card$suffix$.cscc_update_time = #csccUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csccUpdateTimeNot" prepend="and">
+				<isEmpty property="csccUpdateTimeStart"><isEmpty property="csccUpdateTimeEnd"><isEmpty property="csccUpdateTime">
+				$csccUpdateTimeNot$ cs_credit_card$suffix$.cscc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccAddTimeStart" prepend="and">
+			    $csccAddTimeNot$   (cs_credit_card$suffix$.cscc_add_time &gt;= #csccAddTimeStart#
+			   <isEmpty property="csccAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csccAddTimeEnd" prepend="and">
+				<isEmpty property="csccAddTimeStart">$csccAddTimeNot$   (</isEmpty>
+			    cs_credit_card$suffix$.cscc_add_time &lt;= #csccAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="csccAddTime" prepend="and">
+			    $csccAddTimeNot$ cs_credit_card$suffix$.cscc_add_time = #csccAddTime#
+			</isNotEmpty>
+			<isNotNull property="csccAddTimeNot" prepend="and">
+				<isEmpty property="csccAddTimeStart"><isEmpty property="csccAddTimeEnd"><isEmpty property="csccAddTime">
+				$csccAddTimeNot$ cs_credit_card$suffix$.cscc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccStatus" prepend="and">
+			    $csccStatusNot$ cs_credit_card$suffix$.cscc_status = #csccStatus#
+			</isNotEmpty>
+			<isNotNull property="csccStatusNot" prepend="and">
+				<isEmpty property="csccStatus">
+				$csccStatusNot$ cs_credit_card$suffix$.cscc_status is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csccImage" prepend="and">			    
+			    (<isNotNull property="csccImageNot">
+			    cs_credit_card$suffix$.cscc_image is null or length(cs_credit_card$suffix$.cscc_image) &lt; 1 or
+			    </isNotNull>$csccImageNot$ cs_credit_card$suffix$.cscc_image = #csccImage#)
+			</isNotEmpty>
+			<isNotNull property="csccImageNot" prepend="and">
+				<isEmpty property="csccImage">
+				$csccImageNot$ (cs_credit_card$suffix$.cscc_image is null or length(cs_credit_card$suffix$.cscc_image) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 信用卡left join 条件sql片段 -->
+	<sql id="cs_credit_card_join">
+		<dynamic>
+			<isNotEmpty property="CsCreditCard.csccId" prepend="and">
+			    $CsCreditCard.csccIdNot$ cs_credit_card$CsCreditCard.suffix$.cscc_id = #CsCreditCard.csccId#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccIdNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccId">
+				$csccIdNot$ cs_credit_card$CsCreditCard.suffix$.cscc_id is null
+				</isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCreditCard.csccNo" prepend="and">			    
+				    (<isNotNull property="CsCreditCard.csccNoNot">
+				    cs_credit_card$CsCreditCard.suffix$.cscc_no is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_no) &lt; 1 or
+				    </isNotNull>$CsCreditCard.csccNoNot$ cs_credit_card$CsCreditCard.suffix$.cscc_no = #CsCreditCard.csccNo#)
+				</isNotEmpty>
+				<isNotNull property="CsCreditCard.csccNoNot" prepend="and">
+					<isEmpty property="CsCreditCard.csccNo">
+					$csccNoNot$ (cs_credit_card$CsCreditCard.suffix$.cscc_no is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_no) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCreditCard.csccMember" prepend="and">
+			    $CsCreditCard.csccMemberNot$ cs_credit_card$CsCreditCard.suffix$.cscc_member = #CsCreditCard.csccMember#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccMemberNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccMember">
+				$csccMemberNot$ cs_credit_card$CsCreditCard.suffix$.cscc_member is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCreditCard.csccLimitMin" prepend="and">
+			    $CsCreditCard.csccLimitNot$  ( cs_credit_card$CsCreditCard.suffix$.cscc_limit &gt;= #CsCreditCard.csccLimitMin#
+			    <isEmpty property="CsCreditCard.csccLimitMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccLimitMax" prepend="and">
+				<isEmpty property="CsCreditCard.csccLimitMin">$CsCreditCard.csccLimitNot$   (</isEmpty>
+			    cs_credit_card$CsCreditCard.suffix$.cscc_limit &lt;= #CsCreditCard.csccLimitMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccLimit" prepend="and">
+			    $CsCreditCard.csccLimitNot$ cs_credit_card$CsCreditCard.suffix$.cscc_limit = #CsCreditCard.csccLimit#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccLimitNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccLimitMax"><isEmpty property="CsCreditCard.csccLimitMin"><isEmpty property="CsCreditCard.csccLimit">
+				$csccLimitNot$ cs_credit_card$CsCreditCard.suffix$.cscc_limit is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditCard.csccScopeMin" prepend="and">
+			    $CsCreditCard.csccScopeNot$  ( cs_credit_card$CsCreditCard.suffix$.cscc_scope &gt;= #CsCreditCard.csccScopeMin#
+			    <isEmpty property="CsCreditCard.csccScopeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccScopeMax" prepend="and">
+				<isEmpty property="CsCreditCard.csccScopeMin">$CsCreditCard.csccScopeNot$   (</isEmpty>
+			    cs_credit_card$CsCreditCard.suffix$.cscc_scope &lt;= #CsCreditCard.csccScopeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccScope" prepend="and">
+			    $CsCreditCard.csccScopeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_scope = #CsCreditCard.csccScope#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccScopeNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccScopeMax"><isEmpty property="CsCreditCard.csccScopeMin"><isEmpty property="CsCreditCard.csccScope">
+				$csccScopeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_scope is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditCard.csccTypeMin" prepend="and">
+			    $CsCreditCard.csccTypeNot$  ( cs_credit_card$CsCreditCard.suffix$.cscc_type &gt;= #CsCreditCard.csccTypeMin#
+			    <isEmpty property="CsCreditCard.csccTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccTypeMax" prepend="and">
+				<isEmpty property="CsCreditCard.csccTypeMin">$CsCreditCard.csccTypeNot$   (</isEmpty>
+			    cs_credit_card$CsCreditCard.suffix$.cscc_type &lt;= #CsCreditCard.csccTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccType" prepend="and">
+			    $CsCreditCard.csccTypeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_type = #CsCreditCard.csccType#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccTypeNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccTypeMax"><isEmpty property="CsCreditCard.csccTypeMin"><isEmpty property="CsCreditCard.csccType">
+				$csccTypeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCreditCard.csccRemark" prepend="and">			    
+				    (<isNotNull property="CsCreditCard.csccRemarkNot">
+				    cs_credit_card$CsCreditCard.suffix$.cscc_remark is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_remark) &lt; 1 or
+				    </isNotNull>$CsCreditCard.csccRemarkNot$ cs_credit_card$CsCreditCard.suffix$.cscc_remark like #CsCreditCard.csccRemark#)
+				</isNotEmpty>
+				<isNotNull property="CsCreditCard.csccRemarkNot" prepend="and">
+					<isEmpty property="CsCreditCard.csccRemark">
+					$csccRemarkNot$ (cs_credit_card$CsCreditCard.suffix$.cscc_remark is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_remark) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCreditCard.csccData" prepend="and">			    
+				    (<isNotNull property="CsCreditCard.csccDataNot">
+				    cs_credit_card$CsCreditCard.suffix$.cscc_data is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_data) &lt; 1 or
+				    </isNotNull>$CsCreditCard.csccDataNot$ cs_credit_card$CsCreditCard.suffix$.cscc_data like #CsCreditCard.csccData#)
+				</isNotEmpty>
+				<isNotNull property="CsCreditCard.csccDataNot" prepend="and">
+					<isEmpty property="CsCreditCard.csccData">
+					$csccDataNot$ (cs_credit_card$CsCreditCard.suffix$.cscc_data is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_data) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCreditCard.csccMaskMin" prepend="and">
+			    $CsCreditCard.csccMaskNot$  ( cs_credit_card$CsCreditCard.suffix$.cscc_mask &gt;= #CsCreditCard.csccMaskMin#
+			    <isEmpty property="CsCreditCard.csccMaskMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccMaskMax" prepend="and">
+				<isEmpty property="CsCreditCard.csccMaskMin">$CsCreditCard.csccMaskNot$   (</isEmpty>
+			    cs_credit_card$CsCreditCard.suffix$.cscc_mask &lt;= #CsCreditCard.csccMaskMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditCard.csccMask" prepend="and">
+			    $CsCreditCard.csccMaskNot$ cs_credit_card$CsCreditCard.suffix$.cscc_mask = #CsCreditCard.csccMask#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccMaskNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccMaskMax"><isEmpty property="CsCreditCard.csccMaskMin"><isEmpty property="CsCreditCard.csccMask">
+				$csccMaskNot$ cs_credit_card$CsCreditCard.suffix$.cscc_mask is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCreditCard.csccUpdateTimeStart" prepend="and">
+				    $CsCreditCard.csccUpdateTimeNot$   (cs_credit_card$CsCreditCard.suffix$.cscc_update_time &gt;= #CsCreditCard.csccUpdateTimeStart#
+				   <isEmpty property="CsCreditCard.csccUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCreditCard.csccUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsCreditCard.csccUpdateTimeStart">$CsCreditCard.csccUpdateTimeNot$   (</isEmpty>
+				    cs_credit_card$CsCreditCard.suffix$.cscc_update_time &lt;= #CsCreditCard.csccUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCreditCard.csccUpdateTime" prepend="and">
+				    $CsCreditCard.csccUpdateTimeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_update_time = #CsCreditCard.csccUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsCreditCard.csccUpdateTimeNot" prepend="and">
+					<isEmpty property="CsCreditCard.csccUpdateTimeStart"><isEmpty property="CsCreditCard.csccUpdateTimeEnd"><isEmpty property="CsCreditCard.csccUpdateTime">
+					$csccUpdateTimeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCreditCard.csccAddTimeStart" prepend="and">
+				    $CsCreditCard.csccAddTimeNot$   (cs_credit_card$CsCreditCard.suffix$.cscc_add_time &gt;= #CsCreditCard.csccAddTimeStart#
+				   <isEmpty property="CsCreditCard.csccAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCreditCard.csccAddTimeEnd" prepend="and">
+					<isEmpty property="CsCreditCard.csccAddTimeStart">$CsCreditCard.csccAddTimeNot$   (</isEmpty>
+				    cs_credit_card$CsCreditCard.suffix$.cscc_add_time &lt;= #CsCreditCard.csccAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCreditCard.csccAddTime" prepend="and">
+				    $CsCreditCard.csccAddTimeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_add_time = #CsCreditCard.csccAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsCreditCard.csccAddTimeNot" prepend="and">
+					<isEmpty property="CsCreditCard.csccAddTimeStart"><isEmpty property="CsCreditCard.csccAddTimeEnd"><isEmpty property="CsCreditCard.csccAddTime">
+					$csccAddTimeNot$ cs_credit_card$CsCreditCard.suffix$.cscc_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCreditCard.csccStatus" prepend="and">
+			    $CsCreditCard.csccStatusNot$ cs_credit_card$CsCreditCard.suffix$.cscc_status = #CsCreditCard.csccStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCreditCard.csccStatusNot" prepend="and">
+				<isEmpty property="CsCreditCard.csccStatus">
+				$csccStatusNot$ cs_credit_card$CsCreditCard.suffix$.cscc_status is null
+				</isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCreditCard.csccImage" prepend="and">			    
+				    (<isNotNull property="CsCreditCard.csccImageNot">
+				    cs_credit_card$CsCreditCard.suffix$.cscc_image is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_image) &lt; 1 or
+				    </isNotNull>$CsCreditCard.csccImageNot$ cs_credit_card$CsCreditCard.suffix$.cscc_image = #CsCreditCard.csccImage#)
+				</isNotEmpty>
+				<isNotNull property="CsCreditCard.csccImageNot" prepend="and">
+					<isEmpty property="CsCreditCard.csccImage">
+					$csccImageNot$ (cs_credit_card$CsCreditCard.suffix$.cscc_image is null or length(cs_credit_card$CsCreditCard.suffix$.cscc_image) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+	<!-- 会员常用地址之SQL映射 -->
+	<resultMap id="CsFavoriteAddress" class="com.ccclubs.model.CsFavoriteAddress">
+		<result property="csfaId" column="csfa_id"/>
+		<result property="csfaMember" column="csfa_member"/>
+		<result property="csfaType" column="csfa_type"/>
+		<result property="csfaAddress" column="csfa_address"/>
+		<result property="csfaDescription" column="csfa_description"/>
+		<result property="csfaLatitude" column="csfa_latitude"/>
+		<result property="csfaLongitude" column="csfa_longitude"/>
+		<result property="csfaStatus" column="csfa_status"/>
+		<result property="csfaAddTime" column="csfa_add_time"/>
+		<result property="csfaUpdateTime" column="csfa_update_time"/>
+	</resultMap>
+		
+	<!-- 获取所有会员常用地址 -->
+	<select id="getCsFavoriteAddressList" resultMap="CsFavoriteAddress">
+		select cs_favorite_address$suffix$.* from cs_favorite_address$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.csfa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsFavoriteAddress_part.cs_favorite_address_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csfa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员常用地址分页 -->
+	<select id="getCsFavoriteAddressPage" parameterClass="java.util.HashMap" resultMap="CsFavoriteAddress">
+		select cs_favorite_address$suffix$.* from cs_favorite_address$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.csfa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsFavoriteAddress_part.cs_favorite_address_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csfa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员常用地址总数 -->
+	<select id="getCsFavoriteAddressEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_favorite_address$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.csfa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsFavoriteAddress_part.cs_favorite_address_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员常用地址 -->
+	<select id="getCsFavoriteAddressById" parameterClass="java.util.HashMap" resultMap="CsFavoriteAddress">
+		select cs_favorite_address$suffix$.* from cs_favorite_address$suffix$
+		where csfa_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员常用地址 -->
+	<insert id="saveCsFavoriteAddress"  parameterClass="com.ccclubs.model.CsFavoriteAddress">
+		insert into cs_favorite_address$suffix$
+		(
+			cs_favorite_address$suffix$.csfa_member
+			,cs_favorite_address$suffix$.csfa_type
+			,cs_favorite_address$suffix$.csfa_address
+			,cs_favorite_address$suffix$.csfa_description
+			,cs_favorite_address$suffix$.csfa_latitude
+			,cs_favorite_address$suffix$.csfa_longitude
+			,cs_favorite_address$suffix$.csfa_status
+			,cs_favorite_address$suffix$.csfa_add_time
+			,cs_favorite_address$suffix$.csfa_update_time
+		)
+		values(
+			<isNotNull property="csfaMember" prepend="">
+				#csfaMember#
+			</isNotNull>
+			<isNull property="csfaMember" prepend="">
+				null
+			</isNull>	
+			<isNotNull property="csfaType" prepend=",">
+				#csfaType#
+			</isNotNull>
+			<isNull property="csfaType" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaAddress" prepend=",">
+				#csfaAddress#
+			</isNotNull>
+			<isNull property="csfaAddress" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaDescription" prepend=",">
+				#csfaDescription#
+			</isNotNull>
+			<isNull property="csfaDescription" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaLatitude" prepend=",">
+				#csfaLatitude#
+			</isNotNull>
+			<isNull property="csfaLatitude" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaLongitude" prepend=",">
+				#csfaLongitude#
+			</isNotNull>
+			<isNull property="csfaLongitude" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaStatus" prepend=",">
+				#csfaStatus#
+			</isNotNull>
+			<isNull property="csfaStatus" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaAddTime" prepend=",">
+				#csfaAddTime#
+			</isNotNull>
+			<isNull property="csfaAddTime" prepend=",">
+				null
+			</isNull>	
+			<isNotNull property="csfaUpdateTime" prepend=",">
+				#csfaUpdateTime#
+			</isNotNull>
+			<isNull property="csfaUpdateTime" prepend=",">
+				null
+			</isNull>	
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员常用地址 -->
+	<update id="updateCsFavoriteAddress"  parameterClass="com.ccclubs.model.CsFavoriteAddress">
+		update cs_favorite_address$suffix$ set
+			<isNotNull property="csfaMember" prepend="">
+				cs_favorite_address$suffix$.csfa_member = #csfaMember#
+			</isNotNull>
+			<isNull property="csfaMember" prepend="">
+				cs_favorite_address$suffix$.csfa_member = null
+			</isNull>				
+			<isNotNull property="csfaType" prepend=",">
+				cs_favorite_address$suffix$.csfa_type = #csfaType#
+			</isNotNull>
+			<isNull property="csfaType" prepend=",">
+				cs_favorite_address$suffix$.csfa_type = null
+			</isNull>				
+			<isNotNull property="csfaAddress" prepend=",">
+				cs_favorite_address$suffix$.csfa_address = #csfaAddress#
+			</isNotNull>
+			<isNull property="csfaAddress" prepend=",">
+				cs_favorite_address$suffix$.csfa_address = null
+			</isNull>				
+			<isNotNull property="csfaDescription" prepend=",">
+				cs_favorite_address$suffix$.csfa_description = #csfaDescription#
+			</isNotNull>
+			<isNull property="csfaDescription" prepend=",">
+				cs_favorite_address$suffix$.csfa_description = null
+			</isNull>				
+			<isNotNull property="csfaLatitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_latitude = #csfaLatitude#
+			</isNotNull>
+			<isNull property="csfaLatitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_latitude = null
+			</isNull>				
+			<isNotNull property="csfaLongitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_longitude = #csfaLongitude#
+			</isNotNull>
+			<isNull property="csfaLongitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_longitude = null
+			</isNull>				
+			<isNotNull property="csfaStatus" prepend=",">
+				cs_favorite_address$suffix$.csfa_status = #csfaStatus#
+			</isNotNull>
+			<isNull property="csfaStatus" prepend=",">
+				cs_favorite_address$suffix$.csfa_status = null
+			</isNull>				
+			<isNotNull property="csfaAddTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_add_time = #csfaAddTime#
+			</isNotNull>
+			<isNull property="csfaAddTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_add_time = null
+			</isNull>				
+			<isNotNull property="csfaUpdateTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_update_time = #csfaUpdateTime#
+			</isNotNull>
+			<isNull property="csfaUpdateTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_update_time = null
+			</isNull>				
+		where
+			csfa_id=#csfaId#
+	</update>
+	
+	<!-- 更新会员常用地址非空字段 -->
+	<update id="updateCsFavoriteAddress$NotNull"  parameterClass="com.ccclubs.model.CsFavoriteAddress">
+		update cs_favorite_address$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csfaMember" prepend=",">
+				cs_favorite_address$suffix$.csfa_member = #csfaMember#
+			</isNotNull>		
+			<isNotNull property="csfaType" prepend=",">
+				cs_favorite_address$suffix$.csfa_type = #csfaType#
+			</isNotNull>		
+			<isNotNull property="csfaAddress" prepend=",">
+				cs_favorite_address$suffix$.csfa_address = #csfaAddress#
+			</isNotNull>		
+			<isNotNull property="csfaDescription" prepend=",">
+				cs_favorite_address$suffix$.csfa_description = #csfaDescription#
+			</isNotNull>		
+			<isNotNull property="csfaLatitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_latitude = #csfaLatitude#
+			</isNotNull>		
+			<isNotNull property="csfaLongitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_longitude = #csfaLongitude#
+			</isNotNull>		
+			<isNotNull property="csfaStatus" prepend=",">
+				cs_favorite_address$suffix$.csfa_status = #csfaStatus#
+			</isNotNull>		
+			<isNotNull property="csfaAddTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_add_time = #csfaAddTime#
+			</isNotNull>		
+			<isNotNull property="csfaUpdateTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_update_time = #csfaUpdateTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csfa_id=#csfaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员常用地址 -->
+	<delete id="deleteCsFavoriteAddressById" parameterClass="java.util.HashMap">
+		delete from cs_favorite_address$suffix$ where csfa_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新会员常用地址 -->
+	<update id="updateCsFavoriteAddressBy"  parameterClass="java.util.HashMap">
+		update cs_favorite_address$suffix$ set		
+			csfa_id=csfa_id
+			<isNotNull property="V_csfaId" prepend=",">
+				cs_favorite_address$suffix$.csfa_id = #V_csfaId#
+			</isNotNull>		
+			<isNotNull property="V_csfaMember" prepend=",">
+				cs_favorite_address$suffix$.csfa_member = #V_csfaMember#
+			</isNotNull>		
+			<isNotNull property="V_csfaType" prepend=",">
+				cs_favorite_address$suffix$.csfa_type = #V_csfaType#
+			</isNotNull>		
+			<isNotNull property="V_csfaAddress" prepend=",">
+				cs_favorite_address$suffix$.csfa_address = #V_csfaAddress#
+			</isNotNull>		
+			<isNotNull property="V_csfaDescription" prepend=",">
+				cs_favorite_address$suffix$.csfa_description = #V_csfaDescription#
+			</isNotNull>		
+			<isNotNull property="V_csfaLatitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_latitude = #V_csfaLatitude#
+			</isNotNull>		
+			<isNotNull property="V_csfaLongitude" prepend=",">
+				cs_favorite_address$suffix$.csfa_longitude = #V_csfaLongitude#
+			</isNotNull>		
+			<isNotNull property="V_csfaStatus" prepend=",">
+				cs_favorite_address$suffix$.csfa_status = #V_csfaStatus#
+			</isNotNull>		
+			<isNotNull property="V_csfaAddTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_add_time = #V_csfaAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csfaUpdateTime" prepend=",">
+				cs_favorite_address$suffix$.csfa_update_time = #V_csfaUpdateTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员]查询-->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.csfa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="SrvApiClient.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_favorite_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[会员]查询条件sql片段 -->
+		<isNotNull property="CsfaMember"><!-- 调用一下CsfaMember，把CsMember指向CsfaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsFavoriteAddress_part.cs_favorite_address_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员常用地址 -->
+	<update id="deleteCsFavoriteAddressBy"  parameterClass="java.util.HashMap">
+		delete from cs_favorite_address$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsFavoriteAddress_part.cs_favorite_address_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

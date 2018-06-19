@@ -1,0 +1,115 @@
+<!-- 免费小时发放 -->
+<s:if test="#request.freehourType == 1">
+	<s:iterator value="#request.page.result" id="item" status="i">
+		<!-- loop temp [begin] -->
+		<s:if test="#i.modulus(2) == 1">
+			<tr>
+		</s:if>
+		<s:else>
+			<tr class="split">
+		</s:else>
+		<td class="time">
+			<p>
+				${lz:date(item.csfhAddTime,"yyyy-MM-dd")}
+			</p>
+			<p class="ccc-color-gray">
+				${lz:date(item.csfhAddTime,"HH:mm")}
+			</p>
+		</td>
+		<td class="description">
+			<p>
+				${item.csfhRemark}
+			</p>
+		</td>
+		<td class="validity">
+			<div>
+				${item.csfhValidity==0?"4个月":""}${item.csfhValidity==1?"1个月":""} ${item.csfhValidity==2?"2个月":""} ${item.csfhValidity==3?"3个月":""} ${item.csfhValidity==6?"半年":""} ${item.csfhValidity==12?"1年":""}
+				<a class="ccc-trigger"><b></b><i></i>
+					<div class="ccc-bubble-azure">
+						有效期至：
+						<span class="ccc-font-lato">${lz:date(item.csfhEnd,"yyyy-MM-dd,HH:mm")}</span>
+					</div> </a>
+			</div>
+		</td>
+		<td class="amount single">
+			<span class="plus">+${lz:digit(item.csfhCount,2)}</span>
+		</td>
+		</tr>
+	</s:iterator>
+</s:if>
+<!-- 免费小时过期 -->
+<s:if test="#request.freehourType == 2">
+	<s:iterator value="#request.page.result" id="item" status="i">
+		<!-- loop temp [begin] -->
+		<s:if test="#i.modulus(2) == 1">
+			<tr>
+		</s:if>
+		<s:else>
+			<tr class="split">
+		</s:else>
+		<td class="time">
+			<p>
+				${lz:date(item.csfhEnd,"yyyy-MM-dd")}
+			</p>
+			<p class="ccc-color-gray">
+				${lz:date(item.csfhEnd,"HH:mm")}
+			</p>
+		</td>
+		<td class="description">
+			<p>
+				${item.csfhRemark}
+			</p>
+		</td>
+		<td class="validity">
+			<div>
+				<p class="ccc-color-gray">
+					已过期
+				</p>
+			</div>
+		</td>
+		<td class="amount single">
+			<span class="subtract">-${lz:digit(item.csfhRemain,2)}</span>
+		</td>
+		</tr>
+	</s:iterator>
+</s:if>
+<!-- 免费小时支出 -->
+<s:if test="#request.freehourType == 3">
+	<s:iterator value="#request.page.result" id="item" status="i">
+		<!-- loop temp [begin] -->
+		<s:if test="#i.modulus(2) == 1">
+			<tr>
+		</s:if>
+		<s:else>
+			<tr class="split">
+		</s:else>
+		<td class="time">
+			<p>
+				${lz:date(item.csurAddTime,"yyyy-MM-dd")}
+			</p>
+			<p class="ccc-color-gray">
+				${lz:date(item.csurAddTime,"HH:mm")}
+			</p>
+		</td>
+		<td class="description">
+			<p>
+				订单租金消费
+			</p>
+			<p class="ccc-color-gray">
+				订单号：
+				<span class="ccc-font-lato">${item.csurOrder}</span>
+			</p>
+		</td>
+		<td class="validity">
+			<div>
+				<p class="ccc-color-gray">
+					已使用
+				</p>
+			</div>
+		</td>
+		<td class="amount single">
+			<span class="subtract">-${lz:digit(item.csurCount,2)}</span>
+		</td>
+		</tr>
+	</s:iterator>
+</s:if>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 产品之SQL映射 -->
+	<resultMap id="CsProduct" class="com.ccclubs.model.CsProduct">
+		<result property="cspId" column="csp_id"/>
+		<result property="cspName" column="csp_name"/>
+		<result property="cspFlag" column="csp_flag"/>
+		<result property="cspProfile" column="csp_profile"/>
+		<result property="cspUpdateTime" column="csp_update_time"/>
+		<result property="cspAddTime" column="csp_add_time"/>
+		<result property="cspStatus" column="csp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有产品 -->
+	<select id="getCsProductList" resultMap="CsProduct">
+		select cs_product$suffix$.* from cs_product$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_product$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsProduct_part.cs_product_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取产品分页 -->
+	<select id="getCsProductPage" parameterClass="java.util.HashMap" resultMap="CsProduct">
+		select cs_product$suffix$.* from cs_product$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_product$suffix$.csp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsProduct_part.cs_product_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取产品总数 -->
+	<select id="getCsProductEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_product$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_product$suffix$.csp_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsProduct_part.cs_product_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取产品 -->
+	<select id="getCsProductById" parameterClass="java.util.HashMap" resultMap="CsProduct">
+		select cs_product$suffix$.* from cs_product$suffix$
+		where csp_id=#id#
+	</select>
+	
+		
+	<!-- 保存产品 -->
+	<insert id="saveCsProduct"  parameterClass="com.ccclubs.model.CsProduct">
+		insert into cs_product$suffix$
+		(
+			cs_product$suffix$.csp_name
+			,cs_product$suffix$.csp_flag
+			,cs_product$suffix$.csp_profile
+			,cs_product$suffix$.csp_update_time
+			,cs_product$suffix$.csp_add_time
+			,cs_product$suffix$.csp_status
+		)
+		values(
+			<isNotNull property="cspName" prepend="">
+				#cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspFlag" prepend=",">
+				#cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspProfile" prepend=",">
+				#cspProfile#
+			</isNotNull>
+			<isNull property="cspProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspUpdateTime" prepend=",">
+				#cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspAddTime" prepend=",">
+				#cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspStatus" prepend=",">
+				#cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新产品 -->
+	<update id="updateCsProduct"  parameterClass="com.ccclubs.model.CsProduct">
+		update cs_product$suffix$ set
+			<isNotNull property="cspName" prepend="">
+				cs_product$suffix$.csp_name = #cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend="">
+				cs_product$suffix$.csp_name = null
+			</isNull>				
+			<isNotNull property="cspFlag" prepend=",">
+				cs_product$suffix$.csp_flag = #cspFlag#
+			</isNotNull>
+			<isNull property="cspFlag" prepend=",">
+				cs_product$suffix$.csp_flag = null
+			</isNull>				
+			<isNotNull property="cspProfile" prepend=",">
+				cs_product$suffix$.csp_profile = #cspProfile#
+			</isNotNull>
+			<isNull property="cspProfile" prepend=",">
+				cs_product$suffix$.csp_profile = null
+			</isNull>				
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_product$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				cs_product$suffix$.csp_update_time = null
+			</isNull>				
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_product$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				cs_product$suffix$.csp_add_time = null
+			</isNull>				
+			<isNotNull property="cspStatus" prepend=",">
+				cs_product$suffix$.csp_status = #cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				cs_product$suffix$.csp_status = null
+			</isNull>				
+		where
+			csp_id=#cspId#
+	</update>
+	
+	<!-- 更新产品非空字段 -->
+	<update id="updateCsProduct$NotNull"  parameterClass="com.ccclubs.model.CsProduct">
+		update cs_product$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspName" prepend=",">
+				cs_product$suffix$.csp_name = #cspName#
+			</isNotNull>		
+			<isNotNull property="cspFlag" prepend=",">
+				cs_product$suffix$.csp_flag = #cspFlag#
+			</isNotNull>		
+			<isNotNull property="cspProfile" prepend=",">
+				cs_product$suffix$.csp_profile = #cspProfile#
+			</isNotNull>		
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_product$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_product$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>		
+			<isNotNull property="cspStatus" prepend=",">
+				cs_product$suffix$.csp_status = #cspStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csp_id=#cspId#
+	</update>
+	
+
+	<!-- 根据ID删除一个产品 -->
+	<delete id="deleteCsProductById" parameterClass="java.util.HashMap">
+		delete from cs_product$suffix$ where csp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个产品 -->
+	<update id="removeCsProductById" parameterClass="java.util.HashMap">
+		update cs_product$suffix$ set  cs_product$suffix$.csp_status=-1  where csp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新产品 -->
+	<update id="updateCsProductBy"  parameterClass="java.util.HashMap">
+		update cs_product$suffix$ set		
+			csp_id=csp_id
+			<isNotNull property="V_cspId" prepend=",">
+				cs_product$suffix$.csp_id = #V_cspId#
+			</isNotNull>		
+			<isNotNull property="V_cspName" prepend=",">
+				cs_product$suffix$.csp_name = #V_cspName#
+			</isNotNull>		
+			<isNotNull property="V_cspFlag" prepend=",">
+				cs_product$suffix$.csp_flag = #V_cspFlag#
+			</isNotNull>		
+			<isNotNull property="V_cspProfile" prepend=",">
+				cs_product$suffix$.csp_profile = #V_cspProfile#
+			</isNotNull>		
+			<isNotNull property="V_cspUpdateTime" prepend=",">
+				cs_product$suffix$.csp_update_time = #V_cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cspAddTime" prepend=",">
+				cs_product$suffix$.csp_add_time = #V_cspAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cspStatus" prepend=",">
+				cs_product$suffix$.csp_status = #V_cspStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_product$suffix$.csp_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsProduct_part.cs_product_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除产品 -->
+	<update id="deleteCsProductBy"  parameterClass="java.util.HashMap">
+		delete from cs_product$suffix$ where 
+		cs_product$suffix$.csp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsProduct_part.cs_product_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

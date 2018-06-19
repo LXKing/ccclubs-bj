@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsServAlarm_part">	
+	<!-- 服务监控报警条件sql片段  -->
+	<sql id="cs_serv_alarm_dynamic">
+		<dynamic>
+			<isNotEmpty property="cssaId" prepend="and">
+			    $cssaIdNot$ cs_serv_alarm$suffix$.cssa_id = #cssaId#
+			</isNotEmpty>
+			<isNotNull property="cssaIdNot" prepend="and">
+				<isEmpty property="cssaId">
+				$cssaIdNot$ cs_serv_alarm$suffix$.cssa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_serv_alarm$suffix$.cssa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cssaHost" prepend="and">
+			    $cssaHostNot$ cs_serv_alarm$suffix$.cssa_host = #cssaHost#
+			</isNotEmpty>
+			<isNotNull property="cssaHostNot" prepend="and">
+				<isEmpty property="cssaHost">
+				$cssaHostNot$ cs_serv_alarm$suffix$.cssa_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaOutlets" prepend="and">
+			    $cssaOutletsNot$ cs_serv_alarm$suffix$.cssa_outlets = #cssaOutlets#
+			</isNotEmpty>
+			<isNotNull property="cssaOutletsNot" prepend="and">
+				<isEmpty property="cssaOutlets">
+				$cssaOutletsNot$ cs_serv_alarm$suffix$.cssa_outlets is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaType" prepend="and">
+			    $cssaTypeNot$ cs_serv_alarm$suffix$.cssa_type = #cssaType#
+			</isNotEmpty>
+			<isNotNull property="cssaTypeNot" prepend="and">
+				<isEmpty property="cssaType">
+				$cssaTypeNot$ cs_serv_alarm$suffix$.cssa_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaTitle" prepend="and">			    
+			    (<isNotNull property="cssaTitleNot">
+			    cs_serv_alarm$suffix$.cssa_title is null or length(cs_serv_alarm$suffix$.cssa_title) &lt; 1 or
+			    </isNotNull>$cssaTitleNot$ cs_serv_alarm$suffix$.cssa_title = #cssaTitle#)
+			</isNotEmpty>
+			<isNotNull property="cssaTitleNot" prepend="and">
+				<isEmpty property="cssaTitle">
+				$cssaTitleNot$ (cs_serv_alarm$suffix$.cssa_title is null or length(cs_serv_alarm$suffix$.cssa_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaContent" prepend="and">			    
+			    (<isNotNull property="cssaContentNot">
+			    cs_serv_alarm$suffix$.cssa_content is null or length(cs_serv_alarm$suffix$.cssa_content) &lt; 1 or
+			    </isNotNull>$cssaContentNot$ cs_serv_alarm$suffix$.cssa_content = #cssaContent#)
+			</isNotEmpty>
+			<isNotNull property="cssaContentNot" prepend="and">
+				<isEmpty property="cssaContent">
+				$cssaContentNot$ (cs_serv_alarm$suffix$.cssa_content is null or length(cs_serv_alarm$suffix$.cssa_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaRelate" prepend="and">			    
+			    (<isNotNull property="cssaRelateNot">
+			    cs_serv_alarm$suffix$.cssa_relate is null or length(cs_serv_alarm$suffix$.cssa_relate) &lt; 1 or
+			    </isNotNull>$cssaRelateNot$ cs_serv_alarm$suffix$.cssa_relate = #cssaRelate#)
+			</isNotEmpty>
+			<isNotNull property="cssaRelateNot" prepend="and">
+				<isEmpty property="cssaRelate">
+				$cssaRelateNot$ (cs_serv_alarm$suffix$.cssa_relate is null or length(cs_serv_alarm$suffix$.cssa_relate) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaSrouce" prepend="and">			    
+			    (<isNotNull property="cssaSrouceNot">
+			    cs_serv_alarm$suffix$.cssa_srouce is null or length(cs_serv_alarm$suffix$.cssa_srouce) &lt; 1 or
+			    </isNotNull>$cssaSrouceNot$ cs_serv_alarm$suffix$.cssa_srouce = #cssaSrouce#)
+			</isNotEmpty>
+			<isNotNull property="cssaSrouceNot" prepend="and">
+				<isEmpty property="cssaSrouce">
+				$cssaSrouceNot$ (cs_serv_alarm$suffix$.cssa_srouce is null or length(cs_serv_alarm$suffix$.cssa_srouce) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaStatusMin" prepend="and">
+			    $cssaStatusNot$  ( cs_serv_alarm$suffix$.cssa_status &gt;= #cssaStatusMin#
+			    <isEmpty property="cssaStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssaStatusMax" prepend="and">
+				<isEmpty property="cssaStatusMin">$cssaStatusNot$   (</isEmpty>
+			    cs_serv_alarm$suffix$.cssa_status &lt;= #cssaStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cssaStatus" prepend="and">
+			    $cssaStatusNot$ cs_serv_alarm$suffix$.cssa_status = #cssaStatus#
+			</isNotEmpty>
+			<isNotNull property="cssaStatusNot" prepend="and">
+				<isEmpty property="cssaStatusMax"><isEmpty property="cssaStatusMin"><isEmpty property="cssaStatus">
+				$cssaStatusNot$ cs_serv_alarm$suffix$.cssa_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaData" prepend="and">			    
+			    (<isNotNull property="cssaDataNot">
+			    cs_serv_alarm$suffix$.cssa_data is null or length(cs_serv_alarm$suffix$.cssa_data) &lt; 1 or
+			    </isNotNull>$cssaDataNot$ cs_serv_alarm$suffix$.cssa_data = #cssaData#)
+			</isNotEmpty>
+			<isNotNull property="cssaDataNot" prepend="and">
+				<isEmpty property="cssaData">
+				$cssaDataNot$ (cs_serv_alarm$suffix$.cssa_data is null or length(cs_serv_alarm$suffix$.cssa_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaAddTimeStart" prepend="and">
+			    $cssaAddTimeNot$   (cs_serv_alarm$suffix$.cssa_add_time &gt;= #cssaAddTimeStart#
+			   <isEmpty property="cssaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssaAddTimeEnd" prepend="and">
+				<isEmpty property="cssaAddTimeStart">$cssaAddTimeNot$   (</isEmpty>
+			    cs_serv_alarm$suffix$.cssa_add_time &lt;= #cssaAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cssaAddTime" prepend="and">
+			    $cssaAddTimeNot$ cs_serv_alarm$suffix$.cssa_add_time = #cssaAddTime#
+			</isNotEmpty>
+			<isNotNull property="cssaAddTimeNot" prepend="and">
+				<isEmpty property="cssaAddTimeStart"><isEmpty property="cssaAddTimeEnd"><isEmpty property="cssaAddTime">
+				$cssaAddTimeNot$ cs_serv_alarm$suffix$.cssa_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssaUpdateTimeStart" prepend="and">
+			    $cssaUpdateTimeNot$   (cs_serv_alarm$suffix$.cssa_update_time &gt;= #cssaUpdateTimeStart#
+			   <isEmpty property="cssaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssaUpdateTimeEnd" prepend="and">
+				<isEmpty property="cssaUpdateTimeStart">$cssaUpdateTimeNot$   (</isEmpty>
+			    cs_serv_alarm$suffix$.cssa_update_time &lt;= #cssaUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cssaUpdateTime" prepend="and">
+			    $cssaUpdateTimeNot$ cs_serv_alarm$suffix$.cssa_update_time = #cssaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cssaUpdateTimeNot" prepend="and">
+				<isEmpty property="cssaUpdateTimeStart"><isEmpty property="cssaUpdateTimeEnd"><isEmpty property="cssaUpdateTime">
+				$cssaUpdateTimeNot$ cs_serv_alarm$suffix$.cssa_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 服务监控报警left join 条件sql片段 -->
+	<sql id="cs_serv_alarm_join">
+		<dynamic>
+			<isNotEmpty property="CsServAlarm.cssaId" prepend="and">
+			    $CsServAlarm.cssaIdNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_id = #CsServAlarm.cssaId#
+			</isNotEmpty>
+			<isNotNull property="CsServAlarm.cssaIdNot" prepend="and">
+				<isEmpty property="CsServAlarm.cssaId">
+				$cssaIdNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_serv_alarm$CsServAlarm.suffix$.cssa_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsServAlarm.cssaHost" prepend="and">
+			    $CsServAlarm.cssaHostNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_host = #CsServAlarm.cssaHost#
+			</isNotEmpty>
+			<isNotNull property="CsServAlarm.cssaHostNot" prepend="and">
+				<isEmpty property="CsServAlarm.cssaHost">
+				$cssaHostNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_host is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsServAlarm.cssaOutlets" prepend="and">
+			    $CsServAlarm.cssaOutletsNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_outlets = #CsServAlarm.cssaOutlets#
+			</isNotEmpty>
+			<isNotNull property="CsServAlarm.cssaOutletsNot" prepend="and">
+				<isEmpty property="CsServAlarm.cssaOutlets">
+				$cssaOutletsNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_outlets is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsServAlarm.cssaType" prepend="and">
+			    $CsServAlarm.cssaTypeNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_type = #CsServAlarm.cssaType#
+			</isNotEmpty>
+			<isNotNull property="CsServAlarm.cssaTypeNot" prepend="and">
+				<isEmpty property="CsServAlarm.cssaType">
+				$cssaTypeNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_type is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsServAlarm.cssaTitle" prepend="and">			    
+				    (<isNotNull property="CsServAlarm.cssaTitleNot">
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_title is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_title) &lt; 1 or
+				    </isNotNull>$CsServAlarm.cssaTitleNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_title = #CsServAlarm.cssaTitle#)
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaTitleNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaTitle">
+					$cssaTitleNot$ (cs_serv_alarm$CsServAlarm.suffix$.cssa_title is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_title) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsServAlarm.cssaContent" prepend="and">			    
+				    (<isNotNull property="CsServAlarm.cssaContentNot">
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_content is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_content) &lt; 1 or
+				    </isNotNull>$CsServAlarm.cssaContentNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_content = #CsServAlarm.cssaContent#)
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaContentNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaContent">
+					$cssaContentNot$ (cs_serv_alarm$CsServAlarm.suffix$.cssa_content is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_content) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsServAlarm.cssaRelate" prepend="and">			    
+				    (<isNotNull property="CsServAlarm.cssaRelateNot">
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_relate is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_relate) &lt; 1 or
+				    </isNotNull>$CsServAlarm.cssaRelateNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_relate = #CsServAlarm.cssaRelate#)
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaRelateNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaRelate">
+					$cssaRelateNot$ (cs_serv_alarm$CsServAlarm.suffix$.cssa_relate is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_relate) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsServAlarm.cssaSrouce" prepend="and">			    
+				    (<isNotNull property="CsServAlarm.cssaSrouceNot">
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_srouce is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_srouce) &lt; 1 or
+				    </isNotNull>$CsServAlarm.cssaSrouceNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_srouce = #CsServAlarm.cssaSrouce#)
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaSrouceNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaSrouce">
+					$cssaSrouceNot$ (cs_serv_alarm$CsServAlarm.suffix$.cssa_srouce is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_srouce) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsServAlarm.cssaStatusMin" prepend="and">
+			    $CsServAlarm.cssaStatusNot$  ( cs_serv_alarm$CsServAlarm.suffix$.cssa_status &gt;= #CsServAlarm.cssaStatusMin#
+			    <isEmpty property="CsServAlarm.cssaStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsServAlarm.cssaStatusMax" prepend="and">
+				<isEmpty property="CsServAlarm.cssaStatusMin">$CsServAlarm.cssaStatusNot$   (</isEmpty>
+			    cs_serv_alarm$CsServAlarm.suffix$.cssa_status &lt;= #CsServAlarm.cssaStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsServAlarm.cssaStatus" prepend="and">
+			    $CsServAlarm.cssaStatusNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_status = #CsServAlarm.cssaStatus#
+			</isNotEmpty>
+			<isNotNull property="CsServAlarm.cssaStatusNot" prepend="and">
+				<isEmpty property="CsServAlarm.cssaStatusMax"><isEmpty property="CsServAlarm.cssaStatusMin"><isEmpty property="CsServAlarm.cssaStatus">
+				$cssaStatusNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsServAlarm.cssaData" prepend="and">			    
+				    (<isNotNull property="CsServAlarm.cssaDataNot">
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_data is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_data) &lt; 1 or
+				    </isNotNull>$CsServAlarm.cssaDataNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_data = #CsServAlarm.cssaData#)
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaDataNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaData">
+					$cssaDataNot$ (cs_serv_alarm$CsServAlarm.suffix$.cssa_data is null or length(cs_serv_alarm$CsServAlarm.suffix$.cssa_data) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsServAlarm.cssaAddTimeStart" prepend="and">
+				    $CsServAlarm.cssaAddTimeNot$   (cs_serv_alarm$CsServAlarm.suffix$.cssa_add_time &gt;= #CsServAlarm.cssaAddTimeStart#
+				   <isEmpty property="CsServAlarm.cssaAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsServAlarm.cssaAddTimeEnd" prepend="and">
+					<isEmpty property="CsServAlarm.cssaAddTimeStart">$CsServAlarm.cssaAddTimeNot$   (</isEmpty>
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_add_time &lt;= #CsServAlarm.cssaAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsServAlarm.cssaAddTime" prepend="and">
+				    $CsServAlarm.cssaAddTimeNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_add_time = #CsServAlarm.cssaAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaAddTimeNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaAddTimeStart"><isEmpty property="CsServAlarm.cssaAddTimeEnd"><isEmpty property="CsServAlarm.cssaAddTime">
+					$cssaAddTimeNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsServAlarm.cssaUpdateTimeStart" prepend="and">
+				    $CsServAlarm.cssaUpdateTimeNot$   (cs_serv_alarm$CsServAlarm.suffix$.cssa_update_time &gt;= #CsServAlarm.cssaUpdateTimeStart#
+				   <isEmpty property="CsServAlarm.cssaUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsServAlarm.cssaUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsServAlarm.cssaUpdateTimeStart">$CsServAlarm.cssaUpdateTimeNot$   (</isEmpty>
+				    cs_serv_alarm$CsServAlarm.suffix$.cssa_update_time &lt;= #CsServAlarm.cssaUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsServAlarm.cssaUpdateTime" prepend="and">
+				    $CsServAlarm.cssaUpdateTimeNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_update_time = #CsServAlarm.cssaUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsServAlarm.cssaUpdateTimeNot" prepend="and">
+					<isEmpty property="CsServAlarm.cssaUpdateTimeStart"><isEmpty property="CsServAlarm.cssaUpdateTimeEnd"><isEmpty property="CsServAlarm.cssaUpdateTime">
+					$cssaUpdateTimeNot$ cs_serv_alarm$CsServAlarm.suffix$.cssa_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

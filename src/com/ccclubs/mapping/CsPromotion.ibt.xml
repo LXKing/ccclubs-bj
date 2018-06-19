@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 促销配置之SQL映射 -->
+	<resultMap id="CsPromotion" class="com.ccclubs.model.CsPromotion">
+		<result property="cspId" column="csp_id"/>
+		<result property="cspHost" column="csp_host"/>
+		<result property="cspName" column="csp_name"/>
+		<result property="cspActivity" column="csp_activity"/>
+		<result property="cspType" column="csp_type"/>
+		<result property="cspRecharge" column="csp_recharge"/>
+		<result property="cspConsume" column="csp_consume"/>
+		<result property="cspPrice" column="csp_price"/>
+		<result property="cspPackage" column="csp_package"/>
+		<result property="cspItems" column="csp_items"/>
+		<result property="cspPresents" column="csp_presents"/>
+		<result property="cspUpdateTime" column="csp_update_time"/>
+		<result property="cspAddTime" column="csp_add_time"/>
+		<result property="cspStatus" column="csp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有促销配置 -->
+	<select id="getCsPromotionList" resultMap="CsPromotion">
+		select cs_promotion$suffix$.* from cs_promotion$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.csp_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.csp_package=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_promotion$suffix$.csp_status!=-1
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPromotion_part.cs_promotion_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取促销配置分页 -->
+	<select id="getCsPromotionPage" parameterClass="java.util.HashMap" resultMap="CsPromotion">
+		select cs_promotion$suffix$.* from cs_promotion$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询 -->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.csp_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询 -->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.csp_package=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_promotion$suffix$.csp_status!=-1
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPromotion_part.cs_promotion_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取促销配置总数 -->
+	<select id="getCsPromotionEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_promotion$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.csp_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询,同张表只能外链接一次 -->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.csp_package=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_promotion$suffix$.csp_status!=-1
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPromotion_part.cs_promotion_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取促销配置 -->
+	<select id="getCsPromotionById" parameterClass="java.util.HashMap" resultMap="CsPromotion">
+		select cs_promotion$suffix$.* from cs_promotion$suffix$
+		where csp_id=#id#
+	</select>
+	
+		
+	<!-- 保存促销配置 -->
+	<insert id="saveCsPromotion"  parameterClass="com.ccclubs.model.CsPromotion">
+		insert into cs_promotion$suffix$
+		(
+			cs_promotion$suffix$.csp_host
+			,cs_promotion$suffix$.csp_name
+			,cs_promotion$suffix$.csp_activity
+			,cs_promotion$suffix$.csp_type
+			,cs_promotion$suffix$.csp_recharge
+			,cs_promotion$suffix$.csp_consume
+			,cs_promotion$suffix$.csp_price
+			,cs_promotion$suffix$.csp_package
+			,cs_promotion$suffix$.csp_items
+			,cs_promotion$suffix$.csp_presents
+			,cs_promotion$suffix$.csp_update_time
+			,cs_promotion$suffix$.csp_add_time
+			,cs_promotion$suffix$.csp_status
+		)
+		values(
+			<isNotNull property="cspHost" prepend="">
+				#cspHost#
+			</isNotNull>
+			<isNull property="cspHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspName" prepend=",">
+				#cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspActivity" prepend=",">
+				#cspActivity#
+			</isNotNull>
+			<isNull property="cspActivity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspType" prepend=",">
+				#cspType#
+			</isNotNull>
+			<isNull property="cspType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspRecharge" prepend=",">
+				#cspRecharge#
+			</isNotNull>
+			<isNull property="cspRecharge" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspConsume" prepend=",">
+				#cspConsume#
+			</isNotNull>
+			<isNull property="cspConsume" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspPrice" prepend=",">
+				#cspPrice#
+			</isNotNull>
+			<isNull property="cspPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspPackage" prepend=",">
+				#cspPackage#
+			</isNotNull>
+			<isNull property="cspPackage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspItems" prepend=",">
+				#cspItems#
+			</isNotNull>
+			<isNull property="cspItems" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspPresents" prepend=",">
+				#cspPresents#
+			</isNotNull>
+			<isNull property="cspPresents" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspUpdateTime" prepend=",">
+				#cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspAddTime" prepend=",">
+				#cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspStatus" prepend=",">
+				#cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新促销配置 -->
+	<update id="updateCsPromotion"  parameterClass="com.ccclubs.model.CsPromotion">
+		update cs_promotion$suffix$ set
+			<isNotNull property="cspHost" prepend="">
+				cs_promotion$suffix$.csp_host = #cspHost#
+			</isNotNull>
+			<isNull property="cspHost" prepend="">
+				cs_promotion$suffix$.csp_host = null
+			</isNull>				
+			<isNotNull property="cspName" prepend=",">
+				cs_promotion$suffix$.csp_name = #cspName#
+			</isNotNull>
+			<isNull property="cspName" prepend=",">
+				cs_promotion$suffix$.csp_name = null
+			</isNull>				
+			<isNotNull property="cspActivity" prepend=",">
+				cs_promotion$suffix$.csp_activity = #cspActivity#
+			</isNotNull>
+			<isNull property="cspActivity" prepend=",">
+				cs_promotion$suffix$.csp_activity = null
+			</isNull>				
+			<isNotNull property="cspType" prepend=",">
+				cs_promotion$suffix$.csp_type = #cspType#
+			</isNotNull>
+			<isNull property="cspType" prepend=",">
+				cs_promotion$suffix$.csp_type = null
+			</isNull>				
+			<isNotNull property="cspRecharge" prepend=",">
+				cs_promotion$suffix$.csp_recharge = #cspRecharge#
+			</isNotNull>
+			<isNull property="cspRecharge" prepend=",">
+				cs_promotion$suffix$.csp_recharge = null
+			</isNull>				
+			<isNotNull property="cspConsume" prepend=",">
+				cs_promotion$suffix$.csp_consume = #cspConsume#
+			</isNotNull>
+			<isNull property="cspConsume" prepend=",">
+				cs_promotion$suffix$.csp_consume = null
+			</isNull>				
+			<isNotNull property="cspPrice" prepend=",">
+				cs_promotion$suffix$.csp_price = #cspPrice#
+			</isNotNull>
+			<isNull property="cspPrice" prepend=",">
+				cs_promotion$suffix$.csp_price = null
+			</isNull>				
+			<isNotNull property="cspPackage" prepend=",">
+				cs_promotion$suffix$.csp_package = #cspPackage#
+			</isNotNull>
+			<isNull property="cspPackage" prepend=",">
+				cs_promotion$suffix$.csp_package = null
+			</isNull>				
+			<isNotNull property="cspItems" prepend=",">
+				cs_promotion$suffix$.csp_items = #cspItems#
+			</isNotNull>
+			<isNull property="cspItems" prepend=",">
+				cs_promotion$suffix$.csp_items = null
+			</isNull>				
+			<isNotNull property="cspPresents" prepend=",">
+				cs_promotion$suffix$.csp_presents = #cspPresents#
+			</isNotNull>
+			<isNull property="cspPresents" prepend=",">
+				cs_promotion$suffix$.csp_presents = null
+			</isNull>				
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_promotion$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>
+			<isNull property="cspUpdateTime" prepend=",">
+				cs_promotion$suffix$.csp_update_time = null
+			</isNull>				
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_promotion$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>
+			<isNull property="cspAddTime" prepend=",">
+				cs_promotion$suffix$.csp_add_time = null
+			</isNull>				
+			<isNotNull property="cspStatus" prepend=",">
+				cs_promotion$suffix$.csp_status = #cspStatus#
+			</isNotNull>
+			<isNull property="cspStatus" prepend=",">
+				cs_promotion$suffix$.csp_status = null
+			</isNull>				
+		where
+			csp_id=#cspId#
+	</update>
+	
+	<!-- 更新促销配置非空字段 -->
+	<update id="updateCsPromotion$NotNull"  parameterClass="com.ccclubs.model.CsPromotion">
+		update cs_promotion$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspHost" prepend=",">
+				cs_promotion$suffix$.csp_host = #cspHost#
+			</isNotNull>		
+			<isNotNull property="cspName" prepend=",">
+				cs_promotion$suffix$.csp_name = #cspName#
+			</isNotNull>		
+			<isNotNull property="cspActivity" prepend=",">
+				cs_promotion$suffix$.csp_activity = #cspActivity#
+			</isNotNull>		
+			<isNotNull property="cspType" prepend=",">
+				cs_promotion$suffix$.csp_type = #cspType#
+			</isNotNull>		
+			<isNotNull property="cspRecharge" prepend=",">
+				cs_promotion$suffix$.csp_recharge = #cspRecharge#
+			</isNotNull>		
+			<isNotNull property="cspConsume" prepend=",">
+				cs_promotion$suffix$.csp_consume = #cspConsume#
+			</isNotNull>		
+			<isNotNull property="cspPrice" prepend=",">
+				cs_promotion$suffix$.csp_price = #cspPrice#
+			</isNotNull>		
+			<isNotNull property="cspPackage" prepend=",">
+				cs_promotion$suffix$.csp_package = #cspPackage#
+			</isNotNull>		
+			<isNotNull property="cspItems" prepend=",">
+				cs_promotion$suffix$.csp_items = #cspItems#
+			</isNotNull>		
+			<isNotNull property="cspPresents" prepend=",">
+				cs_promotion$suffix$.csp_presents = #cspPresents#
+			</isNotNull>		
+			<isNotNull property="cspUpdateTime" prepend=",">
+				cs_promotion$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cspAddTime" prepend=",">
+				cs_promotion$suffix$.csp_add_time = #cspAddTime#
+			</isNotNull>		
+			<isNotNull property="cspStatus" prepend=",">
+				cs_promotion$suffix$.csp_status = #cspStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csp_id=#cspId#
+	</update>
+	
+
+	<!-- 根据ID删除一个促销配置 -->
+	<delete id="deleteCsPromotionById" parameterClass="java.util.HashMap">
+		delete from cs_promotion$suffix$ where csp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个促销配置 -->
+	<update id="removeCsPromotionById" parameterClass="java.util.HashMap">
+		update cs_promotion$suffix$ set  cs_promotion$suffix$.csp_status=-1  where csp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新促销配置 -->
+	<update id="updateCsPromotionBy"  parameterClass="java.util.HashMap">
+		update cs_promotion$suffix$ set		
+			csp_id=csp_id
+			<isNotNull property="V_cspId" prepend=",">
+				cs_promotion$suffix$.csp_id = #V_cspId#
+			</isNotNull>		
+			<isNotNull property="V_cspHost" prepend=",">
+				cs_promotion$suffix$.csp_host = #V_cspHost#
+			</isNotNull>		
+			<isNotNull property="V_cspName" prepend=",">
+				cs_promotion$suffix$.csp_name = #V_cspName#
+			</isNotNull>		
+			<isNotNull property="V_cspActivity" prepend=",">
+				cs_promotion$suffix$.csp_activity = #V_cspActivity#
+			</isNotNull>		
+			<isNotNull property="V_cspType" prepend=",">
+				cs_promotion$suffix$.csp_type = #V_cspType#
+			</isNotNull>		
+			<isNotNull property="V_cspRecharge" prepend=",">
+				cs_promotion$suffix$.csp_recharge = #V_cspRecharge#
+			</isNotNull>		
+			<isNotNull property="V_cspConsume" prepend=",">
+				cs_promotion$suffix$.csp_consume = #V_cspConsume#
+			</isNotNull>		
+			<isNotNull property="V_cspPrice" prepend=",">
+				cs_promotion$suffix$.csp_price = #V_cspPrice#
+			</isNotNull>		
+			<isNotNull property="V_cspPackage" prepend=",">
+				cs_promotion$suffix$.csp_package = #V_cspPackage#
+			</isNotNull>		
+			<isNotNull property="V_cspItems" prepend=",">
+				cs_promotion$suffix$.csp_items = #V_cspItems#
+			</isNotNull>		
+			<isNotNull property="V_cspPresents" prepend=",">
+				cs_promotion$suffix$.csp_presents = #V_cspPresents#
+			</isNotNull>		
+			<isNotNull property="V_cspUpdateTime" prepend=",">
+				cs_promotion$suffix$.csp_update_time = #V_cspUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cspAddTime" prepend=",">
+				cs_promotion$suffix$.csp_add_time = #V_cspAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cspStatus" prepend=",">
+				cs_promotion$suffix$.csp_status = #V_cspStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.csp_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_promotion$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.csp_package=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_promotion$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_promotion$suffix$.csp_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CspActivity"><!-- 调用一下CspActivity，把CsActivity指向CspActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspPackage"><!-- 调用一下CspPackage，把CsPack指向CspPackage --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsPromotion_part.cs_promotion_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除促销配置 -->
+	<update id="deleteCsPromotionBy"  parameterClass="java.util.HashMap">
+		delete from cs_promotion$suffix$ where 
+		cs_promotion$suffix$.csp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsPromotion_part.cs_promotion_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

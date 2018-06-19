@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 分享指数之SQL映射 -->
+	<resultMap id="CsShareIndex" class="com.ccclubs.model.CsShareIndex">
+		<result property="cssiId" column="cssi_id"/>
+		<result property="cssiHost" column="cssi_host"/>
+		<result property="cssiSource" column="cssi_source"/>
+		<result property="cssiWebS" column="cssi_web_s"/>
+		<result property="cssiWeiboS" column="cssi_weibo_s"/>
+		<result property="cssiWeixinS" column="cssi_weixin_s"/>
+		<result property="cssiUpdateTime" column="cssi_update_time"/>
+		<result property="cssiAddTime" column="cssi_add_time"/>
+		<result property="cssiStatus" column="cssi_status"/>
+	</resultMap>
+		
+	<!-- 获取所有分享指数 -->
+	<select id="getCsShareIndexList" resultMap="CsShareIndex">
+		select cs_share_index$suffix$.* from cs_share_index$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.cssi_source=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_share_index$suffix$.cssi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShareIndex_part.cs_share_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	<!-- 统计分享指数 -->
+	<select id="getCsShareIndexStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_share_index$suffix$		
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.cssi_source=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_share_index$suffix$.cssi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShareIndex_part.cs_share_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取分享指数分页 -->
+	<select id="getCsShareIndexPage" parameterClass="java.util.HashMap" resultMap="CsShareIndex">
+		select cs_share_index$suffix$.* from cs_share_index$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.cssi_source=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_share_index$suffix$.cssi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShareIndex_part.cs_share_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取分享指数总数 -->
+	<select id="getCsShareIndexEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_share_index$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.cssi_source=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_share_index$suffix$.cssi_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsShareIndex_part.cs_share_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取分享指数 -->
+	<select id="getCsShareIndexById" parameterClass="java.util.HashMap" resultMap="CsShareIndex">
+		select cs_share_index$suffix$.* from cs_share_index$suffix$
+		where cssi_id=#id#
+	</select>
+	
+		
+	<!-- 保存分享指数 -->
+	<insert id="saveCsShareIndex"  parameterClass="com.ccclubs.model.CsShareIndex">
+		insert into cs_share_index$suffix$
+		(
+			cs_share_index$suffix$.cssi_host
+			,cs_share_index$suffix$.cssi_source
+			,cs_share_index$suffix$.cssi_web_s
+			,cs_share_index$suffix$.cssi_weibo_s
+			,cs_share_index$suffix$.cssi_weixin_s
+			,cs_share_index$suffix$.cssi_update_time
+			,cs_share_index$suffix$.cssi_add_time
+			,cs_share_index$suffix$.cssi_status
+		)
+		values(
+			<isNotNull property="cssiHost" prepend="">
+				#cssiHost#
+			</isNotNull>
+			<isNull property="cssiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssiSource" prepend=",">
+				#cssiSource#
+			</isNotNull>
+			<isNull property="cssiSource" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssiWebS" prepend=",">
+				#cssiWebS#
+			</isNotNull>
+			<isNull property="cssiWebS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssiWeiboS" prepend=",">
+				#cssiWeiboS#
+			</isNotNull>
+			<isNull property="cssiWeiboS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssiWeixinS" prepend=",">
+				#cssiWeixinS#
+			</isNotNull>
+			<isNull property="cssiWeixinS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssiUpdateTime" prepend=",">
+				#cssiUpdateTime#
+			</isNotNull>
+			<isNull property="cssiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssiAddTime" prepend=",">
+				#cssiAddTime#
+			</isNotNull>
+			<isNull property="cssiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssiStatus" prepend=",">
+				#cssiStatus#
+			</isNotNull>
+			<isNull property="cssiStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新分享指数 -->
+	<update id="updateCsShareIndex"  parameterClass="com.ccclubs.model.CsShareIndex">
+		update cs_share_index$suffix$ set
+			<isNotNull property="cssiHost" prepend="">
+				cs_share_index$suffix$.cssi_host = #cssiHost#
+			</isNotNull>
+			<isNull property="cssiHost" prepend="">
+				cs_share_index$suffix$.cssi_host = null
+			</isNull>				
+			<isNotNull property="cssiSource" prepend=",">
+				cs_share_index$suffix$.cssi_source = #cssiSource#
+			</isNotNull>
+			<isNull property="cssiSource" prepend=",">
+				cs_share_index$suffix$.cssi_source = null
+			</isNull>				
+			<isNotNull property="cssiWebS" prepend=",">
+				cs_share_index$suffix$.cssi_web_s = #cssiWebS#
+			</isNotNull>
+			<isNull property="cssiWebS" prepend=",">
+				cs_share_index$suffix$.cssi_web_s = null
+			</isNull>				
+			<isNotNull property="cssiWeiboS" prepend=",">
+				cs_share_index$suffix$.cssi_weibo_s = #cssiWeiboS#
+			</isNotNull>
+			<isNull property="cssiWeiboS" prepend=",">
+				cs_share_index$suffix$.cssi_weibo_s = null
+			</isNull>				
+			<isNotNull property="cssiWeixinS" prepend=",">
+				cs_share_index$suffix$.cssi_weixin_s = #cssiWeixinS#
+			</isNotNull>
+			<isNull property="cssiWeixinS" prepend=",">
+				cs_share_index$suffix$.cssi_weixin_s = null
+			</isNull>				
+			<isNotNull property="cssiUpdateTime" prepend=",">
+				cs_share_index$suffix$.cssi_update_time = #cssiUpdateTime#
+			</isNotNull>
+			<isNull property="cssiUpdateTime" prepend=",">
+				cs_share_index$suffix$.cssi_update_time = null
+			</isNull>				
+			<isNotNull property="cssiAddTime" prepend=",">
+				cs_share_index$suffix$.cssi_add_time = #cssiAddTime#
+			</isNotNull>
+			<isNull property="cssiAddTime" prepend=",">
+				cs_share_index$suffix$.cssi_add_time = null
+			</isNull>				
+			<isNotNull property="cssiStatus" prepend=",">
+				cs_share_index$suffix$.cssi_status = #cssiStatus#
+			</isNotNull>
+			<isNull property="cssiStatus" prepend=",">
+				cs_share_index$suffix$.cssi_status = null
+			</isNull>				
+		where
+			cssi_id=#cssiId#
+	</update>
+	
+	<!-- 更新分享指数非空字段 -->
+	<update id="updateCsShareIndex$NotNull"  parameterClass="com.ccclubs.model.CsShareIndex">
+		update cs_share_index$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssiHost" prepend=",">
+				cs_share_index$suffix$.cssi_host = #cssiHost#
+			</isNotNull>		
+			<isNotNull property="cssiSource" prepend=",">
+				cs_share_index$suffix$.cssi_source = #cssiSource#
+			</isNotNull>		
+			<isNotNull property="cssiWebS" prepend=",">
+				cs_share_index$suffix$.cssi_web_s = #cssiWebS#
+			</isNotNull>		
+			<isNotNull property="cssiWeiboS" prepend=",">
+				cs_share_index$suffix$.cssi_weibo_s = #cssiWeiboS#
+			</isNotNull>		
+			<isNotNull property="cssiWeixinS" prepend=",">
+				cs_share_index$suffix$.cssi_weixin_s = #cssiWeixinS#
+			</isNotNull>		
+			<isNotNull property="cssiUpdateTime" prepend=",">
+				cs_share_index$suffix$.cssi_update_time = #cssiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cssiAddTime" prepend=",">
+				cs_share_index$suffix$.cssi_add_time = #cssiAddTime#
+			</isNotNull>		
+			<isNotNull property="cssiStatus" prepend=",">
+				cs_share_index$suffix$.cssi_status = #cssiStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cssi_id=#cssiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个分享指数 -->
+	<delete id="deleteCsShareIndexById" parameterClass="java.util.HashMap">
+		delete from cs_share_index$suffix$ where cssi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个分享指数 -->
+	<update id="removeCsShareIndexById" parameterClass="java.util.HashMap">
+		update cs_share_index$suffix$ set  cs_share_index$suffix$.cssi_status=-1  where cssi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新分享指数 -->
+	<update id="updateCsShareIndexBy"  parameterClass="java.util.HashMap">
+		update cs_share_index$suffix$ set		
+			cssi_id=cssi_id
+			<isNotNull property="V_cssiId" prepend=",">
+				cs_share_index$suffix$.cssi_id = #V_cssiId#
+			</isNotNull>		
+			<isNotNull property="V_cssiHost" prepend=",">
+				cs_share_index$suffix$.cssi_host = #V_cssiHost#
+			</isNotNull>		
+			<isNotNull property="V_cssiSource" prepend=",">
+				cs_share_index$suffix$.cssi_source = #V_cssiSource#
+			</isNotNull>		
+			<isNotNull property="V_cssiWebS" prepend=",">
+				cs_share_index$suffix$.cssi_web_s = #V_cssiWebS#
+			</isNotNull>		
+			<isNotNull property="V_cssiWeiboS" prepend=",">
+				cs_share_index$suffix$.cssi_weibo_s = #V_cssiWeiboS#
+			</isNotNull>		
+			<isNotNull property="V_cssiWeixinS" prepend=",">
+				cs_share_index$suffix$.cssi_weixin_s = #V_cssiWeixinS#
+			</isNotNull>		
+			<isNotNull property="V_cssiUpdateTime" prepend=",">
+				cs_share_index$suffix$.cssi_update_time = #V_cssiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cssiAddTime" prepend=",">
+				cs_share_index$suffix$.cssi_add_time = #V_cssiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssiStatus" prepend=",">
+				cs_share_index$suffix$.cssi_status = #V_cssiStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.cssi_source=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_share_index$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_share_index$suffix$.cssi_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CssiSource"><!-- 调用一下CssiSource，把CsMember指向CssiSource --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsShareIndex_part.cs_share_index_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除分享指数 -->
+	<update id="deleteCsShareIndexBy"  parameterClass="java.util.HashMap">
+		delete from cs_share_index$suffix$ where 
+		cs_share_index$suffix$.cssi_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsShareIndex_part.cs_share_index_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

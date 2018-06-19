@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 节假日之SQL映射 -->
+	<resultMap id="CsHoliday" class="com.ccclubs.model.CsHoliday">
+		<result property="cshId" column="csh_id"/>
+		<result property="cshName" column="csh_name"/>
+		<result property="cshDate" column="csh_date"/>
+		<result property="cshType" column="csh_type"/>
+		<result property="cshIndex" column="csh_index"/>
+	</resultMap>
+		
+	<!-- 获取所有节假日 -->
+	<select id="getCsHolidayList" resultMap="CsHoliday">
+		select cs_holiday$suffix$.* from cs_holiday$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsHoliday_part.cs_holiday_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csh_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取节假日分页 -->
+	<select id="getCsHolidayPage" parameterClass="java.util.HashMap" resultMap="CsHoliday">
+		select cs_holiday$suffix$.* from cs_holiday$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsHoliday_part.cs_holiday_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csh_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取节假日总数 -->
+	<select id="getCsHolidayEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_holiday$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsHoliday_part.cs_holiday_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取节假日 -->
+	<select id="getCsHolidayById" parameterClass="java.util.HashMap" resultMap="CsHoliday">
+		select cs_holiday$suffix$.* from cs_holiday$suffix$
+		where csh_id=#id#
+	</select>
+	
+		
+	<!-- 保存节假日 -->
+	<insert id="saveCsHoliday"  parameterClass="com.ccclubs.model.CsHoliday">
+		insert into cs_holiday$suffix$
+		(
+			cs_holiday$suffix$.csh_name
+			,cs_holiday$suffix$.csh_date
+			,cs_holiday$suffix$.csh_type
+			,cs_holiday$suffix$.csh_index
+		)
+		values(
+			<isNotNull property="cshName" prepend="">
+				#cshName#
+			</isNotNull>
+			<isNull property="cshName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cshDate" prepend=",">
+				#cshDate#
+			</isNotNull>
+			<isNull property="cshDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshType" prepend=",">
+				#cshType#
+			</isNotNull>
+			<isNull property="cshType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cshIndex" prepend=",">
+				#cshIndex#
+			</isNotNull>
+			<isNull property="cshIndex" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新节假日 -->
+	<update id="updateCsHoliday"  parameterClass="com.ccclubs.model.CsHoliday">
+		update cs_holiday$suffix$ set
+			<isNotNull property="cshName" prepend="">
+				cs_holiday$suffix$.csh_name = #cshName#
+			</isNotNull>
+			<isNull property="cshName" prepend="">
+				cs_holiday$suffix$.csh_name = null
+			</isNull>				
+			<isNotNull property="cshDate" prepend=",">
+				cs_holiday$suffix$.csh_date = #cshDate#
+			</isNotNull>
+			<isNull property="cshDate" prepend=",">
+				cs_holiday$suffix$.csh_date = null
+			</isNull>				
+			<isNotNull property="cshType" prepend=",">
+				cs_holiday$suffix$.csh_type = #cshType#
+			</isNotNull>
+			<isNull property="cshType" prepend=",">
+				cs_holiday$suffix$.csh_type = null
+			</isNull>				
+			<isNotNull property="cshIndex" prepend=",">
+				cs_holiday$suffix$.csh_index = #cshIndex#
+			</isNotNull>
+			<isNull property="cshIndex" prepend=",">
+				cs_holiday$suffix$.csh_index = null
+			</isNull>				
+		where
+			csh_id=#cshId#
+	</update>
+	
+	<!-- 更新节假日非空字段 -->
+	<update id="updateCsHoliday$NotNull"  parameterClass="com.ccclubs.model.CsHoliday">
+		update cs_holiday$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cshName" prepend=",">
+				cs_holiday$suffix$.csh_name = #cshName#
+			</isNotNull>		
+			<isNotNull property="cshDate" prepend=",">
+				cs_holiday$suffix$.csh_date = #cshDate#
+			</isNotNull>		
+			<isNotNull property="cshType" prepend=",">
+				cs_holiday$suffix$.csh_type = #cshType#
+			</isNotNull>		
+			<isNotNull property="cshIndex" prepend=",">
+				cs_holiday$suffix$.csh_index = #cshIndex#
+			</isNotNull>		
+			</dynamic>
+		where
+			csh_id=#cshId#
+	</update>
+	
+
+	<!-- 根据ID删除一个节假日 -->
+	<delete id="deleteCsHolidayById" parameterClass="java.util.HashMap">
+		delete from cs_holiday$suffix$ where csh_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新节假日 -->
+	<update id="updateCsHolidayBy"  parameterClass="java.util.HashMap">
+		update cs_holiday$suffix$ set		
+			csh_id=csh_id
+			<isNotNull property="V_cshId" prepend=",">
+				cs_holiday$suffix$.csh_id = #V_cshId#
+			</isNotNull>		
+			<isNotNull property="V_cshName" prepend=",">
+				cs_holiday$suffix$.csh_name = #V_cshName#
+			</isNotNull>		
+			<isNotNull property="V_cshDate" prepend=",">
+				cs_holiday$suffix$.csh_date = #V_cshDate#
+			</isNotNull>		
+			<isNotNull property="V_cshType" prepend=",">
+				cs_holiday$suffix$.csh_type = #V_cshType#
+			</isNotNull>		
+			<isNotNull property="V_cshIndex" prepend=",">
+				cs_holiday$suffix$.csh_index = #V_cshIndex#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsHoliday_part.cs_holiday_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除节假日 -->
+	<update id="deleteCsHolidayBy"  parameterClass="java.util.HashMap">
+		delete from cs_holiday$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsHoliday_part.cs_holiday_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

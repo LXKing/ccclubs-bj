@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统BUG之SQL映射 -->
+	<resultMap id="CsBug" class="com.ccclubs.model.CsBug">
+		<result property="csbId" column="csb_id"/>
+		<result property="csbTitle" column="csb_title"/>
+		<result property="csbDescript" column="csb_descript"/>
+		<result property="csbImages" column="csb_images"/>
+		<result property="csbLevel" column="csb_level"/>
+		<result property="csbTester" column="csb_tester"/>
+		<result property="csbTecher" column="csb_techer"/>
+		<result property="csbExpectTime" column="csb_expect_time"/>
+		<result property="csbUpdateTime" column="csb_update_time"/>
+		<result property="csbAddTime" column="csb_add_time"/>
+		<result property="csbRemark" column="csb_remark"/>
+		<result property="csbStatus" column="csb_status"/>
+	</resultMap>
+		
+	<!-- 获取所有系统BUG -->
+	<select id="getCsBugList" resultMap="CsBug">
+		select cs_bug$suffix$.* from cs_bug$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_bug$suffix$.csb_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsBug_part.cs_bug_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csb_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统BUG分页 -->
+	<select id="getCsBugPage" parameterClass="java.util.HashMap" resultMap="CsBug">
+		select cs_bug$suffix$.* from cs_bug$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_bug$suffix$.csb_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsBug_part.cs_bug_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csb_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统BUG总数 -->
+	<select id="getCsBugEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_bug$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_bug$suffix$.csb_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsBug_part.cs_bug_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统BUG -->
+	<select id="getCsBugById" parameterClass="java.util.HashMap" resultMap="CsBug">
+		select cs_bug$suffix$.* from cs_bug$suffix$
+		where csb_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统BUG -->
+	<insert id="saveCsBug"  parameterClass="com.ccclubs.model.CsBug">
+		insert into cs_bug$suffix$
+		(
+			cs_bug$suffix$.csb_title
+			,cs_bug$suffix$.csb_descript
+			,cs_bug$suffix$.csb_images
+			,cs_bug$suffix$.csb_level
+			,cs_bug$suffix$.csb_tester
+			,cs_bug$suffix$.csb_techer
+			,cs_bug$suffix$.csb_expect_time
+			,cs_bug$suffix$.csb_update_time
+			,cs_bug$suffix$.csb_add_time
+			,cs_bug$suffix$.csb_remark
+			,cs_bug$suffix$.csb_status
+		)
+		values(
+			<isNotNull property="csbTitle" prepend="">
+				#csbTitle#
+			</isNotNull>
+			<isNull property="csbTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csbDescript" prepend=",">
+				#csbDescript#
+			</isNotNull>
+			<isNull property="csbDescript" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbImages" prepend=",">
+				#csbImages#
+			</isNotNull>
+			<isNull property="csbImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbLevel" prepend=",">
+				#csbLevel#
+			</isNotNull>
+			<isNull property="csbLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbTester" prepend=",">
+				#csbTester#
+			</isNotNull>
+			<isNull property="csbTester" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbTecher" prepend=",">
+				#csbTecher#
+			</isNotNull>
+			<isNull property="csbTecher" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbExpectTime" prepend=",">
+				#csbExpectTime#
+			</isNotNull>
+			<isNull property="csbExpectTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbUpdateTime" prepend=",">
+				#csbUpdateTime#
+			</isNotNull>
+			<isNull property="csbUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbAddTime" prepend=",">
+				#csbAddTime#
+			</isNotNull>
+			<isNull property="csbAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbRemark" prepend=",">
+				#csbRemark#
+			</isNotNull>
+			<isNull property="csbRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csbStatus" prepend=",">
+				#csbStatus#
+			</isNotNull>
+			<isNull property="csbStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统BUG -->
+	<update id="updateCsBug"  parameterClass="com.ccclubs.model.CsBug">
+		update cs_bug$suffix$ set
+			<isNotNull property="csbTitle" prepend="">
+				cs_bug$suffix$.csb_title = #csbTitle#
+			</isNotNull>
+			<isNull property="csbTitle" prepend="">
+				cs_bug$suffix$.csb_title = null
+			</isNull>				
+			<isNotNull property="csbDescript" prepend=",">
+				cs_bug$suffix$.csb_descript = #csbDescript#
+			</isNotNull>
+			<isNull property="csbDescript" prepend=",">
+				cs_bug$suffix$.csb_descript = null
+			</isNull>				
+			<isNotNull property="csbImages" prepend=",">
+				cs_bug$suffix$.csb_images = #csbImages#
+			</isNotNull>
+			<isNull property="csbImages" prepend=",">
+				cs_bug$suffix$.csb_images = null
+			</isNull>				
+			<isNotNull property="csbLevel" prepend=",">
+				cs_bug$suffix$.csb_level = #csbLevel#
+			</isNotNull>
+			<isNull property="csbLevel" prepend=",">
+				cs_bug$suffix$.csb_level = null
+			</isNull>				
+			<isNotNull property="csbTester" prepend=",">
+				cs_bug$suffix$.csb_tester = #csbTester#
+			</isNotNull>
+			<isNull property="csbTester" prepend=",">
+				cs_bug$suffix$.csb_tester = null
+			</isNull>				
+			<isNotNull property="csbTecher" prepend=",">
+				cs_bug$suffix$.csb_techer = #csbTecher#
+			</isNotNull>
+			<isNull property="csbTecher" prepend=",">
+				cs_bug$suffix$.csb_techer = null
+			</isNull>				
+			<isNotNull property="csbExpectTime" prepend=",">
+				cs_bug$suffix$.csb_expect_time = #csbExpectTime#
+			</isNotNull>
+			<isNull property="csbExpectTime" prepend=",">
+				cs_bug$suffix$.csb_expect_time = null
+			</isNull>				
+			<isNotNull property="csbUpdateTime" prepend=",">
+				cs_bug$suffix$.csb_update_time = #csbUpdateTime#
+			</isNotNull>
+			<isNull property="csbUpdateTime" prepend=",">
+				cs_bug$suffix$.csb_update_time = null
+			</isNull>				
+			<isNotNull property="csbAddTime" prepend=",">
+				cs_bug$suffix$.csb_add_time = #csbAddTime#
+			</isNotNull>
+			<isNull property="csbAddTime" prepend=",">
+				cs_bug$suffix$.csb_add_time = null
+			</isNull>				
+			<isNotNull property="csbRemark" prepend=",">
+				cs_bug$suffix$.csb_remark = #csbRemark#
+			</isNotNull>
+			<isNull property="csbRemark" prepend=",">
+				cs_bug$suffix$.csb_remark = null
+			</isNull>				
+			<isNotNull property="csbStatus" prepend=",">
+				cs_bug$suffix$.csb_status = #csbStatus#
+			</isNotNull>
+			<isNull property="csbStatus" prepend=",">
+				cs_bug$suffix$.csb_status = null
+			</isNull>				
+		where
+			csb_id=#csbId#
+	</update>
+	
+	<!-- 更新系统BUG非空字段 -->
+	<update id="updateCsBug$NotNull"  parameterClass="com.ccclubs.model.CsBug">
+		update cs_bug$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csbTitle" prepend=",">
+				cs_bug$suffix$.csb_title = #csbTitle#
+			</isNotNull>		
+			<isNotNull property="csbDescript" prepend=",">
+				cs_bug$suffix$.csb_descript = #csbDescript#
+			</isNotNull>		
+			<isNotNull property="csbImages" prepend=",">
+				cs_bug$suffix$.csb_images = #csbImages#
+			</isNotNull>		
+			<isNotNull property="csbLevel" prepend=",">
+				cs_bug$suffix$.csb_level = #csbLevel#
+			</isNotNull>		
+			<isNotNull property="csbTester" prepend=",">
+				cs_bug$suffix$.csb_tester = #csbTester#
+			</isNotNull>		
+			<isNotNull property="csbTecher" prepend=",">
+				cs_bug$suffix$.csb_techer = #csbTecher#
+			</isNotNull>		
+			<isNotNull property="csbExpectTime" prepend=",">
+				cs_bug$suffix$.csb_expect_time = #csbExpectTime#
+			</isNotNull>		
+			<isNotNull property="csbUpdateTime" prepend=",">
+				cs_bug$suffix$.csb_update_time = #csbUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csbAddTime" prepend=",">
+				cs_bug$suffix$.csb_add_time = #csbAddTime#
+			</isNotNull>		
+			<isNotNull property="csbRemark" prepend=",">
+				cs_bug$suffix$.csb_remark = #csbRemark#
+			</isNotNull>		
+			<isNotNull property="csbStatus" prepend=",">
+				cs_bug$suffix$.csb_status = #csbStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csb_id=#csbId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统BUG -->
+	<delete id="deleteCsBugById" parameterClass="java.util.HashMap">
+		delete from cs_bug$suffix$ where csb_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个系统BUG -->
+	<update id="removeCsBugById" parameterClass="java.util.HashMap">
+		update cs_bug$suffix$ set  cs_bug$suffix$.csb_status=-1  where csb_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新系统BUG -->
+	<update id="updateCsBugBy"  parameterClass="java.util.HashMap">
+		update cs_bug$suffix$ set		
+			csb_id=csb_id
+			<isNotNull property="V_csbId" prepend=",">
+				cs_bug$suffix$.csb_id = #V_csbId#
+			</isNotNull>		
+			<isNotNull property="V_csbTitle" prepend=",">
+				cs_bug$suffix$.csb_title = #V_csbTitle#
+			</isNotNull>		
+			<isNotNull property="V_csbDescript" prepend=",">
+				cs_bug$suffix$.csb_descript = #V_csbDescript#
+			</isNotNull>		
+			<isNotNull property="V_csbImages" prepend=",">
+				cs_bug$suffix$.csb_images = #V_csbImages#
+			</isNotNull>		
+			<isNotNull property="V_csbLevel" prepend=",">
+				cs_bug$suffix$.csb_level = #V_csbLevel#
+			</isNotNull>		
+			<isNotNull property="V_csbTester" prepend=",">
+				cs_bug$suffix$.csb_tester = #V_csbTester#
+			</isNotNull>		
+			<isNotNull property="V_csbTecher" prepend=",">
+				cs_bug$suffix$.csb_techer = #V_csbTecher#
+			</isNotNull>		
+			<isNotNull property="V_csbExpectTime" prepend=",">
+				cs_bug$suffix$.csb_expect_time = #V_csbExpectTime#
+			</isNotNull>		
+			<isNotNull property="V_csbUpdateTime" prepend=",">
+				cs_bug$suffix$.csb_update_time = #V_csbUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csbAddTime" prepend=",">
+				cs_bug$suffix$.csb_add_time = #V_csbAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csbRemark" prepend=",">
+				cs_bug$suffix$.csb_remark = #V_csbRemark#
+			</isNotNull>		
+			<isNotNull property="V_csbStatus" prepend=",">
+				cs_bug$suffix$.csb_status = #V_csbStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_bug$suffix$.csb_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsBug_part.cs_bug_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统BUG -->
+	<update id="deleteCsBugBy"  parameterClass="java.util.HashMap">
+		delete from cs_bug$suffix$ where 
+		cs_bug$suffix$.csb_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsBug_part.cs_bug_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

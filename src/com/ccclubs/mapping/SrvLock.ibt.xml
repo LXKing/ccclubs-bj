@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 事务锁之SQL映射 -->
+	<resultMap id="SrvLock" class="com.ccclubs.model.SrvLock">
+		<result property="slId" column="sl_id"/>
+		<result property="slProfile" column="sl_profile"/>
+		<result property="slType" column="sl_type"/>
+		<result property="slTime" column="sl_time"/>
+	</resultMap>
+		
+	<!-- 获取所有事务锁 -->
+	<select id="getSrvLockList" resultMap="SrvLock">
+		select srv_lock$suffix$.* from srv_lock$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvLock_part.srv_lock_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sl_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取事务锁分页 -->
+	<select id="getSrvLockPage" parameterClass="java.util.HashMap" resultMap="SrvLock">
+		select srv_lock$suffix$.* from srv_lock$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvLock_part.srv_lock_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sl_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取事务锁总数 -->
+	<select id="getSrvLockEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_lock$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvLock_part.srv_lock_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取事务锁 -->
+	<select id="getSrvLockById" parameterClass="java.util.HashMap" resultMap="SrvLock">
+		select srv_lock$suffix$.* from srv_lock$suffix$
+		where sl_id=#id#
+	</select>
+	
+		
+	<!-- 保存事务锁 -->
+	<insert id="saveSrvLock"  parameterClass="com.ccclubs.model.SrvLock">
+		insert into srv_lock$suffix$
+		(
+			srv_lock$suffix$.sl_profile
+			,srv_lock$suffix$.sl_type
+			,srv_lock$suffix$.sl_time
+		)
+		values(
+			<isNotNull property="slProfile" prepend="">
+				#slProfile#
+			</isNotNull>
+			<isNull property="slProfile" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="slType" prepend=",">
+				#slType#
+			</isNotNull>
+			<isNull property="slType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="slTime" prepend=",">
+				#slTime#
+			</isNotNull>
+			<isNull property="slTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新事务锁 -->
+	<update id="updateSrvLock"  parameterClass="com.ccclubs.model.SrvLock">
+		update srv_lock$suffix$ set
+			<isNotNull property="slProfile" prepend="">
+				srv_lock$suffix$.sl_profile = #slProfile#
+			</isNotNull>
+			<isNull property="slProfile" prepend="">
+				srv_lock$suffix$.sl_profile = null
+			</isNull>				
+			<isNotNull property="slType" prepend=",">
+				srv_lock$suffix$.sl_type = #slType#
+			</isNotNull>
+			<isNull property="slType" prepend=",">
+				srv_lock$suffix$.sl_type = null
+			</isNull>				
+			<isNotNull property="slTime" prepend=",">
+				srv_lock$suffix$.sl_time = #slTime#
+			</isNotNull>
+			<isNull property="slTime" prepend=",">
+				srv_lock$suffix$.sl_time = null
+			</isNull>				
+		where
+			sl_id=#slId#
+	</update>
+	
+	<!-- 更新事务锁非空字段 -->
+	<update id="updateSrvLock$NotNull"  parameterClass="com.ccclubs.model.SrvLock">
+		update srv_lock$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="slProfile" prepend=",">
+				srv_lock$suffix$.sl_profile = #slProfile#
+			</isNotNull>		
+			<isNotNull property="slType" prepend=",">
+				srv_lock$suffix$.sl_type = #slType#
+			</isNotNull>		
+			<isNotNull property="slTime" prepend=",">
+				srv_lock$suffix$.sl_time = #slTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			sl_id=#slId#
+	</update>
+	
+
+	<!-- 根据ID删除一个事务锁 -->
+	<delete id="deleteSrvLockById" parameterClass="java.util.HashMap">
+		delete from srv_lock$suffix$ where sl_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新事务锁 -->
+	<update id="updateSrvLockBy"  parameterClass="java.util.HashMap">
+		update srv_lock$suffix$ set		
+			sl_id=sl_id
+			<isNotNull property="V_slId" prepend=",">
+				srv_lock$suffix$.sl_id = #V_slId#
+			</isNotNull>		
+			<isNotNull property="V_slProfile" prepend=",">
+				srv_lock$suffix$.sl_profile = #V_slProfile#
+			</isNotNull>		
+			<isNotNull property="V_slType" prepend=",">
+				srv_lock$suffix$.sl_type = #V_slType#
+			</isNotNull>		
+			<isNotNull property="V_slTime" prepend=",">
+				srv_lock$suffix$.sl_time = #V_slTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvLock_part.srv_lock_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除事务锁 -->
+	<update id="deleteSrvLockBy"  parameterClass="java.util.HashMap">
+		delete from srv_lock$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvLock_part.srv_lock_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsElecHistory_part">	
+	<!-- 电桩历史数据条件sql片段  -->
+	<sql id="cs_elec_history_dynamic">
+		<dynamic>
+			<isNotEmpty property="csehId" prepend="and">
+			    $csehIdNot$ cs_elec_history$suffix$.cseh_id = #csehId#
+			</isNotEmpty>
+			<isNotNull property="csehIdNot" prepend="and">
+				<isEmpty property="csehId">
+				$csehIdNot$ cs_elec_history$suffix$.cseh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehDid" prepend="and">			    
+			    (<isNotNull property="csehDidNot">
+			    cs_elec_history$suffix$.cseh_did is null or length(cs_elec_history$suffix$.cseh_did) &lt; 1 or
+			    </isNotNull>$csehDidNot$ cs_elec_history$suffix$.cseh_did = #csehDid#)
+			</isNotEmpty>
+			<isNotNull property="csehDidNot" prepend="and">
+				<isEmpty property="csehDid">
+				$csehDidNot$ (cs_elec_history$suffix$.cseh_did is null or length(cs_elec_history$suffix$.cseh_did) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehPowerPile" prepend="and">
+			    $csehPowerPileNot$ cs_elec_history$suffix$.cseh_power_pile = #csehPowerPile#
+			</isNotEmpty>
+			<isNotNull property="csehPowerPileNot" prepend="and">
+				<isEmpty property="csehPowerPile">
+				$csehPowerPileNot$ cs_elec_history$suffix$.cseh_power_pile is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehStatusCode" prepend="and">			    
+			    (<isNotNull property="csehStatusCodeNot">
+			    cs_elec_history$suffix$.cseh_status_code is null or length(cs_elec_history$suffix$.cseh_status_code) &lt; 1 or
+			    </isNotNull>$csehStatusCodeNot$ cs_elec_history$suffix$.cseh_status_code = #csehStatusCode#)
+			</isNotEmpty>
+			<isNotNull property="csehStatusCodeNot" prepend="and">
+				<isEmpty property="csehStatusCode">
+				$csehStatusCodeNot$ (cs_elec_history$suffix$.cseh_status_code is null or length(cs_elec_history$suffix$.cseh_status_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehStatusText" prepend="and">			    
+			    (<isNotNull property="csehStatusTextNot">
+			    cs_elec_history$suffix$.cseh_status_text is null or length(cs_elec_history$suffix$.cseh_status_text) &lt; 1 or
+			    </isNotNull>$csehStatusTextNot$ cs_elec_history$suffix$.cseh_status_text like #csehStatusText#)
+			</isNotEmpty>
+			<isNotNull property="csehStatusTextNot" prepend="and">
+				<isEmpty property="csehStatusText">
+				$csehStatusTextNot$ (cs_elec_history$suffix$.cseh_status_text is null or length(cs_elec_history$suffix$.cseh_status_text) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehEleAmount" prepend="and">			    
+			    (<isNotNull property="csehEleAmountNot">
+			    cs_elec_history$suffix$.cseh_ele_amount is null or length(cs_elec_history$suffix$.cseh_ele_amount) &lt; 1 or
+			    </isNotNull>$csehEleAmountNot$ cs_elec_history$suffix$.cseh_ele_amount = #csehEleAmount#)
+			</isNotEmpty>
+			<isNotNull property="csehEleAmountNot" prepend="and">
+				<isEmpty property="csehEleAmount">
+				$csehEleAmountNot$ (cs_elec_history$suffix$.cseh_ele_amount is null or length(cs_elec_history$suffix$.cseh_ele_amount) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehTimeLong" prepend="and">			    
+			    (<isNotNull property="csehTimeLongNot">
+			    cs_elec_history$suffix$.cseh_time_long is null or length(cs_elec_history$suffix$.cseh_time_long) &lt; 1 or
+			    </isNotNull>$csehTimeLongNot$ cs_elec_history$suffix$.cseh_time_long = #csehTimeLong#)
+			</isNotEmpty>
+			<isNotNull property="csehTimeLongNot" prepend="and">
+				<isEmpty property="csehTimeLong">
+				$csehTimeLongNot$ (cs_elec_history$suffix$.cseh_time_long is null or length(cs_elec_history$suffix$.cseh_time_long) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehErrorCode" prepend="and">			    
+			    (<isNotNull property="csehErrorCodeNot">
+			    cs_elec_history$suffix$.cseh_error_code is null or length(cs_elec_history$suffix$.cseh_error_code) &lt; 1 or
+			    </isNotNull>$csehErrorCodeNot$ cs_elec_history$suffix$.cseh_error_code = #csehErrorCode#)
+			</isNotEmpty>
+			<isNotNull property="csehErrorCodeNot" prepend="and">
+				<isEmpty property="csehErrorCode">
+				$csehErrorCodeNot$ (cs_elec_history$suffix$.cseh_error_code is null or length(cs_elec_history$suffix$.cseh_error_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehCollectTimeStart" prepend="and">
+			    $csehCollectTimeNot$   (cs_elec_history$suffix$.cseh_collect_time &gt;= #csehCollectTimeStart#
+			   <isEmpty property="csehCollectTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csehCollectTimeEnd" prepend="and">
+				<isEmpty property="csehCollectTimeStart">$csehCollectTimeNot$   (</isEmpty>
+			    cs_elec_history$suffix$.cseh_collect_time &lt;= #csehCollectTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csehCollectTime" prepend="and">
+			    $csehCollectTimeNot$ cs_elec_history$suffix$.cseh_collect_time = #csehCollectTime#
+			</isNotEmpty>
+			<isNotNull property="csehCollectTimeNot" prepend="and">
+				<isEmpty property="csehCollectTimeStart"><isEmpty property="csehCollectTimeEnd"><isEmpty property="csehCollectTime">
+				$csehCollectTimeNot$ cs_elec_history$suffix$.cseh_collect_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehAddTimeStart" prepend="and">
+			    $csehAddTimeNot$   (cs_elec_history$suffix$.cseh_add_time &gt;= #csehAddTimeStart#
+			   <isEmpty property="csehAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csehAddTimeEnd" prepend="and">
+				<isEmpty property="csehAddTimeStart">$csehAddTimeNot$   (</isEmpty>
+			    cs_elec_history$suffix$.cseh_add_time &lt;= #csehAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csehAddTime" prepend="and">
+			    $csehAddTimeNot$ cs_elec_history$suffix$.cseh_add_time = #csehAddTime#
+			</isNotEmpty>
+			<isNotNull property="csehAddTimeNot" prepend="and">
+				<isEmpty property="csehAddTimeStart"><isEmpty property="csehAddTimeEnd"><isEmpty property="csehAddTime">
+				$csehAddTimeNot$ cs_elec_history$suffix$.cseh_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csehData" prepend="and">			    
+			    (<isNotNull property="csehDataNot">
+			    cs_elec_history$suffix$.cseh_data is null or length(cs_elec_history$suffix$.cseh_data) &lt; 1 or
+			    </isNotNull>$csehDataNot$ cs_elec_history$suffix$.cseh_data like #csehData#)
+			</isNotEmpty>
+			<isNotNull property="csehDataNot" prepend="and">
+				<isEmpty property="csehData">
+				$csehDataNot$ (cs_elec_history$suffix$.cseh_data is null or length(cs_elec_history$suffix$.cseh_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 电桩历史数据left join 条件sql片段 -->
+	<sql id="cs_elec_history_join">
+		<dynamic>
+			<isNotEmpty property="CsElecHistory.csehId" prepend="and">
+			    $CsElecHistory.csehIdNot$ cs_elec_history$CsElecHistory.suffix$.cseh_id = #CsElecHistory.csehId#
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehIdNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehId">
+				$csehIdNot$ cs_elec_history$CsElecHistory.suffix$.cseh_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehDid" prepend="and">
+				(<isNotNull property="CsElecHistory.csehDidNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_did is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_did) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehDidNot$ cs_elec_history$CsElecHistory.suffix$.cseh_did = #CsElecHistory.csehDid#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehDidNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehDid">
+				$csehDidNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_did is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_did) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehPowerPile" prepend="and">
+			    $CsElecHistory.csehPowerPileNot$ cs_elec_history$CsElecHistory.suffix$.cseh_power_pile = #CsElecHistory.csehPowerPile#
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehPowerPileNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehPowerPile">
+				$csehPowerPileNot$ cs_elec_history$CsElecHistory.suffix$.cseh_power_pile is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehStatusCode" prepend="and">
+				(<isNotNull property="CsElecHistory.csehStatusCodeNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_status_code is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_status_code) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehStatusCodeNot$ cs_elec_history$CsElecHistory.suffix$.cseh_status_code = #CsElecHistory.csehStatusCode#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehStatusCodeNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehStatusCode">
+				$csehStatusCodeNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_status_code is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_status_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehStatusText" prepend="and">
+				(<isNotNull property="CsElecHistory.csehStatusTextNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_status_text is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_status_text) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehStatusTextNot$ cs_elec_history$CsElecHistory.suffix$.cseh_status_text like #CsElecHistory.csehStatusText#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehStatusTextNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehStatusText">
+				$csehStatusTextNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_status_text is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_status_text) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehEleAmount" prepend="and">
+				(<isNotNull property="CsElecHistory.csehEleAmountNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_ele_amount is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_ele_amount) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehEleAmountNot$ cs_elec_history$CsElecHistory.suffix$.cseh_ele_amount = #CsElecHistory.csehEleAmount#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehEleAmountNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehEleAmount">
+				$csehEleAmountNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_ele_amount is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_ele_amount) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehTimeLong" prepend="and">
+				(<isNotNull property="CsElecHistory.csehTimeLongNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_time_long is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_time_long) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehTimeLongNot$ cs_elec_history$CsElecHistory.suffix$.cseh_time_long = #CsElecHistory.csehTimeLong#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehTimeLongNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehTimeLong">
+				$csehTimeLongNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_time_long is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_time_long) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehErrorCode" prepend="and">
+				(<isNotNull property="CsElecHistory.csehErrorCodeNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_error_code is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_error_code) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehErrorCodeNot$ cs_elec_history$CsElecHistory.suffix$.cseh_error_code = #CsElecHistory.csehErrorCode#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehErrorCodeNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehErrorCode">
+				$csehErrorCodeNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_error_code is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_error_code) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehCollectTimeStart" prepend="and">
+			    $CsElecHistory.csehCollectTimeNot$   (cs_elec_history$CsElecHistory.suffix$.cseh_collect_time &gt;= #CsElecHistory.csehCollectTimeStart#
+			   <isEmpty property="CsElecHistory.csehCollectTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsElecHistory.csehCollectTimeEnd" prepend="and">
+				<isEmpty property="CsElecHistory.csehCollectTimeStart">$CsElecHistory.csehCollectTimeNot$   (</isEmpty>
+			    cs_elec_history$CsElecHistory.suffix$.cseh_collect_time &lt;= #CsElecHistory.csehCollectTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsElecHistory.csehCollectTime" prepend="and">
+			    $CsElecHistory.csehCollectTimeNot$ cs_elec_history$CsElecHistory.suffix$.cseh_collect_time = #CsElecHistory.csehCollectTime#
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehCollectTimeNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehCollectTimeStart"><isEmpty property="CsElecHistory.csehCollectTimeEnd"><isEmpty property="CsElecHistory.csehCollectTime">
+				$csehCollectTimeNot$ cs_elec_history$CsElecHistory.suffix$.cseh_collect_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehAddTimeStart" prepend="and">
+			    $CsElecHistory.csehAddTimeNot$   (cs_elec_history$CsElecHistory.suffix$.cseh_add_time &gt;= #CsElecHistory.csehAddTimeStart#
+			   <isEmpty property="CsElecHistory.csehAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsElecHistory.csehAddTimeEnd" prepend="and">
+				<isEmpty property="CsElecHistory.csehAddTimeStart">$CsElecHistory.csehAddTimeNot$   (</isEmpty>
+			    cs_elec_history$CsElecHistory.suffix$.cseh_add_time &lt;= #CsElecHistory.csehAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsElecHistory.csehAddTime" prepend="and">
+			    $CsElecHistory.csehAddTimeNot$ cs_elec_history$CsElecHistory.suffix$.cseh_add_time = #CsElecHistory.csehAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehAddTimeNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehAddTimeStart"><isEmpty property="CsElecHistory.csehAddTimeEnd"><isEmpty property="CsElecHistory.csehAddTime">
+				$csehAddTimeNot$ cs_elec_history$CsElecHistory.suffix$.cseh_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsElecHistory.csehData" prepend="and">
+				(<isNotNull property="CsElecHistory.csehDataNot">
+			    cs_elec_history$CsElecHistory.suffix$.cseh_data is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_data) &lt; 1 or
+			    </isNotNull>$CsElecHistory.csehDataNot$ cs_elec_history$CsElecHistory.suffix$.cseh_data like #CsElecHistory.csehData#)
+			</isNotEmpty>
+			<isNotNull property="CsElecHistory.csehDataNot" prepend="and">
+				<isEmpty property="CsElecHistory.csehData">
+				$csehDataNot$ (cs_elec_history$CsElecHistory.suffix$.cseh_data is null or length(cs_elec_history$CsElecHistory.suffix$.cseh_data) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

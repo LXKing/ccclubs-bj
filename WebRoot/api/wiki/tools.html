@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>API在线测试工具 - 开放平台</title>
+		<link rel="stylesheet" href="${basePath}api/css/style.css" type="text/css" />
+		<script type="text/javascript" src="${basePath}api/js/jquery-1.7.1.min.js"></script>
+		<script language="javascript" type="text/javascript" src="${basePath}admin/js/My97DatePicker/WdatePicker.js"></script>
+	</head>
+	<style>
+	.byA{display:none;}
+	b{color:red;}
+	</style>
+	
+	<body>
+		<%@ include file="/api/header.html"%>
+		
+		<div id="bd">
+		
+			<div class="div">
+				<div class="title">
+					<span>API在线测试工具</span>
+				</div>
+			</div>
+		
+			<div class="div">
+			
+			
+				<font>系统分配AppKey只能调用基础API，增值API需要填入自己申请的AppKey</font>
+				
+				<table width="100%" border="0" cellspacing="0" cellpadding="10">
+				  <tr>
+				    <td width="50%" valign="top">
+						<table width="100%" border="0" cellspacing="0" cellpadding="10">
+						  <tr>
+							<td width="120">&nbsp;</td>
+							<td width="*">&nbsp;</td>
+						  </tr>
+						  <tr>
+							<td align="right">API类目:</td>
+							<td>
+								<select id="apiType">
+									<s:iterator value="#request.types" id="item" status="i">
+									<option ${srvApi.saType==item.spId?"selected":""} value="${item.spId}">${item.spName}</option>
+									</s:iterator>
+								</select>
+							</td>
+						  </tr>
+						  <tr>
+							<td align="right">API名称:</td>
+							<td>
+								<select id="apiName">
+									<option value=''>请选择</option>
+									<s:iterator value="#request.list" id="item" status="i">
+									<option ${srvApi.saId==item.saId?"selected":""} value="${item.saId}">${item.saNamespace}</option>
+									</s:iterator>
+								</select>
+								<b>*</b>
+							</td>
+						  </tr>
+						  <tr>
+							<td align="right">数据环境:</td>
+							<td>
+								<select id="hostType">
+									<option value="http://123.57.46.221:7006/invoke.do" selected="selected">测试环境</option>
+									<option value="http://api.ccclubs.com/invoke.do">正式</option>
+									<option value="${basePath}/invoke.do">本地</option>
+									<!-- <option value="http://localhost/invoke.do">正式</option> -->
+								</select>
+							</td>
+						  </tr>
+						  <tr>
+							<td align="right">提交方式:</td>
+							<td>
+								<select id="httpMethod">
+									<option value="GET">GET</option>
+									<option value="POST">POST</option>
+								</select>
+							</td>
+						  </tr>
+						  <lz:set name="">
+						  <tr class="by byA">
+							<td align="right">appid:</td>
+							<td>
+								<input id="appid" readonly="readonly" type="text" value="系统分配"/>
+								<a onclick="$('.by').toggle();" href="javascript:void(0);">自定义</a>
+							</td>
+						  </tr>
+						  <tr class="by byA">
+							<td align="right">appsecret:</td>
+							<td>
+								<input id="appsecret" readonly="readonly" type="text" value="系统分配"/>
+								<input id="token" type="hidden" value=""/>
+							</td>
+						  </tr>
+						  </lz:set>
+						  <tr class="by byB">
+							<td align="right">appid:</td>
+							<td>
+								<input id="appid" type="text" value="${appid}"/>
+								<b>*</b>
+								<lz:set name="">
+								<!-- <a onclick="$('.by').toggle();" href="javascript:void(0);">系统分配</a> -->
+								</lz:set>
+							</td>
+						  </tr>
+						  <tr class="by byB">
+							<td align="right">appsecret:</td>
+							<td>
+								<input id="appsecret" type="text" value="${appsecret}"/>
+								<b>*</b>
+							</td>
+						  </tr>
+						  <tr class="by byB">
+							<td align="right">token:</td>
+							<td>
+								<input id="token" type="text" value="${token}"/><a onclick="getSession();" href="javascript:void(0);">获取token</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td colspan="2" align="center">
+								参数↘↘↘将鼠标移至说明上，查看参数介绍；* 表示必填，查看
+								<a class="detail" href="${basePath}api/wiki/api.html?api=${srvApi.saId}" target="_blank">API详情</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td colspan="2" align="center">
+								<table id="paramInfos" width="100%" border="0" cellspacing="0" cellpadding="10">
+								  <tr>
+									<td width="120">&nbsp;</td>
+									<td width="*">&nbsp;</td>
+								  </tr>
+								</table>
+							</td>
+						  </tr>
+						  <tr>
+							<td colspan="2" align="center">
+								<button id="submit" style="height:32px;" type="button">&nbsp;提交测试&nbsp;</button>
+								<button style="height:32px;" type="button">&nbsp;绑定用户&nbsp;</button>
+							</td>
+						  </tr>
+						</table>
+					</td>
+				    <td width="50%" valign="top">
+						<br/><br/>
+						
+						API请求参数：<br/><br/>
+						<textarea id="request" style="width:480px;height:150px;"></textarea>
+						<br/><br/><br/><br/>
+						
+						API返回结果：<br/><br/>
+						<textarea id="response" style="width:480px;height:150px;"></textarea>
+						<br/><br/><br/><br/>
+						
+					</td>
+				  </tr>
+				</table>
+				
+			</div>
+		
+		</div>
+		
+		<%@ include file="/api/footer.html"%>
+		
+		<script>
+		$.extend({
+			getObject:function(url,params,callback,error){
+				var jsonString=$.ajax({
+				   type: "POST",
+				   dataType:(url.indexOf("=?")>-1)?"jsonp":"json",
+				   url:url,
+				   data:params,
+				   cache:false,
+				   async:callback?true:false,
+				   success:callback,
+				   error:error
+				}).responseText;
+				return eval("("+jsonString+")");
+			},
+			date: function(date,format) {
+				var dDate=date?date:new Date();
+				var str = format;    
+				var Week = ['日','一','二','三','四','五','六']; 
+				str=str.replace(/yyyy|YYYY/,dDate.getFullYear());    
+				str=str.replace(/yy|YY/,(dDate.getYear() % 100)>9?(dDate.getYear() % 100).toString():'0' + (dDate.getYear() % 100));    
+				str=str.replace(/MM/,dDate.getMonth()>8?(dDate.getMonth()+1):'0' + (dDate.getMonth()+1));    
+				str=str.replace(/M/g,dDate.getMonth()+1); 
+				str=str.replace(/w|W/g,Week[dDate.getDay()]);
+				str=str.replace(/dd|DD/,dDate.getDate()>9?dDate.getDate().toString():'0' + dDate.getDate());    
+				str=str.replace(/d|D/g,dDate.getDate());
+				str=str.replace(/hh|HH/,dDate.getHours()>9?dDate.getHours().toString():'0' + dDate.getHours());    
+				str=str.replace(/h|H/g,dDate.getHours());    
+				str=str.replace(/mm/,dDate.getMinutes()>9?dDate.getMinutes().toString():'0' + dDate.getMinutes());    
+				str=str.replace(/m/g,dDate.getMinutes());
+				str=str.replace(/ss|SS/,dDate.getSeconds()>9?dDate.getSeconds().toString():'0' + dDate.getSeconds());    
+				str=str.replace(/s|S/g,dDate.getSeconds());
+				return str;
+			},
+			encode:function(str){
+			    str = (str + '').toString(); 
+			    return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
+			}
+		});
+		$(function(){
+			$("#apiType").change(function(){
+				var json = $.getObject("${basePath}api/wiki/tools.do?type="+$(this).val(),{ajax:true});
+				$("#apiName").html("<option value=''>请选择</option>");
+				for(var o in json){
+					$("<option value='"+json[o].id+"'>"+json[o].namespace+"</option>").appendTo("#apiName");
+				}
+			});
+			$("#apiType,#apiName").change(getParamInfos);
+			getParamInfos();
+			$("#submit").click(invoke);
+		});
+		function getParamInfos(){
+			$("#paramInfos").html("");
+			if($("#apiName").val()=="")
+				return;
+			var json = $.getObject("${basePath}api/wiki/tools.do?api="+$("#apiName").val(),{ajax:true});
+			for(var o in json){
+				var tr = $("<tr></tr>").appendTo("#paramInfos");
+				var td1 = $("<td align='right'></td>").html(json[o].type+" "+json[o].name+":").appendTo(tr);
+				var td2 = $("<td></td>").html(json[o].title).appendTo(tr);
+				if(json[o].notnull=="true")
+					$("<span style='color:red;'>*</span>").prependTo(td2);
+				var input = null;
+				if(json[o].type=="Boolean"){
+					input = $("<select name=\""+json[o].name+"\"><option value='true'>true</option><option value='false'>false</option></select>").prependTo(td2);
+				}else if(json[o].type=="Date"){
+					input = $("<input onClick=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})\" name=\""+json[o].name+"\" type=\"text\"/>").prependTo(td2);
+				}else if(json[o].type=="Double"||json[o].type=="Float"){
+					input = $("<input onchange=\"onkeyup()\" onkeyup=\"var reg=/^-?(([1-9]\d{0,9})|0)?(\\.)?(\\d+)?/;this.value=this.value.match(reg)?this.value.match(reg)[0]:''\"  name=\""+json[o].name+"\" type=\"text\"/>").prependTo(td2);
+				}else{
+					input = $("<input name=\""+json[o].name+"\" type=\"text\"/>").prependTo(td2);
+				}
+				if(json[o].notnull=="true")
+					input.attr("notnull","true");
+				input.attr("title",json[o].title);
+				input.attr("params","true");
+				input.attr("javaType",json[o].type);
+			}
+		}
+		
+		function onOauthCallback(token){
+			$("#token").val(token);
+		}
+		
+		function getSession(){
+			var appid = $(".by:visible input[id='appid']").val();
+			var appsecret = $(".by:visible input[id='appsecret']").val();
+			var timestamp = $.date(new Date(),"yyyy-MM-dd HH:mm:ss");
+			
+			if(appid==""){
+				alert("请输入appid");
+				return;
+			}
+			if(appsecret==""){
+				alert("请输入appsecret");
+				return;
+			}
+			
+			
+			var direct = "";
+			var ticket = "";
+			var strSign = appsecret+"appid"+appid+"direct"+direct+"ticket"+ticket+"timestamp"+timestamp+appsecret;
+			var sign = $.getObject("${basePath}api/wiki/tools.do",{ajax:true,md5:strSign});
+						
+			//var strRequest = "http://api.ccclubs.com/oauth.do";
+			var strRequest = "${basePath}/oauth.do";
+			strRequest+="?appid="+appid+"&direct="+$.encode(direct)+"&ticket="+$.encode(ticket)+"&timestamp="+$.encode(timestamp);
+			strRequest+="&sign="+sign;
+			
+			window.open(strRequest);			
+
+		}
+		
+		function invoke(){
+			if($.trim($("#apiName option:selected").attr("value"))==""){
+				alert("请选择API名称");
+				return;
+			}
+			var method = $("#apiName option:selected").text();
+			var appid = $(".by:visible input[id='appid']").val();
+			var appsecret = $(".by:visible input[id='appsecret']").val();
+			var token = $(".by:visible input[id='token']").val();
+			var timestamp = $.date(new Date(),"yyyy-MM-dd HH:mm:ss");
+			
+			if(appid=="系统分配")appid="${testClient.sacClient}";
+			if(appsecret=="系统分配")appsecret="${testClient.sacSecret}";
+			if(appid==""){
+				alert("请输入appid");
+				return;
+			}
+			if(appsecret==""){
+				alert("请输入appsecret");
+				return;
+			}
+			var notnull = false;
+			$("[notnull]").each(function(){
+				if($(this).val()==""){
+					alert(("参数"+$(this).attr("title")+"不能为空"));
+					notnull=true;
+				}
+			});
+			if(notnull)return;
+			
+			var paramsObject = {};
+			$("[params]").each(function(){
+				var javaType = $(this).attr("javaType");
+				if(javaType=="String"||javaType=="Date")
+					paramsObject[$(this).attr("name")]=$(this).val();
+				else if(javaType=="Long"||javaType=="Integer"||javaType=="Double"||javaType=="Float"||javaType=="Short"||javaType=="Byte")
+					paramsObject[$(this).attr("name")]=$.trim($(this).val())==""?null:Number($(this).val());
+				else if(javaType=="Boolean")
+					paramsObject[$(this).attr("name")]=$(this).val()=="true";
+			});
+			var params = JSON.stringify(paramsObject);
+			var strSign = appsecret+"appid"+appid+"method"+method+"params"+params+"timestamp"+timestamp+"token"+token+appsecret;
+			var sign = $.getObject("${basePath}api/wiki/tools.do",{ajax:true,md5:strSign});
+						
+			var strRequest = $("#hostType").val();
+			strRequest+="?appid="+appid+"&method="+$.encode(method)+"&params="+$.encode(params)+"&timestamp="+$.encode(timestamp)+"&token="+$.encode(token);
+			strRequest+="&sign="+sign;
+			$("#request").val(strRequest);
+							
+			$("#response").val($.ajax({
+			   type: $("#httpMethod").val(),
+			   dataType:"text",
+			   url:strRequest,
+			   data:{},
+			   cache:false,
+			   async:false
+			}).responseText);
+		}
+		</script>
+		
+		<tr>
+									<td width="120">&nbsp;</td>
+									<td width="*">&nbsp;</td>
+								  </tr>
+	</body>
+</html>

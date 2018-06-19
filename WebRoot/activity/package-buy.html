@@ -1,0 +1,35 @@
+<s:if test="#session.tips.notNull==true">
+	<span class="message">${tips.value}</span>
+	<s:if test="#request.packaged==true">
+	<a href="${basePath}activity/activity-reserve.html">赶紧去订车吧！</a>
+	</s:if>
+</s:if>
+<s:if test="#session.ccclubs_web_login==null">
+	<br/><br/>
+	<button class="graybutton" onclick="window.location='${basePath}login.html?from=/activity/package-index.html'" type="button">立即登录</button>
+</s:if>
+
+
+<!-- 判断用户的余额是否足够 -->
+<s:if test="#request.csMember.csmMoney>=#request.csPack.cspPrice">	
+	<div class="info">
+		<span>您当前帐户余额为￥<font>${csMember.csmMoney}</font>，您确定要购买【${csPack.cspName}】吗？<br>
+		提交后将从您的帐户余额里扣除<font>${csPack.cspPrice}</font>元</span>
+	</div>
+	<div>
+		<button onclick="submitbuy('${csPack.cspFlag}')" type="button">确定支付</button>
+	</div>
+</s:if>
+<s:else>
+	<div class="info">
+		<span>对不起，您当前充值帐户余额为￥<font>${csMember.csmMoney}</font>
+		<br>
+		不能购买【${csPack.cspName}】￥<font>${csPack.cspPrice}</font>
+		<br>
+		您还需充值￥<font>${lz:digit(csPack.cspPrice-csMember.csmMoney,2)}才能购买该套餐哦</font>
+		</span>
+	</div>
+	<div>
+		<button onclick="window.location='${basePath}my/alipay.html?amount=${csPack.cspPrice-csMember.csmMoney}'" type="button">立即充值</button>
+	</div>
+</s:else>

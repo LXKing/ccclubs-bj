@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsPresent_part">	
+	<!-- 礼品赠品条件sql片段  -->
+	<sql id="cs_present_dynamic">
+		<dynamic>
+			<isNotEmpty property="cspId" prepend="and">
+			    $cspIdNot$ cs_present$suffix$.csp_id = #cspId#
+			</isNotEmpty>
+			<isNotNull property="cspIdNot" prepend="and">
+				<isEmpty property="cspId">
+				$cspIdNot$ cs_present$suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_present$suffix$.csp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cspHost" prepend="and">
+			    $cspHostNot$ cs_present$suffix$.csp_host = #cspHost#
+			</isNotEmpty>
+			<isNotNull property="cspHostNot" prepend="and">
+				<isEmpty property="cspHost">
+				$cspHostNot$ cs_present$suffix$.csp_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cspName" prepend="and">			    
+			    (<isNotNull property="cspNameNot">
+			    cs_present$suffix$.csp_name is null or length(cs_present$suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$cspNameNot$ cs_present$suffix$.csp_name like #cspName#)
+			</isNotEmpty>
+			<isNotNull property="cspNameNot" prepend="and">
+				<isEmpty property="cspName">
+				$cspNameNot$ (cs_present$suffix$.csp_name is null or length(cs_present$suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspType" prepend="and">
+			    $cspTypeNot$ cs_present$suffix$.csp_type = #cspType#
+			</isNotEmpty>
+			<isNotNull property="cspTypeNot" prepend="and">
+				<isEmpty property="cspType">
+				$cspTypeNot$ cs_present$suffix$.csp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspImage" prepend="and">
+			    $cspImageNot$ cs_present$suffix$.csp_image = #cspImage#
+			</isNotEmpty>
+			<isNotNull property="cspImageNot" prepend="and">
+				<isEmpty property="cspImage">
+				$cspImageNot$ cs_present$suffix$.csp_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspImages" prepend="and">
+			    $cspImagesNot$ cs_present$suffix$.csp_images = #cspImages#
+			</isNotEmpty>
+			<isNotNull property="cspImagesNot" prepend="and">
+				<isEmpty property="cspImages">
+				$cspImagesNot$ cs_present$suffix$.csp_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspProfile" prepend="and">			    
+			    (<isNotNull property="cspProfileNot">
+			    cs_present$suffix$.csp_profile is null or length(cs_present$suffix$.csp_profile) &lt; 1 or
+			    </isNotNull>$cspProfileNot$ cs_present$suffix$.csp_profile like #cspProfile#)
+			</isNotEmpty>
+			<isNotNull property="cspProfileNot" prepend="and">
+				<isEmpty property="cspProfile">
+				$cspProfileNot$ (cs_present$suffix$.csp_profile is null or length(cs_present$suffix$.csp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspCountMin" prepend="and">
+			    $cspCountNot$  ( cs_present$suffix$.csp_count &gt;= #cspCountMin#
+			    <isEmpty property="cspCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspCountMax" prepend="and">
+				<isEmpty property="cspCountMin">$cspCountNot$   (</isEmpty>
+			    cs_present$suffix$.csp_count &lt;= #cspCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspCount" prepend="and">
+			    $cspCountNot$ cs_present$suffix$.csp_count = #cspCount#
+			</isNotEmpty>
+			<isNotNull property="cspCountNot" prepend="and">
+				<isEmpty property="cspCountMax"><isEmpty property="cspCountMin"><isEmpty property="cspCount">
+				$cspCountNot$ cs_present$suffix$.csp_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspUpdateTimeStart" prepend="and">
+			    $cspUpdateTimeNot$   (cs_present$suffix$.csp_update_time &gt;= #cspUpdateTimeStart#
+			   <isEmpty property="cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="cspUpdateTimeStart">$cspUpdateTimeNot$   (</isEmpty>
+			    cs_present$suffix$.csp_update_time &lt;= #cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTime" prepend="and">
+			    $cspUpdateTimeNot$ cs_present$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cspUpdateTimeNot" prepend="and">
+				<isEmpty property="cspUpdateTimeStart"><isEmpty property="cspUpdateTimeEnd"><isEmpty property="cspUpdateTime">
+				$cspUpdateTimeNot$ cs_present$suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspAddTimeStart" prepend="and">
+			    $cspAddTimeNot$   (cs_present$suffix$.csp_add_time &gt;= #cspAddTimeStart#
+			   <isEmpty property="cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTimeEnd" prepend="and">
+				<isEmpty property="cspAddTimeStart">$cspAddTimeNot$   (</isEmpty>
+			    cs_present$suffix$.csp_add_time &lt;= #cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTime" prepend="and">
+			    $cspAddTimeNot$ cs_present$suffix$.csp_add_time = #cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="cspAddTimeNot" prepend="and">
+				<isEmpty property="cspAddTimeStart"><isEmpty property="cspAddTimeEnd"><isEmpty property="cspAddTime">
+				$cspAddTimeNot$ cs_present$suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspStatus" prepend="and">
+			    $cspStatusNot$ cs_present$suffix$.csp_status = #cspStatus#
+			</isNotEmpty>
+			<isNotNull property="cspStatusNot" prepend="and">
+				<isEmpty property="cspStatus">
+				$cspStatusNot$ cs_present$suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 礼品赠品left join 条件sql片段 -->
+	<sql id="cs_present_join">
+		<dynamic>
+			<isNotEmpty property="CsPresent.cspId" prepend="and">
+			    $CsPresent.cspIdNot$ cs_present$CsPresent.suffix$.csp_id = #CsPresent.cspId#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspIdNot" prepend="and">
+				<isEmpty property="CsPresent.cspId">
+				$cspIdNot$ cs_present$CsPresent.suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_present$CsPresent.suffix$.csp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspHost" prepend="and">
+			    $CsPresent.cspHostNot$ cs_present$CsPresent.suffix$.csp_host = #CsPresent.cspHost#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspHostNot" prepend="and">
+				<isEmpty property="CsPresent.cspHost">
+				$cspHostNot$ cs_present$CsPresent.suffix$.csp_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspName" prepend="and">
+				(<isNotNull property="CsPresent.cspNameNot">
+			    cs_present$CsPresent.suffix$.csp_name is null or length(cs_present$CsPresent.suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$CsPresent.cspNameNot$ cs_present$CsPresent.suffix$.csp_name like #CsPresent.cspName#)
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspNameNot" prepend="and">
+				<isEmpty property="CsPresent.cspName">
+				$cspNameNot$ (cs_present$CsPresent.suffix$.csp_name is null or length(cs_present$CsPresent.suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspType" prepend="and">
+			    $CsPresent.cspTypeNot$ cs_present$CsPresent.suffix$.csp_type = #CsPresent.cspType#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspTypeNot" prepend="and">
+				<isEmpty property="CsPresent.cspType">
+				$cspTypeNot$ cs_present$CsPresent.suffix$.csp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspImage" prepend="and">
+			    $CsPresent.cspImageNot$ cs_present$CsPresent.suffix$.csp_image = #CsPresent.cspImage#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspImageNot" prepend="and">
+				<isEmpty property="CsPresent.cspImage">
+				$cspImageNot$ cs_present$CsPresent.suffix$.csp_image is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspImages" prepend="and">
+			    $CsPresent.cspImagesNot$ cs_present$CsPresent.suffix$.csp_images = #CsPresent.cspImages#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspImagesNot" prepend="and">
+				<isEmpty property="CsPresent.cspImages">
+				$cspImagesNot$ cs_present$CsPresent.suffix$.csp_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspProfile" prepend="and">
+				(<isNotNull property="CsPresent.cspProfileNot">
+			    cs_present$CsPresent.suffix$.csp_profile is null or length(cs_present$CsPresent.suffix$.csp_profile) &lt; 1 or
+			    </isNotNull>$CsPresent.cspProfileNot$ cs_present$CsPresent.suffix$.csp_profile like #CsPresent.cspProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspProfileNot" prepend="and">
+				<isEmpty property="CsPresent.cspProfile">
+				$cspProfileNot$ (cs_present$CsPresent.suffix$.csp_profile is null or length(cs_present$CsPresent.suffix$.csp_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspCountMin" prepend="and">
+			    $CsPresent.cspCountNot$  ( cs_present$CsPresent.suffix$.csp_count &gt;= #CsPresent.cspCountMin#
+			    <isEmpty property="CsPresent.cspCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspCountMax" prepend="and">
+				<isEmpty property="CsPresent.cspCountMin">$CsPresent.cspCountNot$   (</isEmpty>
+			    cs_present$CsPresent.suffix$.csp_count &lt;= #CsPresent.cspCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspCount" prepend="and">
+			    $CsPresent.cspCountNot$ cs_present$CsPresent.suffix$.csp_count = #CsPresent.cspCount#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspCountNot" prepend="and">
+				<isEmpty property="CsPresent.cspCountMax"><isEmpty property="CsPresent.cspCountMin"><isEmpty property="CsPresent.cspCount">
+				$cspCountNot$ cs_present$CsPresent.suffix$.csp_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspUpdateTimeStart" prepend="and">
+			    $CsPresent.cspUpdateTimeNot$   (cs_present$CsPresent.suffix$.csp_update_time &gt;= #CsPresent.cspUpdateTimeStart#
+			   <isEmpty property="CsPresent.cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsPresent.cspUpdateTimeStart">$CsPresent.cspUpdateTimeNot$   (</isEmpty>
+			    cs_present$CsPresent.suffix$.csp_update_time &lt;= #CsPresent.cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspUpdateTime" prepend="and">
+			    $CsPresent.cspUpdateTimeNot$ cs_present$CsPresent.suffix$.csp_update_time = #CsPresent.cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspUpdateTimeNot" prepend="and">
+				<isEmpty property="CsPresent.cspUpdateTimeStart"><isEmpty property="CsPresent.cspUpdateTimeEnd"><isEmpty property="CsPresent.cspUpdateTime">
+				$cspUpdateTimeNot$ cs_present$CsPresent.suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspAddTimeStart" prepend="and">
+			    $CsPresent.cspAddTimeNot$   (cs_present$CsPresent.suffix$.csp_add_time &gt;= #CsPresent.cspAddTimeStart#
+			   <isEmpty property="CsPresent.cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspAddTimeEnd" prepend="and">
+				<isEmpty property="CsPresent.cspAddTimeStart">$CsPresent.cspAddTimeNot$   (</isEmpty>
+			    cs_present$CsPresent.suffix$.csp_add_time &lt;= #CsPresent.cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPresent.cspAddTime" prepend="and">
+			    $CsPresent.cspAddTimeNot$ cs_present$CsPresent.suffix$.csp_add_time = #CsPresent.cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspAddTimeNot" prepend="and">
+				<isEmpty property="CsPresent.cspAddTimeStart"><isEmpty property="CsPresent.cspAddTimeEnd"><isEmpty property="CsPresent.cspAddTime">
+				$cspAddTimeNot$ cs_present$CsPresent.suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPresent.cspStatus" prepend="and">
+			    $CsPresent.cspStatusNot$ cs_present$CsPresent.suffix$.csp_status = #CsPresent.cspStatus#
+			</isNotEmpty>
+			<isNotNull property="CsPresent.cspStatusNot" prepend="and">
+				<isEmpty property="CsPresent.cspStatus">
+				$cspStatusNot$ cs_present$CsPresent.suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

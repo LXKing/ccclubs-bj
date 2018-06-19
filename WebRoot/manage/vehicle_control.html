@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>车辆相关信息</title>
+</head>
+
+<body class="login-bg gradient">
+<div class="overall-layer registra_bg"></div>
+<div class="vehicle_title">
+	<p>车牌号：<b></b></p>
+</div>
+<div class="vehicle_layer">
+	<ul class="vehicle_ul">
+		<li>车辆上线</li>
+		<li>车辆下线</li>
+		<li>车辆调度</li>
+		<li>查看订单</li>
+		<li style="width: 96%;">车辆信息</li>
+	</ul>
+</div>
+<div id="toast">
+	正在加载...
+</div>
+<div id="toast_input">
+	<div class="overall-layer toast_bg"></div>
+	<p class="toast_p">请输入车牌号！</p>
+	<input class="toast_inpit"  type="text" id="toast_inpit" placeholder="请输入车牌号"></input>
+	<div class="bottom_btn toast_btn" id="btn_cancel"><bottom>取消</bottom></div>
+	<div class="bottom_btn toast_btn btn_greencolor" id="btn_deter"><bottom>确定</bottom></div>
+</div>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+<script type="text/javascript" src="js/vehicle_control.js?v=${lz:config('version')}"></script>
+<script type="text/javascript">
+var loacal='';
+loacal=localStorage.getItem("cscId");
+if(loacal==''||loacal==null||loacal==undefined){
+	Toast_input.show();//首次加载请输入会员信息
+}else{
+	var cardModel=localStorage.getItem("cardModel");
+	var cardnumber = localStorage.getItem("cardnumber");
+	$(".vehicle_title p b").html(/*cardModel*/cardnumber);
+}
+/*
+*切换车辆相关信息
+*/
+var btn_cancel=document.getElementById("btn_cancel");
+btn_cancel.addEventListener("touchend", function(){
+	Toast_input.hide();
+});
+var btn_deter=document.getElementById("btn_deter");
+btn_deter.addEventListener("touchend", function(){
+	Toast_input.hide();
+	var s=$(".toast_p").html();
+	var inputval=$("toast_inpit");
+	switch(s)
+		{
+		case "请输入车牌号！":
+		  layerload();//还原输入框信息
+		  if($("#toast_inpit").val()==''||$("#toast_inpit").val()==null||$("#toast_inpit").val()==undefined){
+		  	Toast.show("车牌号不能为空！");
+		  	Toast_input.show();
+		  }else{
+		  	selectcard($("#toast_inpit").val());
+		  }
+		  $("toast_inpit").val("");
+		  break;
+		case "请输入上线密码！":
+		  if($("#toast_inpit").val()!=null&&$("#toast_inpit").val()!=''&&$("#toast_inpit").val()!=undefined){
+		  	car_status($("#toast_inpit").val(),"1");
+		  	$("toast_inpit").val("");
+		  }else{
+		 	Toast_input.show();
+			Toast.show("密码不能为空");
+		  }
+		  break;
+		case "请输入下线密码！":
+		  if($("#toast_inpit").val()!=null&&$("#toast_inpit").val()!=''&&$("#toast_inpit").val()!=undefined){
+		  	car_status($("#toast_inpit").val(),"2");
+		  	$("toast_inpit").val("");
+		  }else{
+		 	Toast_input.show();
+			Toast.show("密码不能为空");
+		  }
+		  break;
+		default:
+		  alert(s);
+		}
+});
+
+/*
+*触摸效果
+*/
+mytouchnull(".vehicle_title p","touchstart","color","rgba(0,0,0 ,0.6)");
+mytouchnull(".vehicle_title p","touchend","color","rgba(255,255,255 ,0.8)",Toast_input.show);
+mytouch(".vehicle_ul li","touchstart","background","rgba(255,255,255 ,0.7)");
+mytouch(".vehicle_ul li","touchend","background","rgba(255,255,255 ,0.5)",enter_password);
+
+</script>
+</body>
+</html>

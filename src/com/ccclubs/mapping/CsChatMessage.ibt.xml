@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 客服消息之SQL映射 -->
+	<resultMap id="CsChatMessage" class="com.ccclubs.model.CsChatMessage">
+		<result property="cscmId" column="cscm_id"/>
+		<result property="cscmHost" column="cscm_host"/>
+		<result property="cscmContent" column="cscm_content"/>
+		<result property="cscmType" column="cscm_type"/>
+		<result property="cscmFrom" column="cscm_from"/>
+		<result property="cscmTarget" column="cscm_target"/>
+		<result property="cscmUpdateTime" column="cscm_update_time"/>
+		<result property="cscmAddTime" column="cscm_add_time"/>
+		<result property="cscmState" column="cscm_state"/>
+		<result property="cscmStatus" column="cscm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有客服消息 -->
+	<select id="getCsChatMessageList" resultMap="CsChatMessage">
+		select cs_chat_message$suffix$.* from cs_chat_message$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_chat_message$suffix$.cscm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChatMessage_part.cs_chat_message_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取客服消息分页 -->
+	<select id="getCsChatMessagePage" parameterClass="java.util.HashMap" resultMap="CsChatMessage">
+		select cs_chat_message$suffix$.* from cs_chat_message$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_chat_message$suffix$.cscm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChatMessage_part.cs_chat_message_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取客服消息总数 -->
+	<select id="getCsChatMessageEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_chat_message$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_chat_message$suffix$.cscm_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChatMessage_part.cs_chat_message_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取客服消息 -->
+	<select id="getCsChatMessageById" parameterClass="java.util.HashMap" resultMap="CsChatMessage">
+		select cs_chat_message$suffix$.* from cs_chat_message$suffix$
+		where cscm_id=#id#
+	</select>
+	
+		
+	<!-- 保存客服消息 -->
+	<insert id="saveCsChatMessage"  parameterClass="com.ccclubs.model.CsChatMessage">
+		insert into cs_chat_message$suffix$
+		(
+			cs_chat_message$suffix$.cscm_host
+			,cs_chat_message$suffix$.cscm_content
+			,cs_chat_message$suffix$.cscm_type
+			,cs_chat_message$suffix$.cscm_from
+			,cs_chat_message$suffix$.cscm_target
+			,cs_chat_message$suffix$.cscm_update_time
+			,cs_chat_message$suffix$.cscm_add_time
+			,cs_chat_message$suffix$.cscm_state
+			,cs_chat_message$suffix$.cscm_status
+		)
+		values(
+			<isNotNull property="cscmHost" prepend="">
+				#cscmHost#
+			</isNotNull>
+			<isNull property="cscmHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscmContent" prepend=",">
+				#cscmContent#
+			</isNotNull>
+			<isNull property="cscmContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmType" prepend=",">
+				#cscmType#
+			</isNotNull>
+			<isNull property="cscmType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmFrom" prepend=",">
+				#cscmFrom#
+			</isNotNull>
+			<isNull property="cscmFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmTarget" prepend=",">
+				#cscmTarget#
+			</isNotNull>
+			<isNull property="cscmTarget" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmUpdateTime" prepend=",">
+				#cscmUpdateTime#
+			</isNotNull>
+			<isNull property="cscmUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmAddTime" prepend=",">
+				#cscmAddTime#
+			</isNotNull>
+			<isNull property="cscmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmState" prepend=",">
+				#cscmState#
+			</isNotNull>
+			<isNull property="cscmState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmStatus" prepend=",">
+				#cscmStatus#
+			</isNotNull>
+			<isNull property="cscmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新客服消息 -->
+	<update id="updateCsChatMessage"  parameterClass="com.ccclubs.model.CsChatMessage">
+		update cs_chat_message$suffix$ set
+			<isNotNull property="cscmHost" prepend="">
+				cs_chat_message$suffix$.cscm_host = #cscmHost#
+			</isNotNull>
+			<isNull property="cscmHost" prepend="">
+				cs_chat_message$suffix$.cscm_host = null
+			</isNull>				
+			<isNotNull property="cscmContent" prepend=",">
+				cs_chat_message$suffix$.cscm_content = #cscmContent#
+			</isNotNull>
+			<isNull property="cscmContent" prepend=",">
+				cs_chat_message$suffix$.cscm_content = null
+			</isNull>				
+			<isNotNull property="cscmType" prepend=",">
+				cs_chat_message$suffix$.cscm_type = #cscmType#
+			</isNotNull>
+			<isNull property="cscmType" prepend=",">
+				cs_chat_message$suffix$.cscm_type = null
+			</isNull>				
+			<isNotNull property="cscmFrom" prepend=",">
+				cs_chat_message$suffix$.cscm_from = #cscmFrom#
+			</isNotNull>
+			<isNull property="cscmFrom" prepend=",">
+				cs_chat_message$suffix$.cscm_from = null
+			</isNull>				
+			<isNotNull property="cscmTarget" prepend=",">
+				cs_chat_message$suffix$.cscm_target = #cscmTarget#
+			</isNotNull>
+			<isNull property="cscmTarget" prepend=",">
+				cs_chat_message$suffix$.cscm_target = null
+			</isNull>				
+			<isNotNull property="cscmUpdateTime" prepend=",">
+				cs_chat_message$suffix$.cscm_update_time = #cscmUpdateTime#
+			</isNotNull>
+			<isNull property="cscmUpdateTime" prepend=",">
+				cs_chat_message$suffix$.cscm_update_time = null
+			</isNull>				
+			<isNotNull property="cscmAddTime" prepend=",">
+				cs_chat_message$suffix$.cscm_add_time = #cscmAddTime#
+			</isNotNull>
+			<isNull property="cscmAddTime" prepend=",">
+				cs_chat_message$suffix$.cscm_add_time = null
+			</isNull>				
+			<isNotNull property="cscmState" prepend=",">
+				cs_chat_message$suffix$.cscm_state = #cscmState#
+			</isNotNull>
+			<isNull property="cscmState" prepend=",">
+				cs_chat_message$suffix$.cscm_state = null
+			</isNull>				
+			<isNotNull property="cscmStatus" prepend=",">
+				cs_chat_message$suffix$.cscm_status = #cscmStatus#
+			</isNotNull>
+			<isNull property="cscmStatus" prepend=",">
+				cs_chat_message$suffix$.cscm_status = null
+			</isNull>				
+		where
+			cscm_id=#cscmId#
+	</update>
+	
+	<!-- 更新客服消息非空字段 -->
+	<update id="updateCsChatMessage$NotNull"  parameterClass="com.ccclubs.model.CsChatMessage">
+		update cs_chat_message$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscmHost" prepend=",">
+				cs_chat_message$suffix$.cscm_host = #cscmHost#
+			</isNotNull>		
+			<isNotNull property="cscmContent" prepend=",">
+				cs_chat_message$suffix$.cscm_content = #cscmContent#
+			</isNotNull>		
+			<isNotNull property="cscmType" prepend=",">
+				cs_chat_message$suffix$.cscm_type = #cscmType#
+			</isNotNull>		
+			<isNotNull property="cscmFrom" prepend=",">
+				cs_chat_message$suffix$.cscm_from = #cscmFrom#
+			</isNotNull>		
+			<isNotNull property="cscmTarget" prepend=",">
+				cs_chat_message$suffix$.cscm_target = #cscmTarget#
+			</isNotNull>		
+			<isNotNull property="cscmUpdateTime" prepend=",">
+				cs_chat_message$suffix$.cscm_update_time = #cscmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscmAddTime" prepend=",">
+				cs_chat_message$suffix$.cscm_add_time = #cscmAddTime#
+			</isNotNull>		
+			<isNotNull property="cscmState" prepend=",">
+				cs_chat_message$suffix$.cscm_state = #cscmState#
+			</isNotNull>		
+			<isNotNull property="cscmStatus" prepend=",">
+				cs_chat_message$suffix$.cscm_status = #cscmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscm_id=#cscmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个客服消息 -->
+	<delete id="deleteCsChatMessageById" parameterClass="java.util.HashMap">
+		delete from cs_chat_message$suffix$ where cscm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个客服消息 -->
+	<update id="removeCsChatMessageById" parameterClass="java.util.HashMap">
+		update cs_chat_message$suffix$ set  cs_chat_message$suffix$.cscm_status=-1  where cscm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新客服消息 -->
+	<update id="updateCsChatMessageBy"  parameterClass="java.util.HashMap">
+		update cs_chat_message$suffix$ set		
+			cscm_id=cscm_id
+			<isNotNull property="V_cscmId" prepend=",">
+				cs_chat_message$suffix$.cscm_id = #V_cscmId#
+			</isNotNull>		
+			<isNotNull property="V_cscmHost" prepend=",">
+				cs_chat_message$suffix$.cscm_host = #V_cscmHost#
+			</isNotNull>		
+			<isNotNull property="V_cscmContent" prepend=",">
+				cs_chat_message$suffix$.cscm_content = #V_cscmContent#
+			</isNotNull>		
+			<isNotNull property="V_cscmType" prepend=",">
+				cs_chat_message$suffix$.cscm_type = #V_cscmType#
+			</isNotNull>		
+			<isNotNull property="V_cscmFrom" prepend=",">
+				cs_chat_message$suffix$.cscm_from = #V_cscmFrom#
+			</isNotNull>		
+			<isNotNull property="V_cscmTarget" prepend=",">
+				cs_chat_message$suffix$.cscm_target = #V_cscmTarget#
+			</isNotNull>		
+			<isNotNull property="V_cscmUpdateTime" prepend=",">
+				cs_chat_message$suffix$.cscm_update_time = #V_cscmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscmAddTime" prepend=",">
+				cs_chat_message$suffix$.cscm_add_time = #V_cscmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscmState" prepend=",">
+				cs_chat_message$suffix$.cscm_state = #V_cscmState#
+			</isNotNull>		
+			<isNotNull property="V_cscmStatus" prepend=",">
+				cs_chat_message$suffix$.cscm_status = #V_cscmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_chat_message$suffix$.cscm_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChatMessage_part.cs_chat_message_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除客服消息 -->
+	<update id="deleteCsChatMessageBy"  parameterClass="java.util.HashMap">
+		delete from cs_chat_message$suffix$ where 
+		cs_chat_message$suffix$.cscm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChatMessage_part.cs_chat_message_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

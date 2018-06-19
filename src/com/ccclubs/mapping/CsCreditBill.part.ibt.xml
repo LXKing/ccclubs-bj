@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsCreditBill_part">	
+	<!-- 信用账单条件sql片段  -->
+	<sql id="cs_credit_bill_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscbId" prepend="and">
+			    $cscbIdNot$ cs_credit_bill$suffix$.cscb_id = #cscbId#
+			</isNotEmpty>
+			<isNotNull property="cscbIdNot" prepend="and">
+				<isEmpty property="cscbId">
+				$cscbIdNot$ cs_credit_bill$suffix$.cscb_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_credit_bill$suffix$.cscb_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscbHost" prepend="and">
+			    $cscbHostNot$ cs_credit_bill$suffix$.cscb_host = #cscbHost#
+			</isNotEmpty>
+			<isNotNull property="cscbHostNot" prepend="and">
+				<isEmpty property="cscbHost">
+				$cscbHostNot$ cs_credit_bill$suffix$.cscb_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cscbTitle" prepend="and">			    
+			    (<isNotNull property="cscbTitleNot">
+			    cs_credit_bill$suffix$.cscb_title is null or length(cs_credit_bill$suffix$.cscb_title) &lt; 1 or
+			    </isNotNull>$cscbTitleNot$ cs_credit_bill$suffix$.cscb_title like #cscbTitle#)
+			</isNotEmpty>
+			<isNotNull property="cscbTitleNot" prepend="and">
+				<isEmpty property="cscbTitle">
+				$cscbTitleNot$ (cs_credit_bill$suffix$.cscb_title is null or length(cs_credit_bill$suffix$.cscb_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbMember" prepend="and">
+			    $cscbMemberNot$ cs_credit_bill$suffix$.cscb_member = #cscbMember#
+			</isNotEmpty>
+			<isNotNull property="cscbMemberNot" prepend="and">
+				<isEmpty property="cscbMember">
+				$cscbMemberNot$ cs_credit_bill$suffix$.cscb_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbCreditCard" prepend="and">
+			    $cscbCreditCardNot$ cs_credit_bill$suffix$.cscb_credit_card = #cscbCreditCard#
+			</isNotEmpty>
+			<isNotNull property="cscbCreditCardNot" prepend="and">
+				<isEmpty property="cscbCreditCard">
+				$cscbCreditCardNot$ cs_credit_bill$suffix$.cscb_credit_card is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbOrder" prepend="and">
+			    $cscbOrderNot$ cs_credit_bill$suffix$.cscb_order = #cscbOrder#
+			</isNotEmpty>
+			<isNotNull property="cscbOrderNot" prepend="and">
+				<isEmpty property="cscbOrder">
+				$cscbOrderNot$ cs_credit_bill$suffix$.cscb_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbViolat" prepend="and">
+			    $cscbViolatNot$ cs_credit_bill$suffix$.cscb_violat = #cscbViolat#
+			</isNotEmpty>
+			<isNotNull property="cscbViolatNot" prepend="and">
+				<isEmpty property="cscbViolat">
+				$cscbViolatNot$ cs_credit_bill$suffix$.cscb_violat is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbTrouble" prepend="and">
+			    $cscbTroubleNot$ cs_credit_bill$suffix$.cscb_trouble = #cscbTrouble#
+			</isNotEmpty>
+			<isNotNull property="cscbTroubleNot" prepend="and">
+				<isEmpty property="cscbTrouble">
+				$cscbTroubleNot$ cs_credit_bill$suffix$.cscb_trouble is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbValueMin" prepend="and">
+			    $cscbValueNot$  ( cs_credit_bill$suffix$.cscb_value &gt;= #cscbValueMin#
+			    <isEmpty property="cscbValueMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscbValueMax" prepend="and">
+				<isEmpty property="cscbValueMin">$cscbValueNot$   (</isEmpty>
+			    cs_credit_bill$suffix$.cscb_value &lt;= #cscbValueMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscbValue" prepend="and">
+			    $cscbValueNot$ cs_credit_bill$suffix$.cscb_value = #cscbValue#
+			</isNotEmpty>
+			<isNotNull property="cscbValueNot" prepend="and">
+				<isEmpty property="cscbValueMax"><isEmpty property="cscbValueMin"><isEmpty property="cscbValue">
+				$cscbValueNot$ cs_credit_bill$suffix$.cscb_value is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscbPaymentMin" prepend="and">
+			    $cscbPaymentNot$  ( cs_credit_bill$suffix$.cscb_payment &gt;= #cscbPaymentMin#
+			    <isEmpty property="cscbPaymentMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscbPaymentMax" prepend="and">
+				<isEmpty property="cscbPaymentMin">$cscbPaymentNot$   (</isEmpty>
+			    cs_credit_bill$suffix$.cscb_payment &lt;= #cscbPaymentMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscbPayment" prepend="and">
+			    $cscbPaymentNot$ cs_credit_bill$suffix$.cscb_payment = #cscbPayment#
+			</isNotEmpty>
+			<isNotNull property="cscbPaymentNot" prepend="and">
+				<isEmpty property="cscbPaymentMax"><isEmpty property="cscbPaymentMin"><isEmpty property="cscbPayment">
+				$cscbPaymentNot$ cs_credit_bill$suffix$.cscb_payment is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscbRepayTimeStart" prepend="and">
+			    $cscbRepayTimeNot$   (cs_credit_bill$suffix$.cscb_repay_time &gt;= #cscbRepayTimeStart#
+			   <isEmpty property="cscbRepayTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscbRepayTimeEnd" prepend="and">
+				<isEmpty property="cscbRepayTimeStart">$cscbRepayTimeNot$   (</isEmpty>
+			    cs_credit_bill$suffix$.cscb_repay_time &lt;= #cscbRepayTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscbRepayTime" prepend="and">
+			    $cscbRepayTimeNot$ cs_credit_bill$suffix$.cscb_repay_time = #cscbRepayTime#
+			</isNotEmpty>
+			<isNotNull property="cscbRepayTimeNot" prepend="and">
+				<isEmpty property="cscbRepayTimeStart"><isEmpty property="cscbRepayTimeEnd"><isEmpty property="cscbRepayTime">
+				$cscbRepayTimeNot$ cs_credit_bill$suffix$.cscb_repay_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbUpdateTimeStart" prepend="and">
+			    $cscbUpdateTimeNot$   (cs_credit_bill$suffix$.cscb_update_time &gt;= #cscbUpdateTimeStart#
+			   <isEmpty property="cscbUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscbUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscbUpdateTimeStart">$cscbUpdateTimeNot$   (</isEmpty>
+			    cs_credit_bill$suffix$.cscb_update_time &lt;= #cscbUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscbUpdateTime" prepend="and">
+			    $cscbUpdateTimeNot$ cs_credit_bill$suffix$.cscb_update_time = #cscbUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscbUpdateTimeNot" prepend="and">
+				<isEmpty property="cscbUpdateTimeStart"><isEmpty property="cscbUpdateTimeEnd"><isEmpty property="cscbUpdateTime">
+				$cscbUpdateTimeNot$ cs_credit_bill$suffix$.cscb_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbAddTimeStart" prepend="and">
+			    $cscbAddTimeNot$   (cs_credit_bill$suffix$.cscb_add_time &gt;= #cscbAddTimeStart#
+			   <isEmpty property="cscbAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscbAddTimeEnd" prepend="and">
+				<isEmpty property="cscbAddTimeStart">$cscbAddTimeNot$   (</isEmpty>
+			    cs_credit_bill$suffix$.cscb_add_time &lt;= #cscbAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscbAddTime" prepend="and">
+			    $cscbAddTimeNot$ cs_credit_bill$suffix$.cscb_add_time = #cscbAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscbAddTimeNot" prepend="and">
+				<isEmpty property="cscbAddTimeStart"><isEmpty property="cscbAddTimeEnd"><isEmpty property="cscbAddTime">
+				$cscbAddTimeNot$ cs_credit_bill$suffix$.cscb_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbEditor" prepend="and">
+			    $cscbEditorNot$ cs_credit_bill$suffix$.cscb_editor = #cscbEditor#
+			</isNotEmpty>
+			<isNotNull property="cscbEditorNot" prepend="and">
+				<isEmpty property="cscbEditor">
+				$cscbEditorNot$ cs_credit_bill$suffix$.cscb_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbRemark" prepend="and">			    
+			    (<isNotNull property="cscbRemarkNot">
+			    cs_credit_bill$suffix$.cscb_remark is null or length(cs_credit_bill$suffix$.cscb_remark) &lt; 1 or
+			    </isNotNull>$cscbRemarkNot$ cs_credit_bill$suffix$.cscb_remark like #cscbRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscbRemarkNot" prepend="and">
+				<isEmpty property="cscbRemark">
+				$cscbRemarkNot$ (cs_credit_bill$suffix$.cscb_remark is null or length(cs_credit_bill$suffix$.cscb_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbProcess" prepend="and">			    
+			    (<isNotNull property="cscbProcessNot">
+			    cs_credit_bill$suffix$.cscb_process is null or length(cs_credit_bill$suffix$.cscb_process) &lt; 1 or
+			    </isNotNull>$cscbProcessNot$ cs_credit_bill$suffix$.cscb_process like #cscbProcess#)
+			</isNotEmpty>
+			<isNotNull property="cscbProcessNot" prepend="and">
+				<isEmpty property="cscbProcess">
+				$cscbProcessNot$ (cs_credit_bill$suffix$.cscb_process is null or length(cs_credit_bill$suffix$.cscb_process) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbPaySerial" prepend="and">			    
+			    (<isNotNull property="cscbPaySerialNot">
+			    cs_credit_bill$suffix$.cscb_pay_serial is null or length(cs_credit_bill$suffix$.cscb_pay_serial) &lt; 1 or
+			    </isNotNull>$cscbPaySerialNot$ cs_credit_bill$suffix$.cscb_pay_serial = #cscbPaySerial#)
+			</isNotEmpty>
+			<isNotNull property="cscbPaySerialNot" prepend="and">
+				<isEmpty property="cscbPaySerial">
+				$cscbPaySerialNot$ (cs_credit_bill$suffix$.cscb_pay_serial is null or length(cs_credit_bill$suffix$.cscb_pay_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbState" prepend="and">
+			    $cscbStateNot$ cs_credit_bill$suffix$.cscb_state = #cscbState#
+			</isNotEmpty>
+			<isNotNull property="cscbStateNot" prepend="and">
+				<isEmpty property="cscbState">
+				$cscbStateNot$ cs_credit_bill$suffix$.cscb_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscbStatus" prepend="and">
+			    $cscbStatusNot$ cs_credit_bill$suffix$.cscb_status = #cscbStatus#
+			</isNotEmpty>
+			<isNotNull property="cscbStatusNot" prepend="and">
+				<isEmpty property="cscbStatus">
+				$cscbStatusNot$ cs_credit_bill$suffix$.cscb_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 信用账单left join 条件sql片段 -->
+	<sql id="cs_credit_bill_join">
+		<dynamic>
+			<isNotEmpty property="CsCreditBill.cscbId" prepend="and">
+			    $CsCreditBill.cscbIdNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_id = #CsCreditBill.cscbId#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbIdNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbId">
+				$cscbIdNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbHost" prepend="and">
+			    $CsCreditBill.cscbHostNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_host = #CsCreditBill.cscbHost#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbHostNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbHost">
+				$cscbHostNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbTitle" prepend="and">
+				(<isNotNull property="CsCreditBill.cscbTitleNot">
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_title is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_title) &lt; 1 or
+			    </isNotNull>$CsCreditBill.cscbTitleNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_title like #CsCreditBill.cscbTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbTitleNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbTitle">
+				$cscbTitleNot$ (cs_credit_bill$CsCreditBill.suffix$.cscb_title is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbMember" prepend="and">
+			    $CsCreditBill.cscbMemberNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_member = #CsCreditBill.cscbMember#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbMemberNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbMember">
+				$cscbMemberNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbCreditCard" prepend="and">
+			    $CsCreditBill.cscbCreditCardNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_credit_card = #CsCreditBill.cscbCreditCard#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbCreditCardNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbCreditCard">
+				$cscbCreditCardNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_credit_card is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbOrder" prepend="and">
+			    $CsCreditBill.cscbOrderNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_order = #CsCreditBill.cscbOrder#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbOrderNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbOrder">
+				$cscbOrderNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbViolat" prepend="and">
+			    $CsCreditBill.cscbViolatNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_violat = #CsCreditBill.cscbViolat#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbViolatNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbViolat">
+				$cscbViolatNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_violat is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbTrouble" prepend="and">
+			    $CsCreditBill.cscbTroubleNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_trouble = #CsCreditBill.cscbTrouble#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbTroubleNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbTrouble">
+				$cscbTroubleNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_trouble is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbValueMin" prepend="and">
+			    $CsCreditBill.cscbValueNot$  ( cs_credit_bill$CsCreditBill.suffix$.cscb_value &gt;= #CsCreditBill.cscbValueMin#
+			    <isEmpty property="CsCreditBill.cscbValueMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbValueMax" prepend="and">
+				<isEmpty property="CsCreditBill.cscbValueMin">$CsCreditBill.cscbValueNot$   (</isEmpty>
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_value &lt;= #CsCreditBill.cscbValueMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbValue" prepend="and">
+			    $CsCreditBill.cscbValueNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_value = #CsCreditBill.cscbValue#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbValueNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbValueMax"><isEmpty property="CsCreditBill.cscbValueMin"><isEmpty property="CsCreditBill.cscbValue">
+				$cscbValueNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_value is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbPaymentMin" prepend="and">
+			    $CsCreditBill.cscbPaymentNot$  ( cs_credit_bill$CsCreditBill.suffix$.cscb_payment &gt;= #CsCreditBill.cscbPaymentMin#
+			    <isEmpty property="CsCreditBill.cscbPaymentMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbPaymentMax" prepend="and">
+				<isEmpty property="CsCreditBill.cscbPaymentMin">$CsCreditBill.cscbPaymentNot$   (</isEmpty>
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_payment &lt;= #CsCreditBill.cscbPaymentMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbPayment" prepend="and">
+			    $CsCreditBill.cscbPaymentNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_payment = #CsCreditBill.cscbPayment#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbPaymentNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbPaymentMax"><isEmpty property="CsCreditBill.cscbPaymentMin"><isEmpty property="CsCreditBill.cscbPayment">
+				$cscbPaymentNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_payment is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbRepayTimeStart" prepend="and">
+			    $CsCreditBill.cscbRepayTimeNot$   (cs_credit_bill$CsCreditBill.suffix$.cscb_repay_time &gt;= #CsCreditBill.cscbRepayTimeStart#
+			   <isEmpty property="CsCreditBill.cscbRepayTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbRepayTimeEnd" prepend="and">
+				<isEmpty property="CsCreditBill.cscbRepayTimeStart">$CsCreditBill.cscbRepayTimeNot$   (</isEmpty>
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_repay_time &lt;= #CsCreditBill.cscbRepayTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbRepayTime" prepend="and">
+			    $CsCreditBill.cscbRepayTimeNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_repay_time = #CsCreditBill.cscbRepayTime#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbRepayTimeNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbRepayTimeStart"><isEmpty property="CsCreditBill.cscbRepayTimeEnd"><isEmpty property="CsCreditBill.cscbRepayTime">
+				$cscbRepayTimeNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_repay_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbUpdateTimeStart" prepend="and">
+			    $CsCreditBill.cscbUpdateTimeNot$   (cs_credit_bill$CsCreditBill.suffix$.cscb_update_time &gt;= #CsCreditBill.cscbUpdateTimeStart#
+			   <isEmpty property="CsCreditBill.cscbUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsCreditBill.cscbUpdateTimeStart">$CsCreditBill.cscbUpdateTimeNot$   (</isEmpty>
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_update_time &lt;= #CsCreditBill.cscbUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbUpdateTime" prepend="and">
+			    $CsCreditBill.cscbUpdateTimeNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_update_time = #CsCreditBill.cscbUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbUpdateTimeNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbUpdateTimeStart"><isEmpty property="CsCreditBill.cscbUpdateTimeEnd"><isEmpty property="CsCreditBill.cscbUpdateTime">
+				$cscbUpdateTimeNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbAddTimeStart" prepend="and">
+			    $CsCreditBill.cscbAddTimeNot$   (cs_credit_bill$CsCreditBill.suffix$.cscb_add_time &gt;= #CsCreditBill.cscbAddTimeStart#
+			   <isEmpty property="CsCreditBill.cscbAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbAddTimeEnd" prepend="and">
+				<isEmpty property="CsCreditBill.cscbAddTimeStart">$CsCreditBill.cscbAddTimeNot$   (</isEmpty>
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_add_time &lt;= #CsCreditBill.cscbAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsCreditBill.cscbAddTime" prepend="and">
+			    $CsCreditBill.cscbAddTimeNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_add_time = #CsCreditBill.cscbAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbAddTimeNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbAddTimeStart"><isEmpty property="CsCreditBill.cscbAddTimeEnd"><isEmpty property="CsCreditBill.cscbAddTime">
+				$cscbAddTimeNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbEditor" prepend="and">
+			    $CsCreditBill.cscbEditorNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_editor = #CsCreditBill.cscbEditor#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbEditorNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbEditor">
+				$cscbEditorNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbRemark" prepend="and">
+				(<isNotNull property="CsCreditBill.cscbRemarkNot">
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_remark is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_remark) &lt; 1 or
+			    </isNotNull>$CsCreditBill.cscbRemarkNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_remark like #CsCreditBill.cscbRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbRemarkNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbRemark">
+				$cscbRemarkNot$ (cs_credit_bill$CsCreditBill.suffix$.cscb_remark is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbProcess" prepend="and">
+				(<isNotNull property="CsCreditBill.cscbProcessNot">
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_process is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_process) &lt; 1 or
+			    </isNotNull>$CsCreditBill.cscbProcessNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_process like #CsCreditBill.cscbProcess#)
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbProcessNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbProcess">
+				$cscbProcessNot$ (cs_credit_bill$CsCreditBill.suffix$.cscb_process is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_process) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbPaySerial" prepend="and">
+				(<isNotNull property="CsCreditBill.cscbPaySerialNot">
+			    cs_credit_bill$CsCreditBill.suffix$.cscb_pay_serial is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_pay_serial) &lt; 1 or
+			    </isNotNull>$CsCreditBill.cscbPaySerialNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_pay_serial = #CsCreditBill.cscbPaySerial#)
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbPaySerialNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbPaySerial">
+				$cscbPaySerialNot$ (cs_credit_bill$CsCreditBill.suffix$.cscb_pay_serial is null or length(cs_credit_bill$CsCreditBill.suffix$.cscb_pay_serial) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbState" prepend="and">
+			    $CsCreditBill.cscbStateNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_state = #CsCreditBill.cscbState#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbStateNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbState">
+				$cscbStateNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_state is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsCreditBill.cscbStatus" prepend="and">
+			    $CsCreditBill.cscbStatusNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_status = #CsCreditBill.cscbStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCreditBill.cscbStatusNot" prepend="and">
+				<isEmpty property="CsCreditBill.cscbStatus">
+				$cscbStatusNot$ cs_credit_bill$CsCreditBill.suffix$.cscb_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

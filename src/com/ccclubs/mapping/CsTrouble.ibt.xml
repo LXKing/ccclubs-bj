@@ -1,0 +1,1297 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆事故之SQL映射 -->
+	<resultMap id="CsTrouble" class="com.ccclubs.model.CsTrouble">
+		<result property="cstId" column="cst_id"/>
+		<result property="cstHost" column="cst_host"/>
+		<result property="cstTitle" column="cst_title"/>
+		<result property="cstOrder" column="cst_order"/>
+		<result property="cstMember" column="cst_member"/>
+		<result property="cstCar" column="cst_car"/>
+		<result property="cstType" column="cst_type"/>
+		<result property="cstDamage" column="cst_damage"/>
+		<result property="cstRepairAdr" column="cst_repair_adr"/>
+		<result property="cstRepairPart" column="cst_repair_part"/>
+		<result property="cstRepair" column="cst_repair"/>
+		<result property="cstInvoice" column="cst_invoice"/>
+		<result property="cstInsureFee" column="cst_insure_fee"/>
+		<result property="cstMoney" column="cst_money"/>
+		<result property="cstThirdLoss" column="cst_third_loss"/>
+		<result property="cstTrailFee" column="cst_trail_fee"/>
+		<result property="cstRepayDate" column="cst_repay_date"/>
+		<result property="cstRepayType" column="cst_repay_type"/>
+		<result property="cstThirdDesc" column="cst_third_desc"/>
+		<result property="cstCompensate" column="cst_compensate"/>
+		<result property="cstCompDate" column="cst_comp_date"/>
+		<result property="cstRepairPay" column="cst_repair_pay"/>
+		<result property="cstAgio" column="cst_agio"/>
+		<result property="cstDecipt" column="cst_decipt"/>
+		<result property="cstImages" column="cst_images"/>
+		<result property="cstHappenTime" column="cst_happen_time"/>
+		<result property="cstNotice" column="cst_notice"/>
+		<result property="cstDealFlag" column="cst_deal_flag"/>
+		<result property="cstAccepter" column="cst_accepter"/>
+		<result property="cstCaser" column="cst_caser"/>
+		<result property="cstFinishTime" column="cst_finish_time"/>
+		<result property="cstRemark" column="cst_remark"/>
+		<result property="cstUpdateTime" column="cst_update_time"/>
+		<result property="cstAddTime" column="cst_add_time"/>
+		<result property="cstStatus" column="cst_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆事故 -->
+	<select id="getCsTroubleList" resultMap="CsTrouble">
+		select cs_trouble$suffix$.* from cs_trouble$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.cst_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.cst_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.cst_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询-->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.cst_repair_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询-->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<isNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.cst_repair=cs_repair$CsRepair.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.$CsRepair.on$=cs_repair$CsRepair.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_trouble$suffix$.cst_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询条件sql片段 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<include refid="CsRepair_part.cs_repair_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTrouble_part.cs_trouble_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cst_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	<!-- 统计车辆事故 -->
+	<select id="getCsTroubleStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_trouble$suffix$		
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.cst_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.cst_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.cst_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.cst_repair_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<isNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.cst_repair=cs_repair$CsRepair.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.$CsRepair.on$=cs_repair$CsRepair.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_trouble$suffix$.cst_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询条件sql片段 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<include refid="CsRepair_part.cs_repair_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTrouble_part.cs_trouble_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆事故分页 -->
+	<select id="getCsTroublePage" parameterClass="java.util.HashMap" resultMap="CsTrouble">
+		select cs_trouble$suffix$.* from cs_trouble$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.cst_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.cst_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.cst_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.cst_repair_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<isNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.cst_repair=cs_repair$CsRepair.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.$CsRepair.on$=cs_repair$CsRepair.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_trouble$suffix$.cst_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询条件sql片段 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<include refid="CsRepair_part.cs_repair_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTrouble_part.cs_trouble_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cst_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆事故总数 -->
+	<select id="getCsTroubleEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_trouble$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.cst_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.cst_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.cst_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.cst_repair_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询,同张表只能外链接一次 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<isNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.cst_repair=cs_repair$CsRepair.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.$CsRepair.on$=cs_repair$CsRepair.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_trouble$suffix$.cst_status!=-1
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询条件sql片段 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<include refid="CsRepair_part.cs_repair_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTrouble_part.cs_trouble_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆事故 -->
+	<select id="getCsTroubleById" parameterClass="java.util.HashMap" resultMap="CsTrouble">
+		select cs_trouble$suffix$.* from cs_trouble$suffix$
+		where cst_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆事故 -->
+	<insert id="saveCsTrouble"  parameterClass="com.ccclubs.model.CsTrouble">
+		insert into cs_trouble$suffix$
+		(
+			cs_trouble$suffix$.cst_host
+			,cs_trouble$suffix$.cst_title
+			,cs_trouble$suffix$.cst_order
+			,cs_trouble$suffix$.cst_member
+			,cs_trouble$suffix$.cst_car
+			,cs_trouble$suffix$.cst_type
+			,cs_trouble$suffix$.cst_damage
+			,cs_trouble$suffix$.cst_repair_adr
+			,cs_trouble$suffix$.cst_repair_part
+			,cs_trouble$suffix$.cst_repair
+			,cs_trouble$suffix$.cst_invoice
+			,cs_trouble$suffix$.cst_insure_fee
+			,cs_trouble$suffix$.cst_money
+			,cs_trouble$suffix$.cst_third_loss
+			,cs_trouble$suffix$.cst_trail_fee
+			,cs_trouble$suffix$.cst_repay_date
+			,cs_trouble$suffix$.cst_repay_type
+			,cs_trouble$suffix$.cst_third_desc
+			,cs_trouble$suffix$.cst_compensate
+			,cs_trouble$suffix$.cst_comp_date
+			,cs_trouble$suffix$.cst_repair_pay
+			,cs_trouble$suffix$.cst_agio
+			,cs_trouble$suffix$.cst_decipt
+			,cs_trouble$suffix$.cst_images
+			,cs_trouble$suffix$.cst_happen_time
+			,cs_trouble$suffix$.cst_notice
+			,cs_trouble$suffix$.cst_deal_flag
+			,cs_trouble$suffix$.cst_accepter
+			,cs_trouble$suffix$.cst_caser
+			,cs_trouble$suffix$.cst_finish_time
+			,cs_trouble$suffix$.cst_remark
+			,cs_trouble$suffix$.cst_update_time
+			,cs_trouble$suffix$.cst_add_time
+			,cs_trouble$suffix$.cst_status
+		)
+		values(
+			<isNotNull property="cstHost" prepend="">
+				#cstHost#
+			</isNotNull>
+			<isNull property="cstHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cstTitle" prepend=",">
+				#cstTitle#
+			</isNotNull>
+			<isNull property="cstTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstOrder" prepend=",">
+				#cstOrder#
+			</isNotNull>
+			<isNull property="cstOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstMember" prepend=",">
+				#cstMember#
+			</isNotNull>
+			<isNull property="cstMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstCar" prepend=",">
+				#cstCar#
+			</isNotNull>
+			<isNull property="cstCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstType" prepend=",">
+				#cstType#
+			</isNotNull>
+			<isNull property="cstType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstDamage" prepend=",">
+				#cstDamage#
+			</isNotNull>
+			<isNull property="cstDamage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRepairAdr" prepend=",">
+				#cstRepairAdr#
+			</isNotNull>
+			<isNull property="cstRepairAdr" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRepairPart" prepend=",">
+				#cstRepairPart#
+			</isNotNull>
+			<isNull property="cstRepairPart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRepair" prepend=",">
+				#cstRepair#
+			</isNotNull>
+			<isNull property="cstRepair" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstInvoice" prepend=",">
+				#cstInvoice#
+			</isNotNull>
+			<isNull property="cstInvoice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstInsureFee" prepend=",">
+				#cstInsureFee#
+			</isNotNull>
+			<isNull property="cstInsureFee" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstMoney" prepend=",">
+				#cstMoney#
+			</isNotNull>
+			<isNull property="cstMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstThirdLoss" prepend=",">
+				#cstThirdLoss#
+			</isNotNull>
+			<isNull property="cstThirdLoss" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstTrailFee" prepend=",">
+				#cstTrailFee#
+			</isNotNull>
+			<isNull property="cstTrailFee" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRepayDate" prepend=",">
+				#cstRepayDate#
+			</isNotNull>
+			<isNull property="cstRepayDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRepayType" prepend=",">
+				#cstRepayType#
+			</isNotNull>
+			<isNull property="cstRepayType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstThirdDesc" prepend=",">
+				#cstThirdDesc#
+			</isNotNull>
+			<isNull property="cstThirdDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstCompensate" prepend=",">
+				#cstCompensate#
+			</isNotNull>
+			<isNull property="cstCompensate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstCompDate" prepend=",">
+				#cstCompDate#
+			</isNotNull>
+			<isNull property="cstCompDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRepairPay" prepend=",">
+				#cstRepairPay#
+			</isNotNull>
+			<isNull property="cstRepairPay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstAgio" prepend=",">
+				#cstAgio#
+			</isNotNull>
+			<isNull property="cstAgio" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstDecipt" prepend=",">
+				#cstDecipt#
+			</isNotNull>
+			<isNull property="cstDecipt" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstImages" prepend=",">
+				#cstImages#
+			</isNotNull>
+			<isNull property="cstImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstHappenTime" prepend=",">
+				#cstHappenTime#
+			</isNotNull>
+			<isNull property="cstHappenTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstNotice" prepend=",">
+				#cstNotice#
+			</isNotNull>
+			<isNull property="cstNotice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstDealFlag" prepend=",">
+				#cstDealFlag#
+			</isNotNull>
+			<isNull property="cstDealFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstAccepter" prepend=",">
+				#cstAccepter#
+			</isNotNull>
+			<isNull property="cstAccepter" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstCaser" prepend=",">
+				#cstCaser#
+			</isNotNull>
+			<isNull property="cstCaser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstFinishTime" prepend=",">
+				#cstFinishTime#
+			</isNotNull>
+			<isNull property="cstFinishTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstRemark" prepend=",">
+				#cstRemark#
+			</isNotNull>
+			<isNull property="cstRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstUpdateTime" prepend=",">
+				#cstUpdateTime#
+			</isNotNull>
+			<isNull property="cstUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstAddTime" prepend=",">
+				#cstAddTime#
+			</isNotNull>
+			<isNull property="cstAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstStatus" prepend=",">
+				#cstStatus#
+			</isNotNull>
+			<isNull property="cstStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆事故 -->
+	<update id="updateCsTrouble"  parameterClass="com.ccclubs.model.CsTrouble">
+		update cs_trouble$suffix$ set
+			<isNotNull property="cstHost" prepend="">
+				cs_trouble$suffix$.cst_host = #cstHost#
+			</isNotNull>
+			<isNull property="cstHost" prepend="">
+				cs_trouble$suffix$.cst_host = null
+			</isNull>				
+			<isNotNull property="cstTitle" prepend=",">
+				cs_trouble$suffix$.cst_title = #cstTitle#
+			</isNotNull>
+			<isNull property="cstTitle" prepend=",">
+				cs_trouble$suffix$.cst_title = null
+			</isNull>				
+			<isNotNull property="cstOrder" prepend=",">
+				cs_trouble$suffix$.cst_order = #cstOrder#
+			</isNotNull>
+			<isNull property="cstOrder" prepend=",">
+				cs_trouble$suffix$.cst_order = null
+			</isNull>				
+			<isNotNull property="cstMember" prepend=",">
+				cs_trouble$suffix$.cst_member = #cstMember#
+			</isNotNull>
+			<isNull property="cstMember" prepend=",">
+				cs_trouble$suffix$.cst_member = null
+			</isNull>				
+			<isNotNull property="cstCar" prepend=",">
+				cs_trouble$suffix$.cst_car = #cstCar#
+			</isNotNull>
+			<isNull property="cstCar" prepend=",">
+				cs_trouble$suffix$.cst_car = null
+			</isNull>				
+			<isNotNull property="cstType" prepend=",">
+				cs_trouble$suffix$.cst_type = #cstType#
+			</isNotNull>
+			<isNull property="cstType" prepend=",">
+				cs_trouble$suffix$.cst_type = null
+			</isNull>				
+			<isNotNull property="cstDamage" prepend=",">
+				cs_trouble$suffix$.cst_damage = #cstDamage#
+			</isNotNull>
+			<isNull property="cstDamage" prepend=",">
+				cs_trouble$suffix$.cst_damage = null
+			</isNull>				
+			<isNotNull property="cstRepairAdr" prepend=",">
+				cs_trouble$suffix$.cst_repair_adr = #cstRepairAdr#
+			</isNotNull>
+			<isNull property="cstRepairAdr" prepend=",">
+				cs_trouble$suffix$.cst_repair_adr = null
+			</isNull>				
+			<isNotNull property="cstRepairPart" prepend=",">
+				cs_trouble$suffix$.cst_repair_part = #cstRepairPart#
+			</isNotNull>
+			<isNull property="cstRepairPart" prepend=",">
+				cs_trouble$suffix$.cst_repair_part = null
+			</isNull>				
+			<isNotNull property="cstRepair" prepend=",">
+				cs_trouble$suffix$.cst_repair = #cstRepair#
+			</isNotNull>
+			<isNull property="cstRepair" prepend=",">
+				cs_trouble$suffix$.cst_repair = null
+			</isNull>				
+			<isNotNull property="cstInvoice" prepend=",">
+				cs_trouble$suffix$.cst_invoice = #cstInvoice#
+			</isNotNull>
+			<isNull property="cstInvoice" prepend=",">
+				cs_trouble$suffix$.cst_invoice = null
+			</isNull>				
+			<isNotNull property="cstInsureFee" prepend=",">
+				cs_trouble$suffix$.cst_insure_fee = #cstInsureFee#
+			</isNotNull>
+			<isNull property="cstInsureFee" prepend=",">
+				cs_trouble$suffix$.cst_insure_fee = null
+			</isNull>				
+			<isNotNull property="cstMoney" prepend=",">
+				cs_trouble$suffix$.cst_money = #cstMoney#
+			</isNotNull>
+			<isNull property="cstMoney" prepend=",">
+				cs_trouble$suffix$.cst_money = null
+			</isNull>				
+			<isNotNull property="cstThirdLoss" prepend=",">
+				cs_trouble$suffix$.cst_third_loss = #cstThirdLoss#
+			</isNotNull>
+			<isNull property="cstThirdLoss" prepend=",">
+				cs_trouble$suffix$.cst_third_loss = null
+			</isNull>				
+			<isNotNull property="cstTrailFee" prepend=",">
+				cs_trouble$suffix$.cst_trail_fee = #cstTrailFee#
+			</isNotNull>
+			<isNull property="cstTrailFee" prepend=",">
+				cs_trouble$suffix$.cst_trail_fee = null
+			</isNull>				
+			<isNotNull property="cstRepayDate" prepend=",">
+				cs_trouble$suffix$.cst_repay_date = #cstRepayDate#
+			</isNotNull>
+			<isNull property="cstRepayDate" prepend=",">
+				cs_trouble$suffix$.cst_repay_date = null
+			</isNull>				
+			<isNotNull property="cstRepayType" prepend=",">
+				cs_trouble$suffix$.cst_repay_type = #cstRepayType#
+			</isNotNull>
+			<isNull property="cstRepayType" prepend=",">
+				cs_trouble$suffix$.cst_repay_type = null
+			</isNull>				
+			<isNotNull property="cstThirdDesc" prepend=",">
+				cs_trouble$suffix$.cst_third_desc = #cstThirdDesc#
+			</isNotNull>
+			<isNull property="cstThirdDesc" prepend=",">
+				cs_trouble$suffix$.cst_third_desc = null
+			</isNull>				
+			<isNotNull property="cstCompensate" prepend=",">
+				cs_trouble$suffix$.cst_compensate = #cstCompensate#
+			</isNotNull>
+			<isNull property="cstCompensate" prepend=",">
+				cs_trouble$suffix$.cst_compensate = null
+			</isNull>				
+			<isNotNull property="cstCompDate" prepend=",">
+				cs_trouble$suffix$.cst_comp_date = #cstCompDate#
+			</isNotNull>
+			<isNull property="cstCompDate" prepend=",">
+				cs_trouble$suffix$.cst_comp_date = null
+			</isNull>				
+			<isNotNull property="cstRepairPay" prepend=",">
+				cs_trouble$suffix$.cst_repair_pay = #cstRepairPay#
+			</isNotNull>
+			<isNull property="cstRepairPay" prepend=",">
+				cs_trouble$suffix$.cst_repair_pay = null
+			</isNull>				
+			<isNotNull property="cstAgio" prepend=",">
+				cs_trouble$suffix$.cst_agio = #cstAgio#
+			</isNotNull>
+			<isNull property="cstAgio" prepend=",">
+				cs_trouble$suffix$.cst_agio = null
+			</isNull>				
+			<isNotNull property="cstDecipt" prepend=",">
+				cs_trouble$suffix$.cst_decipt = #cstDecipt#
+			</isNotNull>
+			<isNull property="cstDecipt" prepend=",">
+				cs_trouble$suffix$.cst_decipt = null
+			</isNull>				
+			<isNotNull property="cstImages" prepend=",">
+				cs_trouble$suffix$.cst_images = #cstImages#
+			</isNotNull>
+			<isNull property="cstImages" prepend=",">
+				cs_trouble$suffix$.cst_images = null
+			</isNull>				
+			<isNotNull property="cstHappenTime" prepend=",">
+				cs_trouble$suffix$.cst_happen_time = #cstHappenTime#
+			</isNotNull>
+			<isNull property="cstHappenTime" prepend=",">
+				cs_trouble$suffix$.cst_happen_time = null
+			</isNull>				
+			<isNotNull property="cstNotice" prepend=",">
+				cs_trouble$suffix$.cst_notice = #cstNotice#
+			</isNotNull>
+			<isNull property="cstNotice" prepend=",">
+				cs_trouble$suffix$.cst_notice = null
+			</isNull>				
+			<isNotNull property="cstDealFlag" prepend=",">
+				cs_trouble$suffix$.cst_deal_flag = #cstDealFlag#
+			</isNotNull>
+			<isNull property="cstDealFlag" prepend=",">
+				cs_trouble$suffix$.cst_deal_flag = null
+			</isNull>				
+			<isNotNull property="cstAccepter" prepend=",">
+				cs_trouble$suffix$.cst_accepter = #cstAccepter#
+			</isNotNull>
+			<isNull property="cstAccepter" prepend=",">
+				cs_trouble$suffix$.cst_accepter = null
+			</isNull>				
+			<isNotNull property="cstCaser" prepend=",">
+				cs_trouble$suffix$.cst_caser = #cstCaser#
+			</isNotNull>
+			<isNull property="cstCaser" prepend=",">
+				cs_trouble$suffix$.cst_caser = null
+			</isNull>				
+			<isNotNull property="cstFinishTime" prepend=",">
+				cs_trouble$suffix$.cst_finish_time = #cstFinishTime#
+			</isNotNull>
+			<isNull property="cstFinishTime" prepend=",">
+				cs_trouble$suffix$.cst_finish_time = null
+			</isNull>				
+			<isNotNull property="cstRemark" prepend=",">
+				cs_trouble$suffix$.cst_remark = #cstRemark#
+			</isNotNull>
+			<isNull property="cstRemark" prepend=",">
+				cs_trouble$suffix$.cst_remark = null
+			</isNull>				
+			<isNotNull property="cstUpdateTime" prepend=",">
+				cs_trouble$suffix$.cst_update_time = #cstUpdateTime#
+			</isNotNull>
+			<isNull property="cstUpdateTime" prepend=",">
+				cs_trouble$suffix$.cst_update_time = null
+			</isNull>				
+			<isNotNull property="cstAddTime" prepend=",">
+				cs_trouble$suffix$.cst_add_time = #cstAddTime#
+			</isNotNull>
+			<isNull property="cstAddTime" prepend=",">
+				cs_trouble$suffix$.cst_add_time = null
+			</isNull>				
+			<isNotNull property="cstStatus" prepend=",">
+				cs_trouble$suffix$.cst_status = #cstStatus#
+			</isNotNull>
+			<isNull property="cstStatus" prepend=",">
+				cs_trouble$suffix$.cst_status = null
+			</isNull>				
+		where
+			cst_id=#cstId#
+	</update>
+	
+	<!-- 更新车辆事故非空字段 -->
+	<update id="updateCsTrouble$NotNull"  parameterClass="com.ccclubs.model.CsTrouble">
+		update cs_trouble$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cstHost" prepend=",">
+				cs_trouble$suffix$.cst_host = #cstHost#
+			</isNotNull>		
+			<isNotNull property="cstTitle" prepend=",">
+				cs_trouble$suffix$.cst_title = #cstTitle#
+			</isNotNull>		
+			<isNotNull property="cstOrder" prepend=",">
+				cs_trouble$suffix$.cst_order = #cstOrder#
+			</isNotNull>		
+			<isNotNull property="cstMember" prepend=",">
+				cs_trouble$suffix$.cst_member = #cstMember#
+			</isNotNull>		
+			<isNotNull property="cstCar" prepend=",">
+				cs_trouble$suffix$.cst_car = #cstCar#
+			</isNotNull>		
+			<isNotNull property="cstType" prepend=",">
+				cs_trouble$suffix$.cst_type = #cstType#
+			</isNotNull>		
+			<isNotNull property="cstDamage" prepend=",">
+				cs_trouble$suffix$.cst_damage = #cstDamage#
+			</isNotNull>		
+			<isNotNull property="cstRepairAdr" prepend=",">
+				cs_trouble$suffix$.cst_repair_adr = #cstRepairAdr#
+			</isNotNull>		
+			<isNotNull property="cstRepairPart" prepend=",">
+				cs_trouble$suffix$.cst_repair_part = #cstRepairPart#
+			</isNotNull>		
+			<isNotNull property="cstRepair" prepend=",">
+				cs_trouble$suffix$.cst_repair = #cstRepair#
+			</isNotNull>		
+			<isNotNull property="cstInvoice" prepend=",">
+				cs_trouble$suffix$.cst_invoice = #cstInvoice#
+			</isNotNull>		
+			<isNotNull property="cstInsureFee" prepend=",">
+				cs_trouble$suffix$.cst_insure_fee = #cstInsureFee#
+			</isNotNull>		
+			<isNotNull property="cstMoney" prepend=",">
+				cs_trouble$suffix$.cst_money = #cstMoney#
+			</isNotNull>		
+			<isNotNull property="cstThirdLoss" prepend=",">
+				cs_trouble$suffix$.cst_third_loss = #cstThirdLoss#
+			</isNotNull>		
+			<isNotNull property="cstTrailFee" prepend=",">
+				cs_trouble$suffix$.cst_trail_fee = #cstTrailFee#
+			</isNotNull>		
+			<isNotNull property="cstRepayDate" prepend=",">
+				cs_trouble$suffix$.cst_repay_date = #cstRepayDate#
+			</isNotNull>		
+			<isNotNull property="cstRepayType" prepend=",">
+				cs_trouble$suffix$.cst_repay_type = #cstRepayType#
+			</isNotNull>		
+			<isNotNull property="cstThirdDesc" prepend=",">
+				cs_trouble$suffix$.cst_third_desc = #cstThirdDesc#
+			</isNotNull>		
+			<isNotNull property="cstCompensate" prepend=",">
+				cs_trouble$suffix$.cst_compensate = #cstCompensate#
+			</isNotNull>		
+			<isNotNull property="cstCompDate" prepend=",">
+				cs_trouble$suffix$.cst_comp_date = #cstCompDate#
+			</isNotNull>		
+			<isNotNull property="cstRepairPay" prepend=",">
+				cs_trouble$suffix$.cst_repair_pay = #cstRepairPay#
+			</isNotNull>		
+			<isNotNull property="cstAgio" prepend=",">
+				cs_trouble$suffix$.cst_agio = #cstAgio#
+			</isNotNull>		
+			<isNotNull property="cstDecipt" prepend=",">
+				cs_trouble$suffix$.cst_decipt = #cstDecipt#
+			</isNotNull>		
+			<isNotNull property="cstImages" prepend=",">
+				cs_trouble$suffix$.cst_images = #cstImages#
+			</isNotNull>		
+			<isNotNull property="cstHappenTime" prepend=",">
+				cs_trouble$suffix$.cst_happen_time = #cstHappenTime#
+			</isNotNull>		
+			<isNotNull property="cstNotice" prepend=",">
+				cs_trouble$suffix$.cst_notice = #cstNotice#
+			</isNotNull>		
+			<isNotNull property="cstDealFlag" prepend=",">
+				cs_trouble$suffix$.cst_deal_flag = #cstDealFlag#
+			</isNotNull>		
+			<isNotNull property="cstAccepter" prepend=",">
+				cs_trouble$suffix$.cst_accepter = #cstAccepter#
+			</isNotNull>		
+			<isNotNull property="cstCaser" prepend=",">
+				cs_trouble$suffix$.cst_caser = #cstCaser#
+			</isNotNull>		
+			<isNotNull property="cstFinishTime" prepend=",">
+				cs_trouble$suffix$.cst_finish_time = #cstFinishTime#
+			</isNotNull>		
+			<isNotNull property="cstRemark" prepend=",">
+				cs_trouble$suffix$.cst_remark = #cstRemark#
+			</isNotNull>		
+			<isNotNull property="cstUpdateTime" prepend=",">
+				cs_trouble$suffix$.cst_update_time = #cstUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cstAddTime" prepend=",">
+				cs_trouble$suffix$.cst_add_time = #cstAddTime#
+			</isNotNull>		
+			<isNotNull property="cstStatus" prepend=",">
+				cs_trouble$suffix$.cst_status = #cstStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cst_id=#cstId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆事故 -->
+	<delete id="deleteCsTroubleById" parameterClass="java.util.HashMap">
+		delete from cs_trouble$suffix$ where cst_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆事故 -->
+	<update id="removeCsTroubleById" parameterClass="java.util.HashMap">
+		update cs_trouble$suffix$ set  cs_trouble$suffix$.cst_status=-1  where cst_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆事故 -->
+	<update id="updateCsTroubleBy"  parameterClass="java.util.HashMap">
+		update cs_trouble$suffix$ set		
+			cst_id=cst_id
+			<isNotNull property="V_cstId" prepend=",">
+				cs_trouble$suffix$.cst_id = #V_cstId#
+			</isNotNull>		
+			<isNotNull property="V_cstHost" prepend=",">
+				cs_trouble$suffix$.cst_host = #V_cstHost#
+			</isNotNull>		
+			<isNotNull property="V_cstTitle" prepend=",">
+				cs_trouble$suffix$.cst_title = #V_cstTitle#
+			</isNotNull>		
+			<isNotNull property="V_cstOrder" prepend=",">
+				cs_trouble$suffix$.cst_order = #V_cstOrder#
+			</isNotNull>		
+			<isNotNull property="V_cstMember" prepend=",">
+				cs_trouble$suffix$.cst_member = #V_cstMember#
+			</isNotNull>		
+			<isNotNull property="V_cstCar" prepend=",">
+				cs_trouble$suffix$.cst_car = #V_cstCar#
+			</isNotNull>		
+			<isNotNull property="V_cstType" prepend=",">
+				cs_trouble$suffix$.cst_type = #V_cstType#
+			</isNotNull>		
+			<isNotNull property="V_cstDamage" prepend=",">
+				cs_trouble$suffix$.cst_damage = #V_cstDamage#
+			</isNotNull>		
+			<isNotNull property="V_cstRepairAdr" prepend=",">
+				cs_trouble$suffix$.cst_repair_adr = #V_cstRepairAdr#
+			</isNotNull>		
+			<isNotNull property="V_cstRepairPart" prepend=",">
+				cs_trouble$suffix$.cst_repair_part = #V_cstRepairPart#
+			</isNotNull>		
+			<isNotNull property="V_cstRepair" prepend=",">
+				cs_trouble$suffix$.cst_repair = #V_cstRepair#
+			</isNotNull>		
+			<isNotNull property="V_cstInvoice" prepend=",">
+				cs_trouble$suffix$.cst_invoice = #V_cstInvoice#
+			</isNotNull>		
+			<isNotNull property="V_cstInsureFee" prepend=",">
+				cs_trouble$suffix$.cst_insure_fee = #V_cstInsureFee#
+			</isNotNull>		
+			<isNotNull property="V_cstMoney" prepend=",">
+				cs_trouble$suffix$.cst_money = #V_cstMoney#
+			</isNotNull>		
+			<isNotNull property="V_cstThirdLoss" prepend=",">
+				cs_trouble$suffix$.cst_third_loss = #V_cstThirdLoss#
+			</isNotNull>		
+			<isNotNull property="V_cstTrailFee" prepend=",">
+				cs_trouble$suffix$.cst_trail_fee = #V_cstTrailFee#
+			</isNotNull>		
+			<isNotNull property="V_cstRepayDate" prepend=",">
+				cs_trouble$suffix$.cst_repay_date = #V_cstRepayDate#
+			</isNotNull>		
+			<isNotNull property="V_cstRepayType" prepend=",">
+				cs_trouble$suffix$.cst_repay_type = #V_cstRepayType#
+			</isNotNull>		
+			<isNotNull property="V_cstThirdDesc" prepend=",">
+				cs_trouble$suffix$.cst_third_desc = #V_cstThirdDesc#
+			</isNotNull>		
+			<isNotNull property="V_cstCompensate" prepend=",">
+				cs_trouble$suffix$.cst_compensate = #V_cstCompensate#
+			</isNotNull>		
+			<isNotNull property="V_cstCompDate" prepend=",">
+				cs_trouble$suffix$.cst_comp_date = #V_cstCompDate#
+			</isNotNull>		
+			<isNotNull property="V_cstRepairPay" prepend=",">
+				cs_trouble$suffix$.cst_repair_pay = #V_cstRepairPay#
+			</isNotNull>		
+			<isNotNull property="V_cstAgio" prepend=",">
+				cs_trouble$suffix$.cst_agio = #V_cstAgio#
+			</isNotNull>		
+			<isNotNull property="V_cstDecipt" prepend=",">
+				cs_trouble$suffix$.cst_decipt = #V_cstDecipt#
+			</isNotNull>		
+			<isNotNull property="V_cstImages" prepend=",">
+				cs_trouble$suffix$.cst_images = #V_cstImages#
+			</isNotNull>		
+			<isNotNull property="V_cstHappenTime" prepend=",">
+				cs_trouble$suffix$.cst_happen_time = #V_cstHappenTime#
+			</isNotNull>		
+			<isNotNull property="V_cstNotice" prepend=",">
+				cs_trouble$suffix$.cst_notice = #V_cstNotice#
+			</isNotNull>		
+			<isNotNull property="V_cstDealFlag" prepend=",">
+				cs_trouble$suffix$.cst_deal_flag = #V_cstDealFlag#
+			</isNotNull>		
+			<isNotNull property="V_cstAccepter" prepend=",">
+				cs_trouble$suffix$.cst_accepter = #V_cstAccepter#
+			</isNotNull>		
+			<isNotNull property="V_cstCaser" prepend=",">
+				cs_trouble$suffix$.cst_caser = #V_cstCaser#
+			</isNotNull>		
+			<isNotNull property="V_cstFinishTime" prepend=",">
+				cs_trouble$suffix$.cst_finish_time = #V_cstFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_cstRemark" prepend=",">
+				cs_trouble$suffix$.cst_remark = #V_cstRemark#
+			</isNotNull>		
+			<isNotNull property="V_cstUpdateTime" prepend=",">
+				cs_trouble$suffix$.cst_update_time = #V_cstUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cstAddTime" prepend=",">
+				cs_trouble$suffix$.cst_add_time = #V_cstAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cstStatus" prepend=",">
+				cs_trouble$suffix$.cst_status = #V_cstStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.cst_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_trouble$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.cst_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_trouble$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.cst_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_trouble$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询-->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<isNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.cst_repair_adr=cs_repair_adr$CsRepairAdr.suffix$.csra_id
+			</isNull>
+			<isNotNull property="CsRepairAdr.on">
+				left join cs_repair_adr cs_repair_adr$CsRepairAdr.suffix$ on cs_trouble$suffix$.$CsRepairAdr.on$=cs_repair_adr$CsRepairAdr.suffix$.csra_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询-->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<isNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.cst_repair=cs_repair$CsRepair.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRepair.on">
+				left join cs_repair cs_repair$CsRepair.suffix$ on cs_trouble$suffix$.$CsRepair.on$=cs_repair$CsRepair.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_trouble$suffix$.cst_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CstOrder"><!-- 调用一下CstOrder，把CsOrder指向CstOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CstMember"><!-- 调用一下CstMember，把CsMember指向CstMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CstCar"><!-- 调用一下CstCar，把CsCar指向CstCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[维修地点]查询条件sql片段 -->
+		<isNotNull property="CstRepairAdr"><!-- 调用一下CstRepairAdr，把CsRepairAdr指向CstRepairAdr --></isNotNull>
+		<isNotNull property="CsRepairAdr">
+			<include refid="CsRepairAdr_part.cs_repair_adr_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆维修]查询条件sql片段 -->
+		<isNotNull property="CstRepair"><!-- 调用一下CstRepair，把CsRepair指向CstRepair --></isNotNull>
+		<isNotNull property="CsRepair">
+			<include refid="CsRepair_part.cs_repair_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsTrouble_part.cs_trouble_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆事故 -->
+	<update id="deleteCsTroubleBy"  parameterClass="java.util.HashMap">
+		delete from cs_trouble$suffix$ where 
+		cs_trouble$suffix$.cst_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsTrouble_part.cs_trouble_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

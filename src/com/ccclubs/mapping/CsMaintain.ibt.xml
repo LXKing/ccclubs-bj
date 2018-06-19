@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆保养之SQL映射 -->
+	<resultMap id="CsMaintain" class="com.ccclubs.model.CsMaintain">
+		<result property="csmId" column="csm_id"/>
+		<result property="csmHost" column="csm_host"/>
+		<result property="csmNumber" column="csm_number"/>
+		<result property="csmModel" column="csm_model"/>
+		<result property="csmType" column="csm_type"/>
+		<result property="csmExpectBy" column="csm_expect_by"/>
+		<result property="csmExpectDate" column="csm_expect_date"/>
+		<result property="csmDate" column="csm_date"/>
+		<result property="csmExpectKm" column="csm_expect_km"/>
+		<result property="csmRealKm" column="csm_real_km"/>
+		<result property="csmCurrKm" column="csm_curr_km"/>
+		<result property="csmKmHistory" column="csm_km_history"/>
+		<result property="csmFeeType" column="csm_fee_type"/>
+		<result property="csmFee" column="csm_fee"/>
+		<result property="csmRemark" column="csm_remark"/>
+		<result property="csmAddTime" column="csm_add_time"/>
+		<result property="csmStatus" column="csm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆保养 -->
+	<select id="getCsMaintainList" resultMap="CsMaintain">
+		select cs_maintain$suffix$.* from cs_maintain$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.csm_number=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.csm_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_maintain$suffix$.csm_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMaintain_part.cs_maintain_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆保养分页 -->
+	<select id="getCsMaintainPage" parameterClass="java.util.HashMap" resultMap="CsMaintain">
+		select cs_maintain$suffix$.* from cs_maintain$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.csm_number=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.csm_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_maintain$suffix$.csm_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMaintain_part.cs_maintain_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆保养总数 -->
+	<select id="getCsMaintainEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_maintain$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.csm_number=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.csm_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_maintain$suffix$.csm_status!=-1
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMaintain_part.cs_maintain_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆保养 -->
+	<select id="getCsMaintainById" parameterClass="java.util.HashMap" resultMap="CsMaintain">
+		select cs_maintain$suffix$.* from cs_maintain$suffix$
+		where csm_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆保养 -->
+	<insert id="saveCsMaintain"  parameterClass="com.ccclubs.model.CsMaintain">
+		insert into cs_maintain$suffix$
+		(
+			cs_maintain$suffix$.csm_host
+			,cs_maintain$suffix$.csm_number
+			,cs_maintain$suffix$.csm_model
+			,cs_maintain$suffix$.csm_type
+			,cs_maintain$suffix$.csm_expect_by
+			,cs_maintain$suffix$.csm_expect_date
+			,cs_maintain$suffix$.csm_date
+			,cs_maintain$suffix$.csm_expect_km
+			,cs_maintain$suffix$.csm_real_km
+			,cs_maintain$suffix$.csm_curr_km
+			,cs_maintain$suffix$.csm_km_history
+			,cs_maintain$suffix$.csm_fee_type
+			,cs_maintain$suffix$.csm_fee
+			,cs_maintain$suffix$.csm_remark
+			,cs_maintain$suffix$.csm_add_time
+			,cs_maintain$suffix$.csm_status
+		)
+		values(
+			<isNotNull property="csmHost" prepend="">
+				#csmHost#
+			</isNotNull>
+			<isNull property="csmHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmNumber" prepend=",">
+				#csmNumber#
+			</isNotNull>
+			<isNull property="csmNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmModel" prepend=",">
+				#csmModel#
+			</isNotNull>
+			<isNull property="csmModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmType" prepend=",">
+				#csmType#
+			</isNotNull>
+			<isNull property="csmType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmExpectBy" prepend=",">
+				#csmExpectBy#
+			</isNotNull>
+			<isNull property="csmExpectBy" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmExpectDate" prepend=",">
+				#csmExpectDate#
+			</isNotNull>
+			<isNull property="csmExpectDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmDate" prepend=",">
+				#csmDate#
+			</isNotNull>
+			<isNull property="csmDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmExpectKm" prepend=",">
+				#csmExpectKm#
+			</isNotNull>
+			<isNull property="csmExpectKm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRealKm" prepend=",">
+				#csmRealKm#
+			</isNotNull>
+			<isNull property="csmRealKm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmCurrKm" prepend=",">
+				#csmCurrKm#
+			</isNotNull>
+			<isNull property="csmCurrKm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmKmHistory" prepend=",">
+				#csmKmHistory#
+			</isNotNull>
+			<isNull property="csmKmHistory" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmFeeType" prepend=",">
+				#csmFeeType#
+			</isNotNull>
+			<isNull property="csmFeeType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmFee" prepend=",">
+				#csmFee#
+			</isNotNull>
+			<isNull property="csmFee" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmRemark" prepend=",">
+				#csmRemark#
+			</isNotNull>
+			<isNull property="csmRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmAddTime" prepend=",">
+				#csmAddTime#
+			</isNotNull>
+			<isNull property="csmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmStatus" prepend=",">
+				#csmStatus#
+			</isNotNull>
+			<isNull property="csmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆保养 -->
+	<update id="updateCsMaintain"  parameterClass="com.ccclubs.model.CsMaintain">
+		update cs_maintain$suffix$ set
+			<isNotNull property="csmHost" prepend="">
+				cs_maintain$suffix$.csm_host = #csmHost#
+			</isNotNull>
+			<isNull property="csmHost" prepend="">
+				cs_maintain$suffix$.csm_host = null
+			</isNull>				
+			<isNotNull property="csmNumber" prepend=",">
+				cs_maintain$suffix$.csm_number = #csmNumber#
+			</isNotNull>
+			<isNull property="csmNumber" prepend=",">
+				cs_maintain$suffix$.csm_number = null
+			</isNull>				
+			<isNotNull property="csmModel" prepend=",">
+				cs_maintain$suffix$.csm_model = #csmModel#
+			</isNotNull>
+			<isNull property="csmModel" prepend=",">
+				cs_maintain$suffix$.csm_model = null
+			</isNull>				
+			<isNotNull property="csmType" prepend=",">
+				cs_maintain$suffix$.csm_type = #csmType#
+			</isNotNull>
+			<isNull property="csmType" prepend=",">
+				cs_maintain$suffix$.csm_type = null
+			</isNull>				
+			<isNotNull property="csmExpectBy" prepend=",">
+				cs_maintain$suffix$.csm_expect_by = #csmExpectBy#
+			</isNotNull>
+			<isNull property="csmExpectBy" prepend=",">
+				cs_maintain$suffix$.csm_expect_by = null
+			</isNull>				
+			<isNotNull property="csmExpectDate" prepend=",">
+				cs_maintain$suffix$.csm_expect_date = #csmExpectDate#
+			</isNotNull>
+			<isNull property="csmExpectDate" prepend=",">
+				cs_maintain$suffix$.csm_expect_date = null
+			</isNull>				
+			<isNotNull property="csmDate" prepend=",">
+				cs_maintain$suffix$.csm_date = #csmDate#
+			</isNotNull>
+			<isNull property="csmDate" prepend=",">
+				cs_maintain$suffix$.csm_date = null
+			</isNull>				
+			<isNotNull property="csmExpectKm" prepend=",">
+				cs_maintain$suffix$.csm_expect_km = #csmExpectKm#
+			</isNotNull>
+			<isNull property="csmExpectKm" prepend=",">
+				cs_maintain$suffix$.csm_expect_km = null
+			</isNull>				
+			<isNotNull property="csmRealKm" prepend=",">
+				cs_maintain$suffix$.csm_real_km = #csmRealKm#
+			</isNotNull>
+			<isNull property="csmRealKm" prepend=",">
+				cs_maintain$suffix$.csm_real_km = null
+			</isNull>				
+			<isNotNull property="csmCurrKm" prepend=",">
+				cs_maintain$suffix$.csm_curr_km = #csmCurrKm#
+			</isNotNull>
+			<isNull property="csmCurrKm" prepend=",">
+				cs_maintain$suffix$.csm_curr_km = null
+			</isNull>				
+			<isNotNull property="csmKmHistory" prepend=",">
+				cs_maintain$suffix$.csm_km_history = #csmKmHistory#
+			</isNotNull>
+			<isNull property="csmKmHistory" prepend=",">
+				cs_maintain$suffix$.csm_km_history = null
+			</isNull>				
+			<isNotNull property="csmFeeType" prepend=",">
+				cs_maintain$suffix$.csm_fee_type = #csmFeeType#
+			</isNotNull>
+			<isNull property="csmFeeType" prepend=",">
+				cs_maintain$suffix$.csm_fee_type = null
+			</isNull>				
+			<isNotNull property="csmFee" prepend=",">
+				cs_maintain$suffix$.csm_fee = #csmFee#
+			</isNotNull>
+			<isNull property="csmFee" prepend=",">
+				cs_maintain$suffix$.csm_fee = null
+			</isNull>				
+			<isNotNull property="csmRemark" prepend=",">
+				cs_maintain$suffix$.csm_remark = #csmRemark#
+			</isNotNull>
+			<isNull property="csmRemark" prepend=",">
+				cs_maintain$suffix$.csm_remark = null
+			</isNull>				
+			<isNotNull property="csmAddTime" prepend=",">
+				cs_maintain$suffix$.csm_add_time = #csmAddTime#
+			</isNotNull>
+			<isNull property="csmAddTime" prepend=",">
+				cs_maintain$suffix$.csm_add_time = null
+			</isNull>				
+			<isNotNull property="csmStatus" prepend=",">
+				cs_maintain$suffix$.csm_status = #csmStatus#
+			</isNotNull>
+			<isNull property="csmStatus" prepend=",">
+				cs_maintain$suffix$.csm_status = null
+			</isNull>				
+		where
+			csm_id=#csmId#
+	</update>
+	
+	<!-- 更新车辆保养非空字段 -->
+	<update id="updateCsMaintain$NotNull"  parameterClass="com.ccclubs.model.CsMaintain">
+		update cs_maintain$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmHost" prepend=",">
+				cs_maintain$suffix$.csm_host = #csmHost#
+			</isNotNull>		
+			<isNotNull property="csmNumber" prepend=",">
+				cs_maintain$suffix$.csm_number = #csmNumber#
+			</isNotNull>		
+			<isNotNull property="csmModel" prepend=",">
+				cs_maintain$suffix$.csm_model = #csmModel#
+			</isNotNull>		
+			<isNotNull property="csmType" prepend=",">
+				cs_maintain$suffix$.csm_type = #csmType#
+			</isNotNull>		
+			<isNotNull property="csmExpectBy" prepend=",">
+				cs_maintain$suffix$.csm_expect_by = #csmExpectBy#
+			</isNotNull>		
+			<isNotNull property="csmExpectDate" prepend=",">
+				cs_maintain$suffix$.csm_expect_date = #csmExpectDate#
+			</isNotNull>		
+			<isNotNull property="csmDate" prepend=",">
+				cs_maintain$suffix$.csm_date = #csmDate#
+			</isNotNull>		
+			<isNotNull property="csmExpectKm" prepend=",">
+				cs_maintain$suffix$.csm_expect_km = #csmExpectKm#
+			</isNotNull>		
+			<isNotNull property="csmRealKm" prepend=",">
+				cs_maintain$suffix$.csm_real_km = #csmRealKm#
+			</isNotNull>		
+			<isNotNull property="csmCurrKm" prepend=",">
+				cs_maintain$suffix$.csm_curr_km = #csmCurrKm#
+			</isNotNull>		
+			<isNotNull property="csmKmHistory" prepend=",">
+				cs_maintain$suffix$.csm_km_history = #csmKmHistory#
+			</isNotNull>		
+			<isNotNull property="csmFeeType" prepend=",">
+				cs_maintain$suffix$.csm_fee_type = #csmFeeType#
+			</isNotNull>		
+			<isNotNull property="csmFee" prepend=",">
+				cs_maintain$suffix$.csm_fee = #csmFee#
+			</isNotNull>		
+			<isNotNull property="csmRemark" prepend=",">
+				cs_maintain$suffix$.csm_remark = #csmRemark#
+			</isNotNull>		
+			<isNotNull property="csmAddTime" prepend=",">
+				cs_maintain$suffix$.csm_add_time = #csmAddTime#
+			</isNotNull>		
+			<isNotNull property="csmStatus" prepend=",">
+				cs_maintain$suffix$.csm_status = #csmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csm_id=#csmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆保养 -->
+	<delete id="deleteCsMaintainById" parameterClass="java.util.HashMap">
+		delete from cs_maintain$suffix$ where csm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆保养 -->
+	<update id="removeCsMaintainById" parameterClass="java.util.HashMap">
+		update cs_maintain$suffix$ set  cs_maintain$suffix$.csm_status=-1  where csm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆保养 -->
+	<update id="updateCsMaintainBy"  parameterClass="java.util.HashMap">
+		update cs_maintain$suffix$ set		
+			csm_id=csm_id
+			<isNotNull property="V_csmId" prepend=",">
+				cs_maintain$suffix$.csm_id = #V_csmId#
+			</isNotNull>		
+			<isNotNull property="V_csmHost" prepend=",">
+				cs_maintain$suffix$.csm_host = #V_csmHost#
+			</isNotNull>		
+			<isNotNull property="V_csmNumber" prepend=",">
+				cs_maintain$suffix$.csm_number = #V_csmNumber#
+			</isNotNull>		
+			<isNotNull property="V_csmModel" prepend=",">
+				cs_maintain$suffix$.csm_model = #V_csmModel#
+			</isNotNull>		
+			<isNotNull property="V_csmType" prepend=",">
+				cs_maintain$suffix$.csm_type = #V_csmType#
+			</isNotNull>		
+			<isNotNull property="V_csmExpectBy" prepend=",">
+				cs_maintain$suffix$.csm_expect_by = #V_csmExpectBy#
+			</isNotNull>		
+			<isNotNull property="V_csmExpectDate" prepend=",">
+				cs_maintain$suffix$.csm_expect_date = #V_csmExpectDate#
+			</isNotNull>		
+			<isNotNull property="V_csmDate" prepend=",">
+				cs_maintain$suffix$.csm_date = #V_csmDate#
+			</isNotNull>		
+			<isNotNull property="V_csmExpectKm" prepend=",">
+				cs_maintain$suffix$.csm_expect_km = #V_csmExpectKm#
+			</isNotNull>		
+			<isNotNull property="V_csmRealKm" prepend=",">
+				cs_maintain$suffix$.csm_real_km = #V_csmRealKm#
+			</isNotNull>		
+			<isNotNull property="V_csmCurrKm" prepend=",">
+				cs_maintain$suffix$.csm_curr_km = #V_csmCurrKm#
+			</isNotNull>		
+			<isNotNull property="V_csmKmHistory" prepend=",">
+				cs_maintain$suffix$.csm_km_history = #V_csmKmHistory#
+			</isNotNull>		
+			<isNotNull property="V_csmFeeType" prepend=",">
+				cs_maintain$suffix$.csm_fee_type = #V_csmFeeType#
+			</isNotNull>		
+			<isNotNull property="V_csmFee" prepend=",">
+				cs_maintain$suffix$.csm_fee = #V_csmFee#
+			</isNotNull>		
+			<isNotNull property="V_csmRemark" prepend=",">
+				cs_maintain$suffix$.csm_remark = #V_csmRemark#
+			</isNotNull>		
+			<isNotNull property="V_csmAddTime" prepend=",">
+				cs_maintain$suffix$.csm_add_time = #V_csmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmStatus" prepend=",">
+				cs_maintain$suffix$.csm_status = #V_csmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.csm_number=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_maintain$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.csm_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_maintain$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_maintain$suffix$.csm_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsmNumber"><!-- 调用一下CsmNumber，把CsCar指向CsmNumber --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsmModel"><!-- 调用一下CsmModel，把CsCarModel指向CsmModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMaintain_part.cs_maintain_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆保养 -->
+	<update id="deleteCsMaintainBy"  parameterClass="java.util.HashMap">
+		delete from cs_maintain$suffix$ where 
+		cs_maintain$suffix$.csm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMaintain_part.cs_maintain_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

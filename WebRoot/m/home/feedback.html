@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>意见反馈</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<ul class="table-view mt15">
+					<li class="table-view-cell media">
+						<a id="ccc-identity" class="navigate-right">
+							<div style="font-size:1.6rem;">
+									请选择意见类型：
+								 <span class="badge" style="padding: 2px 0px 0.5rem;font-size:1.4rem;">用车感受</span>
+							 </div>
+						</a>
+					</li>
+				</ul>
+				<textarea rows="6" placeholder="请留下您的意见和建议，我们将努力改进。" id="tucao"></textarea>
+			</form>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block">
+					提交
+				</button>
+			</div>
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer">
+				<div id="ccc-overlay"></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+						<div class="panel" data-role="panel">
+							<div class="panel-header">
+								意见类型
+							</div>
+							<div class="panel-content">
+								<ul class="table-modal-view">
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('用车感受',0);">用车感受</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('我有建议',1);">我有建议</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<input type="hidden" id="j-identity-type" value="0">
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/page-register-identity.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		document.querySelector('#register-btn').onclick = function() {
+			var btn = $('#register-btn');
+			btn.attr("disabled", true);
+			var tucao = $('#tucao').val();
+			if(tucao==null||tucao.length==0){
+				Toast.show('请留下您的意见和建议，我们将努力改进。');
+				btn.removeAttr("disabled");
+				return;
+			}
+			$.ajax({
+				type: 'get',
+        		url: 'account_back.html',
+        		data:{
+        			type: $('#j-identity-type').val(),
+        			tucao: tucao
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			btn.removeAttr("disabled");
+       				Toast.show(data.message);
+       				$('#tucao').val("");
+        		},
+        		error: function(xhr, type){
+        			btn.removeAttr("disabled");
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		};
+		</script>
+	</body>
+</html>

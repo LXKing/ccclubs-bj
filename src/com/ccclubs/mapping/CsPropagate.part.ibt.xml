@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsPropagate_part">	
+	<!-- 传播内容条件sql片段  -->
+	<sql id="cs_propagate_dynamic">
+		<dynamic>
+			<isNotEmpty property="cspId" prepend="and">
+			    $cspIdNot$ cs_propagate$suffix$.csp_id = #cspId#
+			</isNotEmpty>
+			<isNotNull property="cspIdNot" prepend="and">
+				<isEmpty property="cspId">
+				$cspIdNot$ cs_propagate$suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspTitle" prepend="and">			    
+			    (<isNotNull property="cspTitleNot">
+			    cs_propagate$suffix$.csp_title is null or length(cs_propagate$suffix$.csp_title) &lt; 1 or
+			    </isNotNull>$cspTitleNot$ cs_propagate$suffix$.csp_title like #cspTitle#)
+			</isNotEmpty>
+			<isNotNull property="cspTitleNot" prepend="and">
+				<isEmpty property="cspTitle">
+				$cspTitleNot$ (cs_propagate$suffix$.csp_title is null or length(cs_propagate$suffix$.csp_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspType" prepend="and">
+			    $cspTypeNot$ cs_propagate$suffix$.csp_type = #cspType#
+			</isNotEmpty>
+			<isNotNull property="cspTypeNot" prepend="and">
+				<isEmpty property="cspType">
+				$cspTypeNot$ cs_propagate$suffix$.csp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspRecommendMin" prepend="and">
+			    $cspRecommendNot$  ( cs_propagate$suffix$.csp_order &gt;= #cspRecommendMin#
+			    <isEmpty property="cspRecommendMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspRecommendMax" prepend="and">
+				<isEmpty property="cspRecommendMin">$cspRecommendNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_order &lt;= #cspRecommendMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspRecommend" prepend="and">
+			    $cspRecommendNot$ cs_propagate$suffix$.csp_order = #cspRecommend#
+			</isNotEmpty>
+			<isNotNull property="cspRecommendNot" prepend="and">
+				<isEmpty property="cspRecommendMax"><isEmpty property="cspRecommendMin"><isEmpty property="cspRecommend">
+				$cspRecommendNot$ cs_propagate$suffix$.csp_order is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspFlag" prepend="and">			    
+			    (<isNotNull property="cspFlagNot">
+			    cs_propagate$suffix$.csp_flag is null or length(cs_propagate$suffix$.csp_flag) &lt; 1 or
+			    </isNotNull>$cspFlagNot$ cs_propagate$suffix$.csp_flag = #cspFlag#)
+			</isNotEmpty>
+			<isNotNull property="cspFlagNot" prepend="and">
+				<isEmpty property="cspFlag">
+				$cspFlagNot$ (cs_propagate$suffix$.csp_flag is null or length(cs_propagate$suffix$.csp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspThum" prepend="and">
+			    $cspThumNot$ cs_propagate$suffix$.csp_thum = #cspThum#
+			</isNotEmpty>
+			<isNotNull property="cspThumNot" prepend="and">
+				<isEmpty property="cspThum">
+				$cspThumNot$ cs_propagate$suffix$.csp_thum is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspContentType" prepend="and">
+			    $cspContentTypeNot$ cs_propagate$suffix$.csp_content_type = #cspContentType#
+			</isNotEmpty>
+			<isNotNull property="cspContentTypeNot" prepend="and">
+				<isEmpty property="cspContentType">
+				$cspContentTypeNot$ cs_propagate$suffix$.csp_content_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspContent" prepend="and">			    
+			    (<isNotNull property="cspContentNot">
+			    cs_propagate$suffix$.csp_content is null or length(cs_propagate$suffix$.csp_content) &lt; 1 or
+			    </isNotNull>$cspContentNot$ cs_propagate$suffix$.csp_content like #cspContent#)
+			</isNotEmpty>
+			<isNotNull property="cspContentNot" prepend="and">
+				<isEmpty property="cspContent">
+				$cspContentNot$ (cs_propagate$suffix$.csp_content is null or length(cs_propagate$suffix$.csp_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspHtml" prepend="and">			    
+			    (<isNotNull property="cspHtmlNot">
+			    cs_propagate$suffix$.csp_html is null or length(cs_propagate$suffix$.csp_html) &lt; 1 or
+			    </isNotNull>$cspHtmlNot$ cs_propagate$suffix$.csp_html like #cspHtml#)
+			</isNotEmpty>
+			<isNotNull property="cspHtmlNot" prepend="and">
+				<isEmpty property="cspHtml">
+				$cspHtmlNot$ (cs_propagate$suffix$.csp_html is null or length(cs_propagate$suffix$.csp_html) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspRedirect" prepend="and">			    
+			    (<isNotNull property="cspRedirectNot">
+			    cs_propagate$suffix$.csp_redirect is null or length(cs_propagate$suffix$.csp_redirect) &lt; 1 or
+			    </isNotNull>$cspRedirectNot$ cs_propagate$suffix$.csp_redirect = #cspRedirect#)
+			</isNotEmpty>
+			<isNotNull property="cspRedirectNot" prepend="and">
+				<isEmpty property="cspRedirect">
+				$cspRedirectNot$ (cs_propagate$suffix$.csp_redirect is null or length(cs_propagate$suffix$.csp_redirect) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspAddTimeStart" prepend="and">
+			    $cspAddTimeNot$   (cs_propagate$suffix$.csp_add_time &gt;= #cspAddTimeStart#
+			   <isEmpty property="cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTimeEnd" prepend="and">
+				<isEmpty property="cspAddTimeStart">$cspAddTimeNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_add_time &lt;= #cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTime" prepend="and">
+			    $cspAddTimeNot$ cs_propagate$suffix$.csp_add_time = #cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="cspAddTimeNot" prepend="and">
+				<isEmpty property="cspAddTimeStart"><isEmpty property="cspAddTimeEnd"><isEmpty property="cspAddTime">
+				$cspAddTimeNot$ cs_propagate$suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspUpdateTimeStart" prepend="and">
+			    $cspUpdateTimeNot$   (cs_propagate$suffix$.csp_update_time &gt;= #cspUpdateTimeStart#
+			   <isEmpty property="cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="cspUpdateTimeStart">$cspUpdateTimeNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_update_time &lt;= #cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTime" prepend="and">
+			    $cspUpdateTimeNot$ cs_propagate$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cspUpdateTimeNot" prepend="and">
+				<isEmpty property="cspUpdateTimeStart"><isEmpty property="cspUpdateTimeEnd"><isEmpty property="cspUpdateTime">
+				$cspUpdateTimeNot$ cs_propagate$suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspViewSMin" prepend="and">
+			    $cspViewSNot$  ( cs_propagate$suffix$.csp_view_s &gt;= #cspViewSMin#
+			    <isEmpty property="cspViewSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspViewSMax" prepend="and">
+				<isEmpty property="cspViewSMin">$cspViewSNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_view_s &lt;= #cspViewSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspViewS" prepend="and">
+			    $cspViewSNot$ cs_propagate$suffix$.csp_view_s = #cspViewS#
+			</isNotEmpty>
+			<isNotNull property="cspViewSNot" prepend="and">
+				<isEmpty property="cspViewSMax"><isEmpty property="cspViewSMin"><isEmpty property="cspViewS">
+				$cspViewSNot$ cs_propagate$suffix$.csp_view_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspReplySMin" prepend="and">
+			    $cspReplySNot$  ( cs_propagate$suffix$.csp_reply_s &gt;= #cspReplySMin#
+			    <isEmpty property="cspReplySMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspReplySMax" prepend="and">
+				<isEmpty property="cspReplySMin">$cspReplySNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_reply_s &lt;= #cspReplySMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspReplyS" prepend="and">
+			    $cspReplySNot$ cs_propagate$suffix$.csp_reply_s = #cspReplyS#
+			</isNotEmpty>
+			<isNotNull property="cspReplySNot" prepend="and">
+				<isEmpty property="cspReplySMax"><isEmpty property="cspReplySMin"><isEmpty property="cspReplyS">
+				$cspReplySNot$ cs_propagate$suffix$.csp_reply_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspCollectSMin" prepend="and">
+			    $cspCollectSNot$  ( cs_propagate$suffix$.csp_collect_s &gt;= #cspCollectSMin#
+			    <isEmpty property="cspCollectSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspCollectSMax" prepend="and">
+				<isEmpty property="cspCollectSMin">$cspCollectSNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_collect_s &lt;= #cspCollectSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspCollectS" prepend="and">
+			    $cspCollectSNot$ cs_propagate$suffix$.csp_collect_s = #cspCollectS#
+			</isNotEmpty>
+			<isNotNull property="cspCollectSNot" prepend="and">
+				<isEmpty property="cspCollectSMax"><isEmpty property="cspCollectSMin"><isEmpty property="cspCollectS">
+				$cspCollectSNot$ cs_propagate$suffix$.csp_collect_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspPraiseSMin" prepend="and">
+			    $cspPraiseSNot$  ( cs_propagate$suffix$.csp_praise_s &gt;= #cspPraiseSMin#
+			    <isEmpty property="cspPraiseSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspPraiseSMax" prepend="and">
+				<isEmpty property="cspPraiseSMin">$cspPraiseSNot$   (</isEmpty>
+			    cs_propagate$suffix$.csp_praise_s &lt;= #cspPraiseSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspPraiseS" prepend="and">
+			    $cspPraiseSNot$ cs_propagate$suffix$.csp_praise_s = #cspPraiseS#
+			</isNotEmpty>
+			<isNotNull property="cspPraiseSNot" prepend="and">
+				<isEmpty property="cspPraiseSMax"><isEmpty property="cspPraiseSMin"><isEmpty property="cspPraiseS">
+				$cspPraiseSNot$ cs_propagate$suffix$.csp_praise_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspStatus" prepend="and">
+			    $cspStatusNot$ cs_propagate$suffix$.csp_status = #cspStatus#
+			</isNotEmpty>
+			<isNotNull property="cspStatusNot" prepend="and">
+				<isEmpty property="cspStatus">
+				$cspStatusNot$ cs_propagate$suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 传播内容left join 条件sql片段 -->
+	<sql id="cs_propagate_join">
+		<dynamic>
+			<isNotEmpty property="CsPropagate.cspId" prepend="and">
+			    $CsPropagate.cspIdNot$ cs_propagate$CsPropagate.suffix$.csp_id = #CsPropagate.cspId#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspIdNot" prepend="and">
+				<isEmpty property="CsPropagate.cspId">
+				$cspIdNot$ cs_propagate$CsPropagate.suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspTitle" prepend="and">
+				(<isNotNull property="CsPropagate.cspTitleNot">
+			    cs_propagate$CsPropagate.suffix$.csp_title is null or length(cs_propagate$CsPropagate.suffix$.csp_title) &lt; 1 or
+			    </isNotNull>$CsPropagate.cspTitleNot$ cs_propagate$CsPropagate.suffix$.csp_title like #CsPropagate.cspTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspTitleNot" prepend="and">
+				<isEmpty property="CsPropagate.cspTitle">
+				$cspTitleNot$ (cs_propagate$CsPropagate.suffix$.csp_title is null or length(cs_propagate$CsPropagate.suffix$.csp_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspType" prepend="and">
+			    $CsPropagate.cspTypeNot$ cs_propagate$CsPropagate.suffix$.csp_type = #CsPropagate.cspType#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspTypeNot" prepend="and">
+				<isEmpty property="CsPropagate.cspType">
+				$cspTypeNot$ cs_propagate$CsPropagate.suffix$.csp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspRecommendMin" prepend="and">
+			    $CsPropagate.cspRecommendNot$  ( cs_propagate$CsPropagate.suffix$.csp_order &gt;= #CsPropagate.cspRecommendMin#
+			    <isEmpty property="CsPropagate.cspRecommendMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspRecommendMax" prepend="and">
+				<isEmpty property="CsPropagate.cspRecommendMin">$CsPropagate.cspRecommendNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_order &lt;= #CsPropagate.cspRecommendMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspRecommend" prepend="and">
+			    $CsPropagate.cspRecommendNot$ cs_propagate$CsPropagate.suffix$.csp_order = #CsPropagate.cspRecommend#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspRecommendNot" prepend="and">
+				<isEmpty property="CsPropagate.cspRecommendMax"><isEmpty property="CsPropagate.cspRecommendMin"><isEmpty property="CsPropagate.cspRecommend">
+				$cspRecommendNot$ cs_propagate$CsPropagate.suffix$.csp_order is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspFlag" prepend="and">
+				(<isNotNull property="CsPropagate.cspFlagNot">
+			    cs_propagate$CsPropagate.suffix$.csp_flag is null or length(cs_propagate$CsPropagate.suffix$.csp_flag) &lt; 1 or
+			    </isNotNull>$CsPropagate.cspFlagNot$ cs_propagate$CsPropagate.suffix$.csp_flag = #CsPropagate.cspFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspFlagNot" prepend="and">
+				<isEmpty property="CsPropagate.cspFlag">
+				$cspFlagNot$ (cs_propagate$CsPropagate.suffix$.csp_flag is null or length(cs_propagate$CsPropagate.suffix$.csp_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspThum" prepend="and">
+			    $CsPropagate.cspThumNot$ cs_propagate$CsPropagate.suffix$.csp_thum = #CsPropagate.cspThum#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspThumNot" prepend="and">
+				<isEmpty property="CsPropagate.cspThum">
+				$cspThumNot$ cs_propagate$CsPropagate.suffix$.csp_thum is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspContentType" prepend="and">
+			    $CsPropagate.cspContentTypeNot$ cs_propagate$CsPropagate.suffix$.csp_content_type = #CsPropagate.cspContentType#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspContentTypeNot" prepend="and">
+				<isEmpty property="CsPropagate.cspContentType">
+				$cspContentTypeNot$ cs_propagate$CsPropagate.suffix$.csp_content_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspContent" prepend="and">
+				(<isNotNull property="CsPropagate.cspContentNot">
+			    cs_propagate$CsPropagate.suffix$.csp_content is null or length(cs_propagate$CsPropagate.suffix$.csp_content) &lt; 1 or
+			    </isNotNull>$CsPropagate.cspContentNot$ cs_propagate$CsPropagate.suffix$.csp_content like #CsPropagate.cspContent#)
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspContentNot" prepend="and">
+				<isEmpty property="CsPropagate.cspContent">
+				$cspContentNot$ (cs_propagate$CsPropagate.suffix$.csp_content is null or length(cs_propagate$CsPropagate.suffix$.csp_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspHtml" prepend="and">
+				(<isNotNull property="CsPropagate.cspHtmlNot">
+			    cs_propagate$CsPropagate.suffix$.csp_html is null or length(cs_propagate$CsPropagate.suffix$.csp_html) &lt; 1 or
+			    </isNotNull>$CsPropagate.cspHtmlNot$ cs_propagate$CsPropagate.suffix$.csp_html like #CsPropagate.cspHtml#)
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspHtmlNot" prepend="and">
+				<isEmpty property="CsPropagate.cspHtml">
+				$cspHtmlNot$ (cs_propagate$CsPropagate.suffix$.csp_html is null or length(cs_propagate$CsPropagate.suffix$.csp_html) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspRedirect" prepend="and">
+				(<isNotNull property="CsPropagate.cspRedirectNot">
+			    cs_propagate$CsPropagate.suffix$.csp_redirect is null or length(cs_propagate$CsPropagate.suffix$.csp_redirect) &lt; 1 or
+			    </isNotNull>$CsPropagate.cspRedirectNot$ cs_propagate$CsPropagate.suffix$.csp_redirect = #CsPropagate.cspRedirect#)
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspRedirectNot" prepend="and">
+				<isEmpty property="CsPropagate.cspRedirect">
+				$cspRedirectNot$ (cs_propagate$CsPropagate.suffix$.csp_redirect is null or length(cs_propagate$CsPropagate.suffix$.csp_redirect) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspAddTimeStart" prepend="and">
+			    $CsPropagate.cspAddTimeNot$   (cs_propagate$CsPropagate.suffix$.csp_add_time &gt;= #CsPropagate.cspAddTimeStart#
+			   <isEmpty property="CsPropagate.cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspAddTimeEnd" prepend="and">
+				<isEmpty property="CsPropagate.cspAddTimeStart">$CsPropagate.cspAddTimeNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_add_time &lt;= #CsPropagate.cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspAddTime" prepend="and">
+			    $CsPropagate.cspAddTimeNot$ cs_propagate$CsPropagate.suffix$.csp_add_time = #CsPropagate.cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspAddTimeNot" prepend="and">
+				<isEmpty property="CsPropagate.cspAddTimeStart"><isEmpty property="CsPropagate.cspAddTimeEnd"><isEmpty property="CsPropagate.cspAddTime">
+				$cspAddTimeNot$ cs_propagate$CsPropagate.suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspUpdateTimeStart" prepend="and">
+			    $CsPropagate.cspUpdateTimeNot$   (cs_propagate$CsPropagate.suffix$.csp_update_time &gt;= #CsPropagate.cspUpdateTimeStart#
+			   <isEmpty property="CsPropagate.cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsPropagate.cspUpdateTimeStart">$CsPropagate.cspUpdateTimeNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_update_time &lt;= #CsPropagate.cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspUpdateTime" prepend="and">
+			    $CsPropagate.cspUpdateTimeNot$ cs_propagate$CsPropagate.suffix$.csp_update_time = #CsPropagate.cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspUpdateTimeNot" prepend="and">
+				<isEmpty property="CsPropagate.cspUpdateTimeStart"><isEmpty property="CsPropagate.cspUpdateTimeEnd"><isEmpty property="CsPropagate.cspUpdateTime">
+				$cspUpdateTimeNot$ cs_propagate$CsPropagate.suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspViewSMin" prepend="and">
+			    $CsPropagate.cspViewSNot$  ( cs_propagate$CsPropagate.suffix$.csp_view_s &gt;= #CsPropagate.cspViewSMin#
+			    <isEmpty property="CsPropagate.cspViewSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspViewSMax" prepend="and">
+				<isEmpty property="CsPropagate.cspViewSMin">$CsPropagate.cspViewSNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_view_s &lt;= #CsPropagate.cspViewSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspViewS" prepend="and">
+			    $CsPropagate.cspViewSNot$ cs_propagate$CsPropagate.suffix$.csp_view_s = #CsPropagate.cspViewS#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspViewSNot" prepend="and">
+				<isEmpty property="CsPropagate.cspViewSMax"><isEmpty property="CsPropagate.cspViewSMin"><isEmpty property="CsPropagate.cspViewS">
+				$cspViewSNot$ cs_propagate$CsPropagate.suffix$.csp_view_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspReplySMin" prepend="and">
+			    $CsPropagate.cspReplySNot$  ( cs_propagate$CsPropagate.suffix$.csp_reply_s &gt;= #CsPropagate.cspReplySMin#
+			    <isEmpty property="CsPropagate.cspReplySMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspReplySMax" prepend="and">
+				<isEmpty property="CsPropagate.cspReplySMin">$CsPropagate.cspReplySNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_reply_s &lt;= #CsPropagate.cspReplySMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspReplyS" prepend="and">
+			    $CsPropagate.cspReplySNot$ cs_propagate$CsPropagate.suffix$.csp_reply_s = #CsPropagate.cspReplyS#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspReplySNot" prepend="and">
+				<isEmpty property="CsPropagate.cspReplySMax"><isEmpty property="CsPropagate.cspReplySMin"><isEmpty property="CsPropagate.cspReplyS">
+				$cspReplySNot$ cs_propagate$CsPropagate.suffix$.csp_reply_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspCollectSMin" prepend="and">
+			    $CsPropagate.cspCollectSNot$  ( cs_propagate$CsPropagate.suffix$.csp_collect_s &gt;= #CsPropagate.cspCollectSMin#
+			    <isEmpty property="CsPropagate.cspCollectSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspCollectSMax" prepend="and">
+				<isEmpty property="CsPropagate.cspCollectSMin">$CsPropagate.cspCollectSNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_collect_s &lt;= #CsPropagate.cspCollectSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspCollectS" prepend="and">
+			    $CsPropagate.cspCollectSNot$ cs_propagate$CsPropagate.suffix$.csp_collect_s = #CsPropagate.cspCollectS#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspCollectSNot" prepend="and">
+				<isEmpty property="CsPropagate.cspCollectSMax"><isEmpty property="CsPropagate.cspCollectSMin"><isEmpty property="CsPropagate.cspCollectS">
+				$cspCollectSNot$ cs_propagate$CsPropagate.suffix$.csp_collect_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspPraiseSMin" prepend="and">
+			    $CsPropagate.cspPraiseSNot$  ( cs_propagate$CsPropagate.suffix$.csp_praise_s &gt;= #CsPropagate.cspPraiseSMin#
+			    <isEmpty property="CsPropagate.cspPraiseSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspPraiseSMax" prepend="and">
+				<isEmpty property="CsPropagate.cspPraiseSMin">$CsPropagate.cspPraiseSNot$   (</isEmpty>
+			    cs_propagate$CsPropagate.suffix$.csp_praise_s &lt;= #CsPropagate.cspPraiseSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPropagate.cspPraiseS" prepend="and">
+			    $CsPropagate.cspPraiseSNot$ cs_propagate$CsPropagate.suffix$.csp_praise_s = #CsPropagate.cspPraiseS#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspPraiseSNot" prepend="and">
+				<isEmpty property="CsPropagate.cspPraiseSMax"><isEmpty property="CsPropagate.cspPraiseSMin"><isEmpty property="CsPropagate.cspPraiseS">
+				$cspPraiseSNot$ cs_propagate$CsPropagate.suffix$.csp_praise_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPropagate.cspStatus" prepend="and">
+			    $CsPropagate.cspStatusNot$ cs_propagate$CsPropagate.suffix$.csp_status = #CsPropagate.cspStatus#
+			</isNotEmpty>
+			<isNotNull property="CsPropagate.cspStatusNot" prepend="and">
+				<isEmpty property="CsPropagate.cspStatus">
+				$cspStatusNot$ cs_propagate$CsPropagate.suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

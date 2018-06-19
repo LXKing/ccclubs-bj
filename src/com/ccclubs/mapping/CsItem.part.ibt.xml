@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsItem_part">	
+	<!-- 商品信息条件sql片段  -->
+	<sql id="cs_item_dynamic">
+		<dynamic>
+			<isNotEmpty property="csiId" prepend="and">
+			    $csiIdNot$ cs_item$suffix$.csi_id = #csiId#
+			</isNotEmpty>
+			<isNotNull property="csiIdNot" prepend="and">
+				<isEmpty property="csiId">
+				$csiIdNot$ cs_item$suffix$.csi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiTitle" prepend="and">			    
+			    (<isNotNull property="csiTitleNot">
+			    cs_item$suffix$.csi_title is null or length(cs_item$suffix$.csi_title) &lt; 1 or
+			    </isNotNull>$csiTitleNot$ cs_item$suffix$.csi_title like #csiTitle#)
+			</isNotEmpty>
+			<isNotNull property="csiTitleNot" prepend="and">
+				<isEmpty property="csiTitle">
+				$csiTitleNot$ (cs_item$suffix$.csi_title is null or length(cs_item$suffix$.csi_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiType" prepend="and">
+			    $csiTypeNot$ cs_item$suffix$.csi_type = #csiType#
+			</isNotEmpty>
+			<isNotNull property="csiTypeNot" prepend="and">
+				<isEmpty property="csiType">
+				$csiTypeNot$ cs_item$suffix$.csi_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiSort" prepend="and">
+			    $csiSortNot$ cs_item$suffix$.csi_sort = #csiSort#
+			</isNotEmpty>
+			<isNotNull property="csiSortNot" prepend="and">
+				<isEmpty property="csiSort">
+				$csiSortNot$ cs_item$suffix$.csi_sort is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiPriceMin" prepend="and">
+			    $csiPriceNot$  ( cs_item$suffix$.csi_price &gt;= #csiPriceMin#
+			    <isEmpty property="csiPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiPriceMax" prepend="and">
+				<isEmpty property="csiPriceMin">$csiPriceNot$   (</isEmpty>
+			    cs_item$suffix$.csi_price &lt;= #csiPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiPrice" prepend="and">
+			    $csiPriceNot$ cs_item$suffix$.csi_price = #csiPrice#
+			</isNotEmpty>
+			<isNotNull property="csiPriceNot" prepend="and">
+				<isEmpty property="csiPriceMax"><isEmpty property="csiPriceMin"><isEmpty property="csiPrice">
+				$csiPriceNot$ cs_item$suffix$.csi_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiRebateMin" prepend="and">
+			    $csiRebateNot$  ( cs_item$suffix$.csi_rebate &gt;= #csiRebateMin#
+			    <isEmpty property="csiRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiRebateMax" prepend="and">
+				<isEmpty property="csiRebateMin">$csiRebateNot$   (</isEmpty>
+			    cs_item$suffix$.csi_rebate &lt;= #csiRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiRebate" prepend="and">
+			    $csiRebateNot$ cs_item$suffix$.csi_rebate = #csiRebate#
+			</isNotEmpty>
+			<isNotNull property="csiRebateNot" prepend="and">
+				<isEmpty property="csiRebateMax"><isEmpty property="csiRebateMin"><isEmpty property="csiRebate">
+				$csiRebateNot$ cs_item$suffix$.csi_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiFlag" prepend="and">			    
+			    (<isNotNull property="csiFlagNot">
+			    cs_item$suffix$.csi_flag is null or length(cs_item$suffix$.csi_flag) &lt; 1 or
+			    </isNotNull>$csiFlagNot$ cs_item$suffix$.csi_flag = #csiFlag#)
+			</isNotEmpty>
+			<isNotNull property="csiFlagNot" prepend="and">
+				<isEmpty property="csiFlag">
+				$csiFlagNot$ (cs_item$suffix$.csi_flag is null or length(cs_item$suffix$.csi_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiDataString" prepend="and">			    
+			    (<isNotNull property="csiDataStringNot">
+			    cs_item$suffix$.csi_data_string is null or length(cs_item$suffix$.csi_data_string) &lt; 1 or
+			    </isNotNull>$csiDataStringNot$ cs_item$suffix$.csi_data_string = #csiDataString#)
+			</isNotEmpty>
+			<isNotNull property="csiDataStringNot" prepend="and">
+				<isEmpty property="csiDataString">
+				$csiDataStringNot$ (cs_item$suffix$.csi_data_string is null or length(cs_item$suffix$.csi_data_string) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiDataNumberMin" prepend="and">
+			    $csiDataNumberNot$  ( cs_item$suffix$.csi_data_number &gt;= #csiDataNumberMin#
+			    <isEmpty property="csiDataNumberMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiDataNumberMax" prepend="and">
+				<isEmpty property="csiDataNumberMin">$csiDataNumberNot$   (</isEmpty>
+			    cs_item$suffix$.csi_data_number &lt;= #csiDataNumberMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiDataNumber" prepend="and">
+			    $csiDataNumberNot$ cs_item$suffix$.csi_data_number = #csiDataNumber#
+			</isNotEmpty>
+			<isNotNull property="csiDataNumberNot" prepend="and">
+				<isEmpty property="csiDataNumberMax"><isEmpty property="csiDataNumberMin"><isEmpty property="csiDataNumber">
+				$csiDataNumberNot$ cs_item$suffix$.csi_data_number is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiDataDecimalMin" prepend="and">
+			    $csiDataDecimalNot$  ( cs_item$suffix$.csi_data_decimal &gt;= #csiDataDecimalMin#
+			    <isEmpty property="csiDataDecimalMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiDataDecimalMax" prepend="and">
+				<isEmpty property="csiDataDecimalMin">$csiDataDecimalNot$   (</isEmpty>
+			    cs_item$suffix$.csi_data_decimal &lt;= #csiDataDecimalMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiDataDecimal" prepend="and">
+			    $csiDataDecimalNot$ cs_item$suffix$.csi_data_decimal = #csiDataDecimal#
+			</isNotEmpty>
+			<isNotNull property="csiDataDecimalNot" prepend="and">
+				<isEmpty property="csiDataDecimalMax"><isEmpty property="csiDataDecimalMin"><isEmpty property="csiDataDecimal">
+				$csiDataDecimalNot$ cs_item$suffix$.csi_data_decimal is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiThumb" prepend="and">
+			    $csiThumbNot$ cs_item$suffix$.csi_thumb = #csiThumb#
+			</isNotEmpty>
+			<isNotNull property="csiThumbNot" prepend="and">
+				<isEmpty property="csiThumb">
+				$csiThumbNot$ cs_item$suffix$.csi_thumb is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiImages" prepend="and">
+			    $csiImagesNot$ cs_item$suffix$.csi_images = #csiImages#
+			</isNotEmpty>
+			<isNotNull property="csiImagesNot" prepend="and">
+				<isEmpty property="csiImages">
+				$csiImagesNot$ cs_item$suffix$.csi_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiDepict" prepend="and">			    
+			    (<isNotNull property="csiDepictNot">
+			    cs_item$suffix$.csi_depict is null or length(cs_item$suffix$.csi_depict) &lt; 1 or
+			    </isNotNull>$csiDepictNot$ cs_item$suffix$.csi_depict like #csiDepict#)
+			</isNotEmpty>
+			<isNotNull property="csiDepictNot" prepend="and">
+				<isEmpty property="csiDepict">
+				$csiDepictNot$ (cs_item$suffix$.csi_depict is null or length(cs_item$suffix$.csi_depict) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiSaleMin" prepend="and">
+			    $csiSaleNot$  ( cs_item$suffix$.csi_sale &gt;= #csiSaleMin#
+			    <isEmpty property="csiSaleMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiSaleMax" prepend="and">
+				<isEmpty property="csiSaleMin">$csiSaleNot$   (</isEmpty>
+			    cs_item$suffix$.csi_sale &lt;= #csiSaleMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiSale" prepend="and">
+			    $csiSaleNot$ cs_item$suffix$.csi_sale = #csiSale#
+			</isNotEmpty>
+			<isNotNull property="csiSaleNot" prepend="and">
+				<isEmpty property="csiSaleMax"><isEmpty property="csiSaleMin"><isEmpty property="csiSale">
+				$csiSaleNot$ cs_item$suffix$.csi_sale is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiLevelMin" prepend="and">
+			    $csiLevelNot$  ( cs_item$suffix$.csi_level &gt;= #csiLevelMin#
+			    <isEmpty property="csiLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiLevelMax" prepend="and">
+				<isEmpty property="csiLevelMin">$csiLevelNot$   (</isEmpty>
+			    cs_item$suffix$.csi_level &lt;= #csiLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csiLevel" prepend="and">
+			    $csiLevelNot$ cs_item$suffix$.csi_level = #csiLevel#
+			</isNotEmpty>
+			<isNotNull property="csiLevelNot" prepend="and">
+				<isEmpty property="csiLevelMax"><isEmpty property="csiLevelMin"><isEmpty property="csiLevel">
+				$csiLevelNot$ cs_item$suffix$.csi_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csiRemark" prepend="and">			    
+			    (<isNotNull property="csiRemarkNot">
+			    cs_item$suffix$.csi_remark is null or length(cs_item$suffix$.csi_remark) &lt; 1 or
+			    </isNotNull>$csiRemarkNot$ cs_item$suffix$.csi_remark = #csiRemark#)
+			</isNotEmpty>
+			<isNotNull property="csiRemarkNot" prepend="and">
+				<isEmpty property="csiRemark">
+				$csiRemarkNot$ (cs_item$suffix$.csi_remark is null or length(cs_item$suffix$.csi_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiUpdateTimeStart" prepend="and">
+			    $csiUpdateTimeNot$   (cs_item$suffix$.csi_update_time &gt;= #csiUpdateTimeStart#
+			   <isEmpty property="csiUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiUpdateTimeEnd" prepend="and">
+				<isEmpty property="csiUpdateTimeStart">$csiUpdateTimeNot$   (</isEmpty>
+			    cs_item$suffix$.csi_update_time &lt;= #csiUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csiUpdateTime" prepend="and">
+			    $csiUpdateTimeNot$ cs_item$suffix$.csi_update_time = #csiUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csiUpdateTimeNot" prepend="and">
+				<isEmpty property="csiUpdateTimeStart"><isEmpty property="csiUpdateTimeEnd"><isEmpty property="csiUpdateTime">
+				$csiUpdateTimeNot$ cs_item$suffix$.csi_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiAddTimeStart" prepend="and">
+			    $csiAddTimeNot$   (cs_item$suffix$.csi_add_time &gt;= #csiAddTimeStart#
+			   <isEmpty property="csiAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csiAddTimeEnd" prepend="and">
+				<isEmpty property="csiAddTimeStart">$csiAddTimeNot$   (</isEmpty>
+			    cs_item$suffix$.csi_add_time &lt;= #csiAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csiAddTime" prepend="and">
+			    $csiAddTimeNot$ cs_item$suffix$.csi_add_time = #csiAddTime#
+			</isNotEmpty>
+			<isNotNull property="csiAddTimeNot" prepend="and">
+				<isEmpty property="csiAddTimeStart"><isEmpty property="csiAddTimeEnd"><isEmpty property="csiAddTime">
+				$csiAddTimeNot$ cs_item$suffix$.csi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csiStatus" prepend="and">
+			    $csiStatusNot$ cs_item$suffix$.csi_status = #csiStatus#
+			</isNotEmpty>
+			<isNotNull property="csiStatusNot" prepend="and">
+				<isEmpty property="csiStatus">
+				$csiStatusNot$ cs_item$suffix$.csi_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 商品信息left join 条件sql片段 -->
+	<sql id="cs_item_join">
+		<dynamic>
+			<isNotEmpty property="CsItem.csiId" prepend="and">
+			    $CsItem.csiIdNot$ cs_item$CsItem.suffix$.csi_id = #CsItem.csiId#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiIdNot" prepend="and">
+				<isEmpty property="CsItem.csiId">
+				$csiIdNot$ cs_item$CsItem.suffix$.csi_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiTitle" prepend="and">
+				(<isNotNull property="CsItem.csiTitleNot">
+			    cs_item$CsItem.suffix$.csi_title is null or length(cs_item$CsItem.suffix$.csi_title) &lt; 1 or
+			    </isNotNull>$CsItem.csiTitleNot$ cs_item$CsItem.suffix$.csi_title like #CsItem.csiTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiTitleNot" prepend="and">
+				<isEmpty property="CsItem.csiTitle">
+				$csiTitleNot$ (cs_item$CsItem.suffix$.csi_title is null or length(cs_item$CsItem.suffix$.csi_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiType" prepend="and">
+			    $CsItem.csiTypeNot$ cs_item$CsItem.suffix$.csi_type = #CsItem.csiType#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiTypeNot" prepend="and">
+				<isEmpty property="CsItem.csiType">
+				$csiTypeNot$ cs_item$CsItem.suffix$.csi_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiSort" prepend="and">
+			    $CsItem.csiSortNot$ cs_item$CsItem.suffix$.csi_sort = #CsItem.csiSort#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiSortNot" prepend="and">
+				<isEmpty property="CsItem.csiSort">
+				$csiSortNot$ cs_item$CsItem.suffix$.csi_sort is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiPriceMin" prepend="and">
+			    $CsItem.csiPriceNot$  ( cs_item$CsItem.suffix$.csi_price &gt;= #CsItem.csiPriceMin#
+			    <isEmpty property="CsItem.csiPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiPriceMax" prepend="and">
+				<isEmpty property="CsItem.csiPriceMin">$CsItem.csiPriceNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_price &lt;= #CsItem.csiPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiPrice" prepend="and">
+			    $CsItem.csiPriceNot$ cs_item$CsItem.suffix$.csi_price = #CsItem.csiPrice#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiPriceNot" prepend="and">
+				<isEmpty property="CsItem.csiPriceMax"><isEmpty property="CsItem.csiPriceMin"><isEmpty property="CsItem.csiPrice">
+				$csiPriceNot$ cs_item$CsItem.suffix$.csi_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiRebateMin" prepend="and">
+			    $CsItem.csiRebateNot$  ( cs_item$CsItem.suffix$.csi_rebate &gt;= #CsItem.csiRebateMin#
+			    <isEmpty property="CsItem.csiRebateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiRebateMax" prepend="and">
+				<isEmpty property="CsItem.csiRebateMin">$CsItem.csiRebateNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_rebate &lt;= #CsItem.csiRebateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiRebate" prepend="and">
+			    $CsItem.csiRebateNot$ cs_item$CsItem.suffix$.csi_rebate = #CsItem.csiRebate#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiRebateNot" prepend="and">
+				<isEmpty property="CsItem.csiRebateMax"><isEmpty property="CsItem.csiRebateMin"><isEmpty property="CsItem.csiRebate">
+				$csiRebateNot$ cs_item$CsItem.suffix$.csi_rebate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiFlag" prepend="and">
+				(<isNotNull property="CsItem.csiFlagNot">
+			    cs_item$CsItem.suffix$.csi_flag is null or length(cs_item$CsItem.suffix$.csi_flag) &lt; 1 or
+			    </isNotNull>$CsItem.csiFlagNot$ cs_item$CsItem.suffix$.csi_flag = #CsItem.csiFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiFlagNot" prepend="and">
+				<isEmpty property="CsItem.csiFlag">
+				$csiFlagNot$ (cs_item$CsItem.suffix$.csi_flag is null or length(cs_item$CsItem.suffix$.csi_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiDataString" prepend="and">
+				(<isNotNull property="CsItem.csiDataStringNot">
+			    cs_item$CsItem.suffix$.csi_data_string is null or length(cs_item$CsItem.suffix$.csi_data_string) &lt; 1 or
+			    </isNotNull>$CsItem.csiDataStringNot$ cs_item$CsItem.suffix$.csi_data_string = #CsItem.csiDataString#)
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiDataStringNot" prepend="and">
+				<isEmpty property="CsItem.csiDataString">
+				$csiDataStringNot$ (cs_item$CsItem.suffix$.csi_data_string is null or length(cs_item$CsItem.suffix$.csi_data_string) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiDataNumberMin" prepend="and">
+			    $CsItem.csiDataNumberNot$  ( cs_item$CsItem.suffix$.csi_data_number &gt;= #CsItem.csiDataNumberMin#
+			    <isEmpty property="CsItem.csiDataNumberMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiDataNumberMax" prepend="and">
+				<isEmpty property="CsItem.csiDataNumberMin">$CsItem.csiDataNumberNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_data_number &lt;= #CsItem.csiDataNumberMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiDataNumber" prepend="and">
+			    $CsItem.csiDataNumberNot$ cs_item$CsItem.suffix$.csi_data_number = #CsItem.csiDataNumber#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiDataNumberNot" prepend="and">
+				<isEmpty property="CsItem.csiDataNumberMax"><isEmpty property="CsItem.csiDataNumberMin"><isEmpty property="CsItem.csiDataNumber">
+				$csiDataNumberNot$ cs_item$CsItem.suffix$.csi_data_number is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiDataDecimalMin" prepend="and">
+			    $CsItem.csiDataDecimalNot$  ( cs_item$CsItem.suffix$.csi_data_decimal &gt;= #CsItem.csiDataDecimalMin#
+			    <isEmpty property="CsItem.csiDataDecimalMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiDataDecimalMax" prepend="and">
+				<isEmpty property="CsItem.csiDataDecimalMin">$CsItem.csiDataDecimalNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_data_decimal &lt;= #CsItem.csiDataDecimalMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiDataDecimal" prepend="and">
+			    $CsItem.csiDataDecimalNot$ cs_item$CsItem.suffix$.csi_data_decimal = #CsItem.csiDataDecimal#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiDataDecimalNot" prepend="and">
+				<isEmpty property="CsItem.csiDataDecimalMax"><isEmpty property="CsItem.csiDataDecimalMin"><isEmpty property="CsItem.csiDataDecimal">
+				$csiDataDecimalNot$ cs_item$CsItem.suffix$.csi_data_decimal is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiThumb" prepend="and">
+			    $CsItem.csiThumbNot$ cs_item$CsItem.suffix$.csi_thumb = #CsItem.csiThumb#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiThumbNot" prepend="and">
+				<isEmpty property="CsItem.csiThumb">
+				$csiThumbNot$ cs_item$CsItem.suffix$.csi_thumb is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiImages" prepend="and">
+			    $CsItem.csiImagesNot$ cs_item$CsItem.suffix$.csi_images = #CsItem.csiImages#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiImagesNot" prepend="and">
+				<isEmpty property="CsItem.csiImages">
+				$csiImagesNot$ cs_item$CsItem.suffix$.csi_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiDepict" prepend="and">
+				(<isNotNull property="CsItem.csiDepictNot">
+			    cs_item$CsItem.suffix$.csi_depict is null or length(cs_item$CsItem.suffix$.csi_depict) &lt; 1 or
+			    </isNotNull>$CsItem.csiDepictNot$ cs_item$CsItem.suffix$.csi_depict like #CsItem.csiDepict#)
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiDepictNot" prepend="and">
+				<isEmpty property="CsItem.csiDepict">
+				$csiDepictNot$ (cs_item$CsItem.suffix$.csi_depict is null or length(cs_item$CsItem.suffix$.csi_depict) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiSaleMin" prepend="and">
+			    $CsItem.csiSaleNot$  ( cs_item$CsItem.suffix$.csi_sale &gt;= #CsItem.csiSaleMin#
+			    <isEmpty property="CsItem.csiSaleMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiSaleMax" prepend="and">
+				<isEmpty property="CsItem.csiSaleMin">$CsItem.csiSaleNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_sale &lt;= #CsItem.csiSaleMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiSale" prepend="and">
+			    $CsItem.csiSaleNot$ cs_item$CsItem.suffix$.csi_sale = #CsItem.csiSale#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiSaleNot" prepend="and">
+				<isEmpty property="CsItem.csiSaleMax"><isEmpty property="CsItem.csiSaleMin"><isEmpty property="CsItem.csiSale">
+				$csiSaleNot$ cs_item$CsItem.suffix$.csi_sale is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiLevelMin" prepend="and">
+			    $CsItem.csiLevelNot$  ( cs_item$CsItem.suffix$.csi_level &gt;= #CsItem.csiLevelMin#
+			    <isEmpty property="CsItem.csiLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiLevelMax" prepend="and">
+				<isEmpty property="CsItem.csiLevelMin">$CsItem.csiLevelNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_level &lt;= #CsItem.csiLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiLevel" prepend="and">
+			    $CsItem.csiLevelNot$ cs_item$CsItem.suffix$.csi_level = #CsItem.csiLevel#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiLevelNot" prepend="and">
+				<isEmpty property="CsItem.csiLevelMax"><isEmpty property="CsItem.csiLevelMin"><isEmpty property="CsItem.csiLevel">
+				$csiLevelNot$ cs_item$CsItem.suffix$.csi_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiRemark" prepend="and">
+				(<isNotNull property="CsItem.csiRemarkNot">
+			    cs_item$CsItem.suffix$.csi_remark is null or length(cs_item$CsItem.suffix$.csi_remark) &lt; 1 or
+			    </isNotNull>$CsItem.csiRemarkNot$ cs_item$CsItem.suffix$.csi_remark = #CsItem.csiRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiRemarkNot" prepend="and">
+				<isEmpty property="CsItem.csiRemark">
+				$csiRemarkNot$ (cs_item$CsItem.suffix$.csi_remark is null or length(cs_item$CsItem.suffix$.csi_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiUpdateTimeStart" prepend="and">
+			    $CsItem.csiUpdateTimeNot$   (cs_item$CsItem.suffix$.csi_update_time &gt;= #CsItem.csiUpdateTimeStart#
+			   <isEmpty property="CsItem.csiUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsItem.csiUpdateTimeStart">$CsItem.csiUpdateTimeNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_update_time &lt;= #CsItem.csiUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiUpdateTime" prepend="and">
+			    $CsItem.csiUpdateTimeNot$ cs_item$CsItem.suffix$.csi_update_time = #CsItem.csiUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiUpdateTimeNot" prepend="and">
+				<isEmpty property="CsItem.csiUpdateTimeStart"><isEmpty property="CsItem.csiUpdateTimeEnd"><isEmpty property="CsItem.csiUpdateTime">
+				$csiUpdateTimeNot$ cs_item$CsItem.suffix$.csi_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiAddTimeStart" prepend="and">
+			    $CsItem.csiAddTimeNot$   (cs_item$CsItem.suffix$.csi_add_time &gt;= #CsItem.csiAddTimeStart#
+			   <isEmpty property="CsItem.csiAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiAddTimeEnd" prepend="and">
+				<isEmpty property="CsItem.csiAddTimeStart">$CsItem.csiAddTimeNot$   (</isEmpty>
+			    cs_item$CsItem.suffix$.csi_add_time &lt;= #CsItem.csiAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsItem.csiAddTime" prepend="and">
+			    $CsItem.csiAddTimeNot$ cs_item$CsItem.suffix$.csi_add_time = #CsItem.csiAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiAddTimeNot" prepend="and">
+				<isEmpty property="CsItem.csiAddTimeStart"><isEmpty property="CsItem.csiAddTimeEnd"><isEmpty property="CsItem.csiAddTime">
+				$csiAddTimeNot$ cs_item$CsItem.suffix$.csi_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsItem.csiStatus" prepend="and">
+			    $CsItem.csiStatusNot$ cs_item$CsItem.suffix$.csi_status = #CsItem.csiStatus#
+			</isNotEmpty>
+			<isNotNull property="CsItem.csiStatusNot" prepend="and">
+				<isEmpty property="CsItem.csiStatus">
+				$csiStatusNot$ cs_item$CsItem.suffix$.csi_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

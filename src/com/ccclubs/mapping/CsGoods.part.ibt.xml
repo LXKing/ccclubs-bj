@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsGoods_part">	
+	<!-- 商品条件sql片段  -->
+	<sql id="cs_goods_dynamic">
+		<dynamic>
+			<isNotEmpty property="csgId" prepend="and">
+			    $csgIdNot$ cs_goods$suffix$.csg_id = #csgId#
+			</isNotEmpty>
+			<isNotNull property="csgIdNot" prepend="and">
+				<isEmpty property="csgId">
+				$csgIdNot$ cs_goods$suffix$.csg_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgName" prepend="and">			    
+			    (<isNotNull property="csgNameNot">
+			    cs_goods$suffix$.csg_name is null or length(cs_goods$suffix$.csg_name) &lt; 1 or
+			    </isNotNull>$csgNameNot$ cs_goods$suffix$.csg_name = #csgName#)
+			</isNotEmpty>
+			<isNotNull property="csgNameNot" prepend="and">
+				<isEmpty property="csgName">
+				$csgNameNot$ (cs_goods$suffix$.csg_name is null or length(cs_goods$suffix$.csg_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgProduct" prepend="and">
+			    $csgProductNot$ cs_goods$suffix$.csg_product = #csgProduct#
+			</isNotEmpty>
+			<isNotNull property="csgProductNot" prepend="and">
+				<isEmpty property="csgProduct">
+				$csgProductNot$ cs_goods$suffix$.csg_product is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgUserType" prepend="and">
+			    $csgUserTypeNot$ cs_goods$suffix$.csg_user_type = #csgUserType#
+			</isNotEmpty>
+			<isNotNull property="csgUserTypeNot" prepend="and">
+				<isEmpty property="csgUserType">
+				$csgUserTypeNot$ cs_goods$suffix$.csg_user_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgRule" prepend="and">
+			    $csgRuleNot$ cs_goods$suffix$.csg_rule = #csgRule#
+			</isNotEmpty>
+			<isNotNull property="csgRuleNot" prepend="and">
+				<isEmpty property="csgRule">
+				$csgRuleNot$ cs_goods$suffix$.csg_rule is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgProfile" prepend="and">			    
+			    (<isNotNull property="csgProfileNot">
+			    cs_goods$suffix$.csg_profile is null or length(cs_goods$suffix$.csg_profile) &lt; 1 or
+			    </isNotNull>$csgProfileNot$ cs_goods$suffix$.csg_profile like #csgProfile#)
+			</isNotEmpty>
+			<isNotNull property="csgProfileNot" prepend="and">
+				<isEmpty property="csgProfile">
+				$csgProfileNot$ (cs_goods$suffix$.csg_profile is null or length(cs_goods$suffix$.csg_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgUpdateTimeStart" prepend="and">
+			    $csgUpdateTimeNot$   (cs_goods$suffix$.csg_update_time &gt;= #csgUpdateTimeStart#
+			   <isEmpty property="csgUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgUpdateTimeEnd" prepend="and">
+				<isEmpty property="csgUpdateTimeStart">$csgUpdateTimeNot$   (</isEmpty>
+			    cs_goods$suffix$.csg_update_time &lt;= #csgUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgUpdateTime" prepend="and">
+			    $csgUpdateTimeNot$ cs_goods$suffix$.csg_update_time = #csgUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csgUpdateTimeNot" prepend="and">
+				<isEmpty property="csgUpdateTimeStart"><isEmpty property="csgUpdateTimeEnd"><isEmpty property="csgUpdateTime">
+				$csgUpdateTimeNot$ cs_goods$suffix$.csg_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgAddTimeStart" prepend="and">
+			    $csgAddTimeNot$   (cs_goods$suffix$.csg_add_time &gt;= #csgAddTimeStart#
+			   <isEmpty property="csgAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgAddTimeEnd" prepend="and">
+				<isEmpty property="csgAddTimeStart">$csgAddTimeNot$   (</isEmpty>
+			    cs_goods$suffix$.csg_add_time &lt;= #csgAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgAddTime" prepend="and">
+			    $csgAddTimeNot$ cs_goods$suffix$.csg_add_time = #csgAddTime#
+			</isNotEmpty>
+			<isNotNull property="csgAddTimeNot" prepend="and">
+				<isEmpty property="csgAddTimeStart"><isEmpty property="csgAddTimeEnd"><isEmpty property="csgAddTime">
+				$csgAddTimeNot$ cs_goods$suffix$.csg_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgStatus" prepend="and">
+			    $csgStatusNot$ cs_goods$suffix$.csg_status = #csgStatus#
+			</isNotEmpty>
+			<isNotNull property="csgStatusNot" prepend="and">
+				<isEmpty property="csgStatus">
+				$csgStatusNot$ cs_goods$suffix$.csg_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 商品left join 条件sql片段 -->
+	<sql id="cs_goods_join">
+		<dynamic>
+			<isNotEmpty property="CsGoods.csgId" prepend="and">
+			    $CsGoods.csgIdNot$ cs_goods$CsGoods.suffix$.csg_id = #CsGoods.csgId#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgIdNot" prepend="and">
+				<isEmpty property="CsGoods.csgId">
+				$csgIdNot$ cs_goods$CsGoods.suffix$.csg_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgName" prepend="and">
+				(<isNotNull property="CsGoods.csgNameNot">
+			    cs_goods$CsGoods.suffix$.csg_name is null or length(cs_goods$CsGoods.suffix$.csg_name) &lt; 1 or
+			    </isNotNull>$CsGoods.csgNameNot$ cs_goods$CsGoods.suffix$.csg_name = #CsGoods.csgName#)
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgNameNot" prepend="and">
+				<isEmpty property="CsGoods.csgName">
+				$csgNameNot$ (cs_goods$CsGoods.suffix$.csg_name is null or length(cs_goods$CsGoods.suffix$.csg_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgProduct" prepend="and">
+			    $CsGoods.csgProductNot$ cs_goods$CsGoods.suffix$.csg_product = #CsGoods.csgProduct#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgProductNot" prepend="and">
+				<isEmpty property="CsGoods.csgProduct">
+				$csgProductNot$ cs_goods$CsGoods.suffix$.csg_product is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgUserType" prepend="and">
+			    $CsGoods.csgUserTypeNot$ cs_goods$CsGoods.suffix$.csg_user_type = #CsGoods.csgUserType#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgUserTypeNot" prepend="and">
+				<isEmpty property="CsGoods.csgUserType">
+				$csgUserTypeNot$ cs_goods$CsGoods.suffix$.csg_user_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgRule" prepend="and">
+			    $CsGoods.csgRuleNot$ cs_goods$CsGoods.suffix$.csg_rule = #CsGoods.csgRule#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgRuleNot" prepend="and">
+				<isEmpty property="CsGoods.csgRule">
+				$csgRuleNot$ cs_goods$CsGoods.suffix$.csg_rule is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgProfile" prepend="and">
+				(<isNotNull property="CsGoods.csgProfileNot">
+			    cs_goods$CsGoods.suffix$.csg_profile is null or length(cs_goods$CsGoods.suffix$.csg_profile) &lt; 1 or
+			    </isNotNull>$CsGoods.csgProfileNot$ cs_goods$CsGoods.suffix$.csg_profile like #CsGoods.csgProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgProfileNot" prepend="and">
+				<isEmpty property="CsGoods.csgProfile">
+				$csgProfileNot$ (cs_goods$CsGoods.suffix$.csg_profile is null or length(cs_goods$CsGoods.suffix$.csg_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgUpdateTimeStart" prepend="and">
+			    $CsGoods.csgUpdateTimeNot$   (cs_goods$CsGoods.suffix$.csg_update_time &gt;= #CsGoods.csgUpdateTimeStart#
+			   <isEmpty property="CsGoods.csgUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGoods.csgUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsGoods.csgUpdateTimeStart">$CsGoods.csgUpdateTimeNot$   (</isEmpty>
+			    cs_goods$CsGoods.suffix$.csg_update_time &lt;= #CsGoods.csgUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGoods.csgUpdateTime" prepend="and">
+			    $CsGoods.csgUpdateTimeNot$ cs_goods$CsGoods.suffix$.csg_update_time = #CsGoods.csgUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgUpdateTimeNot" prepend="and">
+				<isEmpty property="CsGoods.csgUpdateTimeStart"><isEmpty property="CsGoods.csgUpdateTimeEnd"><isEmpty property="CsGoods.csgUpdateTime">
+				$csgUpdateTimeNot$ cs_goods$CsGoods.suffix$.csg_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgAddTimeStart" prepend="and">
+			    $CsGoods.csgAddTimeNot$   (cs_goods$CsGoods.suffix$.csg_add_time &gt;= #CsGoods.csgAddTimeStart#
+			   <isEmpty property="CsGoods.csgAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGoods.csgAddTimeEnd" prepend="and">
+				<isEmpty property="CsGoods.csgAddTimeStart">$CsGoods.csgAddTimeNot$   (</isEmpty>
+			    cs_goods$CsGoods.suffix$.csg_add_time &lt;= #CsGoods.csgAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGoods.csgAddTime" prepend="and">
+			    $CsGoods.csgAddTimeNot$ cs_goods$CsGoods.suffix$.csg_add_time = #CsGoods.csgAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgAddTimeNot" prepend="and">
+				<isEmpty property="CsGoods.csgAddTimeStart"><isEmpty property="CsGoods.csgAddTimeEnd"><isEmpty property="CsGoods.csgAddTime">
+				$csgAddTimeNot$ cs_goods$CsGoods.suffix$.csg_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGoods.csgStatus" prepend="and">
+			    $CsGoods.csgStatusNot$ cs_goods$CsGoods.suffix$.csg_status = #CsGoods.csgStatus#
+			</isNotEmpty>
+			<isNotNull property="CsGoods.csgStatusNot" prepend="and">
+				<isEmpty property="CsGoods.csgStatus">
+				$csgStatusNot$ cs_goods$CsGoods.suffix$.csg_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,69 @@
+<div id="ccc-view-map" class="ccc-view-widewin">
+	<div class="ccc-view-widewin-box">
+		<div class="ccc-parking-map-cont">
+			<div class="ccc-parking-map-loader">
+				<i></i>正在加载...
+			</div>
+			<div id="ccc-parking-map" class="ccc-parking-map"></div>
+			<div class="ccc-parking-card">
+				<div class="ccc-parking-card-inner">
+					<div class="ccc-title">
+						${csOutlets.csoName}
+						<em></em>
+					</div>
+					<div class="ccc-notes address">
+						<strong>地址：</strong> ${csOutlets.csoAddress}
+					</div>
+					<div class="ccc-notes space">
+						<strong>停车位：</strong> ${csOutlets.csoSpace}
+					</div>
+					<s:if test="#request.csOutlets.csoDetails!=''&&#request.csOutlets.csoDetails!=null">
+						<div class="ccc-notes pass">
+							<strong>通行证：</strong> ${csOutlets.csoDetails}
+						</div>
+					</s:if>
+					<div class="ccc-notes opening omega">
+						<strong>开放时间：</strong> ${csOutlets.csoDoorTime}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var cccMapCont = document.getElementById('ccc-parking-map');
+	var cccCenter = new qq.maps.LatLng(${csOutlets.csoLatitude},${csOutlets.csoLongitude});
+	var cccMapOptions = {
+		center: cccCenter,
+		zoom: 15,
+		minZoom: 10,
+		mapTypeId: qq.maps.MapTypeId.ROADMAP,
+		mapTypeControl: false,
+	};
+	var cccMap = new qq.maps.Map(cccMapCont, cccMapOptions);
+	var markerImg = '/images/icons/marker-sprites@2x.png';
+	var markerSize = new qq.maps.Size(34, 40);
+	var markerScaledSize = new qq.maps.Size(74, 141);
+	var markerShadow = new qq.maps.MarkerImage(
+		'/images/icons/marker-sprites@2x.png',
+		new qq.maps.Size(39, 33), //size
+		new qq.maps.Point(35, 7), //origin
+		new qq.maps.Point(7, 33), //anchor
+		new qq.maps.Size(74, 141) //scaled size
+	);
+	var cccMarker = new qq.maps.Marker ({
+		position: new qq.maps.LatLng(${csOutlets.csoLatitude},${csOutlets.csoLongitude}),
+		icon: new qq.maps.MarkerImage(
+			markerImg,
+			markerSize,
+			new qq.maps.Point(0, 0),
+			new qq.maps.Point(7, 33),
+			markerScaledSize
+		),
+		animation: qq.maps.MarkerAnimation.DROP,
+		shadow: markerShadow,
+		title: '${csOutlets.csoName}',
+		map: cccMap
+	});
+</script>

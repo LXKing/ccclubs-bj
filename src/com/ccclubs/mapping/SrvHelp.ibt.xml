@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统帮助之SQL映射 -->
+	<resultMap id="SrvHelp" class="com.ccclubs.model.SrvHelp">
+		<result property="shId" column="sh_id"/>
+		<result property="shName" column="sh_name"/>
+		<result property="shParent" column="sh_parent"/>
+		<result property="shProfile" column="sh_profile"/>
+		<result property="shText" column="sh_text"/>
+		<result property="shMind" column="sh_mind"/>
+		<result property="shImages" column="sh_images"/>
+		<result property="shEditor" column="sh_editor"/>
+		<result property="shAddTime" column="sh_add_time"/>
+		<result property="shUpdateTime" column="sh_update_time"/>
+		<result property="shLevel" column="sh_level"/>
+		<result property="shStatus" column="sh_status"/>
+	</resultMap>
+		
+	<!-- 获取所有系统帮助 -->
+	<select id="getSrvHelpList" resultMap="SrvHelp">
+		select srv_help$suffix$.* from srv_help$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvHelp_part.srv_help_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sh_level desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统帮助分页 -->
+	<select id="getSrvHelpPage" parameterClass="java.util.HashMap" resultMap="SrvHelp">
+		select srv_help$suffix$.* from srv_help$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvHelp_part.srv_help_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sh_level desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统帮助总数 -->
+	<select id="getSrvHelpEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_help$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvHelp_part.srv_help_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统帮助 -->
+	<select id="getSrvHelpById" parameterClass="java.util.HashMap" resultMap="SrvHelp">
+		select srv_help$suffix$.* from srv_help$suffix$
+		where sh_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统帮助 -->
+	<insert id="saveSrvHelp"  parameterClass="com.ccclubs.model.SrvHelp">
+		insert into srv_help$suffix$
+		(
+			srv_help$suffix$.sh_name
+			,srv_help$suffix$.sh_parent
+			,srv_help$suffix$.sh_profile
+			,srv_help$suffix$.sh_text
+			,srv_help$suffix$.sh_mind
+			,srv_help$suffix$.sh_images
+			,srv_help$suffix$.sh_editor
+			,srv_help$suffix$.sh_add_time
+			,srv_help$suffix$.sh_update_time
+			,srv_help$suffix$.sh_level
+			,srv_help$suffix$.sh_status
+		)
+		values(
+			<isNotNull property="shName" prepend="">
+				#shName#
+			</isNotNull>
+			<isNull property="shName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="shParent" prepend=",">
+				#shParent#
+			</isNotNull>
+			<isNull property="shParent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shProfile" prepend=",">
+				#shProfile#
+			</isNotNull>
+			<isNull property="shProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shText" prepend=",">
+				#shText#
+			</isNotNull>
+			<isNull property="shText" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shMind" prepend=",">
+				#shMind#
+			</isNotNull>
+			<isNull property="shMind" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shImages" prepend=",">
+				#shImages#
+			</isNotNull>
+			<isNull property="shImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shEditor" prepend=",">
+				#shEditor#
+			</isNotNull>
+			<isNull property="shEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shAddTime" prepend=",">
+				#shAddTime#
+			</isNotNull>
+			<isNull property="shAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shUpdateTime" prepend=",">
+				#shUpdateTime#
+			</isNotNull>
+			<isNull property="shUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shLevel" prepend=",">
+				#shLevel#
+			</isNotNull>
+			<isNull property="shLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="shStatus" prepend=",">
+				#shStatus#
+			</isNotNull>
+			<isNull property="shStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统帮助 -->
+	<update id="updateSrvHelp"  parameterClass="com.ccclubs.model.SrvHelp">
+		update srv_help$suffix$ set
+			<isNotNull property="shName" prepend="">
+				srv_help$suffix$.sh_name = #shName#
+			</isNotNull>
+			<isNull property="shName" prepend="">
+				srv_help$suffix$.sh_name = null
+			</isNull>				
+			<isNotNull property="shParent" prepend=",">
+				srv_help$suffix$.sh_parent = #shParent#
+			</isNotNull>
+			<isNull property="shParent" prepend=",">
+				srv_help$suffix$.sh_parent = null
+			</isNull>				
+			<isNotNull property="shProfile" prepend=",">
+				srv_help$suffix$.sh_profile = #shProfile#
+			</isNotNull>
+			<isNull property="shProfile" prepend=",">
+				srv_help$suffix$.sh_profile = null
+			</isNull>				
+			<isNotNull property="shText" prepend=",">
+				srv_help$suffix$.sh_text = #shText#
+			</isNotNull>
+			<isNull property="shText" prepend=",">
+				srv_help$suffix$.sh_text = null
+			</isNull>				
+			<isNotNull property="shMind" prepend=",">
+				srv_help$suffix$.sh_mind = #shMind#
+			</isNotNull>
+			<isNull property="shMind" prepend=",">
+				srv_help$suffix$.sh_mind = null
+			</isNull>				
+			<isNotNull property="shImages" prepend=",">
+				srv_help$suffix$.sh_images = #shImages#
+			</isNotNull>
+			<isNull property="shImages" prepend=",">
+				srv_help$suffix$.sh_images = null
+			</isNull>				
+			<isNotNull property="shEditor" prepend=",">
+				srv_help$suffix$.sh_editor = #shEditor#
+			</isNotNull>
+			<isNull property="shEditor" prepend=",">
+				srv_help$suffix$.sh_editor = null
+			</isNull>				
+			<isNotNull property="shAddTime" prepend=",">
+				srv_help$suffix$.sh_add_time = #shAddTime#
+			</isNotNull>
+			<isNull property="shAddTime" prepend=",">
+				srv_help$suffix$.sh_add_time = null
+			</isNull>				
+			<isNotNull property="shUpdateTime" prepend=",">
+				srv_help$suffix$.sh_update_time = #shUpdateTime#
+			</isNotNull>
+			<isNull property="shUpdateTime" prepend=",">
+				srv_help$suffix$.sh_update_time = null
+			</isNull>				
+			<isNotNull property="shLevel" prepend=",">
+				srv_help$suffix$.sh_level = #shLevel#
+			</isNotNull>
+			<isNull property="shLevel" prepend=",">
+				srv_help$suffix$.sh_level = null
+			</isNull>				
+			<isNotNull property="shStatus" prepend=",">
+				srv_help$suffix$.sh_status = #shStatus#
+			</isNotNull>
+			<isNull property="shStatus" prepend=",">
+				srv_help$suffix$.sh_status = null
+			</isNull>				
+		where
+			sh_id=#shId#
+	</update>
+	
+	<!-- 更新系统帮助非空字段 -->
+	<update id="updateSrvHelp$NotNull"  parameterClass="com.ccclubs.model.SrvHelp">
+		update srv_help$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="shName" prepend=",">
+				srv_help$suffix$.sh_name = #shName#
+			</isNotNull>		
+			<isNotNull property="shParent" prepend=",">
+				srv_help$suffix$.sh_parent = #shParent#
+			</isNotNull>		
+			<isNotNull property="shProfile" prepend=",">
+				srv_help$suffix$.sh_profile = #shProfile#
+			</isNotNull>		
+			<isNotNull property="shText" prepend=",">
+				srv_help$suffix$.sh_text = #shText#
+			</isNotNull>		
+			<isNotNull property="shMind" prepend=",">
+				srv_help$suffix$.sh_mind = #shMind#
+			</isNotNull>		
+			<isNotNull property="shImages" prepend=",">
+				srv_help$suffix$.sh_images = #shImages#
+			</isNotNull>		
+			<isNotNull property="shEditor" prepend=",">
+				srv_help$suffix$.sh_editor = #shEditor#
+			</isNotNull>		
+			<isNotNull property="shAddTime" prepend=",">
+				srv_help$suffix$.sh_add_time = #shAddTime#
+			</isNotNull>		
+			<isNotNull property="shUpdateTime" prepend=",">
+				srv_help$suffix$.sh_update_time = #shUpdateTime#
+			</isNotNull>		
+			<isNotNull property="shLevel" prepend=",">
+				srv_help$suffix$.sh_level = #shLevel#
+			</isNotNull>		
+			<isNotNull property="shStatus" prepend=",">
+				srv_help$suffix$.sh_status = #shStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sh_id=#shId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统帮助 -->
+	<delete id="deleteSrvHelpById" parameterClass="java.util.HashMap">
+		delete from srv_help$suffix$ where sh_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新系统帮助 -->
+	<update id="updateSrvHelpBy"  parameterClass="java.util.HashMap">
+		update srv_help$suffix$ set		
+			sh_id=sh_id
+			<isNotNull property="V_shId" prepend=",">
+				srv_help$suffix$.sh_id = #V_shId#
+			</isNotNull>		
+			<isNotNull property="V_shName" prepend=",">
+				srv_help$suffix$.sh_name = #V_shName#
+			</isNotNull>		
+			<isNotNull property="V_shParent" prepend=",">
+				srv_help$suffix$.sh_parent = #V_shParent#
+			</isNotNull>		
+			<isNotNull property="V_shProfile" prepend=",">
+				srv_help$suffix$.sh_profile = #V_shProfile#
+			</isNotNull>		
+			<isNotNull property="V_shText" prepend=",">
+				srv_help$suffix$.sh_text = #V_shText#
+			</isNotNull>		
+			<isNotNull property="V_shMind" prepend=",">
+				srv_help$suffix$.sh_mind = #V_shMind#
+			</isNotNull>		
+			<isNotNull property="V_shImages" prepend=",">
+				srv_help$suffix$.sh_images = #V_shImages#
+			</isNotNull>		
+			<isNotNull property="V_shEditor" prepend=",">
+				srv_help$suffix$.sh_editor = #V_shEditor#
+			</isNotNull>		
+			<isNotNull property="V_shAddTime" prepend=",">
+				srv_help$suffix$.sh_add_time = #V_shAddTime#
+			</isNotNull>		
+			<isNotNull property="V_shUpdateTime" prepend=",">
+				srv_help$suffix$.sh_update_time = #V_shUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_shLevel" prepend=",">
+				srv_help$suffix$.sh_level = #V_shLevel#
+			</isNotNull>		
+			<isNotNull property="V_shStatus" prepend=",">
+				srv_help$suffix$.sh_status = #V_shStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvHelp_part.srv_help_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统帮助 -->
+	<update id="deleteSrvHelpBy"  parameterClass="java.util.HashMap">
+		delete from srv_help$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvHelp_part.srv_help_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

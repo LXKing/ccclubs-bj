@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员组织之SQL映射 -->
+	<resultMap id="CsMemberGroup" class="com.ccclubs.model.CsMemberGroup">
+		<result property="csmgId" column="csmg_id"/>
+		<result property="csmgHost" column="csmg_host"/>
+		<result property="csmgName" column="csmg_name"/>
+		<result property="csmgPerson" column="csmg_person"/>
+		<result property="csmgNumber" column="csmg_number"/>
+		<result property="csmgFlag" column="csmg_flag"/>
+		<result property="csmgRebate" column="csmg_rebate"/>
+		<result property="csmgRemark" column="csmg_remark"/>
+		<result property="csmgAddTime" column="csmg_add_time"/>
+		<result property="csmgStatus" column="csmg_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员组织 -->
+	<select id="getCsMemberGroupList" resultMap="CsMemberGroup">
+		select cs_member_group$suffix$.* from cs_member_group$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_member_group$suffix$.csmg_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberGroup_part.cs_member_group_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmg_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员组织分页 -->
+	<select id="getCsMemberGroupPage" parameterClass="java.util.HashMap" resultMap="CsMemberGroup">
+		select cs_member_group$suffix$.* from cs_member_group$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_member_group$suffix$.csmg_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberGroup_part.cs_member_group_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmg_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员组织总数 -->
+	<select id="getCsMemberGroupEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_member_group$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_member_group$suffix$.csmg_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberGroup_part.cs_member_group_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员组织 -->
+	<select id="getCsMemberGroupById" parameterClass="java.util.HashMap" resultMap="CsMemberGroup">
+		select cs_member_group$suffix$.* from cs_member_group$suffix$
+		where csmg_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员组织 -->
+	<insert id="saveCsMemberGroup"  parameterClass="com.ccclubs.model.CsMemberGroup">
+		insert into cs_member_group$suffix$
+		(
+			cs_member_group$suffix$.csmg_host
+			,cs_member_group$suffix$.csmg_name
+			,cs_member_group$suffix$.csmg_person
+			,cs_member_group$suffix$.csmg_number
+			,cs_member_group$suffix$.csmg_flag
+			,cs_member_group$suffix$.csmg_rebate
+			,cs_member_group$suffix$.csmg_remark
+			,cs_member_group$suffix$.csmg_add_time
+			,cs_member_group$suffix$.csmg_status
+		)
+		values(
+			<isNotNull property="csmgHost" prepend="">
+				#csmgHost#
+			</isNotNull>
+			<isNull property="csmgHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmgName" prepend=",">
+				#csmgName#
+			</isNotNull>
+			<isNull property="csmgName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgPerson" prepend=",">
+				#csmgPerson#
+			</isNotNull>
+			<isNull property="csmgPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgNumber" prepend=",">
+				#csmgNumber#
+			</isNotNull>
+			<isNull property="csmgNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgFlag" prepend=",">
+				#csmgFlag#
+			</isNotNull>
+			<isNull property="csmgFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgRebate" prepend=",">
+				#csmgRebate#
+			</isNotNull>
+			<isNull property="csmgRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgRemark" prepend=",">
+				#csmgRemark#
+			</isNotNull>
+			<isNull property="csmgRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgAddTime" prepend=",">
+				#csmgAddTime#
+			</isNotNull>
+			<isNull property="csmgAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmgStatus" prepend=",">
+				#csmgStatus#
+			</isNotNull>
+			<isNull property="csmgStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员组织 -->
+	<update id="updateCsMemberGroup"  parameterClass="com.ccclubs.model.CsMemberGroup">
+		update cs_member_group$suffix$ set
+			<isNotNull property="csmgHost" prepend="">
+				cs_member_group$suffix$.csmg_host = #csmgHost#
+			</isNotNull>
+			<isNull property="csmgHost" prepend="">
+				cs_member_group$suffix$.csmg_host = null
+			</isNull>				
+			<isNotNull property="csmgName" prepend=",">
+				cs_member_group$suffix$.csmg_name = #csmgName#
+			</isNotNull>
+			<isNull property="csmgName" prepend=",">
+				cs_member_group$suffix$.csmg_name = null
+			</isNull>				
+			<isNotNull property="csmgPerson" prepend=",">
+				cs_member_group$suffix$.csmg_person = #csmgPerson#
+			</isNotNull>
+			<isNull property="csmgPerson" prepend=",">
+				cs_member_group$suffix$.csmg_person = null
+			</isNull>				
+			<isNotNull property="csmgNumber" prepend=",">
+				cs_member_group$suffix$.csmg_number = #csmgNumber#
+			</isNotNull>
+			<isNull property="csmgNumber" prepend=",">
+				cs_member_group$suffix$.csmg_number = null
+			</isNull>				
+			<isNotNull property="csmgFlag" prepend=",">
+				cs_member_group$suffix$.csmg_flag = #csmgFlag#
+			</isNotNull>
+			<isNull property="csmgFlag" prepend=",">
+				cs_member_group$suffix$.csmg_flag = null
+			</isNull>				
+			<isNotNull property="csmgRebate" prepend=",">
+				cs_member_group$suffix$.csmg_rebate = #csmgRebate#
+			</isNotNull>
+			<isNull property="csmgRebate" prepend=",">
+				cs_member_group$suffix$.csmg_rebate = null
+			</isNull>				
+			<isNotNull property="csmgRemark" prepend=",">
+				cs_member_group$suffix$.csmg_remark = #csmgRemark#
+			</isNotNull>
+			<isNull property="csmgRemark" prepend=",">
+				cs_member_group$suffix$.csmg_remark = null
+			</isNull>				
+			<isNotNull property="csmgAddTime" prepend=",">
+				cs_member_group$suffix$.csmg_add_time = #csmgAddTime#
+			</isNotNull>
+			<isNull property="csmgAddTime" prepend=",">
+				cs_member_group$suffix$.csmg_add_time = null
+			</isNull>				
+			<isNotNull property="csmgStatus" prepend=",">
+				cs_member_group$suffix$.csmg_status = #csmgStatus#
+			</isNotNull>
+			<isNull property="csmgStatus" prepend=",">
+				cs_member_group$suffix$.csmg_status = null
+			</isNull>				
+		where
+			csmg_id=#csmgId#
+	</update>
+	
+	<!-- 更新会员组织非空字段 -->
+	<update id="updateCsMemberGroup$NotNull"  parameterClass="com.ccclubs.model.CsMemberGroup">
+		update cs_member_group$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmgHost" prepend=",">
+				cs_member_group$suffix$.csmg_host = #csmgHost#
+			</isNotNull>		
+			<isNotNull property="csmgName" prepend=",">
+				cs_member_group$suffix$.csmg_name = #csmgName#
+			</isNotNull>		
+			<isNotNull property="csmgPerson" prepend=",">
+				cs_member_group$suffix$.csmg_person = #csmgPerson#
+			</isNotNull>		
+			<isNotNull property="csmgNumber" prepend=",">
+				cs_member_group$suffix$.csmg_number = #csmgNumber#
+			</isNotNull>		
+			<isNotNull property="csmgFlag" prepend=",">
+				cs_member_group$suffix$.csmg_flag = #csmgFlag#
+			</isNotNull>		
+			<isNotNull property="csmgRebate" prepend=",">
+				cs_member_group$suffix$.csmg_rebate = #csmgRebate#
+			</isNotNull>		
+			<isNotNull property="csmgRemark" prepend=",">
+				cs_member_group$suffix$.csmg_remark = #csmgRemark#
+			</isNotNull>		
+			<isNotNull property="csmgAddTime" prepend=",">
+				cs_member_group$suffix$.csmg_add_time = #csmgAddTime#
+			</isNotNull>		
+			<isNotNull property="csmgStatus" prepend=",">
+				cs_member_group$suffix$.csmg_status = #csmgStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csmg_id=#csmgId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员组织 -->
+	<delete id="deleteCsMemberGroupById" parameterClass="java.util.HashMap">
+		delete from cs_member_group$suffix$ where csmg_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员组织 -->
+	<update id="removeCsMemberGroupById" parameterClass="java.util.HashMap">
+		update cs_member_group$suffix$ set  cs_member_group$suffix$.csmg_status=-1  where csmg_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员组织 -->
+	<update id="updateCsMemberGroupBy"  parameterClass="java.util.HashMap">
+		update cs_member_group$suffix$ set		
+			csmg_id=csmg_id
+			<isNotNull property="V_csmgId" prepend=",">
+				cs_member_group$suffix$.csmg_id = #V_csmgId#
+			</isNotNull>		
+			<isNotNull property="V_csmgHost" prepend=",">
+				cs_member_group$suffix$.csmg_host = #V_csmgHost#
+			</isNotNull>		
+			<isNotNull property="V_csmgName" prepend=",">
+				cs_member_group$suffix$.csmg_name = #V_csmgName#
+			</isNotNull>		
+			<isNotNull property="V_csmgPerson" prepend=",">
+				cs_member_group$suffix$.csmg_person = #V_csmgPerson#
+			</isNotNull>		
+			<isNotNull property="V_csmgNumber" prepend=",">
+				cs_member_group$suffix$.csmg_number = #V_csmgNumber#
+			</isNotNull>		
+			<isNotNull property="V_csmgFlag" prepend=",">
+				cs_member_group$suffix$.csmg_flag = #V_csmgFlag#
+			</isNotNull>		
+			<isNotNull property="V_csmgRebate" prepend=",">
+				cs_member_group$suffix$.csmg_rebate = #V_csmgRebate#
+			</isNotNull>		
+			<isNotNull property="V_csmgRemark" prepend=",">
+				cs_member_group$suffix$.csmg_remark = #V_csmgRemark#
+			</isNotNull>		
+			<isNotNull property="V_csmgAddTime" prepend=",">
+				cs_member_group$suffix$.csmg_add_time = #V_csmgAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmgStatus" prepend=",">
+				cs_member_group$suffix$.csmg_status = #V_csmgStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_member_group$suffix$.csmg_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMemberGroup_part.cs_member_group_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员组织 -->
+	<update id="deleteCsMemberGroupBy"  parameterClass="java.util.HashMap">
+		delete from cs_member_group$suffix$ where 
+		cs_member_group$suffix$.csmg_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMemberGroup_part.cs_member_group_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>车纷享-订车</title>
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" type="text/css" href="include/jstackmenu.css" />
+		<link rel="stylesheet" type="text/css" href="include/wheel.css" />
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain" style="padding-bottom: 50px;">
+			<ul class="menunavtop">
+				<li>
+					<a href="index.html"><img src="images/menu_btn1.png"> <br>主页</a>
+				</li>
+				<li>
+					<a href="###" class="on"><img src="images/menu_btn2on.png"> <br>租车</a>
+				</li>
+				<li>
+					<a href="account_order.html"><img src="images/menu_btn3.png"> <br>订单</a>
+				</li>
+				<li>
+					<a href="account.html"><img src="images/menu_btn4.png"> <br>账户</a>
+				</li>
+			</ul>
+			<nav class="navbar navbar-default" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="navbarnewnav">
+				<ul>
+					<li>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">区域<b class="ccaret">&nbsp;</b> </a>
+						<ul id="ul-csoArea" class="dropdown-menu" role="menu">
+							<li class="${baseOrderInfo.csoArea==-1 ?'seled' :''}" data="-1">
+								<a href="#">不限区域</a>
+							</li>
+							<s:iterator value="#request.areas" id="item" status="i">
+								<s:if test="#i.last">
+									<li data="${item.csaId}" class="last ${baseOrderInfo.csoArea==item.csaId ?'seled' :''}">
+								</s:if>
+								<s:else>
+									<li data="${item.csaId}" class="${baseOrderInfo.csoArea==item.csaId ?'seled' :''}">
+								</s:else>
+								<a href="#">${item.csaName}</a>
+					</li>
+					</s:iterator>
+				</ul>
+				</li>
+				<li>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">网点<b class="ccaret">&nbsp;</b> </a>
+					<ul id="ul-csoOutlets" class="dropdown-menu" role="menu">
+
+					</ul>
+				</li>
+				<li>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">车型<b class="ccaret">&nbsp;</b> </a>
+					<ul id="ul-csoModel" class="dropdown-menu" role="menu">
+						<li class=" ${baseOrderInfo.csoModel==-1 ?'seled' :''}" data="-1">
+							<a href="javascript:;">不限车型</a>
+						</li>
+						<s:iterator value="#request.carModels" id="item" status="i">
+							<li data="${item.cscmId}" class="${baseOrderInfo.csoModel==item.cscmId ?'seled' :''}">
+								<a href="javascript:;">${item.cscmName}<i></i> </a>
+							</li>
+						</s:iterator>
+					</ul>
+				</li>
+
+				<li class="btnmap">
+					<a href="parkinglot_mapall.html"><img src="images/btn_map.png"> </a>
+				</li>
+				</ul>
+			</div>
+			</nav>
+			<div class="ccc-reserve-list">
+				<s:if test="#request.page.result.size()>0">
+					<s:iterator value="#request.page.result" id="item" status="i">
+						<a href="reserve_checkout.html?car=${item.cscId}&csoDate=${date}">
+							<div class="carlist">
+								<dl>
+									<dt>
+										<img src="/images/cars/${item.cscModel}_wide.jpg">
+										<s:if test="#item.values.xianxing==1">
+											<span style="color: red; font-style:'宋体'; font-weight:nomal; font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;今日限行</span>
+										</s:if>
+									</dt>
+									<dd>
+										<div class="car-item-detail" style="line-height: 20px;">
+											<h1>
+												<b>${item.$cscModel.cscmName}<u>|</u>${item.cscCarNo}</b>
+												<s:if test="#item.cscIsAd">
+													<span>宣</span>
+												</s:if>
+											</h1>
+											${lz:set("prices",(cc:prices(session.ccclubs_web_host.shId,item.$cscModel.cscmId,null)))}
+											<p>
+												<strong>${prices["租金.工作日白天小时|租金.白天小时|租金.每小时"]}</strong> 元/小时<!-- ${lz:digit(item.cscHourPrice,2)} -->
+											</p>
+											<p>
+												<em>${prices["租金.工作日一天|租金.每天"]}</em> 元/天<!-- ${lz:digit(item.cscDayPrice,2)} -->
+											</p>
+											<p>
+											<s:if test="#item.$cscModel.cscmType==0">
+												${item.$cscModel.cscmVolume}
+											</s:if>
+											<s:else>
+												${lz:set("dqxh", lz:query$("ccclubs_system","select css_endurance from cs_state where css_number like ?",lz:join("",item.cscNumber))[0].cssEndurance)}
+												<s:if test="#request.dqxh==null">
+													${lz:set("dqxh", lz:query$("ccclubs_system","select css_endurance from cs_state where css_number like ?",lz:join("EV",item.cscNumber))[0].cssEndurance)}
+												</s:if>
+												当前续航：${dqxh}公里
+											</s:else>
+											</p>
+											<p>
+												<a class="icon-gps" style="display: block; overflow: hidden;" href='parkinglot_itemdetail.html?outlet=${item.$cscOutlets.csoId}'>${item.$cscOutlets.csoName}</a>
+											</p>
+										</div>
+									</dd>
+								</dl>
+								<div class="cartime">
+									<table width="100%" class="timetext" border="0" cellspacing="0" cellpadding="0">
+										<tbody>
+											<tr>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td class="ttext">
+													6:00
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td class="ttext">
+													12:00
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td class="ttext">
+													18:00
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+												<td>
+													&nbsp;
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="cartime24">
+										<table width="100%" cellspacing="0" cellpadding="0">
+											<tbody>
+												<tr>
+													<td class="first">
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+													<td>
+														&nbsp;
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<s:action name="reserve_timeline" executeResult="true" namespace="/weixin">
+										<s:param name="car">${item.cscId}</s:param>
+										<s:param name="date">${date}</s:param>
+									</s:action>
+								</div>
+								<!--  <div class="content">
+									<img style="margin-top: 5px; margin-bottom: -10px; width: 100%;" src="${basePath}weixin/reserve_timeline.html?id=${item.cscId}&date=${date}&count=1">
+								</div>-->
+							</div> </a>
+					</s:iterator>
+				</s:if>
+				<s:else>
+					<div class="ccc-nodata">
+						<s:if test="#request.baseOrderInfo.csoModel!=-1">
+								没有找到符合要求的车辆～<a href="reserve.html?csoArea=${baseOrderInfo.csoArea}&csoOutlets=${baseOrderInfo.csoOutlets}&csoModel=-1" class="ccc-link">换个搜索条件，试试看 &raquo;</a>
+						</s:if>
+						<s:else>
+								车辆临时下线，可能是洗车或者保养去了哦。过会儿再来吧。
+							</s:else>
+					</div>
+				</s:else>
+			</div>
+			<div style="display: none;" class="more-loading">
+				正在加载...
+			</div>
+		</div>
+		<input id="csoHost" type="hidden" value="${baseOrderInfo.csoHost}" />
+		<input id="csoModel" type="hidden" value="${baseOrderInfo.csoModel}" />
+		<input id="csoOutlets" type="hidden" value="${baseOrderInfo.csoOutlets}" />
+		<input id="csoArea" type="hidden" value="${baseOrderInfo.csoArea}" />
+		<input id="csoAmount" type="hidden" value="${baseOrderInfo.csoAmount}" />
+		<input id="csoIsAdCar" type="hidden" value="${baseOrderInfo.csoIsAdCar}" />
+		<input id="csoIsDate" type="hidden" value="${baseOrderInfo.csoIsDate}" />
+		<!--  <div class="menunavbottom">
+			<ul>
+				<s:iterator value="#request.dates" id="item" status="i">
+					${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+					<li class="${date==nowdate?'on':''}">
+						${lz:set("value",lz:date(item,"EEE"))}
+						<a href="javascript:;" onclick="setDate('${lz:date(item,'yyyy-MM-dd')}');" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+					</li>
+				</s:iterator>
+			</ul>
+		</div>-->
+		<div class="menunavbottom">
+			<ul>
+				<li class="prev">
+					<a href="#" class="${index<=1?'off':''}">&nbsp;</a>
+				</li>
+				<s:if test="#request.index==0">
+					<s:iterator value="#request.dates" id="item" status="i">
+						<s:if test="#i.index<=3">
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} show" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+								${lz:set("value",lz:date(item,"EEE"))}
+								<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+							</li>
+						</s:if>
+						<s:else>
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} hide" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+								${lz:set("value",lz:date(item,"EEE"))}
+								<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+							</li>
+						</s:else>
+					</s:iterator>
+				</s:if>
+				<s:elseif test="#request.index==6||#request.index==5">
+					<s:iterator value="#request.dates" id="item" status="i">
+						<s:if test="#i.index>=3">
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} show" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+								${lz:set("value",lz:date(item,"EEE"))}
+								<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+							</li>
+						</s:if>
+						<s:else>
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} hide" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+								${lz:set("value",lz:date(item,"EEE"))}
+								<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+							</li>
+						</s:else>
+					</s:iterator>
+				</s:elseif>
+				<s:else>
+					<s:iterator value="#request.dates" id="item" status="i">
+						<s:if test="#i.index==#request.index||#i.index==#request.index-1||#i.index==#request.index+1||#i.index==#request.index+2">
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} show" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+								${lz:set("value",lz:date(item,"EEE"))}
+								<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+							</li>
+						</s:if>
+						<s:else>
+							${lz:set("nowdate",lz:date(item,"yyyy-MM-dd"))} 
+							<li class="A ${date==nowdate?'on':''} hide" data="${lz:date(item,'yyyy-MM-dd')}" data-i="${i.index}">
+								${lz:set("value",lz:date(item,"EEE"))}
+								<a href="javascript:;" class="${value=='星期六'||value=='星期日'?'rest':''}" href="#">${value}<br>${lz:date(item,"MM-dd")}</a>
+							</li>
+						</s:else>
+					</s:iterator>
+				</s:else>
+				<li class="next">
+					<a href="#" class="${index>=4?'off':''}">&nbsp;</a>
+				</li>
+			</ul>
+		</div>
+		<%@ include file="include/wheel.html"%>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<!-- 底部城市切换 -->
+		<script type="text/javascript" src="include/jquery-ui-1.7.2.custom.js"></script>
+		<script type="text/javascript" src="include/jstackmenu.js"></script>
+		<script src="js/wheel.define.js"></script>
+		
+		<input id="csoHost" type="hidden" value="${baseOrderInfo.csoHost}" />
+		<input id="csoModel" type="hidden" value="${baseOrderInfo.csoModel}" />
+		<input id="csoOutlets" type="hidden" value="${baseOrderInfo.csoOutlets}" />
+		<input id="csoArea" type="hidden" value="${baseOrderInfo.csoArea}" />
+		<input id="csoAmount" type="hidden" value="${baseOrderInfo.csoAmount}" />
+		<input id="csoDate" type="hidden" value="${date}" />
+		<input id="index" type="hidden" value="${index}" />
+		<div id="tempdata" style="display: none;"></div>
+
+		<script src="js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					var page = 0;
+					var maxPage = ${page.total};
+					$(window).bind('scroll', function() {
+						if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+							if(page < maxPage-1)
+							{
+								page++;
+								$('.more-loading').css("display", "block");
+								$.get('/weixin/reserve.html',{page:page,date:'${date}'},function(data){
+									//先将临时存放区清空
+									$('#tempdata').html('');
+									//将页面载入临时存放区
+									$('#tempdata').append(data);
+									//用find方法找出车辆列表
+									var temp = $('#tempdata').find("div .ccc-reserve-list");
+									//由于find出来的是一个数组，所以取第一个元素即为要加载的数据
+									$('.ccc-reserve-list').append(temp[0].innerHTML);
+									$('.more-loading').css("display", "none");
+								});
+							}
+						};
+					});
+					
+					setArea();
+					$(document).on('click','#ul-csoArea li a',function(){
+						var li = $(this).parent();
+						if (li.hasClass('all seled')) {
+							return false;
+						} else if (li.hasClass('seled')) {
+							li.removeClass('seled').siblings('.all').addClass('seled');
+							$('#csoArea').val(-1);
+							$('#csoOutlets').val(-1);
+							getCarDetail();
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoArea').val(li.attr('data'));
+							$('#csoOutlets').val(-1);
+							getCarDetail();
+							return false;
+						}
+					});
+					$(document).on('click','#ul-csoOutlets li a',function(){
+						var li = $(this).parent();
+						if (li.hasClass('all seled')||li.hasClass('disabled')) {
+							return false;
+						} else if (li.hasClass('seled')) {
+							li.removeClass('seled').siblings('.all').addClass('seled');
+							$('#csoOutlets').val(-1);
+							getCarDetail();
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoOutlets').val(li.attr('data'));
+							getCarDetail();
+							return false;
+						}
+					});
+					$(document).on('click','#ul-csoModel li a',function(){
+						var li = $(this).parent();
+						if (li.hasClass('all seled')) {
+							return false;
+						} else if (li.hasClass('seled')) {
+							li.removeClass('seled').siblings('.all').addClass('seled');
+							$('#csoModel').val(-1);
+							getCarDetail();
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoModel').val(li.attr('data'));
+							getCarDetail();
+							return false;
+						}
+					});
+				});
+		
+		function setDate(date){
+			$('#csoDate').val(date);
+			getCarDetail();
+		}
+				
+		function getCarDetail(){
+			location.href = 'reserve.html?csoHost='+$('#csoHost').val()+'&index='+$('#index').val()+'&csoArea='+$('#csoArea').val()+'&csoDate='+$('#csoDate').val()+"&csoOutlets="+$('#csoOutlets').val()+"&csoModel="+$('#csoModel').val()+"&csoAmount="+$('#csoAmount').val()+"&t="+new Date().getTime();
+		}
+		
+		function setArea(){
+			var value =$('#csoArea').val() ;
+			var csoOutletHtml="<li class='all ";
+			if($('#csoOutlets').val()==-1){
+				csoOutletHtml=csoOutletHtml+"seled' data='-1'><a href='javascript:;'>不限网点</a></li>"
+			}else{
+				csoOutletHtml=csoOutletHtml+"' data='-1'><a href='javascript:;'>不限网点</a></li>"
+			}
+			$('#ul-csoOutlets').html(csoOutletHtml);
+			$.getJSON("account_outletsByAreaCanorder.html",{area:value,t:new Date().getTime()},function(data) {
+				  //遍历JSON中的每个entry 
+				  $.each(data, function(entryIndex, entry) {
+				  //<li><a href="#">不限网点</a></li>
+				  var info = '<li data ="'+entry.csoId;
+				  if($('#csoOutlets').val()== entry.csoId){
+				  		 if(entryIndex == data.length-1){
+				  		 	info=info+'" class="last seled" ><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						    $("#ul-csoOutlets .all").after(info);
+				  		 }else{
+				  		 	info=info+'" class="seled" ><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						    $("#ul-csoOutlets .all").after(info);
+				  		 }
+					 }else{
+					 	if(entryIndex == data.length-1){
+					 			info= info+'" class="last" ><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						        $(info).appendTo("#ul-csoOutlets");
+						 	}else{
+						 		info= info+'"><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						        $(info).appendTo("#ul-csoOutlets");
+						 	}
+					    }
+					 });
+				  })
+			}
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		
+		var maxLength = $('.menunavbottom li.A').length;
+		var index = ${index};
+		$('.menunavbottom li.A').click(function(){
+			$('#index').val($(this).attr('data-i'));
+			$('#csoDate').val($(this).attr('data'));
+			getCarDetail();
+		});
+		$('.next').click(function(){
+			if(index>maxLength-4) return;
+			var lis = $('.menunavbottom li.A');
+			$('#index').val(lis.eq(index+1).attr('data-i'));
+			$('#csoDate').val(lis.eq(index+1).attr('data'));
+			getCarDetail();
+		});
+		$('.prev').click(function(){
+			if(index == 0) return;
+			var lis = $('.menunavbottom li.A');
+			$('#index').val(lis.eq(index-1).attr('data-i'));
+			$('#csoDate').val(lis.eq(index-1).attr('data'));
+			getCarDetail();
+		});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员关系之SQL映射 -->
+	<resultMap id="CsMemberShip" class="com.ccclubs.model.CsMemberShip">
+		<result property="csmsId" column="csms_id"/>
+		<result property="csmsHost" column="csms_host"/>
+		<result property="csmsPayer" column="csms_payer"/>
+		<result property="csmsTargeter" column="csms_targeter"/>
+		<result property="csmsAddTime" column="csms_add_time"/>
+		<result property="csmsRemark" column="csms_remark"/>
+		<result property="csmsStatus" column="csms_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员关系 -->
+	<select id="getCsMemberShipList" resultMap="CsMemberShip">
+		select cs_member_ship$suffix$.* from cs_member_ship$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.csms_payer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_ship$suffix$.csms_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberShip_part.cs_member_ship_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csms_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员关系分页 -->
+	<select id="getCsMemberShipPage" parameterClass="java.util.HashMap" resultMap="CsMemberShip">
+		select cs_member_ship$suffix$.* from cs_member_ship$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.csms_payer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_ship$suffix$.csms_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberShip_part.cs_member_ship_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csms_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员关系总数 -->
+	<select id="getCsMemberShipEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_member_ship$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.csms_payer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_member_ship$suffix$.csms_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMemberShip_part.cs_member_ship_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员关系 -->
+	<select id="getCsMemberShipById" parameterClass="java.util.HashMap" resultMap="CsMemberShip">
+		select cs_member_ship$suffix$.* from cs_member_ship$suffix$
+		where csms_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员关系 -->
+	<insert id="saveCsMemberShip"  parameterClass="com.ccclubs.model.CsMemberShip">
+		insert into cs_member_ship$suffix$
+		(
+			cs_member_ship$suffix$.csms_host
+			,cs_member_ship$suffix$.csms_payer
+			,cs_member_ship$suffix$.csms_targeter
+			,cs_member_ship$suffix$.csms_add_time
+			,cs_member_ship$suffix$.csms_remark
+			,cs_member_ship$suffix$.csms_status
+		)
+		values(
+			<isNotNull property="csmsHost" prepend="">
+				#csmsHost#
+			</isNotNull>
+			<isNull property="csmsHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmsPayer" prepend=",">
+				#csmsPayer#
+			</isNotNull>
+			<isNull property="csmsPayer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsTargeter" prepend=",">
+				#csmsTargeter#
+			</isNotNull>
+			<isNull property="csmsTargeter" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsAddTime" prepend=",">
+				#csmsAddTime#
+			</isNotNull>
+			<isNull property="csmsAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsRemark" prepend=",">
+				#csmsRemark#
+			</isNotNull>
+			<isNull property="csmsRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmsStatus" prepend=",">
+				#csmsStatus#
+			</isNotNull>
+			<isNull property="csmsStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员关系 -->
+	<update id="updateCsMemberShip"  parameterClass="com.ccclubs.model.CsMemberShip">
+		update cs_member_ship$suffix$ set
+			<isNotNull property="csmsHost" prepend="">
+				cs_member_ship$suffix$.csms_host = #csmsHost#
+			</isNotNull>
+			<isNull property="csmsHost" prepend="">
+				cs_member_ship$suffix$.csms_host = null
+			</isNull>				
+			<isNotNull property="csmsPayer" prepend=",">
+				cs_member_ship$suffix$.csms_payer = #csmsPayer#
+			</isNotNull>
+			<isNull property="csmsPayer" prepend=",">
+				cs_member_ship$suffix$.csms_payer = null
+			</isNull>				
+			<isNotNull property="csmsTargeter" prepend=",">
+				cs_member_ship$suffix$.csms_targeter = #csmsTargeter#
+			</isNotNull>
+			<isNull property="csmsTargeter" prepend=",">
+				cs_member_ship$suffix$.csms_targeter = null
+			</isNull>				
+			<isNotNull property="csmsAddTime" prepend=",">
+				cs_member_ship$suffix$.csms_add_time = #csmsAddTime#
+			</isNotNull>
+			<isNull property="csmsAddTime" prepend=",">
+				cs_member_ship$suffix$.csms_add_time = null
+			</isNull>				
+			<isNotNull property="csmsRemark" prepend=",">
+				cs_member_ship$suffix$.csms_remark = #csmsRemark#
+			</isNotNull>
+			<isNull property="csmsRemark" prepend=",">
+				cs_member_ship$suffix$.csms_remark = null
+			</isNull>				
+			<isNotNull property="csmsStatus" prepend=",">
+				cs_member_ship$suffix$.csms_status = #csmsStatus#
+			</isNotNull>
+			<isNull property="csmsStatus" prepend=",">
+				cs_member_ship$suffix$.csms_status = null
+			</isNull>				
+		where
+			csms_id=#csmsId#
+	</update>
+	
+	<!-- 更新会员关系非空字段 -->
+	<update id="updateCsMemberShip$NotNull"  parameterClass="com.ccclubs.model.CsMemberShip">
+		update cs_member_ship$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmsHost" prepend=",">
+				cs_member_ship$suffix$.csms_host = #csmsHost#
+			</isNotNull>		
+			<isNotNull property="csmsPayer" prepend=",">
+				cs_member_ship$suffix$.csms_payer = #csmsPayer#
+			</isNotNull>		
+			<isNotNull property="csmsTargeter" prepend=",">
+				cs_member_ship$suffix$.csms_targeter = #csmsTargeter#
+			</isNotNull>		
+			<isNotNull property="csmsAddTime" prepend=",">
+				cs_member_ship$suffix$.csms_add_time = #csmsAddTime#
+			</isNotNull>		
+			<isNotNull property="csmsRemark" prepend=",">
+				cs_member_ship$suffix$.csms_remark = #csmsRemark#
+			</isNotNull>		
+			<isNotNull property="csmsStatus" prepend=",">
+				cs_member_ship$suffix$.csms_status = #csmsStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csms_id=#csmsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员关系 -->
+	<delete id="deleteCsMemberShipById" parameterClass="java.util.HashMap">
+		delete from cs_member_ship$suffix$ where csms_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员关系 -->
+	<update id="removeCsMemberShipById" parameterClass="java.util.HashMap">
+		update cs_member_ship$suffix$ set  cs_member_ship$suffix$.csms_status=-1  where csms_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员关系 -->
+	<update id="updateCsMemberShipBy"  parameterClass="java.util.HashMap">
+		update cs_member_ship$suffix$ set		
+			csms_id=csms_id
+			<isNotNull property="V_csmsId" prepend=",">
+				cs_member_ship$suffix$.csms_id = #V_csmsId#
+			</isNotNull>		
+			<isNotNull property="V_csmsHost" prepend=",">
+				cs_member_ship$suffix$.csms_host = #V_csmsHost#
+			</isNotNull>		
+			<isNotNull property="V_csmsPayer" prepend=",">
+				cs_member_ship$suffix$.csms_payer = #V_csmsPayer#
+			</isNotNull>		
+			<isNotNull property="V_csmsTargeter" prepend=",">
+				cs_member_ship$suffix$.csms_targeter = #V_csmsTargeter#
+			</isNotNull>		
+			<isNotNull property="V_csmsAddTime" prepend=",">
+				cs_member_ship$suffix$.csms_add_time = #V_csmsAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmsRemark" prepend=",">
+				cs_member_ship$suffix$.csms_remark = #V_csmsRemark#
+			</isNotNull>		
+			<isNotNull property="V_csmsStatus" prepend=",">
+				cs_member_ship$suffix$.csms_status = #V_csmsStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.csms_payer=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_member_ship$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_member_ship$suffix$.csms_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsmsPayer"><!-- 调用一下CsmsPayer，把CsMember指向CsmsPayer --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMemberShip_part.cs_member_ship_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员关系 -->
+	<update id="deleteCsMemberShipBy"  parameterClass="java.util.HashMap">
+		delete from cs_member_ship$suffix$ where 
+		cs_member_ship$suffix$.csms_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMemberShip_part.cs_member_ship_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

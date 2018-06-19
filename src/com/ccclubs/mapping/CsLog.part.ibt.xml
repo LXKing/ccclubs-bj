@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsLog_part">	
+	<!-- 系统日志条件sql片段  -->
+	<sql id="cs_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="cslId" prepend="and">
+			    $cslIdNot$ cs_log$suffix$.csl_id = #cslId#
+			</isNotEmpty>
+			<isNotNull property="cslIdNot" prepend="and">
+				<isEmpty property="cslId">
+				$cslIdNot$ cs_log$suffix$.csl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_log$suffix$.csl_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cslHost" prepend="and">
+			    $cslHostNot$ cs_log$suffix$.csl_host = #cslHost#
+			</isNotEmpty>
+			<isNotNull property="cslHostNot" prepend="and">
+				<isEmpty property="cslHost">
+				$cslHostNot$ cs_log$suffix$.csl_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cslName" prepend="and">			    
+			    (<isNotNull property="cslNameNot">
+			    cs_log$suffix$.csl_name is null or length(cs_log$suffix$.csl_name) &lt; 1 or
+			    </isNotNull>$cslNameNot$ cs_log$suffix$.csl_name = #cslName#)
+			</isNotEmpty>
+			<isNotNull property="cslNameNot" prepend="and">
+				<isEmpty property="cslName">
+				$cslNameNot$ (cs_log$suffix$.csl_name is null or length(cs_log$suffix$.csl_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslModel" prepend="and">
+			    $cslModelNot$ cs_log$suffix$.csl_model = #cslModel#
+			</isNotEmpty>
+			<isNotNull property="cslModelNot" prepend="and">
+				<isEmpty property="cslModel">
+				$cslModelNot$ cs_log$suffix$.csl_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslType" prepend="and">
+			    $cslTypeNot$ cs_log$suffix$.csl_type = #cslType#
+			</isNotEmpty>
+			<isNotNull property="cslTypeNot" prepend="and">
+				<isEmpty property="cslType">
+				$cslTypeNot$ cs_log$suffix$.csl_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslUser" prepend="and">
+			    $cslUserNot$ cs_log$suffix$.csl_user = #cslUser#
+			</isNotEmpty>
+			<isNotNull property="cslUserNot" prepend="and">
+				<isEmpty property="cslUser">
+				$cslUserNot$ cs_log$suffix$.csl_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslClass" prepend="and">			    
+			    (<isNotNull property="cslClassNot">
+			    cs_log$suffix$.csl_class is null or length(cs_log$suffix$.csl_class) &lt; 1 or
+			    </isNotNull>$cslClassNot$ cs_log$suffix$.csl_class = #cslClass#)
+			</isNotEmpty>
+			<isNotNull property="cslClassNot" prepend="and">
+				<isEmpty property="cslClass">
+				$cslClassNot$ (cs_log$suffix$.csl_class is null or length(cs_log$suffix$.csl_class) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslRelateMin" prepend="and">
+			    $cslRelateNot$  ( cs_log$suffix$.csl_relate &gt;= #cslRelateMin#
+			    <isEmpty property="cslRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslRelateMax" prepend="and">
+				<isEmpty property="cslRelateMin">$cslRelateNot$   (</isEmpty>
+			    cs_log$suffix$.csl_relate &lt;= #cslRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cslRelate" prepend="and">
+			    $cslRelateNot$ cs_log$suffix$.csl_relate = #cslRelate#
+			</isNotEmpty>
+			<isNotNull property="cslRelateNot" prepend="and">
+				<isEmpty property="cslRelateMax"><isEmpty property="cslRelateMin"><isEmpty property="cslRelate">
+				$cslRelateNot$ cs_log$suffix$.csl_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cslDetail" prepend="and">			    
+			    (<isNotNull property="cslDetailNot">
+			    cs_log$suffix$.csl_detail is null or length(cs_log$suffix$.csl_detail) &lt; 1 or
+			    </isNotNull>$cslDetailNot$ cs_log$suffix$.csl_detail like #cslDetail#)
+			</isNotEmpty>
+			<isNotNull property="cslDetailNot" prepend="and">
+				<isEmpty property="cslDetail">
+				$cslDetailNot$ (cs_log$suffix$.csl_detail is null or length(cs_log$suffix$.csl_detail) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cslAddTimeStart" prepend="and">
+			    $cslAddTimeNot$   (cs_log$suffix$.csl_add_time &gt;= #cslAddTimeStart#
+			   <isEmpty property="cslAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cslAddTimeEnd" prepend="and">
+				<isEmpty property="cslAddTimeStart">$cslAddTimeNot$   (</isEmpty>
+			    cs_log$suffix$.csl_add_time &lt;= #cslAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cslAddTime" prepend="and">
+			    $cslAddTimeNot$ cs_log$suffix$.csl_add_time = #cslAddTime#
+			</isNotEmpty>
+			<isNotNull property="cslAddTimeNot" prepend="and">
+				<isEmpty property="cslAddTimeStart"><isEmpty property="cslAddTimeEnd"><isEmpty property="cslAddTime">
+				$cslAddTimeNot$ cs_log$suffix$.csl_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统日志left join 条件sql片段 -->
+	<sql id="cs_log_join">
+		<dynamic>
+			<isNotEmpty property="CsLog.cslId" prepend="and">
+			    $CsLog.cslIdNot$ cs_log$CsLog.suffix$.csl_id = #CsLog.cslId#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslIdNot" prepend="and">
+				<isEmpty property="CsLog.cslId">
+				$cslIdNot$ cs_log$CsLog.suffix$.csl_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_log$CsLog.suffix$.csl_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsLog.cslHost" prepend="and">
+			    $CsLog.cslHostNot$ cs_log$CsLog.suffix$.csl_host = #CsLog.cslHost#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslHostNot" prepend="and">
+				<isEmpty property="CsLog.cslHost">
+				$cslHostNot$ cs_log$CsLog.suffix$.csl_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslName" prepend="and">
+				(<isNotNull property="CsLog.cslNameNot">
+			    cs_log$CsLog.suffix$.csl_name is null or length(cs_log$CsLog.suffix$.csl_name) &lt; 1 or
+			    </isNotNull>$CsLog.cslNameNot$ cs_log$CsLog.suffix$.csl_name = #CsLog.cslName#)
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslNameNot" prepend="and">
+				<isEmpty property="CsLog.cslName">
+				$cslNameNot$ (cs_log$CsLog.suffix$.csl_name is null or length(cs_log$CsLog.suffix$.csl_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslModel" prepend="and">
+			    $CsLog.cslModelNot$ cs_log$CsLog.suffix$.csl_model = #CsLog.cslModel#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslModelNot" prepend="and">
+				<isEmpty property="CsLog.cslModel">
+				$cslModelNot$ cs_log$CsLog.suffix$.csl_model is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslType" prepend="and">
+			    $CsLog.cslTypeNot$ cs_log$CsLog.suffix$.csl_type = #CsLog.cslType#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslTypeNot" prepend="and">
+				<isEmpty property="CsLog.cslType">
+				$cslTypeNot$ cs_log$CsLog.suffix$.csl_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslUser" prepend="and">
+			    $CsLog.cslUserNot$ cs_log$CsLog.suffix$.csl_user = #CsLog.cslUser#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslUserNot" prepend="and">
+				<isEmpty property="CsLog.cslUser">
+				$cslUserNot$ cs_log$CsLog.suffix$.csl_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslClass" prepend="and">
+				(<isNotNull property="CsLog.cslClassNot">
+			    cs_log$CsLog.suffix$.csl_class is null or length(cs_log$CsLog.suffix$.csl_class) &lt; 1 or
+			    </isNotNull>$CsLog.cslClassNot$ cs_log$CsLog.suffix$.csl_class = #CsLog.cslClass#)
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslClassNot" prepend="and">
+				<isEmpty property="CsLog.cslClass">
+				$cslClassNot$ (cs_log$CsLog.suffix$.csl_class is null or length(cs_log$CsLog.suffix$.csl_class) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslRelateMin" prepend="and">
+			    $CsLog.cslRelateNot$  ( cs_log$CsLog.suffix$.csl_relate &gt;= #CsLog.cslRelateMin#
+			    <isEmpty property="CsLog.cslRelateMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLog.cslRelateMax" prepend="and">
+				<isEmpty property="CsLog.cslRelateMin">$CsLog.cslRelateNot$   (</isEmpty>
+			    cs_log$CsLog.suffix$.csl_relate &lt;= #CsLog.cslRelateMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsLog.cslRelate" prepend="and">
+			    $CsLog.cslRelateNot$ cs_log$CsLog.suffix$.csl_relate = #CsLog.cslRelate#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslRelateNot" prepend="and">
+				<isEmpty property="CsLog.cslRelateMax"><isEmpty property="CsLog.cslRelateMin"><isEmpty property="CsLog.cslRelate">
+				$cslRelateNot$ cs_log$CsLog.suffix$.csl_relate is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslDetail" prepend="and">
+				(<isNotNull property="CsLog.cslDetailNot">
+			    cs_log$CsLog.suffix$.csl_detail is null or length(cs_log$CsLog.suffix$.csl_detail) &lt; 1 or
+			    </isNotNull>$CsLog.cslDetailNot$ cs_log$CsLog.suffix$.csl_detail like #CsLog.cslDetail#)
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslDetailNot" prepend="and">
+				<isEmpty property="CsLog.cslDetail">
+				$cslDetailNot$ (cs_log$CsLog.suffix$.csl_detail is null or length(cs_log$CsLog.suffix$.csl_detail) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsLog.cslAddTimeStart" prepend="and">
+			    $CsLog.cslAddTimeNot$   (cs_log$CsLog.suffix$.csl_add_time &gt;= #CsLog.cslAddTimeStart#
+			   <isEmpty property="CsLog.cslAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsLog.cslAddTimeEnd" prepend="and">
+				<isEmpty property="CsLog.cslAddTimeStart">$CsLog.cslAddTimeNot$   (</isEmpty>
+			    cs_log$CsLog.suffix$.csl_add_time &lt;= #CsLog.cslAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsLog.cslAddTime" prepend="and">
+			    $CsLog.cslAddTimeNot$ cs_log$CsLog.suffix$.csl_add_time = #CsLog.cslAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsLog.cslAddTimeNot" prepend="and">
+				<isEmpty property="CsLog.cslAddTimeStart"><isEmpty property="CsLog.cslAddTimeEnd"><isEmpty property="CsLog.cslAddTime">
+				$cslAddTimeNot$ cs_log$CsLog.suffix$.csl_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

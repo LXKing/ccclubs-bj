@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 分组信息之SQL映射 -->
+	<resultMap id="CsUnitGroup" class="com.ccclubs.model.CsUnitGroup">
+		<result property="csugId" column="csug_id"/>
+		<result property="csugHost" column="csug_host"/>
+		<result property="csugInfo" column="csug_info"/>
+		<result property="csugName" column="csug_name"/>
+		<result property="csugPerson" column="csug_person"/>
+		<result property="csugRemark" column="csug_remark"/>
+		<result property="csugMemo" column="csug_memo"/>
+		<result property="csugData" column="csug_data"/>
+		<result property="csugUpdateTime" column="csug_update_time"/>
+		<result property="csugAddTime" column="csug_add_time"/>
+		<result property="csugStatus" column="csug_status"/>
+	</resultMap>
+		
+	<!-- 获取所有分组信息 -->
+	<select id="getCsUnitGroupList" resultMap="CsUnitGroup">
+		select cs_unit_group$suffix$.* from cs_unit_group$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.csug_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_group$suffix$.csug_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitGroup_part.cs_unit_group_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csug_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取分组信息分页 -->
+	<select id="getCsUnitGroupPage" parameterClass="java.util.HashMap" resultMap="CsUnitGroup">
+		select cs_unit_group$suffix$.* from cs_unit_group$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询 -->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.csug_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_group$suffix$.csug_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitGroup_part.cs_unit_group_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csug_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取分组信息总数 -->
+	<select id="getCsUnitGroupEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_group$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.csug_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_group$suffix$.csug_status!=-1
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitGroup_part.cs_unit_group_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取分组信息 -->
+	<select id="getCsUnitGroupById" parameterClass="java.util.HashMap" resultMap="CsUnitGroup">
+		select cs_unit_group$suffix$.* from cs_unit_group$suffix$
+		where csug_id=#id#
+	</select>
+	
+		
+	<!-- 保存分组信息 -->
+	<insert id="saveCsUnitGroup"  parameterClass="com.ccclubs.model.CsUnitGroup">
+		insert into cs_unit_group$suffix$
+		(
+			cs_unit_group$suffix$.csug_host
+			,cs_unit_group$suffix$.csug_info
+			,cs_unit_group$suffix$.csug_name
+			,cs_unit_group$suffix$.csug_person
+			,cs_unit_group$suffix$.csug_remark
+			,cs_unit_group$suffix$.csug_memo
+			,cs_unit_group$suffix$.csug_data
+			,cs_unit_group$suffix$.csug_update_time
+			,cs_unit_group$suffix$.csug_add_time
+			,cs_unit_group$suffix$.csug_status
+		)
+		values(
+			<isNotNull property="csugHost" prepend="">
+				#csugHost#
+			</isNotNull>
+			<isNull property="csugHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csugInfo" prepend=",">
+				#csugInfo#
+			</isNotNull>
+			<isNull property="csugInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugName" prepend=",">
+				#csugName#
+			</isNotNull>
+			<isNull property="csugName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugPerson" prepend=",">
+				#csugPerson#
+			</isNotNull>
+			<isNull property="csugPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugRemark" prepend=",">
+				#csugRemark#
+			</isNotNull>
+			<isNull property="csugRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugMemo" prepend=",">
+				#csugMemo#
+			</isNotNull>
+			<isNull property="csugMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugData" prepend=",">
+				#csugData#
+			</isNotNull>
+			<isNull property="csugData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugUpdateTime" prepend=",">
+				#csugUpdateTime#
+			</isNotNull>
+			<isNull property="csugUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugAddTime" prepend=",">
+				#csugAddTime#
+			</isNotNull>
+			<isNull property="csugAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csugStatus" prepend=",">
+				#csugStatus#
+			</isNotNull>
+			<isNull property="csugStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新分组信息 -->
+	<update id="updateCsUnitGroup"  parameterClass="com.ccclubs.model.CsUnitGroup">
+		update cs_unit_group$suffix$ set
+			<isNotNull property="csugHost" prepend="">
+				cs_unit_group$suffix$.csug_host = #csugHost#
+			</isNotNull>
+			<isNull property="csugHost" prepend="">
+				cs_unit_group$suffix$.csug_host = null
+			</isNull>				
+			<isNotNull property="csugInfo" prepend=",">
+				cs_unit_group$suffix$.csug_info = #csugInfo#
+			</isNotNull>
+			<isNull property="csugInfo" prepend=",">
+				cs_unit_group$suffix$.csug_info = null
+			</isNull>				
+			<isNotNull property="csugName" prepend=",">
+				cs_unit_group$suffix$.csug_name = #csugName#
+			</isNotNull>
+			<isNull property="csugName" prepend=",">
+				cs_unit_group$suffix$.csug_name = null
+			</isNull>				
+			<isNotNull property="csugPerson" prepend=",">
+				cs_unit_group$suffix$.csug_person = #csugPerson#
+			</isNotNull>
+			<isNull property="csugPerson" prepend=",">
+				cs_unit_group$suffix$.csug_person = null
+			</isNull>				
+			<isNotNull property="csugRemark" prepend=",">
+				cs_unit_group$suffix$.csug_remark = #csugRemark#
+			</isNotNull>
+			<isNull property="csugRemark" prepend=",">
+				cs_unit_group$suffix$.csug_remark = null
+			</isNull>				
+			<isNotNull property="csugMemo" prepend=",">
+				cs_unit_group$suffix$.csug_memo = #csugMemo#
+			</isNotNull>
+			<isNull property="csugMemo" prepend=",">
+				cs_unit_group$suffix$.csug_memo = null
+			</isNull>				
+			<isNotNull property="csugData" prepend=",">
+				cs_unit_group$suffix$.csug_data = #csugData#
+			</isNotNull>
+			<isNull property="csugData" prepend=",">
+				cs_unit_group$suffix$.csug_data = null
+			</isNull>				
+			<isNotNull property="csugUpdateTime" prepend=",">
+				cs_unit_group$suffix$.csug_update_time = #csugUpdateTime#
+			</isNotNull>
+			<isNull property="csugUpdateTime" prepend=",">
+				cs_unit_group$suffix$.csug_update_time = null
+			</isNull>				
+			<isNotNull property="csugAddTime" prepend=",">
+				cs_unit_group$suffix$.csug_add_time = #csugAddTime#
+			</isNotNull>
+			<isNull property="csugAddTime" prepend=",">
+				cs_unit_group$suffix$.csug_add_time = null
+			</isNull>				
+			<isNotNull property="csugStatus" prepend=",">
+				cs_unit_group$suffix$.csug_status = #csugStatus#
+			</isNotNull>
+			<isNull property="csugStatus" prepend=",">
+				cs_unit_group$suffix$.csug_status = null
+			</isNull>				
+		where
+			csug_id=#csugId#
+	</update>
+	
+	<!-- 更新分组信息非空字段 -->
+	<update id="updateCsUnitGroup$NotNull"  parameterClass="com.ccclubs.model.CsUnitGroup">
+		update cs_unit_group$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csugHost" prepend=",">
+				cs_unit_group$suffix$.csug_host = #csugHost#
+			</isNotNull>		
+			<isNotNull property="csugInfo" prepend=",">
+				cs_unit_group$suffix$.csug_info = #csugInfo#
+			</isNotNull>		
+			<isNotNull property="csugName" prepend=",">
+				cs_unit_group$suffix$.csug_name = #csugName#
+			</isNotNull>		
+			<isNotNull property="csugPerson" prepend=",">
+				cs_unit_group$suffix$.csug_person = #csugPerson#
+			</isNotNull>		
+			<isNotNull property="csugRemark" prepend=",">
+				cs_unit_group$suffix$.csug_remark = #csugRemark#
+			</isNotNull>		
+			<isNotNull property="csugMemo" prepend=",">
+				cs_unit_group$suffix$.csug_memo = #csugMemo#
+			</isNotNull>		
+			<isNotNull property="csugData" prepend=",">
+				cs_unit_group$suffix$.csug_data = #csugData#
+			</isNotNull>		
+			<isNotNull property="csugUpdateTime" prepend=",">
+				cs_unit_group$suffix$.csug_update_time = #csugUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csugAddTime" prepend=",">
+				cs_unit_group$suffix$.csug_add_time = #csugAddTime#
+			</isNotNull>		
+			<isNotNull property="csugStatus" prepend=",">
+				cs_unit_group$suffix$.csug_status = #csugStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csug_id=#csugId#
+	</update>
+	
+
+	<!-- 根据ID删除一个分组信息 -->
+	<delete id="deleteCsUnitGroupById" parameterClass="java.util.HashMap">
+		delete from cs_unit_group$suffix$ where csug_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个分组信息 -->
+	<update id="removeCsUnitGroupById" parameterClass="java.util.HashMap">
+		update cs_unit_group$suffix$ set  cs_unit_group$suffix$.csug_status=-1  where csug_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新分组信息 -->
+	<update id="updateCsUnitGroupBy"  parameterClass="java.util.HashMap">
+		update cs_unit_group$suffix$ set		
+			csug_id=csug_id
+			<isNotNull property="V_csugId" prepend=",">
+				cs_unit_group$suffix$.csug_id = #V_csugId#
+			</isNotNull>		
+			<isNotNull property="V_csugHost" prepend=",">
+				cs_unit_group$suffix$.csug_host = #V_csugHost#
+			</isNotNull>		
+			<isNotNull property="V_csugInfo" prepend=",">
+				cs_unit_group$suffix$.csug_info = #V_csugInfo#
+			</isNotNull>		
+			<isNotNull property="V_csugName" prepend=",">
+				cs_unit_group$suffix$.csug_name = #V_csugName#
+			</isNotNull>		
+			<isNotNull property="V_csugPerson" prepend=",">
+				cs_unit_group$suffix$.csug_person = #V_csugPerson#
+			</isNotNull>		
+			<isNotNull property="V_csugRemark" prepend=",">
+				cs_unit_group$suffix$.csug_remark = #V_csugRemark#
+			</isNotNull>		
+			<isNotNull property="V_csugMemo" prepend=",">
+				cs_unit_group$suffix$.csug_memo = #V_csugMemo#
+			</isNotNull>		
+			<isNotNull property="V_csugData" prepend=",">
+				cs_unit_group$suffix$.csug_data = #V_csugData#
+			</isNotNull>		
+			<isNotNull property="V_csugUpdateTime" prepend=",">
+				cs_unit_group$suffix$.csug_update_time = #V_csugUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csugAddTime" prepend=",">
+				cs_unit_group$suffix$.csug_add_time = #V_csugAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csugStatus" prepend=",">
+				cs_unit_group$suffix$.csug_status = #V_csugStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[企业信息]查询-->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.csug_info=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_group$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_unit_group$suffix$.csug_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[企业信息]查询条件sql片段 -->
+		<isNotNull property="CsugInfo"><!-- 调用一下CsugInfo，把CsUnitInfo指向CsugInfo --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitGroup_part.cs_unit_group_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除分组信息 -->
+	<update id="deleteCsUnitGroupBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_group$suffix$ where 
+		cs_unit_group$suffix$.csug_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitGroup_part.cs_unit_group_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>订单详情</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content" style="padding-bottom: 50px;">
+			<ul class="table-view padding-less confirm">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						订单编号 ${csOrder.csoId}
+					</div>
+					<s:if test="#request.csOrder.csoStatus==4||#request.csOrder.csoStatus==3">
+						<s:if test="#request.payStatus==0">
+							<span class="badge ccc-desc-label red">未付款</span>
+						</s:if>
+						<s:elseif test="#request.payStatus==1">
+							<s:if test="#request.csOrder.csoStatus==4">
+								<span class="badge ccc-desc-label blue">已完成</span>
+							</s:if>
+							<s:elseif test="#request.csOrder.csoStatus==3">
+								<span class="badge ccc-desc-label blue">已取消</span>
+							</s:elseif>
+						</s:elseif>
+					</s:if>
+					<s:elseif test="#request.csOrder.csoStatus==7">
+						<span class="badge ccc-desc-label" style="background-color: #ABB2B9;color: #fff;">已作废</span>
+					</s:elseif>
+					<s:else>
+						<span class="badge ccc-desc-label blue">${csOrder.csoStatus==0?"已预定":""} ${csOrder.csoStatus==1?"正在执行":""} ${csOrder.csoStatus==2?"已还车":""}
+							${csOrder.csoStatus==3?"已取消":""}${csOrder.csoStatus==4?"已完成":""} ${csOrder.csoStatus==5?"待处理":""} ${csOrder.csoStatus==6?"已退款":""}</span>
+					</s:else>
+				</li>
+				<li class="table-view-cell media min-dur">
+					<div class="media-body"></div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						车型
+					</div>
+					<div class="badge">${csOrder.$csoModel.cscmName}<span class="text-split"></span>${csOrder.$csoCar.cscCarNo}</div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						取车网点
+					</div>
+					<span class="badge">${csOrder.$csoOutlets.csoName}</span>
+				</li>
+				<s:if test="#request.csOrder.$csoOutletsRet.csoName!=null">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						还车网点
+					</div>
+					<span class="badge">${csOrder.$csoOutletsRet.csoName}</span>
+				</li>
+				</s:if>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						预计取车时间
+					</div>
+					<span class="badge">${lz:date(csOrder.csoStartTime,"yyyy年MM月dd日 HH:mm")}</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						预计还车时间
+					</div>
+					<span class="badge">${lz:date(csOrder.csoFinishTime,"yyyy年MM月dd日 HH:mm")}</span>
+				</li>
+				<s:if test="#request.csOrder.csoTakeTime!=null">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						实际取车时间
+					</div>
+					<span class="badge">${lz:date(csOrder.csoTakeTime,"yyyy年MM月dd日 HH:mm")}</span>
+				</li>
+				</s:if>
+				<s:if test="#request.csOrder.csoRetTime!=null">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						实际还车时间
+					</div>
+					<span class="badge">${lz:date(csOrder.csoRetTime,"yyyy年MM月dd日 HH:mm")}</span>
+				</li>
+				</s:if>
+				<s:if test="#request.csOrder.csoStatus==4">
+					<li class="table-view-cell media">
+						<div class="media-body">
+							租金
+						</div>
+						<span class="badge">${lz:digit(csOrder.csoPayRent,2)}元</span>
+					</li>
+					<li class="table-view-cell media">
+						<div class="media-body">
+							<s:if test="#request.csOrder.csoStatus==4||#requset.csOrder.csoStatus==7">
+								里程费[实际]
+							</s:if>
+							<s:else>
+								里程费[预估]
+							</s:else>
+						</div>
+						<span class="badge">${lz:digit((csOrder.csoPayMileage + csOrder.csoPayKilom),2)}元</span>
+					</li><s:if test="#request.csOrder.csoPayInsure!=0">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								免责费
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayInsure,2)}元</span>
+						</li>
+					</s:if>
+					<s:if test="#request.csOrder.csoPayTimeout!=0">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								超时费用
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayTimeout,2)}元</span>
+						</li>
+					</s:if>
+					<li class="table-view-cell media min-dur">
+						<div class="media-body"></div>
+					</li>
+					<s:if test="#request.payStatus==0">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								应付金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayNeed,2)}元</span>
+						</li>
+					</ul>
+					<nav class="bar bar-tab bar-recharge">
+						<a class="tab-item" href="###" onclick="pay()"><span class="tab-label">付款</span></a>
+					</nav>
+					</s:if>
+					<s:elseif test="#request.payStatus==1">
+						<li class="table-view-cell media">
+							<div class="media-body">应付金额</div>
+							<span class="badge">${lz:digit(csOrder.csoPayNeed,2)}元</span>
+						</li>
+					</ul>
+					</s:elseif>
+				</s:if>
+				<s:else>
+					<s:if test="#request.csOrder.csoStatus==3">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								应付金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayReal,2)}元</span>
+						</li>
+					</s:if>
+					<s:else>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								应付金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayNeed,2)}元</span>
+						</li>
+					</s:else>
+				</s:else>
+				
+				<s:if test="#request.csOrder.csoStatus==3">
+					<s:if test="#request.payStatus==0">
+					</ul>
+					<nav class="bar bar-tab bar-recharge">
+						<a class="tab-item" href="###" onclick="pay()"><span class="tab-label">付款</span></a>
+					</nav>
+					</s:if>
+					<s:elseif test="#request.payStatus==1">
+						<li class="table-view-cell media">
+							<div class="media-body">手续费</div>
+							<span class="badge">${lz:digit(csOrder.csoPayReal,2)}元</span>
+						</li>
+					</ul>
+					</s:elseif>
+				</s:if>
+				<s:elseif test="#request.csOrder.csoStatus==0">
+					<s:if test="#request.csOrder.csoCreditCard==null||#request.csOrder.csoCreditCard==''">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								冻结金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayNeed+csOrder.csoPayInsure+csOrder.csoMarginNeed,2)}元</span>
+						</li>
+					</ul>
+					</s:if>
+					<s:else>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								使用免押金金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayNeed+csOrder.csoPayInsure+csOrder.csoMarginNeed,2)}元</span>
+						</li>
+					</ul>
+					</s:else>
+					<li class="table-view-cell media">
+						<div class="media-body">
+							授权码
+						</div>
+						<span class="badge">${csOrder.csoCode}</span>
+					</li>
+					<nav class="bar bar-tab bar-recharge">
+					<a class="tab-item" href="###" onclick="cancelconfirm(${csOrder.csoId});"> <span class="tab-label">取消订单</span> </a>
+					<a class="tab-item split" href="order_reorder.html?orderid=${csOrder.csoId}"> <span class="tab-label">续订</span> </a>
+					<a class="tab-item split" href="###" onclick="searchcar()"> <span class="tab-label">寻车</span> </a>
+					<a class="tab-item split" href="order_operate.html?orderid=${csOrder.csoId}"> <span class="tab-label">用车</span> </a>
+					</nav>
+				</s:elseif>
+				<s:elseif test="#request.csOrder.csoStatus==1">
+					<s:if test="#request.csOrder.csoCreditCard==null||#request.csOrder.csoCreditCard==''">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								冻结金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayRent+csOrder.csoPayMileage+csOrder.csoPayKilom+csOrder.csoPayInsure,2)}元</span>
+						</li>
+					</ul>
+					</s:if>
+					<s:else>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								使用免押金金额
+							</div>
+							<span class="badge">${lz:digit(csOrder.csoPayRent+csOrder.csoPayMileage+csOrder.csoPayKilom+csOrder.csoPayInsure,2)}元</span>
+						</li>
+					</ul>
+					</s:else>
+					<nav class="bar bar-tab bar-recharge">
+					<!-- <a class="tab-item" href="###"> <span class="tab-label">提前还车</span></a> -->
+					<a class="tab-item split" href="order_reorder.html?orderid=${csOrder.csoId}"><span class="tab-label">续订</span></a>
+					<a class="tab-item split" href="###" onclick="searchcar()"><span class="tab-label">寻车</span></a>
+					<a class="tab-item split" href="order_operate.html?orderid=${csOrder.csoId}"><span class="tab-label">用车</span></a>
+					</nav>
+				</s:elseif>
+				<s:elseif test="#request.csOrder.csoStatus==5||#request.csOrder.csoStatus==7">
+					</ul>
+				</s:elseif>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function pay(){
+			location.href="${basePath}weixin/pay/alipayapi.jsp?WIDout_trade_no=${csOrder.csoId}&WIDtotal_fee=${mustPay}";
+		}
+		function cancelconfirm(orderid){
+			$.ajax({
+				type: 'get',
+        		url: 'order_cancelconfirm.html',
+        		data:{
+        			orderid:orderid
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			if(data.state){
+        				if(confirm(data.message)){
+							cancel(orderid);
+						}
+        				return;
+        			}else{
+        				Toast.show(data.message);
+                        return;
+        			}
+        		},
+        		error: function(xhr, type){
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		}
+		function cancel(orderid){
+			$.ajax({
+				type: 'get',
+        		url: 'order_cancel.html',
+        		data:{
+        			orderid:orderid
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			if(data.state){
+        				location.href = 'order.html';
+        				return;
+        			}else{
+        				Toast.show(data.message);
+                        return;
+        			}
+        		},
+        		error: function(xhr, type){
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		}
+		
+		function searchcar(){
+			var dest = '${csOrder.$csoOutlets.csoLongitude},${csOrder.$csoOutlets.csoLatitude}';
+			var destname = '${csOrder.$csoOutlets.csoName}';
+			location.href = "http://m.amap.com/navi/?dest="+dest+"&destName="+destname+"&key=82580560262998be89e2bc7d535f5b5d";
+		}
+		</script>
+	</body>
+
+</html>

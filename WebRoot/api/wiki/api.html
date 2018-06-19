@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>车纷享 - 开放平台</title>
+		<link rel="stylesheet" href="${basePath}api/css/style.css" type="text/css" />
+		<script type="text/javascript" src="${basePath}api/js/jquery-1.7.1.min.js"></script>
+	</head>
+	<body>
+		<%@ include file="/api/header.html"%>
+		
+		<div id="bd">
+		
+			<div class="div">
+				<div class="title">
+					<span>API</span>
+					<span>${sort.spName}</span>
+					<span>${srvApi.saName}</span>
+				</div>
+			</div>
+		
+			<div class="div">
+				<div class="catalog">
+					<s:if test="#request.types!=null">
+						<s:iterator value="#request.types" id="item" status="i">
+							<p><a class="${type==item.spId?"on":""}" href="${basePath}api/wiki/api.html?type=${item.spId}">${item.spName}</a></p>
+						</s:iterator>
+					</s:if>
+					
+					<s:if test="#request.list!=null && #request.srvApi!=null">
+						<a href="${basePath}api/wiki/api.html?type=${srvApi.saType}">
+				    		返回<strong>API列表</strong>
+				    	</a>
+						<s:iterator value="#request.list" id="item" status="i">
+						<p>
+					    	<a class="${srvApi.saId==item.saId?"on":""}" href="${basePath}api/wiki/api.html?api=${item.saId}">
+					    		${item.saName}<br/>${item.saNamespace}
+					    		<s></s>
+					    	</a>
+					    </p>
+						</s:iterator>
+					</s:if>
+					
+					
+				</div>
+				
+				<div class="artcile">
+					
+					
+					<s:if test="#request.list!=null && #request.srvApi==null">
+						<table class="table" width="100%" border="0" cellspacing="0" cellpadding="0">
+						  <tr>
+						    <th width="200" scope="col">API名称</th>
+						    <th scope="col">名字空间</th>
+						  </tr>
+						  <s:iterator value="#request.list" id="item" status="i">
+						  <tr>
+						    <td>
+						    	<a href="${basePath}api/wiki/api.html?api=${item.saId}">${item.saName}</a>
+						    </td>
+						    <td>
+						    	<a href="${basePath}api/wiki/api.html?api=${item.saId}">${item.saNamespace}</a>
+						    </td>
+						  </tr>
+						  </s:iterator>
+						</table>
+					</s:if>
+					<s:elseif test="#request.srvApi!=null">
+					
+						<div class="caption">${srvApi.saNamespace} - ${srvApi.saName}</div>
+						<div class="api-sub-title">
+							<a href="#saOauth">API用户授权类型</a>
+							<a href="#saParams">应用参数</a>
+							<a href="#saReturnStruct">返回结果</a>
+							<a href="#saReturnFormat">返回示例</a>
+							<a href="#saError">错误码</a>
+							<a href="#apiTool">API工具</a>
+						</div>
+						<div class="api-desc">
+							${srvApi.saDescript}
+						</div>
+						<br/>
+						
+						
+						
+						
+						<div id="saOauth" class="head-title">
+							<s></s>用户授权
+						</div>
+						<div style="padding:10px;border:1px solid #D4E2F1;">
+							${srvApi.saOauth==1?"需要授权":"无需授权"}
+						</div>
+						
+						
+						<div id="saParams" class="head-title">
+							<s></s>应用参数
+						</div>
+						<table class="table" width="100%" border="0" cellspacing="0" cellpadding="0">
+						  <tr>
+						    <th scope="col">名称</th>
+						    <th scope="col">描述</th>
+						    <th scope="col">类型</th>
+						    <th scope="col">是否必须</th>
+						    <th scope="col">默认值</th>
+						  </tr>
+						  ${lz:set("params",lz:eval(srvApi.saParams))}
+						  <s:iterator value="#request.params" id="item" status="i">
+						  <tr>
+						    <td>${item.name}</td>
+						    <td>${item.title}</td>
+						    <td>${item.type}</td>
+						    <td>${item.notnull}</td>
+						    <td>${item.defaultValue}</td>
+						  </tr>
+						  </s:iterator>
+						</table>
+						
+						
+						<div id="saReturnStruct" class="head-title">
+							<s></s>返回结构
+						</div>
+						<table id="saReturnStruct" class="table" width="100%" border="0" cellspacing="0" cellpadding="0">
+						  <thead>
+							  <tr>
+							    <td width="160">名称</td>
+							    <td scope="col">描述</th>
+							    <td width="140">类型</td>
+							  </tr>
+						  </thead>
+						  <tbody></tbody>
+						</table>
+						
+						
+						<div id="saReturnFormat" class="head-title">
+							<s></s>返回示例
+						</div>
+						<div style='overflow:hidden;'>
+							<textarea id="formatExample" style="width:810px;height:250px;border:1px solid #D4E2F1;"></textarea>
+						</div>
+						
+						<div id="saError" class="head-title">
+							<s></s>错误代码
+						</div>
+						<table class="table" width="100%" border="0" cellspacing="0" cellpadding="0">
+						  <tr>
+						    <th width="300" scope="col">错误代码</th>
+						    <th scope="col">描述</th>
+						  </tr>
+						  ${lz:set("errors",lz:eval(srvApi.saError))}
+						  <s:iterator value="#request.errors" id="item" status="i">
+						  <tr>
+						    <td>${item.code}</td>
+						    <td>${item.title}</td>
+						  </tr>
+						  </s:iterator>
+						</table>
+						
+						
+						
+						
+						<div id="apiTool" class="head-title">
+							<s></s>API工具
+						</div>
+						<div style="padding:10px;border:1px solid #D4E2F1;">
+							<button onclick="window.location='${basePath}api/wiki/tools.html?api=${srvApi.saId}'" class="button" type="button">API工具在线测试</button>
+						</div>
+						
+						
+					
+					</s:elseif>
+					<s:else>
+						
+						
+					
+						<div style="margin:0px 20px;">
+							<h1>API列表</h1>
+							<ul>
+								<s:iterator value="#request.types" id="item" status="i">
+								<li style="padding:10px 0px;border-bottom:1px dashed #eeeeee;">
+									<h3><a class="${type==item.spId?"on":""}" href="${basePath}api/wiki/api.html?type=${item.spId}">${item.spName}</a></h3>
+									<p>${item.spText}</p>
+								</li>
+								</s:iterator>
+							</ul>
+						</div>
+					
+					</s:else>
+				
+				</div>
+				
+			</div>
+		
+		</div>
+		
+		<script>
+		<s:if test="#request.srvApi!=null">
+		function getExample(type){
+			if(type=="Boolean")
+				return true;
+			if(type=="String")
+				return "\"字符串\"";
+			return 123;
+		}
+		function getFormat(type,struct,step){
+			//空白符
+			var blankcode = "";
+			for(var i=0;i<step;i++)
+				blankcode+="	";
+			var code="";
+			if(type=="0"){
+				code+="[";
+			}
+			code+="{\r\n";
+			var bMap = false;
+			for(var o in struct){
+				code+=bMap?"":("	"+blankcode);
+				code+=(o>0?",":"");
+				if(struct[o].type=="Map"){
+					bMap = true;
+					code+="\""+struct[o].name+"\":"+getFormat("1",struct[o].define,step+1);
+				}else if(struct[o].type=="List"){
+					bMap = true;
+					code+="\""+struct[o].name+"\":"+getFormat("0",struct[o].define,step+1);
+				}else{
+					bMap = false;
+					code+="\""+struct[o].name+"\":"+getExample(struct[o].type);
+					code+="\r\n";
+				}
+			}
+			code+=blankcode+"}";
+			if(type=="0"){
+				code+="]\r\n";
+			}
+			return code;
+		}
+		function getReturnStruct(type,struct,step,parentid){
+			//空白符
+			var blankcode = "";
+			var b = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			for(var i=0;i<step;i++)
+				blankcode+=b;
+			var html="";
+			var bMap = false;
+			for(var o in struct){
+				var id = parentid+(parentid==""?"":"-")+struct[o].name;
+				html+="<tr id='"+id+"' parent='"+parentid+"' style='"+(step>0?"display:none;":"")+"'>";
+				var childHtml = "";
+				if(struct[o].type=="Map"){
+					bMap = true;
+					html+="<td>"+blankcode+"<a class='deploy' href='javascript:void(0);'><span class='ico'>+</span>"+struct[o].name+"</a></td>";
+					html+="<td>"+struct[o].title+"</td>";
+					html+="<td>"+struct[o].type+"</td>";
+					childHtml+=getReturnStruct("Map",struct[o].define,step+1,id);
+				}else if(struct[o].type=="List"){
+					bMap = true;
+					html+="<td>"+blankcode+"<a class='deploy' href='javascript:void(0);'><span class='ico'>+</span>"+struct[o].name+"</a></td>";
+					html+="<td>"+struct[o].title+"</td>";
+					html+="<td>"+struct[o].type+"</td>";
+					childHtml+=getReturnStruct("List",struct[o].define,step+1,id);
+				}else{
+					bMap = false;
+					html+="<td>"+blankcode+b+struct[o].name+"</td>";
+					html+="<td>"+struct[o].title+"</td>";
+					html+="<td>"+struct[o].type+"</td>";
+				}
+				html+="<tr>";
+				html+=childHtml;
+			}
+			return html;
+		}
+		$(function(){
+			if($("#formatExample").size()>0){
+				var formatCode = getFormat(${lz:indexOf(lz:trim(srvApi.saReturnFormat),"[")==0?"0":"1"},${srvApi.saReturnStruct},0);						
+				$("#formatExample").html(formatCode);
+				var returnStruct = getReturnStruct(${lz:indexOf(lz:trim(srvApi.saReturnFormat),"[")==0?"0":"1"},${srvApi.saReturnStruct},0,"");
+				$("#saReturnStruct tbody").html(returnStruct);
+			}
+			$(".deploy").click(function(){
+				if($(this).find("span").text()=="+"){
+					$("#saReturnStruct tbody tr[parent='"+$(this).parents("tr:eq(0)").attr("id")+"']").show();
+					$(this).find("span").text("-");
+				}else{
+					$("#saReturnStruct tbody tr[parent^='"+$(this).parents("tr:eq(0)").attr("id")+"']").each(function(){
+						$(this).find("span").text("+");
+					}).hide();
+					$(this).find("span").text("+");
+				}
+			});
+		});
+		</s:if>
+		</script>
+		
+		
+		<%@ include file="/api/footer.html"%>
+		
+	</body>
+</html>

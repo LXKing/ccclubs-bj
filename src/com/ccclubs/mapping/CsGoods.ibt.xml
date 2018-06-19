@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 商品之SQL映射 -->
+	<resultMap id="CsGoods" class="com.ccclubs.model.CsGoods">
+		<result property="csgId" column="csg_id"/>
+		<result property="csgName" column="csg_name"/>
+		<result property="csgProduct" column="csg_product"/>
+		<result property="csgUserType" column="csg_user_type"/>
+		<result property="csgRule" column="csg_rule"/>
+		<result property="csgProfile" column="csg_profile"/>
+		<result property="csgUpdateTime" column="csg_update_time"/>
+		<result property="csgAddTime" column="csg_add_time"/>
+		<result property="csgStatus" column="csg_status"/>
+	</resultMap>
+		
+	<!-- 获取所有商品 -->
+	<select id="getCsGoodsList" resultMap="CsGoods">
+		select cs_goods$suffix$.* from cs_goods$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[产品]查询-->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.csg_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询-->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.csg_user_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询-->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.csg_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_goods$suffix$.csg_status!=-1
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGoods_part.cs_goods_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csg_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取商品分页 -->
+	<select id="getCsGoodsPage" parameterClass="java.util.HashMap" resultMap="CsGoods">
+		select cs_goods$suffix$.* from cs_goods$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[产品]查询 -->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.csg_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询 -->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.csg_user_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询 -->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.csg_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_goods$suffix$.csg_status!=-1
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGoods_part.cs_goods_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csg_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取商品总数 -->
+	<select id="getCsGoodsEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_goods$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[产品]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.csg_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.csg_user_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.csg_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_goods$suffix$.csg_status!=-1
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGoods_part.cs_goods_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取商品 -->
+	<select id="getCsGoodsById" parameterClass="java.util.HashMap" resultMap="CsGoods">
+		select cs_goods$suffix$.* from cs_goods$suffix$
+		where csg_id=#id#
+	</select>
+	
+		
+	<!-- 保存商品 -->
+	<insert id="saveCsGoods"  parameterClass="com.ccclubs.model.CsGoods">
+		insert into cs_goods$suffix$
+		(
+			cs_goods$suffix$.csg_name
+			,cs_goods$suffix$.csg_product
+			,cs_goods$suffix$.csg_user_type
+			,cs_goods$suffix$.csg_rule
+			,cs_goods$suffix$.csg_profile
+			,cs_goods$suffix$.csg_update_time
+			,cs_goods$suffix$.csg_add_time
+			,cs_goods$suffix$.csg_status
+		)
+		values(
+			<isNotNull property="csgName" prepend="">
+				#csgName#
+			</isNotNull>
+			<isNull property="csgName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csgProduct" prepend=",">
+				#csgProduct#
+			</isNotNull>
+			<isNull property="csgProduct" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgUserType" prepend=",">
+				#csgUserType#
+			</isNotNull>
+			<isNull property="csgUserType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgRule" prepend=",">
+				#csgRule#
+			</isNotNull>
+			<isNull property="csgRule" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgProfile" prepend=",">
+				#csgProfile#
+			</isNotNull>
+			<isNull property="csgProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgUpdateTime" prepend=",">
+				#csgUpdateTime#
+			</isNotNull>
+			<isNull property="csgUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgAddTime" prepend=",">
+				#csgAddTime#
+			</isNotNull>
+			<isNull property="csgAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgStatus" prepend=",">
+				#csgStatus#
+			</isNotNull>
+			<isNull property="csgStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新商品 -->
+	<update id="updateCsGoods"  parameterClass="com.ccclubs.model.CsGoods">
+		update cs_goods$suffix$ set
+			<isNotNull property="csgName" prepend="">
+				cs_goods$suffix$.csg_name = #csgName#
+			</isNotNull>
+			<isNull property="csgName" prepend="">
+				cs_goods$suffix$.csg_name = null
+			</isNull>				
+			<isNotNull property="csgProduct" prepend=",">
+				cs_goods$suffix$.csg_product = #csgProduct#
+			</isNotNull>
+			<isNull property="csgProduct" prepend=",">
+				cs_goods$suffix$.csg_product = null
+			</isNull>				
+			<isNotNull property="csgUserType" prepend=",">
+				cs_goods$suffix$.csg_user_type = #csgUserType#
+			</isNotNull>
+			<isNull property="csgUserType" prepend=",">
+				cs_goods$suffix$.csg_user_type = null
+			</isNull>				
+			<isNotNull property="csgRule" prepend=",">
+				cs_goods$suffix$.csg_rule = #csgRule#
+			</isNotNull>
+			<isNull property="csgRule" prepend=",">
+				cs_goods$suffix$.csg_rule = null
+			</isNull>				
+			<isNotNull property="csgProfile" prepend=",">
+				cs_goods$suffix$.csg_profile = #csgProfile#
+			</isNotNull>
+			<isNull property="csgProfile" prepend=",">
+				cs_goods$suffix$.csg_profile = null
+			</isNull>				
+			<isNotNull property="csgUpdateTime" prepend=",">
+				cs_goods$suffix$.csg_update_time = #csgUpdateTime#
+			</isNotNull>
+			<isNull property="csgUpdateTime" prepend=",">
+				cs_goods$suffix$.csg_update_time = null
+			</isNull>				
+			<isNotNull property="csgAddTime" prepend=",">
+				cs_goods$suffix$.csg_add_time = #csgAddTime#
+			</isNotNull>
+			<isNull property="csgAddTime" prepend=",">
+				cs_goods$suffix$.csg_add_time = null
+			</isNull>				
+			<isNotNull property="csgStatus" prepend=",">
+				cs_goods$suffix$.csg_status = #csgStatus#
+			</isNotNull>
+			<isNull property="csgStatus" prepend=",">
+				cs_goods$suffix$.csg_status = null
+			</isNull>				
+		where
+			csg_id=#csgId#
+	</update>
+	
+	<!-- 更新商品非空字段 -->
+	<update id="updateCsGoods$NotNull"  parameterClass="com.ccclubs.model.CsGoods">
+		update cs_goods$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csgName" prepend=",">
+				cs_goods$suffix$.csg_name = #csgName#
+			</isNotNull>		
+			<isNotNull property="csgProduct" prepend=",">
+				cs_goods$suffix$.csg_product = #csgProduct#
+			</isNotNull>		
+			<isNotNull property="csgUserType" prepend=",">
+				cs_goods$suffix$.csg_user_type = #csgUserType#
+			</isNotNull>		
+			<isNotNull property="csgRule" prepend=",">
+				cs_goods$suffix$.csg_rule = #csgRule#
+			</isNotNull>		
+			<isNotNull property="csgProfile" prepend=",">
+				cs_goods$suffix$.csg_profile = #csgProfile#
+			</isNotNull>		
+			<isNotNull property="csgUpdateTime" prepend=",">
+				cs_goods$suffix$.csg_update_time = #csgUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csgAddTime" prepend=",">
+				cs_goods$suffix$.csg_add_time = #csgAddTime#
+			</isNotNull>		
+			<isNotNull property="csgStatus" prepend=",">
+				cs_goods$suffix$.csg_status = #csgStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csg_id=#csgId#
+	</update>
+	
+
+	<!-- 根据ID删除一个商品 -->
+	<delete id="deleteCsGoodsById" parameterClass="java.util.HashMap">
+		delete from cs_goods$suffix$ where csg_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个商品 -->
+	<update id="removeCsGoodsById" parameterClass="java.util.HashMap">
+		update cs_goods$suffix$ set  cs_goods$suffix$.csg_status=-1  where csg_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新商品 -->
+	<update id="updateCsGoodsBy"  parameterClass="java.util.HashMap">
+		update cs_goods$suffix$ set		
+			csg_id=csg_id
+			<isNotNull property="V_csgId" prepend=",">
+				cs_goods$suffix$.csg_id = #V_csgId#
+			</isNotNull>		
+			<isNotNull property="V_csgName" prepend=",">
+				cs_goods$suffix$.csg_name = #V_csgName#
+			</isNotNull>		
+			<isNotNull property="V_csgProduct" prepend=",">
+				cs_goods$suffix$.csg_product = #V_csgProduct#
+			</isNotNull>		
+			<isNotNull property="V_csgUserType" prepend=",">
+				cs_goods$suffix$.csg_user_type = #V_csgUserType#
+			</isNotNull>		
+			<isNotNull property="V_csgRule" prepend=",">
+				cs_goods$suffix$.csg_rule = #V_csgRule#
+			</isNotNull>		
+			<isNotNull property="V_csgProfile" prepend=",">
+				cs_goods$suffix$.csg_profile = #V_csgProfile#
+			</isNotNull>		
+			<isNotNull property="V_csgUpdateTime" prepend=",">
+				cs_goods$suffix$.csg_update_time = #V_csgUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csgAddTime" prepend=",">
+				cs_goods$suffix$.csg_add_time = #V_csgAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csgStatus" prepend=",">
+				cs_goods$suffix$.csg_status = #V_csgStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[产品]查询-->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.csg_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_goods$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询-->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.csg_user_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_goods$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询-->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.csg_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_goods$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_goods$suffix$.csg_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsgProduct"><!-- 调用一下CsgProduct，把CsProduct指向CsgProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsgUserType"><!-- 调用一下CsgUserType，把CsUserType指向CsgUserType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsgRule"><!-- 调用一下CsgRule，把CsRule指向CsgRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsGoods_part.cs_goods_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除商品 -->
+	<update id="deleteCsGoodsBy"  parameterClass="java.util.HashMap">
+		delete from cs_goods$suffix$ where 
+		cs_goods$suffix$.csg_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsGoods_part.cs_goods_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsOrderLog_part">	
+	<!-- 订单操作记录条件sql片段  -->
+	<sql id="cs_order_log_dynamic">
+		<dynamic>
+			<isNotEmpty property="csolId" prepend="and">
+			    $csolIdNot$ cs_order_log$suffix$.csol_id = #csolId#
+			</isNotEmpty>
+			<isNotNull property="csolIdNot" prepend="and">
+				<isEmpty property="csolId">
+				$csolIdNot$ cs_order_log$suffix$.csol_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolTitle" prepend="and">			    
+			    (<isNotNull property="csolTitleNot">
+			    cs_order_log$suffix$.csol_title is null or length(cs_order_log$suffix$.csol_title) &lt; 1 or
+			    </isNotNull>$csolTitleNot$ cs_order_log$suffix$.csol_title like #csolTitle#)
+			</isNotEmpty>
+			<isNotNull property="csolTitleNot" prepend="and">
+				<isEmpty property="csolTitle">
+				$csolTitleNot$ (cs_order_log$suffix$.csol_title is null or length(cs_order_log$suffix$.csol_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolOrder" prepend="and">
+			    $csolOrderNot$ cs_order_log$suffix$.csol_order = #csolOrder#
+			</isNotEmpty>
+			<isNotNull property="csolOrderNot" prepend="and">
+				<isEmpty property="csolOrder">
+				$csolOrderNot$ cs_order_log$suffix$.csol_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolEditor" prepend="and">
+			    $csolEditorNot$ cs_order_log$suffix$.csol_editor = #csolEditor#
+			</isNotEmpty>
+			<isNotNull property="csolEditorNot" prepend="and">
+				<isEmpty property="csolEditor">
+				$csolEditorNot$ cs_order_log$suffix$.csol_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolMember" prepend="and">
+			    $csolMemberNot$ cs_order_log$suffix$.csol_member = #csolMember#
+			</isNotEmpty>
+			<isNotNull property="csolMemberNot" prepend="and">
+				<isEmpty property="csolMember">
+				$csolMemberNot$ cs_order_log$suffix$.csol_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolFrom" prepend="and">
+			    $csolFromNot$ cs_order_log$suffix$.csol_from = #csolFrom#
+			</isNotEmpty>
+			<isNotNull property="csolFromNot" prepend="and">
+				<isEmpty property="csolFrom">
+				$csolFromNot$ cs_order_log$suffix$.csol_from is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolSrc" prepend="and">
+			    $csolSrcNot$ cs_order_log$suffix$.csol_src = #csolSrc#
+			</isNotEmpty>
+			<isNotNull property="csolSrcNot" prepend="and">
+				<isEmpty property="csolSrc">
+				$csolSrcNot$ cs_order_log$suffix$.csol_src is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolRemark" prepend="and">			    
+			    (<isNotNull property="csolRemarkNot">
+			    cs_order_log$suffix$.csol_remark is null or length(cs_order_log$suffix$.csol_remark) &lt; 1 or
+			    </isNotNull>$csolRemarkNot$ cs_order_log$suffix$.csol_remark like #csolRemark#)
+			</isNotEmpty>
+			<isNotNull property="csolRemarkNot" prepend="and">
+				<isEmpty property="csolRemark">
+				$csolRemarkNot$ (cs_order_log$suffix$.csol_remark is null or length(cs_order_log$suffix$.csol_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csolAddTimeStart" prepend="and">
+			    $csolAddTimeNot$   (cs_order_log$suffix$.csol_add_time &gt;= #csolAddTimeStart#
+			   <isEmpty property="csolAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csolAddTimeEnd" prepend="and">
+				<isEmpty property="csolAddTimeStart">$csolAddTimeNot$   (</isEmpty>
+			    cs_order_log$suffix$.csol_add_time &lt;= #csolAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csolAddTime" prepend="and">
+			    $csolAddTimeNot$ cs_order_log$suffix$.csol_add_time = #csolAddTime#
+			</isNotEmpty>
+			<isNotNull property="csolAddTimeNot" prepend="and">
+				<isEmpty property="csolAddTimeStart"><isEmpty property="csolAddTimeEnd"><isEmpty property="csolAddTime">
+				$csolAddTimeNot$ cs_order_log$suffix$.csol_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 订单操作记录left join 条件sql片段 -->
+	<sql id="cs_order_log_join">
+		<dynamic>
+			<isNotEmpty property="CsOrderLog.csolId" prepend="and">
+			    $CsOrderLog.csolIdNot$ cs_order_log$CsOrderLog.suffix$.csol_id = #CsOrderLog.csolId#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolIdNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolId">
+				$csolIdNot$ cs_order_log$CsOrderLog.suffix$.csol_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolTitle" prepend="and">
+				(<isNotNull property="CsOrderLog.csolTitleNot">
+			    cs_order_log$CsOrderLog.suffix$.csol_title is null or length(cs_order_log$CsOrderLog.suffix$.csol_title) &lt; 1 or
+			    </isNotNull>$CsOrderLog.csolTitleNot$ cs_order_log$CsOrderLog.suffix$.csol_title like #CsOrderLog.csolTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolTitleNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolTitle">
+				$csolTitleNot$ (cs_order_log$CsOrderLog.suffix$.csol_title is null or length(cs_order_log$CsOrderLog.suffix$.csol_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolOrder" prepend="and">
+			    $CsOrderLog.csolOrderNot$ cs_order_log$CsOrderLog.suffix$.csol_order = #CsOrderLog.csolOrder#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolOrderNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolOrder">
+				$csolOrderNot$ cs_order_log$CsOrderLog.suffix$.csol_order is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolEditor" prepend="and">
+			    $CsOrderLog.csolEditorNot$ cs_order_log$CsOrderLog.suffix$.csol_editor = #CsOrderLog.csolEditor#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolEditorNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolEditor">
+				$csolEditorNot$ cs_order_log$CsOrderLog.suffix$.csol_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolMember" prepend="and">
+			    $CsOrderLog.csolMemberNot$ cs_order_log$CsOrderLog.suffix$.csol_member = #CsOrderLog.csolMember#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolMemberNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolMember">
+				$csolMemberNot$ cs_order_log$CsOrderLog.suffix$.csol_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolFrom" prepend="and">
+			    $CsOrderLog.csolFromNot$ cs_order_log$CsOrderLog.suffix$.csol_from = #CsOrderLog.csolFrom#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolFromNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolFrom">
+				$csolFromNot$ cs_order_log$CsOrderLog.suffix$.csol_from is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolSrc" prepend="and">
+			    $CsOrderLog.csolSrcNot$ cs_order_log$CsOrderLog.suffix$.csol_src = #CsOrderLog.csolSrc#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolSrcNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolSrc">
+				$csolSrcNot$ cs_order_log$CsOrderLog.suffix$.csol_src is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolRemark" prepend="and">
+				(<isNotNull property="CsOrderLog.csolRemarkNot">
+			    cs_order_log$CsOrderLog.suffix$.csol_remark is null or length(cs_order_log$CsOrderLog.suffix$.csol_remark) &lt; 1 or
+			    </isNotNull>$CsOrderLog.csolRemarkNot$ cs_order_log$CsOrderLog.suffix$.csol_remark like #CsOrderLog.csolRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolRemarkNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolRemark">
+				$csolRemarkNot$ (cs_order_log$CsOrderLog.suffix$.csol_remark is null or length(cs_order_log$CsOrderLog.suffix$.csol_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsOrderLog.csolAddTimeStart" prepend="and">
+			    $CsOrderLog.csolAddTimeNot$   (cs_order_log$CsOrderLog.suffix$.csol_add_time &gt;= #CsOrderLog.csolAddTimeStart#
+			   <isEmpty property="CsOrderLog.csolAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderLog.csolAddTimeEnd" prepend="and">
+				<isEmpty property="CsOrderLog.csolAddTimeStart">$CsOrderLog.csolAddTimeNot$   (</isEmpty>
+			    cs_order_log$CsOrderLog.suffix$.csol_add_time &lt;= #CsOrderLog.csolAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsOrderLog.csolAddTime" prepend="and">
+			    $CsOrderLog.csolAddTimeNot$ cs_order_log$CsOrderLog.suffix$.csol_add_time = #CsOrderLog.csolAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsOrderLog.csolAddTimeNot" prepend="and">
+				<isEmpty property="CsOrderLog.csolAddTimeStart"><isEmpty property="CsOrderLog.csolAddTimeEnd"><isEmpty property="CsOrderLog.csolAddTime">
+				$csolAddTimeNot$ cs_order_log$CsOrderLog.suffix$.csol_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

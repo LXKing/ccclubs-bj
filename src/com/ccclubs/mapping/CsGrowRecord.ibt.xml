@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 成长记录之SQL映射 -->
+	<resultMap id="CsGrowRecord" class="com.ccclubs.model.CsGrowRecord">
+		<result property="csgrId" column="csgr_id"/>
+		<result property="csgrHost" column="csgr_host"/>
+		<result property="csgrMember" column="csgr_member"/>
+		<result property="csgrDesc" column="csgr_desc"/>
+		<result property="csgrType" column="csgr_type"/>
+		<result property="csgrAmount" column="csgr_amount"/>
+		<result property="csgrRelate" column="csgr_relate"/>
+		<result property="csgrUpdateTime" column="csgr_update_time"/>
+		<result property="csgrAddTime" column="csgr_add_time"/>
+		<result property="csgrStatus" column="csgr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有成长记录 -->
+	<select id="getCsGrowRecordList" resultMap="CsGrowRecord">
+		select cs_grow_record$suffix$.* from cs_grow_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.csgr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_grow_record$suffix$.csgr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGrowRecord_part.cs_grow_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csgr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取成长记录分页 -->
+	<select id="getCsGrowRecordPage" parameterClass="java.util.HashMap" resultMap="CsGrowRecord">
+		select cs_grow_record$suffix$.* from cs_grow_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.csgr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_grow_record$suffix$.csgr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGrowRecord_part.cs_grow_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csgr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取成长记录总数 -->
+	<select id="getCsGrowRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_grow_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.csgr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_grow_record$suffix$.csgr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsGrowRecord_part.cs_grow_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取成长记录 -->
+	<select id="getCsGrowRecordById" parameterClass="java.util.HashMap" resultMap="CsGrowRecord">
+		select cs_grow_record$suffix$.* from cs_grow_record$suffix$
+		where csgr_id=#id#
+	</select>
+	
+		
+	<!-- 保存成长记录 -->
+	<insert id="saveCsGrowRecord"  parameterClass="com.ccclubs.model.CsGrowRecord">
+		insert into cs_grow_record$suffix$
+		(
+			cs_grow_record$suffix$.csgr_host
+			,cs_grow_record$suffix$.csgr_member
+			,cs_grow_record$suffix$.csgr_desc
+			,cs_grow_record$suffix$.csgr_type
+			,cs_grow_record$suffix$.csgr_amount
+			,cs_grow_record$suffix$.csgr_relate
+			,cs_grow_record$suffix$.csgr_update_time
+			,cs_grow_record$suffix$.csgr_add_time
+			,cs_grow_record$suffix$.csgr_status
+		)
+		values(
+			<isNotNull property="csgrHost" prepend="">
+				#csgrHost#
+			</isNotNull>
+			<isNull property="csgrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csgrMember" prepend=",">
+				#csgrMember#
+			</isNotNull>
+			<isNull property="csgrMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrDesc" prepend=",">
+				#csgrDesc#
+			</isNotNull>
+			<isNull property="csgrDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrType" prepend=",">
+				#csgrType#
+			</isNotNull>
+			<isNull property="csgrType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrAmount" prepend=",">
+				#csgrAmount#
+			</isNotNull>
+			<isNull property="csgrAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrRelate" prepend=",">
+				#csgrRelate#
+			</isNotNull>
+			<isNull property="csgrRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrUpdateTime" prepend=",">
+				#csgrUpdateTime#
+			</isNotNull>
+			<isNull property="csgrUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrAddTime" prepend=",">
+				#csgrAddTime#
+			</isNotNull>
+			<isNull property="csgrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csgrStatus" prepend=",">
+				#csgrStatus#
+			</isNotNull>
+			<isNull property="csgrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新成长记录 -->
+	<update id="updateCsGrowRecord"  parameterClass="com.ccclubs.model.CsGrowRecord">
+		update cs_grow_record$suffix$ set
+			<isNotNull property="csgrHost" prepend="">
+				cs_grow_record$suffix$.csgr_host = #csgrHost#
+			</isNotNull>
+			<isNull property="csgrHost" prepend="">
+				cs_grow_record$suffix$.csgr_host = null
+			</isNull>				
+			<isNotNull property="csgrMember" prepend=",">
+				cs_grow_record$suffix$.csgr_member = #csgrMember#
+			</isNotNull>
+			<isNull property="csgrMember" prepend=",">
+				cs_grow_record$suffix$.csgr_member = null
+			</isNull>				
+			<isNotNull property="csgrDesc" prepend=",">
+				cs_grow_record$suffix$.csgr_desc = #csgrDesc#
+			</isNotNull>
+			<isNull property="csgrDesc" prepend=",">
+				cs_grow_record$suffix$.csgr_desc = null
+			</isNull>				
+			<isNotNull property="csgrType" prepend=",">
+				cs_grow_record$suffix$.csgr_type = #csgrType#
+			</isNotNull>
+			<isNull property="csgrType" prepend=",">
+				cs_grow_record$suffix$.csgr_type = null
+			</isNull>				
+			<isNotNull property="csgrAmount" prepend=",">
+				cs_grow_record$suffix$.csgr_amount = #csgrAmount#
+			</isNotNull>
+			<isNull property="csgrAmount" prepend=",">
+				cs_grow_record$suffix$.csgr_amount = null
+			</isNull>				
+			<isNotNull property="csgrRelate" prepend=",">
+				cs_grow_record$suffix$.csgr_relate = #csgrRelate#
+			</isNotNull>
+			<isNull property="csgrRelate" prepend=",">
+				cs_grow_record$suffix$.csgr_relate = null
+			</isNull>				
+			<isNotNull property="csgrUpdateTime" prepend=",">
+				cs_grow_record$suffix$.csgr_update_time = #csgrUpdateTime#
+			</isNotNull>
+			<isNull property="csgrUpdateTime" prepend=",">
+				cs_grow_record$suffix$.csgr_update_time = null
+			</isNull>				
+			<isNotNull property="csgrAddTime" prepend=",">
+				cs_grow_record$suffix$.csgr_add_time = #csgrAddTime#
+			</isNotNull>
+			<isNull property="csgrAddTime" prepend=",">
+				cs_grow_record$suffix$.csgr_add_time = null
+			</isNull>				
+			<isNotNull property="csgrStatus" prepend=",">
+				cs_grow_record$suffix$.csgr_status = #csgrStatus#
+			</isNotNull>
+			<isNull property="csgrStatus" prepend=",">
+				cs_grow_record$suffix$.csgr_status = null
+			</isNull>				
+		where
+			csgr_id=#csgrId#
+	</update>
+	
+	<!-- 更新成长记录非空字段 -->
+	<update id="updateCsGrowRecord$NotNull"  parameterClass="com.ccclubs.model.CsGrowRecord">
+		update cs_grow_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csgrHost" prepend=",">
+				cs_grow_record$suffix$.csgr_host = #csgrHost#
+			</isNotNull>		
+			<isNotNull property="csgrMember" prepend=",">
+				cs_grow_record$suffix$.csgr_member = #csgrMember#
+			</isNotNull>		
+			<isNotNull property="csgrDesc" prepend=",">
+				cs_grow_record$suffix$.csgr_desc = #csgrDesc#
+			</isNotNull>		
+			<isNotNull property="csgrType" prepend=",">
+				cs_grow_record$suffix$.csgr_type = #csgrType#
+			</isNotNull>		
+			<isNotNull property="csgrAmount" prepend=",">
+				cs_grow_record$suffix$.csgr_amount = #csgrAmount#
+			</isNotNull>		
+			<isNotNull property="csgrRelate" prepend=",">
+				cs_grow_record$suffix$.csgr_relate = #csgrRelate#
+			</isNotNull>		
+			<isNotNull property="csgrUpdateTime" prepend=",">
+				cs_grow_record$suffix$.csgr_update_time = #csgrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csgrAddTime" prepend=",">
+				cs_grow_record$suffix$.csgr_add_time = #csgrAddTime#
+			</isNotNull>		
+			<isNotNull property="csgrStatus" prepend=",">
+				cs_grow_record$suffix$.csgr_status = #csgrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csgr_id=#csgrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个成长记录 -->
+	<delete id="deleteCsGrowRecordById" parameterClass="java.util.HashMap">
+		delete from cs_grow_record$suffix$ where csgr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个成长记录 -->
+	<update id="removeCsGrowRecordById" parameterClass="java.util.HashMap">
+		update cs_grow_record$suffix$ set  cs_grow_record$suffix$.csgr_status=-1  where csgr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新成长记录 -->
+	<update id="updateCsGrowRecordBy"  parameterClass="java.util.HashMap">
+		update cs_grow_record$suffix$ set		
+			csgr_id=csgr_id
+			<isNotNull property="V_csgrId" prepend=",">
+				cs_grow_record$suffix$.csgr_id = #V_csgrId#
+			</isNotNull>		
+			<isNotNull property="V_csgrHost" prepend=",">
+				cs_grow_record$suffix$.csgr_host = #V_csgrHost#
+			</isNotNull>		
+			<isNotNull property="V_csgrMember" prepend=",">
+				cs_grow_record$suffix$.csgr_member = #V_csgrMember#
+			</isNotNull>		
+			<isNotNull property="V_csgrDesc" prepend=",">
+				cs_grow_record$suffix$.csgr_desc = #V_csgrDesc#
+			</isNotNull>		
+			<isNotNull property="V_csgrType" prepend=",">
+				cs_grow_record$suffix$.csgr_type = #V_csgrType#
+			</isNotNull>		
+			<isNotNull property="V_csgrAmount" prepend=",">
+				cs_grow_record$suffix$.csgr_amount = #V_csgrAmount#
+			</isNotNull>		
+			<isNotNull property="V_csgrRelate" prepend=",">
+				cs_grow_record$suffix$.csgr_relate = #V_csgrRelate#
+			</isNotNull>		
+			<isNotNull property="V_csgrUpdateTime" prepend=",">
+				cs_grow_record$suffix$.csgr_update_time = #V_csgrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csgrAddTime" prepend=",">
+				cs_grow_record$suffix$.csgr_add_time = #V_csgrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csgrStatus" prepend=",">
+				cs_grow_record$suffix$.csgr_status = #V_csgrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.csgr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_grow_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_grow_record$suffix$.csgr_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsgrMember"><!-- 调用一下CsgrMember，把CsMember指向CsgrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsGrowRecord_part.cs_grow_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除成长记录 -->
+	<update id="deleteCsGrowRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_grow_record$suffix$ where 
+		cs_grow_record$suffix$.csgr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsGrowRecord_part.cs_grow_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

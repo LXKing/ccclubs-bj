@@ -1,0 +1,134 @@
+﻿<div id="ccc-selecter">
+	<div class="ccc-car-thumb">
+		<img src="/images/cars/${csCarModel.cscmId}_wide.jpg" />
+		<span class="ccc-thumb-shadow"></span>
+		<div class="ccc-car-model" title="车型：${csCarModel.cscmName}">
+			${csCarModel.cscmName}
+			<em></em>
+		</div>
+		<div class="ccc-car-pl" title="网点：${csOutlets.csoName}">
+			${csOutlets.csoName}
+			<em></em>
+		</div>
+	</div>
+	<div class="ccc-order-sel ccc-clearfix">
+		<div class="ccc-order-sel-item">
+			<label for="time1">
+				取车时间
+			</label>
+			<div class="ccc-time-sel-item">
+				<input type="text" placeholder="取车时间" readonly id="start" class="ccc-input ccc-font-lato ccc-time-picker" />
+				<em></em>
+			</div>
+		</div>
+		<div class="ccc-order-sel-item ccc-item-right">
+			<label for="time2">
+				还车时间
+			</label>
+			<div class="ccc-time-sel-item">
+				<input type="text" placeholder="还车时间" readonly id="finish" class="ccc-input ccc-font-lato ccc-time-picker" />
+				<em></em>
+			</div>
+		</div>
+		<div class="ccc-order-sel-item">
+			<label for="nonRes">
+				千元免赔
+			</label>
+			<div class="ccc-time-sel-item">
+				<select id="nonResSel" style="width: 150px">
+					<s:iterator value="#request.insureTypes" id="item" status="i">
+						<option value="${item.cspId}">
+							<s:if test="#i.modulus(2) == 1">
+									按小时购买
+								</s:if>
+								<s:else>按公里购买</s:else>
+						</option>
+					</s:iterator>
+					<option value="0">
+						不购买
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="ccc-order-sel-item ccc-item-right">
+			<label for="time2">
+				行程公里
+			</label>
+			<div class="ccc-time-sel-item">
+				<input type="text" placeholder="请输入行驶里程数" id="mileage" class="ccc-input ccc-font-lato" />
+			</div>
+		</div>
+	</div>
+	<button class="ccc-go-simulate" onclick="submit()"></button>
+</div>
+<script type="text/javascript">
+		$(document).ready(function() {						
+				var timeCur = new Date();
+				var timeCurPlus = new Date();
+					 timeCurPlus.setHours(17);
+					  timeCurPlus.setMinutes(0);
+				var defaultDropTime = new Date();
+						defaultDropTime.setDate(defaultDropTime.getDate()+1);
+						defaultDropTime.setHours(9);
+						defaultDropTime.setMinutes(0);
+				// CCClubs Customization
+				$.timepicker.regional['CCClubs']={
+					minDate: new Date(timeCur.getFullYear(), timeCur.getMonth(), timeCur.getDate(), 0, 0)
+				};
+				$.timepicker.setDefaults($.timepicker.regional['CCClubs']);
+				
+				$('#start').datetimepicker().datetimepicker('setDate', timeCurPlus);
+				$('#finish').datetimepicker().datetimepicker('setDate', defaultDropTime);
+				
+				$('#mileage').on('keydown',function(event) {
+					if (!((event.keyCode>=48 && event.keyCode<=57)||(event.keyCode>=96 && event.keyCode<=105)||(event.keyCode>=37 && event.keyCode<=40)||event.keyCode==8||event.keyCode==46)) {
+						return false;
+					}
+				});
+				$('#nonResSel').select2({
+					placeholder: '选择责任免除',
+					minimumResultsForSearch: -1
+				});
+		});
+		
+		function submit(){
+			var start = $.trim($('#start').val()).replace(' , ',' ');
+			var finish = $.trim($('#finish').val()).replace(' , ',' ');
+			if (dateDiff('M', start, finish) <= 0) {
+				showTips("还车时间应该比取车时间晚","error",3);
+				return;
+			}
+			if (dateDiff('H', start, finish) < 1) {
+				showTips("最低1个小时起租","error",3);
+				return;
+			}
+			var insure = $('#nonResSel option:selected').val();
+			if(insure==''){
+				showTips("请选择是否购买千元免赔","error",3);
+				return;
+			}
+			var fuel = $.trim($('#mileage').val());
+			if(fuel==''){
+				showTips("请输入行驶里程数","error",3);
+				return;
+			}
+			
+			var ajax = {
+			url: "/prices_simulate.html?t="+new Date().getTime(),
+			type: "POST",
+			data: {
+				cspModel:${csCarModel.cscmId},
+				cspOutets:${csOutlets.csoId},
+				fuel:fuel,
+				insureType:insure,
+				start: start+":00",
+				finish: finish+":00"
+			},
+				async: true,
+				success: function(data) {
+					$('#ccc-overpage').html(data);
+				}
+			}
+			$.ajax(ajax);
+		}
+	</script>

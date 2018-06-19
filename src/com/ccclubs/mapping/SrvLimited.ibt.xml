@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+	<resultMap id="SrvLimited" class="com.ccclubs.model.SrvLimited">
+		<result property="slId" column="sl_id"/>
+		<result property="slProjectId" column="sl_project_id"/>
+		<result property="slActorId" column="sl_actor_id"/>
+		<result property="slActorType" column="sl_actor_type"/>
+		<result property="slLimit" column="sl_limit"/>
+	</resultMap>
+	
+	<select id="getLimitsByActorId" resultMap="SrvLimited">
+		select * from srv_limited where sl_actor_id=#actorId# and sl_actor_type=#actorType#
+	</select>
+	
+	
+	<select id="getUserLimitedCount" resultClass="java.lang.Long">
+		select count(1) from srv_limited where sl_actor_id=#suId# and sl_actor_type=1
+	</select>
+	<select id="getUserLimited" resultMap="SrvLimited">
+		select * from srv_limited 
+		left join srv_project on sp_id=sl_project_id 
+		where sl_actor_id=#actorId# and sl_actor_type=#actorType# and sp_url like #path# limit 1
+	</select>
+		
+	<delete id="delAllNullLimits">
+		delete from srv_limited where sl_limit=0
+	</delete>
+	
+	<delete id="delLimitedByGroupIds"  parameterClass="java.util.HashMap">
+		delete from srv_limited where sl_actor_type=0 and sl_actor_id in($ids$)
+	</delete>
+	
+	<delete id="delLimitedByUserIds"  parameterClass="java.util.HashMap">
+		delete from srv_limited where sl_actor_type=1 and sl_actor_id in($ids$)
+	</delete>
+	
+	<delete id="delLimitedByProIds"  parameterClass="java.util.HashMap">
+		delete from srv_limited where sl_project_id in($ids$)
+	</delete>
+	
+	<insert id="saveSrvLimited"  parameterClass="com.ccclubs.model.SrvLimited">
+		insert into srv_limited 
+		(sl_project_id,sl_actor_id,sl_actor_type,sl_limit)
+		values(#slProjectId#,#slActorId#,#slActorType#,#slLimit#)
+		<selectKey resultClass="long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>	
+	<update id="updateSrvLimited"  parameterClass="com.ccclubs.model.SrvLimited">
+		update srv_limited set 
+			sl_project_id=#slProjectId#,
+			sl_actor_id=#slActorId#,
+			sl_actor_type=#slActorType#,
+			sl_limit=#slLimit#
+		where
+			sl_id=#slId#
+	</update>
+	
+	<update id="updateLimitByParent"  parameterClass="java.util.HashMap">
+		$sql$
+	</update>
+	
+	<!-- 获取所有权限 -->
+	<select id="getSrvLimitedList" resultMap="SrvLimited">
+		select srv_limited$suffix$.* from srv_limited$suffix$ where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<dynamic>
+			<isNotEmpty property="slId" prepend="and">
+			    $slIdNot$ srv_limited$suffix$.sl_id = #slId#
+			</isNotEmpty>
+			<isNotEmpty property="slIdNot" prepend="and">
+				<isEmpty property="slId">
+				not srv_limited$suffix$.sl_id is null
+				</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="slProjectId" prepend="and">
+			    $slProjectIdNot$ srv_limited$suffix$.sl_project_id = #slProjectId#
+			</isNotEmpty>
+			<isNotEmpty property="slProjectIdNot" prepend="and">
+				<isEmpty property="slProjectId">
+				not srv_limited$suffix$.sl_project_id is null
+				</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="slActorType" prepend="and">
+			    $slActorTypeNot$ srv_limited$suffix$.sl_actor_type = #slActorType#
+			</isNotEmpty>
+			<isNotEmpty property="slActorTypeNot" prepend="and">
+				<isEmpty property="slActorTypeMax"><isEmpty property="slActorTypeMin"><isEmpty property="slActorType">
+				not srv_limited$suffix$.sl_actor_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotEmpty>	
+			<isNotEmpty property="slLimit" prepend="and">
+			    $slLimitNot$ srv_limited$suffix$.sl_limit = #slLimit#
+			</isNotEmpty>
+			<isNotEmpty property="slLimitNot" prepend="and">
+				<isEmpty property="slLimit">
+				not srv_limited$suffix$.sl_limit is null
+				</isEmpty>
+			</isNotEmpty>
+		</dynamic>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sl_id asc
+			</isNull>
+		</isNull>
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+	</select>
+	
+</sqlMap>

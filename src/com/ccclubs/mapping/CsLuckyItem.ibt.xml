@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 抽奖奖项之SQL映射 -->
+	<resultMap id="CsLuckyItem" class="com.ccclubs.model.CsLuckyItem">
+		<result property="csliId" column="csli_id"/>
+		<result property="csliName" column="csli_name"/>
+		<result property="csliLuckyId" column="csli_lucky_id"/>
+		<result property="csliType" column="csli_type"/>
+		<result property="csliIndex" column="csli_index"/>
+		<result property="csliAmount" column="csli_amount"/>
+		<result property="csliCount" column="csli_count"/>
+		<result property="csliRemain" column="csli_remain"/>
+		<result property="csliRatio" column="csli_ratio"/>
+		<result property="csliUpdateTime" column="csli_update_time"/>
+		<result property="csliAddTime" column="csli_add_time"/>
+		<result property="csliStatus" column="csli_status"/>
+	</resultMap>
+		
+	<!-- 获取所有抽奖奖项 -->
+	<select id="getCsLuckyItemList" resultMap="CsLuckyItem">
+		select cs_lucky_item$suffix$.* from cs_lucky_item$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[抽奖活动]查询-->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.csli_lucky_id=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_lucky_item$suffix$.csli_status!=-1
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLuckyItem_part.cs_lucky_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csli_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取抽奖奖项分页 -->
+	<select id="getCsLuckyItemPage" parameterClass="java.util.HashMap" resultMap="CsLuckyItem">
+		select cs_lucky_item$suffix$.* from cs_lucky_item$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[抽奖活动]查询 -->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.csli_lucky_id=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_lucky_item$suffix$.csli_status!=-1
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLuckyItem_part.cs_lucky_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csli_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取抽奖奖项总数 -->
+	<select id="getCsLuckyItemEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_lucky_item$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[抽奖活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.csli_lucky_id=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_lucky_item$suffix$.csli_status!=-1
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLuckyItem_part.cs_lucky_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取抽奖奖项 -->
+	<select id="getCsLuckyItemById" parameterClass="java.util.HashMap" resultMap="CsLuckyItem">
+		select cs_lucky_item$suffix$.* from cs_lucky_item$suffix$
+		where csli_id=#id#
+	</select>
+	
+		
+	<!-- 保存抽奖奖项 -->
+	<insert id="saveCsLuckyItem"  parameterClass="com.ccclubs.model.CsLuckyItem">
+		insert into cs_lucky_item$suffix$
+		(
+			cs_lucky_item$suffix$.csli_name
+			,cs_lucky_item$suffix$.csli_lucky_id
+			,cs_lucky_item$suffix$.csli_type
+			,cs_lucky_item$suffix$.csli_index
+			,cs_lucky_item$suffix$.csli_amount
+			,cs_lucky_item$suffix$.csli_count
+			,cs_lucky_item$suffix$.csli_remain
+			,cs_lucky_item$suffix$.csli_ratio
+			,cs_lucky_item$suffix$.csli_update_time
+			,cs_lucky_item$suffix$.csli_add_time
+			,cs_lucky_item$suffix$.csli_status
+		)
+		values(
+			<isNotNull property="csliName" prepend="">
+				#csliName#
+			</isNotNull>
+			<isNull property="csliName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csliLuckyId" prepend=",">
+				#csliLuckyId#
+			</isNotNull>
+			<isNull property="csliLuckyId" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliType" prepend=",">
+				#csliType#
+			</isNotNull>
+			<isNull property="csliType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliIndex" prepend=",">
+				#csliIndex#
+			</isNotNull>
+			<isNull property="csliIndex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliAmount" prepend=",">
+				#csliAmount#
+			</isNotNull>
+			<isNull property="csliAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliCount" prepend=",">
+				#csliCount#
+			</isNotNull>
+			<isNull property="csliCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliRemain" prepend=",">
+				#csliRemain#
+			</isNotNull>
+			<isNull property="csliRemain" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliRatio" prepend=",">
+				#csliRatio#
+			</isNotNull>
+			<isNull property="csliRatio" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliUpdateTime" prepend=",">
+				#csliUpdateTime#
+			</isNotNull>
+			<isNull property="csliUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliAddTime" prepend=",">
+				#csliAddTime#
+			</isNotNull>
+			<isNull property="csliAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csliStatus" prepend=",">
+				#csliStatus#
+			</isNotNull>
+			<isNull property="csliStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新抽奖奖项 -->
+	<update id="updateCsLuckyItem"  parameterClass="com.ccclubs.model.CsLuckyItem">
+		update cs_lucky_item$suffix$ set
+			<isNotNull property="csliName" prepend="">
+				cs_lucky_item$suffix$.csli_name = #csliName#
+			</isNotNull>
+			<isNull property="csliName" prepend="">
+				cs_lucky_item$suffix$.csli_name = null
+			</isNull>				
+			<isNotNull property="csliLuckyId" prepend=",">
+				cs_lucky_item$suffix$.csli_lucky_id = #csliLuckyId#
+			</isNotNull>
+			<isNull property="csliLuckyId" prepend=",">
+				cs_lucky_item$suffix$.csli_lucky_id = null
+			</isNull>				
+			<isNotNull property="csliType" prepend=",">
+				cs_lucky_item$suffix$.csli_type = #csliType#
+			</isNotNull>
+			<isNull property="csliType" prepend=",">
+				cs_lucky_item$suffix$.csli_type = null
+			</isNull>				
+			<isNotNull property="csliIndex" prepend=",">
+				cs_lucky_item$suffix$.csli_index = #csliIndex#
+			</isNotNull>
+			<isNull property="csliIndex" prepend=",">
+				cs_lucky_item$suffix$.csli_index = null
+			</isNull>				
+			<isNotNull property="csliAmount" prepend=",">
+				cs_lucky_item$suffix$.csli_amount = #csliAmount#
+			</isNotNull>
+			<isNull property="csliAmount" prepend=",">
+				cs_lucky_item$suffix$.csli_amount = null
+			</isNull>				
+			<isNotNull property="csliCount" prepend=",">
+				cs_lucky_item$suffix$.csli_count = #csliCount#
+			</isNotNull>
+			<isNull property="csliCount" prepend=",">
+				cs_lucky_item$suffix$.csli_count = null
+			</isNull>				
+			<isNotNull property="csliRemain" prepend=",">
+				cs_lucky_item$suffix$.csli_remain = #csliRemain#
+			</isNotNull>
+			<isNull property="csliRemain" prepend=",">
+				cs_lucky_item$suffix$.csli_remain = null
+			</isNull>				
+			<isNotNull property="csliRatio" prepend=",">
+				cs_lucky_item$suffix$.csli_ratio = #csliRatio#
+			</isNotNull>
+			<isNull property="csliRatio" prepend=",">
+				cs_lucky_item$suffix$.csli_ratio = null
+			</isNull>				
+			<isNotNull property="csliUpdateTime" prepend=",">
+				cs_lucky_item$suffix$.csli_update_time = #csliUpdateTime#
+			</isNotNull>
+			<isNull property="csliUpdateTime" prepend=",">
+				cs_lucky_item$suffix$.csli_update_time = null
+			</isNull>				
+			<isNotNull property="csliAddTime" prepend=",">
+				cs_lucky_item$suffix$.csli_add_time = #csliAddTime#
+			</isNotNull>
+			<isNull property="csliAddTime" prepend=",">
+				cs_lucky_item$suffix$.csli_add_time = null
+			</isNull>				
+			<isNotNull property="csliStatus" prepend=",">
+				cs_lucky_item$suffix$.csli_status = #csliStatus#
+			</isNotNull>
+			<isNull property="csliStatus" prepend=",">
+				cs_lucky_item$suffix$.csli_status = null
+			</isNull>				
+		where
+			csli_id=#csliId#
+	</update>
+	
+	<!-- 更新抽奖奖项非空字段 -->
+	<update id="updateCsLuckyItem$NotNull"  parameterClass="com.ccclubs.model.CsLuckyItem">
+		update cs_lucky_item$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csliName" prepend=",">
+				cs_lucky_item$suffix$.csli_name = #csliName#
+			</isNotNull>		
+			<isNotNull property="csliLuckyId" prepend=",">
+				cs_lucky_item$suffix$.csli_lucky_id = #csliLuckyId#
+			</isNotNull>		
+			<isNotNull property="csliType" prepend=",">
+				cs_lucky_item$suffix$.csli_type = #csliType#
+			</isNotNull>		
+			<isNotNull property="csliIndex" prepend=",">
+				cs_lucky_item$suffix$.csli_index = #csliIndex#
+			</isNotNull>		
+			<isNotNull property="csliAmount" prepend=",">
+				cs_lucky_item$suffix$.csli_amount = #csliAmount#
+			</isNotNull>		
+			<isNotNull property="csliCount" prepend=",">
+				cs_lucky_item$suffix$.csli_count = #csliCount#
+			</isNotNull>		
+			<isNotNull property="csliRemain" prepend=",">
+				cs_lucky_item$suffix$.csli_remain = #csliRemain#
+			</isNotNull>		
+			<isNotNull property="csliRatio" prepend=",">
+				cs_lucky_item$suffix$.csli_ratio = #csliRatio#
+			</isNotNull>		
+			<isNotNull property="csliUpdateTime" prepend=",">
+				cs_lucky_item$suffix$.csli_update_time = #csliUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csliAddTime" prepend=",">
+				cs_lucky_item$suffix$.csli_add_time = #csliAddTime#
+			</isNotNull>		
+			<isNotNull property="csliStatus" prepend=",">
+				cs_lucky_item$suffix$.csli_status = #csliStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csli_id=#csliId#
+	</update>
+	
+
+	<!-- 根据ID删除一个抽奖奖项 -->
+	<delete id="deleteCsLuckyItemById" parameterClass="java.util.HashMap">
+		delete from cs_lucky_item$suffix$ where csli_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个抽奖奖项 -->
+	<update id="removeCsLuckyItemById" parameterClass="java.util.HashMap">
+		update cs_lucky_item$suffix$ set  cs_lucky_item$suffix$.csli_status=-1  where csli_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新抽奖奖项 -->
+	<update id="updateCsLuckyItemBy"  parameterClass="java.util.HashMap">
+		update cs_lucky_item$suffix$ set		
+			csli_id=csli_id
+			<isNotNull property="V_csliId" prepend=",">
+				cs_lucky_item$suffix$.csli_id = #V_csliId#
+			</isNotNull>		
+			<isNotNull property="V_csliName" prepend=",">
+				cs_lucky_item$suffix$.csli_name = #V_csliName#
+			</isNotNull>		
+			<isNotNull property="V_csliLuckyId" prepend=",">
+				cs_lucky_item$suffix$.csli_lucky_id = #V_csliLuckyId#
+			</isNotNull>		
+			<isNotNull property="V_csliType" prepend=",">
+				cs_lucky_item$suffix$.csli_type = #V_csliType#
+			</isNotNull>		
+			<isNotNull property="V_csliIndex" prepend=",">
+				cs_lucky_item$suffix$.csli_index = #V_csliIndex#
+			</isNotNull>		
+			<isNotNull property="V_csliAmount" prepend=",">
+				cs_lucky_item$suffix$.csli_amount = #V_csliAmount#
+			</isNotNull>		
+			<isNotNull property="V_csliCount" prepend=",">
+				cs_lucky_item$suffix$.csli_count = #V_csliCount#
+			</isNotNull>		
+			<isNotNull property="V_csliRemain" prepend=",">
+				cs_lucky_item$suffix$.csli_remain = #V_csliRemain#
+			</isNotNull>		
+			<isNotNull property="V_csliRatio" prepend=",">
+				cs_lucky_item$suffix$.csli_ratio = #V_csliRatio#
+			</isNotNull>		
+			<isNotNull property="V_csliUpdateTime" prepend=",">
+				cs_lucky_item$suffix$.csli_update_time = #V_csliUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csliAddTime" prepend=",">
+				cs_lucky_item$suffix$.csli_add_time = #V_csliAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csliStatus" prepend=",">
+				cs_lucky_item$suffix$.csli_status = #V_csliStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[抽奖活动]查询-->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.csli_lucky_id=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_item$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_lucky_item$suffix$.csli_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CsliLuckyId"><!-- 调用一下CsliLuckyId，把CsLucky指向CsliLuckyId --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLuckyItem_part.cs_lucky_item_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除抽奖奖项 -->
+	<update id="deleteCsLuckyItemBy"  parameterClass="java.util.HashMap">
+		delete from cs_lucky_item$suffix$ where 
+		cs_lucky_item$suffix$.csli_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLuckyItem_part.cs_lucky_item_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢struts的Action框架 -->
+<struts>
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<constant name="struts.action.extension" value="do"></constant>
+	<constant name="struts.multipart.maxSize" value="-1"></constant>
+	
+	<package name="api.root" extends="struts-default" namespace="/">
+		<action name="invoke" method="execute" class="apiInvokeAction"></action>
+		<action name="oauth.*" method="{1}" class="apiOauthAction">
+			<result name="index">/api/oauth.html</result>
+			<result name="register">/api/oauth.register.html</result>
+			<result name="success">/api/oauth.success.html</result>
+		</action>
+	</package>
+	
+	
+	<package name="open.root" extends="struts-default" namespace="/api">
+		<!-- 开放平台首页 -->
+		<action name="index" method="execute" class="apiIndexAction">
+			<result name="index">/api/index.html</result>
+		</action>
+	</package>
+	
+	<package name="api.root.wiki" extends="struts-default" namespace="/api/wiki">
+		<!-- 开放平台首页 -->
+		<action name="**" method="{1}" class="apiWikiAction">
+			<result name="{1}">/api/wiki/{1}.html</result>
+		</action>
+	</package>
+	
+	<package name="api.root.storage" extends="struts-default" namespace="/api/storage">
+		<!-- 大数据接口 -->
+		<action name="**" method="{1}" class="storageAction">
+		</action>
+		
+		<!-- 大数据授权接口 -->
+		<action name="oauth" method="execute" class="dataOauthAction">
+		</action>
+		
+		<!-- 第三方调用  -->
+		<action name="gateway" method="execute" class="gatewayAction">
+		</action>
+		
+		<!-- 第三方调用  -->
+		<action name="codeValue" method="codeValue" class="gatewayAction">
+		</action>
+	</package>
+	
+</struts>

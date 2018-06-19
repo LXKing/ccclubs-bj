@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 意见反馈之SQL映射 -->
+	<resultMap id="CsComplain" class="com.ccclubs.model.CsComplain">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscHost" column="csc_host"/>
+		<result property="cscTitle" column="csc_title"/>
+		<result property="cscContent" column="csc_content"/>
+		<result property="cscType" column="csc_type"/>
+		<result property="cscMember" column="csc_member"/>
+		<result property="cscDispose" column="csc_dispose"/>
+		<result property="cscDealer" column="csc_dealer"/>
+		<result property="cscUpdateTime" column="csc_update_time"/>
+		<result property="cscAddTime" column="csc_add_time"/>
+		<result property="cscAccept" column="csc_accept"/>
+		<result property="cscStatus" column="csc_status"/>
+		<result property="cscSource" column="csc_source"/>
+		<result property="cscObject" column="csc_object"/>
+		<result property="cscLevel" column="csc_level"/>
+		<result property="cscLevel1" column="csc_level1"/>
+	</resultMap>
+		
+	<!-- 获取所有意见反馈 -->
+	<select id="getCsComplainList" resultMap="CsComplain">
+		select cs_complain$suffix$.* from cs_complain$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[反馈人]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_complain$suffix$.csc_status!=-1
+		<!-- 多对一外链接[反馈人]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsComplain_part.cs_complain_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取意见反馈分页 -->
+	<select id="getCsComplainPage" parameterClass="java.util.HashMap" resultMap="CsComplain">
+		select cs_complain$suffix$.* from cs_complain$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[反馈人]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_complain$suffix$.csc_status!=-1
+		<!-- 多对一外链接[反馈人]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsComplain_part.cs_complain_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取意见反馈总数 -->
+	<select id="getCsComplainEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_complain$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[反馈人]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_complain$suffix$.csc_status!=-1
+		<!-- 多对一外链接[反馈人]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsComplain_part.cs_complain_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取意见反馈 -->
+	<select id="getCsComplainById" parameterClass="java.util.HashMap" resultMap="CsComplain">
+		select cs_complain$suffix$.* from cs_complain$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存意见反馈 -->
+	<insert id="saveCsComplain"  parameterClass="com.ccclubs.model.CsComplain">
+		insert into cs_complain$suffix$
+		(
+			cs_complain$suffix$.csc_host
+			,cs_complain$suffix$.csc_title
+			,cs_complain$suffix$.csc_content
+			,cs_complain$suffix$.csc_type
+			,cs_complain$suffix$.csc_member
+			,cs_complain$suffix$.csc_dispose
+			,cs_complain$suffix$.csc_dealer
+			,cs_complain$suffix$.csc_update_time
+			,cs_complain$suffix$.csc_add_time
+			,cs_complain$suffix$.csc_accept
+			,cs_complain$suffix$.csc_status
+			,cs_complain$suffix$.csc_source
+			,cs_complain$suffix$.csc_object
+			,cs_complain$suffix$.csc_level
+			,cs_complain$suffix$.csc_level1
+		)
+		values(
+			<isNotNull property="cscHost" prepend="">
+				#cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscTitle" prepend=",">
+				#cscTitle#
+			</isNotNull>
+			<isNull property="cscTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscContent" prepend=",">
+				#cscContent#
+			</isNotNull>
+			<isNull property="cscContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscType" prepend=",">
+				#cscType#
+			</isNotNull>
+			<isNull property="cscType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscMember" prepend=",">
+				#cscMember#
+			</isNotNull>
+			<isNull property="cscMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscDispose" prepend=",">
+				#cscDispose#
+			</isNotNull>
+			<isNull property="cscDispose" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscDealer" prepend=",">
+				#cscDealer#
+			</isNotNull>
+			<isNull property="cscDealer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUpdateTime" prepend=",">
+				#cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddTime" prepend=",">
+				#cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAccept" prepend=",">
+				#cscAccept#
+			</isNotNull>
+			<isNull property="cscAccept" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscStatus" prepend=",">
+				#cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscSource" prepend=",">
+				#cscSource#
+			</isNotNull>
+			<isNull property="cscSource" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscObject" prepend=",">
+				#cscObject#
+			</isNotNull>
+			<isNull property="cscObject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscLevel" prepend=",">
+				#cscLevel#
+			</isNotNull>
+			<isNull property="cscLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscLevel1" prepend=",">
+				#cscLevel1#
+			</isNotNull>
+			<isNull property="cscLevel1" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新意见反馈 -->
+	<update id="updateCsComplain"  parameterClass="com.ccclubs.model.CsComplain">
+		update cs_complain$suffix$ set
+			<isNotNull property="cscHost" prepend="">
+				cs_complain$suffix$.csc_host = #cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				cs_complain$suffix$.csc_host = null
+			</isNull>				
+			<isNotNull property="cscTitle" prepend=",">
+				cs_complain$suffix$.csc_title = #cscTitle#
+			</isNotNull>
+			<isNull property="cscTitle" prepend=",">
+				cs_complain$suffix$.csc_title = null
+			</isNull>				
+			<isNotNull property="cscContent" prepend=",">
+				cs_complain$suffix$.csc_content = #cscContent#
+			</isNotNull>
+			<isNull property="cscContent" prepend=",">
+				cs_complain$suffix$.csc_content = null
+			</isNull>				
+			<isNotNull property="cscType" prepend=",">
+				cs_complain$suffix$.csc_type = #cscType#
+			</isNotNull>
+			<isNull property="cscType" prepend=",">
+				cs_complain$suffix$.csc_type = null
+			</isNull>				
+			<isNotNull property="cscMember" prepend=",">
+				cs_complain$suffix$.csc_member = #cscMember#
+			</isNotNull>
+			<isNull property="cscMember" prepend=",">
+				cs_complain$suffix$.csc_member = null
+			</isNull>				
+			<isNotNull property="cscDispose" prepend=",">
+				cs_complain$suffix$.csc_dispose = #cscDispose#
+			</isNotNull>
+			<isNull property="cscDispose" prepend=",">
+				cs_complain$suffix$.csc_dispose = null
+			</isNull>				
+			<isNotNull property="cscDealer" prepend=",">
+				cs_complain$suffix$.csc_dealer = #cscDealer#
+			</isNotNull>
+			<isNull property="cscDealer" prepend=",">
+				cs_complain$suffix$.csc_dealer = null
+			</isNull>				
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_complain$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				cs_complain$suffix$.csc_update_time = null
+			</isNull>				
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_complain$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				cs_complain$suffix$.csc_add_time = null
+			</isNull>				
+			<isNotNull property="cscAccept" prepend=",">
+				cs_complain$suffix$.csc_accept = #cscAccept#
+			</isNotNull>
+			<isNull property="cscAccept" prepend=",">
+				cs_complain$suffix$.csc_accept = null
+			</isNull>				
+			<isNotNull property="cscStatus" prepend=",">
+				cs_complain$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				cs_complain$suffix$.csc_status = null
+			</isNull>				
+			<isNotNull property="cscSource" prepend=",">
+				cs_complain$suffix$.csc_source = #cscSource#
+			</isNotNull>
+			<isNull property="cscSource" prepend=",">
+				cs_complain$suffix$.csc_source = null
+			</isNull>				
+			<isNotNull property="cscObject" prepend=",">
+				cs_complain$suffix$.csc_object = #cscObject#
+			</isNotNull>
+			<isNull property="cscObject" prepend=",">
+				cs_complain$suffix$.csc_object = null
+			</isNull>				
+			<isNotNull property="cscLevel" prepend=",">
+				cs_complain$suffix$.csc_level = #cscLevel#
+			</isNotNull>
+			<isNull property="cscLevel" prepend=",">
+				cs_complain$suffix$.csc_level = null
+			</isNull>				
+			<isNotNull property="cscLevel1" prepend=",">
+				cs_complain$suffix$.csc_level1 = #cscLevel1#
+			</isNotNull>
+			<isNull property="cscLevel1" prepend=",">
+				cs_complain$suffix$.csc_level1 = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新意见反馈非空字段 -->
+	<update id="updateCsComplain$NotNull"  parameterClass="com.ccclubs.model.CsComplain">
+		update cs_complain$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscHost" prepend=",">
+				cs_complain$suffix$.csc_host = #cscHost#
+			</isNotNull>		
+			<isNotNull property="cscTitle" prepend=",">
+				cs_complain$suffix$.csc_title = #cscTitle#
+			</isNotNull>		
+			<isNotNull property="cscContent" prepend=",">
+				cs_complain$suffix$.csc_content = #cscContent#
+			</isNotNull>		
+			<isNotNull property="cscType" prepend=",">
+				cs_complain$suffix$.csc_type = #cscType#
+			</isNotNull>		
+			<isNotNull property="cscMember" prepend=",">
+				cs_complain$suffix$.csc_member = #cscMember#
+			</isNotNull>		
+			<isNotNull property="cscDispose" prepend=",">
+				cs_complain$suffix$.csc_dispose = #cscDispose#
+			</isNotNull>		
+			<isNotNull property="cscDealer" prepend=",">
+				cs_complain$suffix$.csc_dealer = #cscDealer#
+			</isNotNull>		
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_complain$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_complain$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>		
+			<isNotNull property="cscAccept" prepend=",">
+				cs_complain$suffix$.csc_accept = #cscAccept#
+			</isNotNull>		
+			<isNotNull property="cscStatus" prepend=",">
+				cs_complain$suffix$.csc_status = #cscStatus#
+			</isNotNull>		
+			<isNotNull property="cscSource" prepend=",">
+				cs_complain$suffix$.csc_source = #cscSource#
+			</isNotNull>		
+			<isNotNull property="cscObject" prepend=",">
+				cs_complain$suffix$.csc_object = #cscObject#
+			</isNotNull>		
+			<isNotNull property="cscLevel" prepend=",">
+				cs_complain$suffix$.csc_level = #cscLevel#
+			</isNotNull>		
+			<isNotNull property="cscLevel1" prepend=",">
+				cs_complain$suffix$.csc_level1 = #cscLevel1#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个意见反馈 -->
+	<delete id="deleteCsComplainById" parameterClass="java.util.HashMap">
+		delete from cs_complain$suffix$ where csc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个意见反馈 -->
+	<update id="removeCsComplainById" parameterClass="java.util.HashMap">
+		update cs_complain$suffix$ set  cs_complain$suffix$.csc_status=-1  where csc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新意见反馈 -->
+	<update id="updateCsComplainBy"  parameterClass="java.util.HashMap">
+		update cs_complain$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_complain$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscHost" prepend=",">
+				cs_complain$suffix$.csc_host = #V_cscHost#
+			</isNotNull>		
+			<isNotNull property="V_cscTitle" prepend=",">
+				cs_complain$suffix$.csc_title = #V_cscTitle#
+			</isNotNull>		
+			<isNotNull property="V_cscContent" prepend=",">
+				cs_complain$suffix$.csc_content = #V_cscContent#
+			</isNotNull>		
+			<isNotNull property="V_cscType" prepend=",">
+				cs_complain$suffix$.csc_type = #V_cscType#
+			</isNotNull>		
+			<isNotNull property="V_cscMember" prepend=",">
+				cs_complain$suffix$.csc_member = #V_cscMember#
+			</isNotNull>		
+			<isNotNull property="V_cscDispose" prepend=",">
+				cs_complain$suffix$.csc_dispose = #V_cscDispose#
+			</isNotNull>		
+			<isNotNull property="V_cscDealer" prepend=",">
+				cs_complain$suffix$.csc_dealer = #V_cscDealer#
+			</isNotNull>		
+			<isNotNull property="V_cscUpdateTime" prepend=",">
+				cs_complain$suffix$.csc_update_time = #V_cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAddTime" prepend=",">
+				cs_complain$suffix$.csc_add_time = #V_cscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAccept" prepend=",">
+				cs_complain$suffix$.csc_accept = #V_cscAccept#
+			</isNotNull>		
+			<isNotNull property="V_cscStatus" prepend=",">
+				cs_complain$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscSource" prepend=",">
+				cs_complain$suffix$.csc_source = #V_cscSource#
+			</isNotNull>		
+			<isNotNull property="V_cscObject" prepend=",">
+				cs_complain$suffix$.csc_object = #V_cscObject#
+			</isNotNull>		
+			<isNotNull property="V_cscLevel" prepend=",">
+				cs_complain$suffix$.csc_level = #V_cscLevel#
+			</isNotNull>		
+			<isNotNull property="V_cscLevel1" prepend=",">
+				cs_complain$suffix$.csc_level1 = #V_cscLevel1#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[反馈人]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_complain$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_complain$suffix$.csc_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[反馈人]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsComplain_part.cs_complain_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除意见反馈 -->
+	<update id="deleteCsComplainBy"  parameterClass="java.util.HashMap">
+		delete from cs_complain$suffix$ where 
+		cs_complain$suffix$.csc_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsComplain_part.cs_complain_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

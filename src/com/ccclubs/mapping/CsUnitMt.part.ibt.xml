@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUnitMt_part">	
+	<!-- 推送消息条件sql片段  -->
+	<sql id="cs_unit_mt_dynamic">
+		<dynamic>
+			<isNotEmpty property="csumId" prepend="and">
+			    $csumIdNot$ cs_unit_mt$suffix$.csum_id = #csumId#
+			</isNotEmpty>
+			<isNotNull property="csumIdNot" prepend="and">
+				<isEmpty property="csumId">
+				$csumIdNot$ cs_unit_mt$suffix$.csum_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_mt$suffix$.csum_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csumHost" prepend="and">
+			    $csumHostNot$ cs_unit_mt$suffix$.csum_host = #csumHost#
+			</isNotEmpty>
+			<isNotNull property="csumHostNot" prepend="and">
+				<isEmpty property="csumHost">
+				$csumHostNot$ cs_unit_mt$suffix$.csum_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csumInfo" prepend="and">
+			    $csumInfoNot$ cs_unit_mt$suffix$.csum_info = #csumInfo#
+			</isNotEmpty>
+			<isNotNull property="csumInfoNot" prepend="and">
+				<isEmpty property="csumInfo">
+				$csumInfoNot$ cs_unit_mt$suffix$.csum_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumPersonMin" prepend="and">
+			    $csumPersonNot$  ( cs_unit_mt$suffix$.csum_person &gt;= #csumPersonMin#
+			    <isEmpty property="csumPersonMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csumPersonMax" prepend="and">
+				<isEmpty property="csumPersonMin">$csumPersonNot$   (</isEmpty>
+			    cs_unit_mt$suffix$.csum_person &lt;= #csumPersonMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csumPerson" prepend="and">
+			    $csumPersonNot$ cs_unit_mt$suffix$.csum_person = #csumPerson#
+			</isNotEmpty>
+			<isNotNull property="csumPersonNot" prepend="and">
+				<isEmpty property="csumPersonMax"><isEmpty property="csumPersonMin"><isEmpty property="csumPerson">
+				$csumPersonNot$ cs_unit_mt$suffix$.csum_person is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csumTitle" prepend="and">			    
+			    (<isNotNull property="csumTitleNot">
+			    cs_unit_mt$suffix$.csum_title is null or length(cs_unit_mt$suffix$.csum_title) &lt; 1 or
+			    </isNotNull>$csumTitleNot$ cs_unit_mt$suffix$.csum_title like #csumTitle#)
+			</isNotEmpty>
+			<isNotNull property="csumTitleNot" prepend="and">
+				<isEmpty property="csumTitle">
+				$csumTitleNot$ (cs_unit_mt$suffix$.csum_title is null or length(cs_unit_mt$suffix$.csum_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumContent" prepend="and">			    
+			    (<isNotNull property="csumContentNot">
+			    cs_unit_mt$suffix$.csum_content is null or length(cs_unit_mt$suffix$.csum_content) &lt; 1 or
+			    </isNotNull>$csumContentNot$ cs_unit_mt$suffix$.csum_content like #csumContent#)
+			</isNotEmpty>
+			<isNotNull property="csumContentNot" prepend="and">
+				<isEmpty property="csumContent">
+				$csumContentNot$ (cs_unit_mt$suffix$.csum_content is null or length(cs_unit_mt$suffix$.csum_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumTypeMin" prepend="and">
+			    $csumTypeNot$  ( cs_unit_mt$suffix$.csum_type &gt;= #csumTypeMin#
+			    <isEmpty property="csumTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csumTypeMax" prepend="and">
+				<isEmpty property="csumTypeMin">$csumTypeNot$   (</isEmpty>
+			    cs_unit_mt$suffix$.csum_type &lt;= #csumTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csumType" prepend="and">
+			    $csumTypeNot$ cs_unit_mt$suffix$.csum_type = #csumType#
+			</isNotEmpty>
+			<isNotNull property="csumTypeNot" prepend="and">
+				<isEmpty property="csumTypeMax"><isEmpty property="csumTypeMin"><isEmpty property="csumType">
+				$csumTypeNot$ cs_unit_mt$suffix$.csum_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csumData" prepend="and">
+			    $csumDataNot$ cs_unit_mt$suffix$.csum_data = #csumData#
+			</isNotEmpty>
+			<isNotNull property="csumDataNot" prepend="and">
+				<isEmpty property="csumData">
+				$csumDataNot$ cs_unit_mt$suffix$.csum_data is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumReadTimeStart" prepend="and">
+			    $csumReadTimeNot$   (cs_unit_mt$suffix$.csum_read_time &gt;= #csumReadTimeStart#
+			   <isEmpty property="csumReadTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csumReadTimeEnd" prepend="and">
+				<isEmpty property="csumReadTimeStart">$csumReadTimeNot$   (</isEmpty>
+			    cs_unit_mt$suffix$.csum_read_time &lt;= #csumReadTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csumReadTime" prepend="and">
+			    $csumReadTimeNot$ cs_unit_mt$suffix$.csum_read_time = #csumReadTime#
+			</isNotEmpty>
+			<isNotNull property="csumReadTimeNot" prepend="and">
+				<isEmpty property="csumReadTimeStart"><isEmpty property="csumReadTimeEnd"><isEmpty property="csumReadTime">
+				$csumReadTimeNot$ cs_unit_mt$suffix$.csum_read_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumUpdateTimeStart" prepend="and">
+			    $csumUpdateTimeNot$   (cs_unit_mt$suffix$.csum_update_time &gt;= #csumUpdateTimeStart#
+			   <isEmpty property="csumUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csumUpdateTimeEnd" prepend="and">
+				<isEmpty property="csumUpdateTimeStart">$csumUpdateTimeNot$   (</isEmpty>
+			    cs_unit_mt$suffix$.csum_update_time &lt;= #csumUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csumUpdateTime" prepend="and">
+			    $csumUpdateTimeNot$ cs_unit_mt$suffix$.csum_update_time = #csumUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csumUpdateTimeNot" prepend="and">
+				<isEmpty property="csumUpdateTimeStart"><isEmpty property="csumUpdateTimeEnd"><isEmpty property="csumUpdateTime">
+				$csumUpdateTimeNot$ cs_unit_mt$suffix$.csum_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumAddTimeStart" prepend="and">
+			    $csumAddTimeNot$   (cs_unit_mt$suffix$.csum_add_time &gt;= #csumAddTimeStart#
+			   <isEmpty property="csumAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csumAddTimeEnd" prepend="and">
+				<isEmpty property="csumAddTimeStart">$csumAddTimeNot$   (</isEmpty>
+			    cs_unit_mt$suffix$.csum_add_time &lt;= #csumAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csumAddTime" prepend="and">
+			    $csumAddTimeNot$ cs_unit_mt$suffix$.csum_add_time = #csumAddTime#
+			</isNotEmpty>
+			<isNotNull property="csumAddTimeNot" prepend="and">
+				<isEmpty property="csumAddTimeStart"><isEmpty property="csumAddTimeEnd"><isEmpty property="csumAddTime">
+				$csumAddTimeNot$ cs_unit_mt$suffix$.csum_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csumStatus" prepend="and">
+			    $csumStatusNot$ cs_unit_mt$suffix$.csum_status = #csumStatus#
+			</isNotEmpty>
+			<isNotNull property="csumStatusNot" prepend="and">
+				<isEmpty property="csumStatus">
+				$csumStatusNot$ cs_unit_mt$suffix$.csum_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 推送消息left join 条件sql片段 -->
+	<sql id="cs_unit_mt_join">
+		<dynamic>
+			<isNotEmpty property="CsUnitMt.csumId" prepend="and">
+			    $CsUnitMt.csumIdNot$ cs_unit_mt$CsUnitMt.suffix$.csum_id = #CsUnitMt.csumId#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumIdNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumId">
+				$csumIdNot$ cs_unit_mt$CsUnitMt.suffix$.csum_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_mt$CsUnitMt.suffix$.csum_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumHost" prepend="and">
+			    $CsUnitMt.csumHostNot$ cs_unit_mt$CsUnitMt.suffix$.csum_host = #CsUnitMt.csumHost#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumHostNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumHost">
+				$csumHostNot$ cs_unit_mt$CsUnitMt.suffix$.csum_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumInfo" prepend="and">
+			    $CsUnitMt.csumInfoNot$ cs_unit_mt$CsUnitMt.suffix$.csum_info = #CsUnitMt.csumInfo#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumInfoNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumInfo">
+				$csumInfoNot$ cs_unit_mt$CsUnitMt.suffix$.csum_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumPersonMin" prepend="and">
+			    $CsUnitMt.csumPersonNot$  ( cs_unit_mt$CsUnitMt.suffix$.csum_person &gt;= #CsUnitMt.csumPersonMin#
+			    <isEmpty property="CsUnitMt.csumPersonMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumPersonMax" prepend="and">
+				<isEmpty property="CsUnitMt.csumPersonMin">$CsUnitMt.csumPersonNot$   (</isEmpty>
+			    cs_unit_mt$CsUnitMt.suffix$.csum_person &lt;= #CsUnitMt.csumPersonMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumPerson" prepend="and">
+			    $CsUnitMt.csumPersonNot$ cs_unit_mt$CsUnitMt.suffix$.csum_person = #CsUnitMt.csumPerson#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumPersonNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumPersonMax"><isEmpty property="CsUnitMt.csumPersonMin"><isEmpty property="CsUnitMt.csumPerson">
+				$csumPersonNot$ cs_unit_mt$CsUnitMt.suffix$.csum_person is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumTitle" prepend="and">
+				(<isNotNull property="CsUnitMt.csumTitleNot">
+			    cs_unit_mt$CsUnitMt.suffix$.csum_title is null or length(cs_unit_mt$CsUnitMt.suffix$.csum_title) &lt; 1 or
+			    </isNotNull>$CsUnitMt.csumTitleNot$ cs_unit_mt$CsUnitMt.suffix$.csum_title like #CsUnitMt.csumTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumTitleNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumTitle">
+				$csumTitleNot$ (cs_unit_mt$CsUnitMt.suffix$.csum_title is null or length(cs_unit_mt$CsUnitMt.suffix$.csum_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumContent" prepend="and">
+				(<isNotNull property="CsUnitMt.csumContentNot">
+			    cs_unit_mt$CsUnitMt.suffix$.csum_content is null or length(cs_unit_mt$CsUnitMt.suffix$.csum_content) &lt; 1 or
+			    </isNotNull>$CsUnitMt.csumContentNot$ cs_unit_mt$CsUnitMt.suffix$.csum_content like #CsUnitMt.csumContent#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumContentNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumContent">
+				$csumContentNot$ (cs_unit_mt$CsUnitMt.suffix$.csum_content is null or length(cs_unit_mt$CsUnitMt.suffix$.csum_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumTypeMin" prepend="and">
+			    $CsUnitMt.csumTypeNot$  ( cs_unit_mt$CsUnitMt.suffix$.csum_type &gt;= #CsUnitMt.csumTypeMin#
+			    <isEmpty property="CsUnitMt.csumTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumTypeMax" prepend="and">
+				<isEmpty property="CsUnitMt.csumTypeMin">$CsUnitMt.csumTypeNot$   (</isEmpty>
+			    cs_unit_mt$CsUnitMt.suffix$.csum_type &lt;= #CsUnitMt.csumTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumType" prepend="and">
+			    $CsUnitMt.csumTypeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_type = #CsUnitMt.csumType#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumTypeNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumTypeMax"><isEmpty property="CsUnitMt.csumTypeMin"><isEmpty property="CsUnitMt.csumType">
+				$csumTypeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumData" prepend="and">
+			    $CsUnitMt.csumDataNot$ cs_unit_mt$CsUnitMt.suffix$.csum_data = #CsUnitMt.csumData#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumDataNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumData">
+				$csumDataNot$ cs_unit_mt$CsUnitMt.suffix$.csum_data is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumReadTimeStart" prepend="and">
+			    $CsUnitMt.csumReadTimeNot$   (cs_unit_mt$CsUnitMt.suffix$.csum_read_time &gt;= #CsUnitMt.csumReadTimeStart#
+			   <isEmpty property="CsUnitMt.csumReadTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumReadTimeEnd" prepend="and">
+				<isEmpty property="CsUnitMt.csumReadTimeStart">$CsUnitMt.csumReadTimeNot$   (</isEmpty>
+			    cs_unit_mt$CsUnitMt.suffix$.csum_read_time &lt;= #CsUnitMt.csumReadTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumReadTime" prepend="and">
+			    $CsUnitMt.csumReadTimeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_read_time = #CsUnitMt.csumReadTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumReadTimeNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumReadTimeStart"><isEmpty property="CsUnitMt.csumReadTimeEnd"><isEmpty property="CsUnitMt.csumReadTime">
+				$csumReadTimeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_read_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumUpdateTimeStart" prepend="and">
+			    $CsUnitMt.csumUpdateTimeNot$   (cs_unit_mt$CsUnitMt.suffix$.csum_update_time &gt;= #CsUnitMt.csumUpdateTimeStart#
+			   <isEmpty property="CsUnitMt.csumUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsUnitMt.csumUpdateTimeStart">$CsUnitMt.csumUpdateTimeNot$   (</isEmpty>
+			    cs_unit_mt$CsUnitMt.suffix$.csum_update_time &lt;= #CsUnitMt.csumUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumUpdateTime" prepend="and">
+			    $CsUnitMt.csumUpdateTimeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_update_time = #CsUnitMt.csumUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumUpdateTimeNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumUpdateTimeStart"><isEmpty property="CsUnitMt.csumUpdateTimeEnd"><isEmpty property="CsUnitMt.csumUpdateTime">
+				$csumUpdateTimeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumAddTimeStart" prepend="and">
+			    $CsUnitMt.csumAddTimeNot$   (cs_unit_mt$CsUnitMt.suffix$.csum_add_time &gt;= #CsUnitMt.csumAddTimeStart#
+			   <isEmpty property="CsUnitMt.csumAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumAddTimeEnd" prepend="and">
+				<isEmpty property="CsUnitMt.csumAddTimeStart">$CsUnitMt.csumAddTimeNot$   (</isEmpty>
+			    cs_unit_mt$CsUnitMt.suffix$.csum_add_time &lt;= #CsUnitMt.csumAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitMt.csumAddTime" prepend="and">
+			    $CsUnitMt.csumAddTimeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_add_time = #CsUnitMt.csumAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumAddTimeNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumAddTimeStart"><isEmpty property="CsUnitMt.csumAddTimeEnd"><isEmpty property="CsUnitMt.csumAddTime">
+				$csumAddTimeNot$ cs_unit_mt$CsUnitMt.suffix$.csum_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitMt.csumStatus" prepend="and">
+			    $CsUnitMt.csumStatusNot$ cs_unit_mt$CsUnitMt.suffix$.csum_status = #CsUnitMt.csumStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUnitMt.csumStatusNot" prepend="and">
+				<isEmpty property="CsUnitMt.csumStatus">
+				$csumStatusNot$ cs_unit_mt$CsUnitMt.suffix$.csum_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

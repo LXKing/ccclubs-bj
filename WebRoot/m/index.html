@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<!--manifest="ccclubs.manifest"-->
+
+	<head>
+		<meta charset="utf-8">
+		<title>车纷享</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/common.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-home.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content">
+			<ul class="table-view">
+				<li class="table-view-cell media">
+					<a id="ccc-city" class="navigate-right">
+						<span class="media-object pull-left icon-index-city"></span>
+						<div class="media-body">所在城市</div><span class="badge"></span>
+						<div class="table-view-icon"></div>
+					</a>
+				</li>
+			</ul>
+			<ul class="table-view">
+				<li class="table-view-cell-take media">
+					<div class="take-left">
+						<span class="media-object pull-left icon-index-location"></span>
+						<div class="media-body" >定位取车</div>
+					</div>
+					<div class="take-right" id="takegbs">
+						<a id="ccc-location-area">
+							<input class="badge input_textright" id="o_from" name="" type="search" value="" placeholder="您在哪里" onkeyup="hide_lst('o_from')"   onclick="changecheck()"/>
+						</a>
+						<a class="take-text" id="takeswith">
+							点击切换网点选车
+						</a>
+					</div>
+					<div class="take-right take-right-top" id="takedot" style="display: none;padding-top: 10px;">
+						<a class="take-text" id="swith_dot">
+							点击切换GPS选车
+						</a>
+						<a id="ccc-location-area">
+							<input id="areadot" class="badge input_textright" onclick="selectarea()" type="search" readOnly="true" placeholder="点击选择网点" />
+						</a>
+					</div>
+				</li>
+			</ul>
+			<ul id="o_from_lst" class="addr-lst" style="display: none; padding: 0 15px;"></ul>
+			<ul class="table-view">
+				<li class="table-view-cell media">
+					<a id="ccc-start" class="navigate-right">
+						<span class="media-object pull-left icon-index-start"></span>
+						<div class="media-body">取车时间</div><span id="ccc-start-time" data-value='2015-05-08 14:40' class="badge"></span>
+						<div class="table-view-icon"></div>
+					</a>
+				</li>
+				<div class="panel-line"></div>
+				<li class="table-view-cell media">
+					<a id="ccc-finish" class="navigate-right">
+						<span class="media-object pull-left icon-index-finish"></span>
+						<div class="media-body">还车时间</div><span id="ccc-finish-time" data-value='2015-05-09 09:40' class="badge"></span>
+						<div class="table-view-icon"></div>
+					</a>
+				</li>
+			</ul>
+			<ul class="table-view">
+				<li class="table-view-cell media">
+					<a id="ccc-model" class="navigate-right">
+						<span class="media-object pull-left icon-index-model"></span>
+						<div class="media-body">车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</div><span class="badge">北汽E150</span>
+						<div class="table-view-icon"></div>
+					</a>
+				</li>
+			</ul>
+			<div class="wrap-index-reserve" style="margin-bottom: 3rem;">
+				<button id="index-reserve-btn" class="btn btn-ccclubs-reserve btn-block">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+			</div>
+		<nav class="bar bar-tab" style="background: #EDF2F7">
+		<a class="tab-item active" href="index.html"> <span class="icon nav-icon focus-icon-plus"></span> <span class="tab-label">租车</span> </a>
+		<a class="tab-item nav_bottom_default" href="home/order_usecar.html"> <span class="icon nav-icon-share nav-icon"></span> <span class="tab-label">用车</span> </a>
+		<a class="tab-item nav_bottom_default" href="home/order.html"> <span class="icon nav-icon nav-icon-bars "></span> <span class="tab-label">订单</span> </a>
+		<a class="tab-item nav_bottom_default" href="home/index.html"> <span class="icon nav-icon nav-icon-person"></span> <span class="tab-label">帐户</span> </a>
+		</nav>
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer" >
+				<div id="ccc-overlay" ></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+						
+					</div>
+				</div>
+			</div>
+			<!-- 区域异步加载 -->
+			<div id="ccc-area-box">
+				
+			</div>
+		</div>
+		<div id="toast">正在加载...</div>
+		<div id="iCenter"></div>
+		<!--<script src="http://192.168.1.124:8088/target/target-script.js"></script>-->
+		<script type="text/javascript" src="js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/ccclubs-order-util.js?v=${lz:config('version')}" ></script>
+
+		<script language="javascript" src="http://webapi.amap.com/maps?v=1.3&key=74273c110fdb45f1416484650b403bec"></script>
+		<script type="text/javascript" src="js/gaode.js?v=${lz:config('version')}"></script>
+		<!--<script type="text/javascript" src="js/kuaidi.min.js?v=20150113"></script>-->
+		
+		<script type="text/javascript" src="js/ccclubs-date.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/iscroll.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/ccclubs-date-utils.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/index.js?v=${lz:config('version')}"></script>
+	</body>
+
+</html>

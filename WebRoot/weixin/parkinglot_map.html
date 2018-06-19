@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="no-js" style="height: 100%;">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 网点地图</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body style="height: 100%;">
+		<div class="bigmain" style="height: 100%;">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<s:if test="#request.car==null">
+							<a href="parkinglot_itemlist.html?area=${csOutlets.csoArea}">返回</a>
+						</s:if>
+						<s:else>
+							<a href="reserve_checkout.html?car=${car}">返回</a>
+						</s:else>
+					</div>
+					<div class="golist">
+						<a href="parkinglot_itemdetail.html?outlet=${csOutlets.csoId}">&nbsp;</a>
+					</div>
+					<div class="showtitle">
+						网点地图
+					</div>
+				</div>
+			</div>
+			<div id="ccc-view-map" class="ccc-view-widewin" style="width: 100%; height: 100%;">
+			</div>
+		</div>
+
+		<script type="text/javascript" src="http://map.qq.com/api/js?v=2.exp&key=0e2941f1708f3eb3d19c029c3802521b"></script>
+		<!--  <script src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>-->
+		<script>
+			var cccMapCont = document.getElementById('ccc-view-map');
+			var cccCenter = new qq.maps.LatLng(${csOutlets.csoLatitude},${csOutlets.csoLongitude});
+			var cccMapOptions = {
+				center: cccCenter,
+				zoom: 15,
+				minZoom: 10,
+				mapTypeId: qq.maps.MapTypeId.ROADMAP,
+				mapTypeControl: false,
+			};
+			var cccBigger = new qq.maps.Size(654, 160);
+			var cccMap = new qq.maps.Map(cccMapCont, cccMapOptions);
+			var markerImg = '/images/icons/marker-sprites@2x.png';
+			var markerSize = new qq.maps.Size(34, 40);
+			var markerScaledSize = new qq.maps.Size(74, 141);
+			var markerShadow = new qq.maps.MarkerImage(
+				'/images/icons/marker-sprites@2x.png',
+				new qq.maps.Size(39, 33), //size
+				new qq.maps.Point(35, 7), //origin
+				new qq.maps.Point(7, 33), //anchor
+				new qq.maps.Size(74, 141) //scaled size
+			);
+			var cccMarker = new qq.maps.Marker ({
+				position: new qq.maps.LatLng(${csOutlets.csoLatitude},${csOutlets.csoLongitude}),
+				icon: new qq.maps.MarkerImage(
+					markerImg,
+					markerSize,
+					new qq.maps.Point(0, 0),
+					new qq.maps.Point(7, 33),
+					markerScaledSize
+				),
+				animation: qq.maps.MarkerAnimation.DROP,
+				shadow: markerShadow,
+				title: '${csOutlets.csoName}',
+				map: cccMap
+			});
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

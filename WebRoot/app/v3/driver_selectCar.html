@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>选择车辆</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta content="telephone=yes" name="format-detection" />
+		<link rel="stylesheet" href="css/driver-app.css">
+		<link rel="stylesheet" href="css/weui.min.css">
+		<style>
+			/* TODO:内联CSS样式 */
+		</style>
+	</head>
+
+	<body>
+		<div class="pageBody">
+			<!-- TODO: 展示的内容 <div class="content"></div>-->
+			<div class="weui_cells weui_cells_radio">
+			</div>
+		</div>
+		<!--BEGIN toast-->
+		<div id="toast" style="display: none;">
+			<div class="weui_mask_transparent"></div>
+			<div class="weui_toast">
+				<i class="weui_icon_toast"></i>
+				<p class="weui_toast_content">已完成</p>
+			</div>
+		</div>
+		<!--end toast-->
+		<!-- loading toast -->
+		<div id="loadingToast" class="weui_loading_toast" style="display: none;">
+			<div class="weui_mask_transparent"></div>
+			<div class="weui_toast">
+				<div class="weui_loading">
+					<div class="weui_loading_leaf weui_loading_leaf_0"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_1"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_2"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_3"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_4"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_5"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_6"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_7"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_8"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_9"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_10"></div>
+					<div class="weui_loading_leaf weui_loading_leaf_11"></div>
+				</div>
+				<p class="weui_toast_content">数据加载中</p>
+			</div>
+		</div>
+
+		<script src="js/driver-app.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script type="text/javascript">
+			// TODO: 自定义javascript
+			$(function() {
+				var itemTemplate =
+					'<label class="weui_cell weui_check_label" for="{csdcId}" data-json = "{json}"><div class="weui_cell_bd weui_cell_primary"><p>{cscrCarNo}</p><p><span class="cells_subtitle">{cscrCarmodel}</span><span class="cells_subtitle">{cscrColor}</span></p></div><div class="weui_cell_ft"><input type="radio" class="weui_check" name="radioCar" id="{csdcId}" {csdcState}><span class="weui_icon_checked"></span></div></label>';
+				ajax(URLHelper.DriverCars, {
+					access_token: getQueryString('access_token')
+				}, function(data) {
+					console.log(data);
+					var $content = $('.weui_cells_radio');
+					var page = data.page;
+					var list = data.list;
+					if (page.count > 0 & list.length > 0) {
+						$content.html('');
+						$.each(list, function(index, item) {
+							var itemHtml;
+							var options = {};
+							options.carId = item.csdcCar;
+							options.carState = item.csdcState;
+							options.carNum = item.cscrCarNo;
+							options.carColor = item.cscrColor;
+							options.carTypeName = item.cscrCarmodel;
+							itemHtml = itemTemplate.replace(/{csdcId}/g, item.csdcCar).replace('{json}', JSON.stringify(options).replace(/"/g, "'")).replace('{cscrCarNo}', item.cscrCarNo).replace('{cscrColor}', item.cscrColor).replace('{cscrCarmodel}', item.cscrCarmodel).replace('{csdcState}', item.csdcState == 1 ? ' checked="checked" ' : '');
+							$content.append(itemHtml);
+						});
+					} else {
+						$content.html("<p style='text-align: center;'>没有数据</p>");
+					}
+					showPageBody();
+				});
+				var flag = false;
+				$('.weui_cells_radio').on('click', 'label', function() {
+					if (flag)
+						return;
+					flag = true;
+					//					showSuccessToast($(this).data('json').replace(/'/g, '"'));
+					window.JsBridge.getSelectedCar($(this).data('json').replace(/'/g, '"'));
+					setTimeout(function() {
+						flag = false;
+					}, 1000);
+				});
+			});
+		</script>
+	</body>
+
+</html>

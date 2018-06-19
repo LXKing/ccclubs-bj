@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvModel_part">	
+	<!-- 表单设计条件sql片段  -->
+	<sql id="srv_model_dynamic">
+		<dynamic>
+			<isNotEmpty property="smId" prepend="and">
+			    $smIdNot$ srv_model$suffix$.sm_id = #smId#
+			</isNotEmpty>
+			<isNotNull property="smIdNot" prepend="and">
+				<isEmpty property="smId">
+				$smIdNot$ srv_model$suffix$.sm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smName" prepend="and">			    
+			    (<isNotNull property="smNameNot">
+			    srv_model$suffix$.sm_name is null or length(srv_model$suffix$.sm_name) &lt; 1 or
+			    </isNotNull>$smNameNot$ srv_model$suffix$.sm_name = #smName#)
+			</isNotEmpty>
+			<isNotNull property="smNameNot" prepend="and">
+				<isEmpty property="smName">
+				$smNameNot$ (srv_model$suffix$.sm_name is null or length(srv_model$suffix$.sm_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smAction" prepend="and">			    
+			    (<isNotNull property="smActionNot">
+			    srv_model$suffix$.sm_action is null or length(srv_model$suffix$.sm_action) &lt; 1 or
+			    </isNotNull>$smActionNot$ srv_model$suffix$.sm_action = #smAction#)
+			</isNotEmpty>
+			<isNotNull property="smActionNot" prepend="and">
+				<isEmpty property="smAction">
+				$smActionNot$ (srv_model$suffix$.sm_action is null or length(srv_model$suffix$.sm_action) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smNamespace" prepend="and">			    
+			    (<isNotNull property="smNamespaceNot">
+			    srv_model$suffix$.sm_namespace is null or length(srv_model$suffix$.sm_namespace) &lt; 1 or
+			    </isNotNull>$smNamespaceNot$ srv_model$suffix$.sm_namespace = #smNamespace#)
+			</isNotEmpty>
+			<isNotNull property="smNamespaceNot" prepend="and">
+				<isEmpty property="smNamespace">
+				$smNamespaceNot$ (srv_model$suffix$.sm_namespace is null or length(srv_model$suffix$.sm_namespace) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smDisplay" prepend="and">
+			    $smDisplayNot$ srv_model$suffix$.sm_display = #smDisplay#
+			</isNotEmpty>
+			<isNotNull property="smDisplayNot" prepend="and">
+				<isEmpty property="smDisplay">
+				$smDisplayNot$ srv_model$suffix$.sm_display is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smFunctions" prepend="and">			    
+			    (<isNotNull property="smFunctionsNot">
+			    srv_model$suffix$.sm_functions is null or length(srv_model$suffix$.sm_functions) &lt; 1 or
+			    </isNotNull>$smFunctionsNot$ srv_model$suffix$.sm_functions like #smFunctions#)
+			</isNotEmpty>
+			<isNotNull property="smFunctionsNot" prepend="and">
+				<isEmpty property="smFunctions">
+				$smFunctionsNot$ (srv_model$suffix$.sm_functions is null or length(srv_model$suffix$.sm_functions) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smFields" prepend="and">			    
+			    (<isNotNull property="smFieldsNot">
+			    srv_model$suffix$.sm_fields is null or length(srv_model$suffix$.sm_fields) &lt; 1 or
+			    </isNotNull>$smFieldsNot$ srv_model$suffix$.sm_fields like #smFields#)
+			</isNotEmpty>
+			<isNotNull property="smFieldsNot" prepend="and">
+				<isEmpty property="smFields">
+				$smFieldsNot$ (srv_model$suffix$.sm_fields is null or length(srv_model$suffix$.sm_fields) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smEditor" prepend="and">
+			    $smEditorNot$ srv_model$suffix$.sm_editor = #smEditor#
+			</isNotEmpty>
+			<isNotNull property="smEditorNot" prepend="and">
+				<isEmpty property="smEditor">
+				$smEditorNot$ srv_model$suffix$.sm_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smUpdateTimeStart" prepend="and">
+			    $smUpdateTimeNot$   (srv_model$suffix$.sm_update_time &gt;= #smUpdateTimeStart#
+			   <isEmpty property="smUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="smUpdateTimeEnd" prepend="and">
+				<isEmpty property="smUpdateTimeStart">$smUpdateTimeNot$   (</isEmpty>
+			    srv_model$suffix$.sm_update_time &lt;= #smUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="smUpdateTime" prepend="and">
+			    $smUpdateTimeNot$ srv_model$suffix$.sm_update_time = #smUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="smUpdateTimeNot" prepend="and">
+				<isEmpty property="smUpdateTimeStart"><isEmpty property="smUpdateTimeEnd"><isEmpty property="smUpdateTime">
+				$smUpdateTimeNot$ srv_model$suffix$.sm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smAddTimeStart" prepend="and">
+			    $smAddTimeNot$   (srv_model$suffix$.sm_add_time &gt;= #smAddTimeStart#
+			   <isEmpty property="smAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="smAddTimeEnd" prepend="and">
+				<isEmpty property="smAddTimeStart">$smAddTimeNot$   (</isEmpty>
+			    srv_model$suffix$.sm_add_time &lt;= #smAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="smAddTime" prepend="and">
+			    $smAddTimeNot$ srv_model$suffix$.sm_add_time = #smAddTime#
+			</isNotEmpty>
+			<isNotNull property="smAddTimeNot" prepend="and">
+				<isEmpty property="smAddTimeStart"><isEmpty property="smAddTimeEnd"><isEmpty property="smAddTime">
+				$smAddTimeNot$ srv_model$suffix$.sm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="smStatus" prepend="and">
+			    $smStatusNot$ srv_model$suffix$.sm_status = #smStatus#
+			</isNotEmpty>
+			<isNotNull property="smStatusNot" prepend="and">
+				<isEmpty property="smStatus">
+				$smStatusNot$ srv_model$suffix$.sm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 表单设计left join 条件sql片段 -->
+	<sql id="srv_model_join">
+		<dynamic>
+			<isNotEmpty property="SrvModel.smId" prepend="and">
+			    $SrvModel.smIdNot$ srv_model$SrvModel.suffix$.sm_id = #SrvModel.smId#
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smIdNot" prepend="and">
+				<isEmpty property="SrvModel.smId">
+				$smIdNot$ srv_model$SrvModel.suffix$.sm_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smName" prepend="and">
+				(<isNotNull property="SrvModel.smNameNot">
+			    srv_model$SrvModel.suffix$.sm_name is null or length(srv_model$SrvModel.suffix$.sm_name) &lt; 1 or
+			    </isNotNull>$SrvModel.smNameNot$ srv_model$SrvModel.suffix$.sm_name = #SrvModel.smName#)
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smNameNot" prepend="and">
+				<isEmpty property="SrvModel.smName">
+				$smNameNot$ (srv_model$SrvModel.suffix$.sm_name is null or length(srv_model$SrvModel.suffix$.sm_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smAction" prepend="and">
+				(<isNotNull property="SrvModel.smActionNot">
+			    srv_model$SrvModel.suffix$.sm_action is null or length(srv_model$SrvModel.suffix$.sm_action) &lt; 1 or
+			    </isNotNull>$SrvModel.smActionNot$ srv_model$SrvModel.suffix$.sm_action = #SrvModel.smAction#)
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smActionNot" prepend="and">
+				<isEmpty property="SrvModel.smAction">
+				$smActionNot$ (srv_model$SrvModel.suffix$.sm_action is null or length(srv_model$SrvModel.suffix$.sm_action) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smNamespace" prepend="and">
+				(<isNotNull property="SrvModel.smNamespaceNot">
+			    srv_model$SrvModel.suffix$.sm_namespace is null or length(srv_model$SrvModel.suffix$.sm_namespace) &lt; 1 or
+			    </isNotNull>$SrvModel.smNamespaceNot$ srv_model$SrvModel.suffix$.sm_namespace = #SrvModel.smNamespace#)
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smNamespaceNot" prepend="and">
+				<isEmpty property="SrvModel.smNamespace">
+				$smNamespaceNot$ (srv_model$SrvModel.suffix$.sm_namespace is null or length(srv_model$SrvModel.suffix$.sm_namespace) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smDisplay" prepend="and">
+			    $SrvModel.smDisplayNot$ srv_model$SrvModel.suffix$.sm_display = #SrvModel.smDisplay#
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smDisplayNot" prepend="and">
+				<isEmpty property="SrvModel.smDisplay">
+				$smDisplayNot$ srv_model$SrvModel.suffix$.sm_display is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smFunctions" prepend="and">
+				(<isNotNull property="SrvModel.smFunctionsNot">
+			    srv_model$SrvModel.suffix$.sm_functions is null or length(srv_model$SrvModel.suffix$.sm_functions) &lt; 1 or
+			    </isNotNull>$SrvModel.smFunctionsNot$ srv_model$SrvModel.suffix$.sm_functions like #SrvModel.smFunctions#)
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smFunctionsNot" prepend="and">
+				<isEmpty property="SrvModel.smFunctions">
+				$smFunctionsNot$ (srv_model$SrvModel.suffix$.sm_functions is null or length(srv_model$SrvModel.suffix$.sm_functions) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smFields" prepend="and">
+				(<isNotNull property="SrvModel.smFieldsNot">
+			    srv_model$SrvModel.suffix$.sm_fields is null or length(srv_model$SrvModel.suffix$.sm_fields) &lt; 1 or
+			    </isNotNull>$SrvModel.smFieldsNot$ srv_model$SrvModel.suffix$.sm_fields like #SrvModel.smFields#)
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smFieldsNot" prepend="and">
+				<isEmpty property="SrvModel.smFields">
+				$smFieldsNot$ (srv_model$SrvModel.suffix$.sm_fields is null or length(srv_model$SrvModel.suffix$.sm_fields) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smEditor" prepend="and">
+			    $SrvModel.smEditorNot$ srv_model$SrvModel.suffix$.sm_editor = #SrvModel.smEditor#
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smEditorNot" prepend="and">
+				<isEmpty property="SrvModel.smEditor">
+				$smEditorNot$ srv_model$SrvModel.suffix$.sm_editor is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smUpdateTimeStart" prepend="and">
+			    $SrvModel.smUpdateTimeNot$   (srv_model$SrvModel.suffix$.sm_update_time &gt;= #SrvModel.smUpdateTimeStart#
+			   <isEmpty property="SrvModel.smUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvModel.smUpdateTimeEnd" prepend="and">
+				<isEmpty property="SrvModel.smUpdateTimeStart">$SrvModel.smUpdateTimeNot$   (</isEmpty>
+			    srv_model$SrvModel.suffix$.sm_update_time &lt;= #SrvModel.smUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvModel.smUpdateTime" prepend="and">
+			    $SrvModel.smUpdateTimeNot$ srv_model$SrvModel.suffix$.sm_update_time = #SrvModel.smUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smUpdateTimeNot" prepend="and">
+				<isEmpty property="SrvModel.smUpdateTimeStart"><isEmpty property="SrvModel.smUpdateTimeEnd"><isEmpty property="SrvModel.smUpdateTime">
+				$smUpdateTimeNot$ srv_model$SrvModel.suffix$.sm_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smAddTimeStart" prepend="and">
+			    $SrvModel.smAddTimeNot$   (srv_model$SrvModel.suffix$.sm_add_time &gt;= #SrvModel.smAddTimeStart#
+			   <isEmpty property="SrvModel.smAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvModel.smAddTimeEnd" prepend="and">
+				<isEmpty property="SrvModel.smAddTimeStart">$SrvModel.smAddTimeNot$   (</isEmpty>
+			    srv_model$SrvModel.suffix$.sm_add_time &lt;= #SrvModel.smAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvModel.smAddTime" prepend="and">
+			    $SrvModel.smAddTimeNot$ srv_model$SrvModel.suffix$.sm_add_time = #SrvModel.smAddTime#
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smAddTimeNot" prepend="and">
+				<isEmpty property="SrvModel.smAddTimeStart"><isEmpty property="SrvModel.smAddTimeEnd"><isEmpty property="SrvModel.smAddTime">
+				$smAddTimeNot$ srv_model$SrvModel.suffix$.sm_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvModel.smStatus" prepend="and">
+			    $SrvModel.smStatusNot$ srv_model$SrvModel.suffix$.sm_status = #SrvModel.smStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvModel.smStatusNot" prepend="and">
+				<isEmpty property="SrvModel.smStatus">
+				$smStatusNot$ srv_model$SrvModel.suffix$.sm_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

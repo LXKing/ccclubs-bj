@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 会员地址之SQL映射 -->
+	<resultMap id="CsAddress" class="com.ccclubs.model.CsAddress">
+		<result property="csaId" column="csa_id"/>
+		<result property="csaAddress" column="csa_address"/>
+		<result property="csaName" column="csa_name"/>
+		<result property="csaDefault" column="csa_default"/>
+		<result property="csaMember" column="csa_member"/>
+		<result property="csaPostCode" column="csa_post_code"/>
+		<result property="csaContact" column="csa_contact"/>
+		<result property="csaRemark" column="csa_remark"/>
+		<result property="csaUpdateTime" column="csa_update_time"/>
+		<result property="csaAddTime" column="csa_add_time"/>
+		<result property="csaStatus" column="csa_status"/>
+	</resultMap>
+		
+	<!-- 获取所有会员地址 -->
+	<select id="getCsAddressList" resultMap="CsAddress">
+		select cs_address$suffix$.* from cs_address$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.csa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_address$suffix$.csa_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAddress_part.cs_address_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取会员地址分页 -->
+	<select id="getCsAddressPage" parameterClass="java.util.HashMap" resultMap="CsAddress">
+		select cs_address$suffix$.* from cs_address$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.csa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_address$suffix$.csa_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAddress_part.cs_address_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取会员地址总数 -->
+	<select id="getCsAddressEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_address$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.csa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_address$suffix$.csa_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsAddress_part.cs_address_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取会员地址 -->
+	<select id="getCsAddressById" parameterClass="java.util.HashMap" resultMap="CsAddress">
+		select cs_address$suffix$.* from cs_address$suffix$
+		where csa_id=#id#
+	</select>
+	
+		
+	<!-- 保存会员地址 -->
+	<insert id="saveCsAddress"  parameterClass="com.ccclubs.model.CsAddress">
+		insert into cs_address$suffix$
+		(
+			cs_address$suffix$.csa_address
+			,cs_address$suffix$.csa_name
+			,cs_address$suffix$.csa_default
+			,cs_address$suffix$.csa_member
+			,cs_address$suffix$.csa_post_code
+			,cs_address$suffix$.csa_contact
+			,cs_address$suffix$.csa_remark
+			,cs_address$suffix$.csa_update_time
+			,cs_address$suffix$.csa_add_time
+			,cs_address$suffix$.csa_status
+		)
+		values(
+			<isNotNull property="csaAddress" prepend="">
+				#csaAddress#
+			</isNotNull>
+			<isNull property="csaAddress" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csaName" prepend=",">
+				#csaName#
+			</isNotNull>
+			<isNull property="csaName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaDefault" prepend=",">
+				#csaDefault#
+			</isNotNull>
+			<isNull property="csaDefault" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaMember" prepend=",">
+				#csaMember#
+			</isNotNull>
+			<isNull property="csaMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaPostCode" prepend=",">
+				#csaPostCode#
+			</isNotNull>
+			<isNull property="csaPostCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaContact" prepend=",">
+				#csaContact#
+			</isNotNull>
+			<isNull property="csaContact" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaRemark" prepend=",">
+				#csaRemark#
+			</isNotNull>
+			<isNull property="csaRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaUpdateTime" prepend=",">
+				#csaUpdateTime#
+			</isNotNull>
+			<isNull property="csaUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaAddTime" prepend=",">
+				#csaAddTime#
+			</isNotNull>
+			<isNull property="csaAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaStatus" prepend=",">
+				#csaStatus#
+			</isNotNull>
+			<isNull property="csaStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新会员地址 -->
+	<update id="updateCsAddress"  parameterClass="com.ccclubs.model.CsAddress">
+		update cs_address$suffix$ set
+			<isNotNull property="csaAddress" prepend="">
+				cs_address$suffix$.csa_address = #csaAddress#
+			</isNotNull>
+			<isNull property="csaAddress" prepend="">
+				cs_address$suffix$.csa_address = null
+			</isNull>				
+			<isNotNull property="csaName" prepend=",">
+				cs_address$suffix$.csa_name = #csaName#
+			</isNotNull>
+			<isNull property="csaName" prepend=",">
+				cs_address$suffix$.csa_name = null
+			</isNull>				
+			<isNotNull property="csaDefault" prepend=",">
+				cs_address$suffix$.csa_default = #csaDefault#
+			</isNotNull>
+			<isNull property="csaDefault" prepend=",">
+				cs_address$suffix$.csa_default = null
+			</isNull>				
+			<isNotNull property="csaMember" prepend=",">
+				cs_address$suffix$.csa_member = #csaMember#
+			</isNotNull>
+			<isNull property="csaMember" prepend=",">
+				cs_address$suffix$.csa_member = null
+			</isNull>				
+			<isNotNull property="csaPostCode" prepend=",">
+				cs_address$suffix$.csa_post_code = #csaPostCode#
+			</isNotNull>
+			<isNull property="csaPostCode" prepend=",">
+				cs_address$suffix$.csa_post_code = null
+			</isNull>				
+			<isNotNull property="csaContact" prepend=",">
+				cs_address$suffix$.csa_contact = #csaContact#
+			</isNotNull>
+			<isNull property="csaContact" prepend=",">
+				cs_address$suffix$.csa_contact = null
+			</isNull>				
+			<isNotNull property="csaRemark" prepend=",">
+				cs_address$suffix$.csa_remark = #csaRemark#
+			</isNotNull>
+			<isNull property="csaRemark" prepend=",">
+				cs_address$suffix$.csa_remark = null
+			</isNull>				
+			<isNotNull property="csaUpdateTime" prepend=",">
+				cs_address$suffix$.csa_update_time = #csaUpdateTime#
+			</isNotNull>
+			<isNull property="csaUpdateTime" prepend=",">
+				cs_address$suffix$.csa_update_time = null
+			</isNull>				
+			<isNotNull property="csaAddTime" prepend=",">
+				cs_address$suffix$.csa_add_time = #csaAddTime#
+			</isNotNull>
+			<isNull property="csaAddTime" prepend=",">
+				cs_address$suffix$.csa_add_time = null
+			</isNull>				
+			<isNotNull property="csaStatus" prepend=",">
+				cs_address$suffix$.csa_status = #csaStatus#
+			</isNotNull>
+			<isNull property="csaStatus" prepend=",">
+				cs_address$suffix$.csa_status = null
+			</isNull>				
+		where
+			csa_id=#csaId#
+	</update>
+	
+	<!-- 更新会员地址非空字段 -->
+	<update id="updateCsAddress$NotNull"  parameterClass="com.ccclubs.model.CsAddress">
+		update cs_address$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csaAddress" prepend=",">
+				cs_address$suffix$.csa_address = #csaAddress#
+			</isNotNull>		
+			<isNotNull property="csaName" prepend=",">
+				cs_address$suffix$.csa_name = #csaName#
+			</isNotNull>		
+			<isNotNull property="csaDefault" prepend=",">
+				cs_address$suffix$.csa_default = #csaDefault#
+			</isNotNull>		
+			<isNotNull property="csaMember" prepend=",">
+				cs_address$suffix$.csa_member = #csaMember#
+			</isNotNull>		
+			<isNotNull property="csaPostCode" prepend=",">
+				cs_address$suffix$.csa_post_code = #csaPostCode#
+			</isNotNull>		
+			<isNotNull property="csaContact" prepend=",">
+				cs_address$suffix$.csa_contact = #csaContact#
+			</isNotNull>		
+			<isNotNull property="csaRemark" prepend=",">
+				cs_address$suffix$.csa_remark = #csaRemark#
+			</isNotNull>		
+			<isNotNull property="csaUpdateTime" prepend=",">
+				cs_address$suffix$.csa_update_time = #csaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csaAddTime" prepend=",">
+				cs_address$suffix$.csa_add_time = #csaAddTime#
+			</isNotNull>		
+			<isNotNull property="csaStatus" prepend=",">
+				cs_address$suffix$.csa_status = #csaStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csa_id=#csaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个会员地址 -->
+	<delete id="deleteCsAddressById" parameterClass="java.util.HashMap">
+		delete from cs_address$suffix$ where csa_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个会员地址 -->
+	<update id="removeCsAddressById" parameterClass="java.util.HashMap">
+		update cs_address$suffix$ set  cs_address$suffix$.csa_status=-1  where csa_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新会员地址 -->
+	<update id="updateCsAddressBy"  parameterClass="java.util.HashMap">
+		update cs_address$suffix$ set		
+			csa_id=csa_id
+			<isNotNull property="V_csaId" prepend=",">
+				cs_address$suffix$.csa_id = #V_csaId#
+			</isNotNull>		
+			<isNotNull property="V_csaAddress" prepend=",">
+				cs_address$suffix$.csa_address = #V_csaAddress#
+			</isNotNull>		
+			<isNotNull property="V_csaName" prepend=",">
+				cs_address$suffix$.csa_name = #V_csaName#
+			</isNotNull>		
+			<isNotNull property="V_csaDefault" prepend=",">
+				cs_address$suffix$.csa_default = #V_csaDefault#
+			</isNotNull>		
+			<isNotNull property="V_csaMember" prepend=",">
+				cs_address$suffix$.csa_member = #V_csaMember#
+			</isNotNull>		
+			<isNotNull property="V_csaPostCode" prepend=",">
+				cs_address$suffix$.csa_post_code = #V_csaPostCode#
+			</isNotNull>		
+			<isNotNull property="V_csaContact" prepend=",">
+				cs_address$suffix$.csa_contact = #V_csaContact#
+			</isNotNull>		
+			<isNotNull property="V_csaRemark" prepend=",">
+				cs_address$suffix$.csa_remark = #V_csaRemark#
+			</isNotNull>		
+			<isNotNull property="V_csaUpdateTime" prepend=",">
+				cs_address$suffix$.csa_update_time = #V_csaUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csaAddTime" prepend=",">
+				cs_address$suffix$.csa_add_time = #V_csaAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csaStatus" prepend=",">
+				cs_address$suffix$.csa_status = #V_csaStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.csa_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_address$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_address$suffix$.csa_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaMember"><!-- 调用一下CsaMember，把CsMember指向CsaMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsAddress_part.cs_address_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除会员地址 -->
+	<update id="deleteCsAddressBy"  parameterClass="java.util.HashMap">
+		delete from cs_address$suffix$ where 
+		cs_address$suffix$.csa_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsAddress_part.cs_address_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

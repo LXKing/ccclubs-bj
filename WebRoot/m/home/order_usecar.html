@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>用车列表</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-home.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+		<s:if test="#request.list.size()>0">
+		<s:iterator value="#request.list" id="item" status="i">
+			<s:if test="#item.csoStatus==0||#item.csoStatus==1">
+				<a href="order_operate.html?orderid=${item.csoId}">
+			</s:if>
+			<s:else>
+				<a href="order_operate.html?orderid=${item.csoId}">
+			</s:else>
+				<div class="list-item mt15">
+					<s:if test="#item.csoStatus==0||#item.csoStatus==1||#item.csoStatus==2||#item.csoStatus==5">
+						<div class="list-item-head using">
+							<span class="badge">订单号</span><span class="badge">${item.csoId}</span>
+							<span class="badge pull-right">${item.csoStatus==0?"已预定":""} ${item.csoStatus==1?"正在执行":""} ${item.csoStatus==2?"已还车":""} ${item.csoStatus==3?"已取消":""} ${item.csoStatus==4?"已完成":""} ${item.csoStatus==5?"待处理":""} ${item.csoStatus==6?"已退款":""} ${item.csoStatus==7?"已作废":""}</span>
+						</div>
+					</s:if>
+					<ul class="table-view">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								订单时间
+							</div>
+							<span class="badge">${lz:date(item.csoStartTime,"yyyy-MM-dd HH:mm")}</span>
+						</li>
+						<div class="panel-line"></div>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								至
+							</div>
+							<span class="badge">${lz:date(item.csoFinishTime,"yyyy-MM-dd HH:mm")}</span>
+						</li>
+						<div class="panel-line"></div>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								订单金额
+							</div>
+							<span class="badge">${lz:digit(item.csoPayNeed,2)}元</span>
+						</li>
+					</ul>
+				</div>
+			</a>
+		</s:iterator>
+		</s:if>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<div id="tempdata" style="display: none;"></div>
+		<nav class="bar bar-tab">
+		<a class="tab-item nav_bottom_default" href="../index.html"> <span class="icon nav-icon nav-icon-plus"></span> <span class="tab-label">租车</span> </a>
+		<a class="tab-item nav_bottom_default" href="order_operate.html"> <span class="icon nav-icon-share nav-icon"></span> <span class="tab-label">用车</span> </a>
+		<a class="tab-item active" href="order.html"> <span class="icon nav-icon focus-icon-bars "></span> <span class="tab-label">订单</span> </a>
+		<a class="tab-item nav_bottom_default" href="index.html"> <span class="icon nav-icon nav-icon-person"></span> <span class="tab-label">帐户</span> </a>
+		</nav>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script src="../../js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			var page = 0;
+			var maxPage = ${page.total};
+			$(window).bind('scroll', function() {
+				if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+					if(page < maxPage-1){
+						page++;
+						$.get('/m/home/order.html',{page:page},function(data){
+							//先将临时存放区清空
+							$('#tempdata').html('');
+							//将页面载入临时存放区
+							$('#tempdata').append(data);
+							//用find方法找出车辆列表
+							var temp = $('#tempdata').find("#content");
+							//由于find出来的是一个数组，所以取第一个元素即为要加载的数据
+							$('#content').append(temp[0].innerHTML);
+						});
+					}
+				};
+			});	
+		});
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+
+</html>

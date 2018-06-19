@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRepairAdr_part">	
+	<!-- 维修地点条件sql片段  -->
+	<sql id="cs_repair_adr_dynamic">
+		<dynamic>
+			<isNotEmpty property="csraId" prepend="and">
+			    $csraIdNot$ cs_repair_adr$suffix$.csra_id = #csraId#
+			</isNotEmpty>
+			<isNotNull property="csraIdNot" prepend="and">
+				<isEmpty property="csraId">
+				$csraIdNot$ cs_repair_adr$suffix$.csra_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_repair_adr$suffix$.csra_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csraHost" prepend="and">
+			    $csraHostNot$ cs_repair_adr$suffix$.csra_host = #csraHost#
+			</isNotEmpty>
+			<isNotNull property="csraHostNot" prepend="and">
+				<isEmpty property="csraHost">
+				$csraHostNot$ cs_repair_adr$suffix$.csra_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csraName" prepend="and">			    
+			    (<isNotNull property="csraNameNot">
+			    cs_repair_adr$suffix$.csra_name is null or length(cs_repair_adr$suffix$.csra_name) &lt; 1 or
+			    </isNotNull>$csraNameNot$ cs_repair_adr$suffix$.csra_name = #csraName#)
+			</isNotEmpty>
+			<isNotNull property="csraNameNot" prepend="and">
+				<isEmpty property="csraName">
+				$csraNameNot$ (cs_repair_adr$suffix$.csra_name is null or length(cs_repair_adr$suffix$.csra_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csraAddress" prepend="and">			    
+			    (<isNotNull property="csraAddressNot">
+			    cs_repair_adr$suffix$.csra_address is null or length(cs_repair_adr$suffix$.csra_address) &lt; 1 or
+			    </isNotNull>$csraAddressNot$ cs_repair_adr$suffix$.csra_address like #csraAddress#)
+			</isNotEmpty>
+			<isNotNull property="csraAddressNot" prepend="and">
+				<isEmpty property="csraAddress">
+				$csraAddressNot$ (cs_repair_adr$suffix$.csra_address is null or length(cs_repair_adr$suffix$.csra_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 维修地点left join 条件sql片段 -->
+	<sql id="cs_repair_adr_join">
+		<dynamic>
+			<isNotEmpty property="CsRepairAdr.csraId" prepend="and">
+			    $CsRepairAdr.csraIdNot$ cs_repair_adr$CsRepairAdr.suffix$.csra_id = #CsRepairAdr.csraId#
+			</isNotEmpty>
+			<isNotNull property="CsRepairAdr.csraIdNot" prepend="and">
+				<isEmpty property="CsRepairAdr.csraId">
+				$csraIdNot$ cs_repair_adr$CsRepairAdr.suffix$.csra_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_repair_adr$CsRepairAdr.suffix$.csra_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsRepairAdr.csraHost" prepend="and">
+			    $CsRepairAdr.csraHostNot$ cs_repair_adr$CsRepairAdr.suffix$.csra_host = #CsRepairAdr.csraHost#
+			</isNotEmpty>
+			<isNotNull property="CsRepairAdr.csraHostNot" prepend="and">
+				<isEmpty property="CsRepairAdr.csraHost">
+				$csraHostNot$ cs_repair_adr$CsRepairAdr.suffix$.csra_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepairAdr.csraName" prepend="and">
+				(<isNotNull property="CsRepairAdr.csraNameNot">
+			    cs_repair_adr$CsRepairAdr.suffix$.csra_name is null or length(cs_repair_adr$CsRepairAdr.suffix$.csra_name) &lt; 1 or
+			    </isNotNull>$CsRepairAdr.csraNameNot$ cs_repair_adr$CsRepairAdr.suffix$.csra_name = #CsRepairAdr.csraName#)
+			</isNotEmpty>
+			<isNotNull property="CsRepairAdr.csraNameNot" prepend="and">
+				<isEmpty property="CsRepairAdr.csraName">
+				$csraNameNot$ (cs_repair_adr$CsRepairAdr.suffix$.csra_name is null or length(cs_repair_adr$CsRepairAdr.suffix$.csra_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRepairAdr.csraAddress" prepend="and">
+				(<isNotNull property="CsRepairAdr.csraAddressNot">
+			    cs_repair_adr$CsRepairAdr.suffix$.csra_address is null or length(cs_repair_adr$CsRepairAdr.suffix$.csra_address) &lt; 1 or
+			    </isNotNull>$CsRepairAdr.csraAddressNot$ cs_repair_adr$CsRepairAdr.suffix$.csra_address like #CsRepairAdr.csraAddress#)
+			</isNotEmpty>
+			<isNotNull property="CsRepairAdr.csraAddressNot" prepend="and">
+				<isEmpty property="CsRepairAdr.csraAddress">
+				$csraAddressNot$ (cs_repair_adr$CsRepairAdr.suffix$.csra_address is null or length(cs_repair_adr$CsRepairAdr.suffix$.csra_address) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

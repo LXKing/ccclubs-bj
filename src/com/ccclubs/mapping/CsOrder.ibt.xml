@@ -1,0 +1,2192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统订单之SQL映射 -->
+	<resultMap id="CsOrder" class="com.ccclubs.model.CsOrder">
+		<result property="csoId" column="cso_id"/>
+		<result property="csoHost" column="cso_host"/>
+		<result property="csoPayMember" column="cso_pay_member"/>
+		<result property="csoUseMember" column="cso_use_member"/>
+		<result property="csoFeeType" column="cso_fee_type"/>
+		<result property="csoArea" column="cso_area"/>
+		<result property="csoOutlets" column="cso_outlets"/>
+		<result property="csoOutletsRet" column="cso_outlets_ret"/>
+		<result property="csoModel" column="cso_model"/>
+		<result property="csoCar" column="cso_car"/>
+		<result property="csoProvid" column="cso_provid"/>
+		<result property="csoCarNumber" column="cso_car_number"/>
+		<result property="csoMobile" column="cso_mobile"/>
+		<result property="csoEvRfid" column="cso_ev_rfid"/>
+		<result property="csoIsAdCar" column="cso_is_ad_car"/>
+		<result property="csoStartTime" column="cso_start_time"/>
+		<result property="csoFinishTime" column="cso_finish_time"/>
+		<result property="csoLongOrder" column="cso_long_order"/>
+		<result property="csoLongPrice" column="cso_long_price"/>
+		<result property="csoUseType" column="cso_use_type"/>
+		<result property="csoTakeTime" column="cso_take_time"/>
+		<result property="csoRetTime" column="cso_ret_time"/>
+		<result property="csoDuration" column="cso_duration"/>
+		<result property="csoFuel" column="cso_fuel"/>
+		<result property="csoElectric" column="cso_electric"/>
+		<result property="csoCreditCard" column="cso_credit_card"/>
+		<result property="csoCreditBill" column="cso_credit_bill"/>
+		<result property="csoInsureType" column="cso_insure_type"/>
+		<result property="csoFreehour" column="cso_freehour"/>
+		<result property="csoRebate" column="cso_rebate"/>
+		<result property="csoMarginNeed" column="cso_margin_need"/>
+		<result property="csoPredict" column="cso_predict"/>
+		<result property="csoPayNeed" column="cso_pay_need"/>
+		<result property="csoPayReal" column="cso_pay_real"/>
+		<result property="csoPayMoney" column="cso_pay_money"/>
+		<result property="csoPayCoupon" column="cso_pay_coupon"/>
+		<result property="csoPayCoin" column="cso_pay_coin"/>
+		<result property="csoPayKilom" column="cso_pay_kilom"/>
+		<result property="csoPayMileage" column="cso_pay_mileage"/>
+		<result property="csoPayRent" column="cso_pay_rent"/>
+		<result property="csoPayInsure" column="cso_pay_insure"/>
+		<result property="csoPayTimeout" column="cso_pay_timeout"/>
+		<result property="csoPayDriver" column="cso_pay_driver"/>
+		<result property="csoIncome" column="cso_income"/>
+		<result property="csoUseIndex" column="cso_use_index"/>
+		<result property="csoFlag" column="cso_flag"/>
+		<result property="csoFrom" column="cso_from"/>
+		<result property="csoSrc" column="cso_src"/>
+		<result property="csoUpdateTime" column="cso_update_time"/>
+		<result property="csoAddTime" column="cso_add_time"/>
+		<result property="csoEndTime" column="cso_end_time"/>
+		<result property="csoSerial" column="cso_serial"/>
+		<result property="csoCode" column="cso_code"/>
+		<result property="csoRemark" column="cso_remark"/>
+		<result property="csoLog" column="cso_log"/>
+		<result property="csoEditor" column="cso_editor"/>
+		<result property="csoMask" column="cso_mask"/>
+		<result property="csoDeviceVesion" column="cso_device_vesion"/>
+		<result property="csoAlarm" column="cso_alarm"/>
+		<result property="csoState" column="cso_state"/>
+		<result property="csoStatus" column="cso_status"/>
+	</resultMap>
+		
+	<!-- 获取所有系统订单 -->
+	<select id="getCsOrderList" resultMap="CsOrder">
+		select cs_order$suffix$.* from cs_order$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.cso_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询-->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.cso_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询-->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.cso_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.cso_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.cso_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询-->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.cso_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询-->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.cso_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询-->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<isNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.cso_credit_bill=cs_credit_bill$CsCreditBill.suffix$.cscb_id
+			</isNull>
+			<isNotNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.$CsCreditBill.on$=cs_credit_bill$CsCreditBill.suffix$.cscb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询-->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.cso_insure_type=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order$suffix$.cso_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询条件sql片段 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<include refid="CsCreditBill_part.cs_credit_bill_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrder_part.cs_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cso_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	<!-- 统计系统订单 -->
+	<select id="getCsOrderStats" remapResults="true" resultClass="com.lazy3q.sql.SqlMap">
+		select $select$ from cs_order$suffix$		
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.cso_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.cso_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.cso_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.cso_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.cso_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.cso_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.cso_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<isNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.cso_credit_bill=cs_credit_bill$CsCreditBill.suffix$.cscb_id
+			</isNull>
+			<isNotNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.$CsCreditBill.on$=cs_credit_bill$CsCreditBill.suffix$.cscb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.cso_insure_type=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order$suffix$.cso_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询条件sql片段 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<include refid="CsCreditBill_part.cs_credit_bill_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrder_part.cs_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		$group$
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统订单分页 -->
+	<select id="getCsOrderPage" parameterClass="java.util.HashMap" resultMap="CsOrder">
+		select cs_order$suffix$.* from cs_order$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.cso_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.cso_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.cso_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.cso_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.cso_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.cso_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.cso_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<isNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.cso_credit_bill=cs_credit_bill$CsCreditBill.suffix$.cscb_id
+			</isNull>
+			<isNotNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.$CsCreditBill.on$=cs_credit_bill$CsCreditBill.suffix$.cscb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.cso_insure_type=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order$suffix$.cso_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询条件sql片段 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<include refid="CsCreditBill_part.cs_credit_bill_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrder_part.cs_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cso_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统订单总数 -->
+	<select id="getCsOrderEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_order$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.cso_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.cso_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.cso_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.cso_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.cso_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.cso_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.cso_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<isNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.cso_credit_bill=cs_credit_bill$CsCreditBill.suffix$.cscb_id
+			</isNull>
+			<isNotNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.$CsCreditBill.on$=cs_credit_bill$CsCreditBill.suffix$.cscb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.cso_insure_type=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_order$suffix$.cso_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询条件sql片段 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<include refid="CsCreditBill_part.cs_credit_bill_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrder_part.cs_order_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统订单 -->
+	<select id="getCsOrderById" parameterClass="java.util.HashMap" resultMap="CsOrder">
+		select cs_order$suffix$.* from cs_order$suffix$
+		where cso_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统订单 -->
+	<insert id="saveCsOrder"  parameterClass="com.ccclubs.model.CsOrder">
+		insert into cs_order$suffix$
+		(
+			cs_order$suffix$.cso_host
+			,cs_order$suffix$.cso_pay_member
+			,cs_order$suffix$.cso_use_member
+			,cs_order$suffix$.cso_fee_type
+			,cs_order$suffix$.cso_area
+			,cs_order$suffix$.cso_outlets
+			,cs_order$suffix$.cso_outlets_ret
+			,cs_order$suffix$.cso_model
+			,cs_order$suffix$.cso_car
+			,cs_order$suffix$.cso_provid
+			,cs_order$suffix$.cso_car_number
+			,cs_order$suffix$.cso_mobile
+			,cs_order$suffix$.cso_ev_rfid
+			,cs_order$suffix$.cso_is_ad_car
+			,cs_order$suffix$.cso_start_time
+			,cs_order$suffix$.cso_finish_time
+			,cs_order$suffix$.cso_long_order
+			,cs_order$suffix$.cso_long_price
+			,cs_order$suffix$.cso_use_type
+			,cs_order$suffix$.cso_take_time
+			,cs_order$suffix$.cso_ret_time
+			,cs_order$suffix$.cso_duration
+			,cs_order$suffix$.cso_fuel
+			,cs_order$suffix$.cso_electric
+			,cs_order$suffix$.cso_credit_card
+			,cs_order$suffix$.cso_credit_bill
+			,cs_order$suffix$.cso_insure_type
+			,cs_order$suffix$.cso_freehour
+			,cs_order$suffix$.cso_rebate
+			,cs_order$suffix$.cso_margin_need
+			,cs_order$suffix$.cso_predict
+			,cs_order$suffix$.cso_pay_need
+			,cs_order$suffix$.cso_pay_real
+			,cs_order$suffix$.cso_pay_money
+			,cs_order$suffix$.cso_pay_coupon
+			,cs_order$suffix$.cso_pay_coin
+			,cs_order$suffix$.cso_pay_kilom
+			,cs_order$suffix$.cso_pay_mileage
+			,cs_order$suffix$.cso_pay_rent
+			,cs_order$suffix$.cso_pay_insure
+			,cs_order$suffix$.cso_pay_timeout
+			,cs_order$suffix$.cso_pay_driver
+			,cs_order$suffix$.cso_income
+			,cs_order$suffix$.cso_use_index
+			,cs_order$suffix$.cso_flag
+			,cs_order$suffix$.cso_from
+			,cs_order$suffix$.cso_src
+			,cs_order$suffix$.cso_update_time
+			,cs_order$suffix$.cso_add_time
+			,cs_order$suffix$.cso_end_time
+			,cs_order$suffix$.cso_serial
+			,cs_order$suffix$.cso_code
+			,cs_order$suffix$.cso_remark
+			,cs_order$suffix$.cso_log
+			,cs_order$suffix$.cso_editor
+			,cs_order$suffix$.cso_mask
+			,cs_order$suffix$.cso_device_vesion
+			,cs_order$suffix$.cso_alarm
+			,cs_order$suffix$.cso_state
+			,cs_order$suffix$.cso_status
+		)
+		values(
+			<isNotNull property="csoHost" prepend="">
+				#csoHost#
+			</isNotNull>
+			<isNull property="csoHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csoPayMember" prepend=",">
+				#csoPayMember#
+			</isNotNull>
+			<isNull property="csoPayMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUseMember" prepend=",">
+				#csoUseMember#
+			</isNotNull>
+			<isNull property="csoUseMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoFeeType" prepend=",">
+				#csoFeeType#
+			</isNotNull>
+			<isNull property="csoFeeType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoArea" prepend=",">
+				#csoArea#
+			</isNotNull>
+			<isNull property="csoArea" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoOutlets" prepend=",">
+				#csoOutlets#
+			</isNotNull>
+			<isNull property="csoOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoOutletsRet" prepend=",">
+				#csoOutletsRet#
+			</isNotNull>
+			<isNull property="csoOutletsRet" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoModel" prepend=",">
+				#csoModel#
+			</isNotNull>
+			<isNull property="csoModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCar" prepend=",">
+				#csoCar#
+			</isNotNull>
+			<isNull property="csoCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoProvid" prepend=",">
+				#csoProvid#
+			</isNotNull>
+			<isNull property="csoProvid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCarNumber" prepend=",">
+				#csoCarNumber#
+			</isNotNull>
+			<isNull property="csoCarNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoMobile" prepend=",">
+				#csoMobile#
+			</isNotNull>
+			<isNull property="csoMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoEvRfid" prepend=",">
+				#csoEvRfid#
+			</isNotNull>
+			<isNull property="csoEvRfid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoIsAdCar" prepend=",">
+				#csoIsAdCar#
+			</isNotNull>
+			<isNull property="csoIsAdCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoStartTime" prepend=",">
+				#csoStartTime#
+			</isNotNull>
+			<isNull property="csoStartTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoFinishTime" prepend=",">
+				#csoFinishTime#
+			</isNotNull>
+			<isNull property="csoFinishTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoLongOrder" prepend=",">
+				#csoLongOrder#
+			</isNotNull>
+			<isNull property="csoLongOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoLongPrice" prepend=",">
+				#csoLongPrice#
+			</isNotNull>
+			<isNull property="csoLongPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUseType" prepend=",">
+				#csoUseType#
+			</isNotNull>
+			<isNull property="csoUseType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoTakeTime" prepend=",">
+				#csoTakeTime#
+			</isNotNull>
+			<isNull property="csoTakeTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoRetTime" prepend=",">
+				#csoRetTime#
+			</isNotNull>
+			<isNull property="csoRetTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoDuration" prepend=",">
+				#csoDuration#
+			</isNotNull>
+			<isNull property="csoDuration" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoFuel" prepend=",">
+				#csoFuel#
+			</isNotNull>
+			<isNull property="csoFuel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoElectric" prepend=",">
+				#csoElectric#
+			</isNotNull>
+			<isNull property="csoElectric" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCreditCard" prepend=",">
+				#csoCreditCard#
+			</isNotNull>
+			<isNull property="csoCreditCard" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCreditBill" prepend=",">
+				#csoCreditBill#
+			</isNotNull>
+			<isNull property="csoCreditBill" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoInsureType" prepend=",">
+				#csoInsureType#
+			</isNotNull>
+			<isNull property="csoInsureType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoFreehour" prepend=",">
+				#csoFreehour#
+			</isNotNull>
+			<isNull property="csoFreehour" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoRebate" prepend=",">
+				#csoRebate#
+			</isNotNull>
+			<isNull property="csoRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoMarginNeed" prepend=",">
+				#csoMarginNeed#
+			</isNotNull>
+			<isNull property="csoMarginNeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPredict" prepend=",">
+				#csoPredict#
+			</isNotNull>
+			<isNull property="csoPredict" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayNeed" prepend=",">
+				#csoPayNeed#
+			</isNotNull>
+			<isNull property="csoPayNeed" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayReal" prepend=",">
+				#csoPayReal#
+			</isNotNull>
+			<isNull property="csoPayReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayMoney" prepend=",">
+				#csoPayMoney#
+			</isNotNull>
+			<isNull property="csoPayMoney" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayCoupon" prepend=",">
+				#csoPayCoupon#
+			</isNotNull>
+			<isNull property="csoPayCoupon" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayCoin" prepend=",">
+				#csoPayCoin#
+			</isNotNull>
+			<isNull property="csoPayCoin" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayKilom" prepend=",">
+				#csoPayKilom#
+			</isNotNull>
+			<isNull property="csoPayKilom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayMileage" prepend=",">
+				#csoPayMileage#
+			</isNotNull>
+			<isNull property="csoPayMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayRent" prepend=",">
+				#csoPayRent#
+			</isNotNull>
+			<isNull property="csoPayRent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayInsure" prepend=",">
+				#csoPayInsure#
+			</isNotNull>
+			<isNull property="csoPayInsure" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayTimeout" prepend=",">
+				#csoPayTimeout#
+			</isNotNull>
+			<isNull property="csoPayTimeout" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoPayDriver" prepend=",">
+				#csoPayDriver#
+			</isNotNull>
+			<isNull property="csoPayDriver" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoIncome" prepend=",">
+				#csoIncome#
+			</isNotNull>
+			<isNull property="csoIncome" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUseIndex" prepend=",">
+				#csoUseIndex#
+			</isNotNull>
+			<isNull property="csoUseIndex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoFlag" prepend=",">
+				#csoFlag#
+			</isNotNull>
+			<isNull property="csoFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoFrom" prepend=",">
+				#csoFrom#
+			</isNotNull>
+			<isNull property="csoFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoSrc" prepend=",">
+				#csoSrc#
+			</isNotNull>
+			<isNull property="csoSrc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoUpdateTime" prepend=",">
+				#csoUpdateTime#
+			</isNotNull>
+			<isNull property="csoUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAddTime" prepend=",">
+				#csoAddTime#
+			</isNotNull>
+			<isNull property="csoAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoEndTime" prepend=",">
+				#csoEndTime#
+			</isNotNull>
+			<isNull property="csoEndTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoSerial" prepend=",">
+				#csoSerial#
+			</isNotNull>
+			<isNull property="csoSerial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoCode" prepend=",">
+				#csoCode#
+			</isNotNull>
+			<isNull property="csoCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoRemark" prepend=",">
+				#csoRemark#
+			</isNotNull>
+			<isNull property="csoRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoLog" prepend=",">
+				#csoLog#
+			</isNotNull>
+			<isNull property="csoLog" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoEditor" prepend=",">
+				#csoEditor#
+			</isNotNull>
+			<isNull property="csoEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoMask" prepend=",">
+				#csoMask#
+			</isNotNull>
+			<isNull property="csoMask" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoDeviceVesion" prepend=",">
+				#csoDeviceVesion#
+			</isNotNull>
+			<isNull property="csoDeviceVesion" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoAlarm" prepend=",">
+				#csoAlarm#
+			</isNotNull>
+			<isNull property="csoAlarm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoState" prepend=",">
+				#csoState#
+			</isNotNull>
+			<isNull property="csoState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csoStatus" prepend=",">
+				#csoStatus#
+			</isNotNull>
+			<isNull property="csoStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统订单 -->
+	<update id="updateCsOrder"  parameterClass="com.ccclubs.model.CsOrder">
+		update cs_order$suffix$ set
+			<isNotNull property="csoHost" prepend="">
+				cs_order$suffix$.cso_host = #csoHost#
+			</isNotNull>
+			<isNull property="csoHost" prepend="">
+				cs_order$suffix$.cso_host = null
+			</isNull>				
+			<isNotNull property="csoPayMember" prepend=",">
+				cs_order$suffix$.cso_pay_member = #csoPayMember#
+			</isNotNull>
+			<isNull property="csoPayMember" prepend=",">
+				cs_order$suffix$.cso_pay_member = null
+			</isNull>				
+			<isNotNull property="csoUseMember" prepend=",">
+				cs_order$suffix$.cso_use_member = #csoUseMember#
+			</isNotNull>
+			<isNull property="csoUseMember" prepend=",">
+				cs_order$suffix$.cso_use_member = null
+			</isNull>				
+			<isNotNull property="csoFeeType" prepend=",">
+				cs_order$suffix$.cso_fee_type = #csoFeeType#
+			</isNotNull>
+			<isNull property="csoFeeType" prepend=",">
+				cs_order$suffix$.cso_fee_type = null
+			</isNull>				
+			<isNotNull property="csoArea" prepend=",">
+				cs_order$suffix$.cso_area = #csoArea#
+			</isNotNull>
+			<isNull property="csoArea" prepend=",">
+				cs_order$suffix$.cso_area = null
+			</isNull>				
+			<isNotNull property="csoOutlets" prepend=",">
+				cs_order$suffix$.cso_outlets = #csoOutlets#
+			</isNotNull>
+			<isNull property="csoOutlets" prepend=",">
+				cs_order$suffix$.cso_outlets = null
+			</isNull>				
+			<isNotNull property="csoOutletsRet" prepend=",">
+				cs_order$suffix$.cso_outlets_ret = #csoOutletsRet#
+			</isNotNull>
+			<isNull property="csoOutletsRet" prepend=",">
+				cs_order$suffix$.cso_outlets_ret = null
+			</isNull>				
+			<isNotNull property="csoModel" prepend=",">
+				cs_order$suffix$.cso_model = #csoModel#
+			</isNotNull>
+			<isNull property="csoModel" prepend=",">
+				cs_order$suffix$.cso_model = null
+			</isNull>				
+			<isNotNull property="csoCar" prepend=",">
+				cs_order$suffix$.cso_car = #csoCar#
+			</isNotNull>
+			<isNull property="csoCar" prepend=",">
+				cs_order$suffix$.cso_car = null
+			</isNull>				
+			<isNotNull property="csoProvid" prepend=",">
+				cs_order$suffix$.cso_provid = #csoProvid#
+			</isNotNull>
+			<isNull property="csoProvid" prepend=",">
+				cs_order$suffix$.cso_provid = null
+			</isNull>				
+			<isNotNull property="csoCarNumber" prepend=",">
+				cs_order$suffix$.cso_car_number = #csoCarNumber#
+			</isNotNull>
+			<isNull property="csoCarNumber" prepend=",">
+				cs_order$suffix$.cso_car_number = null
+			</isNull>				
+			<isNotNull property="csoMobile" prepend=",">
+				cs_order$suffix$.cso_mobile = #csoMobile#
+			</isNotNull>
+			<isNull property="csoMobile" prepend=",">
+				cs_order$suffix$.cso_mobile = null
+			</isNull>				
+			<isNotNull property="csoEvRfid" prepend=",">
+				cs_order$suffix$.cso_ev_rfid = #csoEvRfid#
+			</isNotNull>
+			<isNull property="csoEvRfid" prepend=",">
+				cs_order$suffix$.cso_ev_rfid = null
+			</isNull>				
+			<isNotNull property="csoIsAdCar" prepend=",">
+				cs_order$suffix$.cso_is_ad_car = #csoIsAdCar#
+			</isNotNull>
+			<isNull property="csoIsAdCar" prepend=",">
+				cs_order$suffix$.cso_is_ad_car = null
+			</isNull>				
+			<isNotNull property="csoStartTime" prepend=",">
+				cs_order$suffix$.cso_start_time = #csoStartTime#
+			</isNotNull>
+			<isNull property="csoStartTime" prepend=",">
+				cs_order$suffix$.cso_start_time = null
+			</isNull>				
+			<isNotNull property="csoFinishTime" prepend=",">
+				cs_order$suffix$.cso_finish_time = #csoFinishTime#
+			</isNotNull>
+			<isNull property="csoFinishTime" prepend=",">
+				cs_order$suffix$.cso_finish_time = null
+			</isNull>				
+			<isNotNull property="csoLongOrder" prepend=",">
+				cs_order$suffix$.cso_long_order = #csoLongOrder#
+			</isNotNull>
+			<isNull property="csoLongOrder" prepend=",">
+				cs_order$suffix$.cso_long_order = null
+			</isNull>				
+			<isNotNull property="csoLongPrice" prepend=",">
+				cs_order$suffix$.cso_long_price = #csoLongPrice#
+			</isNotNull>
+			<isNull property="csoLongPrice" prepend=",">
+				cs_order$suffix$.cso_long_price = null
+			</isNull>				
+			<isNotNull property="csoUseType" prepend=",">
+				cs_order$suffix$.cso_use_type = #csoUseType#
+			</isNotNull>
+			<isNull property="csoUseType" prepend=",">
+				cs_order$suffix$.cso_use_type = null
+			</isNull>				
+			<isNotNull property="csoTakeTime" prepend=",">
+				cs_order$suffix$.cso_take_time = #csoTakeTime#
+			</isNotNull>
+			<isNull property="csoTakeTime" prepend=",">
+				cs_order$suffix$.cso_take_time = null
+			</isNull>				
+			<isNotNull property="csoRetTime" prepend=",">
+				cs_order$suffix$.cso_ret_time = #csoRetTime#
+			</isNotNull>
+			<isNull property="csoRetTime" prepend=",">
+				cs_order$suffix$.cso_ret_time = null
+			</isNull>				
+			<isNotNull property="csoDuration" prepend=",">
+				cs_order$suffix$.cso_duration = #csoDuration#
+			</isNotNull>
+			<isNull property="csoDuration" prepend=",">
+				cs_order$suffix$.cso_duration = null
+			</isNull>				
+			<isNotNull property="csoFuel" prepend=",">
+				cs_order$suffix$.cso_fuel = #csoFuel#
+			</isNotNull>
+			<isNull property="csoFuel" prepend=",">
+				cs_order$suffix$.cso_fuel = null
+			</isNull>				
+			<isNotNull property="csoElectric" prepend=",">
+				cs_order$suffix$.cso_electric = #csoElectric#
+			</isNotNull>
+			<isNull property="csoElectric" prepend=",">
+				cs_order$suffix$.cso_electric = null
+			</isNull>				
+			<isNotNull property="csoCreditCard" prepend=",">
+				cs_order$suffix$.cso_credit_card = #csoCreditCard#
+			</isNotNull>
+			<isNull property="csoCreditCard" prepend=",">
+				cs_order$suffix$.cso_credit_card = null
+			</isNull>				
+			<isNotNull property="csoCreditBill" prepend=",">
+				cs_order$suffix$.cso_credit_bill = #csoCreditBill#
+			</isNotNull>
+			<isNull property="csoCreditBill" prepend=",">
+				cs_order$suffix$.cso_credit_bill = null
+			</isNull>				
+			<isNotNull property="csoInsureType" prepend=",">
+				cs_order$suffix$.cso_insure_type = #csoInsureType#
+			</isNotNull>
+			<isNull property="csoInsureType" prepend=",">
+				cs_order$suffix$.cso_insure_type = null
+			</isNull>				
+			<isNotNull property="csoFreehour" prepend=",">
+				cs_order$suffix$.cso_freehour = #csoFreehour#
+			</isNotNull>
+			<isNull property="csoFreehour" prepend=",">
+				cs_order$suffix$.cso_freehour = null
+			</isNull>				
+			<isNotNull property="csoRebate" prepend=",">
+				cs_order$suffix$.cso_rebate = #csoRebate#
+			</isNotNull>
+			<isNull property="csoRebate" prepend=",">
+				cs_order$suffix$.cso_rebate = null
+			</isNull>				
+			<isNotNull property="csoMarginNeed" prepend=",">
+				cs_order$suffix$.cso_margin_need = #csoMarginNeed#
+			</isNotNull>
+			<isNull property="csoMarginNeed" prepend=",">
+				cs_order$suffix$.cso_margin_need = null
+			</isNull>				
+			<isNotNull property="csoPredict" prepend=",">
+				cs_order$suffix$.cso_predict = #csoPredict#
+			</isNotNull>
+			<isNull property="csoPredict" prepend=",">
+				cs_order$suffix$.cso_predict = null
+			</isNull>				
+			<isNotNull property="csoPayNeed" prepend=",">
+				cs_order$suffix$.cso_pay_need = #csoPayNeed#
+			</isNotNull>
+			<isNull property="csoPayNeed" prepend=",">
+				cs_order$suffix$.cso_pay_need = null
+			</isNull>				
+			<isNotNull property="csoPayReal" prepend=",">
+				cs_order$suffix$.cso_pay_real = #csoPayReal#
+			</isNotNull>
+			<isNull property="csoPayReal" prepend=",">
+				cs_order$suffix$.cso_pay_real = null
+			</isNull>				
+			<isNotNull property="csoPayMoney" prepend=",">
+				cs_order$suffix$.cso_pay_money = #csoPayMoney#
+			</isNotNull>
+			<isNull property="csoPayMoney" prepend=",">
+				cs_order$suffix$.cso_pay_money = null
+			</isNull>				
+			<isNotNull property="csoPayCoupon" prepend=",">
+				cs_order$suffix$.cso_pay_coupon = #csoPayCoupon#
+			</isNotNull>
+			<isNull property="csoPayCoupon" prepend=",">
+				cs_order$suffix$.cso_pay_coupon = null
+			</isNull>				
+			<isNotNull property="csoPayCoin" prepend=",">
+				cs_order$suffix$.cso_pay_coin = #csoPayCoin#
+			</isNotNull>
+			<isNull property="csoPayCoin" prepend=",">
+				cs_order$suffix$.cso_pay_coin = null
+			</isNull>				
+			<isNotNull property="csoPayKilom" prepend=",">
+				cs_order$suffix$.cso_pay_kilom = #csoPayKilom#
+			</isNotNull>
+			<isNull property="csoPayKilom" prepend=",">
+				cs_order$suffix$.cso_pay_kilom = null
+			</isNull>				
+			<isNotNull property="csoPayMileage" prepend=",">
+				cs_order$suffix$.cso_pay_mileage = #csoPayMileage#
+			</isNotNull>
+			<isNull property="csoPayMileage" prepend=",">
+				cs_order$suffix$.cso_pay_mileage = null
+			</isNull>				
+			<isNotNull property="csoPayRent" prepend=",">
+				cs_order$suffix$.cso_pay_rent = #csoPayRent#
+			</isNotNull>
+			<isNull property="csoPayRent" prepend=",">
+				cs_order$suffix$.cso_pay_rent = null
+			</isNull>				
+			<isNotNull property="csoPayInsure" prepend=",">
+				cs_order$suffix$.cso_pay_insure = #csoPayInsure#
+			</isNotNull>
+			<isNull property="csoPayInsure" prepend=",">
+				cs_order$suffix$.cso_pay_insure = null
+			</isNull>				
+			<isNotNull property="csoPayTimeout" prepend=",">
+				cs_order$suffix$.cso_pay_timeout = #csoPayTimeout#
+			</isNotNull>
+			<isNull property="csoPayTimeout" prepend=",">
+				cs_order$suffix$.cso_pay_timeout = null
+			</isNull>				
+			<isNotNull property="csoPayDriver" prepend=",">
+				cs_order$suffix$.cso_pay_driver = #csoPayDriver#
+			</isNotNull>
+			<isNull property="csoPayDriver" prepend=",">
+				cs_order$suffix$.cso_pay_driver = null
+			</isNull>				
+			<isNotNull property="csoIncome" prepend=",">
+				cs_order$suffix$.cso_income = #csoIncome#
+			</isNotNull>
+			<isNull property="csoIncome" prepend=",">
+				cs_order$suffix$.cso_income = null
+			</isNull>				
+			<isNotNull property="csoUseIndex" prepend=",">
+				cs_order$suffix$.cso_use_index = #csoUseIndex#
+			</isNotNull>
+			<isNull property="csoUseIndex" prepend=",">
+				cs_order$suffix$.cso_use_index = null
+			</isNull>				
+			<isNotNull property="csoFlag" prepend=",">
+				cs_order$suffix$.cso_flag = #csoFlag#
+			</isNotNull>
+			<isNull property="csoFlag" prepend=",">
+				cs_order$suffix$.cso_flag = null
+			</isNull>				
+			<isNotNull property="csoFrom" prepend=",">
+				cs_order$suffix$.cso_from = #csoFrom#
+			</isNotNull>
+			<isNull property="csoFrom" prepend=",">
+				cs_order$suffix$.cso_from = null
+			</isNull>				
+			<isNotNull property="csoSrc" prepend=",">
+				cs_order$suffix$.cso_src = #csoSrc#
+			</isNotNull>
+			<isNull property="csoSrc" prepend=",">
+				cs_order$suffix$.cso_src = null
+			</isNull>				
+			<isNotNull property="csoUpdateTime" prepend=",">
+				cs_order$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotNull>
+			<isNull property="csoUpdateTime" prepend=",">
+				cs_order$suffix$.cso_update_time = null
+			</isNull>				
+			<isNotNull property="csoAddTime" prepend=",">
+				cs_order$suffix$.cso_add_time = #csoAddTime#
+			</isNotNull>
+			<isNull property="csoAddTime" prepend=",">
+				cs_order$suffix$.cso_add_time = null
+			</isNull>				
+			<isNotNull property="csoEndTime" prepend=",">
+				cs_order$suffix$.cso_end_time = #csoEndTime#
+			</isNotNull>
+			<isNull property="csoEndTime" prepend=",">
+				cs_order$suffix$.cso_end_time = null
+			</isNull>				
+			<isNotNull property="csoSerial" prepend=",">
+				cs_order$suffix$.cso_serial = #csoSerial#
+			</isNotNull>
+			<isNull property="csoSerial" prepend=",">
+				cs_order$suffix$.cso_serial = null
+			</isNull>				
+			<isNotNull property="csoCode" prepend=",">
+				cs_order$suffix$.cso_code = #csoCode#
+			</isNotNull>
+			<isNull property="csoCode" prepend=",">
+				cs_order$suffix$.cso_code = null
+			</isNull>				
+			<isNotNull property="csoRemark" prepend=",">
+				cs_order$suffix$.cso_remark = #csoRemark#
+			</isNotNull>
+			<isNull property="csoRemark" prepend=",">
+				cs_order$suffix$.cso_remark = null
+			</isNull>				
+			<isNotNull property="csoLog" prepend=",">
+				cs_order$suffix$.cso_log = #csoLog#
+			</isNotNull>
+			<isNull property="csoLog" prepend=",">
+				cs_order$suffix$.cso_log = null
+			</isNull>				
+			<isNotNull property="csoEditor" prepend=",">
+				cs_order$suffix$.cso_editor = #csoEditor#
+			</isNotNull>
+			<isNull property="csoEditor" prepend=",">
+				cs_order$suffix$.cso_editor = null
+			</isNull>				
+			<isNotNull property="csoMask" prepend=",">
+				cs_order$suffix$.cso_mask = #csoMask#
+			</isNotNull>
+			<isNull property="csoMask" prepend=",">
+				cs_order$suffix$.cso_mask = null
+			</isNull>				
+			<isNotNull property="csoDeviceVesion" prepend=",">
+				cs_order$suffix$.cso_device_vesion = #csoDeviceVesion#
+			</isNotNull>
+			<isNull property="csoDeviceVesion" prepend=",">
+				cs_order$suffix$.cso_device_vesion = null
+			</isNull>				
+			<isNotNull property="csoAlarm" prepend=",">
+				cs_order$suffix$.cso_alarm = #csoAlarm#
+			</isNotNull>
+			<isNull property="csoAlarm" prepend=",">
+				cs_order$suffix$.cso_alarm = null
+			</isNull>				
+			<isNotNull property="csoState" prepend=",">
+				cs_order$suffix$.cso_state = #csoState#
+			</isNotNull>
+			<isNull property="csoState" prepend=",">
+				cs_order$suffix$.cso_state = null
+			</isNull>				
+			<isNotNull property="csoStatus" prepend=",">
+				cs_order$suffix$.cso_status = #csoStatus#
+			</isNotNull>
+			<isNull property="csoStatus" prepend=",">
+				cs_order$suffix$.cso_status = null
+			</isNull>				
+		where
+			cso_id=#csoId#
+	</update>
+	
+	<!-- 更新系统订单非空字段 -->
+	<update id="updateCsOrder$NotNull"  parameterClass="com.ccclubs.model.CsOrder">
+		update cs_order$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csoHost" prepend=",">
+				cs_order$suffix$.cso_host = #csoHost#
+			</isNotNull>		
+			<isNotNull property="csoPayMember" prepend=",">
+				cs_order$suffix$.cso_pay_member = #csoPayMember#
+			</isNotNull>		
+			<isNotNull property="csoUseMember" prepend=",">
+				cs_order$suffix$.cso_use_member = #csoUseMember#
+			</isNotNull>		
+			<isNotNull property="csoFeeType" prepend=",">
+				cs_order$suffix$.cso_fee_type = #csoFeeType#
+			</isNotNull>		
+			<isNotNull property="csoArea" prepend=",">
+				cs_order$suffix$.cso_area = #csoArea#
+			</isNotNull>		
+			<isNotNull property="csoOutlets" prepend=",">
+				cs_order$suffix$.cso_outlets = #csoOutlets#
+			</isNotNull>		
+			<isNotNull property="csoOutletsRet" prepend=",">
+				cs_order$suffix$.cso_outlets_ret = #csoOutletsRet#
+			</isNotNull>		
+			<isNotNull property="csoModel" prepend=",">
+				cs_order$suffix$.cso_model = #csoModel#
+			</isNotNull>		
+			<isNotNull property="csoCar" prepend=",">
+				cs_order$suffix$.cso_car = #csoCar#
+			</isNotNull>		
+			<isNotNull property="csoProvid" prepend=",">
+				cs_order$suffix$.cso_provid = #csoProvid#
+			</isNotNull>		
+			<isNotNull property="csoCarNumber" prepend=",">
+				cs_order$suffix$.cso_car_number = #csoCarNumber#
+			</isNotNull>		
+			<isNotNull property="csoMobile" prepend=",">
+				cs_order$suffix$.cso_mobile = #csoMobile#
+			</isNotNull>		
+			<isNotNull property="csoEvRfid" prepend=",">
+				cs_order$suffix$.cso_ev_rfid = #csoEvRfid#
+			</isNotNull>		
+			<isNotNull property="csoIsAdCar" prepend=",">
+				cs_order$suffix$.cso_is_ad_car = #csoIsAdCar#
+			</isNotNull>		
+			<isNotNull property="csoStartTime" prepend=",">
+				cs_order$suffix$.cso_start_time = #csoStartTime#
+			</isNotNull>		
+			<isNotNull property="csoFinishTime" prepend=",">
+				cs_order$suffix$.cso_finish_time = #csoFinishTime#
+			</isNotNull>		
+			<isNotNull property="csoLongOrder" prepend=",">
+				cs_order$suffix$.cso_long_order = #csoLongOrder#
+			</isNotNull>		
+			<isNotNull property="csoLongPrice" prepend=",">
+				cs_order$suffix$.cso_long_price = #csoLongPrice#
+			</isNotNull>		
+			<isNotNull property="csoUseType" prepend=",">
+				cs_order$suffix$.cso_use_type = #csoUseType#
+			</isNotNull>		
+			<isNotNull property="csoTakeTime" prepend=",">
+				cs_order$suffix$.cso_take_time = #csoTakeTime#
+			</isNotNull>		
+			<isNotNull property="csoRetTime" prepend=",">
+				cs_order$suffix$.cso_ret_time = #csoRetTime#
+			</isNotNull>		
+			<isNotNull property="csoDuration" prepend=",">
+				cs_order$suffix$.cso_duration = #csoDuration#
+			</isNotNull>		
+			<isNotNull property="csoFuel" prepend=",">
+				cs_order$suffix$.cso_fuel = #csoFuel#
+			</isNotNull>		
+			<isNotNull property="csoElectric" prepend=",">
+				cs_order$suffix$.cso_electric = #csoElectric#
+			</isNotNull>		
+			<isNotNull property="csoCreditCard" prepend=",">
+				cs_order$suffix$.cso_credit_card = #csoCreditCard#
+			</isNotNull>		
+			<isNotNull property="csoCreditBill" prepend=",">
+				cs_order$suffix$.cso_credit_bill = #csoCreditBill#
+			</isNotNull>		
+			<isNotNull property="csoInsureType" prepend=",">
+				cs_order$suffix$.cso_insure_type = #csoInsureType#
+			</isNotNull>		
+			<isNotNull property="csoFreehour" prepend=",">
+				cs_order$suffix$.cso_freehour = #csoFreehour#
+			</isNotNull>		
+			<isNotNull property="csoRebate" prepend=",">
+				cs_order$suffix$.cso_rebate = #csoRebate#
+			</isNotNull>		
+			<isNotNull property="csoMarginNeed" prepend=",">
+				cs_order$suffix$.cso_margin_need = #csoMarginNeed#
+			</isNotNull>		
+			<isNotNull property="csoPredict" prepend=",">
+				cs_order$suffix$.cso_predict = #csoPredict#
+			</isNotNull>		
+			<isNotNull property="csoPayNeed" prepend=",">
+				cs_order$suffix$.cso_pay_need = #csoPayNeed#
+			</isNotNull>		
+			<isNotNull property="csoPayReal" prepend=",">
+				cs_order$suffix$.cso_pay_real = #csoPayReal#
+			</isNotNull>		
+			<isNotNull property="csoPayMoney" prepend=",">
+				cs_order$suffix$.cso_pay_money = #csoPayMoney#
+			</isNotNull>		
+			<isNotNull property="csoPayCoupon" prepend=",">
+				cs_order$suffix$.cso_pay_coupon = #csoPayCoupon#
+			</isNotNull>		
+			<isNotNull property="csoPayCoin" prepend=",">
+				cs_order$suffix$.cso_pay_coin = #csoPayCoin#
+			</isNotNull>		
+			<isNotNull property="csoPayKilom" prepend=",">
+				cs_order$suffix$.cso_pay_kilom = #csoPayKilom#
+			</isNotNull>		
+			<isNotNull property="csoPayMileage" prepend=",">
+				cs_order$suffix$.cso_pay_mileage = #csoPayMileage#
+			</isNotNull>		
+			<isNotNull property="csoPayRent" prepend=",">
+				cs_order$suffix$.cso_pay_rent = #csoPayRent#
+			</isNotNull>		
+			<isNotNull property="csoPayInsure" prepend=",">
+				cs_order$suffix$.cso_pay_insure = #csoPayInsure#
+			</isNotNull>		
+			<isNotNull property="csoPayTimeout" prepend=",">
+				cs_order$suffix$.cso_pay_timeout = #csoPayTimeout#
+			</isNotNull>		
+			<isNotNull property="csoPayDriver" prepend=",">
+				cs_order$suffix$.cso_pay_driver = #csoPayDriver#
+			</isNotNull>		
+			<isNotNull property="csoIncome" prepend=",">
+				cs_order$suffix$.cso_income = #csoIncome#
+			</isNotNull>		
+			<isNotNull property="csoUseIndex" prepend=",">
+				cs_order$suffix$.cso_use_index = #csoUseIndex#
+			</isNotNull>		
+			<isNotNull property="csoFlag" prepend=",">
+				cs_order$suffix$.cso_flag = #csoFlag#
+			</isNotNull>		
+			<isNotNull property="csoFrom" prepend=",">
+				cs_order$suffix$.cso_from = #csoFrom#
+			</isNotNull>		
+			<isNotNull property="csoSrc" prepend=",">
+				cs_order$suffix$.cso_src = #csoSrc#
+			</isNotNull>		
+			<isNotNull property="csoUpdateTime" prepend=",">
+				cs_order$suffix$.cso_update_time = #csoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csoAddTime" prepend=",">
+				cs_order$suffix$.cso_add_time = #csoAddTime#
+			</isNotNull>		
+			<isNotNull property="csoEndTime" prepend=",">
+				cs_order$suffix$.cso_end_time = #csoEndTime#
+			</isNotNull>		
+			<isNotNull property="csoSerial" prepend=",">
+				cs_order$suffix$.cso_serial = #csoSerial#
+			</isNotNull>		
+			<isNotNull property="csoCode" prepend=",">
+				cs_order$suffix$.cso_code = #csoCode#
+			</isNotNull>		
+			<isNotNull property="csoRemark" prepend=",">
+				cs_order$suffix$.cso_remark = #csoRemark#
+			</isNotNull>		
+			<isNotNull property="csoLog" prepend=",">
+				cs_order$suffix$.cso_log = #csoLog#
+			</isNotNull>		
+			<isNotNull property="csoEditor" prepend=",">
+				cs_order$suffix$.cso_editor = #csoEditor#
+			</isNotNull>		
+			<isNotNull property="csoMask" prepend=",">
+				cs_order$suffix$.cso_mask = #csoMask#
+			</isNotNull>		
+			<isNotNull property="csoDeviceVesion" prepend=",">
+				cs_order$suffix$.cso_device_vesion = #csoDeviceVesion#
+			</isNotNull>		
+			<isNotNull property="csoAlarm" prepend=",">
+				cs_order$suffix$.cso_alarm = #csoAlarm#
+			</isNotNull>		
+			<isNotNull property="csoState" prepend=",">
+				cs_order$suffix$.cso_state = #csoState#
+			</isNotNull>		
+			<isNotNull property="csoStatus" prepend=",">
+				cs_order$suffix$.cso_status = #csoStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cso_id=#csoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统订单 -->
+	<delete id="deleteCsOrderById" parameterClass="java.util.HashMap">
+		delete from cs_order$suffix$ where cso_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个系统订单 -->
+	<update id="removeCsOrderById" parameterClass="java.util.HashMap">
+		update cs_order$suffix$ set  cs_order$suffix$.cso_status=-1  where cso_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新系统订单 -->
+	<update id="updateCsOrderBy"  parameterClass="java.util.HashMap">
+		update cs_order$suffix$ set		
+			cso_id=cso_id
+			<isNotNull property="V_csoId" prepend=",">
+				cs_order$suffix$.cso_id = #V_csoId#
+			</isNotNull>		
+			<isNotNull property="V_csoHost" prepend=",">
+				cs_order$suffix$.cso_host = #V_csoHost#
+			</isNotNull>		
+			<isNotNull property="V_csoPayMember" prepend=",">
+				cs_order$suffix$.cso_pay_member = #V_csoPayMember#
+			</isNotNull>		
+			<isNotNull property="V_csoUseMember" prepend=",">
+				cs_order$suffix$.cso_use_member = #V_csoUseMember#
+			</isNotNull>		
+			<isNotNull property="V_csoFeeType" prepend=",">
+				cs_order$suffix$.cso_fee_type = #V_csoFeeType#
+			</isNotNull>		
+			<isNotNull property="V_csoArea" prepend=",">
+				cs_order$suffix$.cso_area = #V_csoArea#
+			</isNotNull>		
+			<isNotNull property="V_csoOutlets" prepend=",">
+				cs_order$suffix$.cso_outlets = #V_csoOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csoOutletsRet" prepend=",">
+				cs_order$suffix$.cso_outlets_ret = #V_csoOutletsRet#
+			</isNotNull>		
+			<isNotNull property="V_csoModel" prepend=",">
+				cs_order$suffix$.cso_model = #V_csoModel#
+			</isNotNull>		
+			<isNotNull property="V_csoCar" prepend=",">
+				cs_order$suffix$.cso_car = #V_csoCar#
+			</isNotNull>		
+			<isNotNull property="V_csoProvid" prepend=",">
+				cs_order$suffix$.cso_provid = #V_csoProvid#
+			</isNotNull>		
+			<isNotNull property="V_csoCarNumber" prepend=",">
+				cs_order$suffix$.cso_car_number = #V_csoCarNumber#
+			</isNotNull>		
+			<isNotNull property="V_csoMobile" prepend=",">
+				cs_order$suffix$.cso_mobile = #V_csoMobile#
+			</isNotNull>		
+			<isNotNull property="V_csoEvRfid" prepend=",">
+				cs_order$suffix$.cso_ev_rfid = #V_csoEvRfid#
+			</isNotNull>		
+			<isNotNull property="V_csoIsAdCar" prepend=",">
+				cs_order$suffix$.cso_is_ad_car = #V_csoIsAdCar#
+			</isNotNull>		
+			<isNotNull property="V_csoStartTime" prepend=",">
+				cs_order$suffix$.cso_start_time = #V_csoStartTime#
+			</isNotNull>		
+			<isNotNull property="V_csoFinishTime" prepend=",">
+				cs_order$suffix$.cso_finish_time = #V_csoFinishTime#
+			</isNotNull>		
+			<isNotNull property="V_csoLongOrder" prepend=",">
+				cs_order$suffix$.cso_long_order = #V_csoLongOrder#
+			</isNotNull>		
+			<isNotNull property="V_csoLongPrice" prepend=",">
+				cs_order$suffix$.cso_long_price = #V_csoLongPrice#
+			</isNotNull>		
+			<isNotNull property="V_csoUseType" prepend=",">
+				cs_order$suffix$.cso_use_type = #V_csoUseType#
+			</isNotNull>		
+			<isNotNull property="V_csoTakeTime" prepend=",">
+				cs_order$suffix$.cso_take_time = #V_csoTakeTime#
+			</isNotNull>		
+			<isNotNull property="V_csoRetTime" prepend=",">
+				cs_order$suffix$.cso_ret_time = #V_csoRetTime#
+			</isNotNull>		
+			<isNotNull property="V_csoDuration" prepend=",">
+				cs_order$suffix$.cso_duration = #V_csoDuration#
+			</isNotNull>		
+			<isNotNull property="V_csoFuel" prepend=",">
+				cs_order$suffix$.cso_fuel = #V_csoFuel#
+			</isNotNull>		
+			<isNotNull property="V_csoElectric" prepend=",">
+				cs_order$suffix$.cso_electric = #V_csoElectric#
+			</isNotNull>		
+			<isNotNull property="V_csoCreditCard" prepend=",">
+				cs_order$suffix$.cso_credit_card = #V_csoCreditCard#
+			</isNotNull>		
+			<isNotNull property="V_csoCreditBill" prepend=",">
+				cs_order$suffix$.cso_credit_bill = #V_csoCreditBill#
+			</isNotNull>		
+			<isNotNull property="V_csoInsureType" prepend=",">
+				cs_order$suffix$.cso_insure_type = #V_csoInsureType#
+			</isNotNull>		
+			<isNotNull property="V_csoFreehour" prepend=",">
+				cs_order$suffix$.cso_freehour = #V_csoFreehour#
+			</isNotNull>		
+			<isNotNull property="V_csoRebate" prepend=",">
+				cs_order$suffix$.cso_rebate = #V_csoRebate#
+			</isNotNull>		
+			<isNotNull property="V_csoMarginNeed" prepend=",">
+				cs_order$suffix$.cso_margin_need = #V_csoMarginNeed#
+			</isNotNull>		
+			<isNotNull property="V_csoPredict" prepend=",">
+				cs_order$suffix$.cso_predict = #V_csoPredict#
+			</isNotNull>		
+			<isNotNull property="V_csoPayNeed" prepend=",">
+				cs_order$suffix$.cso_pay_need = #V_csoPayNeed#
+			</isNotNull>		
+			<isNotNull property="V_csoPayReal" prepend=",">
+				cs_order$suffix$.cso_pay_real = #V_csoPayReal#
+			</isNotNull>		
+			<isNotNull property="V_csoPayMoney" prepend=",">
+				cs_order$suffix$.cso_pay_money = #V_csoPayMoney#
+			</isNotNull>		
+			<isNotNull property="V_csoPayCoupon" prepend=",">
+				cs_order$suffix$.cso_pay_coupon = #V_csoPayCoupon#
+			</isNotNull>		
+			<isNotNull property="V_csoPayCoin" prepend=",">
+				cs_order$suffix$.cso_pay_coin = #V_csoPayCoin#
+			</isNotNull>		
+			<isNotNull property="V_csoPayKilom" prepend=",">
+				cs_order$suffix$.cso_pay_kilom = #V_csoPayKilom#
+			</isNotNull>		
+			<isNotNull property="V_csoPayMileage" prepend=",">
+				cs_order$suffix$.cso_pay_mileage = #V_csoPayMileage#
+			</isNotNull>		
+			<isNotNull property="V_csoPayRent" prepend=",">
+				cs_order$suffix$.cso_pay_rent = #V_csoPayRent#
+			</isNotNull>		
+			<isNotNull property="V_csoPayInsure" prepend=",">
+				cs_order$suffix$.cso_pay_insure = #V_csoPayInsure#
+			</isNotNull>		
+			<isNotNull property="V_csoPayTimeout" prepend=",">
+				cs_order$suffix$.cso_pay_timeout = #V_csoPayTimeout#
+			</isNotNull>		
+			<isNotNull property="V_csoPayDriver" prepend=",">
+				cs_order$suffix$.cso_pay_driver = #V_csoPayDriver#
+			</isNotNull>		
+			<isNotNull property="V_csoIncome" prepend=",">
+				cs_order$suffix$.cso_income = #V_csoIncome#
+			</isNotNull>		
+			<isNotNull property="V_csoUseIndex" prepend=",">
+				cs_order$suffix$.cso_use_index = #V_csoUseIndex#
+			</isNotNull>		
+			<isNotNull property="V_csoFlag" prepend=",">
+				cs_order$suffix$.cso_flag = #V_csoFlag#
+			</isNotNull>		
+			<isNotNull property="V_csoFrom" prepend=",">
+				cs_order$suffix$.cso_from = #V_csoFrom#
+			</isNotNull>		
+			<isNotNull property="V_csoSrc" prepend=",">
+				cs_order$suffix$.cso_src = #V_csoSrc#
+			</isNotNull>		
+			<isNotNull property="V_csoUpdateTime" prepend=",">
+				cs_order$suffix$.cso_update_time = #V_csoUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csoAddTime" prepend=",">
+				cs_order$suffix$.cso_add_time = #V_csoAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csoEndTime" prepend=",">
+				cs_order$suffix$.cso_end_time = #V_csoEndTime#
+			</isNotNull>		
+			<isNotNull property="V_csoSerial" prepend=",">
+				cs_order$suffix$.cso_serial = #V_csoSerial#
+			</isNotNull>		
+			<isNotNull property="V_csoCode" prepend=",">
+				cs_order$suffix$.cso_code = #V_csoCode#
+			</isNotNull>		
+			<isNotNull property="V_csoRemark" prepend=",">
+				cs_order$suffix$.cso_remark = #V_csoRemark#
+			</isNotNull>		
+			<isNotNull property="V_csoLog" prepend=",">
+				cs_order$suffix$.cso_log = #V_csoLog#
+			</isNotNull>		
+			<isNotNull property="V_csoEditor" prepend=",">
+				cs_order$suffix$.cso_editor = #V_csoEditor#
+			</isNotNull>		
+			<isNotNull property="V_csoMask" prepend=",">
+				cs_order$suffix$.cso_mask = #V_csoMask#
+			</isNotNull>		
+			<isNotNull property="V_csoDeviceVesion" prepend=",">
+				cs_order$suffix$.cso_device_vesion = #V_csoDeviceVesion#
+			</isNotNull>		
+			<isNotNull property="V_csoAlarm" prepend=",">
+				cs_order$suffix$.cso_alarm = #V_csoAlarm#
+			</isNotNull>		
+			<isNotNull property="V_csoState" prepend=",">
+				cs_order$suffix$.cso_state = #V_csoState#
+			</isNotNull>		
+			<isNotNull property="V_csoStatus" prepend=",">
+				cs_order$suffix$.cso_status = #V_csoStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.cso_pay_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_order$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询-->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<isNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.cso_fee_type=cs_user_type$CsUserType.suffix$.csut_id
+			</isNull>
+			<isNotNull property="CsUserType.on">
+				left join cs_user_type cs_user_type$CsUserType.suffix$ on cs_order$suffix$.$CsUserType.on$=cs_user_type$CsUserType.suffix$.csut_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询-->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<isNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.cso_area=cs_area$CsArea.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsArea.on">
+				left join cs_area cs_area$CsArea.suffix$ on cs_order$suffix$.$CsArea.on$=cs_area$CsArea.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.cso_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.cso_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.cso_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询-->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.cso_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询-->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<isNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.cso_credit_card=cs_credit_card$CsCreditCard.suffix$.cscc_id
+			</isNull>
+			<isNotNull property="CsCreditCard.on">
+				left join cs_credit_card cs_credit_card$CsCreditCard.suffix$ on cs_order$suffix$.$CsCreditCard.on$=cs_credit_card$CsCreditCard.suffix$.cscc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询-->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<isNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.cso_credit_bill=cs_credit_bill$CsCreditBill.suffix$.cscb_id
+			</isNull>
+			<isNotNull property="CsCreditBill.on">
+				left join cs_credit_bill cs_credit_bill$CsCreditBill.suffix$ on cs_order$suffix$.$CsCreditBill.on$=cs_credit_bill$CsCreditBill.suffix$.cscb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询-->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.cso_insure_type=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_order$suffix$.cso_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsoPayMember"><!-- 调用一下CsoPayMember，把CsMember指向CsoPayMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[计费方式]查询条件sql片段 -->
+		<isNotNull property="CsoFeeType"><!-- 调用一下CsoFeeType，把CsUserType指向CsoFeeType --></isNotNull>
+		<isNotNull property="CsUserType">
+			<include refid="CsUserType_part.cs_user_type_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点区域]查询条件sql片段 -->
+		<isNotNull property="CsoArea"><!-- 调用一下CsoArea，把CsArea指向CsoArea --></isNotNull>
+		<isNotNull property="CsArea">
+			<include refid="CsArea_part.cs_area_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsoOutlets"><!-- 调用一下CsoOutlets，把CsOutlets指向CsoOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsoModel"><!-- 调用一下CsoModel，把CsCarModel指向CsoModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsoCar"><!-- 调用一下CsoCar，把CsCar指向CsoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsoProvid"><!-- 调用一下CsoProvid，把CsProvid指向CsoProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用卡]查询条件sql片段 -->
+		<isNotNull property="CsoCreditCard"><!-- 调用一下CsoCreditCard，把CsCreditCard指向CsoCreditCard --></isNotNull>
+		<isNotNull property="CsCreditCard">
+			<include refid="CsCreditCard_part.cs_credit_card_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[信用账单]查询条件sql片段 -->
+		<isNotNull property="CsoCreditBill"><!-- 调用一下CsoCreditBill，把CsCreditBill指向CsoCreditBill --></isNotNull>
+		<isNotNull property="CsCreditBill">
+			<include refid="CsCreditBill_part.cs_credit_bill_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsoInsureType"><!-- 调用一下CsoInsureType，把CsProduct指向CsoInsureType --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOrder_part.cs_order_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统订单 -->
+	<update id="deleteCsOrderBy"  parameterClass="java.util.HashMap">
+		delete from cs_order$suffix$ where 
+		cs_order$suffix$.cso_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOrder_part.cs_order_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

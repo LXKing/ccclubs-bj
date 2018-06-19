@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 客户关怀之SQL映射 -->
+	<resultMap id="CsCare" class="com.ccclubs.model.CsCare">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscHost" column="csc_host"/>
+		<result property="cscMember" column="csc_member"/>
+		<result property="cscUser" column="csc_user"/>
+		<result property="cscSort" column="csc_sort"/>
+		<result property="cscType" column="csc_type"/>
+		<result property="cscTitle" column="csc_title"/>
+		<result property="cscDesc" column="csc_desc"/>
+		<result property="cscUpdateTime" column="csc_update_time"/>
+		<result property="cscAddTime" column="csc_add_time"/>
+		<result property="cscAlarmTime" column="csc_alarm_time"/>
+		<result property="cscStatus" column="csc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有客户关怀 -->
+	<select id="getCsCareList" resultMap="CsCare">
+		select cs_care$suffix$.* from cs_care$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_care$suffix$.csc_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCare_part.cs_care_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取客户关怀分页 -->
+	<select id="getCsCarePage" parameterClass="java.util.HashMap" resultMap="CsCare">
+		select cs_care$suffix$.* from cs_care$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_care$suffix$.csc_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCare_part.cs_care_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取客户关怀总数 -->
+	<select id="getCsCareEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_care$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_care$suffix$.csc_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCare_part.cs_care_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取客户关怀 -->
+	<select id="getCsCareById" parameterClass="java.util.HashMap" resultMap="CsCare">
+		select cs_care$suffix$.* from cs_care$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存客户关怀 -->
+	<insert id="saveCsCare"  parameterClass="com.ccclubs.model.CsCare">
+		insert into cs_care$suffix$
+		(
+			cs_care$suffix$.csc_host
+			,cs_care$suffix$.csc_member
+			,cs_care$suffix$.csc_user
+			,cs_care$suffix$.csc_sort
+			,cs_care$suffix$.csc_type
+			,cs_care$suffix$.csc_title
+			,cs_care$suffix$.csc_desc
+			,cs_care$suffix$.csc_update_time
+			,cs_care$suffix$.csc_add_time
+			,cs_care$suffix$.csc_alarm_time
+			,cs_care$suffix$.csc_status
+		)
+		values(
+			<isNotNull property="cscHost" prepend="">
+				#cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscMember" prepend=",">
+				#cscMember#
+			</isNotNull>
+			<isNull property="cscMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUser" prepend=",">
+				#cscUser#
+			</isNotNull>
+			<isNull property="cscUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscSort" prepend=",">
+				#cscSort#
+			</isNotNull>
+			<isNull property="cscSort" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscType" prepend=",">
+				#cscType#
+			</isNotNull>
+			<isNull property="cscType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscTitle" prepend=",">
+				#cscTitle#
+			</isNotNull>
+			<isNull property="cscTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscDesc" prepend=",">
+				#cscDesc#
+			</isNotNull>
+			<isNull property="cscDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUpdateTime" prepend=",">
+				#cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddTime" prepend=",">
+				#cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAlarmTime" prepend=",">
+				#cscAlarmTime#
+			</isNotNull>
+			<isNull property="cscAlarmTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscStatus" prepend=",">
+				#cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新客户关怀 -->
+	<update id="updateCsCare"  parameterClass="com.ccclubs.model.CsCare">
+		update cs_care$suffix$ set
+			<isNotNull property="cscHost" prepend="">
+				cs_care$suffix$.csc_host = #cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				cs_care$suffix$.csc_host = null
+			</isNull>				
+			<isNotNull property="cscMember" prepend=",">
+				cs_care$suffix$.csc_member = #cscMember#
+			</isNotNull>
+			<isNull property="cscMember" prepend=",">
+				cs_care$suffix$.csc_member = null
+			</isNull>				
+			<isNotNull property="cscUser" prepend=",">
+				cs_care$suffix$.csc_user = #cscUser#
+			</isNotNull>
+			<isNull property="cscUser" prepend=",">
+				cs_care$suffix$.csc_user = null
+			</isNull>				
+			<isNotNull property="cscSort" prepend=",">
+				cs_care$suffix$.csc_sort = #cscSort#
+			</isNotNull>
+			<isNull property="cscSort" prepend=",">
+				cs_care$suffix$.csc_sort = null
+			</isNull>				
+			<isNotNull property="cscType" prepend=",">
+				cs_care$suffix$.csc_type = #cscType#
+			</isNotNull>
+			<isNull property="cscType" prepend=",">
+				cs_care$suffix$.csc_type = null
+			</isNull>				
+			<isNotNull property="cscTitle" prepend=",">
+				cs_care$suffix$.csc_title = #cscTitle#
+			</isNotNull>
+			<isNull property="cscTitle" prepend=",">
+				cs_care$suffix$.csc_title = null
+			</isNull>				
+			<isNotNull property="cscDesc" prepend=",">
+				cs_care$suffix$.csc_desc = #cscDesc#
+			</isNotNull>
+			<isNull property="cscDesc" prepend=",">
+				cs_care$suffix$.csc_desc = null
+			</isNull>				
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_care$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				cs_care$suffix$.csc_update_time = null
+			</isNull>				
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_care$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				cs_care$suffix$.csc_add_time = null
+			</isNull>				
+			<isNotNull property="cscAlarmTime" prepend=",">
+				cs_care$suffix$.csc_alarm_time = #cscAlarmTime#
+			</isNotNull>
+			<isNull property="cscAlarmTime" prepend=",">
+				cs_care$suffix$.csc_alarm_time = null
+			</isNull>				
+			<isNotNull property="cscStatus" prepend=",">
+				cs_care$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				cs_care$suffix$.csc_status = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新客户关怀非空字段 -->
+	<update id="updateCsCare$NotNull"  parameterClass="com.ccclubs.model.CsCare">
+		update cs_care$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscHost" prepend=",">
+				cs_care$suffix$.csc_host = #cscHost#
+			</isNotNull>		
+			<isNotNull property="cscMember" prepend=",">
+				cs_care$suffix$.csc_member = #cscMember#
+			</isNotNull>		
+			<isNotNull property="cscUser" prepend=",">
+				cs_care$suffix$.csc_user = #cscUser#
+			</isNotNull>		
+			<isNotNull property="cscSort" prepend=",">
+				cs_care$suffix$.csc_sort = #cscSort#
+			</isNotNull>		
+			<isNotNull property="cscType" prepend=",">
+				cs_care$suffix$.csc_type = #cscType#
+			</isNotNull>		
+			<isNotNull property="cscTitle" prepend=",">
+				cs_care$suffix$.csc_title = #cscTitle#
+			</isNotNull>		
+			<isNotNull property="cscDesc" prepend=",">
+				cs_care$suffix$.csc_desc = #cscDesc#
+			</isNotNull>		
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_care$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_care$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>		
+			<isNotNull property="cscAlarmTime" prepend=",">
+				cs_care$suffix$.csc_alarm_time = #cscAlarmTime#
+			</isNotNull>		
+			<isNotNull property="cscStatus" prepend=",">
+				cs_care$suffix$.csc_status = #cscStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个客户关怀 -->
+	<delete id="deleteCsCareById" parameterClass="java.util.HashMap">
+		delete from cs_care$suffix$ where csc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个客户关怀 -->
+	<update id="removeCsCareById" parameterClass="java.util.HashMap">
+		update cs_care$suffix$ set  cs_care$suffix$.csc_status=-1  where csc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新客户关怀 -->
+	<update id="updateCsCareBy"  parameterClass="java.util.HashMap">
+		update cs_care$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_care$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscHost" prepend=",">
+				cs_care$suffix$.csc_host = #V_cscHost#
+			</isNotNull>		
+			<isNotNull property="V_cscMember" prepend=",">
+				cs_care$suffix$.csc_member = #V_cscMember#
+			</isNotNull>		
+			<isNotNull property="V_cscUser" prepend=",">
+				cs_care$suffix$.csc_user = #V_cscUser#
+			</isNotNull>		
+			<isNotNull property="V_cscSort" prepend=",">
+				cs_care$suffix$.csc_sort = #V_cscSort#
+			</isNotNull>		
+			<isNotNull property="V_cscType" prepend=",">
+				cs_care$suffix$.csc_type = #V_cscType#
+			</isNotNull>		
+			<isNotNull property="V_cscTitle" prepend=",">
+				cs_care$suffix$.csc_title = #V_cscTitle#
+			</isNotNull>		
+			<isNotNull property="V_cscDesc" prepend=",">
+				cs_care$suffix$.csc_desc = #V_cscDesc#
+			</isNotNull>		
+			<isNotNull property="V_cscUpdateTime" prepend=",">
+				cs_care$suffix$.csc_update_time = #V_cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAddTime" prepend=",">
+				cs_care$suffix$.csc_add_time = #V_cscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAlarmTime" prepend=",">
+				cs_care$suffix$.csc_alarm_time = #V_cscAlarmTime#
+			</isNotNull>		
+			<isNotNull property="V_cscStatus" prepend=",">
+				cs_care$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.csc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_care$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_care$suffix$.csc_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscMember"><!-- 调用一下CscMember，把CsMember指向CscMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCare_part.cs_care_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除客户关怀 -->
+	<update id="deleteCsCareBy"  parameterClass="java.util.HashMap">
+		delete from cs_care$suffix$ where 
+		cs_care$suffix$.csc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCare_part.cs_care_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

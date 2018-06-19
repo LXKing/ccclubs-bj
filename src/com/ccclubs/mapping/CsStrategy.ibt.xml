@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 品牌战略之SQL映射 -->
+	<resultMap id="CsStrategy" class="com.ccclubs.model.CsStrategy">
+		<result property="cssId" column="css_id"/>
+		<result property="cssTitle" column="css_title"/>
+		<result property="cssContent" column="css_content"/>
+		<result property="cssMind" column="css_mind"/>
+		<result property="cssAdder" column="css_adder"/>
+		<result property="cssEditor" column="css_editor"/>
+		<result property="cssUpdateTime" column="css_update_time"/>
+		<result property="cssAddTime" column="css_add_time"/>
+		<result property="cssStatus" column="css_status"/>
+	</resultMap>
+		
+	<!-- 获取所有品牌战略 -->
+	<select id="getCsStrategyList" resultMap="CsStrategy">
+		select cs_strategy$suffix$.* from cs_strategy$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_strategy$suffix$.css_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsStrategy_part.cs_strategy_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by css_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取品牌战略分页 -->
+	<select id="getCsStrategyPage" parameterClass="java.util.HashMap" resultMap="CsStrategy">
+		select cs_strategy$suffix$.* from cs_strategy$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_strategy$suffix$.css_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsStrategy_part.cs_strategy_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by css_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取品牌战略总数 -->
+	<select id="getCsStrategyEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_strategy$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_strategy$suffix$.css_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsStrategy_part.cs_strategy_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取品牌战略 -->
+	<select id="getCsStrategyById" parameterClass="java.util.HashMap" resultMap="CsStrategy">
+		select cs_strategy$suffix$.* from cs_strategy$suffix$
+		where css_id=#id#
+	</select>
+	
+		
+	<!-- 保存品牌战略 -->
+	<insert id="saveCsStrategy"  parameterClass="com.ccclubs.model.CsStrategy">
+		insert into cs_strategy$suffix$
+		(
+			cs_strategy$suffix$.css_title
+			,cs_strategy$suffix$.css_content
+			,cs_strategy$suffix$.css_mind
+			,cs_strategy$suffix$.css_adder
+			,cs_strategy$suffix$.css_editor
+			,cs_strategy$suffix$.css_update_time
+			,cs_strategy$suffix$.css_add_time
+			,cs_strategy$suffix$.css_status
+		)
+		values(
+			<isNotNull property="cssTitle" prepend="">
+				#cssTitle#
+			</isNotNull>
+			<isNull property="cssTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssContent" prepend=",">
+				#cssContent#
+			</isNotNull>
+			<isNull property="cssContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssMind" prepend=",">
+				#cssMind#
+			</isNotNull>
+			<isNull property="cssMind" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssAdder" prepend=",">
+				#cssAdder#
+			</isNotNull>
+			<isNull property="cssAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssEditor" prepend=",">
+				#cssEditor#
+			</isNotNull>
+			<isNull property="cssEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssUpdateTime" prepend=",">
+				#cssUpdateTime#
+			</isNotNull>
+			<isNull property="cssUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssAddTime" prepend=",">
+				#cssAddTime#
+			</isNotNull>
+			<isNull property="cssAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssStatus" prepend=",">
+				#cssStatus#
+			</isNotNull>
+			<isNull property="cssStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新品牌战略 -->
+	<update id="updateCsStrategy"  parameterClass="com.ccclubs.model.CsStrategy">
+		update cs_strategy$suffix$ set
+			<isNotNull property="cssTitle" prepend="">
+				cs_strategy$suffix$.css_title = #cssTitle#
+			</isNotNull>
+			<isNull property="cssTitle" prepend="">
+				cs_strategy$suffix$.css_title = null
+			</isNull>				
+			<isNotNull property="cssContent" prepend=",">
+				cs_strategy$suffix$.css_content = #cssContent#
+			</isNotNull>
+			<isNull property="cssContent" prepend=",">
+				cs_strategy$suffix$.css_content = null
+			</isNull>				
+			<isNotNull property="cssMind" prepend=",">
+				cs_strategy$suffix$.css_mind = #cssMind#
+			</isNotNull>
+			<isNull property="cssMind" prepend=",">
+				cs_strategy$suffix$.css_mind = null
+			</isNull>				
+			<isNotNull property="cssAdder" prepend=",">
+				cs_strategy$suffix$.css_adder = #cssAdder#
+			</isNotNull>
+			<isNull property="cssAdder" prepend=",">
+				cs_strategy$suffix$.css_adder = null
+			</isNull>				
+			<isNotNull property="cssEditor" prepend=",">
+				cs_strategy$suffix$.css_editor = #cssEditor#
+			</isNotNull>
+			<isNull property="cssEditor" prepend=",">
+				cs_strategy$suffix$.css_editor = null
+			</isNull>				
+			<isNotNull property="cssUpdateTime" prepend=",">
+				cs_strategy$suffix$.css_update_time = #cssUpdateTime#
+			</isNotNull>
+			<isNull property="cssUpdateTime" prepend=",">
+				cs_strategy$suffix$.css_update_time = null
+			</isNull>				
+			<isNotNull property="cssAddTime" prepend=",">
+				cs_strategy$suffix$.css_add_time = #cssAddTime#
+			</isNotNull>
+			<isNull property="cssAddTime" prepend=",">
+				cs_strategy$suffix$.css_add_time = null
+			</isNull>				
+			<isNotNull property="cssStatus" prepend=",">
+				cs_strategy$suffix$.css_status = #cssStatus#
+			</isNotNull>
+			<isNull property="cssStatus" prepend=",">
+				cs_strategy$suffix$.css_status = null
+			</isNull>				
+		where
+			css_id=#cssId#
+	</update>
+	
+	<!-- 更新品牌战略非空字段 -->
+	<update id="updateCsStrategy$NotNull"  parameterClass="com.ccclubs.model.CsStrategy">
+		update cs_strategy$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssTitle" prepend=",">
+				cs_strategy$suffix$.css_title = #cssTitle#
+			</isNotNull>		
+			<isNotNull property="cssContent" prepend=",">
+				cs_strategy$suffix$.css_content = #cssContent#
+			</isNotNull>		
+			<isNotNull property="cssMind" prepend=",">
+				cs_strategy$suffix$.css_mind = #cssMind#
+			</isNotNull>		
+			<isNotNull property="cssAdder" prepend=",">
+				cs_strategy$suffix$.css_adder = #cssAdder#
+			</isNotNull>		
+			<isNotNull property="cssEditor" prepend=",">
+				cs_strategy$suffix$.css_editor = #cssEditor#
+			</isNotNull>		
+			<isNotNull property="cssUpdateTime" prepend=",">
+				cs_strategy$suffix$.css_update_time = #cssUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cssAddTime" prepend=",">
+				cs_strategy$suffix$.css_add_time = #cssAddTime#
+			</isNotNull>		
+			<isNotNull property="cssStatus" prepend=",">
+				cs_strategy$suffix$.css_status = #cssStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			css_id=#cssId#
+	</update>
+	
+
+	<!-- 根据ID删除一个品牌战略 -->
+	<delete id="deleteCsStrategyById" parameterClass="java.util.HashMap">
+		delete from cs_strategy$suffix$ where css_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个品牌战略 -->
+	<update id="removeCsStrategyById" parameterClass="java.util.HashMap">
+		update cs_strategy$suffix$ set  cs_strategy$suffix$.css_status=-1  where css_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新品牌战略 -->
+	<update id="updateCsStrategyBy"  parameterClass="java.util.HashMap">
+		update cs_strategy$suffix$ set		
+			css_id=css_id
+			<isNotNull property="V_cssId" prepend=",">
+				cs_strategy$suffix$.css_id = #V_cssId#
+			</isNotNull>		
+			<isNotNull property="V_cssTitle" prepend=",">
+				cs_strategy$suffix$.css_title = #V_cssTitle#
+			</isNotNull>		
+			<isNotNull property="V_cssContent" prepend=",">
+				cs_strategy$suffix$.css_content = #V_cssContent#
+			</isNotNull>		
+			<isNotNull property="V_cssMind" prepend=",">
+				cs_strategy$suffix$.css_mind = #V_cssMind#
+			</isNotNull>		
+			<isNotNull property="V_cssAdder" prepend=",">
+				cs_strategy$suffix$.css_adder = #V_cssAdder#
+			</isNotNull>		
+			<isNotNull property="V_cssEditor" prepend=",">
+				cs_strategy$suffix$.css_editor = #V_cssEditor#
+			</isNotNull>		
+			<isNotNull property="V_cssUpdateTime" prepend=",">
+				cs_strategy$suffix$.css_update_time = #V_cssUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cssAddTime" prepend=",">
+				cs_strategy$suffix$.css_add_time = #V_cssAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssStatus" prepend=",">
+				cs_strategy$suffix$.css_status = #V_cssStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_strategy$suffix$.css_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsStrategy_part.cs_strategy_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除品牌战略 -->
+	<update id="deleteCsStrategyBy"  parameterClass="java.util.HashMap">
+		delete from cs_strategy$suffix$ where 
+		cs_strategy$suffix$.css_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsStrategy_part.cs_strategy_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

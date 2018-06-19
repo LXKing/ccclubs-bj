@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsNotice_part">	
+	<!-- 系统通知条件sql片段  -->
+	<sql id="cs_notice_dynamic">
+		<dynamic>
+			<isNotEmpty property="csnId" prepend="and">
+			    $csnIdNot$ cs_notice$suffix$.csn_id = #csnId#
+			</isNotEmpty>
+			<isNotNull property="csnIdNot" prepend="and">
+				<isEmpty property="csnId">
+				$csnIdNot$ cs_notice$suffix$.csn_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnContent" prepend="and">			    
+			    (<isNotNull property="csnContentNot">
+			    cs_notice$suffix$.csn_content is null or length(cs_notice$suffix$.csn_content) &lt; 1 or
+			    </isNotNull>$csnContentNot$ cs_notice$suffix$.csn_content like #csnContent#)
+			</isNotEmpty>
+			<isNotNull property="csnContentNot" prepend="and">
+				<isEmpty property="csnContent">
+				$csnContentNot$ (cs_notice$suffix$.csn_content is null or length(cs_notice$suffix$.csn_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnAlarmTimeStart" prepend="and">
+			    $csnAlarmTimeNot$   (cs_notice$suffix$.csn_alarm_time &gt;= #csnAlarmTimeStart#
+			   <isEmpty property="csnAlarmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csnAlarmTimeEnd" prepend="and">
+				<isEmpty property="csnAlarmTimeStart">$csnAlarmTimeNot$   (</isEmpty>
+			    cs_notice$suffix$.csn_alarm_time &lt;= #csnAlarmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csnAlarmTime" prepend="and">
+			    $csnAlarmTimeNot$ cs_notice$suffix$.csn_alarm_time = #csnAlarmTime#
+			</isNotEmpty>
+			<isNotNull property="csnAlarmTimeNot" prepend="and">
+				<isEmpty property="csnAlarmTimeStart"><isEmpty property="csnAlarmTimeEnd"><isEmpty property="csnAlarmTime">
+				$csnAlarmTimeNot$ cs_notice$suffix$.csn_alarm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnUrl" prepend="and">			    
+			    (<isNotNull property="csnUrlNot">
+			    cs_notice$suffix$.csn_url is null or length(cs_notice$suffix$.csn_url) &lt; 1 or
+			    </isNotNull>$csnUrlNot$ cs_notice$suffix$.csn_url = #csnUrl#)
+			</isNotEmpty>
+			<isNotNull property="csnUrlNot" prepend="and">
+				<isEmpty property="csnUrl">
+				$csnUrlNot$ (cs_notice$suffix$.csn_url is null or length(cs_notice$suffix$.csn_url) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnFlag" prepend="and">			    
+			    (<isNotNull property="csnFlagNot">
+			    cs_notice$suffix$.csn_flag is null or length(cs_notice$suffix$.csn_flag) &lt; 1 or
+			    </isNotNull>$csnFlagNot$ cs_notice$suffix$.csn_flag = #csnFlag#)
+			</isNotEmpty>
+			<isNotNull property="csnFlagNot" prepend="and">
+				<isEmpty property="csnFlag">
+				$csnFlagNot$ (cs_notice$suffix$.csn_flag is null or length(cs_notice$suffix$.csn_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnSender" prepend="and">
+			    $csnSenderNot$ cs_notice$suffix$.csn_sender = #csnSender#
+			</isNotEmpty>
+			<isNotNull property="csnSenderNot" prepend="and">
+				<isEmpty property="csnSender">
+				$csnSenderNot$ cs_notice$suffix$.csn_sender is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnReceiver" prepend="and">
+			    $csnReceiverNot$ cs_notice$suffix$.csn_receiver = #csnReceiver#
+			</isNotEmpty>
+			<isNotNull property="csnReceiverNot" prepend="and">
+				<isEmpty property="csnReceiver">
+				$csnReceiverNot$ cs_notice$suffix$.csn_receiver is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnRemark" prepend="and">			    
+			    (<isNotNull property="csnRemarkNot">
+			    cs_notice$suffix$.csn_remark is null or length(cs_notice$suffix$.csn_remark) &lt; 1 or
+			    </isNotNull>$csnRemarkNot$ cs_notice$suffix$.csn_remark like #csnRemark#)
+			</isNotEmpty>
+			<isNotNull property="csnRemarkNot" prepend="and">
+				<isEmpty property="csnRemark">
+				$csnRemarkNot$ (cs_notice$suffix$.csn_remark is null or length(cs_notice$suffix$.csn_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnLog" prepend="and">			    
+			    (<isNotNull property="csnLogNot">
+			    cs_notice$suffix$.csn_log is null or length(cs_notice$suffix$.csn_log) &lt; 1 or
+			    </isNotNull>$csnLogNot$ cs_notice$suffix$.csn_log = #csnLog#)
+			</isNotEmpty>
+			<isNotNull property="csnLogNot" prepend="and">
+				<isEmpty property="csnLog">
+				$csnLogNot$ (cs_notice$suffix$.csn_log is null or length(cs_notice$suffix$.csn_log) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnAddTimeStart" prepend="and">
+			    $csnAddTimeNot$   (cs_notice$suffix$.csn_add_time &gt;= #csnAddTimeStart#
+			   <isEmpty property="csnAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csnAddTimeEnd" prepend="and">
+				<isEmpty property="csnAddTimeStart">$csnAddTimeNot$   (</isEmpty>
+			    cs_notice$suffix$.csn_add_time &lt;= #csnAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csnAddTime" prepend="and">
+			    $csnAddTimeNot$ cs_notice$suffix$.csn_add_time = #csnAddTime#
+			</isNotEmpty>
+			<isNotNull property="csnAddTimeNot" prepend="and">
+				<isEmpty property="csnAddTimeStart"><isEmpty property="csnAddTimeEnd"><isEmpty property="csnAddTime">
+				$csnAddTimeNot$ cs_notice$suffix$.csn_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnDealTimeStart" prepend="and">
+			    $csnDealTimeNot$   (cs_notice$suffix$.csn_deal_time &gt;= #csnDealTimeStart#
+			   <isEmpty property="csnDealTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csnDealTimeEnd" prepend="and">
+				<isEmpty property="csnDealTimeStart">$csnDealTimeNot$   (</isEmpty>
+			    cs_notice$suffix$.csn_deal_time &lt;= #csnDealTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csnDealTime" prepend="and">
+			    $csnDealTimeNot$ cs_notice$suffix$.csn_deal_time = #csnDealTime#
+			</isNotEmpty>
+			<isNotNull property="csnDealTimeNot" prepend="and">
+				<isEmpty property="csnDealTimeStart"><isEmpty property="csnDealTimeEnd"><isEmpty property="csnDealTime">
+				$csnDealTimeNot$ cs_notice$suffix$.csn_deal_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csnStatus" prepend="and">
+			    $csnStatusNot$ cs_notice$suffix$.csn_status = #csnStatus#
+			</isNotEmpty>
+			<isNotNull property="csnStatusNot" prepend="and">
+				<isEmpty property="csnStatus">
+				$csnStatusNot$ cs_notice$suffix$.csn_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 系统通知left join 条件sql片段 -->
+	<sql id="cs_notice_join">
+		<dynamic>
+			<isNotEmpty property="CsNotice.csnId" prepend="and">
+			    $CsNotice.csnIdNot$ cs_notice$CsNotice.suffix$.csn_id = #CsNotice.csnId#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnIdNot" prepend="and">
+				<isEmpty property="CsNotice.csnId">
+				$csnIdNot$ cs_notice$CsNotice.suffix$.csn_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnContent" prepend="and">
+				(<isNotNull property="CsNotice.csnContentNot">
+			    cs_notice$CsNotice.suffix$.csn_content is null or length(cs_notice$CsNotice.suffix$.csn_content) &lt; 1 or
+			    </isNotNull>$CsNotice.csnContentNot$ cs_notice$CsNotice.suffix$.csn_content like #CsNotice.csnContent#)
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnContentNot" prepend="and">
+				<isEmpty property="CsNotice.csnContent">
+				$csnContentNot$ (cs_notice$CsNotice.suffix$.csn_content is null or length(cs_notice$CsNotice.suffix$.csn_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnAlarmTimeStart" prepend="and">
+			    $CsNotice.csnAlarmTimeNot$   (cs_notice$CsNotice.suffix$.csn_alarm_time &gt;= #CsNotice.csnAlarmTimeStart#
+			   <isEmpty property="CsNotice.csnAlarmTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsNotice.csnAlarmTimeEnd" prepend="and">
+				<isEmpty property="CsNotice.csnAlarmTimeStart">$CsNotice.csnAlarmTimeNot$   (</isEmpty>
+			    cs_notice$CsNotice.suffix$.csn_alarm_time &lt;= #CsNotice.csnAlarmTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsNotice.csnAlarmTime" prepend="and">
+			    $CsNotice.csnAlarmTimeNot$ cs_notice$CsNotice.suffix$.csn_alarm_time = #CsNotice.csnAlarmTime#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnAlarmTimeNot" prepend="and">
+				<isEmpty property="CsNotice.csnAlarmTimeStart"><isEmpty property="CsNotice.csnAlarmTimeEnd"><isEmpty property="CsNotice.csnAlarmTime">
+				$csnAlarmTimeNot$ cs_notice$CsNotice.suffix$.csn_alarm_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnUrl" prepend="and">
+				(<isNotNull property="CsNotice.csnUrlNot">
+			    cs_notice$CsNotice.suffix$.csn_url is null or length(cs_notice$CsNotice.suffix$.csn_url) &lt; 1 or
+			    </isNotNull>$CsNotice.csnUrlNot$ cs_notice$CsNotice.suffix$.csn_url = #CsNotice.csnUrl#)
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnUrlNot" prepend="and">
+				<isEmpty property="CsNotice.csnUrl">
+				$csnUrlNot$ (cs_notice$CsNotice.suffix$.csn_url is null or length(cs_notice$CsNotice.suffix$.csn_url) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnFlag" prepend="and">
+				(<isNotNull property="CsNotice.csnFlagNot">
+			    cs_notice$CsNotice.suffix$.csn_flag is null or length(cs_notice$CsNotice.suffix$.csn_flag) &lt; 1 or
+			    </isNotNull>$CsNotice.csnFlagNot$ cs_notice$CsNotice.suffix$.csn_flag = #CsNotice.csnFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnFlagNot" prepend="and">
+				<isEmpty property="CsNotice.csnFlag">
+				$csnFlagNot$ (cs_notice$CsNotice.suffix$.csn_flag is null or length(cs_notice$CsNotice.suffix$.csn_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnSender" prepend="and">
+			    $CsNotice.csnSenderNot$ cs_notice$CsNotice.suffix$.csn_sender = #CsNotice.csnSender#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnSenderNot" prepend="and">
+				<isEmpty property="CsNotice.csnSender">
+				$csnSenderNot$ cs_notice$CsNotice.suffix$.csn_sender is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnReceiver" prepend="and">
+			    $CsNotice.csnReceiverNot$ cs_notice$CsNotice.suffix$.csn_receiver = #CsNotice.csnReceiver#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnReceiverNot" prepend="and">
+				<isEmpty property="CsNotice.csnReceiver">
+				$csnReceiverNot$ cs_notice$CsNotice.suffix$.csn_receiver is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnRemark" prepend="and">
+				(<isNotNull property="CsNotice.csnRemarkNot">
+			    cs_notice$CsNotice.suffix$.csn_remark is null or length(cs_notice$CsNotice.suffix$.csn_remark) &lt; 1 or
+			    </isNotNull>$CsNotice.csnRemarkNot$ cs_notice$CsNotice.suffix$.csn_remark like #CsNotice.csnRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnRemarkNot" prepend="and">
+				<isEmpty property="CsNotice.csnRemark">
+				$csnRemarkNot$ (cs_notice$CsNotice.suffix$.csn_remark is null or length(cs_notice$CsNotice.suffix$.csn_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnLog" prepend="and">
+				(<isNotNull property="CsNotice.csnLogNot">
+			    cs_notice$CsNotice.suffix$.csn_log is null or length(cs_notice$CsNotice.suffix$.csn_log) &lt; 1 or
+			    </isNotNull>$CsNotice.csnLogNot$ cs_notice$CsNotice.suffix$.csn_log = #CsNotice.csnLog#)
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnLogNot" prepend="and">
+				<isEmpty property="CsNotice.csnLog">
+				$csnLogNot$ (cs_notice$CsNotice.suffix$.csn_log is null or length(cs_notice$CsNotice.suffix$.csn_log) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnAddTimeStart" prepend="and">
+			    $CsNotice.csnAddTimeNot$   (cs_notice$CsNotice.suffix$.csn_add_time &gt;= #CsNotice.csnAddTimeStart#
+			   <isEmpty property="CsNotice.csnAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsNotice.csnAddTimeEnd" prepend="and">
+				<isEmpty property="CsNotice.csnAddTimeStart">$CsNotice.csnAddTimeNot$   (</isEmpty>
+			    cs_notice$CsNotice.suffix$.csn_add_time &lt;= #CsNotice.csnAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsNotice.csnAddTime" prepend="and">
+			    $CsNotice.csnAddTimeNot$ cs_notice$CsNotice.suffix$.csn_add_time = #CsNotice.csnAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnAddTimeNot" prepend="and">
+				<isEmpty property="CsNotice.csnAddTimeStart"><isEmpty property="CsNotice.csnAddTimeEnd"><isEmpty property="CsNotice.csnAddTime">
+				$csnAddTimeNot$ cs_notice$CsNotice.suffix$.csn_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnDealTimeStart" prepend="and">
+			    $CsNotice.csnDealTimeNot$   (cs_notice$CsNotice.suffix$.csn_deal_time &gt;= #CsNotice.csnDealTimeStart#
+			   <isEmpty property="CsNotice.csnDealTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsNotice.csnDealTimeEnd" prepend="and">
+				<isEmpty property="CsNotice.csnDealTimeStart">$CsNotice.csnDealTimeNot$   (</isEmpty>
+			    cs_notice$CsNotice.suffix$.csn_deal_time &lt;= #CsNotice.csnDealTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsNotice.csnDealTime" prepend="and">
+			    $CsNotice.csnDealTimeNot$ cs_notice$CsNotice.suffix$.csn_deal_time = #CsNotice.csnDealTime#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnDealTimeNot" prepend="and">
+				<isEmpty property="CsNotice.csnDealTimeStart"><isEmpty property="CsNotice.csnDealTimeEnd"><isEmpty property="CsNotice.csnDealTime">
+				$csnDealTimeNot$ cs_notice$CsNotice.suffix$.csn_deal_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsNotice.csnStatus" prepend="and">
+			    $CsNotice.csnStatusNot$ cs_notice$CsNotice.suffix$.csn_status = #CsNotice.csnStatus#
+			</isNotEmpty>
+			<isNotNull property="CsNotice.csnStatusNot" prepend="and">
+				<isEmpty property="CsNotice.csnStatus">
+				$csnStatusNot$ cs_notice$CsNotice.suffix$.csn_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

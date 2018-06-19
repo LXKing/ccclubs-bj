@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 维修地点之SQL映射 -->
+	<resultMap id="CsRepairAdr" class="com.ccclubs.model.CsRepairAdr">
+		<result property="csraId" column="csra_id"/>
+		<result property="csraHost" column="csra_host"/>
+		<result property="csraName" column="csra_name"/>
+		<result property="csraAddress" column="csra_address"/>
+	</resultMap>
+		
+	<!-- 获取所有维修地点 -->
+	<select id="getCsRepairAdrList" resultMap="CsRepairAdr">
+		select cs_repair_adr$suffix$.* from cs_repair_adr$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRepairAdr_part.cs_repair_adr_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csra_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取维修地点分页 -->
+	<select id="getCsRepairAdrPage" parameterClass="java.util.HashMap" resultMap="CsRepairAdr">
+		select cs_repair_adr$suffix$.* from cs_repair_adr$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRepairAdr_part.cs_repair_adr_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csra_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取维修地点总数 -->
+	<select id="getCsRepairAdrEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_repair_adr$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsRepairAdr_part.cs_repair_adr_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取维修地点 -->
+	<select id="getCsRepairAdrById" parameterClass="java.util.HashMap" resultMap="CsRepairAdr">
+		select cs_repair_adr$suffix$.* from cs_repair_adr$suffix$
+		where csra_id=#id#
+	</select>
+	
+		
+	<!-- 保存维修地点 -->
+	<insert id="saveCsRepairAdr"  parameterClass="com.ccclubs.model.CsRepairAdr">
+		insert into cs_repair_adr$suffix$
+		(
+			cs_repair_adr$suffix$.csra_host
+			,cs_repair_adr$suffix$.csra_name
+			,cs_repair_adr$suffix$.csra_address
+		)
+		values(
+			<isNotNull property="csraHost" prepend="">
+				#csraHost#
+			</isNotNull>
+			<isNull property="csraHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csraName" prepend=",">
+				#csraName#
+			</isNotNull>
+			<isNull property="csraName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csraAddress" prepend=",">
+				#csraAddress#
+			</isNotNull>
+			<isNull property="csraAddress" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新维修地点 -->
+	<update id="updateCsRepairAdr"  parameterClass="com.ccclubs.model.CsRepairAdr">
+		update cs_repair_adr$suffix$ set
+			<isNotNull property="csraHost" prepend="">
+				cs_repair_adr$suffix$.csra_host = #csraHost#
+			</isNotNull>
+			<isNull property="csraHost" prepend="">
+				cs_repair_adr$suffix$.csra_host = null
+			</isNull>				
+			<isNotNull property="csraName" prepend=",">
+				cs_repair_adr$suffix$.csra_name = #csraName#
+			</isNotNull>
+			<isNull property="csraName" prepend=",">
+				cs_repair_adr$suffix$.csra_name = null
+			</isNull>				
+			<isNotNull property="csraAddress" prepend=",">
+				cs_repair_adr$suffix$.csra_address = #csraAddress#
+			</isNotNull>
+			<isNull property="csraAddress" prepend=",">
+				cs_repair_adr$suffix$.csra_address = null
+			</isNull>				
+		where
+			csra_id=#csraId#
+	</update>
+	
+	<!-- 更新维修地点非空字段 -->
+	<update id="updateCsRepairAdr$NotNull"  parameterClass="com.ccclubs.model.CsRepairAdr">
+		update cs_repair_adr$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csraHost" prepend=",">
+				cs_repair_adr$suffix$.csra_host = #csraHost#
+			</isNotNull>		
+			<isNotNull property="csraName" prepend=",">
+				cs_repair_adr$suffix$.csra_name = #csraName#
+			</isNotNull>		
+			<isNotNull property="csraAddress" prepend=",">
+				cs_repair_adr$suffix$.csra_address = #csraAddress#
+			</isNotNull>		
+			</dynamic>
+		where
+			csra_id=#csraId#
+	</update>
+	
+
+	<!-- 根据ID删除一个维修地点 -->
+	<delete id="deleteCsRepairAdrById" parameterClass="java.util.HashMap">
+		delete from cs_repair_adr$suffix$ where csra_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新维修地点 -->
+	<update id="updateCsRepairAdrBy"  parameterClass="java.util.HashMap">
+		update cs_repair_adr$suffix$ set		
+			csra_id=csra_id
+			<isNotNull property="V_csraId" prepend=",">
+				cs_repair_adr$suffix$.csra_id = #V_csraId#
+			</isNotNull>		
+			<isNotNull property="V_csraHost" prepend=",">
+				cs_repair_adr$suffix$.csra_host = #V_csraHost#
+			</isNotNull>		
+			<isNotNull property="V_csraName" prepend=",">
+				cs_repair_adr$suffix$.csra_name = #V_csraName#
+			</isNotNull>		
+			<isNotNull property="V_csraAddress" prepend=",">
+				cs_repair_adr$suffix$.csra_address = #V_csraAddress#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsRepairAdr_part.cs_repair_adr_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除维修地点 -->
+	<update id="deleteCsRepairAdrBy"  parameterClass="java.util.HashMap">
+		delete from cs_repair_adr$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsRepairAdr_part.cs_repair_adr_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

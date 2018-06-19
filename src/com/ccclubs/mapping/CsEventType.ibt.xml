@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统事件类型之SQL映射 -->
+	<resultMap id="CsEventType" class="com.ccclubs.model.CsEventType">
+		<result property="csetId" column="cset_id"/>
+		<result property="csetName" column="cset_name"/>
+		<result property="csetLevel" column="cset_level"/>
+		<result property="csetProject" column="cset_project"/>
+		<result property="csetAction" column="cset_action"/>
+		<result property="csetInterval" column="cset_interval"/>
+		<result property="csetUpdateTime" column="cset_update_time"/>
+		<result property="csetAddTime" column="cset_add_time"/>
+		<result property="csetStatus" column="cset_status"/>
+	</resultMap>
+		
+	<!-- 获取所有系统事件类型 -->
+	<select id="getCsEventTypeList" resultMap="CsEventType">
+		select cs_event_type$suffix$.* from cs_event_type$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_event_type$suffix$.cset_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEventType_part.cs_event_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cset_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统事件类型分页 -->
+	<select id="getCsEventTypePage" parameterClass="java.util.HashMap" resultMap="CsEventType">
+		select cs_event_type$suffix$.* from cs_event_type$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_event_type$suffix$.cset_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEventType_part.cs_event_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cset_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统事件类型总数 -->
+	<select id="getCsEventTypeEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_event_type$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_event_type$suffix$.cset_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEventType_part.cs_event_type_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统事件类型 -->
+	<select id="getCsEventTypeById" parameterClass="java.util.HashMap" resultMap="CsEventType">
+		select cs_event_type$suffix$.* from cs_event_type$suffix$
+		where cset_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统事件类型 -->
+	<insert id="saveCsEventType"  parameterClass="com.ccclubs.model.CsEventType">
+		insert into cs_event_type$suffix$
+		(
+			cs_event_type$suffix$.cset_name
+			,cs_event_type$suffix$.cset_level
+			,cs_event_type$suffix$.cset_project
+			,cs_event_type$suffix$.cset_action
+			,cs_event_type$suffix$.cset_interval
+			,cs_event_type$suffix$.cset_update_time
+			,cs_event_type$suffix$.cset_add_time
+			,cs_event_type$suffix$.cset_status
+		)
+		values(
+			<isNotNull property="csetName" prepend="">
+				#csetName#
+			</isNotNull>
+			<isNull property="csetName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csetLevel" prepend=",">
+				#csetLevel#
+			</isNotNull>
+			<isNull property="csetLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csetProject" prepend=",">
+				#csetProject#
+			</isNotNull>
+			<isNull property="csetProject" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csetAction" prepend=",">
+				#csetAction#
+			</isNotNull>
+			<isNull property="csetAction" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csetInterval" prepend=",">
+				#csetInterval#
+			</isNotNull>
+			<isNull property="csetInterval" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csetUpdateTime" prepend=",">
+				#csetUpdateTime#
+			</isNotNull>
+			<isNull property="csetUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csetAddTime" prepend=",">
+				#csetAddTime#
+			</isNotNull>
+			<isNull property="csetAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csetStatus" prepend=",">
+				#csetStatus#
+			</isNotNull>
+			<isNull property="csetStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统事件类型 -->
+	<update id="updateCsEventType"  parameterClass="com.ccclubs.model.CsEventType">
+		update cs_event_type$suffix$ set
+			<isNotNull property="csetName" prepend="">
+				cs_event_type$suffix$.cset_name = #csetName#
+			</isNotNull>
+			<isNull property="csetName" prepend="">
+				cs_event_type$suffix$.cset_name = null
+			</isNull>				
+			<isNotNull property="csetLevel" prepend=",">
+				cs_event_type$suffix$.cset_level = #csetLevel#
+			</isNotNull>
+			<isNull property="csetLevel" prepend=",">
+				cs_event_type$suffix$.cset_level = null
+			</isNull>				
+			<isNotNull property="csetProject" prepend=",">
+				cs_event_type$suffix$.cset_project = #csetProject#
+			</isNotNull>
+			<isNull property="csetProject" prepend=",">
+				cs_event_type$suffix$.cset_project = null
+			</isNull>				
+			<isNotNull property="csetAction" prepend=",">
+				cs_event_type$suffix$.cset_action = #csetAction#
+			</isNotNull>
+			<isNull property="csetAction" prepend=",">
+				cs_event_type$suffix$.cset_action = null
+			</isNull>				
+			<isNotNull property="csetInterval" prepend=",">
+				cs_event_type$suffix$.cset_interval = #csetInterval#
+			</isNotNull>
+			<isNull property="csetInterval" prepend=",">
+				cs_event_type$suffix$.cset_interval = null
+			</isNull>				
+			<isNotNull property="csetUpdateTime" prepend=",">
+				cs_event_type$suffix$.cset_update_time = #csetUpdateTime#
+			</isNotNull>
+			<isNull property="csetUpdateTime" prepend=",">
+				cs_event_type$suffix$.cset_update_time = null
+			</isNull>				
+			<isNotNull property="csetAddTime" prepend=",">
+				cs_event_type$suffix$.cset_add_time = #csetAddTime#
+			</isNotNull>
+			<isNull property="csetAddTime" prepend=",">
+				cs_event_type$suffix$.cset_add_time = null
+			</isNull>				
+			<isNotNull property="csetStatus" prepend=",">
+				cs_event_type$suffix$.cset_status = #csetStatus#
+			</isNotNull>
+			<isNull property="csetStatus" prepend=",">
+				cs_event_type$suffix$.cset_status = null
+			</isNull>				
+		where
+			cset_id=#csetId#
+	</update>
+	
+	<!-- 更新系统事件类型非空字段 -->
+	<update id="updateCsEventType$NotNull"  parameterClass="com.ccclubs.model.CsEventType">
+		update cs_event_type$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csetName" prepend=",">
+				cs_event_type$suffix$.cset_name = #csetName#
+			</isNotNull>		
+			<isNotNull property="csetLevel" prepend=",">
+				cs_event_type$suffix$.cset_level = #csetLevel#
+			</isNotNull>		
+			<isNotNull property="csetProject" prepend=",">
+				cs_event_type$suffix$.cset_project = #csetProject#
+			</isNotNull>		
+			<isNotNull property="csetAction" prepend=",">
+				cs_event_type$suffix$.cset_action = #csetAction#
+			</isNotNull>		
+			<isNotNull property="csetInterval" prepend=",">
+				cs_event_type$suffix$.cset_interval = #csetInterval#
+			</isNotNull>		
+			<isNotNull property="csetUpdateTime" prepend=",">
+				cs_event_type$suffix$.cset_update_time = #csetUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csetAddTime" prepend=",">
+				cs_event_type$suffix$.cset_add_time = #csetAddTime#
+			</isNotNull>		
+			<isNotNull property="csetStatus" prepend=",">
+				cs_event_type$suffix$.cset_status = #csetStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cset_id=#csetId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统事件类型 -->
+	<delete id="deleteCsEventTypeById" parameterClass="java.util.HashMap">
+		delete from cs_event_type$suffix$ where cset_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个系统事件类型 -->
+	<update id="removeCsEventTypeById" parameterClass="java.util.HashMap">
+		update cs_event_type$suffix$ set  cs_event_type$suffix$.cset_status=-1  where cset_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新系统事件类型 -->
+	<update id="updateCsEventTypeBy"  parameterClass="java.util.HashMap">
+		update cs_event_type$suffix$ set		
+			cset_id=cset_id
+			<isNotNull property="V_csetId" prepend=",">
+				cs_event_type$suffix$.cset_id = #V_csetId#
+			</isNotNull>		
+			<isNotNull property="V_csetName" prepend=",">
+				cs_event_type$suffix$.cset_name = #V_csetName#
+			</isNotNull>		
+			<isNotNull property="V_csetLevel" prepend=",">
+				cs_event_type$suffix$.cset_level = #V_csetLevel#
+			</isNotNull>		
+			<isNotNull property="V_csetProject" prepend=",">
+				cs_event_type$suffix$.cset_project = #V_csetProject#
+			</isNotNull>		
+			<isNotNull property="V_csetAction" prepend=",">
+				cs_event_type$suffix$.cset_action = #V_csetAction#
+			</isNotNull>		
+			<isNotNull property="V_csetInterval" prepend=",">
+				cs_event_type$suffix$.cset_interval = #V_csetInterval#
+			</isNotNull>		
+			<isNotNull property="V_csetUpdateTime" prepend=",">
+				cs_event_type$suffix$.cset_update_time = #V_csetUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csetAddTime" prepend=",">
+				cs_event_type$suffix$.cset_add_time = #V_csetAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csetStatus" prepend=",">
+				cs_event_type$suffix$.cset_status = #V_csetStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_event_type$suffix$.cset_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsEventType_part.cs_event_type_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统事件类型 -->
+	<update id="deleteCsEventTypeBy"  parameterClass="java.util.HashMap">
+		delete from cs_event_type$suffix$ where 
+		cs_event_type$suffix$.cset_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsEventType_part.cs_event_type_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

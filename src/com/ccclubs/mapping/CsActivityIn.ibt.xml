@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 活动参与之SQL映射 -->
+	<resultMap id="CsActivityIn" class="com.ccclubs.model.CsActivityIn">
+		<result property="csaiId" column="csai_id"/>
+		<result property="csaiHost" column="csai_host"/>
+		<result property="csaiActivity" column="csai_activity"/>
+		<result property="csaiMember" column="csai_member"/>
+		<result property="csaiUpdateTime" column="csai_update_time"/>
+		<result property="csaiAddTime" column="csai_add_time"/>
+		<result property="csaiRemark" column="csai_remark"/>
+		<result property="csaiData" column="csai_data"/>
+		<result property="csaiState" column="csai_state"/>
+		<result property="csaiStatus" column="csai_status"/>
+	</resultMap>
+		
+	<!-- 获取所有活动参与 -->
+	<select id="getCsActivityInList" resultMap="CsActivityIn">
+		select cs_activity_in$suffix$.* from cs_activity_in$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.csai_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.csai_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_activity_in$suffix$.csai_status!=-1
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsActivityIn_part.cs_activity_in_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csai_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取活动参与分页 -->
+	<select id="getCsActivityInPage" parameterClass="java.util.HashMap" resultMap="CsActivityIn">
+		select cs_activity_in$suffix$.* from cs_activity_in$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询 -->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.csai_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.csai_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_activity_in$suffix$.csai_status!=-1
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsActivityIn_part.cs_activity_in_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csai_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取活动参与总数 -->
+	<select id="getCsActivityInEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_activity_in$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.csai_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.csai_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_activity_in$suffix$.csai_status!=-1
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsActivityIn_part.cs_activity_in_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取活动参与 -->
+	<select id="getCsActivityInById" parameterClass="java.util.HashMap" resultMap="CsActivityIn">
+		select cs_activity_in$suffix$.* from cs_activity_in$suffix$
+		where csai_id=#id#
+	</select>
+	
+		
+	<!-- 保存活动参与 -->
+	<insert id="saveCsActivityIn"  parameterClass="com.ccclubs.model.CsActivityIn">
+		insert into cs_activity_in$suffix$
+		(
+			cs_activity_in$suffix$.csai_host
+			,cs_activity_in$suffix$.csai_activity
+			,cs_activity_in$suffix$.csai_member
+			,cs_activity_in$suffix$.csai_update_time
+			,cs_activity_in$suffix$.csai_add_time
+			,cs_activity_in$suffix$.csai_remark
+			,cs_activity_in$suffix$.csai_data
+			,cs_activity_in$suffix$.csai_state
+			,cs_activity_in$suffix$.csai_status
+		)
+		values(
+			<isNotNull property="csaiHost" prepend="">
+				#csaiHost#
+			</isNotNull>
+			<isNull property="csaiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csaiActivity" prepend=",">
+				#csaiActivity#
+			</isNotNull>
+			<isNull property="csaiActivity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiMember" prepend=",">
+				#csaiMember#
+			</isNotNull>
+			<isNull property="csaiMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiUpdateTime" prepend=",">
+				#csaiUpdateTime#
+			</isNotNull>
+			<isNull property="csaiUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiAddTime" prepend=",">
+				#csaiAddTime#
+			</isNotNull>
+			<isNull property="csaiAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiRemark" prepend=",">
+				#csaiRemark#
+			</isNotNull>
+			<isNull property="csaiRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiData" prepend=",">
+				#csaiData#
+			</isNotNull>
+			<isNull property="csaiData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiState" prepend=",">
+				#csaiState#
+			</isNotNull>
+			<isNull property="csaiState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaiStatus" prepend=",">
+				#csaiStatus#
+			</isNotNull>
+			<isNull property="csaiStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新活动参与 -->
+	<update id="updateCsActivityIn"  parameterClass="com.ccclubs.model.CsActivityIn">
+		update cs_activity_in$suffix$ set
+			<isNotNull property="csaiHost" prepend="">
+				cs_activity_in$suffix$.csai_host = #csaiHost#
+			</isNotNull>
+			<isNull property="csaiHost" prepend="">
+				cs_activity_in$suffix$.csai_host = null
+			</isNull>				
+			<isNotNull property="csaiActivity" prepend=",">
+				cs_activity_in$suffix$.csai_activity = #csaiActivity#
+			</isNotNull>
+			<isNull property="csaiActivity" prepend=",">
+				cs_activity_in$suffix$.csai_activity = null
+			</isNull>				
+			<isNotNull property="csaiMember" prepend=",">
+				cs_activity_in$suffix$.csai_member = #csaiMember#
+			</isNotNull>
+			<isNull property="csaiMember" prepend=",">
+				cs_activity_in$suffix$.csai_member = null
+			</isNull>				
+			<isNotNull property="csaiUpdateTime" prepend=",">
+				cs_activity_in$suffix$.csai_update_time = #csaiUpdateTime#
+			</isNotNull>
+			<isNull property="csaiUpdateTime" prepend=",">
+				cs_activity_in$suffix$.csai_update_time = null
+			</isNull>				
+			<isNotNull property="csaiAddTime" prepend=",">
+				cs_activity_in$suffix$.csai_add_time = #csaiAddTime#
+			</isNotNull>
+			<isNull property="csaiAddTime" prepend=",">
+				cs_activity_in$suffix$.csai_add_time = null
+			</isNull>				
+			<isNotNull property="csaiRemark" prepend=",">
+				cs_activity_in$suffix$.csai_remark = #csaiRemark#
+			</isNotNull>
+			<isNull property="csaiRemark" prepend=",">
+				cs_activity_in$suffix$.csai_remark = null
+			</isNull>				
+			<isNotNull property="csaiData" prepend=",">
+				cs_activity_in$suffix$.csai_data = #csaiData#
+			</isNotNull>
+			<isNull property="csaiData" prepend=",">
+				cs_activity_in$suffix$.csai_data = null
+			</isNull>				
+			<isNotNull property="csaiState" prepend=",">
+				cs_activity_in$suffix$.csai_state = #csaiState#
+			</isNotNull>
+			<isNull property="csaiState" prepend=",">
+				cs_activity_in$suffix$.csai_state = null
+			</isNull>				
+			<isNotNull property="csaiStatus" prepend=",">
+				cs_activity_in$suffix$.csai_status = #csaiStatus#
+			</isNotNull>
+			<isNull property="csaiStatus" prepend=",">
+				cs_activity_in$suffix$.csai_status = null
+			</isNull>				
+		where
+			csai_id=#csaiId#
+	</update>
+	
+	<!-- 更新活动参与非空字段 -->
+	<update id="updateCsActivityIn$NotNull"  parameterClass="com.ccclubs.model.CsActivityIn">
+		update cs_activity_in$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csaiHost" prepend=",">
+				cs_activity_in$suffix$.csai_host = #csaiHost#
+			</isNotNull>		
+			<isNotNull property="csaiActivity" prepend=",">
+				cs_activity_in$suffix$.csai_activity = #csaiActivity#
+			</isNotNull>		
+			<isNotNull property="csaiMember" prepend=",">
+				cs_activity_in$suffix$.csai_member = #csaiMember#
+			</isNotNull>		
+			<isNotNull property="csaiUpdateTime" prepend=",">
+				cs_activity_in$suffix$.csai_update_time = #csaiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csaiAddTime" prepend=",">
+				cs_activity_in$suffix$.csai_add_time = #csaiAddTime#
+			</isNotNull>		
+			<isNotNull property="csaiRemark" prepend=",">
+				cs_activity_in$suffix$.csai_remark = #csaiRemark#
+			</isNotNull>		
+			<isNotNull property="csaiData" prepend=",">
+				cs_activity_in$suffix$.csai_data = #csaiData#
+			</isNotNull>		
+			<isNotNull property="csaiState" prepend=",">
+				cs_activity_in$suffix$.csai_state = #csaiState#
+			</isNotNull>		
+			<isNotNull property="csaiStatus" prepend=",">
+				cs_activity_in$suffix$.csai_status = #csaiStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csai_id=#csaiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个活动参与 -->
+	<delete id="deleteCsActivityInById" parameterClass="java.util.HashMap">
+		delete from cs_activity_in$suffix$ where csai_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个活动参与 -->
+	<update id="removeCsActivityInById" parameterClass="java.util.HashMap">
+		update cs_activity_in$suffix$ set  cs_activity_in$suffix$.csai_status=-1  where csai_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新活动参与 -->
+	<update id="updateCsActivityInBy"  parameterClass="java.util.HashMap">
+		update cs_activity_in$suffix$ set		
+			csai_id=csai_id
+			<isNotNull property="V_csaiId" prepend=",">
+				cs_activity_in$suffix$.csai_id = #V_csaiId#
+			</isNotNull>		
+			<isNotNull property="V_csaiHost" prepend=",">
+				cs_activity_in$suffix$.csai_host = #V_csaiHost#
+			</isNotNull>		
+			<isNotNull property="V_csaiActivity" prepend=",">
+				cs_activity_in$suffix$.csai_activity = #V_csaiActivity#
+			</isNotNull>		
+			<isNotNull property="V_csaiMember" prepend=",">
+				cs_activity_in$suffix$.csai_member = #V_csaiMember#
+			</isNotNull>		
+			<isNotNull property="V_csaiUpdateTime" prepend=",">
+				cs_activity_in$suffix$.csai_update_time = #V_csaiUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csaiAddTime" prepend=",">
+				cs_activity_in$suffix$.csai_add_time = #V_csaiAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csaiRemark" prepend=",">
+				cs_activity_in$suffix$.csai_remark = #V_csaiRemark#
+			</isNotNull>		
+			<isNotNull property="V_csaiData" prepend=",">
+				cs_activity_in$suffix$.csai_data = #V_csaiData#
+			</isNotNull>		
+			<isNotNull property="V_csaiState" prepend=",">
+				cs_activity_in$suffix$.csai_state = #V_csaiState#
+			</isNotNull>		
+			<isNotNull property="V_csaiStatus" prepend=",">
+				cs_activity_in$suffix$.csai_status = #V_csaiStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[营销活动]查询-->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<isNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.csai_activity=cs_activity$CsActivity.suffix$.csa_id
+			</isNull>
+			<isNotNull property="CsActivity.on">
+				left join cs_activity cs_activity$CsActivity.suffix$ on cs_activity_in$suffix$.$CsActivity.on$=cs_activity$CsActivity.suffix$.csa_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.csai_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_activity_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_activity_in$suffix$.csai_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[营销活动]查询条件sql片段 -->
+		<isNotNull property="CsaiActivity"><!-- 调用一下CsaiActivity，把CsActivity指向CsaiActivity --></isNotNull>
+		<isNotNull property="CsActivity">
+			<include refid="CsActivity_part.cs_activity_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsaiMember"><!-- 调用一下CsaiMember，把CsMember指向CsaiMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsActivityIn_part.cs_activity_in_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除活动参与 -->
+	<update id="deleteCsActivityInBy"  parameterClass="java.util.HashMap">
+		delete from cs_activity_in$suffix$ where 
+		cs_activity_in$suffix$.csai_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsActivityIn_part.cs_activity_in_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

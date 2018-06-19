@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 营销方案之SQL映射 -->
+	<resultMap id="CsMarketPlan" class="com.ccclubs.model.CsMarketPlan">
+		<result property="csmpId" column="csmp_id"/>
+		<result property="csmpHost" column="csmp_host"/>
+		<result property="csmpName" column="csmp_name"/>
+		<result property="csmpType" column="csmp_type"/>
+		<result property="csmpMethod" column="csmp_method"/>
+		<result property="csmpPerson" column="csmp_person"/>
+		<result property="csmpProfile" column="csmp_profile"/>
+		<result property="csmpPlanBook" column="csmp_plan_book"/>
+		<result property="csmpMindMap" column="csmp_mind_map"/>
+		<result property="csmpVIndex" column="csmp_v_index"/>
+		<result property="csmpStart" column="csmp_start"/>
+		<result property="csmpFinish" column="csmp_finish"/>
+		<result property="csmpUpdateTime" column="csmp_update_time"/>
+		<result property="csmpAddTime" column="csmp_add_time"/>
+		<result property="csmpRemark" column="csmp_remark"/>
+		<result property="csmpStatus" column="csmp_status"/>
+	</resultMap>
+		
+	<!-- 获取所有营销方案 -->
+	<select id="getCsMarketPlanList" resultMap="CsMarketPlan">
+		select cs_market_plan$suffix$.* from cs_market_plan$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_market_plan$suffix$.csmp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketPlan_part.cs_market_plan_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmp_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取营销方案分页 -->
+	<select id="getCsMarketPlanPage" parameterClass="java.util.HashMap" resultMap="CsMarketPlan">
+		select cs_market_plan$suffix$.* from cs_market_plan$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_market_plan$suffix$.csmp_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketPlan_part.cs_market_plan_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmp_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取营销方案总数 -->
+	<select id="getCsMarketPlanEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_market_plan$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_market_plan$suffix$.csmp_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketPlan_part.cs_market_plan_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取营销方案 -->
+	<select id="getCsMarketPlanById" parameterClass="java.util.HashMap" resultMap="CsMarketPlan">
+		select cs_market_plan$suffix$.* from cs_market_plan$suffix$
+		where csmp_id=#id#
+	</select>
+	
+		
+	<!-- 保存营销方案 -->
+	<insert id="saveCsMarketPlan"  parameterClass="com.ccclubs.model.CsMarketPlan">
+		insert into cs_market_plan$suffix$
+		(
+			cs_market_plan$suffix$.csmp_host
+			,cs_market_plan$suffix$.csmp_name
+			,cs_market_plan$suffix$.csmp_type
+			,cs_market_plan$suffix$.csmp_method
+			,cs_market_plan$suffix$.csmp_person
+			,cs_market_plan$suffix$.csmp_profile
+			,cs_market_plan$suffix$.csmp_plan_book
+			,cs_market_plan$suffix$.csmp_mind_map
+			,cs_market_plan$suffix$.csmp_v_index
+			,cs_market_plan$suffix$.csmp_start
+			,cs_market_plan$suffix$.csmp_finish
+			,cs_market_plan$suffix$.csmp_update_time
+			,cs_market_plan$suffix$.csmp_add_time
+			,cs_market_plan$suffix$.csmp_remark
+			,cs_market_plan$suffix$.csmp_status
+		)
+		values(
+			<isNotNull property="csmpHost" prepend="">
+				#csmpHost#
+			</isNotNull>
+			<isNull property="csmpHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmpName" prepend=",">
+				#csmpName#
+			</isNotNull>
+			<isNull property="csmpName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpType" prepend=",">
+				#csmpType#
+			</isNotNull>
+			<isNull property="csmpType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpMethod" prepend=",">
+				#csmpMethod#
+			</isNotNull>
+			<isNull property="csmpMethod" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpPerson" prepend=",">
+				#csmpPerson#
+			</isNotNull>
+			<isNull property="csmpPerson" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpProfile" prepend=",">
+				#csmpProfile#
+			</isNotNull>
+			<isNull property="csmpProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpPlanBook" prepend=",">
+				#csmpPlanBook#
+			</isNotNull>
+			<isNull property="csmpPlanBook" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpMindMap" prepend=",">
+				#csmpMindMap#
+			</isNotNull>
+			<isNull property="csmpMindMap" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpVIndex" prepend=",">
+				#csmpVIndex#
+			</isNotNull>
+			<isNull property="csmpVIndex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpStart" prepend=",">
+				#csmpStart#
+			</isNotNull>
+			<isNull property="csmpStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpFinish" prepend=",">
+				#csmpFinish#
+			</isNotNull>
+			<isNull property="csmpFinish" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpUpdateTime" prepend=",">
+				#csmpUpdateTime#
+			</isNotNull>
+			<isNull property="csmpUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpAddTime" prepend=",">
+				#csmpAddTime#
+			</isNotNull>
+			<isNull property="csmpAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpRemark" prepend=",">
+				#csmpRemark#
+			</isNotNull>
+			<isNull property="csmpRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmpStatus" prepend=",">
+				#csmpStatus#
+			</isNotNull>
+			<isNull property="csmpStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新营销方案 -->
+	<update id="updateCsMarketPlan"  parameterClass="com.ccclubs.model.CsMarketPlan">
+		update cs_market_plan$suffix$ set
+			<isNotNull property="csmpHost" prepend="">
+				cs_market_plan$suffix$.csmp_host = #csmpHost#
+			</isNotNull>
+			<isNull property="csmpHost" prepend="">
+				cs_market_plan$suffix$.csmp_host = null
+			</isNull>				
+			<isNotNull property="csmpName" prepend=",">
+				cs_market_plan$suffix$.csmp_name = #csmpName#
+			</isNotNull>
+			<isNull property="csmpName" prepend=",">
+				cs_market_plan$suffix$.csmp_name = null
+			</isNull>				
+			<isNotNull property="csmpType" prepend=",">
+				cs_market_plan$suffix$.csmp_type = #csmpType#
+			</isNotNull>
+			<isNull property="csmpType" prepend=",">
+				cs_market_plan$suffix$.csmp_type = null
+			</isNull>				
+			<isNotNull property="csmpMethod" prepend=",">
+				cs_market_plan$suffix$.csmp_method = #csmpMethod#
+			</isNotNull>
+			<isNull property="csmpMethod" prepend=",">
+				cs_market_plan$suffix$.csmp_method = null
+			</isNull>				
+			<isNotNull property="csmpPerson" prepend=",">
+				cs_market_plan$suffix$.csmp_person = #csmpPerson#
+			</isNotNull>
+			<isNull property="csmpPerson" prepend=",">
+				cs_market_plan$suffix$.csmp_person = null
+			</isNull>				
+			<isNotNull property="csmpProfile" prepend=",">
+				cs_market_plan$suffix$.csmp_profile = #csmpProfile#
+			</isNotNull>
+			<isNull property="csmpProfile" prepend=",">
+				cs_market_plan$suffix$.csmp_profile = null
+			</isNull>				
+			<isNotNull property="csmpPlanBook" prepend=",">
+				cs_market_plan$suffix$.csmp_plan_book = #csmpPlanBook#
+			</isNotNull>
+			<isNull property="csmpPlanBook" prepend=",">
+				cs_market_plan$suffix$.csmp_plan_book = null
+			</isNull>				
+			<isNotNull property="csmpMindMap" prepend=",">
+				cs_market_plan$suffix$.csmp_mind_map = #csmpMindMap#
+			</isNotNull>
+			<isNull property="csmpMindMap" prepend=",">
+				cs_market_plan$suffix$.csmp_mind_map = null
+			</isNull>				
+			<isNotNull property="csmpVIndex" prepend=",">
+				cs_market_plan$suffix$.csmp_v_index = #csmpVIndex#
+			</isNotNull>
+			<isNull property="csmpVIndex" prepend=",">
+				cs_market_plan$suffix$.csmp_v_index = null
+			</isNull>				
+			<isNotNull property="csmpStart" prepend=",">
+				cs_market_plan$suffix$.csmp_start = #csmpStart#
+			</isNotNull>
+			<isNull property="csmpStart" prepend=",">
+				cs_market_plan$suffix$.csmp_start = null
+			</isNull>				
+			<isNotNull property="csmpFinish" prepend=",">
+				cs_market_plan$suffix$.csmp_finish = #csmpFinish#
+			</isNotNull>
+			<isNull property="csmpFinish" prepend=",">
+				cs_market_plan$suffix$.csmp_finish = null
+			</isNull>				
+			<isNotNull property="csmpUpdateTime" prepend=",">
+				cs_market_plan$suffix$.csmp_update_time = #csmpUpdateTime#
+			</isNotNull>
+			<isNull property="csmpUpdateTime" prepend=",">
+				cs_market_plan$suffix$.csmp_update_time = null
+			</isNull>				
+			<isNotNull property="csmpAddTime" prepend=",">
+				cs_market_plan$suffix$.csmp_add_time = #csmpAddTime#
+			</isNotNull>
+			<isNull property="csmpAddTime" prepend=",">
+				cs_market_plan$suffix$.csmp_add_time = null
+			</isNull>				
+			<isNotNull property="csmpRemark" prepend=",">
+				cs_market_plan$suffix$.csmp_remark = #csmpRemark#
+			</isNotNull>
+			<isNull property="csmpRemark" prepend=",">
+				cs_market_plan$suffix$.csmp_remark = null
+			</isNull>				
+			<isNotNull property="csmpStatus" prepend=",">
+				cs_market_plan$suffix$.csmp_status = #csmpStatus#
+			</isNotNull>
+			<isNull property="csmpStatus" prepend=",">
+				cs_market_plan$suffix$.csmp_status = null
+			</isNull>				
+		where
+			csmp_id=#csmpId#
+	</update>
+	
+	<!-- 更新营销方案非空字段 -->
+	<update id="updateCsMarketPlan$NotNull"  parameterClass="com.ccclubs.model.CsMarketPlan">
+		update cs_market_plan$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmpHost" prepend=",">
+				cs_market_plan$suffix$.csmp_host = #csmpHost#
+			</isNotNull>		
+			<isNotNull property="csmpName" prepend=",">
+				cs_market_plan$suffix$.csmp_name = #csmpName#
+			</isNotNull>		
+			<isNotNull property="csmpType" prepend=",">
+				cs_market_plan$suffix$.csmp_type = #csmpType#
+			</isNotNull>		
+			<isNotNull property="csmpMethod" prepend=",">
+				cs_market_plan$suffix$.csmp_method = #csmpMethod#
+			</isNotNull>		
+			<isNotNull property="csmpPerson" prepend=",">
+				cs_market_plan$suffix$.csmp_person = #csmpPerson#
+			</isNotNull>		
+			<isNotNull property="csmpProfile" prepend=",">
+				cs_market_plan$suffix$.csmp_profile = #csmpProfile#
+			</isNotNull>		
+			<isNotNull property="csmpPlanBook" prepend=",">
+				cs_market_plan$suffix$.csmp_plan_book = #csmpPlanBook#
+			</isNotNull>		
+			<isNotNull property="csmpMindMap" prepend=",">
+				cs_market_plan$suffix$.csmp_mind_map = #csmpMindMap#
+			</isNotNull>		
+			<isNotNull property="csmpVIndex" prepend=",">
+				cs_market_plan$suffix$.csmp_v_index = #csmpVIndex#
+			</isNotNull>		
+			<isNotNull property="csmpStart" prepend=",">
+				cs_market_plan$suffix$.csmp_start = #csmpStart#
+			</isNotNull>		
+			<isNotNull property="csmpFinish" prepend=",">
+				cs_market_plan$suffix$.csmp_finish = #csmpFinish#
+			</isNotNull>		
+			<isNotNull property="csmpUpdateTime" prepend=",">
+				cs_market_plan$suffix$.csmp_update_time = #csmpUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csmpAddTime" prepend=",">
+				cs_market_plan$suffix$.csmp_add_time = #csmpAddTime#
+			</isNotNull>		
+			<isNotNull property="csmpRemark" prepend=",">
+				cs_market_plan$suffix$.csmp_remark = #csmpRemark#
+			</isNotNull>		
+			<isNotNull property="csmpStatus" prepend=",">
+				cs_market_plan$suffix$.csmp_status = #csmpStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csmp_id=#csmpId#
+	</update>
+	
+
+	<!-- 根据ID删除一个营销方案 -->
+	<delete id="deleteCsMarketPlanById" parameterClass="java.util.HashMap">
+		delete from cs_market_plan$suffix$ where csmp_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个营销方案 -->
+	<update id="removeCsMarketPlanById" parameterClass="java.util.HashMap">
+		update cs_market_plan$suffix$ set  cs_market_plan$suffix$.csmp_status=-1  where csmp_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新营销方案 -->
+	<update id="updateCsMarketPlanBy"  parameterClass="java.util.HashMap">
+		update cs_market_plan$suffix$ set		
+			csmp_id=csmp_id
+			<isNotNull property="V_csmpId" prepend=",">
+				cs_market_plan$suffix$.csmp_id = #V_csmpId#
+			</isNotNull>		
+			<isNotNull property="V_csmpHost" prepend=",">
+				cs_market_plan$suffix$.csmp_host = #V_csmpHost#
+			</isNotNull>		
+			<isNotNull property="V_csmpName" prepend=",">
+				cs_market_plan$suffix$.csmp_name = #V_csmpName#
+			</isNotNull>		
+			<isNotNull property="V_csmpType" prepend=",">
+				cs_market_plan$suffix$.csmp_type = #V_csmpType#
+			</isNotNull>		
+			<isNotNull property="V_csmpMethod" prepend=",">
+				cs_market_plan$suffix$.csmp_method = #V_csmpMethod#
+			</isNotNull>		
+			<isNotNull property="V_csmpPerson" prepend=",">
+				cs_market_plan$suffix$.csmp_person = #V_csmpPerson#
+			</isNotNull>		
+			<isNotNull property="V_csmpProfile" prepend=",">
+				cs_market_plan$suffix$.csmp_profile = #V_csmpProfile#
+			</isNotNull>		
+			<isNotNull property="V_csmpPlanBook" prepend=",">
+				cs_market_plan$suffix$.csmp_plan_book = #V_csmpPlanBook#
+			</isNotNull>		
+			<isNotNull property="V_csmpMindMap" prepend=",">
+				cs_market_plan$suffix$.csmp_mind_map = #V_csmpMindMap#
+			</isNotNull>		
+			<isNotNull property="V_csmpVIndex" prepend=",">
+				cs_market_plan$suffix$.csmp_v_index = #V_csmpVIndex#
+			</isNotNull>		
+			<isNotNull property="V_csmpStart" prepend=",">
+				cs_market_plan$suffix$.csmp_start = #V_csmpStart#
+			</isNotNull>		
+			<isNotNull property="V_csmpFinish" prepend=",">
+				cs_market_plan$suffix$.csmp_finish = #V_csmpFinish#
+			</isNotNull>		
+			<isNotNull property="V_csmpUpdateTime" prepend=",">
+				cs_market_plan$suffix$.csmp_update_time = #V_csmpUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csmpAddTime" prepend=",">
+				cs_market_plan$suffix$.csmp_add_time = #V_csmpAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csmpRemark" prepend=",">
+				cs_market_plan$suffix$.csmp_remark = #V_csmpRemark#
+			</isNotNull>		
+			<isNotNull property="V_csmpStatus" prepend=",">
+				cs_market_plan$suffix$.csmp_status = #V_csmpStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_market_plan$suffix$.csmp_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMarketPlan_part.cs_market_plan_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除营销方案 -->
+	<update id="deleteCsMarketPlanBy"  parameterClass="java.util.HashMap">
+		delete from cs_market_plan$suffix$ where 
+		cs_market_plan$suffix$.csmp_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMarketPlan_part.cs_market_plan_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

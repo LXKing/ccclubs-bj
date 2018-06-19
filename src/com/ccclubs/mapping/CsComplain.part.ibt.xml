@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsComplain_part">	
+	<!-- 意见反馈条件sql片段  -->
+	<sql id="cs_complain_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_complain$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_complain$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_complain$suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscHost" prepend="and">
+			    $cscHostNot$ cs_complain$suffix$.csc_host = #cscHost#
+			</isNotEmpty>
+			<isNotNull property="cscHostNot" prepend="and">
+				<isEmpty property="cscHost">
+				$cscHostNot$ cs_complain$suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTitle" prepend="and">			    
+			    (<isNotNull property="cscTitleNot">
+			    cs_complain$suffix$.csc_title is null or length(cs_complain$suffix$.csc_title) &lt; 1 or
+			    </isNotNull>$cscTitleNot$ cs_complain$suffix$.csc_title like #cscTitle#)
+			</isNotEmpty>
+			<isNotNull property="cscTitleNot" prepend="and">
+				<isEmpty property="cscTitle">
+				$cscTitleNot$ (cs_complain$suffix$.csc_title is null or length(cs_complain$suffix$.csc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscContent" prepend="and">			    
+			    (<isNotNull property="cscContentNot">
+			    cs_complain$suffix$.csc_content is null or length(cs_complain$suffix$.csc_content) &lt; 1 or
+			    </isNotNull>$cscContentNot$ cs_complain$suffix$.csc_content like #cscContent#)
+			</isNotEmpty>
+			<isNotNull property="cscContentNot" prepend="and">
+				<isEmpty property="cscContent">
+				$cscContentNot$ (cs_complain$suffix$.csc_content is null or length(cs_complain$suffix$.csc_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTypeMin" prepend="and">
+			    $cscTypeNot$  ( cs_complain$suffix$.csc_type &gt;= #cscTypeMin#
+			    <isEmpty property="cscTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscTypeMax" prepend="and">
+				<isEmpty property="cscTypeMin">$cscTypeNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_type &lt;= #cscTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscType" prepend="and">
+			    $cscTypeNot$ cs_complain$suffix$.csc_type = #cscType#
+			</isNotEmpty>
+			<isNotNull property="cscTypeNot" prepend="and">
+				<isEmpty property="cscTypeMax"><isEmpty property="cscTypeMin"><isEmpty property="cscType">
+				$cscTypeNot$ cs_complain$suffix$.csc_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscMember" prepend="and">
+			    $cscMemberNot$ cs_complain$suffix$.csc_member = #cscMember#
+			</isNotEmpty>
+			<isNotNull property="cscMemberNot" prepend="and">
+				<isEmpty property="cscMember">
+				$cscMemberNot$ cs_complain$suffix$.csc_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscDispose" prepend="and">			    
+			    (<isNotNull property="cscDisposeNot">
+			    cs_complain$suffix$.csc_dispose is null or length(cs_complain$suffix$.csc_dispose) &lt; 1 or
+			    </isNotNull>$cscDisposeNot$ cs_complain$suffix$.csc_dispose like #cscDispose#)
+			</isNotEmpty>
+			<isNotNull property="cscDisposeNot" prepend="and">
+				<isEmpty property="cscDispose">
+				$cscDisposeNot$ (cs_complain$suffix$.csc_dispose is null or length(cs_complain$suffix$.csc_dispose) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscDealerMin" prepend="and">
+			    $cscDealerNot$  ( cs_complain$suffix$.csc_dealer &gt;= #cscDealerMin#
+			    <isEmpty property="cscDealerMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscDealerMax" prepend="and">
+				<isEmpty property="cscDealerMin">$cscDealerNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_dealer &lt;= #cscDealerMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscDealer" prepend="and">
+			    $cscDealerNot$ cs_complain$suffix$.csc_dealer = #cscDealer#
+			</isNotEmpty>
+			<isNotNull property="cscDealerNot" prepend="and">
+				<isEmpty property="cscDealerMax"><isEmpty property="cscDealerMin"><isEmpty property="cscDealer">
+				$cscDealerNot$ cs_complain$suffix$.csc_dealer is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUpdateTimeStart" prepend="and">
+			    $cscUpdateTimeNot$   (cs_complain$suffix$.csc_update_time &gt;= #cscUpdateTimeStart#
+			   <isEmpty property="cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscUpdateTimeStart">$cscUpdateTimeNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_update_time &lt;= #cscUpdateTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscUpdateTime" prepend="and">
+			    $cscUpdateTimeNot$ cs_complain$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscUpdateTimeNot" prepend="and">
+				<isEmpty property="cscUpdateTimeStart"><isEmpty property="cscUpdateTimeEnd"><isEmpty property="cscUpdateTime">
+				$cscUpdateTimeNot$ cs_complain$suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddTimeStart" prepend="and">
+			    $cscAddTimeNot$   (cs_complain$suffix$.csc_add_time &gt;= #cscAddTimeStart#
+			   <isEmpty property="cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTimeEnd" prepend="and">
+				<isEmpty property="cscAddTimeStart">$cscAddTimeNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_add_time &lt;= #cscAddTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscAddTime" prepend="and">
+			    $cscAddTimeNot$ cs_complain$suffix$.csc_add_time = #cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscAddTimeNot" prepend="and">
+				<isEmpty property="cscAddTimeStart"><isEmpty property="cscAddTimeEnd"><isEmpty property="cscAddTime">
+				$cscAddTimeNot$ cs_complain$suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAcceptMin" prepend="and">
+			    $cscAcceptNot$  ( cs_complain$suffix$.csc_accept &gt;= #cscAcceptMin#
+			    <isEmpty property="cscAcceptMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAcceptMax" prepend="and">
+				<isEmpty property="cscAcceptMin">$cscAcceptNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_accept &lt;= #cscAcceptMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscAccept" prepend="and">
+			    $cscAcceptNot$ cs_complain$suffix$.csc_accept = #cscAccept#
+			</isNotEmpty>
+			<isNotNull property="cscAcceptNot" prepend="and">
+				<isEmpty property="cscAcceptMax"><isEmpty property="cscAcceptMin"><isEmpty property="cscAccept">
+				$cscAcceptNot$ cs_complain$suffix$.csc_accept is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscStatusMin" prepend="and">
+			    $cscStatusNot$  ( cs_complain$suffix$.csc_status &gt;= #cscStatusMin#
+			    <isEmpty property="cscStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscStatusMax" prepend="and">
+				<isEmpty property="cscStatusMin">$cscStatusNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_status &lt;= #cscStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscStatus" prepend="and">
+			    $cscStatusNot$ cs_complain$suffix$.csc_status = #cscStatus#
+			</isNotEmpty>
+			<isNotNull property="cscStatusNot" prepend="and">
+				<isEmpty property="cscStatusMax"><isEmpty property="cscStatusMin"><isEmpty property="cscStatus">
+				$cscStatusNot$ cs_complain$suffix$.csc_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscSource" prepend="and">			    
+			    (<isNotNull property="cscSourceNot">
+			    cs_complain$suffix$.csc_source is null or length(cs_complain$suffix$.csc_source) &lt; 1 or
+			    </isNotNull>$cscSourceNot$ cs_complain$suffix$.csc_source = #cscSource#)
+			</isNotEmpty>
+			<isNotNull property="cscSourceNot" prepend="and">
+				<isEmpty property="cscSource">
+				$cscSourceNot$ (cs_complain$suffix$.csc_source is null or length(cs_complain$suffix$.csc_source) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscObject" prepend="and">			    
+			    (<isNotNull property="cscObjectNot">
+			    cs_complain$suffix$.csc_object is null or length(cs_complain$suffix$.csc_object) &lt; 1 or
+			    </isNotNull>$cscObjectNot$ cs_complain$suffix$.csc_object = #cscObject#)
+			</isNotEmpty>
+			<isNotNull property="cscObjectNot" prepend="and">
+				<isEmpty property="cscObject">
+				$cscObjectNot$ (cs_complain$suffix$.csc_object is null or length(cs_complain$suffix$.csc_object) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscLevelMin" prepend="and">
+			    $cscLevelNot$  ( cs_complain$suffix$.csc_level &gt;= #cscLevelMin#
+			    <isEmpty property="cscLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscLevelMax" prepend="and">
+				<isEmpty property="cscLevelMin">$cscLevelNot$   (</isEmpty>
+			    cs_complain$suffix$.csc_level &lt;= #cscLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscLevel" prepend="and">
+			    $cscLevelNot$ cs_complain$suffix$.csc_level = #cscLevel#
+			</isNotEmpty>
+			<isNotNull property="cscLevelNot" prepend="and">
+				<isEmpty property="cscLevelMax"><isEmpty property="cscLevelMin"><isEmpty property="cscLevel">
+				$cscLevelNot$ cs_complain$suffix$.csc_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscLevel1Min" prepend="and">
+			    $cscLevel1Not$  ( cs_complain$suffix$.csc_level1 &gt;= #cscLevel1Min#
+			    <isEmpty property="cscLevel1Max">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscLevel1Max" prepend="and">
+				<isEmpty property="cscLevel1Min">$cscLevel1Not$   (</isEmpty>
+			    cs_complain$suffix$.csc_level1 &lt;= #cscLevel1Max# )
+			</isNotEmpty>
+			<isNotEmpty property="cscLevel1" prepend="and">
+			    $cscLevel1Not$ cs_complain$suffix$.csc_level1 = #cscLevel1#
+			</isNotEmpty>
+			<isNotNull property="cscLevel1Not" prepend="and">
+				<isEmpty property="cscLevel1Max"><isEmpty property="cscLevel1Min"><isEmpty property="cscLevel1">
+				$cscLevel1Not$ cs_complain$suffix$.csc_level1 is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 意见反馈left join 条件sql片段 -->
+	<sql id="cs_complain_join">
+		<dynamic>
+			<isNotEmpty property="CsComplain.cscId" prepend="and">
+			    $CsComplain.cscIdNot$ cs_complain$CsComplain.suffix$.csc_id = #CsComplain.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscIdNot" prepend="and">
+				<isEmpty property="CsComplain.cscId">
+				$cscIdNot$ cs_complain$CsComplain.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_complain$CsComplain.suffix$.csc_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscHost" prepend="and">
+			    $CsComplain.cscHostNot$ cs_complain$CsComplain.suffix$.csc_host = #CsComplain.cscHost#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscHostNot" prepend="and">
+				<isEmpty property="CsComplain.cscHost">
+				$cscHostNot$ cs_complain$CsComplain.suffix$.csc_host is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsComplain.cscTitle" prepend="and">			    
+				    (<isNotNull property="CsComplain.cscTitleNot">
+				    cs_complain$CsComplain.suffix$.csc_title is null or length(cs_complain$CsComplain.suffix$.csc_title) &lt; 1 or
+				    </isNotNull>$CsComplain.cscTitleNot$ cs_complain$CsComplain.suffix$.csc_title like #CsComplain.cscTitle#)
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscTitleNot" prepend="and">
+					<isEmpty property="CsComplain.cscTitle">
+					$cscTitleNot$ (cs_complain$CsComplain.suffix$.csc_title is null or length(cs_complain$CsComplain.suffix$.csc_title) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsComplain.cscContent" prepend="and">			    
+				    (<isNotNull property="CsComplain.cscContentNot">
+				    cs_complain$CsComplain.suffix$.csc_content is null or length(cs_complain$CsComplain.suffix$.csc_content) &lt; 1 or
+				    </isNotNull>$CsComplain.cscContentNot$ cs_complain$CsComplain.suffix$.csc_content like #CsComplain.cscContent#)
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscContentNot" prepend="and">
+					<isEmpty property="CsComplain.cscContent">
+					$cscContentNot$ (cs_complain$CsComplain.suffix$.csc_content is null or length(cs_complain$CsComplain.suffix$.csc_content) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsComplain.cscTypeMin" prepend="and">
+			    $CsComplain.cscTypeNot$  ( cs_complain$CsComplain.suffix$.csc_type &gt;= #CsComplain.cscTypeMin#
+			    <isEmpty property="CsComplain.cscTypeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscTypeMax" prepend="and">
+				<isEmpty property="CsComplain.cscTypeMin">$CsComplain.cscTypeNot$   (</isEmpty>
+			    cs_complain$CsComplain.suffix$.csc_type &lt;= #CsComplain.cscTypeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscType" prepend="and">
+			    $CsComplain.cscTypeNot$ cs_complain$CsComplain.suffix$.csc_type = #CsComplain.cscType#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscTypeNot" prepend="and">
+				<isEmpty property="CsComplain.cscTypeMax"><isEmpty property="CsComplain.cscTypeMin"><isEmpty property="CsComplain.cscType">
+				$cscTypeNot$ cs_complain$CsComplain.suffix$.csc_type is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsComplain.cscMember" prepend="and">
+			    $CsComplain.cscMemberNot$ cs_complain$CsComplain.suffix$.csc_member = #CsComplain.cscMember#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscMemberNot" prepend="and">
+				<isEmpty property="CsComplain.cscMember">
+				$cscMemberNot$ cs_complain$CsComplain.suffix$.csc_member is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsComplain.cscDispose" prepend="and">			    
+				    (<isNotNull property="CsComplain.cscDisposeNot">
+				    cs_complain$CsComplain.suffix$.csc_dispose is null or length(cs_complain$CsComplain.suffix$.csc_dispose) &lt; 1 or
+				    </isNotNull>$CsComplain.cscDisposeNot$ cs_complain$CsComplain.suffix$.csc_dispose like #CsComplain.cscDispose#)
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscDisposeNot" prepend="and">
+					<isEmpty property="CsComplain.cscDispose">
+					$cscDisposeNot$ (cs_complain$CsComplain.suffix$.csc_dispose is null or length(cs_complain$CsComplain.suffix$.csc_dispose) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsComplain.cscDealerMin" prepend="and">
+			    $CsComplain.cscDealerNot$  ( cs_complain$CsComplain.suffix$.csc_dealer &gt;= #CsComplain.cscDealerMin#
+			    <isEmpty property="CsComplain.cscDealerMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscDealerMax" prepend="and">
+				<isEmpty property="CsComplain.cscDealerMin">$CsComplain.cscDealerNot$   (</isEmpty>
+			    cs_complain$CsComplain.suffix$.csc_dealer &lt;= #CsComplain.cscDealerMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscDealer" prepend="and">
+			    $CsComplain.cscDealerNot$ cs_complain$CsComplain.suffix$.csc_dealer = #CsComplain.cscDealer#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscDealerNot" prepend="and">
+				<isEmpty property="CsComplain.cscDealerMax"><isEmpty property="CsComplain.cscDealerMin"><isEmpty property="CsComplain.cscDealer">
+				$cscDealerNot$ cs_complain$CsComplain.suffix$.csc_dealer is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsComplain.cscUpdateTimeStart" prepend="and">
+				    $CsComplain.cscUpdateTimeNot$   (cs_complain$CsComplain.suffix$.csc_update_time &gt;= #CsComplain.cscUpdateTimeStart#
+				   <isEmpty property="CsComplain.cscUpdateTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsComplain.cscUpdateTimeEnd" prepend="and">
+					<isEmpty property="CsComplain.cscUpdateTimeStart">$CsComplain.cscUpdateTimeNot$   (</isEmpty>
+				    cs_complain$CsComplain.suffix$.csc_update_time &lt;= #CsComplain.cscUpdateTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsComplain.cscUpdateTime" prepend="and">
+				    $CsComplain.cscUpdateTimeNot$ cs_complain$CsComplain.suffix$.csc_update_time = #CsComplain.cscUpdateTime#
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscUpdateTimeNot" prepend="and">
+					<isEmpty property="CsComplain.cscUpdateTimeStart"><isEmpty property="CsComplain.cscUpdateTimeEnd"><isEmpty property="CsComplain.cscUpdateTime">
+					$cscUpdateTimeNot$ cs_complain$CsComplain.suffix$.csc_update_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsComplain.cscAddTimeStart" prepend="and">
+				    $CsComplain.cscAddTimeNot$   (cs_complain$CsComplain.suffix$.csc_add_time &gt;= #CsComplain.cscAddTimeStart#
+				   <isEmpty property="CsComplain.cscAddTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsComplain.cscAddTimeEnd" prepend="and">
+					<isEmpty property="CsComplain.cscAddTimeStart">$CsComplain.cscAddTimeNot$   (</isEmpty>
+				    cs_complain$CsComplain.suffix$.csc_add_time &lt;= #CsComplain.cscAddTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsComplain.cscAddTime" prepend="and">
+				    $CsComplain.cscAddTimeNot$ cs_complain$CsComplain.suffix$.csc_add_time = #CsComplain.cscAddTime#
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscAddTimeNot" prepend="and">
+					<isEmpty property="CsComplain.cscAddTimeStart"><isEmpty property="CsComplain.cscAddTimeEnd"><isEmpty property="CsComplain.cscAddTime">
+					$cscAddTimeNot$ cs_complain$CsComplain.suffix$.csc_add_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsComplain.cscAcceptMin" prepend="and">
+			    $CsComplain.cscAcceptNot$  ( cs_complain$CsComplain.suffix$.csc_accept &gt;= #CsComplain.cscAcceptMin#
+			    <isEmpty property="CsComplain.cscAcceptMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscAcceptMax" prepend="and">
+				<isEmpty property="CsComplain.cscAcceptMin">$CsComplain.cscAcceptNot$   (</isEmpty>
+			    cs_complain$CsComplain.suffix$.csc_accept &lt;= #CsComplain.cscAcceptMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscAccept" prepend="and">
+			    $CsComplain.cscAcceptNot$ cs_complain$CsComplain.suffix$.csc_accept = #CsComplain.cscAccept#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscAcceptNot" prepend="and">
+				<isEmpty property="CsComplain.cscAcceptMax"><isEmpty property="CsComplain.cscAcceptMin"><isEmpty property="CsComplain.cscAccept">
+				$cscAcceptNot$ cs_complain$CsComplain.suffix$.csc_accept is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsComplain.cscStatusMin" prepend="and">
+			    $CsComplain.cscStatusNot$  ( cs_complain$CsComplain.suffix$.csc_status &gt;= #CsComplain.cscStatusMin#
+			    <isEmpty property="CsComplain.cscStatusMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscStatusMax" prepend="and">
+				<isEmpty property="CsComplain.cscStatusMin">$CsComplain.cscStatusNot$   (</isEmpty>
+			    cs_complain$CsComplain.suffix$.csc_status &lt;= #CsComplain.cscStatusMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscStatus" prepend="and">
+			    $CsComplain.cscStatusNot$ cs_complain$CsComplain.suffix$.csc_status = #CsComplain.cscStatus#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscStatusNot" prepend="and">
+				<isEmpty property="CsComplain.cscStatusMax"><isEmpty property="CsComplain.cscStatusMin"><isEmpty property="CsComplain.cscStatus">
+				$cscStatusNot$ cs_complain$CsComplain.suffix$.csc_status is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsComplain.cscSource" prepend="and">			    
+				    (<isNotNull property="CsComplain.cscSourceNot">
+				    cs_complain$CsComplain.suffix$.csc_source is null or length(cs_complain$CsComplain.suffix$.csc_source) &lt; 1 or
+				    </isNotNull>$CsComplain.cscSourceNot$ cs_complain$CsComplain.suffix$.csc_source = #CsComplain.cscSource#)
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscSourceNot" prepend="and">
+					<isEmpty property="CsComplain.cscSource">
+					$cscSourceNot$ (cs_complain$CsComplain.suffix$.csc_source is null or length(cs_complain$CsComplain.suffix$.csc_source) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsComplain.cscObject" prepend="and">			    
+				    (<isNotNull property="CsComplain.cscObjectNot">
+				    cs_complain$CsComplain.suffix$.csc_object is null or length(cs_complain$CsComplain.suffix$.csc_object) &lt; 1 or
+				    </isNotNull>$CsComplain.cscObjectNot$ cs_complain$CsComplain.suffix$.csc_object = #CsComplain.cscObject#)
+				</isNotEmpty>
+				<isNotNull property="CsComplain.cscObjectNot" prepend="and">
+					<isEmpty property="CsComplain.cscObject">
+					$cscObjectNot$ (cs_complain$CsComplain.suffix$.csc_object is null or length(cs_complain$CsComplain.suffix$.csc_object) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsComplain.cscLevelMin" prepend="and">
+			    $CsComplain.cscLevelNot$  ( cs_complain$CsComplain.suffix$.csc_level &gt;= #CsComplain.cscLevelMin#
+			    <isEmpty property="CsComplain.cscLevelMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscLevelMax" prepend="and">
+				<isEmpty property="CsComplain.cscLevelMin">$CsComplain.cscLevelNot$   (</isEmpty>
+			    cs_complain$CsComplain.suffix$.csc_level &lt;= #CsComplain.cscLevelMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscLevel" prepend="and">
+			    $CsComplain.cscLevelNot$ cs_complain$CsComplain.suffix$.csc_level = #CsComplain.cscLevel#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscLevelNot" prepend="and">
+				<isEmpty property="CsComplain.cscLevelMax"><isEmpty property="CsComplain.cscLevelMin"><isEmpty property="CsComplain.cscLevel">
+				$cscLevelNot$ cs_complain$CsComplain.suffix$.csc_level is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsComplain.cscLevel1Min" prepend="and">
+			    $CsComplain.cscLevel1Not$  ( cs_complain$CsComplain.suffix$.csc_level1 &gt;= #CsComplain.cscLevel1Min#
+			    <isEmpty property="CsComplain.cscLevel1Max">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscLevel1Max" prepend="and">
+				<isEmpty property="CsComplain.cscLevel1Min">$CsComplain.cscLevel1Not$   (</isEmpty>
+			    cs_complain$CsComplain.suffix$.csc_level1 &lt;= #CsComplain.cscLevel1Max# )
+			</isNotEmpty>
+			<isNotEmpty property="CsComplain.cscLevel1" prepend="and">
+			    $CsComplain.cscLevel1Not$ cs_complain$CsComplain.suffix$.csc_level1 = #CsComplain.cscLevel1#
+			</isNotEmpty>
+			<isNotNull property="CsComplain.cscLevel1Not" prepend="and">
+				<isEmpty property="CsComplain.cscLevel1Max"><isEmpty property="CsComplain.cscLevel1Min"><isEmpty property="CsComplain.cscLevel1">
+				$cscLevel1Not$ cs_complain$CsComplain.suffix$.csc_level1 is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

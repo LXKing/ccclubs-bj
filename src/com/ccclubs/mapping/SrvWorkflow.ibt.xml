@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 工作流之SQL映射 -->
+	<resultMap id="SrvWorkflow" class="com.ccclubs.model.SrvWorkflow">
+		<result property="swId" column="sw_id"/>
+		<result property="swName" column="sw_name"/>
+		<result property="swProfile" column="sw_profile"/>
+		<result property="swPaint" column="sw_paint"/>
+		<result property="swConfig" column="sw_config"/>
+		<result property="swEditor" column="sw_editor"/>
+		<result property="swUpdateTime" column="sw_update_time"/>
+		<result property="swAddTime" column="sw_add_time"/>
+		<result property="swStatus" column="sw_status"/>
+	</resultMap>
+		
+	<!-- 获取所有工作流 -->
+	<select id="getSrvWorkflowList" resultMap="SrvWorkflow">
+		select srv_workflow$suffix$.* from srv_workflow$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_workflow$suffix$.sw_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvWorkflow_part.srv_workflow_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sw_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取工作流分页 -->
+	<select id="getSrvWorkflowPage" parameterClass="java.util.HashMap" resultMap="SrvWorkflow">
+		select srv_workflow$suffix$.* from srv_workflow$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_workflow$suffix$.sw_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvWorkflow_part.srv_workflow_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by sw_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取工作流总数 -->
+	<select id="getSrvWorkflowEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from srv_workflow$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and srv_workflow$suffix$.sw_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="SrvWorkflow_part.srv_workflow_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取工作流 -->
+	<select id="getSrvWorkflowById" parameterClass="java.util.HashMap" resultMap="SrvWorkflow">
+		select srv_workflow$suffix$.* from srv_workflow$suffix$
+		where sw_id=#id#
+	</select>
+	
+		
+	<!-- 保存工作流 -->
+	<insert id="saveSrvWorkflow"  parameterClass="com.ccclubs.model.SrvWorkflow">
+		insert into srv_workflow$suffix$
+		(
+			srv_workflow$suffix$.sw_name
+			,srv_workflow$suffix$.sw_profile
+			,srv_workflow$suffix$.sw_paint
+			,srv_workflow$suffix$.sw_config
+			,srv_workflow$suffix$.sw_editor
+			,srv_workflow$suffix$.sw_update_time
+			,srv_workflow$suffix$.sw_add_time
+			,srv_workflow$suffix$.sw_status
+		)
+		values(
+			<isNotNull property="swName" prepend="">
+				#swName#
+			</isNotNull>
+			<isNull property="swName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="swProfile" prepend=",">
+				#swProfile#
+			</isNotNull>
+			<isNull property="swProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="swPaint" prepend=",">
+				#swPaint#
+			</isNotNull>
+			<isNull property="swPaint" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="swConfig" prepend=",">
+				#swConfig#
+			</isNotNull>
+			<isNull property="swConfig" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="swEditor" prepend=",">
+				#swEditor#
+			</isNotNull>
+			<isNull property="swEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="swUpdateTime" prepend=",">
+				#swUpdateTime#
+			</isNotNull>
+			<isNull property="swUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="swAddTime" prepend=",">
+				#swAddTime#
+			</isNotNull>
+			<isNull property="swAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="swStatus" prepend=",">
+				#swStatus#
+			</isNotNull>
+			<isNull property="swStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新工作流 -->
+	<update id="updateSrvWorkflow"  parameterClass="com.ccclubs.model.SrvWorkflow">
+		update srv_workflow$suffix$ set
+			<isNotNull property="swName" prepend="">
+				srv_workflow$suffix$.sw_name = #swName#
+			</isNotNull>
+			<isNull property="swName" prepend="">
+				srv_workflow$suffix$.sw_name = null
+			</isNull>				
+			<isNotNull property="swProfile" prepend=",">
+				srv_workflow$suffix$.sw_profile = #swProfile#
+			</isNotNull>
+			<isNull property="swProfile" prepend=",">
+				srv_workflow$suffix$.sw_profile = null
+			</isNull>				
+			<isNotNull property="swPaint" prepend=",">
+				srv_workflow$suffix$.sw_paint = #swPaint#
+			</isNotNull>
+			<isNull property="swPaint" prepend=",">
+				srv_workflow$suffix$.sw_paint = null
+			</isNull>				
+			<isNotNull property="swConfig" prepend=",">
+				srv_workflow$suffix$.sw_config = #swConfig#
+			</isNotNull>
+			<isNull property="swConfig" prepend=",">
+				srv_workflow$suffix$.sw_config = null
+			</isNull>				
+			<isNotNull property="swEditor" prepend=",">
+				srv_workflow$suffix$.sw_editor = #swEditor#
+			</isNotNull>
+			<isNull property="swEditor" prepend=",">
+				srv_workflow$suffix$.sw_editor = null
+			</isNull>				
+			<isNotNull property="swUpdateTime" prepend=",">
+				srv_workflow$suffix$.sw_update_time = #swUpdateTime#
+			</isNotNull>
+			<isNull property="swUpdateTime" prepend=",">
+				srv_workflow$suffix$.sw_update_time = null
+			</isNull>				
+			<isNotNull property="swAddTime" prepend=",">
+				srv_workflow$suffix$.sw_add_time = #swAddTime#
+			</isNotNull>
+			<isNull property="swAddTime" prepend=",">
+				srv_workflow$suffix$.sw_add_time = null
+			</isNull>				
+			<isNotNull property="swStatus" prepend=",">
+				srv_workflow$suffix$.sw_status = #swStatus#
+			</isNotNull>
+			<isNull property="swStatus" prepend=",">
+				srv_workflow$suffix$.sw_status = null
+			</isNull>				
+		where
+			sw_id=#swId#
+	</update>
+	
+	<!-- 更新工作流非空字段 -->
+	<update id="updateSrvWorkflow$NotNull"  parameterClass="com.ccclubs.model.SrvWorkflow">
+		update srv_workflow$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="swName" prepend=",">
+				srv_workflow$suffix$.sw_name = #swName#
+			</isNotNull>		
+			<isNotNull property="swProfile" prepend=",">
+				srv_workflow$suffix$.sw_profile = #swProfile#
+			</isNotNull>		
+			<isNotNull property="swPaint" prepend=",">
+				srv_workflow$suffix$.sw_paint = #swPaint#
+			</isNotNull>		
+			<isNotNull property="swConfig" prepend=",">
+				srv_workflow$suffix$.sw_config = #swConfig#
+			</isNotNull>		
+			<isNotNull property="swEditor" prepend=",">
+				srv_workflow$suffix$.sw_editor = #swEditor#
+			</isNotNull>		
+			<isNotNull property="swUpdateTime" prepend=",">
+				srv_workflow$suffix$.sw_update_time = #swUpdateTime#
+			</isNotNull>		
+			<isNotNull property="swAddTime" prepend=",">
+				srv_workflow$suffix$.sw_add_time = #swAddTime#
+			</isNotNull>		
+			<isNotNull property="swStatus" prepend=",">
+				srv_workflow$suffix$.sw_status = #swStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			sw_id=#swId#
+	</update>
+	
+
+	<!-- 根据ID删除一个工作流 -->
+	<delete id="deleteSrvWorkflowById" parameterClass="java.util.HashMap">
+		delete from srv_workflow$suffix$ where sw_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个工作流 -->
+	<update id="removeSrvWorkflowById" parameterClass="java.util.HashMap">
+		update srv_workflow$suffix$ set  srv_workflow$suffix$.sw_status=-1  where sw_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新工作流 -->
+	<update id="updateSrvWorkflowBy"  parameterClass="java.util.HashMap">
+		update srv_workflow$suffix$ set		
+			sw_id=sw_id
+			<isNotNull property="V_swId" prepend=",">
+				srv_workflow$suffix$.sw_id = #V_swId#
+			</isNotNull>		
+			<isNotNull property="V_swName" prepend=",">
+				srv_workflow$suffix$.sw_name = #V_swName#
+			</isNotNull>		
+			<isNotNull property="V_swProfile" prepend=",">
+				srv_workflow$suffix$.sw_profile = #V_swProfile#
+			</isNotNull>		
+			<isNotNull property="V_swPaint" prepend=",">
+				srv_workflow$suffix$.sw_paint = #V_swPaint#
+			</isNotNull>		
+			<isNotNull property="V_swConfig" prepend=",">
+				srv_workflow$suffix$.sw_config = #V_swConfig#
+			</isNotNull>		
+			<isNotNull property="V_swEditor" prepend=",">
+				srv_workflow$suffix$.sw_editor = #V_swEditor#
+			</isNotNull>		
+			<isNotNull property="V_swUpdateTime" prepend=",">
+				srv_workflow$suffix$.sw_update_time = #V_swUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_swAddTime" prepend=",">
+				srv_workflow$suffix$.sw_add_time = #V_swAddTime#
+			</isNotNull>		
+			<isNotNull property="V_swStatus" prepend=",">
+				srv_workflow$suffix$.sw_status = #V_swStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		srv_workflow$suffix$.sw_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="SrvWorkflow_part.srv_workflow_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除工作流 -->
+	<update id="deleteSrvWorkflowBy"  parameterClass="java.util.HashMap">
+		delete from srv_workflow$suffix$ where 
+		srv_workflow$suffix$.sw_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="SrvWorkflow_part.srv_workflow_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

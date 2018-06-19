@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 系统参数之SQL映射 -->
+	<resultMap id="CsArgument" class="com.ccclubs.model.CsArgument">
+		<result property="csaId" column="csa_id"/>
+		<result property="csaName" column="csa_name"/>
+		<result property="csaFlag" column="csa_flag"/>
+		<result property="csaValue" column="csa_value"/>
+		<result property="csaDescribe" column="csa_describe"/>
+	</resultMap>
+		
+	<!-- 获取所有系统参数 -->
+	<select id="getCsArgumentList" resultMap="CsArgument">
+		select cs_argument$suffix$.* from cs_argument$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsArgument_part.cs_argument_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csa_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取系统参数分页 -->
+	<select id="getCsArgumentPage" parameterClass="java.util.HashMap" resultMap="CsArgument">
+		select cs_argument$suffix$.* from cs_argument$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsArgument_part.cs_argument_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csa_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取系统参数总数 -->
+	<select id="getCsArgumentEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_argument$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsArgument_part.cs_argument_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取系统参数 -->
+	<select id="getCsArgumentById" parameterClass="java.util.HashMap" resultMap="CsArgument">
+		select cs_argument$suffix$.* from cs_argument$suffix$
+		where csa_id=#id#
+	</select>
+	
+		
+	<!-- 保存系统参数 -->
+	<insert id="saveCsArgument"  parameterClass="com.ccclubs.model.CsArgument">
+		insert into cs_argument$suffix$
+		(
+			cs_argument$suffix$.csa_name
+			,cs_argument$suffix$.csa_flag
+			,cs_argument$suffix$.csa_value
+			,cs_argument$suffix$.csa_describe
+		)
+		values(
+			<isNotNull property="csaName" prepend="">
+				#csaName#
+			</isNotNull>
+			<isNull property="csaName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csaFlag" prepend=",">
+				#csaFlag#
+			</isNotNull>
+			<isNull property="csaFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaValue" prepend=",">
+				#csaValue#
+			</isNotNull>
+			<isNull property="csaValue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csaDescribe" prepend=",">
+				#csaDescribe#
+			</isNotNull>
+			<isNull property="csaDescribe" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新系统参数 -->
+	<update id="updateCsArgument"  parameterClass="com.ccclubs.model.CsArgument">
+		update cs_argument$suffix$ set
+			<isNotNull property="csaName" prepend="">
+				cs_argument$suffix$.csa_name = #csaName#
+			</isNotNull>
+			<isNull property="csaName" prepend="">
+				cs_argument$suffix$.csa_name = null
+			</isNull>				
+			<isNotNull property="csaFlag" prepend=",">
+				cs_argument$suffix$.csa_flag = #csaFlag#
+			</isNotNull>
+			<isNull property="csaFlag" prepend=",">
+				cs_argument$suffix$.csa_flag = null
+			</isNull>				
+			<isNotNull property="csaValue" prepend=",">
+				cs_argument$suffix$.csa_value = #csaValue#
+			</isNotNull>
+			<isNull property="csaValue" prepend=",">
+				cs_argument$suffix$.csa_value = null
+			</isNull>				
+			<isNotNull property="csaDescribe" prepend=",">
+				cs_argument$suffix$.csa_describe = #csaDescribe#
+			</isNotNull>
+			<isNull property="csaDescribe" prepend=",">
+				cs_argument$suffix$.csa_describe = null
+			</isNull>				
+		where
+			csa_id=#csaId#
+	</update>
+	
+	<!-- 更新系统参数非空字段 -->
+	<update id="updateCsArgument$NotNull"  parameterClass="com.ccclubs.model.CsArgument">
+		update cs_argument$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csaName" prepend=",">
+				cs_argument$suffix$.csa_name = #csaName#
+			</isNotNull>		
+			<isNotNull property="csaFlag" prepend=",">
+				cs_argument$suffix$.csa_flag = #csaFlag#
+			</isNotNull>		
+			<isNotNull property="csaValue" prepend=",">
+				cs_argument$suffix$.csa_value = #csaValue#
+			</isNotNull>		
+			<isNotNull property="csaDescribe" prepend=",">
+				cs_argument$suffix$.csa_describe = #csaDescribe#
+			</isNotNull>		
+			</dynamic>
+		where
+			csa_id=#csaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个系统参数 -->
+	<delete id="deleteCsArgumentById" parameterClass="java.util.HashMap">
+		delete from cs_argument$suffix$ where csa_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新系统参数 -->
+	<update id="updateCsArgumentBy"  parameterClass="java.util.HashMap">
+		update cs_argument$suffix$ set		
+			csa_id=csa_id
+			<isNotNull property="V_csaId" prepend=",">
+				cs_argument$suffix$.csa_id = #V_csaId#
+			</isNotNull>		
+			<isNotNull property="V_csaName" prepend=",">
+				cs_argument$suffix$.csa_name = #V_csaName#
+			</isNotNull>		
+			<isNotNull property="V_csaFlag" prepend=",">
+				cs_argument$suffix$.csa_flag = #V_csaFlag#
+			</isNotNull>		
+			<isNotNull property="V_csaValue" prepend=",">
+				cs_argument$suffix$.csa_value = #V_csaValue#
+			</isNotNull>		
+			<isNotNull property="V_csaDescribe" prepend=",">
+				cs_argument$suffix$.csa_describe = #V_csaDescribe#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsArgument_part.cs_argument_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除系统参数 -->
+	<update id="deleteCsArgumentBy"  parameterClass="java.util.HashMap">
+		delete from cs_argument$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsArgument_part.cs_argument_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

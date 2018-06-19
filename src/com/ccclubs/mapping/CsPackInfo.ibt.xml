@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 套餐内容之SQL映射 -->
+	<resultMap id="CsPackInfo" class="com.ccclubs.model.CsPackInfo">
+		<result property="cspiId" column="cspi_id"/>
+		<result property="cspiName" column="cspi_name"/>
+		<result property="cspiPack" column="cspi_pack"/>
+		<result property="cspiGoods" column="cspi_goods"/>
+		<result property="cspiOutlets" column="cspi_outlets"/>
+		<result property="cspiModel" column="cspi_model"/>
+		<result property="cspiType" column="cspi_type"/>
+		<result property="cspiValue" column="cspi_value"/>
+		<result property="cspiScript" column="cspi_script"/>
+		<result property="cspiAddTime" column="cspi_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有套餐内容 -->
+	<select id="getCsPackInfoList" resultMap="CsPackInfo">
+		select cs_pack_info$suffix$.* from cs_pack_info$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.cspi_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询-->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.cspi_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.cspi_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPackInfo_part.cs_pack_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cspi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取套餐内容分页 -->
+	<select id="getCsPackInfoPage" parameterClass="java.util.HashMap" resultMap="CsPackInfo">
+		select cs_pack_info$suffix$.* from cs_pack_info$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统套餐]查询 -->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.cspi_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询 -->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.cspi_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.cspi_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPackInfo_part.cs_pack_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cspi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取套餐内容总数 -->
+	<select id="getCsPackInfoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_pack_info$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统套餐]查询,同张表只能外链接一次 -->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.cspi_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询,同张表只能外链接一次 -->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.cspi_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.cspi_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsPackInfo_part.cs_pack_info_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取套餐内容 -->
+	<select id="getCsPackInfoById" parameterClass="java.util.HashMap" resultMap="CsPackInfo">
+		select cs_pack_info$suffix$.* from cs_pack_info$suffix$
+		where cspi_id=#id#
+	</select>
+	
+		
+	<!-- 保存套餐内容 -->
+	<insert id="saveCsPackInfo"  parameterClass="com.ccclubs.model.CsPackInfo">
+		insert into cs_pack_info$suffix$
+		(
+			cs_pack_info$suffix$.cspi_name
+			,cs_pack_info$suffix$.cspi_pack
+			,cs_pack_info$suffix$.cspi_goods
+			,cs_pack_info$suffix$.cspi_outlets
+			,cs_pack_info$suffix$.cspi_model
+			,cs_pack_info$suffix$.cspi_type
+			,cs_pack_info$suffix$.cspi_value
+			,cs_pack_info$suffix$.cspi_script
+			,cs_pack_info$suffix$.cspi_add_time
+		)
+		values(
+			<isNotNull property="cspiName" prepend="">
+				#cspiName#
+			</isNotNull>
+			<isNull property="cspiName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cspiPack" prepend=",">
+				#cspiPack#
+			</isNotNull>
+			<isNull property="cspiPack" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiGoods" prepend=",">
+				#cspiGoods#
+			</isNotNull>
+			<isNull property="cspiGoods" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiOutlets" prepend=",">
+				#cspiOutlets#
+			</isNotNull>
+			<isNull property="cspiOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiModel" prepend=",">
+				#cspiModel#
+			</isNotNull>
+			<isNull property="cspiModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiType" prepend=",">
+				#cspiType#
+			</isNotNull>
+			<isNull property="cspiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiValue" prepend=",">
+				#cspiValue#
+			</isNotNull>
+			<isNull property="cspiValue" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiScript" prepend=",">
+				#cspiScript#
+			</isNotNull>
+			<isNull property="cspiScript" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cspiAddTime" prepend=",">
+				#cspiAddTime#
+			</isNotNull>
+			<isNull property="cspiAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新套餐内容 -->
+	<update id="updateCsPackInfo"  parameterClass="com.ccclubs.model.CsPackInfo">
+		update cs_pack_info$suffix$ set
+			<isNotNull property="cspiName" prepend="">
+				cs_pack_info$suffix$.cspi_name = #cspiName#
+			</isNotNull>
+			<isNull property="cspiName" prepend="">
+				cs_pack_info$suffix$.cspi_name = null
+			</isNull>				
+			<isNotNull property="cspiPack" prepend=",">
+				cs_pack_info$suffix$.cspi_pack = #cspiPack#
+			</isNotNull>
+			<isNull property="cspiPack" prepend=",">
+				cs_pack_info$suffix$.cspi_pack = null
+			</isNull>				
+			<isNotNull property="cspiGoods" prepend=",">
+				cs_pack_info$suffix$.cspi_goods = #cspiGoods#
+			</isNotNull>
+			<isNull property="cspiGoods" prepend=",">
+				cs_pack_info$suffix$.cspi_goods = null
+			</isNull>				
+			<isNotNull property="cspiOutlets" prepend=",">
+				cs_pack_info$suffix$.cspi_outlets = #cspiOutlets#
+			</isNotNull>
+			<isNull property="cspiOutlets" prepend=",">
+				cs_pack_info$suffix$.cspi_outlets = null
+			</isNull>				
+			<isNotNull property="cspiModel" prepend=",">
+				cs_pack_info$suffix$.cspi_model = #cspiModel#
+			</isNotNull>
+			<isNull property="cspiModel" prepend=",">
+				cs_pack_info$suffix$.cspi_model = null
+			</isNull>				
+			<isNotNull property="cspiType" prepend=",">
+				cs_pack_info$suffix$.cspi_type = #cspiType#
+			</isNotNull>
+			<isNull property="cspiType" prepend=",">
+				cs_pack_info$suffix$.cspi_type = null
+			</isNull>				
+			<isNotNull property="cspiValue" prepend=",">
+				cs_pack_info$suffix$.cspi_value = #cspiValue#
+			</isNotNull>
+			<isNull property="cspiValue" prepend=",">
+				cs_pack_info$suffix$.cspi_value = null
+			</isNull>				
+			<isNotNull property="cspiScript" prepend=",">
+				cs_pack_info$suffix$.cspi_script = #cspiScript#
+			</isNotNull>
+			<isNull property="cspiScript" prepend=",">
+				cs_pack_info$suffix$.cspi_script = null
+			</isNull>				
+			<isNotNull property="cspiAddTime" prepend=",">
+				cs_pack_info$suffix$.cspi_add_time = #cspiAddTime#
+			</isNotNull>
+			<isNull property="cspiAddTime" prepend=",">
+				cs_pack_info$suffix$.cspi_add_time = null
+			</isNull>				
+		where
+			cspi_id=#cspiId#
+	</update>
+	
+	<!-- 更新套餐内容非空字段 -->
+	<update id="updateCsPackInfo$NotNull"  parameterClass="com.ccclubs.model.CsPackInfo">
+		update cs_pack_info$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cspiName" prepend=",">
+				cs_pack_info$suffix$.cspi_name = #cspiName#
+			</isNotNull>		
+			<isNotNull property="cspiPack" prepend=",">
+				cs_pack_info$suffix$.cspi_pack = #cspiPack#
+			</isNotNull>		
+			<isNotNull property="cspiGoods" prepend=",">
+				cs_pack_info$suffix$.cspi_goods = #cspiGoods#
+			</isNotNull>		
+			<isNotNull property="cspiOutlets" prepend=",">
+				cs_pack_info$suffix$.cspi_outlets = #cspiOutlets#
+			</isNotNull>		
+			<isNotNull property="cspiModel" prepend=",">
+				cs_pack_info$suffix$.cspi_model = #cspiModel#
+			</isNotNull>		
+			<isNotNull property="cspiType" prepend=",">
+				cs_pack_info$suffix$.cspi_type = #cspiType#
+			</isNotNull>		
+			<isNotNull property="cspiValue" prepend=",">
+				cs_pack_info$suffix$.cspi_value = #cspiValue#
+			</isNotNull>		
+			<isNotNull property="cspiScript" prepend=",">
+				cs_pack_info$suffix$.cspi_script = #cspiScript#
+			</isNotNull>		
+			<isNotNull property="cspiAddTime" prepend=",">
+				cs_pack_info$suffix$.cspi_add_time = #cspiAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			cspi_id=#cspiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个套餐内容 -->
+	<delete id="deleteCsPackInfoById" parameterClass="java.util.HashMap">
+		delete from cs_pack_info$suffix$ where cspi_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新套餐内容 -->
+	<update id="updateCsPackInfoBy"  parameterClass="java.util.HashMap">
+		update cs_pack_info$suffix$ set		
+			cspi_id=cspi_id
+			<isNotNull property="V_cspiId" prepend=",">
+				cs_pack_info$suffix$.cspi_id = #V_cspiId#
+			</isNotNull>		
+			<isNotNull property="V_cspiName" prepend=",">
+				cs_pack_info$suffix$.cspi_name = #V_cspiName#
+			</isNotNull>		
+			<isNotNull property="V_cspiPack" prepend=",">
+				cs_pack_info$suffix$.cspi_pack = #V_cspiPack#
+			</isNotNull>		
+			<isNotNull property="V_cspiGoods" prepend=",">
+				cs_pack_info$suffix$.cspi_goods = #V_cspiGoods#
+			</isNotNull>		
+			<isNotNull property="V_cspiOutlets" prepend=",">
+				cs_pack_info$suffix$.cspi_outlets = #V_cspiOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cspiModel" prepend=",">
+				cs_pack_info$suffix$.cspi_model = #V_cspiModel#
+			</isNotNull>		
+			<isNotNull property="V_cspiType" prepend=",">
+				cs_pack_info$suffix$.cspi_type = #V_cspiType#
+			</isNotNull>		
+			<isNotNull property="V_cspiValue" prepend=",">
+				cs_pack_info$suffix$.cspi_value = #V_cspiValue#
+			</isNotNull>		
+			<isNotNull property="V_cspiScript" prepend=",">
+				cs_pack_info$suffix$.cspi_script = #V_cspiScript#
+			</isNotNull>		
+			<isNotNull property="V_cspiAddTime" prepend=",">
+				cs_pack_info$suffix$.cspi_add_time = #V_cspiAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.cspi_pack=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_pack_info$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询-->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.cspi_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_pack_info$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.cspi_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_pack_info$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CspiPack"><!-- 调用一下CspiPack，把CsPack指向CspiPack --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CspiGoods"><!-- 调用一下CspiGoods，把CsGoods指向CspiGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CspiOutlets"><!-- 调用一下CspiOutlets，把CsOutlets指向CspiOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsPackInfo_part.cs_pack_info_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除套餐内容 -->
+	<update id="deleteCsPackInfoBy"  parameterClass="java.util.HashMap">
+		delete from cs_pack_info$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsPackInfo_part.cs_pack_info_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

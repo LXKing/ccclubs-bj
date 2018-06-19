@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>兑换红包</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<input class="input-dur" type="text" placeholder="请输入卡号" id="cardNum">
+				<input class="input-dur"  type="text" placeholder="请输入校验码" id="checkcode">
+			</form>
+			<div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block" onclick="submit()">
+					马上兑换
+				</button>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function reset(){
+			$('#cardNum').val('');
+			$('#checkcode').val('');
+		}
+		
+		function submit(){
+			var cardNum = $.trim($("#cardNum").val());
+			var checkcode = $.trim($("#checkcode").val());
+			if(cardNum==null||cardNum==''){
+				Toast.show('您必须输入卡号！');
+                return;
+			}
+			if(checkcode==null||checkcode==''){
+				Toast.show('您必须输入验证码！');
+                return;
+			}
+			var btn = $('#register-btn');
+			btn.attr("disabled", true);
+			$.ajax({
+				type: 'get',
+        		url: 'account_exchangecoinsubmit.html',
+        		data:{
+        			cardNum: cardNum,
+					checkcode: checkcode
+        		},
+        		dataType: 'json',
+        		success: function(data){
+        			btn.removeAttr("disabled");
+        			if(data==101){
+						location.href = '403.html';
+					}else if(data==201){
+						reset();
+						Toast.show('用户不存在。');
+                        return;
+					}else if(data==104){
+						reset();
+						Toast.show('卡号或密码错误');
+						return;
+					}else if(data==106){
+						reset();
+						Toast.show('卡的所属人与当前登录会员账号不一致，充值失败');
+						return;
+					}else if(data==203){
+						reset();
+						Toast.show('只有出库的才能进行兑换！');
+						return;
+					}else if(data==204){
+						reset();
+						Toast.show('不能重复兑换！');
+						return;
+					}else if(data==205){
+						reset();
+						Toast.show('充值卡已超出兑换有效期！');
+						return;
+					}else if(data==299){
+						reset();
+						Toast.show("未知的返回");
+						return;
+					}else if(data==9999){
+						reset();
+						Toast.show("系统错误,请稍候再试");
+						return;
+					}else if(data==200){
+						Toast.show("兑换成功！");
+						location.href = 'account_coin.html';
+						//return;
+					}else{
+						reset();
+						$('.popbox p').html(data);
+						open();
+					}
+        		},
+        		error: function(xhr, type){
+        			btn.removeAttr("disabled");
+        			Toast.show('通讯失败，请检查网络');
+                    return;
+        		}
+			});
+		}
+		</script>
+	</body>
+</html>

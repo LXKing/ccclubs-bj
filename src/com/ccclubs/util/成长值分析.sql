@@ -1,0 +1,11 @@
+﻿truncate table cs_grow_record;
+insert into cs_grow_record (csgr_host,csgr_member,csgr_desc,csgr_type,csgr_amount,csgr_relate,csgr_update_time,csgr_add_time,csgr_status) (select cso_host,cso_pay_member,concat('订单消费，成长值+10+',convert(floor(sqrt(cso_pay_real)),char)),'订单消费',(floor(sqrt(cso_pay_real))+10),concat('CsOrder@',cso_id),cso_end_time,cso_end_time,1 from cs_order where cso_status=4);
+insert into cs_grow_record (csgr_host,csgr_member,csgr_desc,csgr_type,csgr_amount,csgr_relate,csgr_update_time,csgr_add_time,csgr_status) (select cso_host,cso_pay_member,'电动车租用，成长值+5','电动车租用',5,concat('CsOrder@',cso_id),cso_end_time,cso_end_time,1 from cs_order left join cs_car_model on cso_model=cscm_id where cso_status=4 and cscm_type=1);
+insert into cs_grow_record (csgr_host,csgr_member,csgr_desc,csgr_type,csgr_amount,csgr_relate,csgr_update_time,csgr_add_time,csgr_status) (select cso_host,cso_pay_member,'还车超时，成长值-20','还车超时',-20,concat('CsOrder@',cso_id),cso_end_time,cso_end_time,1 from cs_order  where cso_status=4 and cso_pay_timeout>0);
+update cs_trouble set cst_insure_fee=0 where cst_insure_fee is null and cst_status=6;
+update cs_trouble set cst_money=0 where cst_money is null and cst_status=6;
+insert into cs_grow_record (csgr_host,csgr_member,csgr_desc,csgr_type,csgr_amount,csgr_relate,csgr_update_time,csgr_add_time,csgr_status) (select cst_host,cst_member,concat('交通事故，扣款',convert(GREATEST(cst_money,cst_insure_fee),char),'，成长值-',convert((floor(GREATEST(cst_money,cst_insure_fee)/1000)+1)*10,char)),'交通事故',-(floor(GREATEST(cst_money,cst_insure_fee)/1000)+1)*10,concat('CsTrouble@',cst_id),cst_update_time,cst_update_time,1 from cs_trouble  where cst_status=6);
+update cs_member set csm_grow=0,csm_grade=0;
+update cs_member a left join (select csgr_member,SUM(csgr_amount) as csgr_amount from cs_grow_record GROUP BY csgr_member) b on a.csm_id=b.csgr_member
+set a.csm_grow=b.csgr_amount,a.csm_grade=(CASE WHEN b.csgr_amount >5000 THEN 4 WHEN b.csgr_amount >2000 THEN 3 WHEN b.csgr_amount >500 THEN 2 WHEN b.csgr_amount >0 THEN 1 WHEN b.csgr_amount =0 THEN 0  END)
+update cs_member set csm_grow=if(csm_grow is null,0,csm_grow),csm_grade=if(csm_grade is null,0,csm_grade);

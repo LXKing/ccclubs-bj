@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 购物车项之SQL映射 -->
+	<resultMap id="CsCartItem" class="com.ccclubs.model.CsCartItem">
+		<result property="csciId" column="csci_id"/>
+		<result property="csciMember" column="csci_member"/>
+		<result property="csciItem" column="csci_item"/>
+		<result property="csciCount" column="csci_count"/>
+		<result property="csciAddTime" column="csci_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有购物车项 -->
+	<select id="getCsCartItemList" resultMap="CsCartItem">
+		select cs_cart_item$suffix$.* from cs_cart_item$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询-->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.csci_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCartItem_part.cs_cart_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csci_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取购物车项分页 -->
+	<select id="getCsCartItemPage" parameterClass="java.util.HashMap" resultMap="CsCartItem">
+		select cs_cart_item$suffix$.* from cs_cart_item$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询 -->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.csci_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCartItem_part.cs_cart_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csci_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取购物车项总数 -->
+	<select id="getCsCartItemEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_cart_item$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.csci_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCartItem_part.cs_cart_item_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取购物车项 -->
+	<select id="getCsCartItemById" parameterClass="java.util.HashMap" resultMap="CsCartItem">
+		select cs_cart_item$suffix$.* from cs_cart_item$suffix$
+		where csci_id=#id#
+	</select>
+	
+		
+	<!-- 保存购物车项 -->
+	<insert id="saveCsCartItem"  parameterClass="com.ccclubs.model.CsCartItem">
+		insert into cs_cart_item$suffix$
+		(
+			cs_cart_item$suffix$.csci_member
+			,cs_cart_item$suffix$.csci_item
+			,cs_cart_item$suffix$.csci_count
+			,cs_cart_item$suffix$.csci_add_time
+		)
+		values(
+			<isNotNull property="csciMember" prepend="">
+				#csciMember#
+			</isNotNull>
+			<isNull property="csciMember" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csciItem" prepend=",">
+				#csciItem#
+			</isNotNull>
+			<isNull property="csciItem" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciCount" prepend=",">
+				#csciCount#
+			</isNotNull>
+			<isNull property="csciCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciAddTime" prepend=",">
+				#csciAddTime#
+			</isNotNull>
+			<isNull property="csciAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新购物车项 -->
+	<update id="updateCsCartItem"  parameterClass="com.ccclubs.model.CsCartItem">
+		update cs_cart_item$suffix$ set
+			<isNotNull property="csciMember" prepend="">
+				cs_cart_item$suffix$.csci_member = #csciMember#
+			</isNotNull>
+			<isNull property="csciMember" prepend="">
+				cs_cart_item$suffix$.csci_member = null
+			</isNull>				
+			<isNotNull property="csciItem" prepend=",">
+				cs_cart_item$suffix$.csci_item = #csciItem#
+			</isNotNull>
+			<isNull property="csciItem" prepend=",">
+				cs_cart_item$suffix$.csci_item = null
+			</isNull>				
+			<isNotNull property="csciCount" prepend=",">
+				cs_cart_item$suffix$.csci_count = #csciCount#
+			</isNotNull>
+			<isNull property="csciCount" prepend=",">
+				cs_cart_item$suffix$.csci_count = null
+			</isNull>				
+			<isNotNull property="csciAddTime" prepend=",">
+				cs_cart_item$suffix$.csci_add_time = #csciAddTime#
+			</isNotNull>
+			<isNull property="csciAddTime" prepend=",">
+				cs_cart_item$suffix$.csci_add_time = null
+			</isNull>				
+		where
+			csci_id=#csciId#
+	</update>
+	
+	<!-- 更新购物车项非空字段 -->
+	<update id="updateCsCartItem$NotNull"  parameterClass="com.ccclubs.model.CsCartItem">
+		update cs_cart_item$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csciMember" prepend=",">
+				cs_cart_item$suffix$.csci_member = #csciMember#
+			</isNotNull>		
+			<isNotNull property="csciItem" prepend=",">
+				cs_cart_item$suffix$.csci_item = #csciItem#
+			</isNotNull>		
+			<isNotNull property="csciCount" prepend=",">
+				cs_cart_item$suffix$.csci_count = #csciCount#
+			</isNotNull>		
+			<isNotNull property="csciAddTime" prepend=",">
+				cs_cart_item$suffix$.csci_add_time = #csciAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csci_id=#csciId#
+	</update>
+	
+
+	<!-- 根据ID删除一个购物车项 -->
+	<delete id="deleteCsCartItemById" parameterClass="java.util.HashMap">
+		delete from cs_cart_item$suffix$ where csci_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新购物车项 -->
+	<update id="updateCsCartItemBy"  parameterClass="java.util.HashMap">
+		update cs_cart_item$suffix$ set		
+			csci_id=csci_id
+			<isNotNull property="V_csciId" prepend=",">
+				cs_cart_item$suffix$.csci_id = #V_csciId#
+			</isNotNull>		
+			<isNotNull property="V_csciMember" prepend=",">
+				cs_cart_item$suffix$.csci_member = #V_csciMember#
+			</isNotNull>		
+			<isNotNull property="V_csciItem" prepend=",">
+				cs_cart_item$suffix$.csci_item = #V_csciItem#
+			</isNotNull>		
+			<isNotNull property="V_csciCount" prepend=",">
+				cs_cart_item$suffix$.csci_count = #V_csciCount#
+			</isNotNull>		
+			<isNotNull property="V_csciAddTime" prepend=",">
+				cs_cart_item$suffix$.csci_add_time = #V_csciAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_cart_item$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询-->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<isNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.csci_item=cs_item$CsItem.suffix$.csi_id
+			</isNull>
+			<isNotNull property="CsItem.on">
+				left join cs_item cs_item$CsItem.suffix$ on cs_cart_item$suffix$.$CsItem.on$=cs_item$CsItem.suffix$.csi_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品信息]查询条件sql片段 -->
+		<isNotNull property="CsciItem"><!-- 调用一下CsciItem，把CsItem指向CsciItem --></isNotNull>
+		<isNotNull property="CsItem">
+			<include refid="CsItem_part.cs_item_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCartItem_part.cs_cart_item_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除购物车项 -->
+	<update id="deleteCsCartItemBy"  parameterClass="java.util.HashMap">
+		delete from cs_cart_item$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCartItem_part.cs_cart_item_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

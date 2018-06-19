@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 客户来电之SQL映射 -->
+	<resultMap id="CsCallIn" class="com.ccclubs.model.CsCallIn">
+		<result property="csciId" column="csci_id"/>
+		<result property="csciHost" column="csci_host"/>
+		<result property="csciNumber" column="csci_number"/>
+		<result property="csciMember" column="csci_member"/>
+		<result property="csciName" column="csci_name"/>
+		<result property="csciAnswer" column="csci_answer"/>
+		<result property="csciHowLong" column="csci_how_long"/>
+		<result property="csciUpdateTime" column="csci_update_time"/>
+		<result property="csciAddTime" column="csci_add_time"/>
+		<result property="csciStatus" column="csci_status"/>
+	</resultMap>
+		
+	<!-- 获取所有客户来电 -->
+	<select id="getCsCallInList" resultMap="CsCallIn">
+		select cs_call_in$suffix$.* from cs_call_in$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_call_in$suffix$.csci_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCallIn_part.cs_call_in_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csci_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取客户来电分页 -->
+	<select id="getCsCallInPage" parameterClass="java.util.HashMap" resultMap="CsCallIn">
+		select cs_call_in$suffix$.* from cs_call_in$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_call_in$suffix$.csci_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCallIn_part.cs_call_in_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csci_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取客户来电总数 -->
+	<select id="getCsCallInEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_call_in$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_call_in$suffix$.csci_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCallIn_part.cs_call_in_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取客户来电 -->
+	<select id="getCsCallInById" parameterClass="java.util.HashMap" resultMap="CsCallIn">
+		select cs_call_in$suffix$.* from cs_call_in$suffix$
+		where csci_id=#id#
+	</select>
+	
+		
+	<!-- 保存客户来电 -->
+	<insert id="saveCsCallIn"  parameterClass="com.ccclubs.model.CsCallIn">
+		insert into cs_call_in$suffix$
+		(
+			cs_call_in$suffix$.csci_host
+			,cs_call_in$suffix$.csci_number
+			,cs_call_in$suffix$.csci_member
+			,cs_call_in$suffix$.csci_name
+			,cs_call_in$suffix$.csci_answer
+			,cs_call_in$suffix$.csci_how_long
+			,cs_call_in$suffix$.csci_update_time
+			,cs_call_in$suffix$.csci_add_time
+			,cs_call_in$suffix$.csci_status
+		)
+		values(
+			<isNotNull property="csciHost" prepend="">
+				#csciHost#
+			</isNotNull>
+			<isNull property="csciHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csciNumber" prepend=",">
+				#csciNumber#
+			</isNotNull>
+			<isNull property="csciNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciMember" prepend=",">
+				#csciMember#
+			</isNotNull>
+			<isNull property="csciMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciName" prepend=",">
+				#csciName#
+			</isNotNull>
+			<isNull property="csciName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciAnswer" prepend=",">
+				#csciAnswer#
+			</isNotNull>
+			<isNull property="csciAnswer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciHowLong" prepend=",">
+				#csciHowLong#
+			</isNotNull>
+			<isNull property="csciHowLong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciUpdateTime" prepend=",">
+				#csciUpdateTime#
+			</isNotNull>
+			<isNull property="csciUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciAddTime" prepend=",">
+				#csciAddTime#
+			</isNotNull>
+			<isNull property="csciAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csciStatus" prepend=",">
+				#csciStatus#
+			</isNotNull>
+			<isNull property="csciStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新客户来电 -->
+	<update id="updateCsCallIn"  parameterClass="com.ccclubs.model.CsCallIn">
+		update cs_call_in$suffix$ set
+			<isNotNull property="csciHost" prepend="">
+				cs_call_in$suffix$.csci_host = #csciHost#
+			</isNotNull>
+			<isNull property="csciHost" prepend="">
+				cs_call_in$suffix$.csci_host = null
+			</isNull>				
+			<isNotNull property="csciNumber" prepend=",">
+				cs_call_in$suffix$.csci_number = #csciNumber#
+			</isNotNull>
+			<isNull property="csciNumber" prepend=",">
+				cs_call_in$suffix$.csci_number = null
+			</isNull>				
+			<isNotNull property="csciMember" prepend=",">
+				cs_call_in$suffix$.csci_member = #csciMember#
+			</isNotNull>
+			<isNull property="csciMember" prepend=",">
+				cs_call_in$suffix$.csci_member = null
+			</isNull>				
+			<isNotNull property="csciName" prepend=",">
+				cs_call_in$suffix$.csci_name = #csciName#
+			</isNotNull>
+			<isNull property="csciName" prepend=",">
+				cs_call_in$suffix$.csci_name = null
+			</isNull>				
+			<isNotNull property="csciAnswer" prepend=",">
+				cs_call_in$suffix$.csci_answer = #csciAnswer#
+			</isNotNull>
+			<isNull property="csciAnswer" prepend=",">
+				cs_call_in$suffix$.csci_answer = null
+			</isNull>				
+			<isNotNull property="csciHowLong" prepend=",">
+				cs_call_in$suffix$.csci_how_long = #csciHowLong#
+			</isNotNull>
+			<isNull property="csciHowLong" prepend=",">
+				cs_call_in$suffix$.csci_how_long = null
+			</isNull>				
+			<isNotNull property="csciUpdateTime" prepend=",">
+				cs_call_in$suffix$.csci_update_time = #csciUpdateTime#
+			</isNotNull>
+			<isNull property="csciUpdateTime" prepend=",">
+				cs_call_in$suffix$.csci_update_time = null
+			</isNull>				
+			<isNotNull property="csciAddTime" prepend=",">
+				cs_call_in$suffix$.csci_add_time = #csciAddTime#
+			</isNotNull>
+			<isNull property="csciAddTime" prepend=",">
+				cs_call_in$suffix$.csci_add_time = null
+			</isNull>				
+			<isNotNull property="csciStatus" prepend=",">
+				cs_call_in$suffix$.csci_status = #csciStatus#
+			</isNotNull>
+			<isNull property="csciStatus" prepend=",">
+				cs_call_in$suffix$.csci_status = null
+			</isNull>				
+		where
+			csci_id=#csciId#
+	</update>
+	
+	<!-- 更新客户来电非空字段 -->
+	<update id="updateCsCallIn$NotNull"  parameterClass="com.ccclubs.model.CsCallIn">
+		update cs_call_in$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csciHost" prepend=",">
+				cs_call_in$suffix$.csci_host = #csciHost#
+			</isNotNull>		
+			<isNotNull property="csciNumber" prepend=",">
+				cs_call_in$suffix$.csci_number = #csciNumber#
+			</isNotNull>		
+			<isNotNull property="csciMember" prepend=",">
+				cs_call_in$suffix$.csci_member = #csciMember#
+			</isNotNull>		
+			<isNotNull property="csciName" prepend=",">
+				cs_call_in$suffix$.csci_name = #csciName#
+			</isNotNull>		
+			<isNotNull property="csciAnswer" prepend=",">
+				cs_call_in$suffix$.csci_answer = #csciAnswer#
+			</isNotNull>		
+			<isNotNull property="csciHowLong" prepend=",">
+				cs_call_in$suffix$.csci_how_long = #csciHowLong#
+			</isNotNull>		
+			<isNotNull property="csciUpdateTime" prepend=",">
+				cs_call_in$suffix$.csci_update_time = #csciUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csciAddTime" prepend=",">
+				cs_call_in$suffix$.csci_add_time = #csciAddTime#
+			</isNotNull>		
+			<isNotNull property="csciStatus" prepend=",">
+				cs_call_in$suffix$.csci_status = #csciStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csci_id=#csciId#
+	</update>
+	
+
+	<!-- 根据ID删除一个客户来电 -->
+	<delete id="deleteCsCallInById" parameterClass="java.util.HashMap">
+		delete from cs_call_in$suffix$ where csci_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个客户来电 -->
+	<update id="removeCsCallInById" parameterClass="java.util.HashMap">
+		update cs_call_in$suffix$ set  cs_call_in$suffix$.csci_status=-1  where csci_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新客户来电 -->
+	<update id="updateCsCallInBy"  parameterClass="java.util.HashMap">
+		update cs_call_in$suffix$ set		
+			csci_id=csci_id
+			<isNotNull property="V_csciId" prepend=",">
+				cs_call_in$suffix$.csci_id = #V_csciId#
+			</isNotNull>		
+			<isNotNull property="V_csciHost" prepend=",">
+				cs_call_in$suffix$.csci_host = #V_csciHost#
+			</isNotNull>		
+			<isNotNull property="V_csciNumber" prepend=",">
+				cs_call_in$suffix$.csci_number = #V_csciNumber#
+			</isNotNull>		
+			<isNotNull property="V_csciMember" prepend=",">
+				cs_call_in$suffix$.csci_member = #V_csciMember#
+			</isNotNull>		
+			<isNotNull property="V_csciName" prepend=",">
+				cs_call_in$suffix$.csci_name = #V_csciName#
+			</isNotNull>		
+			<isNotNull property="V_csciAnswer" prepend=",">
+				cs_call_in$suffix$.csci_answer = #V_csciAnswer#
+			</isNotNull>		
+			<isNotNull property="V_csciHowLong" prepend=",">
+				cs_call_in$suffix$.csci_how_long = #V_csciHowLong#
+			</isNotNull>		
+			<isNotNull property="V_csciUpdateTime" prepend=",">
+				cs_call_in$suffix$.csci_update_time = #V_csciUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csciAddTime" prepend=",">
+				cs_call_in$suffix$.csci_add_time = #V_csciAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csciStatus" prepend=",">
+				cs_call_in$suffix$.csci_status = #V_csciStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.csci_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_call_in$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_call_in$suffix$.csci_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsciMember"><!-- 调用一下CsciMember，把CsMember指向CsciMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCallIn_part.cs_call_in_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除客户来电 -->
+	<update id="deleteCsCallInBy"  parameterClass="java.util.HashMap">
+		delete from cs_call_in$suffix$ where 
+		cs_call_in$suffix$.csci_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCallIn_part.cs_call_in_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

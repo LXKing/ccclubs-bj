@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 在线访客之SQL映射 -->
+	<resultMap id="CsChatTalker" class="com.ccclubs.model.CsChatTalker">
+		<result property="csctId" column="csct_id"/>
+		<result property="csctHost" column="csct_host"/>
+		<result property="csctName" column="csct_name"/>
+		<result property="csctHeader" column="csct_header"/>
+		<result property="csctSign" column="csct_sign"/>
+		<result property="csctMember" column="csct_member"/>
+		<result property="csctFlag" column="csct_flag"/>
+		<result property="csctPlatform" column="csct_platform"/>
+		<result property="csctCount" column="csct_count"/>
+		<result property="csctLastIp" column="csct_last_ip"/>
+		<result property="csctServicer" column="csct_servicer"/>
+		<result property="csctLastTime" column="csct_last_time"/>
+		<result property="csctAddTime" column="csct_add_time"/>
+		<result property="csctRemark" column="csct_remark"/>
+		<result property="csctState" column="csct_state"/>
+		<result property="csctStatus" column="csct_status"/>
+	</resultMap>
+		
+	<!-- 获取所有在线访客 -->
+	<select id="getCsChatTalkerList" resultMap="CsChatTalker">
+		select cs_chat_talker$suffix$.* from cs_chat_talker$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.csct_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_chat_talker$suffix$.csct_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChatTalker_part.cs_chat_talker_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csct_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取在线访客分页 -->
+	<select id="getCsChatTalkerPage" parameterClass="java.util.HashMap" resultMap="CsChatTalker">
+		select cs_chat_talker$suffix$.* from cs_chat_talker$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.csct_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_chat_talker$suffix$.csct_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChatTalker_part.cs_chat_talker_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csct_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取在线访客总数 -->
+	<select id="getCsChatTalkerEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_chat_talker$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.csct_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_chat_talker$suffix$.csct_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChatTalker_part.cs_chat_talker_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取在线访客 -->
+	<select id="getCsChatTalkerById" parameterClass="java.util.HashMap" resultMap="CsChatTalker">
+		select cs_chat_talker$suffix$.* from cs_chat_talker$suffix$
+		where csct_id=#id#
+	</select>
+	
+		
+	<!-- 保存在线访客 -->
+	<insert id="saveCsChatTalker"  parameterClass="com.ccclubs.model.CsChatTalker">
+		insert into cs_chat_talker$suffix$
+		(
+			cs_chat_talker$suffix$.csct_host
+			,cs_chat_talker$suffix$.csct_name
+			,cs_chat_talker$suffix$.csct_header
+			,cs_chat_talker$suffix$.csct_sign
+			,cs_chat_talker$suffix$.csct_member
+			,cs_chat_talker$suffix$.csct_flag
+			,cs_chat_talker$suffix$.csct_platform
+			,cs_chat_talker$suffix$.csct_count
+			,cs_chat_talker$suffix$.csct_last_ip
+			,cs_chat_talker$suffix$.csct_servicer
+			,cs_chat_talker$suffix$.csct_last_time
+			,cs_chat_talker$suffix$.csct_add_time
+			,cs_chat_talker$suffix$.csct_remark
+			,cs_chat_talker$suffix$.csct_state
+			,cs_chat_talker$suffix$.csct_status
+		)
+		values(
+			<isNotNull property="csctHost" prepend="">
+				#csctHost#
+			</isNotNull>
+			<isNull property="csctHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csctName" prepend=",">
+				#csctName#
+			</isNotNull>
+			<isNull property="csctName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctHeader" prepend=",">
+				#csctHeader#
+			</isNotNull>
+			<isNull property="csctHeader" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctSign" prepend=",">
+				#csctSign#
+			</isNotNull>
+			<isNull property="csctSign" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctMember" prepend=",">
+				#csctMember#
+			</isNotNull>
+			<isNull property="csctMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctFlag" prepend=",">
+				#csctFlag#
+			</isNotNull>
+			<isNull property="csctFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctPlatform" prepend=",">
+				#csctPlatform#
+			</isNotNull>
+			<isNull property="csctPlatform" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctCount" prepend=",">
+				#csctCount#
+			</isNotNull>
+			<isNull property="csctCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctLastIp" prepend=",">
+				#csctLastIp#
+			</isNotNull>
+			<isNull property="csctLastIp" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctServicer" prepend=",">
+				#csctServicer#
+			</isNotNull>
+			<isNull property="csctServicer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctLastTime" prepend=",">
+				#csctLastTime#
+			</isNotNull>
+			<isNull property="csctLastTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctAddTime" prepend=",">
+				#csctAddTime#
+			</isNotNull>
+			<isNull property="csctAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctRemark" prepend=",">
+				#csctRemark#
+			</isNotNull>
+			<isNull property="csctRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctState" prepend=",">
+				#csctState#
+			</isNotNull>
+			<isNull property="csctState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csctStatus" prepend=",">
+				#csctStatus#
+			</isNotNull>
+			<isNull property="csctStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新在线访客 -->
+	<update id="updateCsChatTalker"  parameterClass="com.ccclubs.model.CsChatTalker">
+		update cs_chat_talker$suffix$ set
+			<isNotNull property="csctHost" prepend="">
+				cs_chat_talker$suffix$.csct_host = #csctHost#
+			</isNotNull>
+			<isNull property="csctHost" prepend="">
+				cs_chat_talker$suffix$.csct_host = null
+			</isNull>				
+			<isNotNull property="csctName" prepend=",">
+				cs_chat_talker$suffix$.csct_name = #csctName#
+			</isNotNull>
+			<isNull property="csctName" prepend=",">
+				cs_chat_talker$suffix$.csct_name = null
+			</isNull>				
+			<isNotNull property="csctHeader" prepend=",">
+				cs_chat_talker$suffix$.csct_header = #csctHeader#
+			</isNotNull>
+			<isNull property="csctHeader" prepend=",">
+				cs_chat_talker$suffix$.csct_header = null
+			</isNull>				
+			<isNotNull property="csctSign" prepend=",">
+				cs_chat_talker$suffix$.csct_sign = #csctSign#
+			</isNotNull>
+			<isNull property="csctSign" prepend=",">
+				cs_chat_talker$suffix$.csct_sign = null
+			</isNull>				
+			<isNotNull property="csctMember" prepend=",">
+				cs_chat_talker$suffix$.csct_member = #csctMember#
+			</isNotNull>
+			<isNull property="csctMember" prepend=",">
+				cs_chat_talker$suffix$.csct_member = null
+			</isNull>				
+			<isNotNull property="csctFlag" prepend=",">
+				cs_chat_talker$suffix$.csct_flag = #csctFlag#
+			</isNotNull>
+			<isNull property="csctFlag" prepend=",">
+				cs_chat_talker$suffix$.csct_flag = null
+			</isNull>				
+			<isNotNull property="csctPlatform" prepend=",">
+				cs_chat_talker$suffix$.csct_platform = #csctPlatform#
+			</isNotNull>
+			<isNull property="csctPlatform" prepend=",">
+				cs_chat_talker$suffix$.csct_platform = null
+			</isNull>				
+			<isNotNull property="csctCount" prepend=",">
+				cs_chat_talker$suffix$.csct_count = #csctCount#
+			</isNotNull>
+			<isNull property="csctCount" prepend=",">
+				cs_chat_talker$suffix$.csct_count = null
+			</isNull>				
+			<isNotNull property="csctLastIp" prepend=",">
+				cs_chat_talker$suffix$.csct_last_ip = #csctLastIp#
+			</isNotNull>
+			<isNull property="csctLastIp" prepend=",">
+				cs_chat_talker$suffix$.csct_last_ip = null
+			</isNull>				
+			<isNotNull property="csctServicer" prepend=",">
+				cs_chat_talker$suffix$.csct_servicer = #csctServicer#
+			</isNotNull>
+			<isNull property="csctServicer" prepend=",">
+				cs_chat_talker$suffix$.csct_servicer = null
+			</isNull>				
+			<isNotNull property="csctLastTime" prepend=",">
+				cs_chat_talker$suffix$.csct_last_time = #csctLastTime#
+			</isNotNull>
+			<isNull property="csctLastTime" prepend=",">
+				cs_chat_talker$suffix$.csct_last_time = null
+			</isNull>				
+			<isNotNull property="csctAddTime" prepend=",">
+				cs_chat_talker$suffix$.csct_add_time = #csctAddTime#
+			</isNotNull>
+			<isNull property="csctAddTime" prepend=",">
+				cs_chat_talker$suffix$.csct_add_time = null
+			</isNull>				
+			<isNotNull property="csctRemark" prepend=",">
+				cs_chat_talker$suffix$.csct_remark = #csctRemark#
+			</isNotNull>
+			<isNull property="csctRemark" prepend=",">
+				cs_chat_talker$suffix$.csct_remark = null
+			</isNull>				
+			<isNotNull property="csctState" prepend=",">
+				cs_chat_talker$suffix$.csct_state = #csctState#
+			</isNotNull>
+			<isNull property="csctState" prepend=",">
+				cs_chat_talker$suffix$.csct_state = null
+			</isNull>				
+			<isNotNull property="csctStatus" prepend=",">
+				cs_chat_talker$suffix$.csct_status = #csctStatus#
+			</isNotNull>
+			<isNull property="csctStatus" prepend=",">
+				cs_chat_talker$suffix$.csct_status = null
+			</isNull>				
+		where
+			csct_id=#csctId#
+	</update>
+	
+	<!-- 更新在线访客非空字段 -->
+	<update id="updateCsChatTalker$NotNull"  parameterClass="com.ccclubs.model.CsChatTalker">
+		update cs_chat_talker$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csctHost" prepend=",">
+				cs_chat_talker$suffix$.csct_host = #csctHost#
+			</isNotNull>		
+			<isNotNull property="csctName" prepend=",">
+				cs_chat_talker$suffix$.csct_name = #csctName#
+			</isNotNull>		
+			<isNotNull property="csctHeader" prepend=",">
+				cs_chat_talker$suffix$.csct_header = #csctHeader#
+			</isNotNull>		
+			<isNotNull property="csctSign" prepend=",">
+				cs_chat_talker$suffix$.csct_sign = #csctSign#
+			</isNotNull>		
+			<isNotNull property="csctMember" prepend=",">
+				cs_chat_talker$suffix$.csct_member = #csctMember#
+			</isNotNull>		
+			<isNotNull property="csctFlag" prepend=",">
+				cs_chat_talker$suffix$.csct_flag = #csctFlag#
+			</isNotNull>		
+			<isNotNull property="csctPlatform" prepend=",">
+				cs_chat_talker$suffix$.csct_platform = #csctPlatform#
+			</isNotNull>		
+			<isNotNull property="csctCount" prepend=",">
+				cs_chat_talker$suffix$.csct_count = #csctCount#
+			</isNotNull>		
+			<isNotNull property="csctLastIp" prepend=",">
+				cs_chat_talker$suffix$.csct_last_ip = #csctLastIp#
+			</isNotNull>		
+			<isNotNull property="csctServicer" prepend=",">
+				cs_chat_talker$suffix$.csct_servicer = #csctServicer#
+			</isNotNull>		
+			<isNotNull property="csctLastTime" prepend=",">
+				cs_chat_talker$suffix$.csct_last_time = #csctLastTime#
+			</isNotNull>		
+			<isNotNull property="csctAddTime" prepend=",">
+				cs_chat_talker$suffix$.csct_add_time = #csctAddTime#
+			</isNotNull>		
+			<isNotNull property="csctRemark" prepend=",">
+				cs_chat_talker$suffix$.csct_remark = #csctRemark#
+			</isNotNull>		
+			<isNotNull property="csctState" prepend=",">
+				cs_chat_talker$suffix$.csct_state = #csctState#
+			</isNotNull>		
+			<isNotNull property="csctStatus" prepend=",">
+				cs_chat_talker$suffix$.csct_status = #csctStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csct_id=#csctId#
+	</update>
+	
+
+	<!-- 根据ID删除一个在线访客 -->
+	<delete id="deleteCsChatTalkerById" parameterClass="java.util.HashMap">
+		delete from cs_chat_talker$suffix$ where csct_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个在线访客 -->
+	<update id="removeCsChatTalkerById" parameterClass="java.util.HashMap">
+		update cs_chat_talker$suffix$ set  cs_chat_talker$suffix$.csct_status=-1  where csct_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新在线访客 -->
+	<update id="updateCsChatTalkerBy"  parameterClass="java.util.HashMap">
+		update cs_chat_talker$suffix$ set		
+			csct_id=csct_id
+			<isNotNull property="V_csctId" prepend=",">
+				cs_chat_talker$suffix$.csct_id = #V_csctId#
+			</isNotNull>		
+			<isNotNull property="V_csctHost" prepend=",">
+				cs_chat_talker$suffix$.csct_host = #V_csctHost#
+			</isNotNull>		
+			<isNotNull property="V_csctName" prepend=",">
+				cs_chat_talker$suffix$.csct_name = #V_csctName#
+			</isNotNull>		
+			<isNotNull property="V_csctHeader" prepend=",">
+				cs_chat_talker$suffix$.csct_header = #V_csctHeader#
+			</isNotNull>		
+			<isNotNull property="V_csctSign" prepend=",">
+				cs_chat_talker$suffix$.csct_sign = #V_csctSign#
+			</isNotNull>		
+			<isNotNull property="V_csctMember" prepend=",">
+				cs_chat_talker$suffix$.csct_member = #V_csctMember#
+			</isNotNull>		
+			<isNotNull property="V_csctFlag" prepend=",">
+				cs_chat_talker$suffix$.csct_flag = #V_csctFlag#
+			</isNotNull>		
+			<isNotNull property="V_csctPlatform" prepend=",">
+				cs_chat_talker$suffix$.csct_platform = #V_csctPlatform#
+			</isNotNull>		
+			<isNotNull property="V_csctCount" prepend=",">
+				cs_chat_talker$suffix$.csct_count = #V_csctCount#
+			</isNotNull>		
+			<isNotNull property="V_csctLastIp" prepend=",">
+				cs_chat_talker$suffix$.csct_last_ip = #V_csctLastIp#
+			</isNotNull>		
+			<isNotNull property="V_csctServicer" prepend=",">
+				cs_chat_talker$suffix$.csct_servicer = #V_csctServicer#
+			</isNotNull>		
+			<isNotNull property="V_csctLastTime" prepend=",">
+				cs_chat_talker$suffix$.csct_last_time = #V_csctLastTime#
+			</isNotNull>		
+			<isNotNull property="V_csctAddTime" prepend=",">
+				cs_chat_talker$suffix$.csct_add_time = #V_csctAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csctRemark" prepend=",">
+				cs_chat_talker$suffix$.csct_remark = #V_csctRemark#
+			</isNotNull>		
+			<isNotNull property="V_csctState" prepend=",">
+				cs_chat_talker$suffix$.csct_state = #V_csctState#
+			</isNotNull>		
+			<isNotNull property="V_csctStatus" prepend=",">
+				cs_chat_talker$suffix$.csct_status = #V_csctStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.csct_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chat_talker$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_chat_talker$suffix$.csct_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsctMember"><!-- 调用一下CsctMember，把CsMember指向CsctMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChatTalker_part.cs_chat_talker_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除在线访客 -->
+	<update id="deleteCsChatTalkerBy"  parameterClass="java.util.HashMap">
+		delete from cs_chat_talker$suffix$ where 
+		cs_chat_talker$suffix$.csct_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChatTalker_part.cs_chat_talker_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

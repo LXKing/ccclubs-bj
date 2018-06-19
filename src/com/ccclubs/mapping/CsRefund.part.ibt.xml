@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRefund_part">	
+	<!-- 会员退款条件sql片段  -->
+	<sql id="cs_refund_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrId" prepend="and">
+			    $csrIdNot$ cs_refund$suffix$.csr_id = #csrId#
+			</isNotEmpty>
+			<isNotNull property="csrIdNot" prepend="and">
+				<isEmpty property="csrId">
+				$csrIdNot$ cs_refund$suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_refund$suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csrHost" prepend="and">
+			    $csrHostNot$ cs_refund$suffix$.csr_host = #csrHost#
+			</isNotEmpty>
+			<isNotNull property="csrHostNot" prepend="and">
+				<isEmpty property="csrHost">
+				$csrHostNot$ cs_refund$suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csrMember" prepend="and">
+			    $csrMemberNot$ cs_refund$suffix$.csr_member = #csrMember#
+			</isNotEmpty>
+			<isNotNull property="csrMemberNot" prepend="and">
+				<isEmpty property="csrMember">
+				$csrMemberNot$ cs_refund$suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAmountMin" prepend="and">
+			    $csrAmountNot$  ( cs_refund$suffix$.csr_amount &gt;= #csrAmountMin#
+			    <isEmpty property="csrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAmountMax" prepend="and">
+				<isEmpty property="csrAmountMin">$csrAmountNot$   (</isEmpty>
+			    cs_refund$suffix$.csr_amount &lt;= #csrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrAmount" prepend="and">
+			    $csrAmountNot$ cs_refund$suffix$.csr_amount = #csrAmount#
+			</isNotEmpty>
+			<isNotNull property="csrAmountNot" prepend="and">
+				<isEmpty property="csrAmountMax"><isEmpty property="csrAmountMin"><isEmpty property="csrAmount">
+				$csrAmountNot$ cs_refund$suffix$.csr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrReturnType" prepend="and">
+			    $csrReturnTypeNot$ cs_refund$suffix$.csr_return_type = #csrReturnType#
+			</isNotEmpty>
+			<isNotNull property="csrReturnTypeNot" prepend="and">
+				<isEmpty property="csrReturnType">
+				$csrReturnTypeNot$ cs_refund$suffix$.csr_return_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAccountNo" prepend="and">			    
+			    (<isNotNull property="csrAccountNoNot">
+			    cs_refund$suffix$.csr_account_no is null or length(cs_refund$suffix$.csr_account_no) &lt; 1 or
+			    </isNotNull>$csrAccountNoNot$ cs_refund$suffix$.csr_account_no = #csrAccountNo#)
+			</isNotEmpty>
+			<isNotNull property="csrAccountNoNot" prepend="and">
+				<isEmpty property="csrAccountNo">
+				$csrAccountNoNot$ (cs_refund$suffix$.csr_account_no is null or length(cs_refund$suffix$.csr_account_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAccountName" prepend="and">			    
+			    (<isNotNull property="csrAccountNameNot">
+			    cs_refund$suffix$.csr_account_name is null or length(cs_refund$suffix$.csr_account_name) &lt; 1 or
+			    </isNotNull>$csrAccountNameNot$ cs_refund$suffix$.csr_account_name = #csrAccountName#)
+			</isNotEmpty>
+			<isNotNull property="csrAccountNameNot" prepend="and">
+				<isEmpty property="csrAccountName">
+				$csrAccountNameNot$ (cs_refund$suffix$.csr_account_name is null or length(cs_refund$suffix$.csr_account_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrMobile" prepend="and">			    
+			    (<isNotNull property="csrMobileNot">
+			    cs_refund$suffix$.csr_mobile is null or length(cs_refund$suffix$.csr_mobile) &lt; 1 or
+			    </isNotNull>$csrMobileNot$ cs_refund$suffix$.csr_mobile = #csrMobile#)
+			</isNotEmpty>
+			<isNotNull property="csrMobileNot" prepend="and">
+				<isEmpty property="csrMobile">
+				$csrMobileNot$ (cs_refund$suffix$.csr_mobile is null or length(cs_refund$suffix$.csr_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrChecker" prepend="and">
+			    $csrCheckerNot$ cs_refund$suffix$.csr_checker = #csrChecker#
+			</isNotEmpty>
+			<isNotNull property="csrCheckerNot" prepend="and">
+				<isEmpty property="csrChecker">
+				$csrCheckerNot$ cs_refund$suffix$.csr_checker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrBacker" prepend="and">
+			    $csrBackerNot$ cs_refund$suffix$.csr_backer = #csrBacker#
+			</isNotEmpty>
+			<isNotNull property="csrBackerNot" prepend="and">
+				<isEmpty property="csrBacker">
+				$csrBackerNot$ cs_refund$suffix$.csr_backer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrMemo" prepend="and">			    
+			    (<isNotNull property="csrMemoNot">
+			    cs_refund$suffix$.csr_memo is null or length(cs_refund$suffix$.csr_memo) &lt; 1 or
+			    </isNotNull>$csrMemoNot$ cs_refund$suffix$.csr_memo like #csrMemo#)
+			</isNotEmpty>
+			<isNotNull property="csrMemoNot" prepend="and">
+				<isEmpty property="csrMemo">
+				$csrMemoNot$ (cs_refund$suffix$.csr_memo is null or length(cs_refund$suffix$.csr_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrAddTimeStart" prepend="and">
+			    $csrAddTimeNot$   (cs_refund$suffix$.csr_add_time &gt;= #csrAddTimeStart#
+			   <isEmpty property="csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTimeEnd" prepend="and">
+				<isEmpty property="csrAddTimeStart">$csrAddTimeNot$   (</isEmpty>
+			    cs_refund$suffix$.csr_add_time &lt;= #csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrAddTime" prepend="and">
+			    $csrAddTimeNot$ cs_refund$suffix$.csr_add_time = #csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="csrAddTimeNot" prepend="and">
+				<isEmpty property="csrAddTimeStart"><isEmpty property="csrAddTimeEnd"><isEmpty property="csrAddTime">
+				$csrAddTimeNot$ cs_refund$suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrCheckTimeStart" prepend="and">
+			    $csrCheckTimeNot$   (cs_refund$suffix$.csr_check_time &gt;= #csrCheckTimeStart#
+			   <isEmpty property="csrCheckTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrCheckTimeEnd" prepend="and">
+				<isEmpty property="csrCheckTimeStart">$csrCheckTimeNot$   (</isEmpty>
+			    cs_refund$suffix$.csr_check_time &lt;= #csrCheckTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrCheckTime" prepend="and">
+			    $csrCheckTimeNot$ cs_refund$suffix$.csr_check_time = #csrCheckTime#
+			</isNotEmpty>
+			<isNotNull property="csrCheckTimeNot" prepend="and">
+				<isEmpty property="csrCheckTimeStart"><isEmpty property="csrCheckTimeEnd"><isEmpty property="csrCheckTime">
+				$csrCheckTimeNot$ cs_refund$suffix$.csr_check_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrBackTimeStart" prepend="and">
+			    $csrBackTimeNot$   (cs_refund$suffix$.csr_back_time &gt;= #csrBackTimeStart#
+			   <isEmpty property="csrBackTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrBackTimeEnd" prepend="and">
+				<isEmpty property="csrBackTimeStart">$csrBackTimeNot$   (</isEmpty>
+			    cs_refund$suffix$.csr_back_time &lt;= #csrBackTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrBackTime" prepend="and">
+			    $csrBackTimeNot$ cs_refund$suffix$.csr_back_time = #csrBackTime#
+			</isNotEmpty>
+			<isNotNull property="csrBackTimeNot" prepend="and">
+				<isEmpty property="csrBackTimeStart"><isEmpty property="csrBackTimeEnd"><isEmpty property="csrBackTime">
+				$csrBackTimeNot$ cs_refund$suffix$.csr_back_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrEndTimeStart" prepend="and">
+			    $csrEndTimeNot$   (cs_refund$suffix$.csr_end_time &gt;= #csrEndTimeStart#
+			   <isEmpty property="csrEndTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrEndTimeEnd" prepend="and">
+				<isEmpty property="csrEndTimeStart">$csrEndTimeNot$   (</isEmpty>
+			    cs_refund$suffix$.csr_end_time &lt;= #csrEndTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csrEndTime" prepend="and">
+			    $csrEndTimeNot$ cs_refund$suffix$.csr_end_time = #csrEndTime#
+			</isNotEmpty>
+			<isNotNull property="csrEndTimeNot" prepend="and">
+				<isEmpty property="csrEndTimeStart"><isEmpty property="csrEndTimeEnd"><isEmpty property="csrEndTime">
+				$csrEndTimeNot$ cs_refund$suffix$.csr_end_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrRemark" prepend="and">			    
+			    (<isNotNull property="csrRemarkNot">
+			    cs_refund$suffix$.csr_remark is null or length(cs_refund$suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$csrRemarkNot$ cs_refund$suffix$.csr_remark like #csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="csrRemarkNot" prepend="and">
+				<isEmpty property="csrRemark">
+				$csrRemarkNot$ (cs_refund$suffix$.csr_remark is null or length(cs_refund$suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrStatus" prepend="and">
+			    $csrStatusNot$ cs_refund$suffix$.csr_status = #csrStatus#
+			</isNotEmpty>
+			<isNotNull property="csrStatusNot" prepend="and">
+				<isEmpty property="csrStatus">
+				$csrStatusNot$ cs_refund$suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员退款left join 条件sql片段 -->
+	<sql id="cs_refund_join">
+		<dynamic>
+			<isNotEmpty property="CsRefund.csrId" prepend="and">
+			    $CsRefund.csrIdNot$ cs_refund$CsRefund.suffix$.csr_id = #CsRefund.csrId#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrIdNot" prepend="and">
+				<isEmpty property="CsRefund.csrId">
+				$csrIdNot$ cs_refund$CsRefund.suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_refund$CsRefund.suffix$.csr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrHost" prepend="and">
+			    $CsRefund.csrHostNot$ cs_refund$CsRefund.suffix$.csr_host = #CsRefund.csrHost#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrHostNot" prepend="and">
+				<isEmpty property="CsRefund.csrHost">
+				$csrHostNot$ cs_refund$CsRefund.suffix$.csr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrMember" prepend="and">
+			    $CsRefund.csrMemberNot$ cs_refund$CsRefund.suffix$.csr_member = #CsRefund.csrMember#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrMemberNot" prepend="and">
+				<isEmpty property="CsRefund.csrMember">
+				$csrMemberNot$ cs_refund$CsRefund.suffix$.csr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrAmountMin" prepend="and">
+			    $CsRefund.csrAmountNot$  ( cs_refund$CsRefund.suffix$.csr_amount &gt;= #CsRefund.csrAmountMin#
+			    <isEmpty property="CsRefund.csrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrAmountMax" prepend="and">
+				<isEmpty property="CsRefund.csrAmountMin">$CsRefund.csrAmountNot$   (</isEmpty>
+			    cs_refund$CsRefund.suffix$.csr_amount &lt;= #CsRefund.csrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrAmount" prepend="and">
+			    $CsRefund.csrAmountNot$ cs_refund$CsRefund.suffix$.csr_amount = #CsRefund.csrAmount#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrAmountNot" prepend="and">
+				<isEmpty property="CsRefund.csrAmountMax"><isEmpty property="CsRefund.csrAmountMin"><isEmpty property="CsRefund.csrAmount">
+				$csrAmountNot$ cs_refund$CsRefund.suffix$.csr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrReturnType" prepend="and">
+			    $CsRefund.csrReturnTypeNot$ cs_refund$CsRefund.suffix$.csr_return_type = #CsRefund.csrReturnType#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrReturnTypeNot" prepend="and">
+				<isEmpty property="CsRefund.csrReturnType">
+				$csrReturnTypeNot$ cs_refund$CsRefund.suffix$.csr_return_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrAccountNo" prepend="and">
+				(<isNotNull property="CsRefund.csrAccountNoNot">
+			    cs_refund$CsRefund.suffix$.csr_account_no is null or length(cs_refund$CsRefund.suffix$.csr_account_no) &lt; 1 or
+			    </isNotNull>$CsRefund.csrAccountNoNot$ cs_refund$CsRefund.suffix$.csr_account_no = #CsRefund.csrAccountNo#)
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrAccountNoNot" prepend="and">
+				<isEmpty property="CsRefund.csrAccountNo">
+				$csrAccountNoNot$ (cs_refund$CsRefund.suffix$.csr_account_no is null or length(cs_refund$CsRefund.suffix$.csr_account_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrAccountName" prepend="and">
+				(<isNotNull property="CsRefund.csrAccountNameNot">
+			    cs_refund$CsRefund.suffix$.csr_account_name is null or length(cs_refund$CsRefund.suffix$.csr_account_name) &lt; 1 or
+			    </isNotNull>$CsRefund.csrAccountNameNot$ cs_refund$CsRefund.suffix$.csr_account_name = #CsRefund.csrAccountName#)
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrAccountNameNot" prepend="and">
+				<isEmpty property="CsRefund.csrAccountName">
+				$csrAccountNameNot$ (cs_refund$CsRefund.suffix$.csr_account_name is null or length(cs_refund$CsRefund.suffix$.csr_account_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrMobile" prepend="and">
+				(<isNotNull property="CsRefund.csrMobileNot">
+			    cs_refund$CsRefund.suffix$.csr_mobile is null or length(cs_refund$CsRefund.suffix$.csr_mobile) &lt; 1 or
+			    </isNotNull>$CsRefund.csrMobileNot$ cs_refund$CsRefund.suffix$.csr_mobile = #CsRefund.csrMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrMobileNot" prepend="and">
+				<isEmpty property="CsRefund.csrMobile">
+				$csrMobileNot$ (cs_refund$CsRefund.suffix$.csr_mobile is null or length(cs_refund$CsRefund.suffix$.csr_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrChecker" prepend="and">
+			    $CsRefund.csrCheckerNot$ cs_refund$CsRefund.suffix$.csr_checker = #CsRefund.csrChecker#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrCheckerNot" prepend="and">
+				<isEmpty property="CsRefund.csrChecker">
+				$csrCheckerNot$ cs_refund$CsRefund.suffix$.csr_checker is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrBacker" prepend="and">
+			    $CsRefund.csrBackerNot$ cs_refund$CsRefund.suffix$.csr_backer = #CsRefund.csrBacker#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrBackerNot" prepend="and">
+				<isEmpty property="CsRefund.csrBacker">
+				$csrBackerNot$ cs_refund$CsRefund.suffix$.csr_backer is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrMemo" prepend="and">
+				(<isNotNull property="CsRefund.csrMemoNot">
+			    cs_refund$CsRefund.suffix$.csr_memo is null or length(cs_refund$CsRefund.suffix$.csr_memo) &lt; 1 or
+			    </isNotNull>$CsRefund.csrMemoNot$ cs_refund$CsRefund.suffix$.csr_memo like #CsRefund.csrMemo#)
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrMemoNot" prepend="and">
+				<isEmpty property="CsRefund.csrMemo">
+				$csrMemoNot$ (cs_refund$CsRefund.suffix$.csr_memo is null or length(cs_refund$CsRefund.suffix$.csr_memo) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrAddTimeStart" prepend="and">
+			    $CsRefund.csrAddTimeNot$   (cs_refund$CsRefund.suffix$.csr_add_time &gt;= #CsRefund.csrAddTimeStart#
+			   <isEmpty property="CsRefund.csrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrAddTimeEnd" prepend="and">
+				<isEmpty property="CsRefund.csrAddTimeStart">$CsRefund.csrAddTimeNot$   (</isEmpty>
+			    cs_refund$CsRefund.suffix$.csr_add_time &lt;= #CsRefund.csrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrAddTime" prepend="and">
+			    $CsRefund.csrAddTimeNot$ cs_refund$CsRefund.suffix$.csr_add_time = #CsRefund.csrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrAddTimeNot" prepend="and">
+				<isEmpty property="CsRefund.csrAddTimeStart"><isEmpty property="CsRefund.csrAddTimeEnd"><isEmpty property="CsRefund.csrAddTime">
+				$csrAddTimeNot$ cs_refund$CsRefund.suffix$.csr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrCheckTimeStart" prepend="and">
+			    $CsRefund.csrCheckTimeNot$   (cs_refund$CsRefund.suffix$.csr_check_time &gt;= #CsRefund.csrCheckTimeStart#
+			   <isEmpty property="CsRefund.csrCheckTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrCheckTimeEnd" prepend="and">
+				<isEmpty property="CsRefund.csrCheckTimeStart">$CsRefund.csrCheckTimeNot$   (</isEmpty>
+			    cs_refund$CsRefund.suffix$.csr_check_time &lt;= #CsRefund.csrCheckTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrCheckTime" prepend="and">
+			    $CsRefund.csrCheckTimeNot$ cs_refund$CsRefund.suffix$.csr_check_time = #CsRefund.csrCheckTime#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrCheckTimeNot" prepend="and">
+				<isEmpty property="CsRefund.csrCheckTimeStart"><isEmpty property="CsRefund.csrCheckTimeEnd"><isEmpty property="CsRefund.csrCheckTime">
+				$csrCheckTimeNot$ cs_refund$CsRefund.suffix$.csr_check_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrBackTimeStart" prepend="and">
+			    $CsRefund.csrBackTimeNot$   (cs_refund$CsRefund.suffix$.csr_back_time &gt;= #CsRefund.csrBackTimeStart#
+			   <isEmpty property="CsRefund.csrBackTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrBackTimeEnd" prepend="and">
+				<isEmpty property="CsRefund.csrBackTimeStart">$CsRefund.csrBackTimeNot$   (</isEmpty>
+			    cs_refund$CsRefund.suffix$.csr_back_time &lt;= #CsRefund.csrBackTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrBackTime" prepend="and">
+			    $CsRefund.csrBackTimeNot$ cs_refund$CsRefund.suffix$.csr_back_time = #CsRefund.csrBackTime#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrBackTimeNot" prepend="and">
+				<isEmpty property="CsRefund.csrBackTimeStart"><isEmpty property="CsRefund.csrBackTimeEnd"><isEmpty property="CsRefund.csrBackTime">
+				$csrBackTimeNot$ cs_refund$CsRefund.suffix$.csr_back_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrEndTimeStart" prepend="and">
+			    $CsRefund.csrEndTimeNot$   (cs_refund$CsRefund.suffix$.csr_end_time &gt;= #CsRefund.csrEndTimeStart#
+			   <isEmpty property="CsRefund.csrEndTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrEndTimeEnd" prepend="and">
+				<isEmpty property="CsRefund.csrEndTimeStart">$CsRefund.csrEndTimeNot$   (</isEmpty>
+			    cs_refund$CsRefund.suffix$.csr_end_time &lt;= #CsRefund.csrEndTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsRefund.csrEndTime" prepend="and">
+			    $CsRefund.csrEndTimeNot$ cs_refund$CsRefund.suffix$.csr_end_time = #CsRefund.csrEndTime#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrEndTimeNot" prepend="and">
+				<isEmpty property="CsRefund.csrEndTimeStart"><isEmpty property="CsRefund.csrEndTimeEnd"><isEmpty property="CsRefund.csrEndTime">
+				$csrEndTimeNot$ cs_refund$CsRefund.suffix$.csr_end_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrRemark" prepend="and">
+				(<isNotNull property="CsRefund.csrRemarkNot">
+			    cs_refund$CsRefund.suffix$.csr_remark is null or length(cs_refund$CsRefund.suffix$.csr_remark) &lt; 1 or
+			    </isNotNull>$CsRefund.csrRemarkNot$ cs_refund$CsRefund.suffix$.csr_remark like #CsRefund.csrRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrRemarkNot" prepend="and">
+				<isEmpty property="CsRefund.csrRemark">
+				$csrRemarkNot$ (cs_refund$CsRefund.suffix$.csr_remark is null or length(cs_refund$CsRefund.suffix$.csr_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRefund.csrStatus" prepend="and">
+			    $CsRefund.csrStatusNot$ cs_refund$CsRefund.suffix$.csr_status = #CsRefund.csrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsRefund.csrStatusNot" prepend="and">
+				<isEmpty property="CsRefund.csrStatus">
+				$csrStatusNot$ cs_refund$CsRefund.suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

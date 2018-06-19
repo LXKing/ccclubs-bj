@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsAlipayRefund_part">	
+	<!-- 接口退款条件sql片段  -->
+	<sql id="cs_alipay_refund_dynamic">
+		<dynamic>
+			<isNotEmpty property="csarId" prepend="and">
+			    $csarIdNot$ cs_alipay_refund$suffix$.csar_id = #csarId#
+			</isNotEmpty>
+			<isNotNull property="csarIdNot" prepend="and">
+				<isEmpty property="csarId">
+				$csarIdNot$ cs_alipay_refund$suffix$.csar_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_alipay_refund$suffix$.csar_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csarHost" prepend="and">
+			    $csarHostNot$ cs_alipay_refund$suffix$.csar_host = #csarHost#
+			</isNotEmpty>
+			<isNotNull property="csarHostNot" prepend="and">
+				<isEmpty property="csarHost">
+				$csarHostNot$ cs_alipay_refund$suffix$.csar_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csarBankType" prepend="and">
+			    $csarBankTypeNot$ cs_alipay_refund$suffix$.csar_bank_type = #csarBankType#
+			</isNotEmpty>
+			<isNotNull property="csarBankTypeNot" prepend="and">
+				<isEmpty property="csarBankType">
+				$csarBankTypeNot$ cs_alipay_refund$suffix$.csar_bank_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarTradeNo" prepend="and">			    
+			    (<isNotNull property="csarTradeNoNot">
+			    cs_alipay_refund$suffix$.csar_trade_no is null or length(cs_alipay_refund$suffix$.csar_trade_no) &lt; 1 or
+			    </isNotNull>$csarTradeNoNot$ cs_alipay_refund$suffix$.csar_trade_no = #csarTradeNo#)
+			</isNotEmpty>
+			<isNotNull property="csarTradeNoNot" prepend="and">
+				<isEmpty property="csarTradeNo">
+				$csarTradeNoNot$ (cs_alipay_refund$suffix$.csar_trade_no is null or length(cs_alipay_refund$suffix$.csar_trade_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarMember" prepend="and">
+			    $csarMemberNot$ cs_alipay_refund$suffix$.csar_member = #csarMember#
+			</isNotEmpty>
+			<isNotNull property="csarMemberNot" prepend="and">
+				<isEmpty property="csarMember">
+				$csarMemberNot$ cs_alipay_refund$suffix$.csar_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarRealName" prepend="and">			    
+			    (<isNotNull property="csarRealNameNot">
+			    cs_alipay_refund$suffix$.csar_real_name is null or length(cs_alipay_refund$suffix$.csar_real_name) &lt; 1 or
+			    </isNotNull>$csarRealNameNot$ cs_alipay_refund$suffix$.csar_real_name = #csarRealName#)
+			</isNotEmpty>
+			<isNotNull property="csarRealNameNot" prepend="and">
+				<isEmpty property="csarRealName">
+				$csarRealNameNot$ (cs_alipay_refund$suffix$.csar_real_name is null or length(cs_alipay_refund$suffix$.csar_real_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAmountMin" prepend="and">
+			    $csarAmountNot$  ( cs_alipay_refund$suffix$.csar_amount &gt;= #csarAmountMin#
+			    <isEmpty property="csarAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarAmountMax" prepend="and">
+				<isEmpty property="csarAmountMin">$csarAmountNot$   (</isEmpty>
+			    cs_alipay_refund$suffix$.csar_amount &lt;= #csarAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csarAmount" prepend="and">
+			    $csarAmountNot$ cs_alipay_refund$suffix$.csar_amount = #csarAmount#
+			</isNotEmpty>
+			<isNotNull property="csarAmountNot" prepend="and">
+				<isEmpty property="csarAmountMax"><isEmpty property="csarAmountMin"><isEmpty property="csarAmount">
+				$csarAmountNot$ cs_alipay_refund$suffix$.csar_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csarRefund" prepend="and">
+			    $csarRefundNot$ cs_alipay_refund$suffix$.csar_refund = #csarRefund#
+			</isNotEmpty>
+			<isNotNull property="csarRefundNot" prepend="and">
+				<isEmpty property="csarRefund">
+				$csarRefundNot$ cs_alipay_refund$suffix$.csar_refund is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarRecord" prepend="and">
+			    $csarRecordNot$ cs_alipay_refund$suffix$.csar_record = #csarRecord#
+			</isNotEmpty>
+			<isNotNull property="csarRecordNot" prepend="and">
+				<isEmpty property="csarRecord">
+				$csarRecordNot$ cs_alipay_refund$suffix$.csar_record is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAlipayNo" prepend="and">			    
+			    (<isNotNull property="csarAlipayNoNot">
+			    cs_alipay_refund$suffix$.csar_alipay_no is null or length(cs_alipay_refund$suffix$.csar_alipay_no) &lt; 1 or
+			    </isNotNull>$csarAlipayNoNot$ cs_alipay_refund$suffix$.csar_alipay_no = #csarAlipayNo#)
+			</isNotEmpty>
+			<isNotNull property="csarAlipayNoNot" prepend="and">
+				<isEmpty property="csarAlipayNo">
+				$csarAlipayNoNot$ (cs_alipay_refund$suffix$.csar_alipay_no is null or length(cs_alipay_refund$suffix$.csar_alipay_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarUpdateTimeStart" prepend="and">
+			    $csarUpdateTimeNot$   (cs_alipay_refund$suffix$.csar_update_time &gt;= #csarUpdateTimeStart#
+			   <isEmpty property="csarUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarUpdateTimeEnd" prepend="and">
+				<isEmpty property="csarUpdateTimeStart">$csarUpdateTimeNot$   (</isEmpty>
+			    cs_alipay_refund$suffix$.csar_update_time &lt;= #csarUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarUpdateTime" prepend="and">
+			    $csarUpdateTimeNot$ cs_alipay_refund$suffix$.csar_update_time = #csarUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csarUpdateTimeNot" prepend="and">
+				<isEmpty property="csarUpdateTimeStart"><isEmpty property="csarUpdateTimeEnd"><isEmpty property="csarUpdateTime">
+				$csarUpdateTimeNot$ cs_alipay_refund$suffix$.csar_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarAddTimeStart" prepend="and">
+			    $csarAddTimeNot$   (cs_alipay_refund$suffix$.csar_add_time &gt;= #csarAddTimeStart#
+			   <isEmpty property="csarAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csarAddTimeEnd" prepend="and">
+				<isEmpty property="csarAddTimeStart">$csarAddTimeNot$   (</isEmpty>
+			    cs_alipay_refund$suffix$.csar_add_time &lt;= #csarAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csarAddTime" prepend="and">
+			    $csarAddTimeNot$ cs_alipay_refund$suffix$.csar_add_time = #csarAddTime#
+			</isNotEmpty>
+			<isNotNull property="csarAddTimeNot" prepend="and">
+				<isEmpty property="csarAddTimeStart"><isEmpty property="csarAddTimeEnd"><isEmpty property="csarAddTime">
+				$csarAddTimeNot$ cs_alipay_refund$suffix$.csar_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csarStatus" prepend="and">
+			    $csarStatusNot$ cs_alipay_refund$suffix$.csar_status = #csarStatus#
+			</isNotEmpty>
+			<isNotNull property="csarStatusNot" prepend="and">
+				<isEmpty property="csarStatus">
+				$csarStatusNot$ cs_alipay_refund$suffix$.csar_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 接口退款left join 条件sql片段 -->
+	<sql id="cs_alipay_refund_join">
+		<dynamic>
+			<isNotEmpty property="CsAlipayRefund.csarId" prepend="and">
+			    $CsAlipayRefund.csarIdNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_id = #CsAlipayRefund.csarId#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarIdNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarId">
+				$csarIdNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarHost" prepend="and">
+			    $CsAlipayRefund.csarHostNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_host = #CsAlipayRefund.csarHost#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarHostNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarHost">
+				$csarHostNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarBankType" prepend="and">
+			    $CsAlipayRefund.csarBankTypeNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_bank_type = #CsAlipayRefund.csarBankType#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarBankTypeNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarBankType">
+				$csarBankTypeNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_bank_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarTradeNo" prepend="and">
+				(<isNotNull property="CsAlipayRefund.csarTradeNoNot">
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_trade_no is null or length(cs_alipay_refund$CsAlipayRefund.suffix$.csar_trade_no) &lt; 1 or
+			    </isNotNull>$CsAlipayRefund.csarTradeNoNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_trade_no = #CsAlipayRefund.csarTradeNo#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarTradeNoNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarTradeNo">
+				$csarTradeNoNot$ (cs_alipay_refund$CsAlipayRefund.suffix$.csar_trade_no is null or length(cs_alipay_refund$CsAlipayRefund.suffix$.csar_trade_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarMember" prepend="and">
+			    $CsAlipayRefund.csarMemberNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_member = #CsAlipayRefund.csarMember#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarMemberNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarMember">
+				$csarMemberNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarRealName" prepend="and">
+				(<isNotNull property="CsAlipayRefund.csarRealNameNot">
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_real_name is null or length(cs_alipay_refund$CsAlipayRefund.suffix$.csar_real_name) &lt; 1 or
+			    </isNotNull>$CsAlipayRefund.csarRealNameNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_real_name = #CsAlipayRefund.csarRealName#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarRealNameNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarRealName">
+				$csarRealNameNot$ (cs_alipay_refund$CsAlipayRefund.suffix$.csar_real_name is null or length(cs_alipay_refund$CsAlipayRefund.suffix$.csar_real_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarAmountMin" prepend="and">
+			    $CsAlipayRefund.csarAmountNot$  ( cs_alipay_refund$CsAlipayRefund.suffix$.csar_amount &gt;= #CsAlipayRefund.csarAmountMin#
+			    <isEmpty property="CsAlipayRefund.csarAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarAmountMax" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarAmountMin">$CsAlipayRefund.csarAmountNot$   (</isEmpty>
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_amount &lt;= #CsAlipayRefund.csarAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarAmount" prepend="and">
+			    $CsAlipayRefund.csarAmountNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_amount = #CsAlipayRefund.csarAmount#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarAmountNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarAmountMax"><isEmpty property="CsAlipayRefund.csarAmountMin"><isEmpty property="CsAlipayRefund.csarAmount">
+				$csarAmountNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarRefund" prepend="and">
+			    $CsAlipayRefund.csarRefundNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_refund = #CsAlipayRefund.csarRefund#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarRefundNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarRefund">
+				$csarRefundNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_refund is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarRecord" prepend="and">
+			    $CsAlipayRefund.csarRecordNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_record = #CsAlipayRefund.csarRecord#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarRecordNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarRecord">
+				$csarRecordNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_record is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarAlipayNo" prepend="and">
+				(<isNotNull property="CsAlipayRefund.csarAlipayNoNot">
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_alipay_no is null or length(cs_alipay_refund$CsAlipayRefund.suffix$.csar_alipay_no) &lt; 1 or
+			    </isNotNull>$CsAlipayRefund.csarAlipayNoNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_alipay_no = #CsAlipayRefund.csarAlipayNo#)
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarAlipayNoNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarAlipayNo">
+				$csarAlipayNoNot$ (cs_alipay_refund$CsAlipayRefund.suffix$.csar_alipay_no is null or length(cs_alipay_refund$CsAlipayRefund.suffix$.csar_alipay_no) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarUpdateTimeStart" prepend="and">
+			    $CsAlipayRefund.csarUpdateTimeNot$   (cs_alipay_refund$CsAlipayRefund.suffix$.csar_update_time &gt;= #CsAlipayRefund.csarUpdateTimeStart#
+			   <isEmpty property="CsAlipayRefund.csarUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarUpdateTimeStart">$CsAlipayRefund.csarUpdateTimeNot$   (</isEmpty>
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_update_time &lt;= #CsAlipayRefund.csarUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarUpdateTime" prepend="and">
+			    $CsAlipayRefund.csarUpdateTimeNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_update_time = #CsAlipayRefund.csarUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarUpdateTimeNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarUpdateTimeStart"><isEmpty property="CsAlipayRefund.csarUpdateTimeEnd"><isEmpty property="CsAlipayRefund.csarUpdateTime">
+				$csarUpdateTimeNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarAddTimeStart" prepend="and">
+			    $CsAlipayRefund.csarAddTimeNot$   (cs_alipay_refund$CsAlipayRefund.suffix$.csar_add_time &gt;= #CsAlipayRefund.csarAddTimeStart#
+			   <isEmpty property="CsAlipayRefund.csarAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarAddTimeEnd" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarAddTimeStart">$CsAlipayRefund.csarAddTimeNot$   (</isEmpty>
+			    cs_alipay_refund$CsAlipayRefund.suffix$.csar_add_time &lt;= #CsAlipayRefund.csarAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsAlipayRefund.csarAddTime" prepend="and">
+			    $CsAlipayRefund.csarAddTimeNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_add_time = #CsAlipayRefund.csarAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarAddTimeNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarAddTimeStart"><isEmpty property="CsAlipayRefund.csarAddTimeEnd"><isEmpty property="CsAlipayRefund.csarAddTime">
+				$csarAddTimeNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsAlipayRefund.csarStatus" prepend="and">
+			    $CsAlipayRefund.csarStatusNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_status = #CsAlipayRefund.csarStatus#
+			</isNotEmpty>
+			<isNotNull property="CsAlipayRefund.csarStatusNot" prepend="and">
+				<isEmpty property="CsAlipayRefund.csarStatus">
+				$csarStatusNot$ cs_alipay_refund$CsAlipayRefund.suffix$.csar_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

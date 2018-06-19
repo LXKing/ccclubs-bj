@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 销售战役之SQL映射 -->
+	<resultMap id="TbSaleBattle" class="com.ccclubs.model.TbSaleBattle">
+		<result property="tbsbId" column="tbsb_id"/>
+		<result property="tbsbHost" column="tbsb_host"/>
+		<result property="tbsbTitle" column="tbsb_title"/>
+		<result property="tbsbDetail" column="tbsb_detail"/>
+		<result property="tbsbHeader" column="tbsb_header"/>
+		<result property="tbsbStart" column="tbsb_start"/>
+		<result property="tbsbFinish" column="tbsb_finish"/>
+		<result property="tbsbAdder" column="tbsb_adder"/>
+		<result property="tbsbEditor" column="tbsb_editor"/>
+		<result property="tbsbRemark" column="tbsb_remark"/>
+		<result property="tbsbUpdateTime" column="tbsb_update_time"/>
+		<result property="tbsbAddTime" column="tbsb_add_time"/>
+		<result property="tbsbStatus" column="tbsb_status"/>
+	</resultMap>
+		
+	<!-- 获取所有销售战役 -->
+	<select id="getTbSaleBattleList" resultMap="TbSaleBattle">
+		select tb_sale_battle$suffix$.* from tb_sale_battle$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and tb_sale_battle$suffix$.tbsb_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleBattle_part.tb_sale_battle_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsb_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取销售战役分页 -->
+	<select id="getTbSaleBattlePage" parameterClass="java.util.HashMap" resultMap="TbSaleBattle">
+		select tb_sale_battle$suffix$.* from tb_sale_battle$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and tb_sale_battle$suffix$.tbsb_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleBattle_part.tb_sale_battle_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsb_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取销售战役总数 -->
+	<select id="getTbSaleBattleEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_sale_battle$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and tb_sale_battle$suffix$.tbsb_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleBattle_part.tb_sale_battle_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取销售战役 -->
+	<select id="getTbSaleBattleById" parameterClass="java.util.HashMap" resultMap="TbSaleBattle">
+		select tb_sale_battle$suffix$.* from tb_sale_battle$suffix$
+		where tbsb_id=#id#
+	</select>
+	
+		
+	<!-- 保存销售战役 -->
+	<insert id="saveTbSaleBattle"  parameterClass="com.ccclubs.model.TbSaleBattle">
+		insert into tb_sale_battle$suffix$
+		(
+			tb_sale_battle$suffix$.tbsb_host
+			,tb_sale_battle$suffix$.tbsb_title
+			,tb_sale_battle$suffix$.tbsb_detail
+			,tb_sale_battle$suffix$.tbsb_header
+			,tb_sale_battle$suffix$.tbsb_start
+			,tb_sale_battle$suffix$.tbsb_finish
+			,tb_sale_battle$suffix$.tbsb_adder
+			,tb_sale_battle$suffix$.tbsb_editor
+			,tb_sale_battle$suffix$.tbsb_remark
+			,tb_sale_battle$suffix$.tbsb_update_time
+			,tb_sale_battle$suffix$.tbsb_add_time
+			,tb_sale_battle$suffix$.tbsb_status
+		)
+		values(
+			<isNotNull property="tbsbHost" prepend="">
+				#tbsbHost#
+			</isNotNull>
+			<isNull property="tbsbHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbsbTitle" prepend=",">
+				#tbsbTitle#
+			</isNotNull>
+			<isNull property="tbsbTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbDetail" prepend=",">
+				#tbsbDetail#
+			</isNotNull>
+			<isNull property="tbsbDetail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbHeader" prepend=",">
+				#tbsbHeader#
+			</isNotNull>
+			<isNull property="tbsbHeader" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbStart" prepend=",">
+				#tbsbStart#
+			</isNotNull>
+			<isNull property="tbsbStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbFinish" prepend=",">
+				#tbsbFinish#
+			</isNotNull>
+			<isNull property="tbsbFinish" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbAdder" prepend=",">
+				#tbsbAdder#
+			</isNotNull>
+			<isNull property="tbsbAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbEditor" prepend=",">
+				#tbsbEditor#
+			</isNotNull>
+			<isNull property="tbsbEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbRemark" prepend=",">
+				#tbsbRemark#
+			</isNotNull>
+			<isNull property="tbsbRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbUpdateTime" prepend=",">
+				#tbsbUpdateTime#
+			</isNotNull>
+			<isNull property="tbsbUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbAddTime" prepend=",">
+				#tbsbAddTime#
+			</isNotNull>
+			<isNull property="tbsbAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbsbStatus" prepend=",">
+				#tbsbStatus#
+			</isNotNull>
+			<isNull property="tbsbStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新销售战役 -->
+	<update id="updateTbSaleBattle"  parameterClass="com.ccclubs.model.TbSaleBattle">
+		update tb_sale_battle$suffix$ set
+			<isNotNull property="tbsbHost" prepend="">
+				tb_sale_battle$suffix$.tbsb_host = #tbsbHost#
+			</isNotNull>
+			<isNull property="tbsbHost" prepend="">
+				tb_sale_battle$suffix$.tbsb_host = null
+			</isNull>				
+			<isNotNull property="tbsbTitle" prepend=",">
+				tb_sale_battle$suffix$.tbsb_title = #tbsbTitle#
+			</isNotNull>
+			<isNull property="tbsbTitle" prepend=",">
+				tb_sale_battle$suffix$.tbsb_title = null
+			</isNull>				
+			<isNotNull property="tbsbDetail" prepend=",">
+				tb_sale_battle$suffix$.tbsb_detail = #tbsbDetail#
+			</isNotNull>
+			<isNull property="tbsbDetail" prepend=",">
+				tb_sale_battle$suffix$.tbsb_detail = null
+			</isNull>				
+			<isNotNull property="tbsbHeader" prepend=",">
+				tb_sale_battle$suffix$.tbsb_header = #tbsbHeader#
+			</isNotNull>
+			<isNull property="tbsbHeader" prepend=",">
+				tb_sale_battle$suffix$.tbsb_header = null
+			</isNull>				
+			<isNotNull property="tbsbStart" prepend=",">
+				tb_sale_battle$suffix$.tbsb_start = #tbsbStart#
+			</isNotNull>
+			<isNull property="tbsbStart" prepend=",">
+				tb_sale_battle$suffix$.tbsb_start = null
+			</isNull>				
+			<isNotNull property="tbsbFinish" prepend=",">
+				tb_sale_battle$suffix$.tbsb_finish = #tbsbFinish#
+			</isNotNull>
+			<isNull property="tbsbFinish" prepend=",">
+				tb_sale_battle$suffix$.tbsb_finish = null
+			</isNull>				
+			<isNotNull property="tbsbAdder" prepend=",">
+				tb_sale_battle$suffix$.tbsb_adder = #tbsbAdder#
+			</isNotNull>
+			<isNull property="tbsbAdder" prepend=",">
+				tb_sale_battle$suffix$.tbsb_adder = null
+			</isNull>				
+			<isNotNull property="tbsbEditor" prepend=",">
+				tb_sale_battle$suffix$.tbsb_editor = #tbsbEditor#
+			</isNotNull>
+			<isNull property="tbsbEditor" prepend=",">
+				tb_sale_battle$suffix$.tbsb_editor = null
+			</isNull>				
+			<isNotNull property="tbsbRemark" prepend=",">
+				tb_sale_battle$suffix$.tbsb_remark = #tbsbRemark#
+			</isNotNull>
+			<isNull property="tbsbRemark" prepend=",">
+				tb_sale_battle$suffix$.tbsb_remark = null
+			</isNull>				
+			<isNotNull property="tbsbUpdateTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_update_time = #tbsbUpdateTime#
+			</isNotNull>
+			<isNull property="tbsbUpdateTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_update_time = null
+			</isNull>				
+			<isNotNull property="tbsbAddTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_add_time = #tbsbAddTime#
+			</isNotNull>
+			<isNull property="tbsbAddTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_add_time = null
+			</isNull>				
+			<isNotNull property="tbsbStatus" prepend=",">
+				tb_sale_battle$suffix$.tbsb_status = #tbsbStatus#
+			</isNotNull>
+			<isNull property="tbsbStatus" prepend=",">
+				tb_sale_battle$suffix$.tbsb_status = null
+			</isNull>				
+		where
+			tbsb_id=#tbsbId#
+	</update>
+	
+	<!-- 更新销售战役非空字段 -->
+	<update id="updateTbSaleBattle$NotNull"  parameterClass="com.ccclubs.model.TbSaleBattle">
+		update tb_sale_battle$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbsbHost" prepend=",">
+				tb_sale_battle$suffix$.tbsb_host = #tbsbHost#
+			</isNotNull>		
+			<isNotNull property="tbsbTitle" prepend=",">
+				tb_sale_battle$suffix$.tbsb_title = #tbsbTitle#
+			</isNotNull>		
+			<isNotNull property="tbsbDetail" prepend=",">
+				tb_sale_battle$suffix$.tbsb_detail = #tbsbDetail#
+			</isNotNull>		
+			<isNotNull property="tbsbHeader" prepend=",">
+				tb_sale_battle$suffix$.tbsb_header = #tbsbHeader#
+			</isNotNull>		
+			<isNotNull property="tbsbStart" prepend=",">
+				tb_sale_battle$suffix$.tbsb_start = #tbsbStart#
+			</isNotNull>		
+			<isNotNull property="tbsbFinish" prepend=",">
+				tb_sale_battle$suffix$.tbsb_finish = #tbsbFinish#
+			</isNotNull>		
+			<isNotNull property="tbsbAdder" prepend=",">
+				tb_sale_battle$suffix$.tbsb_adder = #tbsbAdder#
+			</isNotNull>		
+			<isNotNull property="tbsbEditor" prepend=",">
+				tb_sale_battle$suffix$.tbsb_editor = #tbsbEditor#
+			</isNotNull>		
+			<isNotNull property="tbsbRemark" prepend=",">
+				tb_sale_battle$suffix$.tbsb_remark = #tbsbRemark#
+			</isNotNull>		
+			<isNotNull property="tbsbUpdateTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_update_time = #tbsbUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbsbAddTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_add_time = #tbsbAddTime#
+			</isNotNull>		
+			<isNotNull property="tbsbStatus" prepend=",">
+				tb_sale_battle$suffix$.tbsb_status = #tbsbStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbsb_id=#tbsbId#
+	</update>
+	
+
+	<!-- 根据ID删除一个销售战役 -->
+	<delete id="deleteTbSaleBattleById" parameterClass="java.util.HashMap">
+		delete from tb_sale_battle$suffix$ where tbsb_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个销售战役 -->
+	<update id="removeTbSaleBattleById" parameterClass="java.util.HashMap">
+		update tb_sale_battle$suffix$ set  tb_sale_battle$suffix$.tbsb_status=-1  where tbsb_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新销售战役 -->
+	<update id="updateTbSaleBattleBy"  parameterClass="java.util.HashMap">
+		update tb_sale_battle$suffix$ set		
+			tbsb_id=tbsb_id
+			<isNotNull property="V_tbsbId" prepend=",">
+				tb_sale_battle$suffix$.tbsb_id = #V_tbsbId#
+			</isNotNull>		
+			<isNotNull property="V_tbsbHost" prepend=",">
+				tb_sale_battle$suffix$.tbsb_host = #V_tbsbHost#
+			</isNotNull>		
+			<isNotNull property="V_tbsbTitle" prepend=",">
+				tb_sale_battle$suffix$.tbsb_title = #V_tbsbTitle#
+			</isNotNull>		
+			<isNotNull property="V_tbsbDetail" prepend=",">
+				tb_sale_battle$suffix$.tbsb_detail = #V_tbsbDetail#
+			</isNotNull>		
+			<isNotNull property="V_tbsbHeader" prepend=",">
+				tb_sale_battle$suffix$.tbsb_header = #V_tbsbHeader#
+			</isNotNull>		
+			<isNotNull property="V_tbsbStart" prepend=",">
+				tb_sale_battle$suffix$.tbsb_start = #V_tbsbStart#
+			</isNotNull>		
+			<isNotNull property="V_tbsbFinish" prepend=",">
+				tb_sale_battle$suffix$.tbsb_finish = #V_tbsbFinish#
+			</isNotNull>		
+			<isNotNull property="V_tbsbAdder" prepend=",">
+				tb_sale_battle$suffix$.tbsb_adder = #V_tbsbAdder#
+			</isNotNull>		
+			<isNotNull property="V_tbsbEditor" prepend=",">
+				tb_sale_battle$suffix$.tbsb_editor = #V_tbsbEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbsbRemark" prepend=",">
+				tb_sale_battle$suffix$.tbsb_remark = #V_tbsbRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbsbUpdateTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_update_time = #V_tbsbUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbsbAddTime" prepend=",">
+				tb_sale_battle$suffix$.tbsb_add_time = #V_tbsbAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbsbStatus" prepend=",">
+				tb_sale_battle$suffix$.tbsb_status = #V_tbsbStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		tb_sale_battle$suffix$.tbsb_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbSaleBattle_part.tb_sale_battle_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除销售战役 -->
+	<update id="deleteTbSaleBattleBy"  parameterClass="java.util.HashMap">
+		delete from tb_sale_battle$suffix$ where 
+		tb_sale_battle$suffix$.tbsb_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbSaleBattle_part.tb_sale_battle_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 渠道跟踪维护之SQL映射 -->
+	<resultMap id="CsChannelLog" class="com.ccclubs.model.CsChannelLog">
+		<result property="csclId" column="cscl_id"/>
+		<result property="csclHost" column="cscl_host"/>
+		<result property="csclTitle" column="cscl_title"/>
+		<result property="csclPlan" column="cscl_plan"/>
+		<result property="csclProfile" column="cscl_profile"/>
+		<result property="csclUser" column="cscl_user"/>
+		<result property="csclUpdateTime" column="cscl_update_time"/>
+		<result property="csclAddTime" column="cscl_add_time"/>
+		<result property="csclStatus" column="cscl_status"/>
+	</resultMap>
+		
+	<!-- 获取所有渠道跟踪维护 -->
+	<select id="getCsChannelLogList" resultMap="CsChannelLog">
+		select cs_channel_log$suffix$.* from cs_channel_log$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.cscl_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_channel_log$suffix$.cscl_status!=-1
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannelLog_part.cs_channel_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscl_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取渠道跟踪维护分页 -->
+	<select id="getCsChannelLogPage" parameterClass="java.util.HashMap" resultMap="CsChannelLog">
+		select cs_channel_log$suffix$.* from cs_channel_log$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询 -->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.cscl_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_channel_log$suffix$.cscl_status!=-1
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannelLog_part.cs_channel_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscl_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取渠道跟踪维护总数 -->
+	<select id="getCsChannelLogEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_channel_log$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.cscl_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_channel_log$suffix$.cscl_status!=-1
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChannelLog_part.cs_channel_log_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取渠道跟踪维护 -->
+	<select id="getCsChannelLogById" parameterClass="java.util.HashMap" resultMap="CsChannelLog">
+		select cs_channel_log$suffix$.* from cs_channel_log$suffix$
+		where cscl_id=#id#
+	</select>
+	
+		
+	<!-- 保存渠道跟踪维护 -->
+	<insert id="saveCsChannelLog"  parameterClass="com.ccclubs.model.CsChannelLog">
+		insert into cs_channel_log$suffix$
+		(
+			cs_channel_log$suffix$.cscl_host
+			,cs_channel_log$suffix$.cscl_title
+			,cs_channel_log$suffix$.cscl_plan
+			,cs_channel_log$suffix$.cscl_profile
+			,cs_channel_log$suffix$.cscl_user
+			,cs_channel_log$suffix$.cscl_update_time
+			,cs_channel_log$suffix$.cscl_add_time
+			,cs_channel_log$suffix$.cscl_status
+		)
+		values(
+			<isNotNull property="csclHost" prepend="">
+				#csclHost#
+			</isNotNull>
+			<isNull property="csclHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csclTitle" prepend=",">
+				#csclTitle#
+			</isNotNull>
+			<isNull property="csclTitle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csclPlan" prepend=",">
+				#csclPlan#
+			</isNotNull>
+			<isNull property="csclPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csclProfile" prepend=",">
+				#csclProfile#
+			</isNotNull>
+			<isNull property="csclProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csclUser" prepend=",">
+				#csclUser#
+			</isNotNull>
+			<isNull property="csclUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csclUpdateTime" prepend=",">
+				#csclUpdateTime#
+			</isNotNull>
+			<isNull property="csclUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csclAddTime" prepend=",">
+				#csclAddTime#
+			</isNotNull>
+			<isNull property="csclAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csclStatus" prepend=",">
+				#csclStatus#
+			</isNotNull>
+			<isNull property="csclStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新渠道跟踪维护 -->
+	<update id="updateCsChannelLog"  parameterClass="com.ccclubs.model.CsChannelLog">
+		update cs_channel_log$suffix$ set
+			<isNotNull property="csclHost" prepend="">
+				cs_channel_log$suffix$.cscl_host = #csclHost#
+			</isNotNull>
+			<isNull property="csclHost" prepend="">
+				cs_channel_log$suffix$.cscl_host = null
+			</isNull>				
+			<isNotNull property="csclTitle" prepend=",">
+				cs_channel_log$suffix$.cscl_title = #csclTitle#
+			</isNotNull>
+			<isNull property="csclTitle" prepend=",">
+				cs_channel_log$suffix$.cscl_title = null
+			</isNull>				
+			<isNotNull property="csclPlan" prepend=",">
+				cs_channel_log$suffix$.cscl_plan = #csclPlan#
+			</isNotNull>
+			<isNull property="csclPlan" prepend=",">
+				cs_channel_log$suffix$.cscl_plan = null
+			</isNull>				
+			<isNotNull property="csclProfile" prepend=",">
+				cs_channel_log$suffix$.cscl_profile = #csclProfile#
+			</isNotNull>
+			<isNull property="csclProfile" prepend=",">
+				cs_channel_log$suffix$.cscl_profile = null
+			</isNull>				
+			<isNotNull property="csclUser" prepend=",">
+				cs_channel_log$suffix$.cscl_user = #csclUser#
+			</isNotNull>
+			<isNull property="csclUser" prepend=",">
+				cs_channel_log$suffix$.cscl_user = null
+			</isNull>				
+			<isNotNull property="csclUpdateTime" prepend=",">
+				cs_channel_log$suffix$.cscl_update_time = #csclUpdateTime#
+			</isNotNull>
+			<isNull property="csclUpdateTime" prepend=",">
+				cs_channel_log$suffix$.cscl_update_time = null
+			</isNull>				
+			<isNotNull property="csclAddTime" prepend=",">
+				cs_channel_log$suffix$.cscl_add_time = #csclAddTime#
+			</isNotNull>
+			<isNull property="csclAddTime" prepend=",">
+				cs_channel_log$suffix$.cscl_add_time = null
+			</isNull>				
+			<isNotNull property="csclStatus" prepend=",">
+				cs_channel_log$suffix$.cscl_status = #csclStatus#
+			</isNotNull>
+			<isNull property="csclStatus" prepend=",">
+				cs_channel_log$suffix$.cscl_status = null
+			</isNull>				
+		where
+			cscl_id=#csclId#
+	</update>
+	
+	<!-- 更新渠道跟踪维护非空字段 -->
+	<update id="updateCsChannelLog$NotNull"  parameterClass="com.ccclubs.model.CsChannelLog">
+		update cs_channel_log$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csclHost" prepend=",">
+				cs_channel_log$suffix$.cscl_host = #csclHost#
+			</isNotNull>		
+			<isNotNull property="csclTitle" prepend=",">
+				cs_channel_log$suffix$.cscl_title = #csclTitle#
+			</isNotNull>		
+			<isNotNull property="csclPlan" prepend=",">
+				cs_channel_log$suffix$.cscl_plan = #csclPlan#
+			</isNotNull>		
+			<isNotNull property="csclProfile" prepend=",">
+				cs_channel_log$suffix$.cscl_profile = #csclProfile#
+			</isNotNull>		
+			<isNotNull property="csclUser" prepend=",">
+				cs_channel_log$suffix$.cscl_user = #csclUser#
+			</isNotNull>		
+			<isNotNull property="csclUpdateTime" prepend=",">
+				cs_channel_log$suffix$.cscl_update_time = #csclUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csclAddTime" prepend=",">
+				cs_channel_log$suffix$.cscl_add_time = #csclAddTime#
+			</isNotNull>		
+			<isNotNull property="csclStatus" prepend=",">
+				cs_channel_log$suffix$.cscl_status = #csclStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscl_id=#csclId#
+	</update>
+	
+
+	<!-- 根据ID删除一个渠道跟踪维护 -->
+	<delete id="deleteCsChannelLogById" parameterClass="java.util.HashMap">
+		delete from cs_channel_log$suffix$ where cscl_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个渠道跟踪维护 -->
+	<update id="removeCsChannelLogById" parameterClass="java.util.HashMap">
+		update cs_channel_log$suffix$ set  cs_channel_log$suffix$.cscl_status=-1  where cscl_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新渠道跟踪维护 -->
+	<update id="updateCsChannelLogBy"  parameterClass="java.util.HashMap">
+		update cs_channel_log$suffix$ set		
+			cscl_id=cscl_id
+			<isNotNull property="V_csclId" prepend=",">
+				cs_channel_log$suffix$.cscl_id = #V_csclId#
+			</isNotNull>		
+			<isNotNull property="V_csclHost" prepend=",">
+				cs_channel_log$suffix$.cscl_host = #V_csclHost#
+			</isNotNull>		
+			<isNotNull property="V_csclTitle" prepend=",">
+				cs_channel_log$suffix$.cscl_title = #V_csclTitle#
+			</isNotNull>		
+			<isNotNull property="V_csclPlan" prepend=",">
+				cs_channel_log$suffix$.cscl_plan = #V_csclPlan#
+			</isNotNull>		
+			<isNotNull property="V_csclProfile" prepend=",">
+				cs_channel_log$suffix$.cscl_profile = #V_csclProfile#
+			</isNotNull>		
+			<isNotNull property="V_csclUser" prepend=",">
+				cs_channel_log$suffix$.cscl_user = #V_csclUser#
+			</isNotNull>		
+			<isNotNull property="V_csclUpdateTime" prepend=",">
+				cs_channel_log$suffix$.cscl_update_time = #V_csclUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csclAddTime" prepend=",">
+				cs_channel_log$suffix$.cscl_add_time = #V_csclAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csclStatus" prepend=",">
+				cs_channel_log$suffix$.cscl_status = #V_csclStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.cscl_plan=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_channel_log$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_channel_log$suffix$.cscl_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CsclPlan"><!-- 调用一下CsclPlan，把CsChannel指向CsclPlan --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChannelLog_part.cs_channel_log_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除渠道跟踪维护 -->
+	<update id="deleteCsChannelLogBy"  parameterClass="java.util.HashMap">
+		delete from cs_channel_log$suffix$ where 
+		cs_channel_log$suffix$.cscl_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChannelLog_part.cs_channel_log_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

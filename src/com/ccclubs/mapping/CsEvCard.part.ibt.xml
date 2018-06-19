@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsEvCard_part">	
+	<!-- 会员卡条件sql片段  -->
+	<sql id="cs_ev_card_dynamic">
+		<dynamic>
+			<isNotEmpty property="csecId" prepend="and">
+			    $csecIdNot$ cs_ev_card$suffix$.csec_id = #csecId#
+			</isNotEmpty>
+			<isNotNull property="csecIdNot" prepend="and">
+				<isEmpty property="csecId">
+				$csecIdNot$ cs_ev_card$suffix$.csec_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_ev_card$suffix$.csec_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csecHost" prepend="and">
+			    $csecHostNot$ cs_ev_card$suffix$.csec_host = #csecHost#
+			</isNotEmpty>
+			<isNotNull property="csecHostNot" prepend="and">
+				<isEmpty property="csecHost">
+				$csecHostNot$ cs_ev_card$suffix$.csec_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csecNumber" prepend="and">			    
+			    (<isNotNull property="csecNumberNot">
+			    cs_ev_card$suffix$.csec_number is null or length(cs_ev_card$suffix$.csec_number) &lt; 1 or
+			    </isNotNull>$csecNumberNot$ cs_ev_card$suffix$.csec_number like #csecNumber#)
+			</isNotEmpty>
+			<isNotNull property="csecNumberNot" prepend="and">
+				<isEmpty property="csecNumber">
+				$csecNumberNot$ (cs_ev_card$suffix$.csec_number is null or length(cs_ev_card$suffix$.csec_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csecRfid" prepend="and">			    
+			    (<isNotNull property="csecRfidNot">
+			    cs_ev_card$suffix$.csec_rfid is null or length(cs_ev_card$suffix$.csec_rfid) &lt; 1 or
+			    </isNotNull>$csecRfidNot$ cs_ev_card$suffix$.csec_rfid = #csecRfid#)
+			</isNotEmpty>
+			<isNotNull property="csecRfidNot" prepend="and">
+				<isEmpty property="csecRfid">
+				$csecRfidNot$ (cs_ev_card$suffix$.csec_rfid is null or length(cs_ev_card$suffix$.csec_rfid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csecRemark" prepend="and">			    
+			    (<isNotNull property="csecRemarkNot">
+			    cs_ev_card$suffix$.csec_remark is null or length(cs_ev_card$suffix$.csec_remark) &lt; 1 or
+			    </isNotNull>$csecRemarkNot$ cs_ev_card$suffix$.csec_remark like #csecRemark#)
+			</isNotEmpty>
+			<isNotNull property="csecRemarkNot" prepend="and">
+				<isEmpty property="csecRemark">
+				$csecRemarkNot$ (cs_ev_card$suffix$.csec_remark is null or length(cs_ev_card$suffix$.csec_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csecAddTimeStart" prepend="and">
+			    $csecAddTimeNot$   (cs_ev_card$suffix$.csec_add_time &gt;= #csecAddTimeStart#
+			   <isEmpty property="csecAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csecAddTimeEnd" prepend="and">
+				<isEmpty property="csecAddTimeStart">$csecAddTimeNot$   (</isEmpty>
+			    cs_ev_card$suffix$.csec_add_time &lt;= #csecAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csecAddTime" prepend="and">
+			    $csecAddTimeNot$ cs_ev_card$suffix$.csec_add_time = #csecAddTime#
+			</isNotEmpty>
+			<isNotNull property="csecAddTimeNot" prepend="and">
+				<isEmpty property="csecAddTimeStart"><isEmpty property="csecAddTimeEnd"><isEmpty property="csecAddTime">
+				$csecAddTimeNot$ cs_ev_card$suffix$.csec_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csecFlag" prepend="and">
+			    $csecFlagNot$ cs_ev_card$suffix$.csec_flag = #csecFlag#
+			</isNotEmpty>
+			<isNotNull property="csecFlagNot" prepend="and">
+				<isEmpty property="csecFlag">
+				$csecFlagNot$ cs_ev_card$suffix$.csec_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csecStatus" prepend="and">
+			    $csecStatusNot$ cs_ev_card$suffix$.csec_status = #csecStatus#
+			</isNotEmpty>
+			<isNotNull property="csecStatusNot" prepend="and">
+				<isEmpty property="csecStatus">
+				$csecStatusNot$ cs_ev_card$suffix$.csec_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 会员卡left join 条件sql片段 -->
+	<sql id="cs_ev_card_join">
+		<dynamic>
+			<isNotEmpty property="CsEvCard.csecId" prepend="and">
+			    $CsEvCard.csecIdNot$ cs_ev_card$CsEvCard.suffix$.csec_id = #CsEvCard.csecId#
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecIdNot" prepend="and">
+				<isEmpty property="CsEvCard.csecId">
+				$csecIdNot$ cs_ev_card$CsEvCard.suffix$.csec_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_ev_card$CsEvCard.suffix$.csec_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsEvCard.csecHost" prepend="and">
+			    $CsEvCard.csecHostNot$ cs_ev_card$CsEvCard.suffix$.csec_host = #CsEvCard.csecHost#
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecHostNot" prepend="and">
+				<isEmpty property="CsEvCard.csecHost">
+				$csecHostNot$ cs_ev_card$CsEvCard.suffix$.csec_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvCard.csecNumber" prepend="and">
+				(<isNotNull property="CsEvCard.csecNumberNot">
+			    cs_ev_card$CsEvCard.suffix$.csec_number is null or length(cs_ev_card$CsEvCard.suffix$.csec_number) &lt; 1 or
+			    </isNotNull>$CsEvCard.csecNumberNot$ cs_ev_card$CsEvCard.suffix$.csec_number like #CsEvCard.csecNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecNumberNot" prepend="and">
+				<isEmpty property="CsEvCard.csecNumber">
+				$csecNumberNot$ (cs_ev_card$CsEvCard.suffix$.csec_number is null or length(cs_ev_card$CsEvCard.suffix$.csec_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvCard.csecRfid" prepend="and">
+				(<isNotNull property="CsEvCard.csecRfidNot">
+			    cs_ev_card$CsEvCard.suffix$.csec_rfid is null or length(cs_ev_card$CsEvCard.suffix$.csec_rfid) &lt; 1 or
+			    </isNotNull>$CsEvCard.csecRfidNot$ cs_ev_card$CsEvCard.suffix$.csec_rfid = #CsEvCard.csecRfid#)
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecRfidNot" prepend="and">
+				<isEmpty property="CsEvCard.csecRfid">
+				$csecRfidNot$ (cs_ev_card$CsEvCard.suffix$.csec_rfid is null or length(cs_ev_card$CsEvCard.suffix$.csec_rfid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvCard.csecRemark" prepend="and">
+				(<isNotNull property="CsEvCard.csecRemarkNot">
+			    cs_ev_card$CsEvCard.suffix$.csec_remark is null or length(cs_ev_card$CsEvCard.suffix$.csec_remark) &lt; 1 or
+			    </isNotNull>$CsEvCard.csecRemarkNot$ cs_ev_card$CsEvCard.suffix$.csec_remark like #CsEvCard.csecRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecRemarkNot" prepend="and">
+				<isEmpty property="CsEvCard.csecRemark">
+				$csecRemarkNot$ (cs_ev_card$CsEvCard.suffix$.csec_remark is null or length(cs_ev_card$CsEvCard.suffix$.csec_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvCard.csecAddTimeStart" prepend="and">
+			    $CsEvCard.csecAddTimeNot$   (cs_ev_card$CsEvCard.suffix$.csec_add_time &gt;= #CsEvCard.csecAddTimeStart#
+			   <isEmpty property="CsEvCard.csecAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsEvCard.csecAddTimeEnd" prepend="and">
+				<isEmpty property="CsEvCard.csecAddTimeStart">$CsEvCard.csecAddTimeNot$   (</isEmpty>
+			    cs_ev_card$CsEvCard.suffix$.csec_add_time &lt;= #CsEvCard.csecAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsEvCard.csecAddTime" prepend="and">
+			    $CsEvCard.csecAddTimeNot$ cs_ev_card$CsEvCard.suffix$.csec_add_time = #CsEvCard.csecAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecAddTimeNot" prepend="and">
+				<isEmpty property="CsEvCard.csecAddTimeStart"><isEmpty property="CsEvCard.csecAddTimeEnd"><isEmpty property="CsEvCard.csecAddTime">
+				$csecAddTimeNot$ cs_ev_card$CsEvCard.suffix$.csec_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvCard.csecFlag" prepend="and">
+			    $CsEvCard.csecFlagNot$ cs_ev_card$CsEvCard.suffix$.csec_flag = #CsEvCard.csecFlag#
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecFlagNot" prepend="and">
+				<isEmpty property="CsEvCard.csecFlag">
+				$csecFlagNot$ cs_ev_card$CsEvCard.suffix$.csec_flag is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsEvCard.csecStatus" prepend="and">
+			    $CsEvCard.csecStatusNot$ cs_ev_card$CsEvCard.suffix$.csec_status = #CsEvCard.csecStatus#
+			</isNotEmpty>
+			<isNotNull property="CsEvCard.csecStatusNot" prepend="and">
+				<isEmpty property="CsEvCard.csecStatus">
+				$csecStatusNot$ cs_ev_card$CsEvCard.suffix$.csec_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

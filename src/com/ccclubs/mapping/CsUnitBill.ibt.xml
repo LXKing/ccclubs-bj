@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 企业对账之SQL映射 -->
+	<resultMap id="CsUnitBill" class="com.ccclubs.model.CsUnitBill">
+		<result property="csubId" column="csub_id"/>
+		<result property="csubHost" column="csub_host"/>
+		<result property="csubMonth" column="csub_month"/>
+		<result property="csubUnit" column="csub_unit"/>
+		<result property="csubAirS" column="csub_air_s"/>
+		<result property="csubOrderS" column="csub_order_s"/>
+		<result property="csubSpecialS" column="csub_special_s"/>
+		<result property="csubFeeAir" column="csub_fee_air"/>
+		<result property="csubFeeOrder" column="csub_fee_order"/>
+		<result property="csubFeeSpecial" column="csub_fee_special"/>
+		<result property="csubNeedPay" column="csub_need_pay"/>
+		<result property="csubRealPay" column="csub_real_pay"/>
+		<result property="csubEditor" column="csub_editor"/>
+		<result property="csubUpdateTime" column="csub_update_time"/>
+		<result property="csubAddTime" column="csub_add_time"/>
+		<result property="csubSummary" column="csub_summary"/>
+		<result property="csubStatus" column="csub_status"/>
+		<result property="csubIncome" column="csub_income"/>
+		<result property="csubPayout" column="csub_payout"/>
+		<result property="csubGroup" column="csub_group"/>
+		<result property="csubMileage" column="csub_mileage"/>
+		<result property="csubDuration" column="csub_duration"/>
+	</resultMap>
+		
+	<!-- 获取所有企业对账 -->
+	<select id="getCsUnitBillList" resultMap="CsUnitBill">
+		select cs_unit_bill$suffix$.* from cs_unit_bill$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.csub_unit=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人]查询-->
+		<isNotNull property="CsubEditor"><!-- 调用一下CsubEditor，把SrvUser指向CsubEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.csub_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询-->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.csub_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_bill$suffix$.csub_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询条件sql片段 -->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitBill_part.cs_unit_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csub_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取企业对账分页 -->
+	<select id="getCsUnitBillPage" parameterClass="java.util.HashMap" resultMap="CsUnitBill">
+		select cs_unit_bill$suffix$.* from cs_unit_bill$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.csub_unit=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人]查询-->
+		<isNotNull property="CsubEditor"><!-- 调用一下CsubEditor，把SrvUser指向CsubEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.csub_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询-->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.csub_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_bill$suffix$.csub_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询条件sql片段 -->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitBill_part.cs_unit_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csub_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取企业对账总数 -->
+	<select id="getCsUnitBillEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_unit_bill$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.csub_unit=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人]查询-->
+		<isNotNull property="CsubEditor"><!-- 调用一下CsubEditor，把SrvUser指向CsubEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.csub_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询-->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.csub_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_unit_bill$suffix$.csub_status!=-1
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询条件sql片段 -->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnitBill_part.cs_unit_bill_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取企业对账 -->
+	<select id="getCsUnitBillById" parameterClass="java.util.HashMap" resultMap="CsUnitBill">
+		select cs_unit_bill$suffix$.* from cs_unit_bill$suffix$
+		where csub_id=#id#
+	</select>
+	
+		
+	<!-- 保存企业对账 -->
+	<insert id="saveCsUnitBill"  parameterClass="com.ccclubs.model.CsUnitBill">
+		insert into cs_unit_bill$suffix$
+		(
+			cs_unit_bill$suffix$.csub_host
+			,cs_unit_bill$suffix$.csub_month
+			,cs_unit_bill$suffix$.csub_unit
+			,cs_unit_bill$suffix$.csub_air_s
+			,cs_unit_bill$suffix$.csub_order_s
+			,cs_unit_bill$suffix$.csub_special_s
+			,cs_unit_bill$suffix$.csub_fee_air
+			,cs_unit_bill$suffix$.csub_fee_order
+			,cs_unit_bill$suffix$.csub_fee_special
+			,cs_unit_bill$suffix$.csub_need_pay
+			,cs_unit_bill$suffix$.csub_real_pay
+			,cs_unit_bill$suffix$.csub_editor
+			,cs_unit_bill$suffix$.csub_update_time
+			,cs_unit_bill$suffix$.csub_add_time
+			,cs_unit_bill$suffix$.csub_summary
+			,cs_unit_bill$suffix$.csub_status
+			,cs_unit_bill$suffix$.csub_income
+			,cs_unit_bill$suffix$.csub_payout
+			,cs_unit_bill$suffix$.csub_group
+			,cs_unit_bill$suffix$.csub_mileage
+			,cs_unit_bill$suffix$.csub_duration
+		)
+		values(
+			<isNotNull property="csubHost" prepend="">
+				#csubHost#
+			</isNotNull>
+			<isNull property="csubHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csubMonth" prepend=",">
+				#csubMonth#
+			</isNotNull>
+			<isNull property="csubMonth" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubUnit" prepend=",">
+				#csubUnit#
+			</isNotNull>
+			<isNull property="csubUnit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubAirS" prepend=",">
+				#csubAirS#
+			</isNotNull>
+			<isNull property="csubAirS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubOrderS" prepend=",">
+				#csubOrderS#
+			</isNotNull>
+			<isNull property="csubOrderS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubSpecialS" prepend=",">
+				#csubSpecialS#
+			</isNotNull>
+			<isNull property="csubSpecialS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubFeeAir" prepend=",">
+				#csubFeeAir#
+			</isNotNull>
+			<isNull property="csubFeeAir" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubFeeOrder" prepend=",">
+				#csubFeeOrder#
+			</isNotNull>
+			<isNull property="csubFeeOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubFeeSpecial" prepend=",">
+				#csubFeeSpecial#
+			</isNotNull>
+			<isNull property="csubFeeSpecial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubNeedPay" prepend=",">
+				#csubNeedPay#
+			</isNotNull>
+			<isNull property="csubNeedPay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubRealPay" prepend=",">
+				#csubRealPay#
+			</isNotNull>
+			<isNull property="csubRealPay" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubEditor" prepend=",">
+				#csubEditor#
+			</isNotNull>
+			<isNull property="csubEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubUpdateTime" prepend=",">
+				#csubUpdateTime#
+			</isNotNull>
+			<isNull property="csubUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubAddTime" prepend=",">
+				#csubAddTime#
+			</isNotNull>
+			<isNull property="csubAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubSummary" prepend=",">
+				#csubSummary#
+			</isNotNull>
+			<isNull property="csubSummary" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubStatus" prepend=",">
+				#csubStatus#
+			</isNotNull>
+			<isNull property="csubStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubIncome" prepend=",">
+				#csubIncome#
+			</isNotNull>
+			<isNull property="csubIncome" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubPayout" prepend=",">
+				#csubPayout#
+			</isNotNull>
+			<isNull property="csubPayout" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubGroup" prepend=",">
+				#csubGroup#
+			</isNotNull>
+			<isNull property="csubGroup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubMileage" prepend=",">
+				#csubMileage#
+			</isNotNull>
+			<isNull property="csubMileage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csubDuration" prepend=",">
+				#csubDuration#
+			</isNotNull>
+			<isNull property="csubDuration" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新企业对账 -->
+	<update id="updateCsUnitBill"  parameterClass="com.ccclubs.model.CsUnitBill">
+		update cs_unit_bill$suffix$ set
+			<isNotNull property="csubHost" prepend="">
+				cs_unit_bill$suffix$.csub_host = #csubHost#
+			</isNotNull>
+			<isNull property="csubHost" prepend="">
+				cs_unit_bill$suffix$.csub_host = null
+			</isNull>				
+			<isNotNull property="csubMonth" prepend=",">
+				cs_unit_bill$suffix$.csub_month = #csubMonth#
+			</isNotNull>
+			<isNull property="csubMonth" prepend=",">
+				cs_unit_bill$suffix$.csub_month = null
+			</isNull>				
+			<isNotNull property="csubUnit" prepend=",">
+				cs_unit_bill$suffix$.csub_unit = #csubUnit#
+			</isNotNull>
+			<isNull property="csubUnit" prepend=",">
+				cs_unit_bill$suffix$.csub_unit = null
+			</isNull>				
+			<isNotNull property="csubAirS" prepend=",">
+				cs_unit_bill$suffix$.csub_air_s = #csubAirS#
+			</isNotNull>
+			<isNull property="csubAirS" prepend=",">
+				cs_unit_bill$suffix$.csub_air_s = null
+			</isNull>				
+			<isNotNull property="csubOrderS" prepend=",">
+				cs_unit_bill$suffix$.csub_order_s = #csubOrderS#
+			</isNotNull>
+			<isNull property="csubOrderS" prepend=",">
+				cs_unit_bill$suffix$.csub_order_s = null
+			</isNull>				
+			<isNotNull property="csubSpecialS" prepend=",">
+				cs_unit_bill$suffix$.csub_special_s = #csubSpecialS#
+			</isNotNull>
+			<isNull property="csubSpecialS" prepend=",">
+				cs_unit_bill$suffix$.csub_special_s = null
+			</isNull>				
+			<isNotNull property="csubFeeAir" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_air = #csubFeeAir#
+			</isNotNull>
+			<isNull property="csubFeeAir" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_air = null
+			</isNull>				
+			<isNotNull property="csubFeeOrder" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_order = #csubFeeOrder#
+			</isNotNull>
+			<isNull property="csubFeeOrder" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_order = null
+			</isNull>				
+			<isNotNull property="csubFeeSpecial" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_special = #csubFeeSpecial#
+			</isNotNull>
+			<isNull property="csubFeeSpecial" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_special = null
+			</isNull>				
+			<isNotNull property="csubNeedPay" prepend=",">
+				cs_unit_bill$suffix$.csub_need_pay = #csubNeedPay#
+			</isNotNull>
+			<isNull property="csubNeedPay" prepend=",">
+				cs_unit_bill$suffix$.csub_need_pay = null
+			</isNull>				
+			<isNotNull property="csubRealPay" prepend=",">
+				cs_unit_bill$suffix$.csub_real_pay = #csubRealPay#
+			</isNotNull>
+			<isNull property="csubRealPay" prepend=",">
+				cs_unit_bill$suffix$.csub_real_pay = null
+			</isNull>				
+			<isNotNull property="csubEditor" prepend=",">
+				cs_unit_bill$suffix$.csub_editor = #csubEditor#
+			</isNotNull>
+			<isNull property="csubEditor" prepend=",">
+				cs_unit_bill$suffix$.csub_editor = null
+			</isNull>				
+			<isNotNull property="csubUpdateTime" prepend=",">
+				cs_unit_bill$suffix$.csub_update_time = #csubUpdateTime#
+			</isNotNull>
+			<isNull property="csubUpdateTime" prepend=",">
+				cs_unit_bill$suffix$.csub_update_time = null
+			</isNull>				
+			<isNotNull property="csubAddTime" prepend=",">
+				cs_unit_bill$suffix$.csub_add_time = #csubAddTime#
+			</isNotNull>
+			<isNull property="csubAddTime" prepend=",">
+				cs_unit_bill$suffix$.csub_add_time = null
+			</isNull>				
+			<isNotNull property="csubSummary" prepend=",">
+				cs_unit_bill$suffix$.csub_summary = #csubSummary#
+			</isNotNull>
+			<isNull property="csubSummary" prepend=",">
+				cs_unit_bill$suffix$.csub_summary = null
+			</isNull>				
+			<isNotNull property="csubStatus" prepend=",">
+				cs_unit_bill$suffix$.csub_status = #csubStatus#
+			</isNotNull>
+			<isNull property="csubStatus" prepend=",">
+				cs_unit_bill$suffix$.csub_status = null
+			</isNull>				
+			<isNotNull property="csubIncome" prepend=",">
+				cs_unit_bill$suffix$.csub_income = #csubIncome#
+			</isNotNull>
+			<isNull property="csubIncome" prepend=",">
+				cs_unit_bill$suffix$.csub_income = null
+			</isNull>				
+			<isNotNull property="csubPayout" prepend=",">
+				cs_unit_bill$suffix$.csub_payout = #csubPayout#
+			</isNotNull>
+			<isNull property="csubPayout" prepend=",">
+				cs_unit_bill$suffix$.csub_payout = null
+			</isNull>				
+			<isNotNull property="csubGroup" prepend=",">
+				cs_unit_bill$suffix$.csub_group = #csubGroup#
+			</isNotNull>
+			<isNull property="csubGroup" prepend=",">
+				cs_unit_bill$suffix$.csub_group = null
+			</isNull>				
+			<isNotNull property="csubMileage" prepend=",">
+				cs_unit_bill$suffix$.csub_mileage = #csubMileage#
+			</isNotNull>
+			<isNull property="csubMileage" prepend=",">
+				cs_unit_bill$suffix$.csub_mileage = null
+			</isNull>				
+			<isNotNull property="csubDuration" prepend=",">
+				cs_unit_bill$suffix$.csub_duration = #csubDuration#
+			</isNotNull>
+			<isNull property="csubDuration" prepend=",">
+				cs_unit_bill$suffix$.csub_duration = null
+			</isNull>				
+		where
+			csub_id=#csubId#
+	</update>
+	
+	<!-- 更新企业对账非空字段 -->
+	<update id="updateCsUnitBill$NotNull"  parameterClass="com.ccclubs.model.CsUnitBill">
+		update cs_unit_bill$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csubHost" prepend=",">
+				cs_unit_bill$suffix$.csub_host = #csubHost#
+			</isNotNull>		
+			<isNotNull property="csubMonth" prepend=",">
+				cs_unit_bill$suffix$.csub_month = #csubMonth#
+			</isNotNull>		
+			<isNotNull property="csubUnit" prepend=",">
+				cs_unit_bill$suffix$.csub_unit = #csubUnit#
+			</isNotNull>		
+			<isNotNull property="csubAirS" prepend=",">
+				cs_unit_bill$suffix$.csub_air_s = #csubAirS#
+			</isNotNull>		
+			<isNotNull property="csubOrderS" prepend=",">
+				cs_unit_bill$suffix$.csub_order_s = #csubOrderS#
+			</isNotNull>		
+			<isNotNull property="csubSpecialS" prepend=",">
+				cs_unit_bill$suffix$.csub_special_s = #csubSpecialS#
+			</isNotNull>		
+			<isNotNull property="csubFeeAir" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_air = #csubFeeAir#
+			</isNotNull>		
+			<isNotNull property="csubFeeOrder" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_order = #csubFeeOrder#
+			</isNotNull>		
+			<isNotNull property="csubFeeSpecial" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_special = #csubFeeSpecial#
+			</isNotNull>		
+			<isNotNull property="csubNeedPay" prepend=",">
+				cs_unit_bill$suffix$.csub_need_pay = #csubNeedPay#
+			</isNotNull>		
+			<isNotNull property="csubRealPay" prepend=",">
+				cs_unit_bill$suffix$.csub_real_pay = #csubRealPay#
+			</isNotNull>		
+			<isNotNull property="csubEditor" prepend=",">
+				cs_unit_bill$suffix$.csub_editor = #csubEditor#
+			</isNotNull>		
+			<isNotNull property="csubUpdateTime" prepend=",">
+				cs_unit_bill$suffix$.csub_update_time = #csubUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csubAddTime" prepend=",">
+				cs_unit_bill$suffix$.csub_add_time = #csubAddTime#
+			</isNotNull>		
+			<isNotNull property="csubSummary" prepend=",">
+				cs_unit_bill$suffix$.csub_summary = #csubSummary#
+			</isNotNull>		
+			<isNotNull property="csubStatus" prepend=",">
+				cs_unit_bill$suffix$.csub_status = #csubStatus#
+			</isNotNull>		
+			<isNotNull property="csubIncome" prepend=",">
+				cs_unit_bill$suffix$.csub_income = #csubIncome#
+			</isNotNull>		
+			<isNotNull property="csubPayout" prepend=",">
+				cs_unit_bill$suffix$.csub_payout = #csubPayout#
+			</isNotNull>		
+			<isNotNull property="csubGroup" prepend=",">
+				cs_unit_bill$suffix$.csub_group = #csubGroup#
+			</isNotNull>		
+			<isNotNull property="csubMileage" prepend=",">
+				cs_unit_bill$suffix$.csub_mileage = #csubMileage#
+			</isNotNull>		
+			<isNotNull property="csubDuration" prepend=",">
+				cs_unit_bill$suffix$.csub_duration = #csubDuration#
+			</isNotNull>		
+			</dynamic>
+		where
+			csub_id=#csubId#
+	</update>
+	
+
+	<!-- 根据ID删除一个企业对账 -->
+	<delete id="deleteCsUnitBillById" parameterClass="java.util.HashMap">
+		delete from cs_unit_bill$suffix$ where csub_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个企业对账 -->
+	<update id="removeCsUnitBillById" parameterClass="java.util.HashMap">
+		update cs_unit_bill$suffix$ set  cs_unit_bill$suffix$.csub_status=-1  where csub_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新企业对账 -->
+	<update id="updateCsUnitBillBy"  parameterClass="java.util.HashMap">
+		update cs_unit_bill$suffix$ set		
+			csub_id=csub_id
+			<isNotNull property="V_csubId" prepend=",">
+				cs_unit_bill$suffix$.csub_id = #V_csubId#
+			</isNotNull>		
+			<isNotNull property="V_csubHost" prepend=",">
+				cs_unit_bill$suffix$.csub_host = #V_csubHost#
+			</isNotNull>		
+			<isNotNull property="V_csubMonth" prepend=",">
+				cs_unit_bill$suffix$.csub_month = #V_csubMonth#
+			</isNotNull>		
+			<isNotNull property="V_csubUnit" prepend=",">
+				cs_unit_bill$suffix$.csub_unit = #V_csubUnit#
+			</isNotNull>		
+			<isNotNull property="V_csubAirS" prepend=",">
+				cs_unit_bill$suffix$.csub_air_s = #V_csubAirS#
+			</isNotNull>		
+			<isNotNull property="V_csubOrderS" prepend=",">
+				cs_unit_bill$suffix$.csub_order_s = #V_csubOrderS#
+			</isNotNull>		
+			<isNotNull property="V_csubSpecialS" prepend=",">
+				cs_unit_bill$suffix$.csub_special_s = #V_csubSpecialS#
+			</isNotNull>		
+			<isNotNull property="V_csubFeeAir" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_air = #V_csubFeeAir#
+			</isNotNull>		
+			<isNotNull property="V_csubFeeOrder" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_order = #V_csubFeeOrder#
+			</isNotNull>		
+			<isNotNull property="V_csubFeeSpecial" prepend=",">
+				cs_unit_bill$suffix$.csub_fee_special = #V_csubFeeSpecial#
+			</isNotNull>		
+			<isNotNull property="V_csubNeedPay" prepend=",">
+				cs_unit_bill$suffix$.csub_need_pay = #V_csubNeedPay#
+			</isNotNull>		
+			<isNotNull property="V_csubRealPay" prepend=",">
+				cs_unit_bill$suffix$.csub_real_pay = #V_csubRealPay#
+			</isNotNull>		
+			<isNotNull property="V_csubEditor" prepend=",">
+				cs_unit_bill$suffix$.csub_editor = #V_csubEditor#
+			</isNotNull>		
+			<isNotNull property="V_csubUpdateTime" prepend=",">
+				cs_unit_bill$suffix$.csub_update_time = #V_csubUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csubAddTime" prepend=",">
+				cs_unit_bill$suffix$.csub_add_time = #V_csubAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csubSummary" prepend=",">
+				cs_unit_bill$suffix$.csub_summary = #V_csubSummary#
+			</isNotNull>		
+			<isNotNull property="V_csubStatus" prepend=",">
+				cs_unit_bill$suffix$.csub_status = #V_csubStatus#
+			</isNotNull>		
+			<isNotNull property="V_csubIncome" prepend=",">
+				cs_unit_bill$suffix$.csub_income = #V_csubIncome#
+			</isNotNull>		
+			<isNotNull property="V_csubPayout" prepend=",">
+				cs_unit_bill$suffix$.csub_payout = #V_csubPayout#
+			</isNotNull>		
+			<isNotNull property="V_csubGroup" prepend=",">
+				cs_unit_bill$suffix$.csub_group = #V_csubGroup#
+			</isNotNull>		
+			<isNotNull property="V_csubMileage" prepend=",">
+				cs_unit_bill$suffix$.csub_mileage = #V_csubMileage#
+			</isNotNull>		
+			<isNotNull property="V_csubDuration" prepend=",">
+				cs_unit_bill$suffix$.csub_duration = #V_csubDuration#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[所属单位]查询-->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<isNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.csub_unit=cs_unit_info$CsUnitInfo.suffix$.csui_id
+			</isNull>
+			<isNotNull property="CsUnitInfo.on">
+				left join cs_unit_info cs_unit_info$CsUnitInfo.suffix$ on cs_unit_bill$suffix$.$CsUnitInfo.on$=cs_unit_info$CsUnitInfo.suffix$.csui_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[修改人]查询-->
+		<isNotNull property="CsubEditor"><!-- 调用一下CsubEditor，把SrvUser指向CsubEditor --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.csub_editor=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_unit_bill$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询-->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<isNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.csub_group=cs_unit_group$CsUnitGroup.suffix$.csug_id
+			</isNull>
+			<isNotNull property="CsUnitGroup.on">
+				left join cs_unit_group cs_unit_group$CsUnitGroup.suffix$ on cs_unit_bill$suffix$.$CsUnitGroup.on$=cs_unit_group$CsUnitGroup.suffix$.csug_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_unit_bill$suffix$.csub_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[所属单位]查询条件sql片段 -->
+		<isNotNull property="CsubUnit"><!-- 调用一下CsubUnit，把CsUnitInfo指向CsubUnit --></isNotNull>
+		<isNotNull property="CsUnitInfo">
+			<include refid="CsUnitInfo_part.cs_unit_info_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[部门]查询条件sql片段 -->
+		<isNotNull property="CsubGroup"><!-- 调用一下CsubGroup，把CsUnitGroup指向CsubGroup --></isNotNull>
+		<isNotNull property="CsUnitGroup">
+			<include refid="CsUnitGroup_part.cs_unit_group_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnitBill_part.cs_unit_bill_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除企业对账 -->
+	<update id="deleteCsUnitBillBy"  parameterClass="java.util.HashMap">
+		delete from cs_unit_bill$suffix$ where 
+		cs_unit_bill$suffix$.csub_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnitBill_part.cs_unit_bill_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

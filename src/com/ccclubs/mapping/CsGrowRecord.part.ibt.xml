@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsGrowRecord_part">	
+	<!-- 成长记录条件sql片段  -->
+	<sql id="cs_grow_record_dynamic">
+		<dynamic>
+			<isNotEmpty property="csgrId" prepend="and">
+			    $csgrIdNot$ cs_grow_record$suffix$.csgr_id = #csgrId#
+			</isNotEmpty>
+			<isNotNull property="csgrIdNot" prepend="and">
+				<isEmpty property="csgrId">
+				$csgrIdNot$ cs_grow_record$suffix$.csgr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_grow_record$suffix$.csgr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csgrHost" prepend="and">
+			    $csgrHostNot$ cs_grow_record$suffix$.csgr_host = #csgrHost#
+			</isNotEmpty>
+			<isNotNull property="csgrHostNot" prepend="and">
+				<isEmpty property="csgrHost">
+				$csgrHostNot$ cs_grow_record$suffix$.csgr_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csgrMember" prepend="and">
+			    $csgrMemberNot$ cs_grow_record$suffix$.csgr_member = #csgrMember#
+			</isNotEmpty>
+			<isNotNull property="csgrMemberNot" prepend="and">
+				<isEmpty property="csgrMember">
+				$csgrMemberNot$ cs_grow_record$suffix$.csgr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgrDesc" prepend="and">			    
+			    (<isNotNull property="csgrDescNot">
+			    cs_grow_record$suffix$.csgr_desc is null or length(cs_grow_record$suffix$.csgr_desc) &lt; 1 or
+			    </isNotNull>$csgrDescNot$ cs_grow_record$suffix$.csgr_desc like #csgrDesc#)
+			</isNotEmpty>
+			<isNotNull property="csgrDescNot" prepend="and">
+				<isEmpty property="csgrDesc">
+				$csgrDescNot$ (cs_grow_record$suffix$.csgr_desc is null or length(cs_grow_record$suffix$.csgr_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgrType" prepend="and">			    
+			    (<isNotNull property="csgrTypeNot">
+			    cs_grow_record$suffix$.csgr_type is null or length(cs_grow_record$suffix$.csgr_type) &lt; 1 or
+			    </isNotNull>$csgrTypeNot$ cs_grow_record$suffix$.csgr_type = #csgrType#)
+			</isNotEmpty>
+			<isNotNull property="csgrTypeNot" prepend="and">
+				<isEmpty property="csgrType">
+				$csgrTypeNot$ (cs_grow_record$suffix$.csgr_type is null or length(cs_grow_record$suffix$.csgr_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgrAmountMin" prepend="and">
+			    $csgrAmountNot$  ( cs_grow_record$suffix$.csgr_amount &gt;= #csgrAmountMin#
+			    <isEmpty property="csgrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgrAmountMax" prepend="and">
+				<isEmpty property="csgrAmountMin">$csgrAmountNot$   (</isEmpty>
+			    cs_grow_record$suffix$.csgr_amount &lt;= #csgrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csgrAmount" prepend="and">
+			    $csgrAmountNot$ cs_grow_record$suffix$.csgr_amount = #csgrAmount#
+			</isNotEmpty>
+			<isNotNull property="csgrAmountNot" prepend="and">
+				<isEmpty property="csgrAmountMax"><isEmpty property="csgrAmountMin"><isEmpty property="csgrAmount">
+				$csgrAmountNot$ cs_grow_record$suffix$.csgr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csgrRelate" prepend="and">
+			    $csgrRelateNot$ cs_grow_record$suffix$.csgr_relate = #csgrRelate#
+			</isNotEmpty>
+			<isNotNull property="csgrRelateNot" prepend="and">
+				<isEmpty property="csgrRelate">
+				$csgrRelateNot$ cs_grow_record$suffix$.csgr_relate is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgrUpdateTimeStart" prepend="and">
+			    $csgrUpdateTimeNot$   (cs_grow_record$suffix$.csgr_update_time &gt;= #csgrUpdateTimeStart#
+			   <isEmpty property="csgrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgrUpdateTimeEnd" prepend="and">
+				<isEmpty property="csgrUpdateTimeStart">$csgrUpdateTimeNot$   (</isEmpty>
+			    cs_grow_record$suffix$.csgr_update_time &lt;= #csgrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgrUpdateTime" prepend="and">
+			    $csgrUpdateTimeNot$ cs_grow_record$suffix$.csgr_update_time = #csgrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csgrUpdateTimeNot" prepend="and">
+				<isEmpty property="csgrUpdateTimeStart"><isEmpty property="csgrUpdateTimeEnd"><isEmpty property="csgrUpdateTime">
+				$csgrUpdateTimeNot$ cs_grow_record$suffix$.csgr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgrAddTimeStart" prepend="and">
+			    $csgrAddTimeNot$   (cs_grow_record$suffix$.csgr_add_time &gt;= #csgrAddTimeStart#
+			   <isEmpty property="csgrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csgrAddTimeEnd" prepend="and">
+				<isEmpty property="csgrAddTimeStart">$csgrAddTimeNot$   (</isEmpty>
+			    cs_grow_record$suffix$.csgr_add_time &lt;= #csgrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csgrAddTime" prepend="and">
+			    $csgrAddTimeNot$ cs_grow_record$suffix$.csgr_add_time = #csgrAddTime#
+			</isNotEmpty>
+			<isNotNull property="csgrAddTimeNot" prepend="and">
+				<isEmpty property="csgrAddTimeStart"><isEmpty property="csgrAddTimeEnd"><isEmpty property="csgrAddTime">
+				$csgrAddTimeNot$ cs_grow_record$suffix$.csgr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csgrStatus" prepend="and">
+			    $csgrStatusNot$ cs_grow_record$suffix$.csgr_status = #csgrStatus#
+			</isNotEmpty>
+			<isNotNull property="csgrStatusNot" prepend="and">
+				<isEmpty property="csgrStatus">
+				$csgrStatusNot$ cs_grow_record$suffix$.csgr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 成长记录left join 条件sql片段 -->
+	<sql id="cs_grow_record_join">
+		<dynamic>
+			<isNotEmpty property="CsGrowRecord.csgrId" prepend="and">
+			    $CsGrowRecord.csgrIdNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_id = #CsGrowRecord.csgrId#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrIdNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrId">
+				$csgrIdNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_grow_record$CsGrowRecord.suffix$.csgr_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrHost" prepend="and">
+			    $CsGrowRecord.csgrHostNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_host = #CsGrowRecord.csgrHost#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrHostNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrHost">
+				$csgrHostNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrMember" prepend="and">
+			    $CsGrowRecord.csgrMemberNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_member = #CsGrowRecord.csgrMember#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrMemberNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrMember">
+				$csgrMemberNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_member is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrDesc" prepend="and">
+				(<isNotNull property="CsGrowRecord.csgrDescNot">
+			    cs_grow_record$CsGrowRecord.suffix$.csgr_desc is null or length(cs_grow_record$CsGrowRecord.suffix$.csgr_desc) &lt; 1 or
+			    </isNotNull>$CsGrowRecord.csgrDescNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_desc like #CsGrowRecord.csgrDesc#)
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrDescNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrDesc">
+				$csgrDescNot$ (cs_grow_record$CsGrowRecord.suffix$.csgr_desc is null or length(cs_grow_record$CsGrowRecord.suffix$.csgr_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrType" prepend="and">
+				(<isNotNull property="CsGrowRecord.csgrTypeNot">
+			    cs_grow_record$CsGrowRecord.suffix$.csgr_type is null or length(cs_grow_record$CsGrowRecord.suffix$.csgr_type) &lt; 1 or
+			    </isNotNull>$CsGrowRecord.csgrTypeNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_type = #CsGrowRecord.csgrType#)
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrTypeNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrType">
+				$csgrTypeNot$ (cs_grow_record$CsGrowRecord.suffix$.csgr_type is null or length(cs_grow_record$CsGrowRecord.suffix$.csgr_type) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrAmountMin" prepend="and">
+			    $CsGrowRecord.csgrAmountNot$  ( cs_grow_record$CsGrowRecord.suffix$.csgr_amount &gt;= #CsGrowRecord.csgrAmountMin#
+			    <isEmpty property="CsGrowRecord.csgrAmountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrAmountMax" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrAmountMin">$CsGrowRecord.csgrAmountNot$   (</isEmpty>
+			    cs_grow_record$CsGrowRecord.suffix$.csgr_amount &lt;= #CsGrowRecord.csgrAmountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrAmount" prepend="and">
+			    $CsGrowRecord.csgrAmountNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_amount = #CsGrowRecord.csgrAmount#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrAmountNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrAmountMax"><isEmpty property="CsGrowRecord.csgrAmountMin"><isEmpty property="CsGrowRecord.csgrAmount">
+				$csgrAmountNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_amount is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrRelate" prepend="and">
+			    $CsGrowRecord.csgrRelateNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_relate = #CsGrowRecord.csgrRelate#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrRelateNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrRelate">
+				$csgrRelateNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_relate is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrUpdateTimeStart" prepend="and">
+			    $CsGrowRecord.csgrUpdateTimeNot$   (cs_grow_record$CsGrowRecord.suffix$.csgr_update_time &gt;= #CsGrowRecord.csgrUpdateTimeStart#
+			   <isEmpty property="CsGrowRecord.csgrUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrUpdateTimeStart">$CsGrowRecord.csgrUpdateTimeNot$   (</isEmpty>
+			    cs_grow_record$CsGrowRecord.suffix$.csgr_update_time &lt;= #CsGrowRecord.csgrUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrUpdateTime" prepend="and">
+			    $CsGrowRecord.csgrUpdateTimeNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_update_time = #CsGrowRecord.csgrUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrUpdateTimeNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrUpdateTimeStart"><isEmpty property="CsGrowRecord.csgrUpdateTimeEnd"><isEmpty property="CsGrowRecord.csgrUpdateTime">
+				$csgrUpdateTimeNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrAddTimeStart" prepend="and">
+			    $CsGrowRecord.csgrAddTimeNot$   (cs_grow_record$CsGrowRecord.suffix$.csgr_add_time &gt;= #CsGrowRecord.csgrAddTimeStart#
+			   <isEmpty property="CsGrowRecord.csgrAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrAddTimeEnd" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrAddTimeStart">$CsGrowRecord.csgrAddTimeNot$   (</isEmpty>
+			    cs_grow_record$CsGrowRecord.suffix$.csgr_add_time &lt;= #CsGrowRecord.csgrAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsGrowRecord.csgrAddTime" prepend="and">
+			    $CsGrowRecord.csgrAddTimeNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_add_time = #CsGrowRecord.csgrAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrAddTimeNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrAddTimeStart"><isEmpty property="CsGrowRecord.csgrAddTimeEnd"><isEmpty property="CsGrowRecord.csgrAddTime">
+				$csgrAddTimeNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsGrowRecord.csgrStatus" prepend="and">
+			    $CsGrowRecord.csgrStatusNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_status = #CsGrowRecord.csgrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsGrowRecord.csgrStatusNot" prepend="and">
+				<isEmpty property="CsGrowRecord.csgrStatus">
+				$csgrStatusNot$ cs_grow_record$CsGrowRecord.suffix$.csgr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsPromotion_part">	
+	<!-- 促销配置条件sql片段  -->
+	<sql id="cs_promotion_dynamic">
+		<dynamic>
+			<isNotEmpty property="cspId" prepend="and">
+			    $cspIdNot$ cs_promotion$suffix$.csp_id = #cspId#
+			</isNotEmpty>
+			<isNotNull property="cspIdNot" prepend="and">
+				<isEmpty property="cspId">
+				$cspIdNot$ cs_promotion$suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_promotion$suffix$.csp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cspHost" prepend="and">
+			    $cspHostNot$ cs_promotion$suffix$.csp_host = #cspHost#
+			</isNotEmpty>
+			<isNotNull property="cspHostNot" prepend="and">
+				<isEmpty property="cspHost">
+				$cspHostNot$ cs_promotion$suffix$.csp_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cspName" prepend="and">			    
+			    (<isNotNull property="cspNameNot">
+			    cs_promotion$suffix$.csp_name is null or length(cs_promotion$suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$cspNameNot$ cs_promotion$suffix$.csp_name like #cspName#)
+			</isNotEmpty>
+			<isNotNull property="cspNameNot" prepend="and">
+				<isEmpty property="cspName">
+				$cspNameNot$ (cs_promotion$suffix$.csp_name is null or length(cs_promotion$suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspActivity" prepend="and">
+			    $cspActivityNot$ cs_promotion$suffix$.csp_activity = #cspActivity#
+			</isNotEmpty>
+			<isNotNull property="cspActivityNot" prepend="and">
+				<isEmpty property="cspActivity">
+				$cspActivityNot$ cs_promotion$suffix$.csp_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspType" prepend="and">
+			    $cspTypeNot$ cs_promotion$suffix$.csp_type = #cspType#
+			</isNotEmpty>
+			<isNotNull property="cspTypeNot" prepend="and">
+				<isEmpty property="cspType">
+				$cspTypeNot$ cs_promotion$suffix$.csp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspRechargeMin" prepend="and">
+			    $cspRechargeNot$  ( cs_promotion$suffix$.csp_recharge &gt;= #cspRechargeMin#
+			    <isEmpty property="cspRechargeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspRechargeMax" prepend="and">
+				<isEmpty property="cspRechargeMin">$cspRechargeNot$   (</isEmpty>
+			    cs_promotion$suffix$.csp_recharge &lt;= #cspRechargeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspRecharge" prepend="and">
+			    $cspRechargeNot$ cs_promotion$suffix$.csp_recharge = #cspRecharge#
+			</isNotEmpty>
+			<isNotNull property="cspRechargeNot" prepend="and">
+				<isEmpty property="cspRechargeMax"><isEmpty property="cspRechargeMin"><isEmpty property="cspRecharge">
+				$cspRechargeNot$ cs_promotion$suffix$.csp_recharge is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspConsumeMin" prepend="and">
+			    $cspConsumeNot$  ( cs_promotion$suffix$.csp_consume &gt;= #cspConsumeMin#
+			    <isEmpty property="cspConsumeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspConsumeMax" prepend="and">
+				<isEmpty property="cspConsumeMin">$cspConsumeNot$   (</isEmpty>
+			    cs_promotion$suffix$.csp_consume &lt;= #cspConsumeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspConsume" prepend="and">
+			    $cspConsumeNot$ cs_promotion$suffix$.csp_consume = #cspConsume#
+			</isNotEmpty>
+			<isNotNull property="cspConsumeNot" prepend="and">
+				<isEmpty property="cspConsumeMax"><isEmpty property="cspConsumeMin"><isEmpty property="cspConsume">
+				$cspConsumeNot$ cs_promotion$suffix$.csp_consume is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspPriceMin" prepend="and">
+			    $cspPriceNot$  ( cs_promotion$suffix$.csp_price &gt;= #cspPriceMin#
+			    <isEmpty property="cspPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspPriceMax" prepend="and">
+				<isEmpty property="cspPriceMin">$cspPriceNot$   (</isEmpty>
+			    cs_promotion$suffix$.csp_price &lt;= #cspPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cspPrice" prepend="and">
+			    $cspPriceNot$ cs_promotion$suffix$.csp_price = #cspPrice#
+			</isNotEmpty>
+			<isNotNull property="cspPriceNot" prepend="and">
+				<isEmpty property="cspPriceMax"><isEmpty property="cspPriceMin"><isEmpty property="cspPrice">
+				$cspPriceNot$ cs_promotion$suffix$.csp_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cspPackage" prepend="and">
+			    $cspPackageNot$ cs_promotion$suffix$.csp_package = #cspPackage#
+			</isNotEmpty>
+			<isNotNull property="cspPackageNot" prepend="and">
+				<isEmpty property="cspPackage">
+				$cspPackageNot$ cs_promotion$suffix$.csp_package is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspItems" prepend="and">
+			    $cspItemsNot$ cs_promotion$suffix$.csp_items = #cspItems#
+			</isNotEmpty>
+			<isNotNull property="cspItemsNot" prepend="and">
+				<isEmpty property="cspItems">
+				$cspItemsNot$ cs_promotion$suffix$.csp_items is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspPresents" prepend="and">
+			    $cspPresentsNot$ cs_promotion$suffix$.csp_presents = #cspPresents#
+			</isNotEmpty>
+			<isNotNull property="cspPresentsNot" prepend="and">
+				<isEmpty property="cspPresents">
+				$cspPresentsNot$ cs_promotion$suffix$.csp_presents is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspUpdateTimeStart" prepend="and">
+			    $cspUpdateTimeNot$   (cs_promotion$suffix$.csp_update_time &gt;= #cspUpdateTimeStart#
+			   <isEmpty property="cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="cspUpdateTimeStart">$cspUpdateTimeNot$   (</isEmpty>
+			    cs_promotion$suffix$.csp_update_time &lt;= #cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspUpdateTime" prepend="and">
+			    $cspUpdateTimeNot$ cs_promotion$suffix$.csp_update_time = #cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cspUpdateTimeNot" prepend="and">
+				<isEmpty property="cspUpdateTimeStart"><isEmpty property="cspUpdateTimeEnd"><isEmpty property="cspUpdateTime">
+				$cspUpdateTimeNot$ cs_promotion$suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspAddTimeStart" prepend="and">
+			    $cspAddTimeNot$   (cs_promotion$suffix$.csp_add_time &gt;= #cspAddTimeStart#
+			   <isEmpty property="cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTimeEnd" prepend="and">
+				<isEmpty property="cspAddTimeStart">$cspAddTimeNot$   (</isEmpty>
+			    cs_promotion$suffix$.csp_add_time &lt;= #cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cspAddTime" prepend="and">
+			    $cspAddTimeNot$ cs_promotion$suffix$.csp_add_time = #cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="cspAddTimeNot" prepend="and">
+				<isEmpty property="cspAddTimeStart"><isEmpty property="cspAddTimeEnd"><isEmpty property="cspAddTime">
+				$cspAddTimeNot$ cs_promotion$suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cspStatus" prepend="and">
+			    $cspStatusNot$ cs_promotion$suffix$.csp_status = #cspStatus#
+			</isNotEmpty>
+			<isNotNull property="cspStatusNot" prepend="and">
+				<isEmpty property="cspStatus">
+				$cspStatusNot$ cs_promotion$suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 促销配置left join 条件sql片段 -->
+	<sql id="cs_promotion_join">
+		<dynamic>
+			<isNotEmpty property="CsPromotion.cspId" prepend="and">
+			    $CsPromotion.cspIdNot$ cs_promotion$CsPromotion.suffix$.csp_id = #CsPromotion.cspId#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspIdNot" prepend="and">
+				<isEmpty property="CsPromotion.cspId">
+				$cspIdNot$ cs_promotion$CsPromotion.suffix$.csp_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_promotion$CsPromotion.suffix$.csp_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspHost" prepend="and">
+			    $CsPromotion.cspHostNot$ cs_promotion$CsPromotion.suffix$.csp_host = #CsPromotion.cspHost#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspHostNot" prepend="and">
+				<isEmpty property="CsPromotion.cspHost">
+				$cspHostNot$ cs_promotion$CsPromotion.suffix$.csp_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspName" prepend="and">
+				(<isNotNull property="CsPromotion.cspNameNot">
+			    cs_promotion$CsPromotion.suffix$.csp_name is null or length(cs_promotion$CsPromotion.suffix$.csp_name) &lt; 1 or
+			    </isNotNull>$CsPromotion.cspNameNot$ cs_promotion$CsPromotion.suffix$.csp_name like #CsPromotion.cspName#)
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspNameNot" prepend="and">
+				<isEmpty property="CsPromotion.cspName">
+				$cspNameNot$ (cs_promotion$CsPromotion.suffix$.csp_name is null or length(cs_promotion$CsPromotion.suffix$.csp_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspActivity" prepend="and">
+			    $CsPromotion.cspActivityNot$ cs_promotion$CsPromotion.suffix$.csp_activity = #CsPromotion.cspActivity#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspActivityNot" prepend="and">
+				<isEmpty property="CsPromotion.cspActivity">
+				$cspActivityNot$ cs_promotion$CsPromotion.suffix$.csp_activity is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspType" prepend="and">
+			    $CsPromotion.cspTypeNot$ cs_promotion$CsPromotion.suffix$.csp_type = #CsPromotion.cspType#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspTypeNot" prepend="and">
+				<isEmpty property="CsPromotion.cspType">
+				$cspTypeNot$ cs_promotion$CsPromotion.suffix$.csp_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspRechargeMin" prepend="and">
+			    $CsPromotion.cspRechargeNot$  ( cs_promotion$CsPromotion.suffix$.csp_recharge &gt;= #CsPromotion.cspRechargeMin#
+			    <isEmpty property="CsPromotion.cspRechargeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspRechargeMax" prepend="and">
+				<isEmpty property="CsPromotion.cspRechargeMin">$CsPromotion.cspRechargeNot$   (</isEmpty>
+			    cs_promotion$CsPromotion.suffix$.csp_recharge &lt;= #CsPromotion.cspRechargeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspRecharge" prepend="and">
+			    $CsPromotion.cspRechargeNot$ cs_promotion$CsPromotion.suffix$.csp_recharge = #CsPromotion.cspRecharge#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspRechargeNot" prepend="and">
+				<isEmpty property="CsPromotion.cspRechargeMax"><isEmpty property="CsPromotion.cspRechargeMin"><isEmpty property="CsPromotion.cspRecharge">
+				$cspRechargeNot$ cs_promotion$CsPromotion.suffix$.csp_recharge is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspConsumeMin" prepend="and">
+			    $CsPromotion.cspConsumeNot$  ( cs_promotion$CsPromotion.suffix$.csp_consume &gt;= #CsPromotion.cspConsumeMin#
+			    <isEmpty property="CsPromotion.cspConsumeMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspConsumeMax" prepend="and">
+				<isEmpty property="CsPromotion.cspConsumeMin">$CsPromotion.cspConsumeNot$   (</isEmpty>
+			    cs_promotion$CsPromotion.suffix$.csp_consume &lt;= #CsPromotion.cspConsumeMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspConsume" prepend="and">
+			    $CsPromotion.cspConsumeNot$ cs_promotion$CsPromotion.suffix$.csp_consume = #CsPromotion.cspConsume#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspConsumeNot" prepend="and">
+				<isEmpty property="CsPromotion.cspConsumeMax"><isEmpty property="CsPromotion.cspConsumeMin"><isEmpty property="CsPromotion.cspConsume">
+				$cspConsumeNot$ cs_promotion$CsPromotion.suffix$.csp_consume is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspPriceMin" prepend="and">
+			    $CsPromotion.cspPriceNot$  ( cs_promotion$CsPromotion.suffix$.csp_price &gt;= #CsPromotion.cspPriceMin#
+			    <isEmpty property="CsPromotion.cspPriceMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspPriceMax" prepend="and">
+				<isEmpty property="CsPromotion.cspPriceMin">$CsPromotion.cspPriceNot$   (</isEmpty>
+			    cs_promotion$CsPromotion.suffix$.csp_price &lt;= #CsPromotion.cspPriceMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspPrice" prepend="and">
+			    $CsPromotion.cspPriceNot$ cs_promotion$CsPromotion.suffix$.csp_price = #CsPromotion.cspPrice#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspPriceNot" prepend="and">
+				<isEmpty property="CsPromotion.cspPriceMax"><isEmpty property="CsPromotion.cspPriceMin"><isEmpty property="CsPromotion.cspPrice">
+				$cspPriceNot$ cs_promotion$CsPromotion.suffix$.csp_price is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspPackage" prepend="and">
+			    $CsPromotion.cspPackageNot$ cs_promotion$CsPromotion.suffix$.csp_package = #CsPromotion.cspPackage#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspPackageNot" prepend="and">
+				<isEmpty property="CsPromotion.cspPackage">
+				$cspPackageNot$ cs_promotion$CsPromotion.suffix$.csp_package is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspItems" prepend="and">
+			    $CsPromotion.cspItemsNot$ cs_promotion$CsPromotion.suffix$.csp_items = #CsPromotion.cspItems#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspItemsNot" prepend="and">
+				<isEmpty property="CsPromotion.cspItems">
+				$cspItemsNot$ cs_promotion$CsPromotion.suffix$.csp_items is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspPresents" prepend="and">
+			    $CsPromotion.cspPresentsNot$ cs_promotion$CsPromotion.suffix$.csp_presents = #CsPromotion.cspPresents#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspPresentsNot" prepend="and">
+				<isEmpty property="CsPromotion.cspPresents">
+				$cspPresentsNot$ cs_promotion$CsPromotion.suffix$.csp_presents is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspUpdateTimeStart" prepend="and">
+			    $CsPromotion.cspUpdateTimeNot$   (cs_promotion$CsPromotion.suffix$.csp_update_time &gt;= #CsPromotion.cspUpdateTimeStart#
+			   <isEmpty property="CsPromotion.cspUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsPromotion.cspUpdateTimeStart">$CsPromotion.cspUpdateTimeNot$   (</isEmpty>
+			    cs_promotion$CsPromotion.suffix$.csp_update_time &lt;= #CsPromotion.cspUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspUpdateTime" prepend="and">
+			    $CsPromotion.cspUpdateTimeNot$ cs_promotion$CsPromotion.suffix$.csp_update_time = #CsPromotion.cspUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspUpdateTimeNot" prepend="and">
+				<isEmpty property="CsPromotion.cspUpdateTimeStart"><isEmpty property="CsPromotion.cspUpdateTimeEnd"><isEmpty property="CsPromotion.cspUpdateTime">
+				$cspUpdateTimeNot$ cs_promotion$CsPromotion.suffix$.csp_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspAddTimeStart" prepend="and">
+			    $CsPromotion.cspAddTimeNot$   (cs_promotion$CsPromotion.suffix$.csp_add_time &gt;= #CsPromotion.cspAddTimeStart#
+			   <isEmpty property="CsPromotion.cspAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspAddTimeEnd" prepend="and">
+				<isEmpty property="CsPromotion.cspAddTimeStart">$CsPromotion.cspAddTimeNot$   (</isEmpty>
+			    cs_promotion$CsPromotion.suffix$.csp_add_time &lt;= #CsPromotion.cspAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsPromotion.cspAddTime" prepend="and">
+			    $CsPromotion.cspAddTimeNot$ cs_promotion$CsPromotion.suffix$.csp_add_time = #CsPromotion.cspAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspAddTimeNot" prepend="and">
+				<isEmpty property="CsPromotion.cspAddTimeStart"><isEmpty property="CsPromotion.cspAddTimeEnd"><isEmpty property="CsPromotion.cspAddTime">
+				$cspAddTimeNot$ cs_promotion$CsPromotion.suffix$.csp_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsPromotion.cspStatus" prepend="and">
+			    $CsPromotion.cspStatusNot$ cs_promotion$CsPromotion.suffix$.csp_status = #CsPromotion.cspStatus#
+			</isNotEmpty>
+			<isNotNull property="CsPromotion.cspStatusNot" prepend="and">
+				<isEmpty property="CsPromotion.cspStatus">
+				$cspStatusNot$ cs_promotion$CsPromotion.suffix$.csp_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

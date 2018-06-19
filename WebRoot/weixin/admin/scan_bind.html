@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>车纷享-用户登录</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="/weixin/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/weixin/css/main.css">
+	</head>
+	<body>
+		<div class="bigmain">
+			<a href="index.html"><div class="loginbanner">
+				<img src="/weixin/images/login_logo.png">
+			</div></a>
+			<div class="loginbox">
+				<div class="loginname">
+					<input id="username" class="login" type="tel" maxlength="20" placeholder="用户名">
+				</div>
+				<div class="loginpw">
+					<input id="password" class="login" maxlength="20" type="password" placeholder="密码">
+				</div>
+			</div>
+			<div class="error" style="display: none;">
+				您的帐号或密码有误,请重新输入。
+			</div>
+			<div class="okbuybtn">
+				<a href="javascript:;" id="btn_login">登录</a>
+			</div>
+			<div class="reglogintx" id="alipay">
+				<span>请使用后台管理帐号登录。</span>
+			</div>
+		</div>
+		<script src="/weixin/js/zepto-1.1.6.min.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function() {
+		// bind events
+			$('#btn_login').bind('click', function() {
+				var strUsername = $.trim($('#username').val());
+				var strPwd = $.trim($('#password').val());
+		
+				if (strUsername == null || strUsername.length == 0) {
+					var msg = "您还没有输入用户名！";
+					$('.error').css("display", "block");
+					$('.error').html(msg);
+					return;
+				}
+				if (strPwd == null || strPwd.length == 0) {
+					var msg = "您还没有输入密码！";
+					$('.error').css("display", "block");
+					$('.error').html(msg);
+					return;
+				}
+				var ajax = {
+					url: "scan_bindSubmit.html",
+					type: "POST",
+					data: {
+						username: strUsername,
+						password: strPwd
+					},
+					async: true,
+					success: function(data) {
+						switch (data) {
+							case "100":
+								var msg = "成功登录，正在跳转...";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								location.href = '/weixin/admin/scan.html';
+								break;
+							case "102":
+								var msg = "您还没有输入用户名！";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "103":
+								var msg = "您还没有输入密码！";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "105":
+								var msg = "您输入的用户名不正确，请重新输入。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "106":
+								var msg = "该帐户已经失效，请联系车纷享。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							case "107":
+								location.href = '/weixin/403.html';
+								break;
+							case "9999":
+								var msg = "系统错误,请稍候再试。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								break;
+							default:
+								var msg = "未知的返回。";
+								$('.error').css("display", "block");
+								$('.error').html(msg);
+								return;
+						}
+					}
+				}
+				$.ajax(ajax);
+			});
+		});
+		</script>
+	</body>
+</html>

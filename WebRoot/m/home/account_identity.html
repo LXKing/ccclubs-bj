@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>身份信息</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-pic.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<div id="content" class="content">
+			<form class="input-group">
+				<div class="input-row" style="height:53px;">
+					<label style="padding-top:15px;">
+						姓名
+					</label>
+					<input type="text" placeholder="请输入姓名" value="${csMember.csmName}" style="text-align: right;padding-right:32px;padding-top:15px;">
+				</div>
+				<ul class="table-view mt15" style="height:53px;margin-bottom: 0px;">
+					<li class="table-view-cell media">
+						<a id="ccc-identity" class="navigate-right">
+							<div class="media-body" >
+								证件类型
+							</div> <span class="badge" >身份证</span> </a>
+					</li>
+
+				</ul>
+				<div class="input-row"  style="height:53px;">
+					<label style="padding-top:15px;">
+						证件号
+					</label>
+					<input  type="text" value="${csMemberDriver}" style="text-align: right;padding-right:32px;padding-top:15px;"><!--  placeholder="请输入证件号码" -->
+				</div>
+			</form>
+			<div class="input-row"  style="height:53px;">
+				<label style="padding-top:15px;">
+					证件审核
+				</label>
+				<s:if test="#request.csMember.csmVDrive==0">
+					<input  type="text" value="未认证" style="text-align: right;padding-right:32px;padding-top:15px;" readonly="readonly">
+				</s:if>
+				<s:elseif test="#request.csMember.csmVDrive==1">
+					<input  type="text" value="已认证" style="text-align: right;padding-right:32px;padding-top:15px;" readonly="readonly">
+				</s:elseif>
+				<s:elseif test="#request.csMember.csmVDrive==2">
+					<input  type="text" value="等待认证" style="text-align: right;padding-right:32px;padding-top:15px;" readonly="readonly">
+				</s:elseif>
+				<s:elseif test="#request.csMember.csmVDrive==3">
+					<input  type="text" value="认证失败" style="text-align: right;padding-right:32px;padding-top:15px;" readonly="readonly">
+				</s:elseif>
+				<s:else>
+					<input  type="text" value="未认证" style="text-align: right;padding-right:32px;padding-top:15px;" readonly="readonly">
+				</s:else>
+			</div>
+			<!-- <div class="mt15 ccc-pic" style="height: 500px;">
+				<div class="ccc-pic-wrap">
+					<div class="ccc-corner-lefttop"></div>
+					<div class="ccc-corner-righttop"></div>
+					<div class="ccc-corner-rightbottom"></div>
+					<div class="ccc-corner-leftbottom"></div>
+					<div class="ccc-img-wrap" style="height: 50%;">
+						<a class="ccc-img"><img src="${ccclubs_web_login.$csmInfo.csmiDriverImage}" width="96%" height="96%"></a>
+					</div>
+					<div class="ccc-img-wrap" style="height: 50%;">
+						<a class="ccc-img"><img src="${ccclubs_web_login.$csmInfo.csmiCertifyImage}" width="96%" height="96%"></a>
+					</div>
+				</div>
+			</div> -->
+			<!-- <div class="wrap-index-reserve">
+				<button id="register-btn" class="btn btn-ccclubs-reserve btn-block">
+					下一步
+				</button>
+			</div> -->
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer">
+				<div id="ccc-overlay"></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+						<div class="panel" data-role="panel">
+							<div class="panel-header">
+								证件类型
+							</div>
+							<div class="panel-content">
+								<ul class="table-modal-view">
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('身份证',1000);">身份证</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('台胞证',1001);">台胞证</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('港澳台通行证',1002);">港澳台通行证</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('护照',1003);">护照</a>
+									</li>
+									<li class="table-modal-view-cell">
+										<a href="javascript:;" onclick="setIdentity('军官证',1004);">军官证</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<!-- <script type="text/javascript" src="../js/page-register-identity.js?v=${lz:config('version')}"></script> -->
+	</body>
+
+</html>

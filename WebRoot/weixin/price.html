@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享-价格查询</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="index.html">返回</a>
+					</div>
+					<div class="showtitle">
+						价格查询
+					</div>
+				</div>
+			</div>
+			<nav class="navbar-default" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="navbarprice">
+				<dl>
+					<dt>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">区域<b class="pcaret">&nbsp;</b> </a>
+						<ul id="ul-csoArea" class="dropdown-menu" role="menu">
+							<s:iterator value="#request.areas" id="item" status="i">
+								<s:if test="#i.last">
+									<li data="${item.csaId}" class="last ${area==item.csaId ?'seled' :''}">
+								</s:if>
+								<s:else>
+									<li data="${item.csaId}" class="${area==item.csaId ?'seled' :''}">
+								</s:else>
+								<a href="#">${item.csaName}</a>
+								</li>
+							</s:iterator>
+						</ul>
+					</dt>
+					<dd>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">网点<b class="pcaret">&nbsp;</b> </a>
+						<ul id="ul-csoOutlets" class="dropdown-menu" role="menu">
+						</ul>
+					</dd>
+					<div class="clear"></div>
+				</dl>
+				<dl>
+					<dt>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">时间<b class="pcaret">&nbsp;</b> </a>
+						<s:if test="#request.hosts==1">
+						<ul id="ul-csoTime" class="dropdown-menu" role="menu">
+							<li class="${time==1 ?'seled' :''}" data="1">
+								<a href="#">工作日</a>
+							</li>
+							<li class="${time==2 ?'seled' :''}" data="2">
+								<a href="#">双休日</a>
+							</li>
+							<li class="last ${time==3 ?'seled' :''}" data="3">
+								<a href="#">节假日</a>
+							</li>
+						</ul>
+						</s:if>
+					</dt>
+					<dd>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">车型<b class="pcaret">&nbsp;</b> </a>
+						<ul id="ul-csoModel" class="dropdown-menu" role="menu">
+							<s:iterator value="#request.carModels" id="item" status="i">
+								<li data="${item.cscmId}" class="${csoModel==item.cscmId ?'seled' :''}">
+									<a href="javascript:;">${item.cscmName}<i></i> </a>
+								</li>
+							</s:iterator>
+						</ul>
+					</dd>
+					<div class="clear"></div>
+				</dl>
+			</div>
+
+			</nav>
+			<div class="buybanner">
+				<img id="vehpic" src="/images/cars/${csoModel}_wide.jpg">
+				<div class="buybannertitle">
+					<b id="vehtype">${csoModelName}</b>
+				</div>
+			</div>
+			<s:if test="#session.ccclubs_web_host.shId==1">
+				<s:if test="#request.time==1">
+					<div class="buybgprice">
+						<dl>
+							<dt>
+								<img src="images/buy_icon1.png">
+								<b>白天档</b>
+								<br>
+								9:00 - 17:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('工作日·白天小时')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+									</p>
+								</s:if>
+								</s:iterator>
+							</dt>
+							<dd>
+								<img src="images/buy_icon2.png">
+								<b>夜间档</b>
+								<br>
+								17:00 - 9:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('工作日·晚上小时')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+									</p>
+								</s:if>
+								</s:iterator>
+							</dd>
+						</dl>
+						<dl>
+							<dt>
+								<img src="images/buy_icon3.png">
+								<b>包全天</b>
+								<br>
+								任意24小时
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('工作日·天租')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/天
+									</p>
+								</s:if>
+								</s:iterator>
+							</dt>
+							<dd>
+								<img src="images/buy_icon4.png">
+								<b>夜间段</b>
+								<br>
+								17:00 - 次日9:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('工作日·晚上包段')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/夜
+									</p>
+								</s:if>
+								</s:iterator>
+							</dd>
+						</dl>
+					</div>
+				</s:if>
+				<s:elseif test="#request.time==2">
+					<div class="buybgprice">
+						<dl>
+							<dt>
+								<img src="images/buy_icon1.png">
+								<b>白天档</b>
+								<br>
+								9:00 - 17:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('双休日·白天小时')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+									</p>
+								</s:if>
+								</s:iterator>
+							</dt>
+							<dd>
+								<img src="images/buy_icon2.png">
+								<b>夜间档</b>
+								<br>
+								17:00 - 9:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('双休日·晚上小时')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+									</p>
+								</s:if>
+								</s:iterator>
+							</dd>
+						</dl>
+						<dl>
+							<dt>
+								<img src="images/buy_icon3.png">
+								<b>包全天</b>
+								<br>
+								任意24小时
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('双休日·天租')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/天
+									</p>
+								</s:if>
+								</s:iterator>
+							</dt>
+							<dd>
+								<img src="images/buy_icon4.png">
+								<b>夜间段</b>
+								<br>
+								17:00 - 次日9:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('双休日·晚上包段')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/夜
+									</p>
+								</s:if>
+								</s:iterator>
+							</dd>
+						</dl>
+					</div>
+				</s:elseif>
+				<s:elseif test="#request.time==3">
+					<div class="buybgprice">
+						<dl>
+							<dt>
+								<img src="images/buy_icon1.png">
+								<b>白天档</b>
+								<br>
+								9:00 - 17:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('节假日·白天小时')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+									</p>
+								</s:if>
+								</s:iterator>
+							</dt>
+							<dd>
+								<img src="images/buy_icon2.png">
+								<b>夜间档</b>
+								<br>
+								17:00 - 9:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('节假日·晚上小时')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+									</p>
+								</s:if>
+								</s:iterator>
+							</dd>
+						</dl>
+						<dl>
+							<dt>
+								<img src="images/buy_icon3.png">
+								<b>包全天</b>
+								<br>
+								任意24小时
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('节假日·天租')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/天
+									</p>
+								</s:if>
+								</s:iterator>
+							</dt>
+							<dd>
+								<img src="images/buy_icon4.png">
+								<b>夜间段</b>
+								<br>
+								17:00 - 次日9:00
+								<s:iterator value="#request.listPrice" id="item" status="i">
+								<s:if test="#item.$cspGoods.csgName.contains('节假日·晚上包段')">
+									<p>
+										<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/夜
+									</p>
+								</s:if>
+								</s:iterator>
+							</dd>
+						</dl>
+					</div>
+				</s:elseif>
+			</s:if>
+			<s:else>
+				<div class="buybgprice">
+					<dl>
+						<dt>
+							<img src="images/buy_icon1.png">
+							<b>一小时</b>
+							<br>
+							（小时）
+							<s:iterator value="#request.listPrice" id="item" status="i">
+							<s:if test="#item.$cspGoods.csgName.contains('租金每小时')">
+								<p>
+									<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/时
+								</p>
+							</s:if>
+							</s:iterator>
+						</dt>
+						<dd>
+							<img src="images/buy_icon2.png">
+							<b>晚上包段</b>
+							<br>
+							18:00 - 8:00
+							<s:iterator value="#request.listPrice" id="item" status="i">
+							<s:if test="#item.$cspGoods.csgName.contains('晚上包段')">
+								<p>
+									<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/夜
+								</p>
+							</s:if>
+							</s:iterator>
+						</dd>
+					</dl>
+					<dl>
+						<dt>
+							<img src="images/buy_icon3.png">
+							<b>包全天</b>
+							<br>
+							全天24小时
+							<s:iterator value="#request.listPrice" id="item" status="i">
+							<s:if test="#item.$cspGoods.csgName.contains('租金每天')">
+								<p>
+									<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/天
+								</p>
+							</s:if>
+							</s:iterator>
+						</dt>
+						<dd>
+							<img src="images/buy_icon4.png">
+							<b>一周</b>
+							<br>
+							连续7天
+							<s:iterator value="#request.listPrice" id="item" status="i">
+							<s:if test="#item.$cspGoods.csgName.contains('租金每周')">
+								<p>
+									<strong class="price">${lz:digit(item.cspPrice,2)}</strong> 元/周
+								</p>
+							</s:if>
+							</s:iterator>
+						</dd>
+					</dl>
+				</div>
+			</s:else>
+		</div>
+		<input id="csoModel" type="hidden" value="${csoModel}" />
+		<input id="csoOutlets" type="hidden" value="${csOutlets}" />
+		<input id="csoArea" type="hidden" value="${area}" />
+		<input id="csoTime" type="hidden" value="${time}" />
+		<input id="cspUserType" type="hidden" value="${cspUserType}" />
+		<%@ include file="include/wheel.html"%>
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<!-- 底部城市切换 -->
+		<script type="text/javascript" src="js/jquery.wheelmenu.min.js"></script>
+		<script src="js/wheel.define.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					setArea();
+					$(document).on('click','#ul-csoArea li a',function(){
+						var li = $(this).parent();
+						$(this).parent().parent().parent().removeClass('open');
+						if (li.hasClass('seled')) {
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoArea').val(li.attr('data'));
+							$('#csoOutlets').val(-1);
+							setArea();
+							getPriceDetail();
+							return false;
+						}
+					});
+					$(document).on('click','#ul-csoOutlets li a',function(){
+						var li = $(this).parent();
+						$(this).parent().parent().parent().removeClass('open');
+						if (li.hasClass('seled')) {
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoOutlets').val(li.attr('data'));
+							getPriceDetail();
+							return false;
+						}
+					});
+					$(document).on('click','#ul-csoModel li a',function(){
+						var li = $(this).parent();
+						$(this).parent().parent().parent().removeClass('open');
+						if (li.hasClass('seled')) {
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoModel').val(li.attr('data'));
+							getPriceDetail();
+							return false;
+						}
+					});
+					
+					$(document).on('click','#ul-csoTime li a',function(){
+						var li = $(this).parent();
+						$(this).parent().parent().parent().removeClass('open');
+						if (li.hasClass('seled')) {
+							return false;
+						} else {
+							li.addClass('seled').siblings().removeClass('seled');
+							$('#csoTime').val(li.attr('data'));
+							getPriceDetail();
+							return false;
+						}
+					});
+					//getPriceDetail();
+				});
+		function getPriceDetail(){
+			var cspOutetsValue = $('#csoOutlets').val();
+			var cspUserTypeValue = $('#cspUserType').val();
+			var cspTimeValue = $('#csoTime').val() ;
+			var cspModel = $('#csoModel').val();
+			window.location.href="price.html?price_outlets="+cspOutetsValue+"&price_time="+cspTimeValue+"&price_carModel="+cspModel;
+		}
+		
+		function setArea(){
+			var value =$('#csoArea').val() ;
+			$('#ul-csoOutlets').html('');
+			$.getJSON("account_outletsByAreaCanorder.html",{area:value,t:new Date().getTime()},function(data) {
+				  //遍历JSON中的每个entry 
+				  $.each(data, function(entryIndex, entry) {
+				  //<li><a href="#">不限网点</a></li>
+				  if($('#csoOutlets').val()==-1){
+				  		if(entryIndex==0){
+				  			$('#csoOutlets').val(entry.csoId);
+				  		}
+				  }
+				  var info = '<li data ="'+entry.csoId;
+				  if($('#csoOutlets').val()== entry.csoId){
+				  		if(entryIndex == data.length-1){
+				  			info=info+'" class="seled last" ><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						  	$(info).appendTo("#ul-csoOutlets");
+				  		}else{
+				  			info=info+'" class="seled" ><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						  	$(info).appendTo("#ul-csoOutlets");
+				  		}
+					 }else{
+						 	if(entryIndex == data.length-1){
+						 		info= info+'" class="last"><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						        $(info).appendTo("#ul-csoOutlets");
+						 	}else{
+						 		info= info+'"><a href="javascript:;">'+entry.csoName+'<i></i></a></li>';
+						        $(info).appendTo("#ul-csoOutlets");
+						 	}
+					    }
+					 });
+				  })
+			}
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

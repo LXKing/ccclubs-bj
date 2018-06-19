@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 春节套餐报名之SQL映射 -->
+	<resultMap id="CsChjSign" class="com.ccclubs.model.CsChjSign">
+		<result property="cscsId" column="cscs_id"/>
+		<result property="cscsHost" column="cscs_host"/>
+		<result property="cscsName" column="cscs_name"/>
+		<result property="cscsMobile" column="cscs_mobile"/>
+		<result property="cscsMember" column="cscs_member"/>
+		<result property="cscsTakeTime" column="cscs_take_time"/>
+		<result property="cscsRetTime" column="cscs_ret_time"/>
+		<result property="cscsModel" column="cscs_model"/>
+		<result property="cscsOutlets" column="cscs_outlets"/>
+		<result property="cscsTarget" column="cscs_target"/>
+		<result property="cscsLocked" column="cscs_locked"/>
+		<result property="cscsLockTime" column="cscs_lock_time"/>
+		<result property="cscsRemark" column="cscs_remark"/>
+		<result property="cscsYear" column="cscs_year"/>
+		<result property="cscsVisitChannel" column="cscs_channel"/>
+		<result property="cscsUpdateTime" column="cscs_update_time"/>
+		<result property="cscsAddTime" column="cscs_add_time"/>
+		<result property="cscsStatus" column="cscs_status"/>
+	</resultMap>
+		
+	<!-- 获取所有春节套餐报名 -->
+	<select id="getCsChjSignList" resultMap="CsChjSign">
+		select cs_chj_sign$suffix$.* from cs_chj_sign$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.cscs_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.cscs_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.cscs_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.cscs_locked=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.cscs_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_chj_sign$suffix$.cscs_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChjSign_part.cs_chj_sign_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscs_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取春节套餐报名分页 -->
+	<select id="getCsChjSignPage" parameterClass="java.util.HashMap" resultMap="CsChjSign">
+		select cs_chj_sign$suffix$.* from cs_chj_sign$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.cscs_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.cscs_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.cscs_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询 -->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.cscs_locked=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询 -->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.cscs_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_chj_sign$suffix$.cscs_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChjSign_part.cs_chj_sign_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscs_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取春节套餐报名总数 -->
+	<select id="getCsChjSignEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_chj_sign$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.cscs_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.cscs_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.cscs_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.cscs_locked=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.cscs_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_chj_sign$suffix$.cscs_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsChjSign_part.cs_chj_sign_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取春节套餐报名 -->
+	<select id="getCsChjSignById" parameterClass="java.util.HashMap" resultMap="CsChjSign">
+		select cs_chj_sign$suffix$.* from cs_chj_sign$suffix$
+		where cscs_id=#id#
+	</select>
+	
+		
+	<!-- 保存春节套餐报名 -->
+	<insert id="saveCsChjSign"  parameterClass="com.ccclubs.model.CsChjSign">
+		insert into cs_chj_sign$suffix$
+		(
+			cs_chj_sign$suffix$.cscs_host
+			,cs_chj_sign$suffix$.cscs_name
+			,cs_chj_sign$suffix$.cscs_mobile
+			,cs_chj_sign$suffix$.cscs_member
+			,cs_chj_sign$suffix$.cscs_take_time
+			,cs_chj_sign$suffix$.cscs_ret_time
+			,cs_chj_sign$suffix$.cscs_model
+			,cs_chj_sign$suffix$.cscs_outlets
+			,cs_chj_sign$suffix$.cscs_target
+			,cs_chj_sign$suffix$.cscs_locked
+			,cs_chj_sign$suffix$.cscs_lock_time
+			,cs_chj_sign$suffix$.cscs_remark
+			,cs_chj_sign$suffix$.cscs_year
+			,cs_chj_sign$suffix$.cscs_channel
+			,cs_chj_sign$suffix$.cscs_update_time
+			,cs_chj_sign$suffix$.cscs_add_time
+			,cs_chj_sign$suffix$.cscs_status
+		)
+		values(
+			<isNotNull property="cscsHost" prepend="">
+				#cscsHost#
+			</isNotNull>
+			<isNull property="cscsHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscsName" prepend=",">
+				#cscsName#
+			</isNotNull>
+			<isNull property="cscsName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsMobile" prepend=",">
+				#cscsMobile#
+			</isNotNull>
+			<isNull property="cscsMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsMember" prepend=",">
+				#cscsMember#
+			</isNotNull>
+			<isNull property="cscsMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsTakeTime" prepend=",">
+				#cscsTakeTime#
+			</isNotNull>
+			<isNull property="cscsTakeTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsRetTime" prepend=",">
+				#cscsRetTime#
+			</isNotNull>
+			<isNull property="cscsRetTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsModel" prepend=",">
+				#cscsModel#
+			</isNotNull>
+			<isNull property="cscsModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsOutlets" prepend=",">
+				#cscsOutlets#
+			</isNotNull>
+			<isNull property="cscsOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsTarget" prepend=",">
+				#cscsTarget#
+			</isNotNull>
+			<isNull property="cscsTarget" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsLocked" prepend=",">
+				#cscsLocked#
+			</isNotNull>
+			<isNull property="cscsLocked" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsLockTime" prepend=",">
+				#cscsLockTime#
+			</isNotNull>
+			<isNull property="cscsLockTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsRemark" prepend=",">
+				#cscsRemark#
+			</isNotNull>
+			<isNull property="cscsRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsYear" prepend=",">
+				#cscsYear#
+			</isNotNull>
+			<isNull property="cscsYear" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsVisitChannel" prepend=",">
+				#cscsVisitChannel#
+			</isNotNull>
+			<isNull property="cscsVisitChannel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				#cscsUpdateTime#
+			</isNotNull>
+			<isNull property="cscsUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsAddTime" prepend=",">
+				#cscsAddTime#
+			</isNotNull>
+			<isNull property="cscsAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscsStatus" prepend=",">
+				#cscsStatus#
+			</isNotNull>
+			<isNull property="cscsStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新春节套餐报名 -->
+	<update id="updateCsChjSign"  parameterClass="com.ccclubs.model.CsChjSign">
+		update cs_chj_sign$suffix$ set
+			<isNotNull property="cscsHost" prepend="">
+				cs_chj_sign$suffix$.cscs_host = #cscsHost#
+			</isNotNull>
+			<isNull property="cscsHost" prepend="">
+				cs_chj_sign$suffix$.cscs_host = null
+			</isNull>				
+			<isNotNull property="cscsName" prepend=",">
+				cs_chj_sign$suffix$.cscs_name = #cscsName#
+			</isNotNull>
+			<isNull property="cscsName" prepend=",">
+				cs_chj_sign$suffix$.cscs_name = null
+			</isNull>				
+			<isNotNull property="cscsMobile" prepend=",">
+				cs_chj_sign$suffix$.cscs_mobile = #cscsMobile#
+			</isNotNull>
+			<isNull property="cscsMobile" prepend=",">
+				cs_chj_sign$suffix$.cscs_mobile = null
+			</isNull>				
+			<isNotNull property="cscsMember" prepend=",">
+				cs_chj_sign$suffix$.cscs_member = #cscsMember#
+			</isNotNull>
+			<isNull property="cscsMember" prepend=",">
+				cs_chj_sign$suffix$.cscs_member = null
+			</isNull>				
+			<isNotNull property="cscsTakeTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_take_time = #cscsTakeTime#
+			</isNotNull>
+			<isNull property="cscsTakeTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_take_time = null
+			</isNull>				
+			<isNotNull property="cscsRetTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_ret_time = #cscsRetTime#
+			</isNotNull>
+			<isNull property="cscsRetTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_ret_time = null
+			</isNull>				
+			<isNotNull property="cscsModel" prepend=",">
+				cs_chj_sign$suffix$.cscs_model = #cscsModel#
+			</isNotNull>
+			<isNull property="cscsModel" prepend=",">
+				cs_chj_sign$suffix$.cscs_model = null
+			</isNull>				
+			<isNotNull property="cscsOutlets" prepend=",">
+				cs_chj_sign$suffix$.cscs_outlets = #cscsOutlets#
+			</isNotNull>
+			<isNull property="cscsOutlets" prepend=",">
+				cs_chj_sign$suffix$.cscs_outlets = null
+			</isNull>				
+			<isNotNull property="cscsTarget" prepend=",">
+				cs_chj_sign$suffix$.cscs_target = #cscsTarget#
+			</isNotNull>
+			<isNull property="cscsTarget" prepend=",">
+				cs_chj_sign$suffix$.cscs_target = null
+			</isNull>				
+			<isNotNull property="cscsLocked" prepend=",">
+				cs_chj_sign$suffix$.cscs_locked = #cscsLocked#
+			</isNotNull>
+			<isNull property="cscsLocked" prepend=",">
+				cs_chj_sign$suffix$.cscs_locked = null
+			</isNull>				
+			<isNotNull property="cscsLockTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_lock_time = #cscsLockTime#
+			</isNotNull>
+			<isNull property="cscsLockTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_lock_time = null
+			</isNull>				
+			<isNotNull property="cscsRemark" prepend=",">
+				cs_chj_sign$suffix$.cscs_remark = #cscsRemark#
+			</isNotNull>
+			<isNull property="cscsRemark" prepend=",">
+				cs_chj_sign$suffix$.cscs_remark = null
+			</isNull>				
+			<isNotNull property="cscsYear" prepend=",">
+				cs_chj_sign$suffix$.cscs_year = #cscsYear#
+			</isNotNull>
+			<isNull property="cscsYear" prepend=",">
+				cs_chj_sign$suffix$.cscs_year = null
+			</isNull>				
+			<isNotNull property="cscsVisitChannel" prepend=",">
+				cs_chj_sign$suffix$.cscs_channel = #cscsVisitChannel#
+			</isNotNull>
+			<isNull property="cscsVisitChannel" prepend=",">
+				cs_chj_sign$suffix$.cscs_channel = null
+			</isNull>				
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_update_time = #cscsUpdateTime#
+			</isNotNull>
+			<isNull property="cscsUpdateTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_update_time = null
+			</isNull>				
+			<isNotNull property="cscsAddTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_add_time = #cscsAddTime#
+			</isNotNull>
+			<isNull property="cscsAddTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_add_time = null
+			</isNull>				
+			<isNotNull property="cscsStatus" prepend=",">
+				cs_chj_sign$suffix$.cscs_status = #cscsStatus#
+			</isNotNull>
+			<isNull property="cscsStatus" prepend=",">
+				cs_chj_sign$suffix$.cscs_status = null
+			</isNull>				
+		where
+			cscs_id=#cscsId#
+	</update>
+	
+	<!-- 更新春节套餐报名非空字段 -->
+	<update id="updateCsChjSign$NotNull"  parameterClass="com.ccclubs.model.CsChjSign">
+		update cs_chj_sign$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscsHost" prepend=",">
+				cs_chj_sign$suffix$.cscs_host = #cscsHost#
+			</isNotNull>		
+			<isNotNull property="cscsName" prepend=",">
+				cs_chj_sign$suffix$.cscs_name = #cscsName#
+			</isNotNull>		
+			<isNotNull property="cscsMobile" prepend=",">
+				cs_chj_sign$suffix$.cscs_mobile = #cscsMobile#
+			</isNotNull>		
+			<isNotNull property="cscsMember" prepend=",">
+				cs_chj_sign$suffix$.cscs_member = #cscsMember#
+			</isNotNull>		
+			<isNotNull property="cscsTakeTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_take_time = #cscsTakeTime#
+			</isNotNull>		
+			<isNotNull property="cscsRetTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_ret_time = #cscsRetTime#
+			</isNotNull>		
+			<isNotNull property="cscsModel" prepend=",">
+				cs_chj_sign$suffix$.cscs_model = #cscsModel#
+			</isNotNull>		
+			<isNotNull property="cscsOutlets" prepend=",">
+				cs_chj_sign$suffix$.cscs_outlets = #cscsOutlets#
+			</isNotNull>		
+			<isNotNull property="cscsTarget" prepend=",">
+				cs_chj_sign$suffix$.cscs_target = #cscsTarget#
+			</isNotNull>		
+			<isNotNull property="cscsLocked" prepend=",">
+				cs_chj_sign$suffix$.cscs_locked = #cscsLocked#
+			</isNotNull>		
+			<isNotNull property="cscsLockTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_lock_time = #cscsLockTime#
+			</isNotNull>		
+			<isNotNull property="cscsRemark" prepend=",">
+				cs_chj_sign$suffix$.cscs_remark = #cscsRemark#
+			</isNotNull>		
+			<isNotNull property="cscsYear" prepend=",">
+				cs_chj_sign$suffix$.cscs_year = #cscsYear#
+			</isNotNull>		
+			<isNotNull property="cscsVisitChannel" prepend=",">
+				cs_chj_sign$suffix$.cscs_channel = #cscsVisitChannel#
+			</isNotNull>		
+			<isNotNull property="cscsUpdateTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_update_time = #cscsUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscsAddTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_add_time = #cscsAddTime#
+			</isNotNull>		
+			<isNotNull property="cscsStatus" prepend=",">
+				cs_chj_sign$suffix$.cscs_status = #cscsStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscs_id=#cscsId#
+	</update>
+	
+
+	<!-- 根据ID删除一个春节套餐报名 -->
+	<delete id="deleteCsChjSignById" parameterClass="java.util.HashMap">
+		delete from cs_chj_sign$suffix$ where cscs_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个春节套餐报名 -->
+	<update id="removeCsChjSignById" parameterClass="java.util.HashMap">
+		update cs_chj_sign$suffix$ set  cs_chj_sign$suffix$.cscs_status=-1  where cscs_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新春节套餐报名 -->
+	<update id="updateCsChjSignBy"  parameterClass="java.util.HashMap">
+		update cs_chj_sign$suffix$ set		
+			cscs_id=cscs_id
+			<isNotNull property="V_cscsId" prepend=",">
+				cs_chj_sign$suffix$.cscs_id = #V_cscsId#
+			</isNotNull>		
+			<isNotNull property="V_cscsHost" prepend=",">
+				cs_chj_sign$suffix$.cscs_host = #V_cscsHost#
+			</isNotNull>		
+			<isNotNull property="V_cscsName" prepend=",">
+				cs_chj_sign$suffix$.cscs_name = #V_cscsName#
+			</isNotNull>		
+			<isNotNull property="V_cscsMobile" prepend=",">
+				cs_chj_sign$suffix$.cscs_mobile = #V_cscsMobile#
+			</isNotNull>		
+			<isNotNull property="V_cscsMember" prepend=",">
+				cs_chj_sign$suffix$.cscs_member = #V_cscsMember#
+			</isNotNull>		
+			<isNotNull property="V_cscsTakeTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_take_time = #V_cscsTakeTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsRetTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_ret_time = #V_cscsRetTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsModel" prepend=",">
+				cs_chj_sign$suffix$.cscs_model = #V_cscsModel#
+			</isNotNull>		
+			<isNotNull property="V_cscsOutlets" prepend=",">
+				cs_chj_sign$suffix$.cscs_outlets = #V_cscsOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cscsTarget" prepend=",">
+				cs_chj_sign$suffix$.cscs_target = #V_cscsTarget#
+			</isNotNull>		
+			<isNotNull property="V_cscsLocked" prepend=",">
+				cs_chj_sign$suffix$.cscs_locked = #V_cscsLocked#
+			</isNotNull>		
+			<isNotNull property="V_cscsLockTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_lock_time = #V_cscsLockTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsRemark" prepend=",">
+				cs_chj_sign$suffix$.cscs_remark = #V_cscsRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscsYear" prepend=",">
+				cs_chj_sign$suffix$.cscs_year = #V_cscsYear#
+			</isNotNull>		
+			<isNotNull property="V_cscsVisitChannel" prepend=",">
+				cs_chj_sign$suffix$.cscs_channel = #V_cscsVisitChannel#
+			</isNotNull>		
+			<isNotNull property="V_cscsUpdateTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_update_time = #V_cscsUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsAddTime" prepend=",">
+				cs_chj_sign$suffix$.cscs_add_time = #V_cscsAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscsStatus" prepend=",">
+				cs_chj_sign$suffix$.cscs_status = #V_cscsStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.cscs_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_chj_sign$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.cscs_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_chj_sign$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.cscs_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_chj_sign$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询-->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<isNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.cscs_locked=cs_pack$CsPack.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPack.on">
+				left join cs_pack cs_pack$CsPack.suffix$ on cs_chj_sign$suffix$.$CsPack.on$=cs_pack$CsPack.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询-->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<isNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.cscs_channel=cs_channel$CsChannel.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsChannel.on">
+				left join cs_channel cs_channel$CsChannel.suffix$ on cs_chj_sign$suffix$.$CsChannel.on$=cs_channel$CsChannel.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_chj_sign$suffix$.cscs_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CscsMember"><!-- 调用一下CscsMember，把CsMember指向CscsMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscsModel"><!-- 调用一下CscsModel，把CsCarModel指向CscsModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscsOutlets"><!-- 调用一下CscsOutlets，把CsOutlets指向CscsOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统套餐]查询条件sql片段 -->
+		<isNotNull property="CscsLocked"><!-- 调用一下CscsLocked，把CsPack指向CscsLocked --></isNotNull>
+		<isNotNull property="CsPack">
+			<include refid="CsPack_part.cs_pack_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[访问渠道]查询条件sql片段 -->
+		<isNotNull property="CscsVisitChannel"><!-- 调用一下CscsVisitChannel，把CsChannel指向CscsVisitChannel --></isNotNull>
+		<isNotNull property="CsChannel">
+			<include refid="CsChannel_part.cs_channel_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsChjSign_part.cs_chj_sign_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除春节套餐报名 -->
+	<update id="deleteCsChjSignBy"  parameterClass="java.util.HashMap">
+		delete from cs_chj_sign$suffix$ where 
+		cs_chj_sign$suffix$.cscs_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsChjSign_part.cs_chj_sign_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

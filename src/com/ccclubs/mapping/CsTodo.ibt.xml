@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 待办事项之SQL映射 -->
+	<resultMap id="CsTodo" class="com.ccclubs.model.CsTodo">
+		<result property="cstId" column="cst_id"/>
+		<result property="cstTitle" column="cst_title"/>
+		<result property="cstAlarmTime" column="cst_alarm_time"/>
+		<result property="cstUser" column="cst_user"/>
+		<result property="cstContent" column="cst_content"/>
+		<result property="cstUpdateTime" column="cst_update_time"/>
+		<result property="cstAddTime" column="cst_add_time"/>
+		<result property="cstStatus" column="cst_status"/>
+	</resultMap>
+		
+	<!-- 获取所有待办事项 -->
+	<select id="getCsTodoList" resultMap="CsTodo">
+		select cs_todo$suffix$.* from cs_todo$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_todo$suffix$.cst_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTodo_part.cs_todo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cst_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取待办事项分页 -->
+	<select id="getCsTodoPage" parameterClass="java.util.HashMap" resultMap="CsTodo">
+		select cs_todo$suffix$.* from cs_todo$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_todo$suffix$.cst_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTodo_part.cs_todo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cst_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取待办事项总数 -->
+	<select id="getCsTodoEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_todo$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_todo$suffix$.cst_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsTodo_part.cs_todo_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取待办事项 -->
+	<select id="getCsTodoById" parameterClass="java.util.HashMap" resultMap="CsTodo">
+		select cs_todo$suffix$.* from cs_todo$suffix$
+		where cst_id=#id#
+	</select>
+	
+		
+	<!-- 保存待办事项 -->
+	<insert id="saveCsTodo"  parameterClass="com.ccclubs.model.CsTodo">
+		insert into cs_todo$suffix$
+		(
+			cs_todo$suffix$.cst_title
+			,cs_todo$suffix$.cst_alarm_time
+			,cs_todo$suffix$.cst_user
+			,cs_todo$suffix$.cst_content
+			,cs_todo$suffix$.cst_update_time
+			,cs_todo$suffix$.cst_add_time
+			,cs_todo$suffix$.cst_status
+		)
+		values(
+			<isNotNull property="cstTitle" prepend="">
+				#cstTitle#
+			</isNotNull>
+			<isNull property="cstTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cstAlarmTime" prepend=",">
+				#cstAlarmTime#
+			</isNotNull>
+			<isNull property="cstAlarmTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstUser" prepend=",">
+				#cstUser#
+			</isNotNull>
+			<isNull property="cstUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstContent" prepend=",">
+				#cstContent#
+			</isNotNull>
+			<isNull property="cstContent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstUpdateTime" prepend=",">
+				#cstUpdateTime#
+			</isNotNull>
+			<isNull property="cstUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstAddTime" prepend=",">
+				#cstAddTime#
+			</isNotNull>
+			<isNull property="cstAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cstStatus" prepend=",">
+				#cstStatus#
+			</isNotNull>
+			<isNull property="cstStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新待办事项 -->
+	<update id="updateCsTodo"  parameterClass="com.ccclubs.model.CsTodo">
+		update cs_todo$suffix$ set
+			<isNotNull property="cstTitle" prepend="">
+				cs_todo$suffix$.cst_title = #cstTitle#
+			</isNotNull>
+			<isNull property="cstTitle" prepend="">
+				cs_todo$suffix$.cst_title = null
+			</isNull>				
+			<isNotNull property="cstAlarmTime" prepend=",">
+				cs_todo$suffix$.cst_alarm_time = #cstAlarmTime#
+			</isNotNull>
+			<isNull property="cstAlarmTime" prepend=",">
+				cs_todo$suffix$.cst_alarm_time = null
+			</isNull>				
+			<isNotNull property="cstUser" prepend=",">
+				cs_todo$suffix$.cst_user = #cstUser#
+			</isNotNull>
+			<isNull property="cstUser" prepend=",">
+				cs_todo$suffix$.cst_user = null
+			</isNull>				
+			<isNotNull property="cstContent" prepend=",">
+				cs_todo$suffix$.cst_content = #cstContent#
+			</isNotNull>
+			<isNull property="cstContent" prepend=",">
+				cs_todo$suffix$.cst_content = null
+			</isNull>				
+			<isNotNull property="cstUpdateTime" prepend=",">
+				cs_todo$suffix$.cst_update_time = #cstUpdateTime#
+			</isNotNull>
+			<isNull property="cstUpdateTime" prepend=",">
+				cs_todo$suffix$.cst_update_time = null
+			</isNull>				
+			<isNotNull property="cstAddTime" prepend=",">
+				cs_todo$suffix$.cst_add_time = #cstAddTime#
+			</isNotNull>
+			<isNull property="cstAddTime" prepend=",">
+				cs_todo$suffix$.cst_add_time = null
+			</isNull>				
+			<isNotNull property="cstStatus" prepend=",">
+				cs_todo$suffix$.cst_status = #cstStatus#
+			</isNotNull>
+			<isNull property="cstStatus" prepend=",">
+				cs_todo$suffix$.cst_status = null
+			</isNull>				
+		where
+			cst_id=#cstId#
+	</update>
+	
+	<!-- 更新待办事项非空字段 -->
+	<update id="updateCsTodo$NotNull"  parameterClass="com.ccclubs.model.CsTodo">
+		update cs_todo$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cstTitle" prepend=",">
+				cs_todo$suffix$.cst_title = #cstTitle#
+			</isNotNull>		
+			<isNotNull property="cstAlarmTime" prepend=",">
+				cs_todo$suffix$.cst_alarm_time = #cstAlarmTime#
+			</isNotNull>		
+			<isNotNull property="cstUser" prepend=",">
+				cs_todo$suffix$.cst_user = #cstUser#
+			</isNotNull>		
+			<isNotNull property="cstContent" prepend=",">
+				cs_todo$suffix$.cst_content = #cstContent#
+			</isNotNull>		
+			<isNotNull property="cstUpdateTime" prepend=",">
+				cs_todo$suffix$.cst_update_time = #cstUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cstAddTime" prepend=",">
+				cs_todo$suffix$.cst_add_time = #cstAddTime#
+			</isNotNull>		
+			<isNotNull property="cstStatus" prepend=",">
+				cs_todo$suffix$.cst_status = #cstStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cst_id=#cstId#
+	</update>
+	
+
+	<!-- 根据ID删除一个待办事项 -->
+	<delete id="deleteCsTodoById" parameterClass="java.util.HashMap">
+		delete from cs_todo$suffix$ where cst_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个待办事项 -->
+	<update id="removeCsTodoById" parameterClass="java.util.HashMap">
+		update cs_todo$suffix$ set  cs_todo$suffix$.cst_status=-1  where cst_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新待办事项 -->
+	<update id="updateCsTodoBy"  parameterClass="java.util.HashMap">
+		update cs_todo$suffix$ set		
+			cst_id=cst_id
+			<isNotNull property="V_cstId" prepend=",">
+				cs_todo$suffix$.cst_id = #V_cstId#
+			</isNotNull>		
+			<isNotNull property="V_cstTitle" prepend=",">
+				cs_todo$suffix$.cst_title = #V_cstTitle#
+			</isNotNull>		
+			<isNotNull property="V_cstAlarmTime" prepend=",">
+				cs_todo$suffix$.cst_alarm_time = #V_cstAlarmTime#
+			</isNotNull>		
+			<isNotNull property="V_cstUser" prepend=",">
+				cs_todo$suffix$.cst_user = #V_cstUser#
+			</isNotNull>		
+			<isNotNull property="V_cstContent" prepend=",">
+				cs_todo$suffix$.cst_content = #V_cstContent#
+			</isNotNull>		
+			<isNotNull property="V_cstUpdateTime" prepend=",">
+				cs_todo$suffix$.cst_update_time = #V_cstUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cstAddTime" prepend=",">
+				cs_todo$suffix$.cst_add_time = #V_cstAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cstStatus" prepend=",">
+				cs_todo$suffix$.cst_status = #V_cstStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_todo$suffix$.cst_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsTodo_part.cs_todo_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除待办事项 -->
+	<update id="deleteCsTodoBy"  parameterClass="java.util.HashMap">
+		delete from cs_todo$suffix$ where 
+		cs_todo$suffix$.cst_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsTodo_part.cs_todo_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

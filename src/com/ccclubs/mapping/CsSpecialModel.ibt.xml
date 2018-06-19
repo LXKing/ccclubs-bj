@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 专车车型之SQL映射 -->
+	<resultMap id="CsSpecialModel" class="com.ccclubs.model.CsSpecialModel">
+		<result property="cssmId" column="cssm_id"/>
+		<result property="cssmName" column="cssm_name"/>
+		<result property="cssmThird" column="cssm_third"/>
+		<result property="cssmThirdCode" column="cssm_third_code"/>
+		<result property="cssmUpdateTime" column="cssm_update_time"/>
+		<result property="cssmAddTime" column="cssm_add_time"/>
+		<result property="cssmStatus" column="cssm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有专车车型 -->
+	<select id="getCsSpecialModelList" resultMap="CsSpecialModel">
+		select cs_special_model$suffix$.* from cs_special_model$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_special_model$suffix$.cssm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSpecialModel_part.cs_special_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取专车车型分页 -->
+	<select id="getCsSpecialModelPage" parameterClass="java.util.HashMap" resultMap="CsSpecialModel">
+		select cs_special_model$suffix$.* from cs_special_model$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_special_model$suffix$.cssm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSpecialModel_part.cs_special_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cssm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取专车车型总数 -->
+	<select id="getCsSpecialModelEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_special_model$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_special_model$suffix$.cssm_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsSpecialModel_part.cs_special_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取专车车型 -->
+	<select id="getCsSpecialModelById" parameterClass="java.util.HashMap" resultMap="CsSpecialModel">
+		select cs_special_model$suffix$.* from cs_special_model$suffix$
+		where cssm_id=#id#
+	</select>
+	
+		
+	<!-- 保存专车车型 -->
+	<insert id="saveCsSpecialModel"  parameterClass="com.ccclubs.model.CsSpecialModel">
+		insert into cs_special_model$suffix$
+		(
+			cs_special_model$suffix$.cssm_name
+			,cs_special_model$suffix$.cssm_third
+			,cs_special_model$suffix$.cssm_third_code
+			,cs_special_model$suffix$.cssm_update_time
+			,cs_special_model$suffix$.cssm_add_time
+			,cs_special_model$suffix$.cssm_status
+		)
+		values(
+			<isNotNull property="cssmName" prepend="">
+				#cssmName#
+			</isNotNull>
+			<isNull property="cssmName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cssmThird" prepend=",">
+				#cssmThird#
+			</isNotNull>
+			<isNull property="cssmThird" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmThirdCode" prepend=",">
+				#cssmThirdCode#
+			</isNotNull>
+			<isNull property="cssmThirdCode" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmUpdateTime" prepend=",">
+				#cssmUpdateTime#
+			</isNotNull>
+			<isNull property="cssmUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmAddTime" prepend=",">
+				#cssmAddTime#
+			</isNotNull>
+			<isNull property="cssmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cssmStatus" prepend=",">
+				#cssmStatus#
+			</isNotNull>
+			<isNull property="cssmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新专车车型 -->
+	<update id="updateCsSpecialModel"  parameterClass="com.ccclubs.model.CsSpecialModel">
+		update cs_special_model$suffix$ set
+			<isNotNull property="cssmName" prepend="">
+				cs_special_model$suffix$.cssm_name = #cssmName#
+			</isNotNull>
+			<isNull property="cssmName" prepend="">
+				cs_special_model$suffix$.cssm_name = null
+			</isNull>				
+			<isNotNull property="cssmThird" prepend=",">
+				cs_special_model$suffix$.cssm_third = #cssmThird#
+			</isNotNull>
+			<isNull property="cssmThird" prepend=",">
+				cs_special_model$suffix$.cssm_third = null
+			</isNull>				
+			<isNotNull property="cssmThirdCode" prepend=",">
+				cs_special_model$suffix$.cssm_third_code = #cssmThirdCode#
+			</isNotNull>
+			<isNull property="cssmThirdCode" prepend=",">
+				cs_special_model$suffix$.cssm_third_code = null
+			</isNull>				
+			<isNotNull property="cssmUpdateTime" prepend=",">
+				cs_special_model$suffix$.cssm_update_time = #cssmUpdateTime#
+			</isNotNull>
+			<isNull property="cssmUpdateTime" prepend=",">
+				cs_special_model$suffix$.cssm_update_time = null
+			</isNull>				
+			<isNotNull property="cssmAddTime" prepend=",">
+				cs_special_model$suffix$.cssm_add_time = #cssmAddTime#
+			</isNotNull>
+			<isNull property="cssmAddTime" prepend=",">
+				cs_special_model$suffix$.cssm_add_time = null
+			</isNull>				
+			<isNotNull property="cssmStatus" prepend=",">
+				cs_special_model$suffix$.cssm_status = #cssmStatus#
+			</isNotNull>
+			<isNull property="cssmStatus" prepend=",">
+				cs_special_model$suffix$.cssm_status = null
+			</isNull>				
+		where
+			cssm_id=#cssmId#
+	</update>
+	
+	<!-- 更新专车车型非空字段 -->
+	<update id="updateCsSpecialModel$NotNull"  parameterClass="com.ccclubs.model.CsSpecialModel">
+		update cs_special_model$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cssmName" prepend=",">
+				cs_special_model$suffix$.cssm_name = #cssmName#
+			</isNotNull>		
+			<isNotNull property="cssmThird" prepend=",">
+				cs_special_model$suffix$.cssm_third = #cssmThird#
+			</isNotNull>		
+			<isNotNull property="cssmThirdCode" prepend=",">
+				cs_special_model$suffix$.cssm_third_code = #cssmThirdCode#
+			</isNotNull>		
+			<isNotNull property="cssmUpdateTime" prepend=",">
+				cs_special_model$suffix$.cssm_update_time = #cssmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cssmAddTime" prepend=",">
+				cs_special_model$suffix$.cssm_add_time = #cssmAddTime#
+			</isNotNull>		
+			<isNotNull property="cssmStatus" prepend=",">
+				cs_special_model$suffix$.cssm_status = #cssmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cssm_id=#cssmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个专车车型 -->
+	<delete id="deleteCsSpecialModelById" parameterClass="java.util.HashMap">
+		delete from cs_special_model$suffix$ where cssm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个专车车型 -->
+	<update id="removeCsSpecialModelById" parameterClass="java.util.HashMap">
+		update cs_special_model$suffix$ set  cs_special_model$suffix$.cssm_status=-1  where cssm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新专车车型 -->
+	<update id="updateCsSpecialModelBy"  parameterClass="java.util.HashMap">
+		update cs_special_model$suffix$ set		
+			cssm_id=cssm_id
+			<isNotNull property="V_cssmId" prepend=",">
+				cs_special_model$suffix$.cssm_id = #V_cssmId#
+			</isNotNull>		
+			<isNotNull property="V_cssmName" prepend=",">
+				cs_special_model$suffix$.cssm_name = #V_cssmName#
+			</isNotNull>		
+			<isNotNull property="V_cssmThird" prepend=",">
+				cs_special_model$suffix$.cssm_third = #V_cssmThird#
+			</isNotNull>		
+			<isNotNull property="V_cssmThirdCode" prepend=",">
+				cs_special_model$suffix$.cssm_third_code = #V_cssmThirdCode#
+			</isNotNull>		
+			<isNotNull property="V_cssmUpdateTime" prepend=",">
+				cs_special_model$suffix$.cssm_update_time = #V_cssmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cssmAddTime" prepend=",">
+				cs_special_model$suffix$.cssm_add_time = #V_cssmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cssmStatus" prepend=",">
+				cs_special_model$suffix$.cssm_status = #V_cssmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_special_model$suffix$.cssm_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsSpecialModel_part.cs_special_model_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除专车车型 -->
+	<update id="deleteCsSpecialModelBy"  parameterClass="java.util.HashMap">
+		delete from cs_special_model$suffix$ where 
+		cs_special_model$suffix$.cssm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsSpecialModel_part.cs_special_model_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

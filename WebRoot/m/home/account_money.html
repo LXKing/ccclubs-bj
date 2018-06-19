@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>账户余额</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../css/ccclubs-base-ui.css?v=${lz:config('version')}" " />
+	<link rel="stylesheet" type="text/css" href="../css/app.css?v=${lz:config('version')}" " />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+	<body>
+		<header class="bar bar-nav bar-home home-header-bg">
+		<h1 class="bar-title">
+			我的余额（元）
+		</h1>
+		<div class="bar-content">
+			${lz:digit(csMember.csmMoney,2)}
+			<s:if test="#request.refund==1">
+			<span class="bar-span">退款中...</span>
+			</s:if>
+		</div>
+		</header>
+		<div id="content" class="content bar-home-content">
+			<ol class="common-des">
+				<li>
+					1、提交退款申请以后，退款期间将无法租用车辆
+				</li>
+				<li>
+					2、客服热线:
+					<span class="badge badge-negative badge-inverted vertical-align-top" >${config.cscSvrNumber}</span>
+				</li>
+				<s:if test="#request.refund==1">
+				<li>
+					3、提出退款申请后，退款金额将在10个工作日退还到您原充值账户，具体退款时间请在官网查询。
+				</li>
+				<li>
+					4、长假订单(如春节订单等)后，会员提出退款申请的，“车纷享”在35天内向会员退回账户余额。
+				</li>
+				</s:if>
+			</ol>
+		</div>
+		<nav class="bar bar-tab bar-recharge">
+		<a class="tab-item" href="account_recharge.html"> <span class="tab-label">充值</span></a>
+		<s:if test="#request.csMember.csmMoney!=0">
+			<s:if test="#request.refund==0">
+				<a class="tab-item split" href="#" onclick="saveRefund();"><span class="tab-label">退款</span></a>
+			</s:if>
+			<s:elseif test="#request.refund==1">
+				<a class="tab-item split" href="#" onclick="cancleRefund();"><span class="tab-label">取消退款</span></a>
+			</s:elseif>
+		</s:if>
+		</nav>
+		<div id="toast">
+			正在加载...
+		</div>
+		<!--<div id="iCenter"></div>-->
+		<script type="text/javascript" src="../js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="../js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+		function saveRefund(){
+			if(confirm("确定要提交退款申请吗？")){
+				$.ajax({
+					type: 'get',
+					url: "account_refundsubmit.html?t="+new Date().getTime(),
+            		data:{},
+            		dataType: 'json',
+            		success: function(data){
+            			if(data.state){
+            				location.href = 'account_money.html';
+            			}else{
+            				Toast.show(data.message);
+                            return;
+            			}
+            		},
+            		error: function(xhr, type){
+            			Toast.show('通讯失败，请检查网络');
+                        return;
+            		}
+				});
+			}
+		}
+		function cancleRefund(){
+		   if(confirm("确定不再继续等待退款处理结果了吗？")){
+			   $.ajax({
+					type: 'get',
+					url: "account_refundcancel.html?t="+new Date().getTime(),
+           		data:{},
+           		dataType: 'json',
+           		success: function(data){
+           			if(data.state){
+           				location.href = 'account_money.html';
+           			}else{
+           				Toast.show(data.message);
+                           return;
+           			}
+           		},
+           		error: function(xhr, type){
+           			Toast.show('通讯失败，请检查网络');
+                       return;
+           		}
+				});
+		   }
+		}
+		</script>
+	</body>
+
+</html>

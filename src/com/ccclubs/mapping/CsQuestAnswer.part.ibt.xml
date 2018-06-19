@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsQuestAnswer_part">	
+	<!-- 问题及选项条件sql片段  -->
+	<sql id="cs_quest_answer_dynamic">
+		<dynamic>
+			<isNotEmpty property="csqaId" prepend="and">
+			    $csqaIdNot$ cs_quest_answer$suffix$.csqa_id = #csqaId#
+			</isNotEmpty>
+			<isNotNull property="csqaIdNot" prepend="and">
+				<isEmpty property="csqaId">
+				$csqaIdNot$ cs_quest_answer$suffix$.csqa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csqaTitle" prepend="and">			    
+			    (<isNotNull property="csqaTitleNot">
+			    cs_quest_answer$suffix$.csqa_title is null or length(cs_quest_answer$suffix$.csqa_title) &lt; 1 or
+			    </isNotNull>$csqaTitleNot$ cs_quest_answer$suffix$.csqa_title like #csqaTitle#)
+			</isNotEmpty>
+			<isNotNull property="csqaTitleNot" prepend="and">
+				<isEmpty property="csqaTitle">
+				$csqaTitleNot$ (cs_quest_answer$suffix$.csqa_title is null or length(cs_quest_answer$suffix$.csqa_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csqaParent" prepend="and">
+			    $csqaParentNot$ cs_quest_answer$suffix$.csqa_parent = #csqaParent#
+			</isNotEmpty>
+			<isNotNull property="csqaParentNot" prepend="and">
+				<isEmpty property="csqaParent">
+				$csqaParentNot$ cs_quest_answer$suffix$.csqa_parent is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 问题及选项left join 条件sql片段 -->
+	<sql id="cs_quest_answer_join">
+		<dynamic>
+			<isNotEmpty property="CsQuestAnswer.csqaId" prepend="and">
+			    $CsQuestAnswer.csqaIdNot$ cs_quest_answer$CsQuestAnswer.suffix$.csqa_id = #CsQuestAnswer.csqaId#
+			</isNotEmpty>
+			<isNotNull property="CsQuestAnswer.csqaIdNot" prepend="and">
+				<isEmpty property="CsQuestAnswer.csqaId">
+				$csqaIdNot$ cs_quest_answer$CsQuestAnswer.suffix$.csqa_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsQuestAnswer.csqaTitle" prepend="and">
+				(<isNotNull property="CsQuestAnswer.csqaTitleNot">
+			    cs_quest_answer$CsQuestAnswer.suffix$.csqa_title is null or length(cs_quest_answer$CsQuestAnswer.suffix$.csqa_title) &lt; 1 or
+			    </isNotNull>$CsQuestAnswer.csqaTitleNot$ cs_quest_answer$CsQuestAnswer.suffix$.csqa_title like #CsQuestAnswer.csqaTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsQuestAnswer.csqaTitleNot" prepend="and">
+				<isEmpty property="CsQuestAnswer.csqaTitle">
+				$csqaTitleNot$ (cs_quest_answer$CsQuestAnswer.suffix$.csqa_title is null or length(cs_quest_answer$CsQuestAnswer.suffix$.csqa_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsQuestAnswer.csqaParent" prepend="and">
+			    $CsQuestAnswer.csqaParentNot$ cs_quest_answer$CsQuestAnswer.suffix$.csqa_parent = #CsQuestAnswer.csqaParent#
+			</isNotEmpty>
+			<isNotNull property="CsQuestAnswer.csqaParentNot" prepend="and">
+				<isEmpty property="CsQuestAnswer.csqaParent">
+				$csqaParentNot$ cs_quest_answer$CsQuestAnswer.suffix$.csqa_parent is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

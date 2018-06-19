@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 营销指标之SQL映射 -->
+	<resultMap id="CsMarketIndex" class="com.ccclubs.model.CsMarketIndex">
+		<result property="csmiId" column="csmi_id"/>
+		<result property="csmiHost" column="csmi_host"/>
+		<result property="csmiName" column="csmi_name"/>
+		<result property="csmiPlan" column="csmi_plan"/>
+		<result property="csmiType" column="csmi_type"/>
+		<result property="csmiDesc" column="csmi_desc"/>
+		<result property="csmiTarget" column="csmi_target"/>
+		<result property="csmiResult" column="csmi_result"/>
+		<result property="csmiRate" column="csmi_rate"/>
+		<result property="csmiStatus" column="csmi_status"/>
+	</resultMap>
+		
+	<!-- 获取所有营销指标 -->
+	<select id="getCsMarketIndexList" resultMap="CsMarketIndex">
+		select cs_market_index$suffix$.* from cs_market_index$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.csmi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_market_index$suffix$.csmi_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketIndex_part.cs_market_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmi_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取营销指标分页 -->
+	<select id="getCsMarketIndexPage" parameterClass="java.util.HashMap" resultMap="CsMarketIndex">
+		select cs_market_index$suffix$.* from cs_market_index$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询 -->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.csmi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_market_index$suffix$.csmi_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketIndex_part.cs_market_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csmi_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取营销指标总数 -->
+	<select id="getCsMarketIndexEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_market_index$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.csmi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_market_index$suffix$.csmi_status!=-1
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsMarketIndex_part.cs_market_index_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取营销指标 -->
+	<select id="getCsMarketIndexById" parameterClass="java.util.HashMap" resultMap="CsMarketIndex">
+		select cs_market_index$suffix$.* from cs_market_index$suffix$
+		where csmi_id=#id#
+	</select>
+	
+		
+	<!-- 保存营销指标 -->
+	<insert id="saveCsMarketIndex"  parameterClass="com.ccclubs.model.CsMarketIndex">
+		insert into cs_market_index$suffix$
+		(
+			cs_market_index$suffix$.csmi_host
+			,cs_market_index$suffix$.csmi_name
+			,cs_market_index$suffix$.csmi_plan
+			,cs_market_index$suffix$.csmi_type
+			,cs_market_index$suffix$.csmi_desc
+			,cs_market_index$suffix$.csmi_target
+			,cs_market_index$suffix$.csmi_result
+			,cs_market_index$suffix$.csmi_rate
+			,cs_market_index$suffix$.csmi_status
+		)
+		values(
+			<isNotNull property="csmiHost" prepend="">
+				#csmiHost#
+			</isNotNull>
+			<isNull property="csmiHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csmiName" prepend=",">
+				#csmiName#
+			</isNotNull>
+			<isNull property="csmiName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiPlan" prepend=",">
+				#csmiPlan#
+			</isNotNull>
+			<isNull property="csmiPlan" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiType" prepend=",">
+				#csmiType#
+			</isNotNull>
+			<isNull property="csmiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiDesc" prepend=",">
+				#csmiDesc#
+			</isNotNull>
+			<isNull property="csmiDesc" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiTarget" prepend=",">
+				#csmiTarget#
+			</isNotNull>
+			<isNull property="csmiTarget" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiResult" prepend=",">
+				#csmiResult#
+			</isNotNull>
+			<isNull property="csmiResult" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiRate" prepend=",">
+				#csmiRate#
+			</isNotNull>
+			<isNull property="csmiRate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csmiStatus" prepend=",">
+				#csmiStatus#
+			</isNotNull>
+			<isNull property="csmiStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新营销指标 -->
+	<update id="updateCsMarketIndex"  parameterClass="com.ccclubs.model.CsMarketIndex">
+		update cs_market_index$suffix$ set
+			<isNotNull property="csmiHost" prepend="">
+				cs_market_index$suffix$.csmi_host = #csmiHost#
+			</isNotNull>
+			<isNull property="csmiHost" prepend="">
+				cs_market_index$suffix$.csmi_host = null
+			</isNull>				
+			<isNotNull property="csmiName" prepend=",">
+				cs_market_index$suffix$.csmi_name = #csmiName#
+			</isNotNull>
+			<isNull property="csmiName" prepend=",">
+				cs_market_index$suffix$.csmi_name = null
+			</isNull>				
+			<isNotNull property="csmiPlan" prepend=",">
+				cs_market_index$suffix$.csmi_plan = #csmiPlan#
+			</isNotNull>
+			<isNull property="csmiPlan" prepend=",">
+				cs_market_index$suffix$.csmi_plan = null
+			</isNull>				
+			<isNotNull property="csmiType" prepend=",">
+				cs_market_index$suffix$.csmi_type = #csmiType#
+			</isNotNull>
+			<isNull property="csmiType" prepend=",">
+				cs_market_index$suffix$.csmi_type = null
+			</isNull>				
+			<isNotNull property="csmiDesc" prepend=",">
+				cs_market_index$suffix$.csmi_desc = #csmiDesc#
+			</isNotNull>
+			<isNull property="csmiDesc" prepend=",">
+				cs_market_index$suffix$.csmi_desc = null
+			</isNull>				
+			<isNotNull property="csmiTarget" prepend=",">
+				cs_market_index$suffix$.csmi_target = #csmiTarget#
+			</isNotNull>
+			<isNull property="csmiTarget" prepend=",">
+				cs_market_index$suffix$.csmi_target = null
+			</isNull>				
+			<isNotNull property="csmiResult" prepend=",">
+				cs_market_index$suffix$.csmi_result = #csmiResult#
+			</isNotNull>
+			<isNull property="csmiResult" prepend=",">
+				cs_market_index$suffix$.csmi_result = null
+			</isNull>				
+			<isNotNull property="csmiRate" prepend=",">
+				cs_market_index$suffix$.csmi_rate = #csmiRate#
+			</isNotNull>
+			<isNull property="csmiRate" prepend=",">
+				cs_market_index$suffix$.csmi_rate = null
+			</isNull>				
+			<isNotNull property="csmiStatus" prepend=",">
+				cs_market_index$suffix$.csmi_status = #csmiStatus#
+			</isNotNull>
+			<isNull property="csmiStatus" prepend=",">
+				cs_market_index$suffix$.csmi_status = null
+			</isNull>				
+		where
+			csmi_id=#csmiId#
+	</update>
+	
+	<!-- 更新营销指标非空字段 -->
+	<update id="updateCsMarketIndex$NotNull"  parameterClass="com.ccclubs.model.CsMarketIndex">
+		update cs_market_index$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csmiHost" prepend=",">
+				cs_market_index$suffix$.csmi_host = #csmiHost#
+			</isNotNull>		
+			<isNotNull property="csmiName" prepend=",">
+				cs_market_index$suffix$.csmi_name = #csmiName#
+			</isNotNull>		
+			<isNotNull property="csmiPlan" prepend=",">
+				cs_market_index$suffix$.csmi_plan = #csmiPlan#
+			</isNotNull>		
+			<isNotNull property="csmiType" prepend=",">
+				cs_market_index$suffix$.csmi_type = #csmiType#
+			</isNotNull>		
+			<isNotNull property="csmiDesc" prepend=",">
+				cs_market_index$suffix$.csmi_desc = #csmiDesc#
+			</isNotNull>		
+			<isNotNull property="csmiTarget" prepend=",">
+				cs_market_index$suffix$.csmi_target = #csmiTarget#
+			</isNotNull>		
+			<isNotNull property="csmiResult" prepend=",">
+				cs_market_index$suffix$.csmi_result = #csmiResult#
+			</isNotNull>		
+			<isNotNull property="csmiRate" prepend=",">
+				cs_market_index$suffix$.csmi_rate = #csmiRate#
+			</isNotNull>		
+			<isNotNull property="csmiStatus" prepend=",">
+				cs_market_index$suffix$.csmi_status = #csmiStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csmi_id=#csmiId#
+	</update>
+	
+
+	<!-- 根据ID删除一个营销指标 -->
+	<delete id="deleteCsMarketIndexById" parameterClass="java.util.HashMap">
+		delete from cs_market_index$suffix$ where csmi_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个营销指标 -->
+	<update id="removeCsMarketIndexById" parameterClass="java.util.HashMap">
+		update cs_market_index$suffix$ set  cs_market_index$suffix$.csmi_status=-1  where csmi_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新营销指标 -->
+	<update id="updateCsMarketIndexBy"  parameterClass="java.util.HashMap">
+		update cs_market_index$suffix$ set		
+			csmi_id=csmi_id
+			<isNotNull property="V_csmiId" prepend=",">
+				cs_market_index$suffix$.csmi_id = #V_csmiId#
+			</isNotNull>		
+			<isNotNull property="V_csmiHost" prepend=",">
+				cs_market_index$suffix$.csmi_host = #V_csmiHost#
+			</isNotNull>		
+			<isNotNull property="V_csmiName" prepend=",">
+				cs_market_index$suffix$.csmi_name = #V_csmiName#
+			</isNotNull>		
+			<isNotNull property="V_csmiPlan" prepend=",">
+				cs_market_index$suffix$.csmi_plan = #V_csmiPlan#
+			</isNotNull>		
+			<isNotNull property="V_csmiType" prepend=",">
+				cs_market_index$suffix$.csmi_type = #V_csmiType#
+			</isNotNull>		
+			<isNotNull property="V_csmiDesc" prepend=",">
+				cs_market_index$suffix$.csmi_desc = #V_csmiDesc#
+			</isNotNull>		
+			<isNotNull property="V_csmiTarget" prepend=",">
+				cs_market_index$suffix$.csmi_target = #V_csmiTarget#
+			</isNotNull>		
+			<isNotNull property="V_csmiResult" prepend=",">
+				cs_market_index$suffix$.csmi_result = #V_csmiResult#
+			</isNotNull>		
+			<isNotNull property="V_csmiRate" prepend=",">
+				cs_market_index$suffix$.csmi_rate = #V_csmiRate#
+			</isNotNull>		
+			<isNotNull property="V_csmiStatus" prepend=",">
+				cs_market_index$suffix$.csmi_status = #V_csmiStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[营销方案]查询-->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<isNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.csmi_plan=cs_market_plan$CsMarketPlan.suffix$.csmp_id
+			</isNull>
+			<isNotNull property="CsMarketPlan.on">
+				left join cs_market_plan cs_market_plan$CsMarketPlan.suffix$ on cs_market_index$suffix$.$CsMarketPlan.on$=cs_market_plan$CsMarketPlan.suffix$.csmp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_market_index$suffix$.csmi_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[营销方案]查询条件sql片段 -->
+		<isNotNull property="CsmiPlan"><!-- 调用一下CsmiPlan，把CsMarketPlan指向CsmiPlan --></isNotNull>
+		<isNotNull property="CsMarketPlan">
+			<include refid="CsMarketPlan_part.cs_market_plan_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsMarketIndex_part.cs_market_index_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除营销指标 -->
+	<update id="deleteCsMarketIndexBy"  parameterClass="java.util.HashMap">
+		delete from cs_market_index$suffix$ where 
+		cs_market_index$suffix$.csmi_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsMarketIndex_part.cs_market_index_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

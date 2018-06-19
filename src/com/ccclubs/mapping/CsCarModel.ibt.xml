@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车型之SQL映射 -->
+	<resultMap id="CsCarModel" class="com.ccclubs.model.CsCarModel">
+		<result property="cscmId" column="cscm_id"/>
+		<result property="cscmName" column="cscm_name"/>
+		<result property="cscmType" column="cscm_type"/>
+		<result property="cscmFile" column="cscm_file"/>
+		<result property="cscmSeatS" column="cscm_seat_s"/>
+		<result property="cscmTrunk" column="cscm_trunk"/>
+		<result property="cscmVolume" column="cscm_volume"/>
+		<result property="cscmCapacity" column="cscm_capacity"/>
+		<result property="cscmThumb" column="cscm_thumb"/>
+		<result property="cscmImage" column="cscm_image"/>
+		<result property="cscmDetails" column="cscm_details"/>
+		<result property="cscmUpdateTime" column="cscm_update_time"/>
+		<result property="cscmAddTime" column="cscm_add_time"/>
+		<result property="cscmRemark" column="cscm_remark"/>
+		<result property="cscmStatus" column="cscm_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车型 -->
+	<select id="getCsCarModelList" resultMap="CsCarModel">
+		select cs_car_model$suffix$.* from cs_car_model$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_car_model$suffix$.cscm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarModel_part.cs_car_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscm_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车型分页 -->
+	<select id="getCsCarModelPage" parameterClass="java.util.HashMap" resultMap="CsCarModel">
+		select cs_car_model$suffix$.* from cs_car_model$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_car_model$suffix$.cscm_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarModel_part.cs_car_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscm_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车型总数 -->
+	<select id="getCsCarModelEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car_model$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_car_model$suffix$.cscm_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarModel_part.cs_car_model_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车型 -->
+	<select id="getCsCarModelById" parameterClass="java.util.HashMap" resultMap="CsCarModel">
+		select cs_car_model$suffix$.* from cs_car_model$suffix$
+		where cscm_id=#id#
+	</select>
+	
+		
+	<!-- 保存车型 -->
+	<insert id="saveCsCarModel"  parameterClass="com.ccclubs.model.CsCarModel">
+		insert into cs_car_model$suffix$
+		(
+			cs_car_model$suffix$.cscm_name
+			,cs_car_model$suffix$.cscm_type
+			,cs_car_model$suffix$.cscm_file
+			,cs_car_model$suffix$.cscm_seat_s
+			,cs_car_model$suffix$.cscm_trunk
+			,cs_car_model$suffix$.cscm_volume
+			,cs_car_model$suffix$.cscm_capacity
+			,cs_car_model$suffix$.cscm_thumb
+			,cs_car_model$suffix$.cscm_image
+			,cs_car_model$suffix$.cscm_details
+			,cs_car_model$suffix$.cscm_update_time
+			,cs_car_model$suffix$.cscm_add_time
+			,cs_car_model$suffix$.cscm_remark
+			,cs_car_model$suffix$.cscm_status
+		)
+		values(
+			<isNotNull property="cscmName" prepend="">
+				#cscmName#
+			</isNotNull>
+			<isNull property="cscmName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscmType" prepend=",">
+				#cscmType#
+			</isNotNull>
+			<isNull property="cscmType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmFile" prepend=",">
+				#cscmFile#
+			</isNotNull>
+			<isNull property="cscmFile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmSeatS" prepend=",">
+				#cscmSeatS#
+			</isNotNull>
+			<isNull property="cscmSeatS" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmTrunk" prepend=",">
+				#cscmTrunk#
+			</isNotNull>
+			<isNull property="cscmTrunk" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmVolume" prepend=",">
+				#cscmVolume#
+			</isNotNull>
+			<isNull property="cscmVolume" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmCapacity" prepend=",">
+				#cscmCapacity#
+			</isNotNull>
+			<isNull property="cscmCapacity" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmThumb" prepend=",">
+				#cscmThumb#
+			</isNotNull>
+			<isNull property="cscmThumb" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmImage" prepend=",">
+				#cscmImage#
+			</isNotNull>
+			<isNull property="cscmImage" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmDetails" prepend=",">
+				#cscmDetails#
+			</isNotNull>
+			<isNull property="cscmDetails" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmUpdateTime" prepend=",">
+				#cscmUpdateTime#
+			</isNotNull>
+			<isNull property="cscmUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmAddTime" prepend=",">
+				#cscmAddTime#
+			</isNotNull>
+			<isNull property="cscmAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmRemark" prepend=",">
+				#cscmRemark#
+			</isNotNull>
+			<isNull property="cscmRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscmStatus" prepend=",">
+				#cscmStatus#
+			</isNotNull>
+			<isNull property="cscmStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车型 -->
+	<update id="updateCsCarModel"  parameterClass="com.ccclubs.model.CsCarModel">
+		update cs_car_model$suffix$ set
+			<isNotNull property="cscmName" prepend="">
+				cs_car_model$suffix$.cscm_name = #cscmName#
+			</isNotNull>
+			<isNull property="cscmName" prepend="">
+				cs_car_model$suffix$.cscm_name = null
+			</isNull>				
+			<isNotNull property="cscmType" prepend=",">
+				cs_car_model$suffix$.cscm_type = #cscmType#
+			</isNotNull>
+			<isNull property="cscmType" prepend=",">
+				cs_car_model$suffix$.cscm_type = null
+			</isNull>				
+			<isNotNull property="cscmFile" prepend=",">
+				cs_car_model$suffix$.cscm_file = #cscmFile#
+			</isNotNull>
+			<isNull property="cscmFile" prepend=",">
+				cs_car_model$suffix$.cscm_file = null
+			</isNull>				
+			<isNotNull property="cscmSeatS" prepend=",">
+				cs_car_model$suffix$.cscm_seat_s = #cscmSeatS#
+			</isNotNull>
+			<isNull property="cscmSeatS" prepend=",">
+				cs_car_model$suffix$.cscm_seat_s = null
+			</isNull>				
+			<isNotNull property="cscmTrunk" prepend=",">
+				cs_car_model$suffix$.cscm_trunk = #cscmTrunk#
+			</isNotNull>
+			<isNull property="cscmTrunk" prepend=",">
+				cs_car_model$suffix$.cscm_trunk = null
+			</isNull>				
+			<isNotNull property="cscmVolume" prepend=",">
+				cs_car_model$suffix$.cscm_volume = #cscmVolume#
+			</isNotNull>
+			<isNull property="cscmVolume" prepend=",">
+				cs_car_model$suffix$.cscm_volume = null
+			</isNull>				
+			<isNotNull property="cscmCapacity" prepend=",">
+				cs_car_model$suffix$.cscm_capacity = #cscmCapacity#
+			</isNotNull>
+			<isNull property="cscmCapacity" prepend=",">
+				cs_car_model$suffix$.cscm_capacity = null
+			</isNull>				
+			<isNotNull property="cscmThumb" prepend=",">
+				cs_car_model$suffix$.cscm_thumb = #cscmThumb#
+			</isNotNull>
+			<isNull property="cscmThumb" prepend=",">
+				cs_car_model$suffix$.cscm_thumb = null
+			</isNull>				
+			<isNotNull property="cscmImage" prepend=",">
+				cs_car_model$suffix$.cscm_image = #cscmImage#
+			</isNotNull>
+			<isNull property="cscmImage" prepend=",">
+				cs_car_model$suffix$.cscm_image = null
+			</isNull>				
+			<isNotNull property="cscmDetails" prepend=",">
+				cs_car_model$suffix$.cscm_details = #cscmDetails#
+			</isNotNull>
+			<isNull property="cscmDetails" prepend=",">
+				cs_car_model$suffix$.cscm_details = null
+			</isNull>				
+			<isNotNull property="cscmUpdateTime" prepend=",">
+				cs_car_model$suffix$.cscm_update_time = #cscmUpdateTime#
+			</isNotNull>
+			<isNull property="cscmUpdateTime" prepend=",">
+				cs_car_model$suffix$.cscm_update_time = null
+			</isNull>				
+			<isNotNull property="cscmAddTime" prepend=",">
+				cs_car_model$suffix$.cscm_add_time = #cscmAddTime#
+			</isNotNull>
+			<isNull property="cscmAddTime" prepend=",">
+				cs_car_model$suffix$.cscm_add_time = null
+			</isNull>				
+			<isNotNull property="cscmRemark" prepend=",">
+				cs_car_model$suffix$.cscm_remark = #cscmRemark#
+			</isNotNull>
+			<isNull property="cscmRemark" prepend=",">
+				cs_car_model$suffix$.cscm_remark = null
+			</isNull>				
+			<isNotNull property="cscmStatus" prepend=",">
+				cs_car_model$suffix$.cscm_status = #cscmStatus#
+			</isNotNull>
+			<isNull property="cscmStatus" prepend=",">
+				cs_car_model$suffix$.cscm_status = null
+			</isNull>				
+		where
+			cscm_id=#cscmId#
+	</update>
+	
+	<!-- 更新车型非空字段 -->
+	<update id="updateCsCarModel$NotNull"  parameterClass="com.ccclubs.model.CsCarModel">
+		update cs_car_model$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscmName" prepend=",">
+				cs_car_model$suffix$.cscm_name = #cscmName#
+			</isNotNull>		
+			<isNotNull property="cscmType" prepend=",">
+				cs_car_model$suffix$.cscm_type = #cscmType#
+			</isNotNull>		
+			<isNotNull property="cscmFile" prepend=",">
+				cs_car_model$suffix$.cscm_file = #cscmFile#
+			</isNotNull>		
+			<isNotNull property="cscmSeatS" prepend=",">
+				cs_car_model$suffix$.cscm_seat_s = #cscmSeatS#
+			</isNotNull>		
+			<isNotNull property="cscmTrunk" prepend=",">
+				cs_car_model$suffix$.cscm_trunk = #cscmTrunk#
+			</isNotNull>		
+			<isNotNull property="cscmVolume" prepend=",">
+				cs_car_model$suffix$.cscm_volume = #cscmVolume#
+			</isNotNull>		
+			<isNotNull property="cscmCapacity" prepend=",">
+				cs_car_model$suffix$.cscm_capacity = #cscmCapacity#
+			</isNotNull>		
+			<isNotNull property="cscmThumb" prepend=",">
+				cs_car_model$suffix$.cscm_thumb = #cscmThumb#
+			</isNotNull>		
+			<isNotNull property="cscmImage" prepend=",">
+				cs_car_model$suffix$.cscm_image = #cscmImage#
+			</isNotNull>		
+			<isNotNull property="cscmDetails" prepend=",">
+				cs_car_model$suffix$.cscm_details = #cscmDetails#
+			</isNotNull>		
+			<isNotNull property="cscmUpdateTime" prepend=",">
+				cs_car_model$suffix$.cscm_update_time = #cscmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscmAddTime" prepend=",">
+				cs_car_model$suffix$.cscm_add_time = #cscmAddTime#
+			</isNotNull>		
+			<isNotNull property="cscmRemark" prepend=",">
+				cs_car_model$suffix$.cscm_remark = #cscmRemark#
+			</isNotNull>		
+			<isNotNull property="cscmStatus" prepend=",">
+				cs_car_model$suffix$.cscm_status = #cscmStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscm_id=#cscmId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车型 -->
+	<delete id="deleteCsCarModelById" parameterClass="java.util.HashMap">
+		delete from cs_car_model$suffix$ where cscm_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车型 -->
+	<update id="removeCsCarModelById" parameterClass="java.util.HashMap">
+		update cs_car_model$suffix$ set  cs_car_model$suffix$.cscm_status=-1  where cscm_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车型 -->
+	<update id="updateCsCarModelBy"  parameterClass="java.util.HashMap">
+		update cs_car_model$suffix$ set		
+			cscm_id=cscm_id
+			<isNotNull property="V_cscmId" prepend=",">
+				cs_car_model$suffix$.cscm_id = #V_cscmId#
+			</isNotNull>		
+			<isNotNull property="V_cscmName" prepend=",">
+				cs_car_model$suffix$.cscm_name = #V_cscmName#
+			</isNotNull>		
+			<isNotNull property="V_cscmType" prepend=",">
+				cs_car_model$suffix$.cscm_type = #V_cscmType#
+			</isNotNull>		
+			<isNotNull property="V_cscmFile" prepend=",">
+				cs_car_model$suffix$.cscm_file = #V_cscmFile#
+			</isNotNull>		
+			<isNotNull property="V_cscmSeatS" prepend=",">
+				cs_car_model$suffix$.cscm_seat_s = #V_cscmSeatS#
+			</isNotNull>		
+			<isNotNull property="V_cscmTrunk" prepend=",">
+				cs_car_model$suffix$.cscm_trunk = #V_cscmTrunk#
+			</isNotNull>		
+			<isNotNull property="V_cscmVolume" prepend=",">
+				cs_car_model$suffix$.cscm_volume = #V_cscmVolume#
+			</isNotNull>		
+			<isNotNull property="V_cscmCapacity" prepend=",">
+				cs_car_model$suffix$.cscm_capacity = #V_cscmCapacity#
+			</isNotNull>		
+			<isNotNull property="V_cscmThumb" prepend=",">
+				cs_car_model$suffix$.cscm_thumb = #V_cscmThumb#
+			</isNotNull>		
+			<isNotNull property="V_cscmImage" prepend=",">
+				cs_car_model$suffix$.cscm_image = #V_cscmImage#
+			</isNotNull>		
+			<isNotNull property="V_cscmDetails" prepend=",">
+				cs_car_model$suffix$.cscm_details = #V_cscmDetails#
+			</isNotNull>		
+			<isNotNull property="V_cscmUpdateTime" prepend=",">
+				cs_car_model$suffix$.cscm_update_time = #V_cscmUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscmAddTime" prepend=",">
+				cs_car_model$suffix$.cscm_add_time = #V_cscmAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscmRemark" prepend=",">
+				cs_car_model$suffix$.cscm_remark = #V_cscmRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscmStatus" prepend=",">
+				cs_car_model$suffix$.cscm_status = #V_cscmStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		cs_car_model$suffix$.cscm_status!=-1 and
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCarModel_part.cs_car_model_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车型 -->
+	<update id="deleteCsCarModelBy"  parameterClass="java.util.HashMap">
+		delete from cs_car_model$suffix$ where 
+		cs_car_model$suffix$.cscm_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCarModel_part.cs_car_model_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

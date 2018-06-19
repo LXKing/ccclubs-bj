@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="TbDepartment_part">	
+	<!-- 公司部门条件sql片段  -->
+	<sql id="tb_department_dynamic">
+		<dynamic>
+			<isNotEmpty property="tbdId" prepend="and">
+			    $tbdIdNot$ tb_department$suffix$.tbd_id = #tbdId#
+			</isNotEmpty>
+			<isNotNull property="tbdIdNot" prepend="and">
+				<isEmpty property="tbdId">
+				$tbdIdNot$ tb_department$suffix$.tbd_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_department$suffix$.tbd_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="tbdHost" prepend="and">
+			    $tbdHostNot$ tb_department$suffix$.tbd_host = #tbdHost#
+			</isNotEmpty>
+			<isNotNull property="tbdHostNot" prepend="and">
+				<isEmpty property="tbdHost">
+				$tbdHostNot$ tb_department$suffix$.tbd_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="tbdName" prepend="and">			    
+			    (<isNotNull property="tbdNameNot">
+			    tb_department$suffix$.tbd_name is null or length(tb_department$suffix$.tbd_name) &lt; 1 or
+			    </isNotNull>$tbdNameNot$ tb_department$suffix$.tbd_name = #tbdName#)
+			</isNotEmpty>
+			<isNotNull property="tbdNameNot" prepend="and">
+				<isEmpty property="tbdName">
+				$tbdNameNot$ (tb_department$suffix$.tbd_name is null or length(tb_department$suffix$.tbd_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="tbdStatus" prepend="and">
+			    $tbdStatusNot$ tb_department$suffix$.tbd_status = #tbdStatus#
+			</isNotEmpty>
+			<isNotNull property="tbdStatusNot" prepend="and">
+				<isEmpty property="tbdStatus">
+				$tbdStatusNot$ tb_department$suffix$.tbd_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 公司部门left join 条件sql片段 -->
+	<sql id="tb_department_join">
+		<dynamic>
+			<isNotEmpty property="TbDepartment.tbdId" prepend="and">
+			    $TbDepartment.tbdIdNot$ tb_department$TbDepartment.suffix$.tbd_id = #TbDepartment.tbdId#
+			</isNotEmpty>
+			<isNotNull property="TbDepartment.tbdIdNot" prepend="and">
+				<isEmpty property="TbDepartment.tbdId">
+				$tbdIdNot$ tb_department$TbDepartment.suffix$.tbd_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    tb_department$TbDepartment.suffix$.tbd_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="TbDepartment.tbdHost" prepend="and">
+			    $TbDepartment.tbdHostNot$ tb_department$TbDepartment.suffix$.tbd_host = #TbDepartment.tbdHost#
+			</isNotEmpty>
+			<isNotNull property="TbDepartment.tbdHostNot" prepend="and">
+				<isEmpty property="TbDepartment.tbdHost">
+				$tbdHostNot$ tb_department$TbDepartment.suffix$.tbd_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbDepartment.tbdName" prepend="and">
+				(<isNotNull property="TbDepartment.tbdNameNot">
+			    tb_department$TbDepartment.suffix$.tbd_name is null or length(tb_department$TbDepartment.suffix$.tbd_name) &lt; 1 or
+			    </isNotNull>$TbDepartment.tbdNameNot$ tb_department$TbDepartment.suffix$.tbd_name = #TbDepartment.tbdName#)
+			</isNotEmpty>
+			<isNotNull property="TbDepartment.tbdNameNot" prepend="and">
+				<isEmpty property="TbDepartment.tbdName">
+				$tbdNameNot$ (tb_department$TbDepartment.suffix$.tbd_name is null or length(tb_department$TbDepartment.suffix$.tbd_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="TbDepartment.tbdStatus" prepend="and">
+			    $TbDepartment.tbdStatusNot$ tb_department$TbDepartment.suffix$.tbd_status = #TbDepartment.tbdStatus#
+			</isNotEmpty>
+			<isNotNull property="TbDepartment.tbdStatusNot" prepend="and">
+				<isEmpty property="TbDepartment.tbdStatus">
+				$tbdStatusNot$ tb_department$TbDepartment.suffix$.tbd_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

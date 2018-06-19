@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 订单</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body>
+		<div class="bigmain">
+			<ul class="menunavtop">
+				<li>
+					<a href="index.html"><img src="images/menu_btn1.png"> <br>主页</a>
+				</li>
+				<li>
+					<a href="reserve.html"><img src="images/menu_btn2.png"> <br>租车</a>
+				</li>
+				<li>
+					<a href="###" class="on"><img src="images/menu_btn3on.png"> <br>订单</a>
+				</li>
+				<li>
+					<a href="account.html"><img src="images/menu_btn4.png"> <br>账户</a>
+				</li>
+			</ul>
+			<div class="ordersbox ccc-order-list">
+				<s:if test="#request.page.result.size()>0">
+					<s:iterator value="#request.page.result" id="item" status="i">
+						<div class="carlist">
+							<dl>
+								<dt>
+									<img src="/images/cars/${item.csoModel}_wide.jpg">
+									<s:if test="#item.csoStatus==0||#item.csoStatus==1">
+										<a href="account_ordercontinue.html?order=${item.csoId}" class="okbuybtn">续订</a>
+									</s:if>
+									<s:else>
+										<a href="reserve.html?csoArea=${item.csoArea}&csoOutlets=${item.csoOutlets}" class="ono">再次预订</a>
+									</s:else>
+								</dt>
+								<dd style="line-height:24px;">
+								<s:if test="#item.csoStatus==0||#item.csoStatus==1">
+									<a href="account_remote.html?order=${item.csoId}">
+								</s:if>
+								<s:else>
+									<a href="account_orderdetail.html?order=${item.csoId}">
+								</s:else>
+										<div class="order-item-detail">
+											<h1>
+												<b>${item.$csoModel.cscmName}<u>|</u>${item.$csoCar.cscCarNo}</b>
+												<s:if test="#item.csoIsAdCar">
+													<span>宣</span>
+												</s:if>
+											</h1>
+											<p>
+												订单号：${item.csoId}
+												<span class="${item.csoStatus==0?'caryyc':'caryyd'}"> ${item.csoStatus==0?"已预定":""} ${item.csoStatus==1?"正在执行":""} ${item.csoStatus==2?"已还车":""} ${item.csoStatus==3?"已取消":""} ${item.csoStatus==4?"已完成":""} ${item.csoStatus==5?"待处理":""} ${item.csoStatus==6?"已退款":""} ${item.csoStatus==7?"已撤销":""}</span>
+											</p>
+											<p>
+												下单时间：${lz:date(item.csoAddTime,"yyyy-MM-dd,HH:mm")}
+											</p>
+											<p>
+												金额：
+												<strong>${lz:digit(item.csoPayNeed,2)}</strong>元&nbsp;&nbsp;
+												<s:if test="#item.csoCreditCard!=null">
+													<img src="images/mian_25px.png">
+												</s:if>
+												<s:if test="#item.csoCreditCard!=null&&#item.csoStatus==4||#item.csoStatus==3||#item.csoStatus==8">
+													<s:if test="#item.values.csoCreditCardStatus==0">
+														<span style="color:red;">未付款</span>
+													</s:if>
+													<s:if test="#item.values.csoCreditCardStatus==1">
+														<span>已付款</span>
+													</s:if>
+													<s:if test="#item.values.csoCreditCardStatus==2">
+														<span>已取消</span>
+													</s:if>
+												</s:if>
+											</p>
+											<p>
+												<img src="images/address.png">
+												${item.$csoOutlets.csoName}
+											</p>
+										</div> </a>
+								</dd>
+							</dl>
+						</div>
+					</s:iterator>
+				</s:if>
+			</div>
+		</div>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					var page = 0;
+					var maxPage = ${page.total};
+					$(window).bind('scroll', function() {
+						if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+							if(page < maxPage-1)
+							{
+								page++;
+								$.get('/weixin/account_ordermore.html',{page:page},function(data){
+										$('.ccc-order-list').append(data);
+								});
+							}
+						};
+					});
+					
+				});
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

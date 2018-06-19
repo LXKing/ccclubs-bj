@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvApiClient_part">	
+	<!-- API客户端条件sql片段  -->
+	<sql id="srv_api_client_dynamic">
+		<dynamic>
+			<isNotEmpty property="sacId" prepend="and">
+			    $sacIdNot$ srv_api_client$suffix$.sac_id = #sacId#
+			</isNotEmpty>
+			<isNotNull property="sacIdNot" prepend="and">
+				<isEmpty property="sacId">
+				$sacIdNot$ srv_api_client$suffix$.sac_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sacClient" prepend="and">			    
+			    (<isNotNull property="sacClientNot">
+			    srv_api_client$suffix$.sac_client is null or length(srv_api_client$suffix$.sac_client) &lt; 1 or
+			    </isNotNull>$sacClientNot$ srv_api_client$suffix$.sac_client = #sacClient#)
+			</isNotEmpty>
+			<isNotNull property="sacClientNot" prepend="and">
+				<isEmpty property="sacClient">
+				$sacClientNot$ (srv_api_client$suffix$.sac_client is null or length(srv_api_client$suffix$.sac_client) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sacSecret" prepend="and">			    
+			    (<isNotNull property="sacSecretNot">
+			    srv_api_client$suffix$.sac_secret is null or length(srv_api_client$suffix$.sac_secret) &lt; 1 or
+			    </isNotNull>$sacSecretNot$ srv_api_client$suffix$.sac_secret = #sacSecret#)
+			</isNotEmpty>
+			<isNotNull property="sacSecretNot" prepend="and">
+				<isEmpty property="sacSecret">
+				$sacSecretNot$ (srv_api_client$suffix$.sac_secret is null or length(srv_api_client$suffix$.sac_secret) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sacDesc" prepend="and">			    
+			    (<isNotNull property="sacDescNot">
+			    srv_api_client$suffix$.sac_desc is null or length(srv_api_client$suffix$.sac_desc) &lt; 1 or
+			    </isNotNull>$sacDescNot$ srv_api_client$suffix$.sac_desc like #sacDesc#)
+			</isNotEmpty>
+			<isNotNull property="sacDescNot" prepend="and">
+				<isEmpty property="sacDesc">
+				$sacDescNot$ (srv_api_client$suffix$.sac_desc is null or length(srv_api_client$suffix$.sac_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sacUpdateTimeStart" prepend="and">
+			    $sacUpdateTimeNot$   (srv_api_client$suffix$.sac_update_time &gt;= #sacUpdateTimeStart#
+			   <isEmpty property="sacUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="sacUpdateTimeEnd" prepend="and">
+				<isEmpty property="sacUpdateTimeStart">$sacUpdateTimeNot$   (</isEmpty>
+			    srv_api_client$suffix$.sac_update_time &lt;= #sacUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="sacUpdateTime" prepend="and">
+			    $sacUpdateTimeNot$ srv_api_client$suffix$.sac_update_time = #sacUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="sacUpdateTimeNot" prepend="and">
+				<isEmpty property="sacUpdateTimeStart"><isEmpty property="sacUpdateTimeEnd"><isEmpty property="sacUpdateTime">
+				$sacUpdateTimeNot$ srv_api_client$suffix$.sac_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sacAddTimeStart" prepend="and">
+			    $sacAddTimeNot$   (srv_api_client$suffix$.sac_add_time &gt;= #sacAddTimeStart#
+			   <isEmpty property="sacAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="sacAddTimeEnd" prepend="and">
+				<isEmpty property="sacAddTimeStart">$sacAddTimeNot$   (</isEmpty>
+			    srv_api_client$suffix$.sac_add_time &lt;= #sacAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="sacAddTime" prepend="and">
+			    $sacAddTimeNot$ srv_api_client$suffix$.sac_add_time = #sacAddTime#
+			</isNotEmpty>
+			<isNotNull property="sacAddTimeNot" prepend="and">
+				<isEmpty property="sacAddTimeStart"><isEmpty property="sacAddTimeEnd"><isEmpty property="sacAddTime">
+				$sacAddTimeNot$ srv_api_client$suffix$.sac_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="sacStatus" prepend="and">
+			    $sacStatusNot$ srv_api_client$suffix$.sac_status = #sacStatus#
+			</isNotEmpty>
+			<isNotNull property="sacStatusNot" prepend="and">
+				<isEmpty property="sacStatus">
+				$sacStatusNot$ srv_api_client$suffix$.sac_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- API客户端left join 条件sql片段 -->
+	<sql id="srv_api_client_join">
+		<dynamic>
+			<isNotEmpty property="SrvApiClient.sacId" prepend="and">
+			    $SrvApiClient.sacIdNot$ srv_api_client$SrvApiClient.suffix$.sac_id = #SrvApiClient.sacId#
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacIdNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacId">
+				$sacIdNot$ srv_api_client$SrvApiClient.suffix$.sac_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiClient.sacClient" prepend="and">
+				(<isNotNull property="SrvApiClient.sacClientNot">
+			    srv_api_client$SrvApiClient.suffix$.sac_client is null or length(srv_api_client$SrvApiClient.suffix$.sac_client) &lt; 1 or
+			    </isNotNull>$SrvApiClient.sacClientNot$ srv_api_client$SrvApiClient.suffix$.sac_client = #SrvApiClient.sacClient#)
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacClientNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacClient">
+				$sacClientNot$ (srv_api_client$SrvApiClient.suffix$.sac_client is null or length(srv_api_client$SrvApiClient.suffix$.sac_client) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiClient.sacSecret" prepend="and">
+				(<isNotNull property="SrvApiClient.sacSecretNot">
+			    srv_api_client$SrvApiClient.suffix$.sac_secret is null or length(srv_api_client$SrvApiClient.suffix$.sac_secret) &lt; 1 or
+			    </isNotNull>$SrvApiClient.sacSecretNot$ srv_api_client$SrvApiClient.suffix$.sac_secret = #SrvApiClient.sacSecret#)
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacSecretNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacSecret">
+				$sacSecretNot$ (srv_api_client$SrvApiClient.suffix$.sac_secret is null or length(srv_api_client$SrvApiClient.suffix$.sac_secret) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiClient.sacDesc" prepend="and">
+				(<isNotNull property="SrvApiClient.sacDescNot">
+			    srv_api_client$SrvApiClient.suffix$.sac_desc is null or length(srv_api_client$SrvApiClient.suffix$.sac_desc) &lt; 1 or
+			    </isNotNull>$SrvApiClient.sacDescNot$ srv_api_client$SrvApiClient.suffix$.sac_desc like #SrvApiClient.sacDesc#)
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacDescNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacDesc">
+				$sacDescNot$ (srv_api_client$SrvApiClient.suffix$.sac_desc is null or length(srv_api_client$SrvApiClient.suffix$.sac_desc) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiClient.sacUpdateTimeStart" prepend="and">
+			    $SrvApiClient.sacUpdateTimeNot$   (srv_api_client$SrvApiClient.suffix$.sac_update_time &gt;= #SrvApiClient.sacUpdateTimeStart#
+			   <isEmpty property="SrvApiClient.sacUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvApiClient.sacUpdateTimeEnd" prepend="and">
+				<isEmpty property="SrvApiClient.sacUpdateTimeStart">$SrvApiClient.sacUpdateTimeNot$   (</isEmpty>
+			    srv_api_client$SrvApiClient.suffix$.sac_update_time &lt;= #SrvApiClient.sacUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvApiClient.sacUpdateTime" prepend="and">
+			    $SrvApiClient.sacUpdateTimeNot$ srv_api_client$SrvApiClient.suffix$.sac_update_time = #SrvApiClient.sacUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacUpdateTimeNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacUpdateTimeStart"><isEmpty property="SrvApiClient.sacUpdateTimeEnd"><isEmpty property="SrvApiClient.sacUpdateTime">
+				$sacUpdateTimeNot$ srv_api_client$SrvApiClient.suffix$.sac_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiClient.sacAddTimeStart" prepend="and">
+			    $SrvApiClient.sacAddTimeNot$   (srv_api_client$SrvApiClient.suffix$.sac_add_time &gt;= #SrvApiClient.sacAddTimeStart#
+			   <isEmpty property="SrvApiClient.sacAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvApiClient.sacAddTimeEnd" prepend="and">
+				<isEmpty property="SrvApiClient.sacAddTimeStart">$SrvApiClient.sacAddTimeNot$   (</isEmpty>
+			    srv_api_client$SrvApiClient.suffix$.sac_add_time &lt;= #SrvApiClient.sacAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvApiClient.sacAddTime" prepend="and">
+			    $SrvApiClient.sacAddTimeNot$ srv_api_client$SrvApiClient.suffix$.sac_add_time = #SrvApiClient.sacAddTime#
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacAddTimeNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacAddTimeStart"><isEmpty property="SrvApiClient.sacAddTimeEnd"><isEmpty property="SrvApiClient.sacAddTime">
+				$sacAddTimeNot$ srv_api_client$SrvApiClient.suffix$.sac_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvApiClient.sacStatus" prepend="and">
+			    $SrvApiClient.sacStatusNot$ srv_api_client$SrvApiClient.suffix$.sac_status = #SrvApiClient.sacStatus#
+			</isNotEmpty>
+			<isNotNull property="SrvApiClient.sacStatusNot" prepend="and">
+				<isEmpty property="SrvApiClient.sacStatus">
+				$sacStatusNot$ srv_api_client$SrvApiClient.suffix$.sac_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

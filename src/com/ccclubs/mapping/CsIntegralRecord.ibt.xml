@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 积分记录之SQL映射 -->
+	<resultMap id="CsIntegralRecord" class="com.ccclubs.model.CsIntegralRecord">
+		<result property="csrId" column="csr_id"/>
+		<result property="csrHost" column="csr_host"/>
+		<result property="csrMember" column="csr_member"/>
+		<result property="csrType" column="csr_type"/>
+		<result property="csrAmount" column="csr_amount"/>
+		<result property="csrRemain" column="csr_remain"/>
+		<result property="csrRemark" column="csr_remark"/>
+		<result property="csrAddTime" column="csr_add_time"/>
+		<result property="csrOrder" column="csr_order"/>
+		<result property="csrRelate" column="csr_relate"/>
+		<result property="csrSerial" column="csr_serial"/>
+		<result property="csrEditor" column="csr_editor"/>
+	</resultMap>
+		
+	<!-- 获取所有积分记录 -->
+	<select id="getCsIntegralRecordList" resultMap="CsIntegralRecord">
+		select cs_integral_record$suffix$.* from cs_integral_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsIntegralRecord_part.cs_integral_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取积分记录分页 -->
+	<select id="getCsIntegralRecordPage" parameterClass="java.util.HashMap" resultMap="CsIntegralRecord">
+		select cs_integral_record$suffix$.* from cs_integral_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsIntegralRecord_part.cs_integral_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取积分记录总数 -->
+	<select id="getCsIntegralRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_integral_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsIntegralRecord_part.cs_integral_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取积分记录 -->
+	<select id="getCsIntegralRecordById" parameterClass="java.util.HashMap" resultMap="CsIntegralRecord">
+		select cs_integral_record$suffix$.* from cs_integral_record$suffix$
+		where csr_id=#id#
+	</select>
+	
+		
+	<!-- 保存积分记录 -->
+	<insert id="saveCsIntegralRecord"  parameterClass="com.ccclubs.model.CsIntegralRecord">
+		insert into cs_integral_record$suffix$
+		(
+			cs_integral_record$suffix$.csr_host
+			,cs_integral_record$suffix$.csr_member
+			,cs_integral_record$suffix$.csr_type
+			,cs_integral_record$suffix$.csr_amount
+			,cs_integral_record$suffix$.csr_remain
+			,cs_integral_record$suffix$.csr_remark
+			,cs_integral_record$suffix$.csr_add_time
+			,cs_integral_record$suffix$.csr_order
+			,cs_integral_record$suffix$.csr_relate
+			,cs_integral_record$suffix$.csr_serial
+			,cs_integral_record$suffix$.csr_editor
+		)
+		values(
+			<isNotNull property="csrHost" prepend="">
+				#csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csrMember" prepend=",">
+				#csrMember#
+			</isNotNull>
+			<isNull property="csrMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrType" prepend=",">
+				#csrType#
+			</isNotNull>
+			<isNull property="csrType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAmount" prepend=",">
+				#csrAmount#
+			</isNotNull>
+			<isNull property="csrAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRemain" prepend=",">
+				#csrRemain#
+			</isNotNull>
+			<isNull property="csrRemain" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRemark" prepend=",">
+				#csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrAddTime" prepend=",">
+				#csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrOrder" prepend=",">
+				#csrOrder#
+			</isNotNull>
+			<isNull property="csrOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrRelate" prepend=",">
+				#csrRelate#
+			</isNotNull>
+			<isNull property="csrRelate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrSerial" prepend=",">
+				#csrSerial#
+			</isNotNull>
+			<isNull property="csrSerial" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csrEditor" prepend=",">
+				#csrEditor#
+			</isNotNull>
+			<isNull property="csrEditor" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新积分记录 -->
+	<update id="updateCsIntegralRecord"  parameterClass="com.ccclubs.model.CsIntegralRecord">
+		update cs_integral_record$suffix$ set
+			<isNotNull property="csrHost" prepend="">
+				cs_integral_record$suffix$.csr_host = #csrHost#
+			</isNotNull>
+			<isNull property="csrHost" prepend="">
+				cs_integral_record$suffix$.csr_host = null
+			</isNull>				
+			<isNotNull property="csrMember" prepend=",">
+				cs_integral_record$suffix$.csr_member = #csrMember#
+			</isNotNull>
+			<isNull property="csrMember" prepend=",">
+				cs_integral_record$suffix$.csr_member = null
+			</isNull>				
+			<isNotNull property="csrType" prepend=",">
+				cs_integral_record$suffix$.csr_type = #csrType#
+			</isNotNull>
+			<isNull property="csrType" prepend=",">
+				cs_integral_record$suffix$.csr_type = null
+			</isNull>				
+			<isNotNull property="csrAmount" prepend=",">
+				cs_integral_record$suffix$.csr_amount = #csrAmount#
+			</isNotNull>
+			<isNull property="csrAmount" prepend=",">
+				cs_integral_record$suffix$.csr_amount = null
+			</isNull>				
+			<isNotNull property="csrRemain" prepend=",">
+				cs_integral_record$suffix$.csr_remain = #csrRemain#
+			</isNotNull>
+			<isNull property="csrRemain" prepend=",">
+				cs_integral_record$suffix$.csr_remain = null
+			</isNull>				
+			<isNotNull property="csrRemark" prepend=",">
+				cs_integral_record$suffix$.csr_remark = #csrRemark#
+			</isNotNull>
+			<isNull property="csrRemark" prepend=",">
+				cs_integral_record$suffix$.csr_remark = null
+			</isNull>				
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_integral_record$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>
+			<isNull property="csrAddTime" prepend=",">
+				cs_integral_record$suffix$.csr_add_time = null
+			</isNull>				
+			<isNotNull property="csrOrder" prepend=",">
+				cs_integral_record$suffix$.csr_order = #csrOrder#
+			</isNotNull>
+			<isNull property="csrOrder" prepend=",">
+				cs_integral_record$suffix$.csr_order = null
+			</isNull>				
+			<isNotNull property="csrRelate" prepend=",">
+				cs_integral_record$suffix$.csr_relate = #csrRelate#
+			</isNotNull>
+			<isNull property="csrRelate" prepend=",">
+				cs_integral_record$suffix$.csr_relate = null
+			</isNull>				
+			<isNotNull property="csrSerial" prepend=",">
+				cs_integral_record$suffix$.csr_serial = #csrSerial#
+			</isNotNull>
+			<isNull property="csrSerial" prepend=",">
+				cs_integral_record$suffix$.csr_serial = null
+			</isNull>				
+			<isNotNull property="csrEditor" prepend=",">
+				cs_integral_record$suffix$.csr_editor = #csrEditor#
+			</isNotNull>
+			<isNull property="csrEditor" prepend=",">
+				cs_integral_record$suffix$.csr_editor = null
+			</isNull>				
+		where
+			csr_id=#csrId#
+	</update>
+	
+	<!-- 更新积分记录非空字段 -->
+	<update id="updateCsIntegralRecord$NotNull"  parameterClass="com.ccclubs.model.CsIntegralRecord">
+		update cs_integral_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csrHost" prepend=",">
+				cs_integral_record$suffix$.csr_host = #csrHost#
+			</isNotNull>		
+			<isNotNull property="csrMember" prepend=",">
+				cs_integral_record$suffix$.csr_member = #csrMember#
+			</isNotNull>		
+			<isNotNull property="csrType" prepend=",">
+				cs_integral_record$suffix$.csr_type = #csrType#
+			</isNotNull>		
+			<isNotNull property="csrAmount" prepend=",">
+				cs_integral_record$suffix$.csr_amount = #csrAmount#
+			</isNotNull>		
+			<isNotNull property="csrRemain" prepend=",">
+				cs_integral_record$suffix$.csr_remain = #csrRemain#
+			</isNotNull>		
+			<isNotNull property="csrRemark" prepend=",">
+				cs_integral_record$suffix$.csr_remark = #csrRemark#
+			</isNotNull>		
+			<isNotNull property="csrAddTime" prepend=",">
+				cs_integral_record$suffix$.csr_add_time = #csrAddTime#
+			</isNotNull>		
+			<isNotNull property="csrOrder" prepend=",">
+				cs_integral_record$suffix$.csr_order = #csrOrder#
+			</isNotNull>		
+			<isNotNull property="csrRelate" prepend=",">
+				cs_integral_record$suffix$.csr_relate = #csrRelate#
+			</isNotNull>		
+			<isNotNull property="csrSerial" prepend=",">
+				cs_integral_record$suffix$.csr_serial = #csrSerial#
+			</isNotNull>		
+			<isNotNull property="csrEditor" prepend=",">
+				cs_integral_record$suffix$.csr_editor = #csrEditor#
+			</isNotNull>		
+			</dynamic>
+		where
+			csr_id=#csrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个积分记录 -->
+	<delete id="deleteCsIntegralRecordById" parameterClass="java.util.HashMap">
+		delete from cs_integral_record$suffix$ where csr_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新积分记录 -->
+	<update id="updateCsIntegralRecordBy"  parameterClass="java.util.HashMap">
+		update cs_integral_record$suffix$ set		
+			csr_id=csr_id
+			<isNotNull property="V_csrId" prepend=",">
+				cs_integral_record$suffix$.csr_id = #V_csrId#
+			</isNotNull>		
+			<isNotNull property="V_csrHost" prepend=",">
+				cs_integral_record$suffix$.csr_host = #V_csrHost#
+			</isNotNull>		
+			<isNotNull property="V_csrMember" prepend=",">
+				cs_integral_record$suffix$.csr_member = #V_csrMember#
+			</isNotNull>		
+			<isNotNull property="V_csrType" prepend=",">
+				cs_integral_record$suffix$.csr_type = #V_csrType#
+			</isNotNull>		
+			<isNotNull property="V_csrAmount" prepend=",">
+				cs_integral_record$suffix$.csr_amount = #V_csrAmount#
+			</isNotNull>		
+			<isNotNull property="V_csrRemain" prepend=",">
+				cs_integral_record$suffix$.csr_remain = #V_csrRemain#
+			</isNotNull>		
+			<isNotNull property="V_csrRemark" prepend=",">
+				cs_integral_record$suffix$.csr_remark = #V_csrRemark#
+			</isNotNull>		
+			<isNotNull property="V_csrAddTime" prepend=",">
+				cs_integral_record$suffix$.csr_add_time = #V_csrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csrOrder" prepend=",">
+				cs_integral_record$suffix$.csr_order = #V_csrOrder#
+			</isNotNull>		
+			<isNotNull property="V_csrRelate" prepend=",">
+				cs_integral_record$suffix$.csr_relate = #V_csrRelate#
+			</isNotNull>		
+			<isNotNull property="V_csrSerial" prepend=",">
+				cs_integral_record$suffix$.csr_serial = #V_csrSerial#
+			</isNotNull>		
+			<isNotNull property="V_csrEditor" prepend=",">
+				cs_integral_record$suffix$.csr_editor = #V_csrEditor#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.csr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_integral_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.csr_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_integral_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsrMember"><!-- 调用一下CsrMember，把CsMember指向CsrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsrOrder"><!-- 调用一下CsrOrder，把CsOrder指向CsrOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsIntegralRecord_part.cs_integral_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除积分记录 -->
+	<update id="deleteCsIntegralRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_integral_record$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsIntegralRecord_part.cs_integral_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

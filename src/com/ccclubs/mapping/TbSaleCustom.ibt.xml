@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 客户资料之SQL映射 -->
+	<resultMap id="TbSaleCustom" class="com.ccclubs.model.TbSaleCustom">
+		<result property="tbscId" column="tbsc_id"/>
+		<result property="tbscHost" column="tbsc_host"/>
+		<result property="tbscName" column="tbsc_name"/>
+		<result property="tbscBattle" column="tbsc_battle"/>
+		<result property="tbscEvent" column="tbsc_event"/>
+		<result property="tbscGroup" column="tbsc_group"/>
+		<result property="tbscMobile" column="tbsc_mobile"/>
+		<result property="tbscNumber" column="tbsc_number"/>
+		<result property="tbscEmail" column="tbsc_email"/>
+		<result property="tbscQq" column="tbsc_qq"/>
+		<result property="tbscOthrer" column="tbsc_othrer"/>
+		<result property="tbscProfile" column="tbsc_profile"/>
+		<result property="tbscLevel" column="tbsc_level"/>
+		<result property="tbscFormal" column="tbsc_formal"/>
+		<result property="tbscServer" column="tbsc_server"/>
+		<result property="tbscOnwer" column="tbsc_onwer"/>
+		<result property="tbscAdder" column="tbsc_adder"/>
+		<result property="tbscEditor" column="tbsc_editor"/>
+		<result property="tbscRemark" column="tbsc_remark"/>
+		<result property="tbscMemo" column="tbsc_memo"/>
+		<result property="tbscData" column="tbsc_data"/>
+		<result property="tbscUpdateTime" column="tbsc_update_time"/>
+		<result property="tbscAddTime" column="tbsc_add_time"/>
+		<result property="tbscStatus" column="tbsc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有客户资料 -->
+	<select id="getTbSaleCustomList" resultMap="TbSaleCustom">
+		select tb_sale_custom$suffix$.* from tb_sale_custom$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询-->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.tbsc_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询-->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_custom$suffix$.tbsc_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleCustom_part.tb_sale_custom_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取客户资料分页 -->
+	<select id="getTbSaleCustomPage" parameterClass="java.util.HashMap" resultMap="TbSaleCustom">
+		select tb_sale_custom$suffix$.* from tb_sale_custom$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询 -->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.tbsc_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_custom$suffix$.tbsc_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleCustom_part.tb_sale_custom_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by tbsc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取客户资料总数 -->
+	<select id="getTbSaleCustomEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from tb_sale_custom$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.tbsc_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询,同张表只能外链接一次 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and tb_sale_custom$suffix$.tbsc_status!=-1
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="TbSaleCustom_part.tb_sale_custom_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取客户资料 -->
+	<select id="getTbSaleCustomById" parameterClass="java.util.HashMap" resultMap="TbSaleCustom">
+		select tb_sale_custom$suffix$.* from tb_sale_custom$suffix$
+		where tbsc_id=#id#
+	</select>
+	
+		
+	<!-- 保存客户资料 -->
+	<insert id="saveTbSaleCustom"  parameterClass="com.ccclubs.model.TbSaleCustom">
+		insert into tb_sale_custom$suffix$
+		(
+			tb_sale_custom$suffix$.tbsc_host
+			,tb_sale_custom$suffix$.tbsc_name
+			,tb_sale_custom$suffix$.tbsc_battle
+			,tb_sale_custom$suffix$.tbsc_event
+			,tb_sale_custom$suffix$.tbsc_group
+			,tb_sale_custom$suffix$.tbsc_mobile
+			,tb_sale_custom$suffix$.tbsc_number
+			,tb_sale_custom$suffix$.tbsc_email
+			,tb_sale_custom$suffix$.tbsc_qq
+			,tb_sale_custom$suffix$.tbsc_othrer
+			,tb_sale_custom$suffix$.tbsc_profile
+			,tb_sale_custom$suffix$.tbsc_level
+			,tb_sale_custom$suffix$.tbsc_formal
+			,tb_sale_custom$suffix$.tbsc_server
+			,tb_sale_custom$suffix$.tbsc_onwer
+			,tb_sale_custom$suffix$.tbsc_adder
+			,tb_sale_custom$suffix$.tbsc_editor
+			,tb_sale_custom$suffix$.tbsc_remark
+			,tb_sale_custom$suffix$.tbsc_memo
+			,tb_sale_custom$suffix$.tbsc_data
+			,tb_sale_custom$suffix$.tbsc_update_time
+			,tb_sale_custom$suffix$.tbsc_add_time
+			,tb_sale_custom$suffix$.tbsc_status
+		)
+		values(
+			<isNotNull property="tbscHost" prepend="">
+				#tbscHost#
+			</isNotNull>
+			<isNull property="tbscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="tbscName" prepend=",">
+				#tbscName#
+			</isNotNull>
+			<isNull property="tbscName" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscBattle" prepend=",">
+				#tbscBattle#
+			</isNotNull>
+			<isNull property="tbscBattle" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscEvent" prepend=",">
+				#tbscEvent#
+			</isNotNull>
+			<isNull property="tbscEvent" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscGroup" prepend=",">
+				#tbscGroup#
+			</isNotNull>
+			<isNull property="tbscGroup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscMobile" prepend=",">
+				#tbscMobile#
+			</isNotNull>
+			<isNull property="tbscMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscNumber" prepend=",">
+				#tbscNumber#
+			</isNotNull>
+			<isNull property="tbscNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscEmail" prepend=",">
+				#tbscEmail#
+			</isNotNull>
+			<isNull property="tbscEmail" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscQq" prepend=",">
+				#tbscQq#
+			</isNotNull>
+			<isNull property="tbscQq" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscOthrer" prepend=",">
+				#tbscOthrer#
+			</isNotNull>
+			<isNull property="tbscOthrer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscProfile" prepend=",">
+				#tbscProfile#
+			</isNotNull>
+			<isNull property="tbscProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscLevel" prepend=",">
+				#tbscLevel#
+			</isNotNull>
+			<isNull property="tbscLevel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscFormal" prepend=",">
+				#tbscFormal#
+			</isNotNull>
+			<isNull property="tbscFormal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscServer" prepend=",">
+				#tbscServer#
+			</isNotNull>
+			<isNull property="tbscServer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscOnwer" prepend=",">
+				#tbscOnwer#
+			</isNotNull>
+			<isNull property="tbscOnwer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscAdder" prepend=",">
+				#tbscAdder#
+			</isNotNull>
+			<isNull property="tbscAdder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscEditor" prepend=",">
+				#tbscEditor#
+			</isNotNull>
+			<isNull property="tbscEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscRemark" prepend=",">
+				#tbscRemark#
+			</isNotNull>
+			<isNull property="tbscRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscMemo" prepend=",">
+				#tbscMemo#
+			</isNotNull>
+			<isNull property="tbscMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscData" prepend=",">
+				#tbscData#
+			</isNotNull>
+			<isNull property="tbscData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscUpdateTime" prepend=",">
+				#tbscUpdateTime#
+			</isNotNull>
+			<isNull property="tbscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscAddTime" prepend=",">
+				#tbscAddTime#
+			</isNotNull>
+			<isNull property="tbscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="tbscStatus" prepend=",">
+				#tbscStatus#
+			</isNotNull>
+			<isNull property="tbscStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新客户资料 -->
+	<update id="updateTbSaleCustom"  parameterClass="com.ccclubs.model.TbSaleCustom">
+		update tb_sale_custom$suffix$ set
+			<isNotNull property="tbscHost" prepend="">
+				tb_sale_custom$suffix$.tbsc_host = #tbscHost#
+			</isNotNull>
+			<isNull property="tbscHost" prepend="">
+				tb_sale_custom$suffix$.tbsc_host = null
+			</isNull>				
+			<isNotNull property="tbscName" prepend=",">
+				tb_sale_custom$suffix$.tbsc_name = #tbscName#
+			</isNotNull>
+			<isNull property="tbscName" prepend=",">
+				tb_sale_custom$suffix$.tbsc_name = null
+			</isNull>				
+			<isNotNull property="tbscBattle" prepend=",">
+				tb_sale_custom$suffix$.tbsc_battle = #tbscBattle#
+			</isNotNull>
+			<isNull property="tbscBattle" prepend=",">
+				tb_sale_custom$suffix$.tbsc_battle = null
+			</isNull>				
+			<isNotNull property="tbscEvent" prepend=",">
+				tb_sale_custom$suffix$.tbsc_event = #tbscEvent#
+			</isNotNull>
+			<isNull property="tbscEvent" prepend=",">
+				tb_sale_custom$suffix$.tbsc_event = null
+			</isNull>				
+			<isNotNull property="tbscGroup" prepend=",">
+				tb_sale_custom$suffix$.tbsc_group = #tbscGroup#
+			</isNotNull>
+			<isNull property="tbscGroup" prepend=",">
+				tb_sale_custom$suffix$.tbsc_group = null
+			</isNull>				
+			<isNotNull property="tbscMobile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_mobile = #tbscMobile#
+			</isNotNull>
+			<isNull property="tbscMobile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_mobile = null
+			</isNull>				
+			<isNotNull property="tbscNumber" prepend=",">
+				tb_sale_custom$suffix$.tbsc_number = #tbscNumber#
+			</isNotNull>
+			<isNull property="tbscNumber" prepend=",">
+				tb_sale_custom$suffix$.tbsc_number = null
+			</isNull>				
+			<isNotNull property="tbscEmail" prepend=",">
+				tb_sale_custom$suffix$.tbsc_email = #tbscEmail#
+			</isNotNull>
+			<isNull property="tbscEmail" prepend=",">
+				tb_sale_custom$suffix$.tbsc_email = null
+			</isNull>				
+			<isNotNull property="tbscQq" prepend=",">
+				tb_sale_custom$suffix$.tbsc_qq = #tbscQq#
+			</isNotNull>
+			<isNull property="tbscQq" prepend=",">
+				tb_sale_custom$suffix$.tbsc_qq = null
+			</isNull>				
+			<isNotNull property="tbscOthrer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_othrer = #tbscOthrer#
+			</isNotNull>
+			<isNull property="tbscOthrer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_othrer = null
+			</isNull>				
+			<isNotNull property="tbscProfile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_profile = #tbscProfile#
+			</isNotNull>
+			<isNull property="tbscProfile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_profile = null
+			</isNull>				
+			<isNotNull property="tbscLevel" prepend=",">
+				tb_sale_custom$suffix$.tbsc_level = #tbscLevel#
+			</isNotNull>
+			<isNull property="tbscLevel" prepend=",">
+				tb_sale_custom$suffix$.tbsc_level = null
+			</isNull>				
+			<isNotNull property="tbscFormal" prepend=",">
+				tb_sale_custom$suffix$.tbsc_formal = #tbscFormal#
+			</isNotNull>
+			<isNull property="tbscFormal" prepend=",">
+				tb_sale_custom$suffix$.tbsc_formal = null
+			</isNull>				
+			<isNotNull property="tbscServer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_server = #tbscServer#
+			</isNotNull>
+			<isNull property="tbscServer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_server = null
+			</isNull>				
+			<isNotNull property="tbscOnwer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_onwer = #tbscOnwer#
+			</isNotNull>
+			<isNull property="tbscOnwer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_onwer = null
+			</isNull>				
+			<isNotNull property="tbscAdder" prepend=",">
+				tb_sale_custom$suffix$.tbsc_adder = #tbscAdder#
+			</isNotNull>
+			<isNull property="tbscAdder" prepend=",">
+				tb_sale_custom$suffix$.tbsc_adder = null
+			</isNull>				
+			<isNotNull property="tbscEditor" prepend=",">
+				tb_sale_custom$suffix$.tbsc_editor = #tbscEditor#
+			</isNotNull>
+			<isNull property="tbscEditor" prepend=",">
+				tb_sale_custom$suffix$.tbsc_editor = null
+			</isNull>				
+			<isNotNull property="tbscRemark" prepend=",">
+				tb_sale_custom$suffix$.tbsc_remark = #tbscRemark#
+			</isNotNull>
+			<isNull property="tbscRemark" prepend=",">
+				tb_sale_custom$suffix$.tbsc_remark = null
+			</isNull>				
+			<isNotNull property="tbscMemo" prepend=",">
+				tb_sale_custom$suffix$.tbsc_memo = #tbscMemo#
+			</isNotNull>
+			<isNull property="tbscMemo" prepend=",">
+				tb_sale_custom$suffix$.tbsc_memo = null
+			</isNull>				
+			<isNotNull property="tbscData" prepend=",">
+				tb_sale_custom$suffix$.tbsc_data = #tbscData#
+			</isNotNull>
+			<isNull property="tbscData" prepend=",">
+				tb_sale_custom$suffix$.tbsc_data = null
+			</isNull>				
+			<isNotNull property="tbscUpdateTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_update_time = #tbscUpdateTime#
+			</isNotNull>
+			<isNull property="tbscUpdateTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_update_time = null
+			</isNull>				
+			<isNotNull property="tbscAddTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_add_time = #tbscAddTime#
+			</isNotNull>
+			<isNull property="tbscAddTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_add_time = null
+			</isNull>				
+			<isNotNull property="tbscStatus" prepend=",">
+				tb_sale_custom$suffix$.tbsc_status = #tbscStatus#
+			</isNotNull>
+			<isNull property="tbscStatus" prepend=",">
+				tb_sale_custom$suffix$.tbsc_status = null
+			</isNull>				
+		where
+			tbsc_id=#tbscId#
+	</update>
+	
+	<!-- 更新客户资料非空字段 -->
+	<update id="updateTbSaleCustom$NotNull"  parameterClass="com.ccclubs.model.TbSaleCustom">
+		update tb_sale_custom$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="tbscHost" prepend=",">
+				tb_sale_custom$suffix$.tbsc_host = #tbscHost#
+			</isNotNull>		
+			<isNotNull property="tbscName" prepend=",">
+				tb_sale_custom$suffix$.tbsc_name = #tbscName#
+			</isNotNull>		
+			<isNotNull property="tbscBattle" prepend=",">
+				tb_sale_custom$suffix$.tbsc_battle = #tbscBattle#
+			</isNotNull>		
+			<isNotNull property="tbscEvent" prepend=",">
+				tb_sale_custom$suffix$.tbsc_event = #tbscEvent#
+			</isNotNull>		
+			<isNotNull property="tbscGroup" prepend=",">
+				tb_sale_custom$suffix$.tbsc_group = #tbscGroup#
+			</isNotNull>		
+			<isNotNull property="tbscMobile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_mobile = #tbscMobile#
+			</isNotNull>		
+			<isNotNull property="tbscNumber" prepend=",">
+				tb_sale_custom$suffix$.tbsc_number = #tbscNumber#
+			</isNotNull>		
+			<isNotNull property="tbscEmail" prepend=",">
+				tb_sale_custom$suffix$.tbsc_email = #tbscEmail#
+			</isNotNull>		
+			<isNotNull property="tbscQq" prepend=",">
+				tb_sale_custom$suffix$.tbsc_qq = #tbscQq#
+			</isNotNull>		
+			<isNotNull property="tbscOthrer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_othrer = #tbscOthrer#
+			</isNotNull>		
+			<isNotNull property="tbscProfile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_profile = #tbscProfile#
+			</isNotNull>		
+			<isNotNull property="tbscLevel" prepend=",">
+				tb_sale_custom$suffix$.tbsc_level = #tbscLevel#
+			</isNotNull>		
+			<isNotNull property="tbscFormal" prepend=",">
+				tb_sale_custom$suffix$.tbsc_formal = #tbscFormal#
+			</isNotNull>		
+			<isNotNull property="tbscServer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_server = #tbscServer#
+			</isNotNull>		
+			<isNotNull property="tbscOnwer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_onwer = #tbscOnwer#
+			</isNotNull>		
+			<isNotNull property="tbscAdder" prepend=",">
+				tb_sale_custom$suffix$.tbsc_adder = #tbscAdder#
+			</isNotNull>		
+			<isNotNull property="tbscEditor" prepend=",">
+				tb_sale_custom$suffix$.tbsc_editor = #tbscEditor#
+			</isNotNull>		
+			<isNotNull property="tbscRemark" prepend=",">
+				tb_sale_custom$suffix$.tbsc_remark = #tbscRemark#
+			</isNotNull>		
+			<isNotNull property="tbscMemo" prepend=",">
+				tb_sale_custom$suffix$.tbsc_memo = #tbscMemo#
+			</isNotNull>		
+			<isNotNull property="tbscData" prepend=",">
+				tb_sale_custom$suffix$.tbsc_data = #tbscData#
+			</isNotNull>		
+			<isNotNull property="tbscUpdateTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_update_time = #tbscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="tbscAddTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_add_time = #tbscAddTime#
+			</isNotNull>		
+			<isNotNull property="tbscStatus" prepend=",">
+				tb_sale_custom$suffix$.tbsc_status = #tbscStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			tbsc_id=#tbscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个客户资料 -->
+	<delete id="deleteTbSaleCustomById" parameterClass="java.util.HashMap">
+		delete from tb_sale_custom$suffix$ where tbsc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个客户资料 -->
+	<update id="removeTbSaleCustomById" parameterClass="java.util.HashMap">
+		update tb_sale_custom$suffix$ set  tb_sale_custom$suffix$.tbsc_status=-1  where tbsc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新客户资料 -->
+	<update id="updateTbSaleCustomBy"  parameterClass="java.util.HashMap">
+		update tb_sale_custom$suffix$ set		
+			tbsc_id=tbsc_id
+			<isNotNull property="V_tbscId" prepend=",">
+				tb_sale_custom$suffix$.tbsc_id = #V_tbscId#
+			</isNotNull>		
+			<isNotNull property="V_tbscHost" prepend=",">
+				tb_sale_custom$suffix$.tbsc_host = #V_tbscHost#
+			</isNotNull>		
+			<isNotNull property="V_tbscName" prepend=",">
+				tb_sale_custom$suffix$.tbsc_name = #V_tbscName#
+			</isNotNull>		
+			<isNotNull property="V_tbscBattle" prepend=",">
+				tb_sale_custom$suffix$.tbsc_battle = #V_tbscBattle#
+			</isNotNull>		
+			<isNotNull property="V_tbscEvent" prepend=",">
+				tb_sale_custom$suffix$.tbsc_event = #V_tbscEvent#
+			</isNotNull>		
+			<isNotNull property="V_tbscGroup" prepend=",">
+				tb_sale_custom$suffix$.tbsc_group = #V_tbscGroup#
+			</isNotNull>		
+			<isNotNull property="V_tbscMobile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_mobile = #V_tbscMobile#
+			</isNotNull>		
+			<isNotNull property="V_tbscNumber" prepend=",">
+				tb_sale_custom$suffix$.tbsc_number = #V_tbscNumber#
+			</isNotNull>		
+			<isNotNull property="V_tbscEmail" prepend=",">
+				tb_sale_custom$suffix$.tbsc_email = #V_tbscEmail#
+			</isNotNull>		
+			<isNotNull property="V_tbscQq" prepend=",">
+				tb_sale_custom$suffix$.tbsc_qq = #V_tbscQq#
+			</isNotNull>		
+			<isNotNull property="V_tbscOthrer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_othrer = #V_tbscOthrer#
+			</isNotNull>		
+			<isNotNull property="V_tbscProfile" prepend=",">
+				tb_sale_custom$suffix$.tbsc_profile = #V_tbscProfile#
+			</isNotNull>		
+			<isNotNull property="V_tbscLevel" prepend=",">
+				tb_sale_custom$suffix$.tbsc_level = #V_tbscLevel#
+			</isNotNull>		
+			<isNotNull property="V_tbscFormal" prepend=",">
+				tb_sale_custom$suffix$.tbsc_formal = #V_tbscFormal#
+			</isNotNull>		
+			<isNotNull property="V_tbscServer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_server = #V_tbscServer#
+			</isNotNull>		
+			<isNotNull property="V_tbscOnwer" prepend=",">
+				tb_sale_custom$suffix$.tbsc_onwer = #V_tbscOnwer#
+			</isNotNull>		
+			<isNotNull property="V_tbscAdder" prepend=",">
+				tb_sale_custom$suffix$.tbsc_adder = #V_tbscAdder#
+			</isNotNull>		
+			<isNotNull property="V_tbscEditor" prepend=",">
+				tb_sale_custom$suffix$.tbsc_editor = #V_tbscEditor#
+			</isNotNull>		
+			<isNotNull property="V_tbscRemark" prepend=",">
+				tb_sale_custom$suffix$.tbsc_remark = #V_tbscRemark#
+			</isNotNull>		
+			<isNotNull property="V_tbscMemo" prepend=",">
+				tb_sale_custom$suffix$.tbsc_memo = #V_tbscMemo#
+			</isNotNull>		
+			<isNotNull property="V_tbscData" prepend=",">
+				tb_sale_custom$suffix$.tbsc_data = #V_tbscData#
+			</isNotNull>		
+			<isNotNull property="V_tbscUpdateTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_update_time = #V_tbscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_tbscAddTime" prepend=",">
+				tb_sale_custom$suffix$.tbsc_add_time = #V_tbscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_tbscStatus" prepend=",">
+				tb_sale_custom$suffix$.tbsc_status = #V_tbscStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[销售战役]查询-->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<isNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.tbsc_battle=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id
+			</isNull>
+			<isNotNull property="TbSaleBattle.on">
+				left join tb_sale_battle tb_sale_battle$TbSaleBattle.suffix$ on tb_sale_custom$suffix$.$TbSaleBattle.on$=tb_sale_battle$TbSaleBattle.suffix$.tbsb_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询-->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<isNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.tbsc_event=cs_sale_event$CsSaleEvent.suffix$.csse_id
+			</isNull>
+			<isNotNull property="CsSaleEvent.on">
+				left join cs_sale_event cs_sale_event$CsSaleEvent.suffix$ on tb_sale_custom$suffix$.$CsSaleEvent.on$=cs_sale_event$CsSaleEvent.suffix$.csse_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询-->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<isNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.tbsc_group=tb_custom_group$TbCustomGroup.suffix$.tbcg_id
+			</isNull>
+			<isNotNull property="TbCustomGroup.on">
+				left join tb_custom_group tb_custom_group$TbCustomGroup.suffix$ on tb_sale_custom$suffix$.$TbCustomGroup.on$=tb_custom_group$TbCustomGroup.suffix$.tbcg_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		tb_sale_custom$suffix$.tbsc_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[销售战役]查询条件sql片段 -->
+		<isNotNull property="TbscBattle"><!-- 调用一下TbscBattle，把TbSaleBattle指向TbscBattle --></isNotNull>
+		<isNotNull property="TbSaleBattle">
+			<include refid="TbSaleBattle_part.tb_sale_battle_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[销售活动]查询条件sql片段 -->
+		<isNotNull property="TbscEvent"><!-- 调用一下TbscEvent，把CsSaleEvent指向TbscEvent --></isNotNull>
+		<isNotNull property="CsSaleEvent">
+			<include refid="CsSaleEvent_part.cs_sale_event_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[客户组织]查询条件sql片段 -->
+		<isNotNull property="TbscGroup"><!-- 调用一下TbscGroup，把TbCustomGroup指向TbscGroup --></isNotNull>
+		<isNotNull property="TbCustomGroup">
+			<include refid="TbCustomGroup_part.tb_custom_group_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="TbSaleCustom_part.tb_sale_custom_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除客户资料 -->
+	<update id="deleteTbSaleCustomBy"  parameterClass="java.util.HashMap">
+		delete from tb_sale_custom$suffix$ where 
+		tb_sale_custom$suffix$.tbsc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="TbSaleCustom_part.tb_sale_custom_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

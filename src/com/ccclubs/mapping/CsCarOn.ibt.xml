@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 车辆上线记录之SQL映射 -->
+	<resultMap id="CsCarOn" class="com.ccclubs.model.CsCarOn">
+		<result property="cscoId" column="csco_id"/>
+		<result property="cscoHost" column="csco_host"/>
+		<result property="cscoCar" column="csco_car"/>
+		<result property="cscoOnUser" column="csco_on_user"/>
+		<result property="cscoOffUser" column="csco_off_user"/>
+		<result property="cscoOnTime" column="csco_on_time"/>
+		<result property="cscoOffTime" column="csco_off_time"/>
+		<result property="cscoLong" column="csco_long"/>
+		<result property="cscoRemark" column="csco_remark"/>
+		<result property="cscoStatus" column="csco_status"/>
+		<result property="cscoOnRemark" column="csco_on_remark"/>
+		<result property="cscoProperty" column="csco_property"/>
+		<result property="cscoImage" column="csco_image"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆上线记录 -->
+	<select id="getCsCarOnList" resultMap="CsCarOn">
+		select cs_car_on$suffix$.* from cs_car_on$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属车辆]查询-->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.csco_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询-->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.csco_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_on$suffix$.csco_status!=-1
+		<!-- 多对一外链接[所属车辆]查询条件sql片段 -->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询条件sql片段 -->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarOn_part.cs_car_on_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csco_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆上线记录分页 -->
+	<select id="getCsCarOnPage" parameterClass="java.util.HashMap" resultMap="CsCarOn">
+		select cs_car_on$suffix$.* from cs_car_on$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属车辆]查询-->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.csco_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询-->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.csco_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_on$suffix$.csco_status!=-1
+		<!-- 多对一外链接[所属车辆]查询条件sql片段 -->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询条件sql片段 -->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarOn_part.cs_car_on_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csco_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆上线记录总数 -->
+	<select id="getCsCarOnEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car_on$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属车辆]查询-->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.csco_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询-->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.csco_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car_on$suffix$.csco_status!=-1
+		<!-- 多对一外链接[所属车辆]查询条件sql片段 -->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询条件sql片段 -->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCarOn_part.cs_car_on_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆上线记录 -->
+	<select id="getCsCarOnById" parameterClass="java.util.HashMap" resultMap="CsCarOn">
+		select cs_car_on$suffix$.* from cs_car_on$suffix$
+		where csco_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆上线记录 -->
+	<insert id="saveCsCarOn"  parameterClass="com.ccclubs.model.CsCarOn">
+		insert into cs_car_on$suffix$
+		(
+			cs_car_on$suffix$.csco_host
+			,cs_car_on$suffix$.csco_car
+			,cs_car_on$suffix$.csco_on_user
+			,cs_car_on$suffix$.csco_off_user
+			,cs_car_on$suffix$.csco_on_time
+			,cs_car_on$suffix$.csco_off_time
+			,cs_car_on$suffix$.csco_long
+			,cs_car_on$suffix$.csco_remark
+			,cs_car_on$suffix$.csco_status
+			,cs_car_on$suffix$.csco_on_remark
+			,cs_car_on$suffix$.csco_property
+			,cs_car_on$suffix$.csco_image
+		)
+		values(
+			<isNotNull property="cscoHost" prepend="">
+				#cscoHost#
+			</isNotNull>
+			<isNull property="cscoHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscoCar" prepend=",">
+				#cscoCar#
+			</isNotNull>
+			<isNull property="cscoCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoOnUser" prepend=",">
+				#cscoOnUser#
+			</isNotNull>
+			<isNull property="cscoOnUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoOffUser" prepend=",">
+				#cscoOffUser#
+			</isNotNull>
+			<isNull property="cscoOffUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoOnTime" prepend=",">
+				#cscoOnTime#
+			</isNotNull>
+			<isNull property="cscoOnTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoOffTime" prepend=",">
+				#cscoOffTime#
+			</isNotNull>
+			<isNull property="cscoOffTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoLong" prepend=",">
+				#cscoLong#
+			</isNotNull>
+			<isNull property="cscoLong" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoRemark" prepend=",">
+				#cscoRemark#
+			</isNotNull>
+			<isNull property="cscoRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoStatus" prepend=",">
+				#cscoStatus#
+			</isNotNull>
+			<isNull property="cscoStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoOnRemark" prepend=",">
+				#cscoOnRemark#
+			</isNotNull>
+			<isNull property="cscoOnRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoProperty" prepend=",">
+				#cscoProperty#
+			</isNotNull>
+			<isNull property="cscoProperty" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscoImage" prepend=",">
+				#cscoImage#
+			</isNotNull>
+			<isNull property="cscoImage" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆上线记录 -->
+	<update id="updateCsCarOn"  parameterClass="com.ccclubs.model.CsCarOn">
+		update cs_car_on$suffix$ set
+			<isNotNull property="cscoHost" prepend="">
+				cs_car_on$suffix$.csco_host = #cscoHost#
+			</isNotNull>
+			<isNull property="cscoHost" prepend="">
+				cs_car_on$suffix$.csco_host = null
+			</isNull>				
+			<isNotNull property="cscoCar" prepend=",">
+				cs_car_on$suffix$.csco_car = #cscoCar#
+			</isNotNull>
+			<isNull property="cscoCar" prepend=",">
+				cs_car_on$suffix$.csco_car = null
+			</isNull>				
+			<isNotNull property="cscoOnUser" prepend=",">
+				cs_car_on$suffix$.csco_on_user = #cscoOnUser#
+			</isNotNull>
+			<isNull property="cscoOnUser" prepend=",">
+				cs_car_on$suffix$.csco_on_user = null
+			</isNull>				
+			<isNotNull property="cscoOffUser" prepend=",">
+				cs_car_on$suffix$.csco_off_user = #cscoOffUser#
+			</isNotNull>
+			<isNull property="cscoOffUser" prepend=",">
+				cs_car_on$suffix$.csco_off_user = null
+			</isNull>				
+			<isNotNull property="cscoOnTime" prepend=",">
+				cs_car_on$suffix$.csco_on_time = #cscoOnTime#
+			</isNotNull>
+			<isNull property="cscoOnTime" prepend=",">
+				cs_car_on$suffix$.csco_on_time = null
+			</isNull>				
+			<isNotNull property="cscoOffTime" prepend=",">
+				cs_car_on$suffix$.csco_off_time = #cscoOffTime#
+			</isNotNull>
+			<isNull property="cscoOffTime" prepend=",">
+				cs_car_on$suffix$.csco_off_time = null
+			</isNull>				
+			<isNotNull property="cscoLong" prepend=",">
+				cs_car_on$suffix$.csco_long = #cscoLong#
+			</isNotNull>
+			<isNull property="cscoLong" prepend=",">
+				cs_car_on$suffix$.csco_long = null
+			</isNull>				
+			<isNotNull property="cscoRemark" prepend=",">
+				cs_car_on$suffix$.csco_remark = #cscoRemark#
+			</isNotNull>
+			<isNull property="cscoRemark" prepend=",">
+				cs_car_on$suffix$.csco_remark = null
+			</isNull>				
+			<isNotNull property="cscoStatus" prepend=",">
+				cs_car_on$suffix$.csco_status = #cscoStatus#
+			</isNotNull>
+			<isNull property="cscoStatus" prepend=",">
+				cs_car_on$suffix$.csco_status = null
+			</isNull>				
+			<isNotNull property="cscoOnRemark" prepend=",">
+				cs_car_on$suffix$.csco_on_remark = #cscoOnRemark#
+			</isNotNull>
+			<isNull property="cscoOnRemark" prepend=",">
+				cs_car_on$suffix$.csco_on_remark = null
+			</isNull>				
+			<isNotNull property="cscoProperty" prepend=",">
+				cs_car_on$suffix$.csco_property = #cscoProperty#
+			</isNotNull>
+			<isNull property="cscoProperty" prepend=",">
+				cs_car_on$suffix$.csco_property = null
+			</isNull>				
+			<isNotNull property="cscoImage" prepend=",">
+				cs_car_on$suffix$.csco_image = #cscoImage#
+			</isNotNull>
+			<isNull property="cscoImage" prepend=",">
+				cs_car_on$suffix$.csco_image = null
+			</isNull>				
+		where
+			csco_id=#cscoId#
+	</update>
+	
+	<!-- 更新车辆上线记录非空字段 -->
+	<update id="updateCsCarOn$NotNull"  parameterClass="com.ccclubs.model.CsCarOn">
+		update cs_car_on$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscoHost" prepend=",">
+				cs_car_on$suffix$.csco_host = #cscoHost#
+			</isNotNull>		
+			<isNotNull property="cscoCar" prepend=",">
+				cs_car_on$suffix$.csco_car = #cscoCar#
+			</isNotNull>		
+			<isNotNull property="cscoOnUser" prepend=",">
+				cs_car_on$suffix$.csco_on_user = #cscoOnUser#
+			</isNotNull>		
+			<isNotNull property="cscoOffUser" prepend=",">
+				cs_car_on$suffix$.csco_off_user = #cscoOffUser#
+			</isNotNull>		
+			<isNotNull property="cscoOnTime" prepend=",">
+				cs_car_on$suffix$.csco_on_time = #cscoOnTime#
+			</isNotNull>		
+			<isNotNull property="cscoOffTime" prepend=",">
+				cs_car_on$suffix$.csco_off_time = #cscoOffTime#
+			</isNotNull>		
+			<isNotNull property="cscoLong" prepend=",">
+				cs_car_on$suffix$.csco_long = #cscoLong#
+			</isNotNull>		
+			<isNotNull property="cscoRemark" prepend=",">
+				cs_car_on$suffix$.csco_remark = #cscoRemark#
+			</isNotNull>		
+			<isNotNull property="cscoStatus" prepend=",">
+				cs_car_on$suffix$.csco_status = #cscoStatus#
+			</isNotNull>		
+			<isNotNull property="cscoOnRemark" prepend=",">
+				cs_car_on$suffix$.csco_on_remark = #cscoOnRemark#
+			</isNotNull>		
+			<isNotNull property="cscoProperty" prepend=",">
+				cs_car_on$suffix$.csco_property = #cscoProperty#
+			</isNotNull>		
+			<isNotNull property="cscoImage" prepend=",">
+				cs_car_on$suffix$.csco_image = #cscoImage#
+			</isNotNull>		
+			</dynamic>
+		where
+			csco_id=#cscoId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆上线记录 -->
+	<delete id="deleteCsCarOnById" parameterClass="java.util.HashMap">
+		delete from cs_car_on$suffix$ where csco_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆上线记录 -->
+	<update id="removeCsCarOnById" parameterClass="java.util.HashMap">
+		update cs_car_on$suffix$ set  cs_car_on$suffix$.csco_status=-1  where csco_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆上线记录 -->
+	<update id="updateCsCarOnBy"  parameterClass="java.util.HashMap">
+		update cs_car_on$suffix$ set		
+			csco_id=csco_id
+			<isNotNull property="V_cscoId" prepend=",">
+				cs_car_on$suffix$.csco_id = #V_cscoId#
+			</isNotNull>		
+			<isNotNull property="V_cscoHost" prepend=",">
+				cs_car_on$suffix$.csco_host = #V_cscoHost#
+			</isNotNull>		
+			<isNotNull property="V_cscoCar" prepend=",">
+				cs_car_on$suffix$.csco_car = #V_cscoCar#
+			</isNotNull>		
+			<isNotNull property="V_cscoOnUser" prepend=",">
+				cs_car_on$suffix$.csco_on_user = #V_cscoOnUser#
+			</isNotNull>		
+			<isNotNull property="V_cscoOffUser" prepend=",">
+				cs_car_on$suffix$.csco_off_user = #V_cscoOffUser#
+			</isNotNull>		
+			<isNotNull property="V_cscoOnTime" prepend=",">
+				cs_car_on$suffix$.csco_on_time = #V_cscoOnTime#
+			</isNotNull>		
+			<isNotNull property="V_cscoOffTime" prepend=",">
+				cs_car_on$suffix$.csco_off_time = #V_cscoOffTime#
+			</isNotNull>		
+			<isNotNull property="V_cscoLong" prepend=",">
+				cs_car_on$suffix$.csco_long = #V_cscoLong#
+			</isNotNull>		
+			<isNotNull property="V_cscoRemark" prepend=",">
+				cs_car_on$suffix$.csco_remark = #V_cscoRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscoStatus" prepend=",">
+				cs_car_on$suffix$.csco_status = #V_cscoStatus#
+			</isNotNull>		
+			<isNotNull property="V_cscoOnRemark" prepend=",">
+				cs_car_on$suffix$.csco_on_remark = #V_cscoOnRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscoProperty" prepend=",">
+				cs_car_on$suffix$.csco_property = #V_cscoProperty#
+			</isNotNull>		
+			<isNotNull property="V_cscoImage" prepend=",">
+				cs_car_on$suffix$.csco_image = #V_cscoImage#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[所属车辆]查询-->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.csco_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_car_on$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[上线操作人]查询-->
+		<isNotNull property="CscoOnUser"><!-- 调用一下CscoOnUser，把SrvUser指向CscoOnUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_on$suffix$.csco_on_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_on$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[下线操作人]查询-->
+		<isNotNull property="CscoOffUser"><!-- 调用一下CscoOffUser，把SrvUser指向CscoOffUser --></isNotNull>
+		<isNotNull property="SrvUser">
+			<isNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_on$suffix$.csco_off_user=srv_user$SrvUser.suffix$.su_id
+			</isNull>
+			<isNotNull property="SrvUser.on">
+				left join srv_user srv_user$SrvUser.suffix$ on cs_car_on$suffix$.$SrvUser.on$=srv_user$SrvUser.suffix$.su_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询-->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<isNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.csco_property=srv_property$SrvProperty.suffix$.sp_id
+			</isNull>
+			<isNotNull property="SrvProperty.on">
+				left join srv_property srv_property$SrvProperty.suffix$ on cs_car_on$suffix$.$SrvProperty.on$=srv_property$SrvProperty.suffix$.sp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_car_on$suffix$.csco_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[所属车辆]查询条件sql片段 -->
+		<isNotNull property="CscoCar"><!-- 调用一下CscoCar，把CsCar指向CscoCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[下线标签]查询条件sql片段 -->
+		<isNotNull property="CscoProperty"><!-- 调用一下CscoProperty，把SrvProperty指向CscoProperty --></isNotNull>
+		<isNotNull property="SrvProperty">
+			<include refid="SrvProperty_part.srv_property_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCarOn_part.cs_car_on_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆上线记录 -->
+	<update id="deleteCsCarOnBy"  parameterClass="java.util.HashMap">
+		delete from cs_car_on$suffix$ where 
+		cs_car_on$suffix$.csco_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCarOn_part.cs_car_on_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

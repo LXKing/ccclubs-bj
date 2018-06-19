@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 事件关注之SQL映射 -->
+	<resultMap id="CsEventHeed" class="com.ccclubs.model.CsEventHeed">
+		<result property="csehId" column="cseh_id"/>
+		<result property="csehEventType" column="cseh_event_type"/>
+		<result property="csehHeedUser" column="cseh_heed_user"/>
+		<result property="csehHeedType" column="cseh_heed_type"/>
+		<result property="csehUpdateTime" column="cseh_update_time"/>
+		<result property="csehAddTime" column="cseh_add_time"/>
+		<result property="csehStatus" column="cseh_status"/>
+	</resultMap>
+		
+	<!-- 获取所有事件关注 -->
+	<select id="getCsEventHeedList" resultMap="CsEventHeed">
+		select cs_event_heed$suffix$.* from cs_event_heed$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统事件类型]查询-->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<isNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.cseh_event_type=cs_event_type$CsEventType.suffix$.cset_id
+			</isNull>
+			<isNotNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.$CsEventType.on$=cs_event_type$CsEventType.suffix$.cset_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_event_heed$suffix$.cseh_status!=-1
+		<!-- 多对一外链接[系统事件类型]查询条件sql片段 -->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<include refid="CsEventType_part.cs_event_type_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEventHeed_part.cs_event_heed_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cseh_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取事件关注分页 -->
+	<select id="getCsEventHeedPage" parameterClass="java.util.HashMap" resultMap="CsEventHeed">
+		select cs_event_heed$suffix$.* from cs_event_heed$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统事件类型]查询 -->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<isNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.cseh_event_type=cs_event_type$CsEventType.suffix$.cset_id
+			</isNull>
+			<isNotNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.$CsEventType.on$=cs_event_type$CsEventType.suffix$.cset_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_event_heed$suffix$.cseh_status!=-1
+		<!-- 多对一外链接[系统事件类型]查询条件sql片段 -->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<include refid="CsEventType_part.cs_event_type_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEventHeed_part.cs_event_heed_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cseh_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取事件关注总数 -->
+	<select id="getCsEventHeedEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_event_heed$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统事件类型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<isNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.cseh_event_type=cs_event_type$CsEventType.suffix$.cset_id
+			</isNull>
+			<isNotNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.$CsEventType.on$=cs_event_type$CsEventType.suffix$.cset_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_event_heed$suffix$.cseh_status!=-1
+		<!-- 多对一外链接[系统事件类型]查询条件sql片段 -->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<include refid="CsEventType_part.cs_event_type_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsEventHeed_part.cs_event_heed_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取事件关注 -->
+	<select id="getCsEventHeedById" parameterClass="java.util.HashMap" resultMap="CsEventHeed">
+		select cs_event_heed$suffix$.* from cs_event_heed$suffix$
+		where cseh_id=#id#
+	</select>
+	
+		
+	<!-- 保存事件关注 -->
+	<insert id="saveCsEventHeed"  parameterClass="com.ccclubs.model.CsEventHeed">
+		insert into cs_event_heed$suffix$
+		(
+			cs_event_heed$suffix$.cseh_event_type
+			,cs_event_heed$suffix$.cseh_heed_user
+			,cs_event_heed$suffix$.cseh_heed_type
+			,cs_event_heed$suffix$.cseh_update_time
+			,cs_event_heed$suffix$.cseh_add_time
+			,cs_event_heed$suffix$.cseh_status
+		)
+		values(
+			<isNotNull property="csehEventType" prepend="">
+				#csehEventType#
+			</isNotNull>
+			<isNull property="csehEventType" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csehHeedUser" prepend=",">
+				#csehHeedUser#
+			</isNotNull>
+			<isNull property="csehHeedUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehHeedType" prepend=",">
+				#csehHeedType#
+			</isNotNull>
+			<isNull property="csehHeedType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehUpdateTime" prepend=",">
+				#csehUpdateTime#
+			</isNotNull>
+			<isNull property="csehUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehAddTime" prepend=",">
+				#csehAddTime#
+			</isNotNull>
+			<isNull property="csehAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csehStatus" prepend=",">
+				#csehStatus#
+			</isNotNull>
+			<isNull property="csehStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新事件关注 -->
+	<update id="updateCsEventHeed"  parameterClass="com.ccclubs.model.CsEventHeed">
+		update cs_event_heed$suffix$ set
+			<isNotNull property="csehEventType" prepend="">
+				cs_event_heed$suffix$.cseh_event_type = #csehEventType#
+			</isNotNull>
+			<isNull property="csehEventType" prepend="">
+				cs_event_heed$suffix$.cseh_event_type = null
+			</isNull>				
+			<isNotNull property="csehHeedUser" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_user = #csehHeedUser#
+			</isNotNull>
+			<isNull property="csehHeedUser" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_user = null
+			</isNull>				
+			<isNotNull property="csehHeedType" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_type = #csehHeedType#
+			</isNotNull>
+			<isNull property="csehHeedType" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_type = null
+			</isNull>				
+			<isNotNull property="csehUpdateTime" prepend=",">
+				cs_event_heed$suffix$.cseh_update_time = #csehUpdateTime#
+			</isNotNull>
+			<isNull property="csehUpdateTime" prepend=",">
+				cs_event_heed$suffix$.cseh_update_time = null
+			</isNull>				
+			<isNotNull property="csehAddTime" prepend=",">
+				cs_event_heed$suffix$.cseh_add_time = #csehAddTime#
+			</isNotNull>
+			<isNull property="csehAddTime" prepend=",">
+				cs_event_heed$suffix$.cseh_add_time = null
+			</isNull>				
+			<isNotNull property="csehStatus" prepend=",">
+				cs_event_heed$suffix$.cseh_status = #csehStatus#
+			</isNotNull>
+			<isNull property="csehStatus" prepend=",">
+				cs_event_heed$suffix$.cseh_status = null
+			</isNull>				
+		where
+			cseh_id=#csehId#
+	</update>
+	
+	<!-- 更新事件关注非空字段 -->
+	<update id="updateCsEventHeed$NotNull"  parameterClass="com.ccclubs.model.CsEventHeed">
+		update cs_event_heed$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csehEventType" prepend=",">
+				cs_event_heed$suffix$.cseh_event_type = #csehEventType#
+			</isNotNull>		
+			<isNotNull property="csehHeedUser" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_user = #csehHeedUser#
+			</isNotNull>		
+			<isNotNull property="csehHeedType" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_type = #csehHeedType#
+			</isNotNull>		
+			<isNotNull property="csehUpdateTime" prepend=",">
+				cs_event_heed$suffix$.cseh_update_time = #csehUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csehAddTime" prepend=",">
+				cs_event_heed$suffix$.cseh_add_time = #csehAddTime#
+			</isNotNull>		
+			<isNotNull property="csehStatus" prepend=",">
+				cs_event_heed$suffix$.cseh_status = #csehStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cseh_id=#csehId#
+	</update>
+	
+
+	<!-- 根据ID删除一个事件关注 -->
+	<delete id="deleteCsEventHeedById" parameterClass="java.util.HashMap">
+		delete from cs_event_heed$suffix$ where cseh_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个事件关注 -->
+	<update id="removeCsEventHeedById" parameterClass="java.util.HashMap">
+		update cs_event_heed$suffix$ set  cs_event_heed$suffix$.cseh_status=-1  where cseh_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新事件关注 -->
+	<update id="updateCsEventHeedBy"  parameterClass="java.util.HashMap">
+		update cs_event_heed$suffix$ set		
+			cseh_id=cseh_id
+			<isNotNull property="V_csehId" prepend=",">
+				cs_event_heed$suffix$.cseh_id = #V_csehId#
+			</isNotNull>		
+			<isNotNull property="V_csehEventType" prepend=",">
+				cs_event_heed$suffix$.cseh_event_type = #V_csehEventType#
+			</isNotNull>		
+			<isNotNull property="V_csehHeedUser" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_user = #V_csehHeedUser#
+			</isNotNull>		
+			<isNotNull property="V_csehHeedType" prepend=",">
+				cs_event_heed$suffix$.cseh_heed_type = #V_csehHeedType#
+			</isNotNull>		
+			<isNotNull property="V_csehUpdateTime" prepend=",">
+				cs_event_heed$suffix$.cseh_update_time = #V_csehUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csehAddTime" prepend=",">
+				cs_event_heed$suffix$.cseh_add_time = #V_csehAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csehStatus" prepend=",">
+				cs_event_heed$suffix$.cseh_status = #V_csehStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[系统事件类型]查询-->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<isNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.cseh_event_type=cs_event_type$CsEventType.suffix$.cset_id
+			</isNull>
+			<isNotNull property="CsEventType.on">
+				left join cs_event_type cs_event_type$CsEventType.suffix$ on cs_event_heed$suffix$.$CsEventType.on$=cs_event_type$CsEventType.suffix$.cset_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_event_heed$suffix$.cseh_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[系统事件类型]查询条件sql片段 -->
+		<isNotNull property="CsehEventType"><!-- 调用一下CsehEventType，把CsEventType指向CsehEventType --></isNotNull>
+		<isNotNull property="CsEventType">
+			<include refid="CsEventType_part.cs_event_type_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsEventHeed_part.cs_event_heed_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除事件关注 -->
+	<update id="deleteCsEventHeedBy"  parameterClass="java.util.HashMap">
+		delete from cs_event_heed$suffix$ where 
+		cs_event_heed$suffix$.cseh_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsEventHeed_part.cs_event_heed_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

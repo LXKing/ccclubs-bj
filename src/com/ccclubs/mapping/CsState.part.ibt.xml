@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsState_part">	
+	<!-- 车辆当前状态条件sql片段  -->
+	<sql id="cs_state_dynamic">
+		<dynamic>
+			<isNotEmpty property="cssId" prepend="and">
+			    $cssIdNot$ cs_state$suffix$.css_id = #cssId#
+			</isNotEmpty>
+			<isNotNull property="cssIdNot" prepend="and">
+				<isEmpty property="cssId">
+				$cssIdNot$ cs_state$suffix$.css_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_state$suffix$.css_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cssHost" prepend="and">
+			    $cssHostNot$ cs_state$suffix$.css_host = #cssHost#
+			</isNotEmpty>
+			<isNotNull property="cssHostNot" prepend="and">
+				<isEmpty property="cssHost">
+				$cssHostNot$ cs_state$suffix$.css_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="cssNumber" prepend="and">			    
+			    (<isNotNull property="cssNumberNot">
+			    cs_state$suffix$.css_number is null or length(cs_state$suffix$.css_number) &lt; 1 or
+			    </isNotNull>$cssNumberNot$ cs_state$suffix$.css_number like #cssNumber#)
+			</isNotEmpty>
+			<isNotNull property="cssNumberNot" prepend="and">
+				<isEmpty property="cssNumber">
+				$cssNumberNot$ (cs_state$suffix$.css_number is null or length(cs_state$suffix$.css_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssCar" prepend="and">
+			    $cssCarNot$ cs_state$suffix$.css_car = #cssCar#
+			</isNotEmpty>
+			<isNotNull property="cssCarNot" prepend="and">
+				<isEmpty property="cssCar">
+				$cssCarNot$ cs_state$suffix$.css_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssAddTimeStart" prepend="and">
+			    $cssAddTimeNot$   (cs_state$suffix$.css_add_time &gt;= #cssAddTimeStart#
+			   <isEmpty property="cssAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssAddTimeEnd" prepend="and">
+				<isEmpty property="cssAddTimeStart">$cssAddTimeNot$   (</isEmpty>
+			    cs_state$suffix$.css_add_time &lt;= #cssAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssAddTime" prepend="and">
+			    $cssAddTimeNot$ cs_state$suffix$.css_add_time = #cssAddTime#
+			</isNotEmpty>
+			<isNotNull property="cssAddTimeNot" prepend="and">
+				<isEmpty property="cssAddTimeStart"><isEmpty property="cssAddTimeEnd"><isEmpty property="cssAddTime">
+				$cssAddTimeNot$ cs_state$suffix$.css_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssCurrentTimeStart" prepend="and">
+			    $cssCurrentTimeNot$   (cs_state$suffix$.css_current_time &gt;= #cssCurrentTimeStart#
+			   <isEmpty property="cssCurrentTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cssCurrentTimeEnd" prepend="and">
+				<isEmpty property="cssCurrentTimeStart">$cssCurrentTimeNot$   (</isEmpty>
+			    cs_state$suffix$.css_current_time &lt;= #cssCurrentTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cssCurrentTime" prepend="and">
+			    $cssCurrentTimeNot$ cs_state$suffix$.css_current_time = #cssCurrentTime#
+			</isNotEmpty>
+			<isNotNull property="cssCurrentTimeNot" prepend="and">
+				<isEmpty property="cssCurrentTimeStart"><isEmpty property="cssCurrentTimeEnd"><isEmpty property="cssCurrentTime">
+				$cssCurrentTimeNot$ cs_state$suffix$.css_current_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssRented" prepend="and">			    
+			    (<isNotNull property="cssRentedNot">
+			    cs_state$suffix$.css_rented is null or length(cs_state$suffix$.css_rented) &lt; 1 or
+			    </isNotNull>$cssRentedNot$ cs_state$suffix$.css_rented = #cssRented#)
+			</isNotEmpty>
+			<isNotNull property="cssRentedNot" prepend="and">
+				<isEmpty property="cssRented">
+				$cssRentedNot$ (cs_state$suffix$.css_rented is null or length(cs_state$suffix$.css_rented) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssWarn" prepend="and">			    
+			    (<isNotNull property="cssWarnNot">
+			    cs_state$suffix$.css_warn is null or length(cs_state$suffix$.css_warn) &lt; 1 or
+			    </isNotNull>$cssWarnNot$ cs_state$suffix$.css_warn = #cssWarn#)
+			</isNotEmpty>
+			<isNotNull property="cssWarnNot" prepend="and">
+				<isEmpty property="cssWarn">
+				$cssWarnNot$ (cs_state$suffix$.css_warn is null or length(cs_state$suffix$.css_warn) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssRfid" prepend="and">			    
+			    (<isNotNull property="cssRfidNot">
+			    cs_state$suffix$.css_rfid is null or length(cs_state$suffix$.css_rfid) &lt; 1 or
+			    </isNotNull>$cssRfidNot$ cs_state$suffix$.css_rfid = #cssRfid#)
+			</isNotEmpty>
+			<isNotNull property="cssRfidNot" prepend="and">
+				<isEmpty property="cssRfid">
+				$cssRfidNot$ (cs_state$suffix$.css_rfid is null or length(cs_state$suffix$.css_rfid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssRfidDte" prepend="and">			    
+			    (<isNotNull property="cssRfidDteNot">
+			    cs_state$suffix$.css_rfid_dte is null or length(cs_state$suffix$.css_rfid_dte) &lt; 1 or
+			    </isNotNull>$cssRfidDteNot$ cs_state$suffix$.css_rfid_dte = #cssRfidDte#)
+			</isNotEmpty>
+			<isNotNull property="cssRfidDteNot" prepend="and">
+				<isEmpty property="cssRfidDte">
+				$cssRfidDteNot$ (cs_state$suffix$.css_rfid_dte is null or length(cs_state$suffix$.css_rfid_dte) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssObdMile" prepend="and">			    
+			    (<isNotNull property="cssObdMileNot">
+			    cs_state$suffix$.css_obd_mile is null or length(cs_state$suffix$.css_obd_mile) &lt; 1 or
+			    </isNotNull>$cssObdMileNot$ cs_state$suffix$.css_obd_mile = #cssObdMile#)
+			</isNotEmpty>
+			<isNotNull property="cssObdMileNot" prepend="and">
+				<isEmpty property="cssObdMile">
+				$cssObdMileNot$ (cs_state$suffix$.css_obd_mile is null or length(cs_state$suffix$.css_obd_mile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssEngineT" prepend="and">			    
+			    (<isNotNull property="cssEngineTNot">
+			    cs_state$suffix$.css_engine_t is null or length(cs_state$suffix$.css_engine_t) &lt; 1 or
+			    </isNotNull>$cssEngineTNot$ cs_state$suffix$.css_engine_t = #cssEngineT#)
+			</isNotEmpty>
+			<isNotNull property="cssEngineTNot" prepend="and">
+				<isEmpty property="cssEngineT">
+				$cssEngineTNot$ (cs_state$suffix$.css_engine_t is null or length(cs_state$suffix$.css_engine_t) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssMileage" prepend="and">			    
+			    (<isNotNull property="cssMileageNot">
+			    cs_state$suffix$.css_mileage is null or length(cs_state$suffix$.css_mileage) &lt; 1 or
+			    </isNotNull>$cssMileageNot$ cs_state$suffix$.css_mileage = #cssMileage#)
+			</isNotEmpty>
+			<isNotNull property="cssMileageNot" prepend="and">
+				<isEmpty property="cssMileage">
+				$cssMileageNot$ (cs_state$suffix$.css_mileage is null or length(cs_state$suffix$.css_mileage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssSpeed" prepend="and">			    
+			    (<isNotNull property="cssSpeedNot">
+			    cs_state$suffix$.css_speed is null or length(cs_state$suffix$.css_speed) &lt; 1 or
+			    </isNotNull>$cssSpeedNot$ cs_state$suffix$.css_speed = #cssSpeed#)
+			</isNotEmpty>
+			<isNotNull property="cssSpeedNot" prepend="and">
+				<isEmpty property="cssSpeed">
+				$cssSpeedNot$ (cs_state$suffix$.css_speed is null or length(cs_state$suffix$.css_speed) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssMotor" prepend="and">			    
+			    (<isNotNull property="cssMotorNot">
+			    cs_state$suffix$.css_motor is null or length(cs_state$suffix$.css_motor) &lt; 1 or
+			    </isNotNull>$cssMotorNot$ cs_state$suffix$.css_motor = #cssMotor#)
+			</isNotEmpty>
+			<isNotNull property="cssMotorNot" prepend="and">
+				<isEmpty property="cssMotor">
+				$cssMotorNot$ (cs_state$suffix$.css_motor is null or length(cs_state$suffix$.css_motor) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssOil" prepend="and">			    
+			    (<isNotNull property="cssOilNot">
+			    cs_state$suffix$.css_oil is null or length(cs_state$suffix$.css_oil) &lt; 1 or
+			    </isNotNull>$cssOilNot$ cs_state$suffix$.css_oil = #cssOil#)
+			</isNotEmpty>
+			<isNotNull property="cssOilNot" prepend="and">
+				<isEmpty property="cssOil">
+				$cssOilNot$ (cs_state$suffix$.css_oil is null or length(cs_state$suffix$.css_oil) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssPower" prepend="and">			    
+			    (<isNotNull property="cssPowerNot">
+			    cs_state$suffix$.css_power is null or length(cs_state$suffix$.css_power) &lt; 1 or
+			    </isNotNull>$cssPowerNot$ cs_state$suffix$.css_power = #cssPower#)
+			</isNotEmpty>
+			<isNotNull property="cssPowerNot" prepend="and">
+				<isEmpty property="cssPower">
+				$cssPowerNot$ (cs_state$suffix$.css_power is null or length(cs_state$suffix$.css_power) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssEvBattery" prepend="and">			    
+			    (<isNotNull property="cssEvBatteryNot">
+			    cs_state$suffix$.css_ev_battery is null or length(cs_state$suffix$.css_ev_battery) &lt; 1 or
+			    </isNotNull>$cssEvBatteryNot$ cs_state$suffix$.css_ev_battery = #cssEvBattery#)
+			</isNotEmpty>
+			<isNotNull property="cssEvBatteryNot" prepend="and">
+				<isEmpty property="cssEvBattery">
+				$cssEvBatteryNot$ (cs_state$suffix$.css_ev_battery is null or length(cs_state$suffix$.css_ev_battery) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssCharging" prepend="and">			    
+			    (<isNotNull property="cssChargingNot">
+			    cs_state$suffix$.css_charging is null or length(cs_state$suffix$.css_charging) &lt; 1 or
+			    </isNotNull>$cssChargingNot$ cs_state$suffix$.css_charging = #cssCharging#)
+			</isNotEmpty>
+			<isNotNull property="cssChargingNot" prepend="and">
+				<isEmpty property="cssCharging">
+				$cssChargingNot$ (cs_state$suffix$.css_charging is null or length(cs_state$suffix$.css_charging) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssFuelMileage" prepend="and">			    
+			    (<isNotNull property="cssFuelMileageNot">
+			    cs_state$suffix$.css_fuel_mileage is null or length(cs_state$suffix$.css_fuel_mileage) &lt; 1 or
+			    </isNotNull>$cssFuelMileageNot$ cs_state$suffix$.css_fuel_mileage = #cssFuelMileage#)
+			</isNotEmpty>
+			<isNotNull property="cssFuelMileageNot" prepend="and">
+				<isEmpty property="cssFuelMileage">
+				$cssFuelMileageNot$ (cs_state$suffix$.css_fuel_mileage is null or length(cs_state$suffix$.css_fuel_mileage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssElectricMileage" prepend="and">			    
+			    (<isNotNull property="cssElectricMileageNot">
+			    cs_state$suffix$.css_electric_mileage is null or length(cs_state$suffix$.css_electric_mileage) &lt; 1 or
+			    </isNotNull>$cssElectricMileageNot$ cs_state$suffix$.css_electric_mileage = #cssElectricMileage#)
+			</isNotEmpty>
+			<isNotNull property="cssElectricMileageNot" prepend="and">
+				<isEmpty property="cssElectricMileage">
+				$cssElectricMileageNot$ (cs_state$suffix$.css_electric_mileage is null or length(cs_state$suffix$.css_electric_mileage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssEndurance" prepend="and">			    
+			    (<isNotNull property="cssEnduranceNot">
+			    cs_state$suffix$.css_endurance is null or length(cs_state$suffix$.css_endurance) &lt; 1 or
+			    </isNotNull>$cssEnduranceNot$ cs_state$suffix$.css_endurance = #cssEndurance#)
+			</isNotEmpty>
+			<isNotNull property="cssEnduranceNot" prepend="and">
+				<isEmpty property="cssEndurance">
+				$cssEnduranceNot$ (cs_state$suffix$.css_endurance is null or length(cs_state$suffix$.css_endurance) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssTemperature" prepend="and">			    
+			    (<isNotNull property="cssTemperatureNot">
+			    cs_state$suffix$.css_temperature is null or length(cs_state$suffix$.css_temperature) &lt; 1 or
+			    </isNotNull>$cssTemperatureNot$ cs_state$suffix$.css_temperature = #cssTemperature#)
+			</isNotEmpty>
+			<isNotNull property="cssTemperatureNot" prepend="and">
+				<isEmpty property="cssTemperature">
+				$cssTemperatureNot$ (cs_state$suffix$.css_temperature is null or length(cs_state$suffix$.css_temperature) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssCsq" prepend="and">			    
+			    (<isNotNull property="cssCsqNot">
+			    cs_state$suffix$.css_csq is null or length(cs_state$suffix$.css_csq) &lt; 1 or
+			    </isNotNull>$cssCsqNot$ cs_state$suffix$.css_csq = #cssCsq#)
+			</isNotEmpty>
+			<isNotNull property="cssCsqNot" prepend="and">
+				<isEmpty property="cssCsq">
+				$cssCsqNot$ (cs_state$suffix$.css_csq is null or length(cs_state$suffix$.css_csq) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssPowerConsumption" prepend="and">			    
+			    (<isNotNull property="cssPowerConsumptionNot">
+			    cs_state$suffix$.css_power_consumption is null or length(cs_state$suffix$.css_power_consumption) &lt; 1 or
+			    </isNotNull>$cssPowerConsumptionNot$ cs_state$suffix$.css_power_consumption = #cssPowerConsumption#)
+			</isNotEmpty>
+			<isNotNull property="cssPowerConsumptionNot" prepend="and">
+				<isEmpty property="cssPowerConsumption">
+				$cssPowerConsumptionNot$ (cs_state$suffix$.css_power_consumption is null or length(cs_state$suffix$.css_power_consumption) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssLongitude" prepend="and">			    
+			    (<isNotNull property="cssLongitudeNot">
+			    cs_state$suffix$.css_longitude is null or length(cs_state$suffix$.css_longitude) &lt; 1 or
+			    </isNotNull>$cssLongitudeNot$ cs_state$suffix$.css_longitude = #cssLongitude#)
+			</isNotEmpty>
+			<isNotNull property="cssLongitudeNot" prepend="and">
+				<isEmpty property="cssLongitude">
+				$cssLongitudeNot$ (cs_state$suffix$.css_longitude is null or length(cs_state$suffix$.css_longitude) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssLatitude" prepend="and">			    
+			    (<isNotNull property="cssLatitudeNot">
+			    cs_state$suffix$.css_latitude is null or length(cs_state$suffix$.css_latitude) &lt; 1 or
+			    </isNotNull>$cssLatitudeNot$ cs_state$suffix$.css_latitude = #cssLatitude#)
+			</isNotEmpty>
+			<isNotNull property="cssLatitudeNot" prepend="and">
+				<isEmpty property="cssLatitude">
+				$cssLatitudeNot$ (cs_state$suffix$.css_latitude is null or length(cs_state$suffix$.css_latitude) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cssOrder" prepend="and">
+			    $cssOrderNot$ cs_state$suffix$.css_order = #cssOrder#
+			</isNotEmpty>
+			<isNotNull property="cssOrderNot" prepend="and">
+				<isEmpty property="cssOrder">
+				$cssOrderNot$ cs_state$suffix$.css_order is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 车辆当前状态left join 条件sql片段 -->
+	<sql id="cs_state_join">
+		<dynamic>
+			<isNotEmpty property="CsState.cssId" prepend="and">
+			    $CsState.cssIdNot$ cs_state$CsState.suffix$.css_id = #CsState.cssId#
+			</isNotEmpty>
+			<isNotNull property="CsState.cssIdNot" prepend="and">
+				<isEmpty property="CsState.cssId">
+				$cssIdNot$ cs_state$CsState.suffix$.css_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_state$CsState.suffix$.css_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsState.cssHost" prepend="and">
+			    $CsState.cssHostNot$ cs_state$CsState.suffix$.css_host = #CsState.cssHost#
+			</isNotEmpty>
+			<isNotNull property="CsState.cssHostNot" prepend="and">
+				<isEmpty property="CsState.cssHost">
+				$cssHostNot$ cs_state$CsState.suffix$.css_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssNumber" prepend="and">
+				(<isNotNull property="CsState.cssNumberNot">
+			    cs_state$CsState.suffix$.css_number is null or length(cs_state$CsState.suffix$.css_number) &lt; 1 or
+			    </isNotNull>$CsState.cssNumberNot$ cs_state$CsState.suffix$.css_number like #CsState.cssNumber#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssNumberNot" prepend="and">
+				<isEmpty property="CsState.cssNumber">
+				$cssNumberNot$ (cs_state$CsState.suffix$.css_number is null or length(cs_state$CsState.suffix$.css_number) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssCar" prepend="and">
+			    $CsState.cssCarNot$ cs_state$CsState.suffix$.css_car = #CsState.cssCar#
+			</isNotEmpty>
+			<isNotNull property="CsState.cssCarNot" prepend="and">
+				<isEmpty property="CsState.cssCar">
+				$cssCarNot$ cs_state$CsState.suffix$.css_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssAddTimeStart" prepend="and">
+			    $CsState.cssAddTimeNot$   (cs_state$CsState.suffix$.css_add_time &gt;= #CsState.cssAddTimeStart#
+			   <isEmpty property="CsState.cssAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsState.cssAddTimeEnd" prepend="and">
+				<isEmpty property="CsState.cssAddTimeStart">$CsState.cssAddTimeNot$   (</isEmpty>
+			    cs_state$CsState.suffix$.css_add_time &lt;= #CsState.cssAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsState.cssAddTime" prepend="and">
+			    $CsState.cssAddTimeNot$ cs_state$CsState.suffix$.css_add_time = #CsState.cssAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsState.cssAddTimeNot" prepend="and">
+				<isEmpty property="CsState.cssAddTimeStart"><isEmpty property="CsState.cssAddTimeEnd"><isEmpty property="CsState.cssAddTime">
+				$cssAddTimeNot$ cs_state$CsState.suffix$.css_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssCurrentTimeStart" prepend="and">
+			    $CsState.cssCurrentTimeNot$   (cs_state$CsState.suffix$.css_current_time &gt;= #CsState.cssCurrentTimeStart#
+			   <isEmpty property="CsState.cssCurrentTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsState.cssCurrentTimeEnd" prepend="and">
+				<isEmpty property="CsState.cssCurrentTimeStart">$CsState.cssCurrentTimeNot$   (</isEmpty>
+			    cs_state$CsState.suffix$.css_current_time &lt;= #CsState.cssCurrentTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsState.cssCurrentTime" prepend="and">
+			    $CsState.cssCurrentTimeNot$ cs_state$CsState.suffix$.css_current_time = #CsState.cssCurrentTime#
+			</isNotEmpty>
+			<isNotNull property="CsState.cssCurrentTimeNot" prepend="and">
+				<isEmpty property="CsState.cssCurrentTimeStart"><isEmpty property="CsState.cssCurrentTimeEnd"><isEmpty property="CsState.cssCurrentTime">
+				$cssCurrentTimeNot$ cs_state$CsState.suffix$.css_current_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssRented" prepend="and">
+				(<isNotNull property="CsState.cssRentedNot">
+			    cs_state$CsState.suffix$.css_rented is null or length(cs_state$CsState.suffix$.css_rented) &lt; 1 or
+			    </isNotNull>$CsState.cssRentedNot$ cs_state$CsState.suffix$.css_rented = #CsState.cssRented#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssRentedNot" prepend="and">
+				<isEmpty property="CsState.cssRented">
+				$cssRentedNot$ (cs_state$CsState.suffix$.css_rented is null or length(cs_state$CsState.suffix$.css_rented) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssWarn" prepend="and">
+				(<isNotNull property="CsState.cssWarnNot">
+			    cs_state$CsState.suffix$.css_warn is null or length(cs_state$CsState.suffix$.css_warn) &lt; 1 or
+			    </isNotNull>$CsState.cssWarnNot$ cs_state$CsState.suffix$.css_warn = #CsState.cssWarn#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssWarnNot" prepend="and">
+				<isEmpty property="CsState.cssWarn">
+				$cssWarnNot$ (cs_state$CsState.suffix$.css_warn is null or length(cs_state$CsState.suffix$.css_warn) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssRfid" prepend="and">
+				(<isNotNull property="CsState.cssRfidNot">
+			    cs_state$CsState.suffix$.css_rfid is null or length(cs_state$CsState.suffix$.css_rfid) &lt; 1 or
+			    </isNotNull>$CsState.cssRfidNot$ cs_state$CsState.suffix$.css_rfid = #CsState.cssRfid#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssRfidNot" prepend="and">
+				<isEmpty property="CsState.cssRfid">
+				$cssRfidNot$ (cs_state$CsState.suffix$.css_rfid is null or length(cs_state$CsState.suffix$.css_rfid) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssRfidDte" prepend="and">
+				(<isNotNull property="CsState.cssRfidDteNot">
+			    cs_state$CsState.suffix$.css_rfid_dte is null or length(cs_state$CsState.suffix$.css_rfid_dte) &lt; 1 or
+			    </isNotNull>$CsState.cssRfidDteNot$ cs_state$CsState.suffix$.css_rfid_dte = #CsState.cssRfidDte#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssRfidDteNot" prepend="and">
+				<isEmpty property="CsState.cssRfidDte">
+				$cssRfidDteNot$ (cs_state$CsState.suffix$.css_rfid_dte is null or length(cs_state$CsState.suffix$.css_rfid_dte) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssObdMile" prepend="and">
+				(<isNotNull property="CsState.cssObdMileNot">
+			    cs_state$CsState.suffix$.css_obd_mile is null or length(cs_state$CsState.suffix$.css_obd_mile) &lt; 1 or
+			    </isNotNull>$CsState.cssObdMileNot$ cs_state$CsState.suffix$.css_obd_mile = #CsState.cssObdMile#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssObdMileNot" prepend="and">
+				<isEmpty property="CsState.cssObdMile">
+				$cssObdMileNot$ (cs_state$CsState.suffix$.css_obd_mile is null or length(cs_state$CsState.suffix$.css_obd_mile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssEngineT" prepend="and">
+				(<isNotNull property="CsState.cssEngineTNot">
+			    cs_state$CsState.suffix$.css_engine_t is null or length(cs_state$CsState.suffix$.css_engine_t) &lt; 1 or
+			    </isNotNull>$CsState.cssEngineTNot$ cs_state$CsState.suffix$.css_engine_t = #CsState.cssEngineT#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssEngineTNot" prepend="and">
+				<isEmpty property="CsState.cssEngineT">
+				$cssEngineTNot$ (cs_state$CsState.suffix$.css_engine_t is null or length(cs_state$CsState.suffix$.css_engine_t) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssMileage" prepend="and">
+				(<isNotNull property="CsState.cssMileageNot">
+			    cs_state$CsState.suffix$.css_mileage is null or length(cs_state$CsState.suffix$.css_mileage) &lt; 1 or
+			    </isNotNull>$CsState.cssMileageNot$ cs_state$CsState.suffix$.css_mileage = #CsState.cssMileage#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssMileageNot" prepend="and">
+				<isEmpty property="CsState.cssMileage">
+				$cssMileageNot$ (cs_state$CsState.suffix$.css_mileage is null or length(cs_state$CsState.suffix$.css_mileage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssSpeed" prepend="and">
+				(<isNotNull property="CsState.cssSpeedNot">
+			    cs_state$CsState.suffix$.css_speed is null or length(cs_state$CsState.suffix$.css_speed) &lt; 1 or
+			    </isNotNull>$CsState.cssSpeedNot$ cs_state$CsState.suffix$.css_speed = #CsState.cssSpeed#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssSpeedNot" prepend="and">
+				<isEmpty property="CsState.cssSpeed">
+				$cssSpeedNot$ (cs_state$CsState.suffix$.css_speed is null or length(cs_state$CsState.suffix$.css_speed) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssMotor" prepend="and">
+				(<isNotNull property="CsState.cssMotorNot">
+			    cs_state$CsState.suffix$.css_motor is null or length(cs_state$CsState.suffix$.css_motor) &lt; 1 or
+			    </isNotNull>$CsState.cssMotorNot$ cs_state$CsState.suffix$.css_motor = #CsState.cssMotor#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssMotorNot" prepend="and">
+				<isEmpty property="CsState.cssMotor">
+				$cssMotorNot$ (cs_state$CsState.suffix$.css_motor is null or length(cs_state$CsState.suffix$.css_motor) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssOil" prepend="and">
+				(<isNotNull property="CsState.cssOilNot">
+			    cs_state$CsState.suffix$.css_oil is null or length(cs_state$CsState.suffix$.css_oil) &lt; 1 or
+			    </isNotNull>$CsState.cssOilNot$ cs_state$CsState.suffix$.css_oil = #CsState.cssOil#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssOilNot" prepend="and">
+				<isEmpty property="CsState.cssOil">
+				$cssOilNot$ (cs_state$CsState.suffix$.css_oil is null or length(cs_state$CsState.suffix$.css_oil) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssPower" prepend="and">
+				(<isNotNull property="CsState.cssPowerNot">
+			    cs_state$CsState.suffix$.css_power is null or length(cs_state$CsState.suffix$.css_power) &lt; 1 or
+			    </isNotNull>$CsState.cssPowerNot$ cs_state$CsState.suffix$.css_power = #CsState.cssPower#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssPowerNot" prepend="and">
+				<isEmpty property="CsState.cssPower">
+				$cssPowerNot$ (cs_state$CsState.suffix$.css_power is null or length(cs_state$CsState.suffix$.css_power) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssEvBattery" prepend="and">
+				(<isNotNull property="CsState.cssEvBatteryNot">
+			    cs_state$CsState.suffix$.css_ev_battery is null or length(cs_state$CsState.suffix$.css_ev_battery) &lt; 1 or
+			    </isNotNull>$CsState.cssEvBatteryNot$ cs_state$CsState.suffix$.css_ev_battery = #CsState.cssEvBattery#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssEvBatteryNot" prepend="and">
+				<isEmpty property="CsState.cssEvBattery">
+				$cssEvBatteryNot$ (cs_state$CsState.suffix$.css_ev_battery is null or length(cs_state$CsState.suffix$.css_ev_battery) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssCharging" prepend="and">
+				(<isNotNull property="CsState.cssChargingNot">
+			    cs_state$CsState.suffix$.css_charging is null or length(cs_state$CsState.suffix$.css_charging) &lt; 1 or
+			    </isNotNull>$CsState.cssChargingNot$ cs_state$CsState.suffix$.css_charging = #CsState.cssCharging#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssChargingNot" prepend="and">
+				<isEmpty property="CsState.cssCharging">
+				$cssChargingNot$ (cs_state$CsState.suffix$.css_charging is null or length(cs_state$CsState.suffix$.css_charging) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssFuelMileage" prepend="and">
+				(<isNotNull property="CsState.cssFuelMileageNot">
+			    cs_state$CsState.suffix$.css_fuel_mileage is null or length(cs_state$CsState.suffix$.css_fuel_mileage) &lt; 1 or
+			    </isNotNull>$CsState.cssFuelMileageNot$ cs_state$CsState.suffix$.css_fuel_mileage = #CsState.cssFuelMileage#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssFuelMileageNot" prepend="and">
+				<isEmpty property="CsState.cssFuelMileage">
+				$cssFuelMileageNot$ (cs_state$CsState.suffix$.css_fuel_mileage is null or length(cs_state$CsState.suffix$.css_fuel_mileage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssElectricMileage" prepend="and">
+				(<isNotNull property="CsState.cssElectricMileageNot">
+			    cs_state$CsState.suffix$.css_electric_mileage is null or length(cs_state$CsState.suffix$.css_electric_mileage) &lt; 1 or
+			    </isNotNull>$CsState.cssElectricMileageNot$ cs_state$CsState.suffix$.css_electric_mileage = #CsState.cssElectricMileage#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssElectricMileageNot" prepend="and">
+				<isEmpty property="CsState.cssElectricMileage">
+				$cssElectricMileageNot$ (cs_state$CsState.suffix$.css_electric_mileage is null or length(cs_state$CsState.suffix$.css_electric_mileage) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssEndurance" prepend="and">
+				(<isNotNull property="CsState.cssEnduranceNot">
+			    cs_state$CsState.suffix$.css_endurance is null or length(cs_state$CsState.suffix$.css_endurance) &lt; 1 or
+			    </isNotNull>$CsState.cssEnduranceNot$ cs_state$CsState.suffix$.css_endurance = #CsState.cssEndurance#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssEnduranceNot" prepend="and">
+				<isEmpty property="CsState.cssEndurance">
+				$cssEnduranceNot$ (cs_state$CsState.suffix$.css_endurance is null or length(cs_state$CsState.suffix$.css_endurance) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssTemperature" prepend="and">
+				(<isNotNull property="CsState.cssTemperatureNot">
+			    cs_state$CsState.suffix$.css_temperature is null or length(cs_state$CsState.suffix$.css_temperature) &lt; 1 or
+			    </isNotNull>$CsState.cssTemperatureNot$ cs_state$CsState.suffix$.css_temperature = #CsState.cssTemperature#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssTemperatureNot" prepend="and">
+				<isEmpty property="CsState.cssTemperature">
+				$cssTemperatureNot$ (cs_state$CsState.suffix$.css_temperature is null or length(cs_state$CsState.suffix$.css_temperature) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssCsq" prepend="and">
+				(<isNotNull property="CsState.cssCsqNot">
+			    cs_state$CsState.suffix$.css_csq is null or length(cs_state$CsState.suffix$.css_csq) &lt; 1 or
+			    </isNotNull>$CsState.cssCsqNot$ cs_state$CsState.suffix$.css_csq = #CsState.cssCsq#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssCsqNot" prepend="and">
+				<isEmpty property="CsState.cssCsq">
+				$cssCsqNot$ (cs_state$CsState.suffix$.css_csq is null or length(cs_state$CsState.suffix$.css_csq) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssPowerConsumption" prepend="and">
+				(<isNotNull property="CsState.cssPowerConsumptionNot">
+			    cs_state$CsState.suffix$.css_power_consumption is null or length(cs_state$CsState.suffix$.css_power_consumption) &lt; 1 or
+			    </isNotNull>$CsState.cssPowerConsumptionNot$ cs_state$CsState.suffix$.css_power_consumption = #CsState.cssPowerConsumption#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssPowerConsumptionNot" prepend="and">
+				<isEmpty property="CsState.cssPowerConsumption">
+				$cssPowerConsumptionNot$ (cs_state$CsState.suffix$.css_power_consumption is null or length(cs_state$CsState.suffix$.css_power_consumption) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssLongitude" prepend="and">
+				(<isNotNull property="CsState.cssLongitudeNot">
+			    cs_state$CsState.suffix$.css_longitude is null or length(cs_state$CsState.suffix$.css_longitude) &lt; 1 or
+			    </isNotNull>$CsState.cssLongitudeNot$ cs_state$CsState.suffix$.css_longitude = #CsState.cssLongitude#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssLongitudeNot" prepend="and">
+				<isEmpty property="CsState.cssLongitude">
+				$cssLongitudeNot$ (cs_state$CsState.suffix$.css_longitude is null or length(cs_state$CsState.suffix$.css_longitude) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssLatitude" prepend="and">
+				(<isNotNull property="CsState.cssLatitudeNot">
+			    cs_state$CsState.suffix$.css_latitude is null or length(cs_state$CsState.suffix$.css_latitude) &lt; 1 or
+			    </isNotNull>$CsState.cssLatitudeNot$ cs_state$CsState.suffix$.css_latitude = #CsState.cssLatitude#)
+			</isNotEmpty>
+			<isNotNull property="CsState.cssLatitudeNot" prepend="and">
+				<isEmpty property="CsState.cssLatitude">
+				$cssLatitudeNot$ (cs_state$CsState.suffix$.css_latitude is null or length(cs_state$CsState.suffix$.css_latitude) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsState.cssOrder" prepend="and">
+			    $CsState.cssOrderNot$ cs_state$CsState.suffix$.css_order = #CsState.cssOrder#
+			</isNotEmpty>
+			<isNotNull property="CsState.cssOrderNot" prepend="and">
+				<isEmpty property="CsState.cssOrder">
+				$cssOrderNot$ cs_state$CsState.suffix$.css_order is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsTask_part">	
+	<!-- 数据任务条件sql片段  -->
+	<sql id="cs_task_dynamic">
+		<dynamic>
+			<isNotEmpty property="cstId" prepend="and">
+			    $cstIdNot$ cs_task$suffix$.cst_id = #cstId#
+			</isNotEmpty>
+			<isNotNull property="cstIdNot" prepend="and">
+				<isEmpty property="cstId">
+				$cstIdNot$ cs_task$suffix$.cst_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstName" prepend="and">			    
+			    (<isNotNull property="cstNameNot">
+			    cs_task$suffix$.cst_name is null or length(cs_task$suffix$.cst_name) &lt; 1 or
+			    </isNotNull>$cstNameNot$ cs_task$suffix$.cst_name = #cstName#)
+			</isNotEmpty>
+			<isNotNull property="cstNameNot" prepend="and">
+				<isEmpty property="cstName">
+				$cstNameNot$ (cs_task$suffix$.cst_name is null or length(cs_task$suffix$.cst_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstFlag" prepend="and">			    
+			    (<isNotNull property="cstFlagNot">
+			    cs_task$suffix$.cst_flag is null or length(cs_task$suffix$.cst_flag) &lt; 1 or
+			    </isNotNull>$cstFlagNot$ cs_task$suffix$.cst_flag = #cstFlag#)
+			</isNotEmpty>
+			<isNotNull property="cstFlagNot" prepend="and">
+				<isEmpty property="cstFlag">
+				$cstFlagNot$ (cs_task$suffix$.cst_flag is null or length(cs_task$suffix$.cst_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstUserIds" prepend="and">
+			    $cstUserIdsNot$ cs_task$suffix$.cst_user_ids = #cstUserIds#
+			</isNotEmpty>
+			<isNotNull property="cstUserIdsNot" prepend="and">
+				<isEmpty property="cstUserIds">
+				$cstUserIdsNot$ cs_task$suffix$.cst_user_ids is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstSql" prepend="and">			    
+			    (<isNotNull property="cstSqlNot">
+			    cs_task$suffix$.cst_sql is null or length(cs_task$suffix$.cst_sql) &lt; 1 or
+			    </isNotNull>$cstSqlNot$ cs_task$suffix$.cst_sql = #cstSql#)
+			</isNotEmpty>
+			<isNotNull property="cstSqlNot" prepend="and">
+				<isEmpty property="cstSql">
+				$cstSqlNot$ (cs_task$suffix$.cst_sql is null or length(cs_task$suffix$.cst_sql) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstTips" prepend="and">			    
+			    (<isNotNull property="cstTipsNot">
+			    cs_task$suffix$.cst_tips is null or length(cs_task$suffix$.cst_tips) &lt; 1 or
+			    </isNotNull>$cstTipsNot$ cs_task$suffix$.cst_tips = #cstTips#)
+			</isNotEmpty>
+			<isNotNull property="cstTipsNot" prepend="and">
+				<isEmpty property="cstTips">
+				$cstTipsNot$ (cs_task$suffix$.cst_tips is null or length(cs_task$suffix$.cst_tips) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstUrl" prepend="and">			    
+			    (<isNotNull property="cstUrlNot">
+			    cs_task$suffix$.cst_url is null or length(cs_task$suffix$.cst_url) &lt; 1 or
+			    </isNotNull>$cstUrlNot$ cs_task$suffix$.cst_url = #cstUrl#)
+			</isNotEmpty>
+			<isNotNull property="cstUrlNot" prepend="and">
+				<isEmpty property="cstUrl">
+				$cstUrlNot$ (cs_task$suffix$.cst_url is null or length(cs_task$suffix$.cst_url) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstEditTimeStart" prepend="and">
+			    $cstEditTimeNot$   (cs_task$suffix$.cst_edit_time &gt;= #cstEditTimeStart#
+			   <isEmpty property="cstEditTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cstEditTimeEnd" prepend="and">
+				<isEmpty property="cstEditTimeStart">$cstEditTimeNot$   (</isEmpty>
+			    cs_task$suffix$.cst_edit_time &lt;= #cstEditTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cstEditTime" prepend="and">
+			    $cstEditTimeNot$ cs_task$suffix$.cst_edit_time = #cstEditTime#
+			</isNotEmpty>
+			<isNotNull property="cstEditTimeNot" prepend="and">
+				<isEmpty property="cstEditTimeStart"><isEmpty property="cstEditTimeEnd"><isEmpty property="cstEditTime">
+				$cstEditTimeNot$ cs_task$suffix$.cst_edit_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cstStatus" prepend="and">
+			    $cstStatusNot$ cs_task$suffix$.cst_status = #cstStatus#
+			</isNotEmpty>
+			<isNotNull property="cstStatusNot" prepend="and">
+				<isEmpty property="cstStatus">
+				$cstStatusNot$ cs_task$suffix$.cst_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 数据任务left join 条件sql片段 -->
+	<sql id="cs_task_join">
+		<dynamic>
+			<isNotEmpty property="CsTask.cstId" prepend="and">
+			    $CsTask.cstIdNot$ cs_task$CsTask.suffix$.cst_id = #CsTask.cstId#
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstIdNot" prepend="and">
+				<isEmpty property="CsTask.cstId">
+				$cstIdNot$ cs_task$CsTask.suffix$.cst_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstName" prepend="and">
+				(<isNotNull property="CsTask.cstNameNot">
+			    cs_task$CsTask.suffix$.cst_name is null or length(cs_task$CsTask.suffix$.cst_name) &lt; 1 or
+			    </isNotNull>$CsTask.cstNameNot$ cs_task$CsTask.suffix$.cst_name = #CsTask.cstName#)
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstNameNot" prepend="and">
+				<isEmpty property="CsTask.cstName">
+				$cstNameNot$ (cs_task$CsTask.suffix$.cst_name is null or length(cs_task$CsTask.suffix$.cst_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstFlag" prepend="and">
+				(<isNotNull property="CsTask.cstFlagNot">
+			    cs_task$CsTask.suffix$.cst_flag is null or length(cs_task$CsTask.suffix$.cst_flag) &lt; 1 or
+			    </isNotNull>$CsTask.cstFlagNot$ cs_task$CsTask.suffix$.cst_flag = #CsTask.cstFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstFlagNot" prepend="and">
+				<isEmpty property="CsTask.cstFlag">
+				$cstFlagNot$ (cs_task$CsTask.suffix$.cst_flag is null or length(cs_task$CsTask.suffix$.cst_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstUserIds" prepend="and">
+			    $CsTask.cstUserIdsNot$ cs_task$CsTask.suffix$.cst_user_ids = #CsTask.cstUserIds#
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstUserIdsNot" prepend="and">
+				<isEmpty property="CsTask.cstUserIds">
+				$cstUserIdsNot$ cs_task$CsTask.suffix$.cst_user_ids is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstSql" prepend="and">
+				(<isNotNull property="CsTask.cstSqlNot">
+			    cs_task$CsTask.suffix$.cst_sql is null or length(cs_task$CsTask.suffix$.cst_sql) &lt; 1 or
+			    </isNotNull>$CsTask.cstSqlNot$ cs_task$CsTask.suffix$.cst_sql = #CsTask.cstSql#)
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstSqlNot" prepend="and">
+				<isEmpty property="CsTask.cstSql">
+				$cstSqlNot$ (cs_task$CsTask.suffix$.cst_sql is null or length(cs_task$CsTask.suffix$.cst_sql) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstTips" prepend="and">
+				(<isNotNull property="CsTask.cstTipsNot">
+			    cs_task$CsTask.suffix$.cst_tips is null or length(cs_task$CsTask.suffix$.cst_tips) &lt; 1 or
+			    </isNotNull>$CsTask.cstTipsNot$ cs_task$CsTask.suffix$.cst_tips = #CsTask.cstTips#)
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstTipsNot" prepend="and">
+				<isEmpty property="CsTask.cstTips">
+				$cstTipsNot$ (cs_task$CsTask.suffix$.cst_tips is null or length(cs_task$CsTask.suffix$.cst_tips) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstUrl" prepend="and">
+				(<isNotNull property="CsTask.cstUrlNot">
+			    cs_task$CsTask.suffix$.cst_url is null or length(cs_task$CsTask.suffix$.cst_url) &lt; 1 or
+			    </isNotNull>$CsTask.cstUrlNot$ cs_task$CsTask.suffix$.cst_url = #CsTask.cstUrl#)
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstUrlNot" prepend="and">
+				<isEmpty property="CsTask.cstUrl">
+				$cstUrlNot$ (cs_task$CsTask.suffix$.cst_url is null or length(cs_task$CsTask.suffix$.cst_url) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstEditTimeStart" prepend="and">
+			    $CsTask.cstEditTimeNot$   (cs_task$CsTask.suffix$.cst_edit_time &gt;= #CsTask.cstEditTimeStart#
+			   <isEmpty property="CsTask.cstEditTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsTask.cstEditTimeEnd" prepend="and">
+				<isEmpty property="CsTask.cstEditTimeStart">$CsTask.cstEditTimeNot$   (</isEmpty>
+			    cs_task$CsTask.suffix$.cst_edit_time &lt;= #CsTask.cstEditTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsTask.cstEditTime" prepend="and">
+			    $CsTask.cstEditTimeNot$ cs_task$CsTask.suffix$.cst_edit_time = #CsTask.cstEditTime#
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstEditTimeNot" prepend="and">
+				<isEmpty property="CsTask.cstEditTimeStart"><isEmpty property="CsTask.cstEditTimeEnd"><isEmpty property="CsTask.cstEditTime">
+				$cstEditTimeNot$ cs_task$CsTask.suffix$.cst_edit_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsTask.cstStatus" prepend="and">
+			    $CsTask.cstStatusNot$ cs_task$CsTask.suffix$.cst_status = #CsTask.cstStatus#
+			</isNotEmpty>
+			<isNotNull property="CsTask.cstStatusNot" prepend="and">
+				<isEmpty property="CsTask.cstStatus">
+				$cstStatusNot$ cs_task$CsTask.suffix$.cst_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

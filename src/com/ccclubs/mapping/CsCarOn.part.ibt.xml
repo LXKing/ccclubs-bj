@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap namespace="CsCarOn_part">	
+	<!-- 车辆上线记录条件sql片段  -->
+	<sql id="cs_car_on_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscoId" prepend="and">
+			    $cscoIdNot$ cs_car_on$suffix$.csco_id = #cscoId#
+			</isNotEmpty>
+			<isNotNull property="cscoIdNot" prepend="and">
+				<isEmpty property="cscoId">
+				$cscoIdNot$ cs_car_on$suffix$.csco_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_car_on$suffix$.csco_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="cscoHost" prepend="and">
+			    $cscoHostNot$ cs_car_on$suffix$.csco_host = #cscoHost#
+			</isNotEmpty>
+			<isNotNull property="cscoHostNot" prepend="and">
+				<isEmpty property="cscoHost">
+				$cscoHostNot$ cs_car_on$suffix$.csco_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoCar" prepend="and">
+			    $cscoCarNot$ cs_car_on$suffix$.csco_car = #cscoCar#
+			</isNotEmpty>
+			<isNotNull property="cscoCarNot" prepend="and">
+				<isEmpty property="cscoCar">
+				$cscoCarNot$ cs_car_on$suffix$.csco_car is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoOnUser" prepend="and">
+			    $cscoOnUserNot$ cs_car_on$suffix$.csco_on_user = #cscoOnUser#
+			</isNotEmpty>
+			<isNotNull property="cscoOnUserNot" prepend="and">
+				<isEmpty property="cscoOnUser">
+				$cscoOnUserNot$ cs_car_on$suffix$.csco_on_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoOffUser" prepend="and">
+			    $cscoOffUserNot$ cs_car_on$suffix$.csco_off_user = #cscoOffUser#
+			</isNotEmpty>
+			<isNotNull property="cscoOffUserNot" prepend="and">
+				<isEmpty property="cscoOffUser">
+				$cscoOffUserNot$ cs_car_on$suffix$.csco_off_user is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoOnTimeStart" prepend="and">
+			    $cscoOnTimeNot$   (cs_car_on$suffix$.csco_on_time &gt;= #cscoOnTimeStart#
+			   <isEmpty property="cscoOnTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscoOnTimeEnd" prepend="and">
+				<isEmpty property="cscoOnTimeStart">$cscoOnTimeNot$   (</isEmpty>
+			    cs_car_on$suffix$.csco_on_time &lt;= #cscoOnTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscoOnTime" prepend="and">
+			    $cscoOnTimeNot$ cs_car_on$suffix$.csco_on_time = #cscoOnTime#
+			</isNotEmpty>
+			<isNotNull property="cscoOnTimeNot" prepend="and">
+				<isEmpty property="cscoOnTimeStart"><isEmpty property="cscoOnTimeEnd"><isEmpty property="cscoOnTime">
+				$cscoOnTimeNot$ cs_car_on$suffix$.csco_on_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoOffTimeStart" prepend="and">
+			    $cscoOffTimeNot$   (cs_car_on$suffix$.csco_off_time &gt;= #cscoOffTimeStart#
+			   <isEmpty property="cscoOffTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscoOffTimeEnd" prepend="and">
+				<isEmpty property="cscoOffTimeStart">$cscoOffTimeNot$   (</isEmpty>
+			    cs_car_on$suffix$.csco_off_time &lt;= #cscoOffTimeEnd#)
+			</isNotEmpty>			
+			<isNotEmpty property="cscoOffTime" prepend="and">
+			    $cscoOffTimeNot$ cs_car_on$suffix$.csco_off_time = #cscoOffTime#
+			</isNotEmpty>
+			<isNotNull property="cscoOffTimeNot" prepend="and">
+				<isEmpty property="cscoOffTimeStart"><isEmpty property="cscoOffTimeEnd"><isEmpty property="cscoOffTime">
+				$cscoOffTimeNot$ cs_car_on$suffix$.csco_off_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoLongMin" prepend="and">
+			    $cscoLongNot$  ( cs_car_on$suffix$.csco_long &gt;= #cscoLongMin#
+			    <isEmpty property="cscoLongMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscoLongMax" prepend="and">
+				<isEmpty property="cscoLongMin">$cscoLongNot$   (</isEmpty>
+			    cs_car_on$suffix$.csco_long &lt;= #cscoLongMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscoLong" prepend="and">
+			    $cscoLongNot$ cs_car_on$suffix$.csco_long = #cscoLong#
+			</isNotEmpty>
+			<isNotNull property="cscoLongNot" prepend="and">
+				<isEmpty property="cscoLongMax"><isEmpty property="cscoLongMin"><isEmpty property="cscoLong">
+				$cscoLongNot$ cs_car_on$suffix$.csco_long is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoRemark" prepend="and">			    
+			    (<isNotNull property="cscoRemarkNot">
+			    cs_car_on$suffix$.csco_remark is null or length(cs_car_on$suffix$.csco_remark) &lt; 1 or
+			    </isNotNull>$cscoRemarkNot$ cs_car_on$suffix$.csco_remark like #cscoRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscoRemarkNot" prepend="and">
+				<isEmpty property="cscoRemark">
+				$cscoRemarkNot$ (cs_car_on$suffix$.csco_remark is null or length(cs_car_on$suffix$.csco_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoStatus" prepend="and">
+			    $cscoStatusNot$ cs_car_on$suffix$.csco_status = #cscoStatus#
+			</isNotEmpty>
+			<isNotNull property="cscoStatusNot" prepend="and">
+				<isEmpty property="cscoStatus">
+				$cscoStatusNot$ cs_car_on$suffix$.csco_status is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoOnRemark" prepend="and">			    
+			    (<isNotNull property="cscoOnRemarkNot">
+			    cs_car_on$suffix$.csco_on_remark is null or length(cs_car_on$suffix$.csco_on_remark) &lt; 1 or
+			    </isNotNull>$cscoOnRemarkNot$ cs_car_on$suffix$.csco_on_remark like #cscoOnRemark#)
+			</isNotEmpty>
+			<isNotNull property="cscoOnRemarkNot" prepend="and">
+				<isEmpty property="cscoOnRemark">
+				$cscoOnRemarkNot$ (cs_car_on$suffix$.csco_on_remark is null or length(cs_car_on$suffix$.csco_on_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoProperty" prepend="and">
+			    $cscoPropertyNot$ cs_car_on$suffix$.csco_property = #cscoProperty#
+			</isNotEmpty>
+			<isNotNull property="cscoPropertyNot" prepend="and">
+				<isEmpty property="cscoProperty">
+				$cscoPropertyNot$ cs_car_on$suffix$.csco_property is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscoImage" prepend="and">			    
+			    (<isNotNull property="cscoImageNot">
+			    cs_car_on$suffix$.csco_image is null or length(cs_car_on$suffix$.csco_image) &lt; 1 or
+			    </isNotNull>$cscoImageNot$ cs_car_on$suffix$.csco_image = #cscoImage#)
+			</isNotEmpty>
+			<isNotNull property="cscoImageNot" prepend="and">
+				<isEmpty property="cscoImage">
+				$cscoImageNot$ (cs_car_on$suffix$.csco_image is null or length(cs_car_on$suffix$.csco_image) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 车辆上线记录left join 条件sql片段 -->
+	<sql id="cs_car_on_join">
+		<dynamic>
+			<isNotEmpty property="CsCarOn.cscoId" prepend="and">
+			    $CsCarOn.cscoIdNot$ cs_car_on$CsCarOn.suffix$.csco_id = #CsCarOn.cscoId#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoIdNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoId">
+				$cscoIdNot$ cs_car_on$CsCarOn.suffix$.csco_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_car_on$CsCarOn.suffix$.csco_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsCarOn.cscoHost" prepend="and">
+			    $CsCarOn.cscoHostNot$ cs_car_on$CsCarOn.suffix$.csco_host = #CsCarOn.cscoHost#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoHostNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoHost">
+				$cscoHostNot$ cs_car_on$CsCarOn.suffix$.csco_host is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCarOn.cscoCar" prepend="and">
+			    $CsCarOn.cscoCarNot$ cs_car_on$CsCarOn.suffix$.csco_car = #CsCarOn.cscoCar#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoCarNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoCar">
+				$cscoCarNot$ cs_car_on$CsCarOn.suffix$.csco_car is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCarOn.cscoOnUser" prepend="and">
+			    $CsCarOn.cscoOnUserNot$ cs_car_on$CsCarOn.suffix$.csco_on_user = #CsCarOn.cscoOnUser#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoOnUserNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoOnUser">
+				$cscoOnUserNot$ cs_car_on$CsCarOn.suffix$.csco_on_user is null
+				</isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="CsCarOn.cscoOffUser" prepend="and">
+			    $CsCarOn.cscoOffUserNot$ cs_car_on$CsCarOn.suffix$.csco_off_user = #CsCarOn.cscoOffUser#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoOffUserNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoOffUser">
+				$cscoOffUserNot$ cs_car_on$CsCarOn.suffix$.csco_off_user is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsCarOn.cscoOnTimeStart" prepend="and">
+				    $CsCarOn.cscoOnTimeNot$   (cs_car_on$CsCarOn.suffix$.csco_on_time &gt;= #CsCarOn.cscoOnTimeStart#
+				   <isEmpty property="CsCarOn.cscoOnTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCarOn.cscoOnTimeEnd" prepend="and">
+					<isEmpty property="CsCarOn.cscoOnTimeStart">$CsCarOn.cscoOnTimeNot$   (</isEmpty>
+				    cs_car_on$CsCarOn.suffix$.csco_on_time &lt;= #CsCarOn.cscoOnTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCarOn.cscoOnTime" prepend="and">
+				    $CsCarOn.cscoOnTimeNot$ cs_car_on$CsCarOn.suffix$.csco_on_time = #CsCarOn.cscoOnTime#
+				</isNotEmpty>
+				<isNotNull property="CsCarOn.cscoOnTimeNot" prepend="and">
+					<isEmpty property="CsCarOn.cscoOnTimeStart"><isEmpty property="CsCarOn.cscoOnTimeEnd"><isEmpty property="CsCarOn.cscoOnTime">
+					$cscoOnTimeNot$ cs_car_on$CsCarOn.suffix$.csco_on_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+				<isNotEmpty property="CsCarOn.cscoOffTimeStart" prepend="and">
+				    $CsCarOn.cscoOffTimeNot$   (cs_car_on$CsCarOn.suffix$.csco_off_time &gt;= #CsCarOn.cscoOffTimeStart#
+				   <isEmpty property="CsCarOn.cscoOffTimeEnd">)</isEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="CsCarOn.cscoOffTimeEnd" prepend="and">
+					<isEmpty property="CsCarOn.cscoOffTimeStart">$CsCarOn.cscoOffTimeNot$   (</isEmpty>
+				    cs_car_on$CsCarOn.suffix$.csco_off_time &lt;= #CsCarOn.cscoOffTimeEnd#)
+				</isNotEmpty>			
+				<isNotEmpty property="CsCarOn.cscoOffTime" prepend="and">
+				    $CsCarOn.cscoOffTimeNot$ cs_car_on$CsCarOn.suffix$.csco_off_time = #CsCarOn.cscoOffTime#
+				</isNotEmpty>
+				<isNotNull property="CsCarOn.cscoOffTimeNot" prepend="and">
+					<isEmpty property="CsCarOn.cscoOffTimeStart"><isEmpty property="CsCarOn.cscoOffTimeEnd"><isEmpty property="CsCarOn.cscoOffTime">
+					$cscoOffTimeNot$ cs_car_on$CsCarOn.suffix$.csco_off_time is null
+					</isEmpty></isEmpty></isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCarOn.cscoLongMin" prepend="and">
+			    $CsCarOn.cscoLongNot$  ( cs_car_on$CsCarOn.suffix$.csco_long &gt;= #CsCarOn.cscoLongMin#
+			    <isEmpty property="CsCarOn.cscoLongMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsCarOn.cscoLongMax" prepend="and">
+				<isEmpty property="CsCarOn.cscoLongMin">$CsCarOn.cscoLongNot$   (</isEmpty>
+			    cs_car_on$CsCarOn.suffix$.csco_long &lt;= #CsCarOn.cscoLongMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsCarOn.cscoLong" prepend="and">
+			    $CsCarOn.cscoLongNot$ cs_car_on$CsCarOn.suffix$.csco_long = #CsCarOn.cscoLong#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoLongNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoLongMax"><isEmpty property="CsCarOn.cscoLongMin"><isEmpty property="CsCarOn.cscoLong">
+				$cscoLongNot$ cs_car_on$CsCarOn.suffix$.csco_long is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCarOn.cscoRemark" prepend="and">			    
+				    (<isNotNull property="CsCarOn.cscoRemarkNot">
+				    cs_car_on$CsCarOn.suffix$.csco_remark is null or length(cs_car_on$CsCarOn.suffix$.csco_remark) &lt; 1 or
+				    </isNotNull>$CsCarOn.cscoRemarkNot$ cs_car_on$CsCarOn.suffix$.csco_remark like #CsCarOn.cscoRemark#)
+				</isNotEmpty>
+				<isNotNull property="CsCarOn.cscoRemarkNot" prepend="and">
+					<isEmpty property="CsCarOn.cscoRemark">
+					$cscoRemarkNot$ (cs_car_on$CsCarOn.suffix$.csco_remark is null or length(cs_car_on$CsCarOn.suffix$.csco_remark) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCarOn.cscoStatus" prepend="and">
+			    $CsCarOn.cscoStatusNot$ cs_car_on$CsCarOn.suffix$.csco_status = #CsCarOn.cscoStatus#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoStatusNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoStatus">
+				$cscoStatusNot$ cs_car_on$CsCarOn.suffix$.csco_status is null
+				</isEmpty>
+			</isNotNull>
+				<isNotEmpty property="CsCarOn.cscoOnRemark" prepend="and">			    
+				    (<isNotNull property="CsCarOn.cscoOnRemarkNot">
+				    cs_car_on$CsCarOn.suffix$.csco_on_remark is null or length(cs_car_on$CsCarOn.suffix$.csco_on_remark) &lt; 1 or
+				    </isNotNull>$CsCarOn.cscoOnRemarkNot$ cs_car_on$CsCarOn.suffix$.csco_on_remark like #CsCarOn.cscoOnRemark#)
+				</isNotEmpty>
+				<isNotNull property="CsCarOn.cscoOnRemarkNot" prepend="and">
+					<isEmpty property="CsCarOn.cscoOnRemark">
+					$cscoOnRemarkNot$ (cs_car_on$CsCarOn.suffix$.csco_on_remark is null or length(cs_car_on$CsCarOn.suffix$.csco_on_remark) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+			<isNotEmpty property="CsCarOn.cscoProperty" prepend="and">
+			    $CsCarOn.cscoPropertyNot$ cs_car_on$CsCarOn.suffix$.csco_property = #CsCarOn.cscoProperty#
+			</isNotEmpty>
+			<isNotNull property="CsCarOn.cscoPropertyNot" prepend="and">
+				<isEmpty property="CsCarOn.cscoProperty">
+				$cscoPropertyNot$ cs_car_on$CsCarOn.suffix$.csco_property is null
+				</isEmpty>
+			</isNotNull>	
+				<isNotEmpty property="CsCarOn.cscoImage" prepend="and">			    
+				    (<isNotNull property="CsCarOn.cscoImageNot">
+				    cs_car_on$CsCarOn.suffix$.csco_image is null or length(cs_car_on$CsCarOn.suffix$.csco_image) &lt; 1 or
+				    </isNotNull>$CsCarOn.cscoImageNot$ cs_car_on$CsCarOn.suffix$.csco_image = #CsCarOn.cscoImage#)
+				</isNotEmpty>
+				<isNotNull property="CsCarOn.cscoImageNot" prepend="and">
+					<isEmpty property="CsCarOn.cscoImage">
+					$cscoImageNot$ (cs_car_on$CsCarOn.suffix$.csco_image is null or length(cs_car_on$CsCarOn.suffix$.csco_image) &lt; 1)
+					</isEmpty>
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

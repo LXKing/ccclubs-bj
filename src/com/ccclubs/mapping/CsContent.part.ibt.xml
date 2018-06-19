@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsContent_part">	
+	<!-- 静态内容条件sql片段  -->
+	<sql id="cs_content_dynamic">
+		<dynamic>
+			<isNotEmpty property="cscId" prepend="and">
+			    $cscIdNot$ cs_content$suffix$.csc_id = #cscId#
+			</isNotEmpty>
+			<isNotNull property="cscIdNot" prepend="and">
+				<isEmpty property="cscId">
+				$cscIdNot$ cs_content$suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscTitle" prepend="and">			    
+			    (<isNotNull property="cscTitleNot">
+			    cs_content$suffix$.csc_title is null or length(cs_content$suffix$.csc_title) &lt; 1 or
+			    </isNotNull>$cscTitleNot$ cs_content$suffix$.csc_title like #cscTitle#)
+			</isNotEmpty>
+			<isNotNull property="cscTitleNot" prepend="and">
+				<isEmpty property="cscTitle">
+				$cscTitleNot$ (cs_content$suffix$.csc_title is null or length(cs_content$suffix$.csc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscParent" prepend="and">
+			    $cscParentNot$ cs_content$suffix$.csc_parent = #cscParent#
+			</isNotEmpty>
+			<isNotNull property="cscParentNot" prepend="and">
+				<isEmpty property="cscParent">
+				$cscParentNot$ cs_content$suffix$.csc_parent is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscFlag" prepend="and">			    
+			    (<isNotNull property="cscFlagNot">
+			    cs_content$suffix$.csc_flag is null or length(cs_content$suffix$.csc_flag) &lt; 1 or
+			    </isNotNull>$cscFlagNot$ cs_content$suffix$.csc_flag = #cscFlag#)
+			</isNotEmpty>
+			<isNotNull property="cscFlagNot" prepend="and">
+				<isEmpty property="cscFlag">
+				$cscFlagNot$ (cs_content$suffix$.csc_flag is null or length(cs_content$suffix$.csc_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscRecommendMin" prepend="and">
+			    $cscRecommendNot$  ( cs_content$suffix$.csc_order &gt;= #cscRecommendMin#
+			    <isEmpty property="cscRecommendMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscRecommendMax" prepend="and">
+				<isEmpty property="cscRecommendMin">$cscRecommendNot$   (</isEmpty>
+			    cs_content$suffix$.csc_order &lt;= #cscRecommendMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscRecommend" prepend="and">
+			    $cscRecommendNot$ cs_content$suffix$.csc_order = #cscRecommend#
+			</isNotEmpty>
+			<isNotNull property="cscRecommendNot" prepend="and">
+				<isEmpty property="cscRecommendMax"><isEmpty property="cscRecommendMin"><isEmpty property="cscRecommend">
+				$cscRecommendNot$ cs_content$suffix$.csc_order is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscThum" prepend="and">
+			    $cscThumNot$ cs_content$suffix$.csc_thum = #cscThum#
+			</isNotEmpty>
+			<isNotNull property="cscThumNot" prepend="and">
+				<isEmpty property="cscThum">
+				$cscThumNot$ cs_content$suffix$.csc_thum is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscIntroduction" prepend="and">			    
+			    (<isNotNull property="cscIntroductionNot">
+			    cs_content$suffix$.csc_introduction is null or length(cs_content$suffix$.csc_introduction) &lt; 1 or
+			    </isNotNull>$cscIntroductionNot$ cs_content$suffix$.csc_introduction like #cscIntroduction#)
+			</isNotEmpty>
+			<isNotNull property="cscIntroductionNot" prepend="and">
+				<isEmpty property="cscIntroduction">
+				$cscIntroductionNot$ (cs_content$suffix$.csc_introduction is null or length(cs_content$suffix$.csc_introduction) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscKeywords" prepend="and">			    
+			    (<isNotNull property="cscKeywordsNot">
+			    cs_content$suffix$.csc_keywords is null or length(cs_content$suffix$.csc_keywords) &lt; 1 or
+			    </isNotNull>$cscKeywordsNot$ cs_content$suffix$.csc_keywords like #cscKeywords#)
+			</isNotEmpty>
+			<isNotNull property="cscKeywordsNot" prepend="and">
+				<isEmpty property="cscKeywords">
+				$cscKeywordsNot$ (cs_content$suffix$.csc_keywords is null or length(cs_content$suffix$.csc_keywords) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscImages" prepend="and">
+			    $cscImagesNot$ cs_content$suffix$.csc_images = #cscImages#
+			</isNotEmpty>
+			<isNotNull property="cscImagesNot" prepend="and">
+				<isEmpty property="cscImages">
+				$cscImagesNot$ cs_content$suffix$.csc_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscContent" prepend="and">			    
+			    (<isNotNull property="cscContentNot">
+			    cs_content$suffix$.csc_content is null or length(cs_content$suffix$.csc_content) &lt; 1 or
+			    </isNotNull>$cscContentNot$ cs_content$suffix$.csc_content like #cscContent#)
+			</isNotEmpty>
+			<isNotNull property="cscContentNot" prepend="and">
+				<isEmpty property="cscContent">
+				$cscContentNot$ (cs_content$suffix$.csc_content is null or length(cs_content$suffix$.csc_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscFile" prepend="and">
+			    $cscFileNot$ cs_content$suffix$.csc_file = #cscFile#
+			</isNotEmpty>
+			<isNotNull property="cscFileNot" prepend="and">
+				<isEmpty property="cscFile">
+				$cscFileNot$ cs_content$suffix$.csc_file is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscAddTimeStart" prepend="and">
+			    $cscAddTimeNot$   (cs_content$suffix$.csc_add_time &gt;= #cscAddTimeStart#
+			   <isEmpty property="cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTimeEnd" prepend="and">
+				<isEmpty property="cscAddTimeStart">$cscAddTimeNot$   (</isEmpty>
+			    cs_content$suffix$.csc_add_time &lt;= #cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscAddTime" prepend="and">
+			    $cscAddTimeNot$ cs_content$suffix$.csc_add_time = #cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="cscAddTimeNot" prepend="and">
+				<isEmpty property="cscAddTimeStart"><isEmpty property="cscAddTimeEnd"><isEmpty property="cscAddTime">
+				$cscAddTimeNot$ cs_content$suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscUpdateTimeStart" prepend="and">
+			    $cscUpdateTimeNot$   (cs_content$suffix$.csc_update_time &gt;= #cscUpdateTimeStart#
+			   <isEmpty property="cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="cscUpdateTimeStart">$cscUpdateTimeNot$   (</isEmpty>
+			    cs_content$suffix$.csc_update_time &lt;= #cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="cscUpdateTime" prepend="and">
+			    $cscUpdateTimeNot$ cs_content$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="cscUpdateTimeNot" prepend="and">
+				<isEmpty property="cscUpdateTimeStart"><isEmpty property="cscUpdateTimeEnd"><isEmpty property="cscUpdateTime">
+				$cscUpdateTimeNot$ cs_content$suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="cscViewSMin" prepend="and">
+			    $cscViewSNot$  ( cs_content$suffix$.csc_view_s &gt;= #cscViewSMin#
+			    <isEmpty property="cscViewSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscViewSMax" prepend="and">
+				<isEmpty property="cscViewSMin">$cscViewSNot$   (</isEmpty>
+			    cs_content$suffix$.csc_view_s &lt;= #cscViewSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscViewS" prepend="and">
+			    $cscViewSNot$ cs_content$suffix$.csc_view_s = #cscViewS#
+			</isNotEmpty>
+			<isNotNull property="cscViewSNot" prepend="and">
+				<isEmpty property="cscViewSMax"><isEmpty property="cscViewSMin"><isEmpty property="cscViewS">
+				$cscViewSNot$ cs_content$suffix$.csc_view_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscReplySMin" prepend="and">
+			    $cscReplySNot$  ( cs_content$suffix$.csc_reply_s &gt;= #cscReplySMin#
+			    <isEmpty property="cscReplySMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscReplySMax" prepend="and">
+				<isEmpty property="cscReplySMin">$cscReplySNot$   (</isEmpty>
+			    cs_content$suffix$.csc_reply_s &lt;= #cscReplySMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscReplyS" prepend="and">
+			    $cscReplySNot$ cs_content$suffix$.csc_reply_s = #cscReplyS#
+			</isNotEmpty>
+			<isNotNull property="cscReplySNot" prepend="and">
+				<isEmpty property="cscReplySMax"><isEmpty property="cscReplySMin"><isEmpty property="cscReplyS">
+				$cscReplySNot$ cs_content$suffix$.csc_reply_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscCollectSMin" prepend="and">
+			    $cscCollectSNot$  ( cs_content$suffix$.csc_collect_s &gt;= #cscCollectSMin#
+			    <isEmpty property="cscCollectSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscCollectSMax" prepend="and">
+				<isEmpty property="cscCollectSMin">$cscCollectSNot$   (</isEmpty>
+			    cs_content$suffix$.csc_collect_s &lt;= #cscCollectSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscCollectS" prepend="and">
+			    $cscCollectSNot$ cs_content$suffix$.csc_collect_s = #cscCollectS#
+			</isNotEmpty>
+			<isNotNull property="cscCollectSNot" prepend="and">
+				<isEmpty property="cscCollectSMax"><isEmpty property="cscCollectSMin"><isEmpty property="cscCollectS">
+				$cscCollectSNot$ cs_content$suffix$.csc_collect_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscPraiseSMin" prepend="and">
+			    $cscPraiseSNot$  ( cs_content$suffix$.csc_praise_s &gt;= #cscPraiseSMin#
+			    <isEmpty property="cscPraiseSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cscPraiseSMax" prepend="and">
+				<isEmpty property="cscPraiseSMin">$cscPraiseSNot$   (</isEmpty>
+			    cs_content$suffix$.csc_praise_s &lt;= #cscPraiseSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="cscPraiseS" prepend="and">
+			    $cscPraiseSNot$ cs_content$suffix$.csc_praise_s = #cscPraiseS#
+			</isNotEmpty>
+			<isNotNull property="cscPraiseSNot" prepend="and">
+				<isEmpty property="cscPraiseSMax"><isEmpty property="cscPraiseSMin"><isEmpty property="cscPraiseS">
+				$cscPraiseSNot$ cs_content$suffix$.csc_praise_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="cscStatus" prepend="and">
+			    $cscStatusNot$ cs_content$suffix$.csc_status = #cscStatus#
+			</isNotEmpty>
+			<isNotNull property="cscStatusNot" prepend="and">
+				<isEmpty property="cscStatus">
+				$cscStatusNot$ cs_content$suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 静态内容left join 条件sql片段 -->
+	<sql id="cs_content_join">
+		<dynamic>
+			<isNotEmpty property="CsContent.cscId" prepend="and">
+			    $CsContent.cscIdNot$ cs_content$CsContent.suffix$.csc_id = #CsContent.cscId#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscIdNot" prepend="and">
+				<isEmpty property="CsContent.cscId">
+				$cscIdNot$ cs_content$CsContent.suffix$.csc_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscTitle" prepend="and">
+				(<isNotNull property="CsContent.cscTitleNot">
+			    cs_content$CsContent.suffix$.csc_title is null or length(cs_content$CsContent.suffix$.csc_title) &lt; 1 or
+			    </isNotNull>$CsContent.cscTitleNot$ cs_content$CsContent.suffix$.csc_title like #CsContent.cscTitle#)
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscTitleNot" prepend="and">
+				<isEmpty property="CsContent.cscTitle">
+				$cscTitleNot$ (cs_content$CsContent.suffix$.csc_title is null or length(cs_content$CsContent.suffix$.csc_title) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscParent" prepend="and">
+			    $CsContent.cscParentNot$ cs_content$CsContent.suffix$.csc_parent = #CsContent.cscParent#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscParentNot" prepend="and">
+				<isEmpty property="CsContent.cscParent">
+				$cscParentNot$ cs_content$CsContent.suffix$.csc_parent is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscFlag" prepend="and">
+				(<isNotNull property="CsContent.cscFlagNot">
+			    cs_content$CsContent.suffix$.csc_flag is null or length(cs_content$CsContent.suffix$.csc_flag) &lt; 1 or
+			    </isNotNull>$CsContent.cscFlagNot$ cs_content$CsContent.suffix$.csc_flag = #CsContent.cscFlag#)
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscFlagNot" prepend="and">
+				<isEmpty property="CsContent.cscFlag">
+				$cscFlagNot$ (cs_content$CsContent.suffix$.csc_flag is null or length(cs_content$CsContent.suffix$.csc_flag) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscRecommendMin" prepend="and">
+			    $CsContent.cscRecommendNot$  ( cs_content$CsContent.suffix$.csc_order &gt;= #CsContent.cscRecommendMin#
+			    <isEmpty property="CsContent.cscRecommendMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscRecommendMax" prepend="and">
+				<isEmpty property="CsContent.cscRecommendMin">$CsContent.cscRecommendNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_order &lt;= #CsContent.cscRecommendMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscRecommend" prepend="and">
+			    $CsContent.cscRecommendNot$ cs_content$CsContent.suffix$.csc_order = #CsContent.cscRecommend#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscRecommendNot" prepend="and">
+				<isEmpty property="CsContent.cscRecommendMax"><isEmpty property="CsContent.cscRecommendMin"><isEmpty property="CsContent.cscRecommend">
+				$cscRecommendNot$ cs_content$CsContent.suffix$.csc_order is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscThum" prepend="and">
+			    $CsContent.cscThumNot$ cs_content$CsContent.suffix$.csc_thum = #CsContent.cscThum#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscThumNot" prepend="and">
+				<isEmpty property="CsContent.cscThum">
+				$cscThumNot$ cs_content$CsContent.suffix$.csc_thum is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscIntroduction" prepend="and">
+				(<isNotNull property="CsContent.cscIntroductionNot">
+			    cs_content$CsContent.suffix$.csc_introduction is null or length(cs_content$CsContent.suffix$.csc_introduction) &lt; 1 or
+			    </isNotNull>$CsContent.cscIntroductionNot$ cs_content$CsContent.suffix$.csc_introduction like #CsContent.cscIntroduction#)
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscIntroductionNot" prepend="and">
+				<isEmpty property="CsContent.cscIntroduction">
+				$cscIntroductionNot$ (cs_content$CsContent.suffix$.csc_introduction is null or length(cs_content$CsContent.suffix$.csc_introduction) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscKeywords" prepend="and">
+				(<isNotNull property="CsContent.cscKeywordsNot">
+			    cs_content$CsContent.suffix$.csc_keywords is null or length(cs_content$CsContent.suffix$.csc_keywords) &lt; 1 or
+			    </isNotNull>$CsContent.cscKeywordsNot$ cs_content$CsContent.suffix$.csc_keywords like #CsContent.cscKeywords#)
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscKeywordsNot" prepend="and">
+				<isEmpty property="CsContent.cscKeywords">
+				$cscKeywordsNot$ (cs_content$CsContent.suffix$.csc_keywords is null or length(cs_content$CsContent.suffix$.csc_keywords) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscImages" prepend="and">
+			    $CsContent.cscImagesNot$ cs_content$CsContent.suffix$.csc_images = #CsContent.cscImages#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscImagesNot" prepend="and">
+				<isEmpty property="CsContent.cscImages">
+				$cscImagesNot$ cs_content$CsContent.suffix$.csc_images is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscContent" prepend="and">
+				(<isNotNull property="CsContent.cscContentNot">
+			    cs_content$CsContent.suffix$.csc_content is null or length(cs_content$CsContent.suffix$.csc_content) &lt; 1 or
+			    </isNotNull>$CsContent.cscContentNot$ cs_content$CsContent.suffix$.csc_content like #CsContent.cscContent#)
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscContentNot" prepend="and">
+				<isEmpty property="CsContent.cscContent">
+				$cscContentNot$ (cs_content$CsContent.suffix$.csc_content is null or length(cs_content$CsContent.suffix$.csc_content) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscFile" prepend="and">
+			    $CsContent.cscFileNot$ cs_content$CsContent.suffix$.csc_file = #CsContent.cscFile#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscFileNot" prepend="and">
+				<isEmpty property="CsContent.cscFile">
+				$cscFileNot$ cs_content$CsContent.suffix$.csc_file is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscAddTimeStart" prepend="and">
+			    $CsContent.cscAddTimeNot$   (cs_content$CsContent.suffix$.csc_add_time &gt;= #CsContent.cscAddTimeStart#
+			   <isEmpty property="CsContent.cscAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscAddTimeEnd" prepend="and">
+				<isEmpty property="CsContent.cscAddTimeStart">$CsContent.cscAddTimeNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_add_time &lt;= #CsContent.cscAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscAddTime" prepend="and">
+			    $CsContent.cscAddTimeNot$ cs_content$CsContent.suffix$.csc_add_time = #CsContent.cscAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscAddTimeNot" prepend="and">
+				<isEmpty property="CsContent.cscAddTimeStart"><isEmpty property="CsContent.cscAddTimeEnd"><isEmpty property="CsContent.cscAddTime">
+				$cscAddTimeNot$ cs_content$CsContent.suffix$.csc_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscUpdateTimeStart" prepend="and">
+			    $CsContent.cscUpdateTimeNot$   (cs_content$CsContent.suffix$.csc_update_time &gt;= #CsContent.cscUpdateTimeStart#
+			   <isEmpty property="CsContent.cscUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsContent.cscUpdateTimeStart">$CsContent.cscUpdateTimeNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_update_time &lt;= #CsContent.cscUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscUpdateTime" prepend="and">
+			    $CsContent.cscUpdateTimeNot$ cs_content$CsContent.suffix$.csc_update_time = #CsContent.cscUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscUpdateTimeNot" prepend="and">
+				<isEmpty property="CsContent.cscUpdateTimeStart"><isEmpty property="CsContent.cscUpdateTimeEnd"><isEmpty property="CsContent.cscUpdateTime">
+				$cscUpdateTimeNot$ cs_content$CsContent.suffix$.csc_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscViewSMin" prepend="and">
+			    $CsContent.cscViewSNot$  ( cs_content$CsContent.suffix$.csc_view_s &gt;= #CsContent.cscViewSMin#
+			    <isEmpty property="CsContent.cscViewSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscViewSMax" prepend="and">
+				<isEmpty property="CsContent.cscViewSMin">$CsContent.cscViewSNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_view_s &lt;= #CsContent.cscViewSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscViewS" prepend="and">
+			    $CsContent.cscViewSNot$ cs_content$CsContent.suffix$.csc_view_s = #CsContent.cscViewS#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscViewSNot" prepend="and">
+				<isEmpty property="CsContent.cscViewSMax"><isEmpty property="CsContent.cscViewSMin"><isEmpty property="CsContent.cscViewS">
+				$cscViewSNot$ cs_content$CsContent.suffix$.csc_view_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscReplySMin" prepend="and">
+			    $CsContent.cscReplySNot$  ( cs_content$CsContent.suffix$.csc_reply_s &gt;= #CsContent.cscReplySMin#
+			    <isEmpty property="CsContent.cscReplySMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscReplySMax" prepend="and">
+				<isEmpty property="CsContent.cscReplySMin">$CsContent.cscReplySNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_reply_s &lt;= #CsContent.cscReplySMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscReplyS" prepend="and">
+			    $CsContent.cscReplySNot$ cs_content$CsContent.suffix$.csc_reply_s = #CsContent.cscReplyS#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscReplySNot" prepend="and">
+				<isEmpty property="CsContent.cscReplySMax"><isEmpty property="CsContent.cscReplySMin"><isEmpty property="CsContent.cscReplyS">
+				$cscReplySNot$ cs_content$CsContent.suffix$.csc_reply_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscCollectSMin" prepend="and">
+			    $CsContent.cscCollectSNot$  ( cs_content$CsContent.suffix$.csc_collect_s &gt;= #CsContent.cscCollectSMin#
+			    <isEmpty property="CsContent.cscCollectSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscCollectSMax" prepend="and">
+				<isEmpty property="CsContent.cscCollectSMin">$CsContent.cscCollectSNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_collect_s &lt;= #CsContent.cscCollectSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscCollectS" prepend="and">
+			    $CsContent.cscCollectSNot$ cs_content$CsContent.suffix$.csc_collect_s = #CsContent.cscCollectS#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscCollectSNot" prepend="and">
+				<isEmpty property="CsContent.cscCollectSMax"><isEmpty property="CsContent.cscCollectSMin"><isEmpty property="CsContent.cscCollectS">
+				$cscCollectSNot$ cs_content$CsContent.suffix$.csc_collect_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscPraiseSMin" prepend="and">
+			    $CsContent.cscPraiseSNot$  ( cs_content$CsContent.suffix$.csc_praise_s &gt;= #CsContent.cscPraiseSMin#
+			    <isEmpty property="CsContent.cscPraiseSMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscPraiseSMax" prepend="and">
+				<isEmpty property="CsContent.cscPraiseSMin">$CsContent.cscPraiseSNot$   (</isEmpty>
+			    cs_content$CsContent.suffix$.csc_praise_s &lt;= #CsContent.cscPraiseSMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsContent.cscPraiseS" prepend="and">
+			    $CsContent.cscPraiseSNot$ cs_content$CsContent.suffix$.csc_praise_s = #CsContent.cscPraiseS#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscPraiseSNot" prepend="and">
+				<isEmpty property="CsContent.cscPraiseSMax"><isEmpty property="CsContent.cscPraiseSMin"><isEmpty property="CsContent.cscPraiseS">
+				$cscPraiseSNot$ cs_content$CsContent.suffix$.csc_praise_s is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsContent.cscStatus" prepend="and">
+			    $CsContent.cscStatusNot$ cs_content$CsContent.suffix$.csc_status = #CsContent.cscStatus#
+			</isNotEmpty>
+			<isNotNull property="CsContent.cscStatusNot" prepend="and">
+				<isEmpty property="CsContent.cscStatus">
+				$cscStatusNot$ cs_content$CsContent.suffix$.csc_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

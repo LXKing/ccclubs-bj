@@ -1,0 +1,59 @@
+<s:iterator value="#request.page.result" id="item" status="i">
+	<li>
+		<div class="ccc-my-panel-order-item ccc-clearfix">
+			<div class="ccc-car-thumb">
+				${lz:set("car",(get:CsCar(item.csoCar)))}
+				<img src="${lz:or(car.cscPreview,car.$cscModel.cscmThumb)}" />
+				<s:if test="#item.csoIsAdCar==null">
+				${item.$csoCar.cscIsAd == true ? "<i class='ad'></i>" : ""}
+				</s:if>
+				<s:else>${item.csoIsAdCar == true ? "<i class='ad'></i>" : ""}</s:else>
+				<!--if 宣传车-->
+				<span class="ccc-thumb-cover"></span>
+			</div>
+			<div class="ccc-my-order-det">
+				<div class="ccc-car-model">
+					<span class="ccc-font-lato" title="订单号">订单号：${item.csoId}</span>
+					<span class="ccc-font-lato" title="下单时间">${lz:date(item.csoAddTime,"yyyy-MM-dd , HH:mm")}</span>${item.$csoCar.cscCarNo}
+					<s:if test="#item.csoInsureType > 0">
+						<i class="ccc-non-res" title="${item.$csoInsureType.cspName}"></i>
+					</s:if>
+					<span class="ccc-my-order-status" title="订单状态">${item.csoStatus == 0?'已预定':''}${item.csoStatus == 1?'正在执行':''}${item.csoStatus == 2?'已还车':''}${item.csoStatus == 3?'已取消':''}${item.csoStatus == 4?'已完成':''}${item.csoStatus == 5?'待处理':''}${item.csoStatus == 6?'已退款':''}${item.csoStatus == 7?'已撤销':''}</span>
+				</div>
+				<div class="ccc-my-order-grid order-grid-1">
+					<p>
+						取车时间：
+						<span class="ccc-font-lato">${lz:date(item.csoStartTime,"yyyy-MM-dd , HH:mm")}</span>
+					</p>
+					<p>
+						还车时间：
+						<span class="ccc-font-lato">${lz:date(item.csoEndTime,"yyyy-MM-dd , HH:mm")}</span>
+					</p>
+					<p>
+						取车网点：
+						<span class="ccc-font-lato">${item.$csoOutlets.csoName}</span>
+					</p>
+				</div>
+				<div class="ccc-my-order-grid order-grid-2">
+					<p>
+						授权码：
+						<span class="ccc-font-lato">${item.csoCode}</span>
+					</p>
+					<p>
+						车型：
+						<span class="ccc-font-lato"> ${item.$csoCar.$cscModel.cscmName}</span>
+					</p>
+					<p>
+						还车网点：
+						<span class="ccc-font-lato">${item.$csoOutletsRet.csoName}</span>
+					</p>
+				</div>
+				<div class="ccc-my-order-opt">
+					<a href="/reserve.html?csoArea=${item.csoArea}&csoOutlets=${item.csoOutlets}&src=renew" class="ccc-btn-green">再次预订</a>
+					<a href="/my/order_details.html?order=${item.csoId}" target="_blank" class="ccc-btn-white">订单详情</a>
+				</div>
+			</div>
+		</div>
+		<img src="/images/icons/simple-divider.png" class="ccc-my-divider">
+	</li>
+</s:iterator>

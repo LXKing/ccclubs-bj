@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>系统控制</title>
+</head>
+
+<body class="login-bg gradient">
+<div class="overall-layer" style="background-color: rgba(0,0,0 ,0.5);"></div>
+<div class="countent_list">
+	<ul id="countent_list">
+		<li><img src="images/icon1.png"><span>会员注册</span></li>
+		<li><img src="images/icon2.png"><span>远程控制</span></li>
+		<li><img src="images/icon3.png"><span>绑定会员卡</span></li>
+		<li><img src="images/icon4.png"><span>修改密码</span></li>
+		<li><img src="images/icon5.png"><span>车辆控制</span></li>
+		<li><img src="images/icon6.png"><span>上报公里数</span></li>
+		<li id="scanQRCode1"><img src="images/icon7.png"><span>实时巡车</span></li>
+		<li><img src="images/icon8.png"><span>安全退出</span></li>
+	</ul>
+</div>
+<div id="toast">
+	正在加载...
+</div>
+<div id="toast_input">
+	<div class="overall-layer toast_bg"></div>
+	<p class="toast_p"></p>
+	<input class="toast_inpit"  type="text" id="toast_carno" placeholder="请输入车牌号"></input>
+	<input class="toast_inpit"  type="text" id="toast_inpit" placeholder="请输入公里数"></input>
+	<div class="bottom_btn toast_btn" id="btn_cancel"><bottom>取消</bottom></div>
+	<div class="bottom_btn toast_btn btn_greencolor" id="btn_deter"><bottom>确定</bottom></div>
+</div>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+/*
+*提示信息
+*/
+<s:if test="#session.tips.notNull==true">
+//当session里有错误提示时，显示错误提示
+var tips="${tips.value}";
+if(tips!=""&&tips!=null&&tips!=undefined){
+	if(localStorage.getItem("login_id")!=""&&localStorage.getItem("login_id")!=null&&localStorage.getItem("login_id")!=undefined){
+		if(localStorage.getItem("login_id")!=tips){
+			Toast.show(tips);
+		}
+	}else{
+		localStorage.setItem("login_id",tips);
+		Toast.show("恭喜你登录成功");
+	}
+	setTimeout("location.reload();",2000);
+}
+whetherlog();//验证用户是否登录
+</s:if>
+ontouches();
+ wx.config({
+      debug: false,
+      appId: 'wxf7d08a80787fa584',
+      timestamp: ${map.timestamp},
+      nonceStr: '${map.nonceStr}',
+      signature: '${map.signature}',
+      jsApiList: [
+      'scanQRCode',
+      'checkJsApi',
+      'openLocation',
+      'getLocation'
+      ]
+  });
+ // 9.1.2 扫描二维码并返回结果
+var latitude="";
+var longitude ="";
+function attendance(){
+   //点击扫描按钮，扫描二维码并返回结果
+     wx.scanQRCode({
+       needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+	   scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+	   success: function (res) {
+	   		if(res.resultStr!=null&&res.resultStr!=null&&res.resultStr!=undefined){
+	   			if(longitude!=null&&longitude!=null&&longitude!=undefined){
+	   				var s=res.resultStr.slice(-8);
+	   				patrolcheck(s,parseInt(localStorage.getItem("login_id")));
+		   		}else{
+		   			Toast.show("定位失败请允许定位！");
+		   		}
+	   		}else{
+	   			Toast.show("扫描内容不能有问题请重试！");
+	   		}
+       }
+     });
+     //获取地理位置
+     wx.getLocation({
+	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    success: function (res) {
+	        latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        var speed = res.speed; // 速度，以米/每秒计
+	        var accuracy = res.accuracy; // 位置精度
+	    }
+	});
+}
+wx.error(function (res) {
+  alert(res.errMsg);
+});
+/*
+*点击按钮效果和事件
+*/
+function ontouches(){
+	var li=$(".countent_list ul li");
+	li.on("touchstart",function(){
+		$(this).css({"background":"rgba(255,255,255 ,0.2)","-webkit-border-radius": "100px"});
+	});
+	li.on("touchend",function(){
+		$(this).css({"background":"none"});
+		var onli=$(this).children("span").html();
+		switch(onli)
+		{
+		case "会员注册":
+		  window.location.href="register_registra.html"; 
+		  break;
+		case "远程控制":
+		  window.location.href="remote_controla.html"; 
+		  break;
+	    case "绑定会员卡":
+		  window.location.href="bind_card.html"; 
+		  break;
+  	    case "修改密码":
+		  window.location.href="change_password.html"; 
+		  break;
+		case "车辆控制":
+		  window.location.href="vehicle_control.html"; 
+		  break;
+		case "上报公里数":
+		  window.location.href="reported_index.html"; 
+		  break;
+		case "实时巡车":
+		  attendance();	
+		  break;
+		case "安全退出":
+		  clearlocalstorage();	
+		  Toast.show("安全退出");
+		  window.location.href="login.html";
+		  break;
+		default:
+		  Toast.show($(this).children("span").html());
+		}
+	});
+}
+
+/*
+*清除本地缓存
+*/
+function clearlocalstorage(){
+	localStorage.clear();
+	Toast.show("已经安全退出！");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 订单明细之SQL映射 -->
+	<resultMap id="CsOrderDetail" class="com.ccclubs.model.CsOrderDetail">
+		<result property="csodId" column="csod_id"/>
+		<result property="csodHost" column="csod_host"/>
+		<result property="csodOrder" column="csod_order"/>
+		<result property="csodProduct" column="csod_product"/>
+		<result property="csodGoods" column="csod_goods"/>
+		<result property="csodPricer" column="csod_pricer"/>
+		<result property="csodOutlets" column="csod_outlets"/>
+		<result property="csodModel" column="csod_model"/>
+		<result property="csodCar" column="csod_car"/>
+		<result property="csodProvid" column="csod_provid"/>
+		<result property="csodStart" column="csod_start"/>
+		<result property="csodEnd" column="csod_end"/>
+		<result property="csodRule" column="csod_rule"/>
+		<result property="csodCount" column="csod_count"/>
+		<result property="csodCountReal" column="csod_count_real"/>
+		<result property="csodPrice" column="csod_price"/>
+		<result property="csodPriceReal" column="csod_price_real"/>
+		<result property="csodTotal" column="csod_total"/>
+		<result property="csodRebate" column="csod_rebate"/>
+		<result property="csodTotalReal" column="csod_total_real"/>
+		<result property="csodRemark" column="csod_remark"/>
+		<result property="csodAddTime" column="csod_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有订单明细 -->
+	<select id="getCsOrderDetailList" resultMap="CsOrderDetail">
+		select cs_order_detail$suffix$.* from cs_order_detail$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.csod_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询-->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.csod_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询-->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.csod_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询-->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<isNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.csod_pricer=cs_price$CsPrice.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.$CsPrice.on$=cs_price$CsPrice.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.csod_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.csod_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.csod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询-->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.csod_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询-->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.csod_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询条件sql片段 -->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<include refid="CsPrice_part.cs_price_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrderDetail_part.cs_order_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csod_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取订单明细分页 -->
+	<select id="getCsOrderDetailPage" parameterClass="java.util.HashMap" resultMap="CsOrderDetail">
+		select cs_order_detail$suffix$.* from cs_order_detail$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.csod_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询 -->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.csod_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询 -->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.csod_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询 -->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<isNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.csod_pricer=cs_price$CsPrice.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.$CsPrice.on$=cs_price$CsPrice.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.csod_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.csod_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询 -->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.csod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询 -->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.csod_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询 -->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.csod_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询条件sql片段 -->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<include refid="CsPrice_part.cs_price_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrderDetail_part.cs_order_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csod_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取订单明细总数 -->
+	<select id="getCsOrderDetailEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_order_detail$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.csod_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.csod_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.csod_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<isNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.csod_pricer=cs_price$CsPrice.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.$CsPrice.on$=cs_price$CsPrice.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.csod_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.csod_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.csod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.csod_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.csod_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询条件sql片段 -->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<include refid="CsPrice_part.cs_price_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsOrderDetail_part.cs_order_detail_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取订单明细 -->
+	<select id="getCsOrderDetailById" parameterClass="java.util.HashMap" resultMap="CsOrderDetail">
+		select cs_order_detail$suffix$.* from cs_order_detail$suffix$
+		where csod_id=#id#
+	</select>
+	
+		
+	<!-- 保存订单明细 -->
+	<insert id="saveCsOrderDetail"  parameterClass="com.ccclubs.model.CsOrderDetail">
+		insert into cs_order_detail$suffix$
+		(
+			cs_order_detail$suffix$.csod_host
+			,cs_order_detail$suffix$.csod_order
+			,cs_order_detail$suffix$.csod_product
+			,cs_order_detail$suffix$.csod_goods
+			,cs_order_detail$suffix$.csod_pricer
+			,cs_order_detail$suffix$.csod_outlets
+			,cs_order_detail$suffix$.csod_model
+			,cs_order_detail$suffix$.csod_car
+			,cs_order_detail$suffix$.csod_provid
+			,cs_order_detail$suffix$.csod_start
+			,cs_order_detail$suffix$.csod_end
+			,cs_order_detail$suffix$.csod_rule
+			,cs_order_detail$suffix$.csod_count
+			,cs_order_detail$suffix$.csod_count_real
+			,cs_order_detail$suffix$.csod_price
+			,cs_order_detail$suffix$.csod_price_real
+			,cs_order_detail$suffix$.csod_total
+			,cs_order_detail$suffix$.csod_rebate
+			,cs_order_detail$suffix$.csod_total_real
+			,cs_order_detail$suffix$.csod_remark
+			,cs_order_detail$suffix$.csod_add_time
+		)
+		values(
+			<isNotNull property="csodHost" prepend="">
+				#csodHost#
+			</isNotNull>
+			<isNull property="csodHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csodOrder" prepend=",">
+				#csodOrder#
+			</isNotNull>
+			<isNull property="csodOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodProduct" prepend=",">
+				#csodProduct#
+			</isNotNull>
+			<isNull property="csodProduct" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodGoods" prepend=",">
+				#csodGoods#
+			</isNotNull>
+			<isNull property="csodGoods" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodPricer" prepend=",">
+				#csodPricer#
+			</isNotNull>
+			<isNull property="csodPricer" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodOutlets" prepend=",">
+				#csodOutlets#
+			</isNotNull>
+			<isNull property="csodOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodModel" prepend=",">
+				#csodModel#
+			</isNotNull>
+			<isNull property="csodModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodCar" prepend=",">
+				#csodCar#
+			</isNotNull>
+			<isNull property="csodCar" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodProvid" prepend=",">
+				#csodProvid#
+			</isNotNull>
+			<isNull property="csodProvid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodStart" prepend=",">
+				#csodStart#
+			</isNotNull>
+			<isNull property="csodStart" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodEnd" prepend=",">
+				#csodEnd#
+			</isNotNull>
+			<isNull property="csodEnd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodRule" prepend=",">
+				#csodRule#
+			</isNotNull>
+			<isNull property="csodRule" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodCount" prepend=",">
+				#csodCount#
+			</isNotNull>
+			<isNull property="csodCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodCountReal" prepend=",">
+				#csodCountReal#
+			</isNotNull>
+			<isNull property="csodCountReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodPrice" prepend=",">
+				#csodPrice#
+			</isNotNull>
+			<isNull property="csodPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodPriceReal" prepend=",">
+				#csodPriceReal#
+			</isNotNull>
+			<isNull property="csodPriceReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodTotal" prepend=",">
+				#csodTotal#
+			</isNotNull>
+			<isNull property="csodTotal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodRebate" prepend=",">
+				#csodRebate#
+			</isNotNull>
+			<isNull property="csodRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodTotalReal" prepend=",">
+				#csodTotalReal#
+			</isNotNull>
+			<isNull property="csodTotalReal" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodRemark" prepend=",">
+				#csodRemark#
+			</isNotNull>
+			<isNull property="csodRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csodAddTime" prepend=",">
+				#csodAddTime#
+			</isNotNull>
+			<isNull property="csodAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新订单明细 -->
+	<update id="updateCsOrderDetail"  parameterClass="com.ccclubs.model.CsOrderDetail">
+		update cs_order_detail$suffix$ set
+			<isNotNull property="csodHost" prepend="">
+				cs_order_detail$suffix$.csod_host = #csodHost#
+			</isNotNull>
+			<isNull property="csodHost" prepend="">
+				cs_order_detail$suffix$.csod_host = null
+			</isNull>				
+			<isNotNull property="csodOrder" prepend=",">
+				cs_order_detail$suffix$.csod_order = #csodOrder#
+			</isNotNull>
+			<isNull property="csodOrder" prepend=",">
+				cs_order_detail$suffix$.csod_order = null
+			</isNull>				
+			<isNotNull property="csodProduct" prepend=",">
+				cs_order_detail$suffix$.csod_product = #csodProduct#
+			</isNotNull>
+			<isNull property="csodProduct" prepend=",">
+				cs_order_detail$suffix$.csod_product = null
+			</isNull>				
+			<isNotNull property="csodGoods" prepend=",">
+				cs_order_detail$suffix$.csod_goods = #csodGoods#
+			</isNotNull>
+			<isNull property="csodGoods" prepend=",">
+				cs_order_detail$suffix$.csod_goods = null
+			</isNull>				
+			<isNotNull property="csodPricer" prepend=",">
+				cs_order_detail$suffix$.csod_pricer = #csodPricer#
+			</isNotNull>
+			<isNull property="csodPricer" prepend=",">
+				cs_order_detail$suffix$.csod_pricer = null
+			</isNull>				
+			<isNotNull property="csodOutlets" prepend=",">
+				cs_order_detail$suffix$.csod_outlets = #csodOutlets#
+			</isNotNull>
+			<isNull property="csodOutlets" prepend=",">
+				cs_order_detail$suffix$.csod_outlets = null
+			</isNull>				
+			<isNotNull property="csodModel" prepend=",">
+				cs_order_detail$suffix$.csod_model = #csodModel#
+			</isNotNull>
+			<isNull property="csodModel" prepend=",">
+				cs_order_detail$suffix$.csod_model = null
+			</isNull>				
+			<isNotNull property="csodCar" prepend=",">
+				cs_order_detail$suffix$.csod_car = #csodCar#
+			</isNotNull>
+			<isNull property="csodCar" prepend=",">
+				cs_order_detail$suffix$.csod_car = null
+			</isNull>				
+			<isNotNull property="csodProvid" prepend=",">
+				cs_order_detail$suffix$.csod_provid = #csodProvid#
+			</isNotNull>
+			<isNull property="csodProvid" prepend=",">
+				cs_order_detail$suffix$.csod_provid = null
+			</isNull>				
+			<isNotNull property="csodStart" prepend=",">
+				cs_order_detail$suffix$.csod_start = #csodStart#
+			</isNotNull>
+			<isNull property="csodStart" prepend=",">
+				cs_order_detail$suffix$.csod_start = null
+			</isNull>				
+			<isNotNull property="csodEnd" prepend=",">
+				cs_order_detail$suffix$.csod_end = #csodEnd#
+			</isNotNull>
+			<isNull property="csodEnd" prepend=",">
+				cs_order_detail$suffix$.csod_end = null
+			</isNull>				
+			<isNotNull property="csodRule" prepend=",">
+				cs_order_detail$suffix$.csod_rule = #csodRule#
+			</isNotNull>
+			<isNull property="csodRule" prepend=",">
+				cs_order_detail$suffix$.csod_rule = null
+			</isNull>				
+			<isNotNull property="csodCount" prepend=",">
+				cs_order_detail$suffix$.csod_count = #csodCount#
+			</isNotNull>
+			<isNull property="csodCount" prepend=",">
+				cs_order_detail$suffix$.csod_count = null
+			</isNull>				
+			<isNotNull property="csodCountReal" prepend=",">
+				cs_order_detail$suffix$.csod_count_real = #csodCountReal#
+			</isNotNull>
+			<isNull property="csodCountReal" prepend=",">
+				cs_order_detail$suffix$.csod_count_real = null
+			</isNull>				
+			<isNotNull property="csodPrice" prepend=",">
+				cs_order_detail$suffix$.csod_price = #csodPrice#
+			</isNotNull>
+			<isNull property="csodPrice" prepend=",">
+				cs_order_detail$suffix$.csod_price = null
+			</isNull>				
+			<isNotNull property="csodPriceReal" prepend=",">
+				cs_order_detail$suffix$.csod_price_real = #csodPriceReal#
+			</isNotNull>
+			<isNull property="csodPriceReal" prepend=",">
+				cs_order_detail$suffix$.csod_price_real = null
+			</isNull>				
+			<isNotNull property="csodTotal" prepend=",">
+				cs_order_detail$suffix$.csod_total = #csodTotal#
+			</isNotNull>
+			<isNull property="csodTotal" prepend=",">
+				cs_order_detail$suffix$.csod_total = null
+			</isNull>				
+			<isNotNull property="csodRebate" prepend=",">
+				cs_order_detail$suffix$.csod_rebate = #csodRebate#
+			</isNotNull>
+			<isNull property="csodRebate" prepend=",">
+				cs_order_detail$suffix$.csod_rebate = null
+			</isNull>				
+			<isNotNull property="csodTotalReal" prepend=",">
+				cs_order_detail$suffix$.csod_total_real = #csodTotalReal#
+			</isNotNull>
+			<isNull property="csodTotalReal" prepend=",">
+				cs_order_detail$suffix$.csod_total_real = null
+			</isNull>				
+			<isNotNull property="csodRemark" prepend=",">
+				cs_order_detail$suffix$.csod_remark = #csodRemark#
+			</isNotNull>
+			<isNull property="csodRemark" prepend=",">
+				cs_order_detail$suffix$.csod_remark = null
+			</isNull>				
+			<isNotNull property="csodAddTime" prepend=",">
+				cs_order_detail$suffix$.csod_add_time = #csodAddTime#
+			</isNotNull>
+			<isNull property="csodAddTime" prepend=",">
+				cs_order_detail$suffix$.csod_add_time = null
+			</isNull>				
+		where
+			csod_id=#csodId#
+	</update>
+	
+	<!-- 更新订单明细非空字段 -->
+	<update id="updateCsOrderDetail$NotNull"  parameterClass="com.ccclubs.model.CsOrderDetail">
+		update cs_order_detail$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csodHost" prepend=",">
+				cs_order_detail$suffix$.csod_host = #csodHost#
+			</isNotNull>		
+			<isNotNull property="csodOrder" prepend=",">
+				cs_order_detail$suffix$.csod_order = #csodOrder#
+			</isNotNull>		
+			<isNotNull property="csodProduct" prepend=",">
+				cs_order_detail$suffix$.csod_product = #csodProduct#
+			</isNotNull>		
+			<isNotNull property="csodGoods" prepend=",">
+				cs_order_detail$suffix$.csod_goods = #csodGoods#
+			</isNotNull>		
+			<isNotNull property="csodPricer" prepend=",">
+				cs_order_detail$suffix$.csod_pricer = #csodPricer#
+			</isNotNull>		
+			<isNotNull property="csodOutlets" prepend=",">
+				cs_order_detail$suffix$.csod_outlets = #csodOutlets#
+			</isNotNull>		
+			<isNotNull property="csodModel" prepend=",">
+				cs_order_detail$suffix$.csod_model = #csodModel#
+			</isNotNull>		
+			<isNotNull property="csodCar" prepend=",">
+				cs_order_detail$suffix$.csod_car = #csodCar#
+			</isNotNull>		
+			<isNotNull property="csodProvid" prepend=",">
+				cs_order_detail$suffix$.csod_provid = #csodProvid#
+			</isNotNull>		
+			<isNotNull property="csodStart" prepend=",">
+				cs_order_detail$suffix$.csod_start = #csodStart#
+			</isNotNull>		
+			<isNotNull property="csodEnd" prepend=",">
+				cs_order_detail$suffix$.csod_end = #csodEnd#
+			</isNotNull>		
+			<isNotNull property="csodRule" prepend=",">
+				cs_order_detail$suffix$.csod_rule = #csodRule#
+			</isNotNull>		
+			<isNotNull property="csodCount" prepend=",">
+				cs_order_detail$suffix$.csod_count = #csodCount#
+			</isNotNull>		
+			<isNotNull property="csodCountReal" prepend=",">
+				cs_order_detail$suffix$.csod_count_real = #csodCountReal#
+			</isNotNull>		
+			<isNotNull property="csodPrice" prepend=",">
+				cs_order_detail$suffix$.csod_price = #csodPrice#
+			</isNotNull>		
+			<isNotNull property="csodPriceReal" prepend=",">
+				cs_order_detail$suffix$.csod_price_real = #csodPriceReal#
+			</isNotNull>		
+			<isNotNull property="csodTotal" prepend=",">
+				cs_order_detail$suffix$.csod_total = #csodTotal#
+			</isNotNull>		
+			<isNotNull property="csodRebate" prepend=",">
+				cs_order_detail$suffix$.csod_rebate = #csodRebate#
+			</isNotNull>		
+			<isNotNull property="csodTotalReal" prepend=",">
+				cs_order_detail$suffix$.csod_total_real = #csodTotalReal#
+			</isNotNull>		
+			<isNotNull property="csodRemark" prepend=",">
+				cs_order_detail$suffix$.csod_remark = #csodRemark#
+			</isNotNull>		
+			<isNotNull property="csodAddTime" prepend=",">
+				cs_order_detail$suffix$.csod_add_time = #csodAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csod_id=#csodId#
+	</update>
+	
+
+	<!-- 根据ID删除一个订单明细 -->
+	<delete id="deleteCsOrderDetailById" parameterClass="java.util.HashMap">
+		delete from cs_order_detail$suffix$ where csod_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新订单明细 -->
+	<update id="updateCsOrderDetailBy"  parameterClass="java.util.HashMap">
+		update cs_order_detail$suffix$ set		
+			csod_id=csod_id
+			<isNotNull property="V_csodId" prepend=",">
+				cs_order_detail$suffix$.csod_id = #V_csodId#
+			</isNotNull>		
+			<isNotNull property="V_csodHost" prepend=",">
+				cs_order_detail$suffix$.csod_host = #V_csodHost#
+			</isNotNull>		
+			<isNotNull property="V_csodOrder" prepend=",">
+				cs_order_detail$suffix$.csod_order = #V_csodOrder#
+			</isNotNull>		
+			<isNotNull property="V_csodProduct" prepend=",">
+				cs_order_detail$suffix$.csod_product = #V_csodProduct#
+			</isNotNull>		
+			<isNotNull property="V_csodGoods" prepend=",">
+				cs_order_detail$suffix$.csod_goods = #V_csodGoods#
+			</isNotNull>		
+			<isNotNull property="V_csodPricer" prepend=",">
+				cs_order_detail$suffix$.csod_pricer = #V_csodPricer#
+			</isNotNull>		
+			<isNotNull property="V_csodOutlets" prepend=",">
+				cs_order_detail$suffix$.csod_outlets = #V_csodOutlets#
+			</isNotNull>		
+			<isNotNull property="V_csodModel" prepend=",">
+				cs_order_detail$suffix$.csod_model = #V_csodModel#
+			</isNotNull>		
+			<isNotNull property="V_csodCar" prepend=",">
+				cs_order_detail$suffix$.csod_car = #V_csodCar#
+			</isNotNull>		
+			<isNotNull property="V_csodProvid" prepend=",">
+				cs_order_detail$suffix$.csod_provid = #V_csodProvid#
+			</isNotNull>		
+			<isNotNull property="V_csodStart" prepend=",">
+				cs_order_detail$suffix$.csod_start = #V_csodStart#
+			</isNotNull>		
+			<isNotNull property="V_csodEnd" prepend=",">
+				cs_order_detail$suffix$.csod_end = #V_csodEnd#
+			</isNotNull>		
+			<isNotNull property="V_csodRule" prepend=",">
+				cs_order_detail$suffix$.csod_rule = #V_csodRule#
+			</isNotNull>		
+			<isNotNull property="V_csodCount" prepend=",">
+				cs_order_detail$suffix$.csod_count = #V_csodCount#
+			</isNotNull>		
+			<isNotNull property="V_csodCountReal" prepend=",">
+				cs_order_detail$suffix$.csod_count_real = #V_csodCountReal#
+			</isNotNull>		
+			<isNotNull property="V_csodPrice" prepend=",">
+				cs_order_detail$suffix$.csod_price = #V_csodPrice#
+			</isNotNull>		
+			<isNotNull property="V_csodPriceReal" prepend=",">
+				cs_order_detail$suffix$.csod_price_real = #V_csodPriceReal#
+			</isNotNull>		
+			<isNotNull property="V_csodTotal" prepend=",">
+				cs_order_detail$suffix$.csod_total = #V_csodTotal#
+			</isNotNull>		
+			<isNotNull property="V_csodRebate" prepend=",">
+				cs_order_detail$suffix$.csod_rebate = #V_csodRebate#
+			</isNotNull>		
+			<isNotNull property="V_csodTotalReal" prepend=",">
+				cs_order_detail$suffix$.csod_total_real = #V_csodTotalReal#
+			</isNotNull>		
+			<isNotNull property="V_csodRemark" prepend=",">
+				cs_order_detail$suffix$.csod_remark = #V_csodRemark#
+			</isNotNull>		
+			<isNotNull property="V_csodAddTime" prepend=",">
+				cs_order_detail$suffix$.csod_add_time = #V_csodAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.csod_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_order_detail$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询-->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<isNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.csod_product=cs_product$CsProduct.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProduct.on">
+				left join cs_product cs_product$CsProduct.suffix$ on cs_order_detail$suffix$.$CsProduct.on$=cs_product$CsProduct.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询-->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<isNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.csod_goods=cs_goods$CsGoods.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGoods.on">
+				left join cs_goods cs_goods$CsGoods.suffix$ on cs_order_detail$suffix$.$CsGoods.on$=cs_goods$CsGoods.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询-->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<isNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.csod_pricer=cs_price$CsPrice.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsPrice.on">
+				left join cs_price cs_price$CsPrice.suffix$ on cs_order_detail$suffix$.$CsPrice.on$=cs_price$CsPrice.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.csod_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_order_detail$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.csod_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_order_detail$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询-->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<isNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.csod_car=cs_car$CsCar.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCar.on">
+				left join cs_car cs_car$CsCar.suffix$ on cs_order_detail$suffix$.$CsCar.on$=cs_car$CsCar.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询-->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.csod_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_order_detail$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询-->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<isNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.csod_rule=cs_rule$CsRule.suffix$.csr_id
+			</isNull>
+			<isNotNull property="CsRule.on">
+				left join cs_rule cs_rule$CsRule.suffix$ on cs_order_detail$suffix$.$CsRule.on$=cs_rule$CsRule.suffix$.csr_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsodOrder"><!-- 调用一下CsodOrder，把CsOrder指向CsodOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[产品]查询条件sql片段 -->
+		<isNotNull property="CsodProduct"><!-- 调用一下CsodProduct，把CsProduct指向CsodProduct --></isNotNull>
+		<isNotNull property="CsProduct">
+			<include refid="CsProduct_part.cs_product_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[商品]查询条件sql片段 -->
+		<isNotNull property="CsodGoods"><!-- 调用一下CsodGoods，把CsGoods指向CsodGoods --></isNotNull>
+		<isNotNull property="CsGoods">
+			<include refid="CsGoods_part.cs_goods_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[价格]查询条件sql片段 -->
+		<isNotNull property="CsodPricer"><!-- 调用一下CsodPricer，把CsPrice指向CsodPricer --></isNotNull>
+		<isNotNull property="CsPrice">
+			<include refid="CsPrice_part.cs_price_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CsodOutlets"><!-- 调用一下CsodOutlets，把CsOutlets指向CsodOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CsodModel"><!-- 调用一下CsodModel，把CsCarModel指向CsodModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[车辆]查询条件sql片段 -->
+		<isNotNull property="CsodCar"><!-- 调用一下CsodCar，把CsCar指向CsodCar --></isNotNull>
+		<isNotNull property="CsCar">
+			<include refid="CsCar_part.cs_car_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CsodProvid"><!-- 调用一下CsodProvid，把CsProvid指向CsodProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[规则]查询条件sql片段 -->
+		<isNotNull property="CsodRule"><!-- 调用一下CsodRule，把CsRule指向CsodRule --></isNotNull>
+		<isNotNull property="CsRule">
+			<include refid="CsRule_part.cs_rule_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsOrderDetail_part.cs_order_detail_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除订单明细 -->
+	<update id="deleteCsOrderDetailBy"  parameterClass="java.util.HashMap">
+		delete from cs_order_detail$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsOrderDetail_part.cs_order_detail_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

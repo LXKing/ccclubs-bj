@@ -1,0 +1,335 @@
+<div id="ccc-reserve" class="ccc-view-car">
+	<div class="ccc-view-car-inner">
+		<s:if test="#request.csCar.cscIsAd">
+			<div class="ccc-car-thumb  ccc-ad-car" title="宣传车专享租金9折特惠">
+				<img src="${cc:preview(csCar)}">
+				<i class="ad"></i>
+				<!--if 宣传车-->
+		</s:if>
+		<s:else>
+			<div class="ccc-car-thumb">
+				<img src="${cc:preview(csCar)}">
+		</s:else>
+		<span class="ccc-thumb-shadow"></span>
+		<span class="ccc-thumb-cover"></span>
+		<div class="ccc-plate-number">
+			${csCar.cscCarNo}
+			<em></em>
+		</div>
+	</div>
+	<div class="ccc-view-car-detail">
+		<div class="ccc-view-car-desc">
+			<div class="ccc-car-model">
+				${csCar.$cscModel.cscmName}
+			</div>
+			<div class="ccc-desc-label-wrap">
+				<span class="ccc-desc-label ${(csCar.cscColor+1) == 1 ? 'black' : ''}${(csCar.cscColor+1)  == 2 ? 'white' : ''}${(csCar.cscColor+1)  == 7 ? 'silver' : ''}${(csCar.cscColor+1)  == 3 ? 'red' : ''}${(csCar.cscColor+1)  == 5 ? 'yellow' : ''}${(csCar.cscColor+1)  == 8 ? 'blue' : ''}">${cc:convertColor(csCar.cscColor)}</span>
+				<span class="ccc-desc-label">${csCar.$cscModel.cscmFile==0?'自动档':'手动档'}</span>
+				<span class="ccc-desc-label">${csCar.$cscModel.cscmType==0?'汽油车':'电动车'}</span>
+				<span class="ccc-desc-label blue"> <s:if test="#request.csCar.$cscModel.cscmType==0">
+						${csCar.$cscModel.cscmVolume}
+					</s:if> <s:else>
+						续航：${csState.cssEndurance}公里
+					</s:else> </span>
+			</div>
+			${lz:set("prices",(cc:prices(session.ccclubs_web_host.shId, csCar.cscModel, csCar.cscOutlets)))}
+			<div class="ccc-view-car-prices">
+				<div class="ccc-res-prices-big">
+					<span>白天档</span><strong>${lz:digit(prices["租金.工作日白天小时|租金.白天小时|租金.每小时"],2)}</strong><i>元/小时</i>
+				</div>
+				<div class="ccc-res-prices-mil">
+					<s:if test="#request.csCar.$cscModel.cscmType==0">
+						<span>里程费</span>
+						<strong>${lz:digit(prices["油里程费.每公里"]*0.75,2)} - ${lz:digit(prices["油里程费.每公里"],2)}</strong>
+						<i>元/公里</i>
+					</s:if>
+					<s:else>
+						<span>里程费</span>
+						<strong>${lz:digit(prices["电里程费.每公里"],2)}</strong>
+						<i>元/公里</i>
+					</s:else>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<s:if test="#session.ccclubs_web_host.shId==1">
+		<s:set name="limit_href" value="'http://zjnews.zjol.com.cn/system/2014/05/04/020003783.shtml'" />
+	</s:if>
+	<s:else>
+		<s:set name="limit_href" value="'http://www.bjjtgl.gov.cn/zhuanti/10weihao/index.html'" />
+	</s:else>
+
+	<s:if test="#request.isOnLimitTime==1">
+		你选择的车辆<b style="color: red;">今日限行</b>，查看<a href="${limit_href}" class="ccc-link" target="_blank">错峰限行时间</a>和<a href="${limit_href}" class="ccc-link" target="_blank">错峰限行区域</a>（仅供参考）
+	</s:if>
+
+	<div class="ccc-view-car-seltime ccc-clearfix" style="padding-top: 6px; margin-top: 10px;">
+
+		<img src="/images/icons/divider-top.png" class="ccc-my-divider top-deco">
+		<div class="ccc-order-sel-item">
+			<label for="time1">
+				取车时间：
+			</label>
+			<div class="ccc-time-sel-item">
+				<input type="text" id="start-check" value="${lz:date(baseOrderInfo.csoStart,'yyyy-MM-dd , HH:mm')}" class="ccc-input ccc-font-lato ccc-time-picker" />
+				<em></em>
+			</div>
+		</div>
+		<div class="ccc-order-sel-item ccc-item-right">
+			<label for="time2">
+				还车时间：
+			</label>
+			<div class="ccc-time-sel-item">
+				<input type="text" id="finish-check" value="${lz:date(baseOrderInfo.csoFinish,'yyyy-MM-dd , HH:mm')}" class="ccc-input ccc-font-lato ccc-time-picker" />
+				<em></em>
+			</div>
+		</div>
+		<!-- 添加异地还车点 -->
+		<s:if test="#request.csOutlets.csoCanA">
+			<div class="ccc-order-sel-item ccc-item-right">
+				<label class="ccc-label" style="top: 20px;">
+					还车网点：
+				</label>
+				<select id="district" style="width: 205px; border: 1px solid #c4c4c4; margin-top: 10px; margin-left:75px; background-color: #fff;">
+					<s:iterator value="#request.outlets" id="item" status="i">
+						<option value="${item.csoId}" ${csOutlets.csoId==item.csoId?'selected' :''}>
+								${item.csoName}
+						</option>
+					</s:iterator>
+				</select>
+			</div>
+		</s:if>
+		<s:else>
+			<div class="ccc-order-sel-item ccc-item-right">
+				<label class="ccc-label" style="top: 20px;">
+					还车网点：
+				</label>
+				<select id="district" readOnly  style="width: 205px; border: 1px solid #c4c4c4; margin-top: 10px; margin-left:75px; background-color: #fff;">
+					<s:iterator value="#request.outlets" id="item" status="i">
+						<option value="${item.csoId}" selected}>
+								${item.csoName}
+						</option>
+					</s:iterator>
+				</select>
+			</div>
+		</s:else>
+	</div>
+
+	<s:if test="#request.baseOrderInfo.csoIsSpring==false">
+		<div class="ccc-timebar-panel">
+			<div class="ccc-timebar ccc-clearfix">
+				<s:action name="reserve_timebar" executeResult="true" namespace="/">
+					<s:param name="car">${csCar.cscId}</s:param>
+					<s:param name="amount">${baseOrderInfo.csoAmount}</s:param>
+				</s:action>
+			</div>
+		</div>
+	</s:if>
+	<div id="timeConflicts" class="ccc-time-conflicts">
+		<i></i><span>该车<span class="time">12-16 , 20:20 ~ 12-17 , 09:00</span>已被预订，建议您将取车时间更改于<span class="time">12-17 , 09:20</span>之后，或<a href="javascript:closeLayer();" class="blue">重新选择车辆 &raquo;</a> </span>
+	</div>
+	<div class="ccc-view-car-opt">
+		<a href="javascript:;" onclick="checkout(${csCar.cscId})" class="ccc-btn ccc-btn-green">立即预订</a>
+		<a href="javascript:closeLayer();" class="ccc-btn ccc-btn-white">重新选择</a>
+		<div class="ccc-res-view-location">
+			<a href="javascript:;" title="">${csCar.$cscOutlets.csoName}</a>
+		</div>
+	</div>
+</div>
+</div>
+<script type="text/javascript">
+		$(document).ready(function() {
+				$('#district').select2({
+					placeholder: '选择还车网点',
+					minimumResultsForSearch: -1
+				});	
+				/* Time Picker */
+				var timeCur = new Date();
+				// CCClubs Customization
+				$.timepicker.regional['CCClubs']={
+					minDate: new Date(timeCur.getFullYear(), timeCur.getMonth(), timeCur.getDate(), 0, 0)
+				};
+				$.timepicker.setDefaults($.timepicker.regional['CCClubs']);
+				$('.ccc-time-picker').datetimepicker().attr('readonly','readonly');
+				
+				$(document).on('mouseenter','.ccc-timebar .ccc-time-block',function() {
+						$(this).children('.ccc-time-tips').show(120); 
+				});
+				$(document).on('mouseleave','.ccc-timebar .ccc-time-block',function() {
+						$(this).children('.ccc-time-tips').hide(100);
+				});
+		});
+		
+		function checkout(car){
+			var start = $.trim($('#start-check').val()).replace(' , ',' ');
+			var finish = $.trim($('#finish-check').val()).replace(' , ',' ');
+			
+			<s:if test="#request.baseOrderInfo.csoIsSpring">
+				if (dateDiff('M', start, '2015-02-17 17:00') < 0) {
+						showTips("亲，春节租车，需要选择在2月17日17点前提车","error",7);
+						return ;
+					}
+					
+				if (dateDiff('M', '2015-02-25 09:00', finish) < 0) {
+						showTips("亲，春节租车，需要选择在2月25日9点后还车","error",7);
+						return ;
+					}
+			</s:if>
+			
+			var msg0 = "<i></i>";
+			var start_dt = new Date(Date.parse(start.replace(/-/g, "/")));
+			if (start_dt.getTime() - (new Date()).getTime() < -60*60*1000) {
+				var msg=msg0+"<span>亲，预定开始时间不能比当前时间早哦</span>";
+				$('#timeConflicts').css("display", "block");
+				$('#timeConflicts').html(msg);
+				return ;
+			}
+			
+			<s:if test="#request.csCar.$cscModel.cscmType==1">
+				var state = 0 , msg;
+										
+					if (start_dt.getTime() - (new Date()).getTime() > 2000 * 60 * 60) {
+						state = 1;
+						msg=msg0+"<span>亲，电动汽车最多支持提前2小时预订。</span>";
+					}
+				
+				
+				//	if (start_dt.getTime() - (new Date()).getTime() > 1000 * 60 * 60) {
+				//		state = 1;
+				//		msg=msg0+"<span>亲，电动汽车最多支持提前1小时预订。</span>";
+				//	}
+				
+				if(state == 1){
+					$('#timeConflicts').css("display", "block");
+					$('#timeConflicts').html(msg);
+					return ;
+				}			
+			</s:if>
+			
+			if (dateDiff('M', start, finish) <= 0) {
+				var msg=msg0+"<span>还车时间应该比取车时间晚</span>";
+				$('#timeConflicts').css("display", "block");
+				$('#timeConflicts').html(msg);
+				return;
+			}
+			if (dateDiff('H', start, finish) < 1) {
+				var msg=msg0+"<span>最低1个小时起租</span>";
+				$('#timeConflicts').css("display", "block");
+				$('#timeConflicts').html(msg);
+				return;
+			}
+			// 还车网点
+			var outletsRet = '${csCar.cscOutlets}';
+			if('${csOutlets.csoCanA}'=='true'){
+				var objselect=$('#district').get(0);
+			　　var indexselect=objselect.selectedIndex;
+			　　var valselect=objselect.options[indexselect].value;
+			    if(valselect==='')
+				{
+					var msg=msg0+"<span>请选择一个还车网点！</span>";
+					$('#timeConflicts').css("display", "block");
+					$('#timeConflicts').html(msg);
+					return;
+				}else{
+					outletsRet = valselect;
+				}
+			}
+		    
+			
+			var ajax = {
+			url: "/reserve_checkOrder.html?t="+new Date().getTime(),
+			type: "POST",
+			data: {
+				csoOutletsRet:outletsRet,
+				csoStart: start+":00",
+				csoFinish: finish+":00",
+				csoCar: car
+			},
+				async: true,
+				success: function(data) {
+					switch (data) {
+						case "100":
+							if(${baseOrderInfo.csoIsSpring}){
+									location.href = '/activity/activity-checkout.html';
+								}else{
+									location.href = '/checkout.html';
+								}
+							break;
+						case "101":
+							var msg=msg0+"<span>请设置取车时间</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "102":
+							var msg=msg0+"<span>请设置还车时间</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "103":
+							var msg=msg0+"<span>取车时间不能早于当前时间两小时</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "104":
+							var msg=msg0+"<span>取车时间不能晚于还车时间</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "105":
+							var msg=msg0+"<span>最低1个小时起租</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "106":
+							var msg=msg0+"<span>取、还车时间应该是20分钟的倍数</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "107":
+							var msg=msg0+"<span>网站提只提供7天以内的车辆预订</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "108":
+							var msg=msg0+"<span>网站提只提供最长30天的订单</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "109":
+							var msg=msg0+"<span>请先选择一辆车，再预订</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "110":
+							var msg=msg0+"<span>该车去维修或者保养去啦，暂时不能租用哦～<a href=\"javascript:closeLayer();\" class=\"blue\">重新选择车辆 &raquo;</a></span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "111":
+							var msg=msg0+"<span>亲，下手不够快哟～，你选择的时间已经被人预订啦，<a href=\"javascript:closeLayer();\" class=\"blue\">重新选择车辆 &raquo;</a></span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "112":
+							var msg=msg0+"<span>亲，电动汽车最多支持提前2小时预订。</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							break;
+						case "113":
+							showTips("使用春节套餐租车最短要租满10天哦～","error",7);
+							break;
+						case "114":
+							showTips("需要选择一个还车网点","error",7);
+							break;
+						default:
+							var msg=msg0+ "<span>未知的返回。</span>";
+							$('#timeConflicts').css("display", "block");
+							$('#timeConflicts').html(msg);
+							return;
+					}
+				}
+			}
+			$.ajax(ajax);
+		}
+	</script>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvTransaction_part">	
+	<!-- 数据事务条件sql片段  -->
+	<sql id="srv_transaction_dynamic">
+		<dynamic>
+			<isNotEmpty property="stId" prepend="and">
+			    $stIdNot$ srv_transaction$suffix$.st_id = #stId#
+			</isNotEmpty>
+			<isNotNull property="stIdNot" prepend="and">
+				<isEmpty property="stId">
+				$stIdNot$ srv_transaction$suffix$.st_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="stEntry" prepend="and">			    
+			    (<isNotNull property="stEntryNot">
+			    srv_transaction$suffix$.st_entry is null or length(srv_transaction$suffix$.st_entry) &lt; 1 or
+			    </isNotNull>$stEntryNot$ srv_transaction$suffix$.st_entry like #stEntry#)
+			</isNotEmpty>
+			<isNotNull property="stEntryNot" prepend="and">
+				<isEmpty property="stEntry">
+				$stEntryNot$ (srv_transaction$suffix$.st_entry is null or length(srv_transaction$suffix$.st_entry) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="stDetails" prepend="and">			    
+			    (<isNotNull property="stDetailsNot">
+			    srv_transaction$suffix$.st_details is null or length(srv_transaction$suffix$.st_details) &lt; 1 or
+			    </isNotNull>$stDetailsNot$ srv_transaction$suffix$.st_details like #stDetails#)
+			</isNotEmpty>
+			<isNotNull property="stDetailsNot" prepend="and">
+				<isEmpty property="stDetails">
+				$stDetailsNot$ (srv_transaction$suffix$.st_details is null or length(srv_transaction$suffix$.st_details) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="stModels" prepend="and">			    
+			    (<isNotNull property="stModelsNot">
+			    srv_transaction$suffix$.st_models is null or length(srv_transaction$suffix$.st_models) &lt; 1 or
+			    </isNotNull>$stModelsNot$ srv_transaction$suffix$.st_models like #stModels#)
+			</isNotEmpty>
+			<isNotNull property="stModelsNot" prepend="and">
+				<isEmpty property="stModels">
+				$stModelsNot$ (srv_transaction$suffix$.st_models is null or length(srv_transaction$suffix$.st_models) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 数据事务left join 条件sql片段 -->
+	<sql id="srv_transaction_join">
+		<dynamic>
+			<isNotEmpty property="SrvTransaction.stId" prepend="and">
+			    $SrvTransaction.stIdNot$ srv_transaction$SrvTransaction.suffix$.st_id = #SrvTransaction.stId#
+			</isNotEmpty>
+			<isNotNull property="SrvTransaction.stIdNot" prepend="and">
+				<isEmpty property="SrvTransaction.stId">
+				$stIdNot$ srv_transaction$SrvTransaction.suffix$.st_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvTransaction.stEntry" prepend="and">
+				(<isNotNull property="SrvTransaction.stEntryNot">
+			    srv_transaction$SrvTransaction.suffix$.st_entry is null or length(srv_transaction$SrvTransaction.suffix$.st_entry) &lt; 1 or
+			    </isNotNull>$SrvTransaction.stEntryNot$ srv_transaction$SrvTransaction.suffix$.st_entry like #SrvTransaction.stEntry#)
+			</isNotEmpty>
+			<isNotNull property="SrvTransaction.stEntryNot" prepend="and">
+				<isEmpty property="SrvTransaction.stEntry">
+				$stEntryNot$ (srv_transaction$SrvTransaction.suffix$.st_entry is null or length(srv_transaction$SrvTransaction.suffix$.st_entry) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvTransaction.stDetails" prepend="and">
+				(<isNotNull property="SrvTransaction.stDetailsNot">
+			    srv_transaction$SrvTransaction.suffix$.st_details is null or length(srv_transaction$SrvTransaction.suffix$.st_details) &lt; 1 or
+			    </isNotNull>$SrvTransaction.stDetailsNot$ srv_transaction$SrvTransaction.suffix$.st_details like #SrvTransaction.stDetails#)
+			</isNotEmpty>
+			<isNotNull property="SrvTransaction.stDetailsNot" prepend="and">
+				<isEmpty property="SrvTransaction.stDetails">
+				$stDetailsNot$ (srv_transaction$SrvTransaction.suffix$.st_details is null or length(srv_transaction$SrvTransaction.suffix$.st_details) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvTransaction.stModels" prepend="and">
+				(<isNotNull property="SrvTransaction.stModelsNot">
+			    srv_transaction$SrvTransaction.suffix$.st_models is null or length(srv_transaction$SrvTransaction.suffix$.st_models) &lt; 1 or
+			    </isNotNull>$SrvTransaction.stModelsNot$ srv_transaction$SrvTransaction.suffix$.st_models like #SrvTransaction.stModels#)
+			</isNotEmpty>
+			<isNotNull property="SrvTransaction.stModelsNot" prepend="and">
+				<isEmpty property="SrvTransaction.stModels">
+				$stModelsNot$ (srv_transaction$SrvTransaction.suffix$.st_models is null or length(srv_transaction$SrvTransaction.suffix$.st_models) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

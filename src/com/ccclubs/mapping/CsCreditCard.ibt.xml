@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 信用卡之SQL映射 -->
+	<resultMap id="CsCreditCard" class="com.ccclubs.model.CsCreditCard">
+		<result property="csccId" column="cscc_id"/>
+		<result property="csccNo" column="cscc_no"/>
+		<result property="csccMember" column="cscc_member"/>
+		<result property="csccLimit" column="cscc_limit"/>
+		<result property="csccScope" column="cscc_scope"/>
+		<result property="csccType" column="cscc_type"/>
+		<result property="csccRemark" column="cscc_remark"/>
+		<result property="csccData" column="cscc_data"/>
+		<result property="csccMask" column="cscc_mask"/>
+		<result property="csccUpdateTime" column="cscc_update_time"/>
+		<result property="csccAddTime" column="cscc_add_time"/>
+		<result property="csccStatus" column="cscc_status"/>
+		<result property="csccImage" column="cscc_image"/>
+	</resultMap>
+		
+	<!-- 获取所有信用卡 -->
+	<select id="getCsCreditCardList" resultMap="CsCreditCard">
+		select cs_credit_card$suffix$.* from cs_credit_card$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.cscc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_card$suffix$.cscc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditCard_part.cs_credit_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取信用卡分页 -->
+	<select id="getCsCreditCardPage" parameterClass="java.util.HashMap" resultMap="CsCreditCard">
+		select cs_credit_card$suffix$.* from cs_credit_card$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.cscc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_card$suffix$.cscc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditCard_part.cs_credit_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cscc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取信用卡总数 -->
+	<select id="getCsCreditCardEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_credit_card$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.cscc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_credit_card$suffix$.cscc_status!=-1
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCreditCard_part.cs_credit_card_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取信用卡 -->
+	<select id="getCsCreditCardById" parameterClass="java.util.HashMap" resultMap="CsCreditCard">
+		select cs_credit_card$suffix$.* from cs_credit_card$suffix$
+		where cscc_id=#id#
+	</select>
+	
+		
+	<!-- 保存信用卡 -->
+	<insert id="saveCsCreditCard"  parameterClass="com.ccclubs.model.CsCreditCard">
+		insert into cs_credit_card$suffix$
+		(
+			cs_credit_card$suffix$.cscc_no
+			,cs_credit_card$suffix$.cscc_member
+			,cs_credit_card$suffix$.cscc_limit
+			,cs_credit_card$suffix$.cscc_scope
+			,cs_credit_card$suffix$.cscc_type
+			,cs_credit_card$suffix$.cscc_remark
+			,cs_credit_card$suffix$.cscc_data
+			,cs_credit_card$suffix$.cscc_mask
+			,cs_credit_card$suffix$.cscc_update_time
+			,cs_credit_card$suffix$.cscc_add_time
+			,cs_credit_card$suffix$.cscc_status
+			,cs_credit_card$suffix$.cscc_image
+		)
+		values(
+			<isNotNull property="csccNo" prepend="">
+				#csccNo#
+			</isNotNull>
+			<isNull property="csccNo" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csccMember" prepend=",">
+				#csccMember#
+			</isNotNull>
+			<isNull property="csccMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccLimit" prepend=",">
+				#csccLimit#
+			</isNotNull>
+			<isNull property="csccLimit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccScope" prepend=",">
+				#csccScope#
+			</isNotNull>
+			<isNull property="csccScope" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccType" prepend=",">
+				#csccType#
+			</isNotNull>
+			<isNull property="csccType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccRemark" prepend=",">
+				#csccRemark#
+			</isNotNull>
+			<isNull property="csccRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccData" prepend=",">
+				#csccData#
+			</isNotNull>
+			<isNull property="csccData" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccMask" prepend=",">
+				#csccMask#
+			</isNotNull>
+			<isNull property="csccMask" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccUpdateTime" prepend=",">
+				#csccUpdateTime#
+			</isNotNull>
+			<isNull property="csccUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccAddTime" prepend=",">
+				#csccAddTime#
+			</isNotNull>
+			<isNull property="csccAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccStatus" prepend=",">
+				#csccStatus#
+			</isNotNull>
+			<isNull property="csccStatus" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csccImage" prepend=",">
+				#csccImage#
+			</isNotNull>
+			<isNull property="csccImage" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新信用卡 -->
+	<update id="updateCsCreditCard"  parameterClass="com.ccclubs.model.CsCreditCard">
+		update cs_credit_card$suffix$ set
+			<isNotNull property="csccNo" prepend="">
+				cs_credit_card$suffix$.cscc_no = #csccNo#
+			</isNotNull>
+			<isNull property="csccNo" prepend="">
+				cs_credit_card$suffix$.cscc_no = null
+			</isNull>				
+			<isNotNull property="csccMember" prepend=",">
+				cs_credit_card$suffix$.cscc_member = #csccMember#
+			</isNotNull>
+			<isNull property="csccMember" prepend=",">
+				cs_credit_card$suffix$.cscc_member = null
+			</isNull>				
+			<isNotNull property="csccLimit" prepend=",">
+				cs_credit_card$suffix$.cscc_limit = #csccLimit#
+			</isNotNull>
+			<isNull property="csccLimit" prepend=",">
+				cs_credit_card$suffix$.cscc_limit = null
+			</isNull>				
+			<isNotNull property="csccScope" prepend=",">
+				cs_credit_card$suffix$.cscc_scope = #csccScope#
+			</isNotNull>
+			<isNull property="csccScope" prepend=",">
+				cs_credit_card$suffix$.cscc_scope = null
+			</isNull>				
+			<isNotNull property="csccType" prepend=",">
+				cs_credit_card$suffix$.cscc_type = #csccType#
+			</isNotNull>
+			<isNull property="csccType" prepend=",">
+				cs_credit_card$suffix$.cscc_type = null
+			</isNull>				
+			<isNotNull property="csccRemark" prepend=",">
+				cs_credit_card$suffix$.cscc_remark = #csccRemark#
+			</isNotNull>
+			<isNull property="csccRemark" prepend=",">
+				cs_credit_card$suffix$.cscc_remark = null
+			</isNull>				
+			<isNotNull property="csccData" prepend=",">
+				cs_credit_card$suffix$.cscc_data = #csccData#
+			</isNotNull>
+			<isNull property="csccData" prepend=",">
+				cs_credit_card$suffix$.cscc_data = null
+			</isNull>				
+			<isNotNull property="csccMask" prepend=",">
+				cs_credit_card$suffix$.cscc_mask = #csccMask#
+			</isNotNull>
+			<isNull property="csccMask" prepend=",">
+				cs_credit_card$suffix$.cscc_mask = null
+			</isNull>				
+			<isNotNull property="csccUpdateTime" prepend=",">
+				cs_credit_card$suffix$.cscc_update_time = #csccUpdateTime#
+			</isNotNull>
+			<isNull property="csccUpdateTime" prepend=",">
+				cs_credit_card$suffix$.cscc_update_time = null
+			</isNull>				
+			<isNotNull property="csccAddTime" prepend=",">
+				cs_credit_card$suffix$.cscc_add_time = #csccAddTime#
+			</isNotNull>
+			<isNull property="csccAddTime" prepend=",">
+				cs_credit_card$suffix$.cscc_add_time = null
+			</isNull>				
+			<isNotNull property="csccStatus" prepend=",">
+				cs_credit_card$suffix$.cscc_status = #csccStatus#
+			</isNotNull>
+			<isNull property="csccStatus" prepend=",">
+				cs_credit_card$suffix$.cscc_status = null
+			</isNull>				
+			<isNotNull property="csccImage" prepend=",">
+				cs_credit_card$suffix$.cscc_image = #csccImage#
+			</isNotNull>
+			<isNull property="csccImage" prepend=",">
+				cs_credit_card$suffix$.cscc_image = null
+			</isNull>				
+		where
+			cscc_id=#csccId#
+	</update>
+	
+	<!-- 更新信用卡非空字段 -->
+	<update id="updateCsCreditCard$NotNull"  parameterClass="com.ccclubs.model.CsCreditCard">
+		update cs_credit_card$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csccNo" prepend=",">
+				cs_credit_card$suffix$.cscc_no = #csccNo#
+			</isNotNull>		
+			<isNotNull property="csccMember" prepend=",">
+				cs_credit_card$suffix$.cscc_member = #csccMember#
+			</isNotNull>		
+			<isNotNull property="csccLimit" prepend=",">
+				cs_credit_card$suffix$.cscc_limit = #csccLimit#
+			</isNotNull>		
+			<isNotNull property="csccScope" prepend=",">
+				cs_credit_card$suffix$.cscc_scope = #csccScope#
+			</isNotNull>		
+			<isNotNull property="csccType" prepend=",">
+				cs_credit_card$suffix$.cscc_type = #csccType#
+			</isNotNull>		
+			<isNotNull property="csccRemark" prepend=",">
+				cs_credit_card$suffix$.cscc_remark = #csccRemark#
+			</isNotNull>		
+			<isNotNull property="csccData" prepend=",">
+				cs_credit_card$suffix$.cscc_data = #csccData#
+			</isNotNull>		
+			<isNotNull property="csccMask" prepend=",">
+				cs_credit_card$suffix$.cscc_mask = #csccMask#
+			</isNotNull>		
+			<isNotNull property="csccUpdateTime" prepend=",">
+				cs_credit_card$suffix$.cscc_update_time = #csccUpdateTime#
+			</isNotNull>		
+			<isNotNull property="csccAddTime" prepend=",">
+				cs_credit_card$suffix$.cscc_add_time = #csccAddTime#
+			</isNotNull>		
+			<isNotNull property="csccStatus" prepend=",">
+				cs_credit_card$suffix$.cscc_status = #csccStatus#
+			</isNotNull>		
+			<isNotNull property="csccImage" prepend=",">
+				cs_credit_card$suffix$.cscc_image = #csccImage#
+			</isNotNull>		
+			</dynamic>
+		where
+			cscc_id=#csccId#
+	</update>
+	
+
+	<!-- 根据ID删除一个信用卡 -->
+	<delete id="deleteCsCreditCardById" parameterClass="java.util.HashMap">
+		delete from cs_credit_card$suffix$ where cscc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个信用卡 -->
+	<update id="removeCsCreditCardById" parameterClass="java.util.HashMap">
+		update cs_credit_card$suffix$ set  cs_credit_card$suffix$.cscc_status=-1  where cscc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新信用卡 -->
+	<update id="updateCsCreditCardBy"  parameterClass="java.util.HashMap">
+		update cs_credit_card$suffix$ set		
+			cscc_id=cscc_id
+			<isNotNull property="V_csccId" prepend=",">
+				cs_credit_card$suffix$.cscc_id = #V_csccId#
+			</isNotNull>		
+			<isNotNull property="V_csccNo" prepend=",">
+				cs_credit_card$suffix$.cscc_no = #V_csccNo#
+			</isNotNull>		
+			<isNotNull property="V_csccMember" prepend=",">
+				cs_credit_card$suffix$.cscc_member = #V_csccMember#
+			</isNotNull>		
+			<isNotNull property="V_csccLimit" prepend=",">
+				cs_credit_card$suffix$.cscc_limit = #V_csccLimit#
+			</isNotNull>		
+			<isNotNull property="V_csccScope" prepend=",">
+				cs_credit_card$suffix$.cscc_scope = #V_csccScope#
+			</isNotNull>		
+			<isNotNull property="V_csccType" prepend=",">
+				cs_credit_card$suffix$.cscc_type = #V_csccType#
+			</isNotNull>		
+			<isNotNull property="V_csccRemark" prepend=",">
+				cs_credit_card$suffix$.cscc_remark = #V_csccRemark#
+			</isNotNull>		
+			<isNotNull property="V_csccData" prepend=",">
+				cs_credit_card$suffix$.cscc_data = #V_csccData#
+			</isNotNull>		
+			<isNotNull property="V_csccMask" prepend=",">
+				cs_credit_card$suffix$.cscc_mask = #V_csccMask#
+			</isNotNull>		
+			<isNotNull property="V_csccUpdateTime" prepend=",">
+				cs_credit_card$suffix$.cscc_update_time = #V_csccUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_csccAddTime" prepend=",">
+				cs_credit_card$suffix$.cscc_add_time = #V_csccAddTime#
+			</isNotNull>		
+			<isNotNull property="V_csccStatus" prepend=",">
+				cs_credit_card$suffix$.cscc_status = #V_csccStatus#
+			</isNotNull>		
+			<isNotNull property="V_csccImage" prepend=",">
+				cs_credit_card$suffix$.cscc_image = #V_csccImage#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[所属会员]查询-->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.cscc_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_credit_card$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+				and cs_credit_card$suffix$.cscc_status!=-1
+ and
+		1=1 		
+		<!-- 多对一外链接[所属会员]查询条件sql片段 -->
+		<isNotNull property="CsccMember"><!-- 调用一下CsccMember，把CsMember指向CsccMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCreditCard_part.cs_credit_card_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除信用卡 -->
+	<update id="deleteCsCreditCardBy"  parameterClass="java.util.HashMap">
+		delete from cs_credit_card$suffix$ where 
+		cs_credit_card$suffix$.cscc_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCreditCard_part.cs_credit_card_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

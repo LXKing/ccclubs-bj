@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+		<title>我的帐户 - 车纷享</title>
+	</head>
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<style type="text/css">
+	section,li {
+margin: 0;
+padding: 0;
+font-size: 14px;
+color: #333;
+list-style: none;
+}
+h2 {
+display: block;
+font-size: 1.0em;
+-webkit-margin-before: 0.83em;
+-webkit-margin-after: 0.83em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+font-weight: bold;
+}
+ .mod-sub-title {
+margin: 15px 0 10px 8px;
+}
+.red-border {
+border-left: 2px solid #b90508;
+}
+.mod-sub-title {
+padding: 0 0 0 6px;
+height: 18px;
+line-height: 18px;
+}
+.tips-list {
+margin: 0 20px;
+}
+ol, ul {
+margin: 0;
+padding: 0;
+}
+.tips-list li {
+padding: 0 0 0 10px;
+position: relative;
+}
+a {
+text-decoration: none;
+color: #194f7f;
+}
+	</style>
+	<body>
+		<div class="page">
+			<div class="header">
+				<div class="toolbar">
+					<a href="index.htm?from=${from}">车辆预订</a>
+					<a href="orders.htm?from=${from}">我的订单</a>
+					<a class="focus" href="#">我的帐户</a>
+				</div>
+				<div class="shadow"></div>
+			</div>
+			<div class="filler">
+				<!--头部占位-->
+			</div>
+			<div class="content">
+
+				<div class="account">
+					<ul>
+						<li>
+							驾驶认证：
+							<span>${csMember.csmVDrive ==0?"未认证":""}${csMember.csmVDrive ==1?"已认证":""}${csMember.csmVDrive ==2?"等待认证":""}${csMember.csmVDrive ==3?"认证失败":""}</span>
+						</li>
+						<li>
+							会员卡号：
+							<span>${csMember.$csmEvcard.csecNumber}</span>
+						</li>
+						<li>
+							会员身份：
+							<span>${csMember.$csmType.csutName}</span>
+						</li>
+						<li>
+							保证金帐户：
+							<span>${margin}元</span>
+						</li>
+						<li>
+							代金券：
+							<span>${csMember.csmCoupon}元</span>
+						</li>
+						<li>
+							帐户免费小时：
+							<span>${freeHour}
+						</li>
+					</ul>
+				</div>
+				<section class="tips-wrap">
+				<h2 class="mod-sub-title red-border">
+					温馨提示
+				</h2>
+				<ul class="tips-list">
+					<li>
+						若不想绑定，可选择<a href="javascript:;" onclick="unbind()">解除绑定</a>
+					</li>
+				</ul>
+				</section>
+			</div>
+		</div>
+	</body>
+	<script src="./js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">
+		function unbind(){
+			if(confirm("确定要解除绑定吗？"))
+				 {
+				 		var from = '${from}';
+					 	var ajax = {
+								url: '${basePath}weixin/unbind.htm',
+								type: "POST",
+								data: {
+									from:from
+								},
+								async: true,
+								success: function(data) {
+									if(data=="100"){
+										window.location.href='${basePath}weixin/login.htm?from=${from}';
+									}
+							 }
+						}
+					$.ajax(ajax);
+				 }
+			}
+		
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+	</script>
+</html>

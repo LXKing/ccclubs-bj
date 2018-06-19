@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 问题及选项之SQL映射 -->
+	<resultMap id="CsQuestAnswer" class="com.ccclubs.model.CsQuestAnswer">
+		<result property="csqaId" column="csqa_id"/>
+		<result property="csqaTitle" column="csqa_title"/>
+		<result property="csqaParent" column="csqa_parent"/>
+	</resultMap>
+		
+	<!-- 获取所有问题及选项 -->
+	<select id="getCsQuestAnswerList" resultMap="CsQuestAnswer">
+		select cs_quest_answer$suffix$.* from cs_quest_answer$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsQuestAnswer_part.cs_quest_answer_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csqa_parent asc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取问题及选项分页 -->
+	<select id="getCsQuestAnswerPage" parameterClass="java.util.HashMap" resultMap="CsQuestAnswer">
+		select cs_quest_answer$suffix$.* from cs_quest_answer$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsQuestAnswer_part.cs_quest_answer_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csqa_parent asc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取问题及选项总数 -->
+	<select id="getCsQuestAnswerEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_quest_answer$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsQuestAnswer_part.cs_quest_answer_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取问题及选项 -->
+	<select id="getCsQuestAnswerById" parameterClass="java.util.HashMap" resultMap="CsQuestAnswer">
+		select cs_quest_answer$suffix$.* from cs_quest_answer$suffix$
+		where csqa_id=#id#
+	</select>
+	
+		
+	<!-- 保存问题及选项 -->
+	<insert id="saveCsQuestAnswer"  parameterClass="com.ccclubs.model.CsQuestAnswer">
+		insert into cs_quest_answer$suffix$
+		(
+			cs_quest_answer$suffix$.csqa_title
+			,cs_quest_answer$suffix$.csqa_parent
+		)
+		values(
+			<isNotNull property="csqaTitle" prepend="">
+				#csqaTitle#
+			</isNotNull>
+			<isNull property="csqaTitle" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csqaParent" prepend=",">
+				#csqaParent#
+			</isNotNull>
+			<isNull property="csqaParent" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新问题及选项 -->
+	<update id="updateCsQuestAnswer"  parameterClass="com.ccclubs.model.CsQuestAnswer">
+		update cs_quest_answer$suffix$ set
+			<isNotNull property="csqaTitle" prepend="">
+				cs_quest_answer$suffix$.csqa_title = #csqaTitle#
+			</isNotNull>
+			<isNull property="csqaTitle" prepend="">
+				cs_quest_answer$suffix$.csqa_title = null
+			</isNull>				
+			<isNotNull property="csqaParent" prepend=",">
+				cs_quest_answer$suffix$.csqa_parent = #csqaParent#
+			</isNotNull>
+			<isNull property="csqaParent" prepend=",">
+				cs_quest_answer$suffix$.csqa_parent = null
+			</isNull>				
+		where
+			csqa_id=#csqaId#
+	</update>
+	
+	<!-- 更新问题及选项非空字段 -->
+	<update id="updateCsQuestAnswer$NotNull"  parameterClass="com.ccclubs.model.CsQuestAnswer">
+		update cs_quest_answer$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csqaTitle" prepend=",">
+				cs_quest_answer$suffix$.csqa_title = #csqaTitle#
+			</isNotNull>		
+			<isNotNull property="csqaParent" prepend=",">
+				cs_quest_answer$suffix$.csqa_parent = #csqaParent#
+			</isNotNull>		
+			</dynamic>
+		where
+			csqa_id=#csqaId#
+	</update>
+	
+
+	<!-- 根据ID删除一个问题及选项 -->
+	<delete id="deleteCsQuestAnswerById" parameterClass="java.util.HashMap">
+		delete from cs_quest_answer$suffix$ where csqa_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新问题及选项 -->
+	<update id="updateCsQuestAnswerBy"  parameterClass="java.util.HashMap">
+		update cs_quest_answer$suffix$ set		
+			csqa_id=csqa_id
+			<isNotNull property="V_csqaId" prepend=",">
+				cs_quest_answer$suffix$.csqa_id = #V_csqaId#
+			</isNotNull>		
+			<isNotNull property="V_csqaTitle" prepend=",">
+				cs_quest_answer$suffix$.csqa_title = #V_csqaTitle#
+			</isNotNull>		
+			<isNotNull property="V_csqaParent" prepend=",">
+				cs_quest_answer$suffix$.csqa_parent = #V_csqaParent#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+		
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsQuestAnswer_part.cs_quest_answer_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除问题及选项 -->
+	<update id="deleteCsQuestAnswerBy"  parameterClass="java.util.HashMap">
+		delete from cs_quest_answer$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsQuestAnswer_part.cs_quest_answer_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

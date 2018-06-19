@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 中奖结果之SQL映射 -->
+	<resultMap id="CsLuckyResult" class="com.ccclubs.model.CsLuckyResult">
+		<result property="cslrId" column="cslr_id"/>
+		<result property="cslrName" column="cslr_name"/>
+		<result property="cslrMember" column="cslr_member"/>
+		<result property="cslrLucky" column="cslr_lucky"/>
+		<result property="cslrLuckyItem" column="cslr_lucky_item"/>
+		<result property="cslrItemType" column="cslr_item_type"/>
+		<result property="cslrItemIndex" column="cslr_item_index"/>
+		<result property="cslrAmount" column="cslr_amount"/>
+		<result property="cslrFrom" column="cslr_from"/>
+		<result property="cslrIssueTime" column="cslr_issue_time"/>
+		<result property="cslrUpdateTime" column="cslr_update_time"/>
+		<result property="cslrAddTime" column="cslr_add_time"/>
+		<result property="cslrRemark" column="cslr_remark"/>
+		<result property="cslrState" column="cslr_state"/>
+		<result property="cslrStatus" column="cslr_status"/>
+	</resultMap>
+		
+	<!-- 获取所有中奖结果 -->
+	<select id="getCsLuckyResultList" resultMap="CsLuckyResult">
+		select cs_lucky_result$suffix$.* from cs_lucky_result$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.cslr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询-->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.cslr_lucky=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询-->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<isNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.cslr_lucky_item=cs_lucky_item$CsLuckyItem.suffix$.csli_id
+			</isNull>
+			<isNotNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.$CsLuckyItem.on$=cs_lucky_item$CsLuckyItem.suffix$.csli_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_lucky_result$suffix$.cslr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询条件sql片段 -->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<include refid="CsLuckyItem_part.cs_lucky_item_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLuckyResult_part.cs_lucky_result_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslr_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取中奖结果分页 -->
+	<select id="getCsLuckyResultPage" parameterClass="java.util.HashMap" resultMap="CsLuckyResult">
+		select cs_lucky_result$suffix$.* from cs_lucky_result$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.cslr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询 -->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.cslr_lucky=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询 -->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<isNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.cslr_lucky_item=cs_lucky_item$CsLuckyItem.suffix$.csli_id
+			</isNull>
+			<isNotNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.$CsLuckyItem.on$=cs_lucky_item$CsLuckyItem.suffix$.csli_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_lucky_result$suffix$.cslr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询条件sql片段 -->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<include refid="CsLuckyItem_part.cs_lucky_item_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLuckyResult_part.cs_lucky_result_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cslr_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取中奖结果总数 -->
+	<select id="getCsLuckyResultEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_lucky_result$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.cslr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询,同张表只能外链接一次 -->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.cslr_lucky=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询,同张表只能外链接一次 -->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<isNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.cslr_lucky_item=cs_lucky_item$CsLuckyItem.suffix$.csli_id
+			</isNull>
+			<isNotNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.$CsLuckyItem.on$=cs_lucky_item$CsLuckyItem.suffix$.csli_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_lucky_result$suffix$.cslr_status!=-1
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询条件sql片段 -->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<include refid="CsLuckyItem_part.cs_lucky_item_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsLuckyResult_part.cs_lucky_result_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取中奖结果 -->
+	<select id="getCsLuckyResultById" parameterClass="java.util.HashMap" resultMap="CsLuckyResult">
+		select cs_lucky_result$suffix$.* from cs_lucky_result$suffix$
+		where cslr_id=#id#
+	</select>
+	
+		
+	<!-- 保存中奖结果 -->
+	<insert id="saveCsLuckyResult"  parameterClass="com.ccclubs.model.CsLuckyResult">
+		insert into cs_lucky_result$suffix$
+		(
+			cs_lucky_result$suffix$.cslr_name
+			,cs_lucky_result$suffix$.cslr_member
+			,cs_lucky_result$suffix$.cslr_lucky
+			,cs_lucky_result$suffix$.cslr_lucky_item
+			,cs_lucky_result$suffix$.cslr_item_type
+			,cs_lucky_result$suffix$.cslr_item_index
+			,cs_lucky_result$suffix$.cslr_amount
+			,cs_lucky_result$suffix$.cslr_from
+			,cs_lucky_result$suffix$.cslr_issue_time
+			,cs_lucky_result$suffix$.cslr_update_time
+			,cs_lucky_result$suffix$.cslr_add_time
+			,cs_lucky_result$suffix$.cslr_remark
+			,cs_lucky_result$suffix$.cslr_state
+			,cs_lucky_result$suffix$.cslr_status
+		)
+		values(
+			<isNotNull property="cslrName" prepend="">
+				#cslrName#
+			</isNotNull>
+			<isNull property="cslrName" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cslrMember" prepend=",">
+				#cslrMember#
+			</isNotNull>
+			<isNull property="cslrMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrLucky" prepend=",">
+				#cslrLucky#
+			</isNotNull>
+			<isNull property="cslrLucky" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrLuckyItem" prepend=",">
+				#cslrLuckyItem#
+			</isNotNull>
+			<isNull property="cslrLuckyItem" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrItemType" prepend=",">
+				#cslrItemType#
+			</isNotNull>
+			<isNull property="cslrItemType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrItemIndex" prepend=",">
+				#cslrItemIndex#
+			</isNotNull>
+			<isNull property="cslrItemIndex" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrAmount" prepend=",">
+				#cslrAmount#
+			</isNotNull>
+			<isNull property="cslrAmount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrFrom" prepend=",">
+				#cslrFrom#
+			</isNotNull>
+			<isNull property="cslrFrom" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrIssueTime" prepend=",">
+				#cslrIssueTime#
+			</isNotNull>
+			<isNull property="cslrIssueTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrUpdateTime" prepend=",">
+				#cslrUpdateTime#
+			</isNotNull>
+			<isNull property="cslrUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrAddTime" prepend=",">
+				#cslrAddTime#
+			</isNotNull>
+			<isNull property="cslrAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrRemark" prepend=",">
+				#cslrRemark#
+			</isNotNull>
+			<isNull property="cslrRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrState" prepend=",">
+				#cslrState#
+			</isNotNull>
+			<isNull property="cslrState" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cslrStatus" prepend=",">
+				#cslrStatus#
+			</isNotNull>
+			<isNull property="cslrStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新中奖结果 -->
+	<update id="updateCsLuckyResult"  parameterClass="com.ccclubs.model.CsLuckyResult">
+		update cs_lucky_result$suffix$ set
+			<isNotNull property="cslrName" prepend="">
+				cs_lucky_result$suffix$.cslr_name = #cslrName#
+			</isNotNull>
+			<isNull property="cslrName" prepend="">
+				cs_lucky_result$suffix$.cslr_name = null
+			</isNull>				
+			<isNotNull property="cslrMember" prepend=",">
+				cs_lucky_result$suffix$.cslr_member = #cslrMember#
+			</isNotNull>
+			<isNull property="cslrMember" prepend=",">
+				cs_lucky_result$suffix$.cslr_member = null
+			</isNull>				
+			<isNotNull property="cslrLucky" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky = #cslrLucky#
+			</isNotNull>
+			<isNull property="cslrLucky" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky = null
+			</isNull>				
+			<isNotNull property="cslrLuckyItem" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky_item = #cslrLuckyItem#
+			</isNotNull>
+			<isNull property="cslrLuckyItem" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky_item = null
+			</isNull>				
+			<isNotNull property="cslrItemType" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_type = #cslrItemType#
+			</isNotNull>
+			<isNull property="cslrItemType" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_type = null
+			</isNull>				
+			<isNotNull property="cslrItemIndex" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_index = #cslrItemIndex#
+			</isNotNull>
+			<isNull property="cslrItemIndex" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_index = null
+			</isNull>				
+			<isNotNull property="cslrAmount" prepend=",">
+				cs_lucky_result$suffix$.cslr_amount = #cslrAmount#
+			</isNotNull>
+			<isNull property="cslrAmount" prepend=",">
+				cs_lucky_result$suffix$.cslr_amount = null
+			</isNull>				
+			<isNotNull property="cslrFrom" prepend=",">
+				cs_lucky_result$suffix$.cslr_from = #cslrFrom#
+			</isNotNull>
+			<isNull property="cslrFrom" prepend=",">
+				cs_lucky_result$suffix$.cslr_from = null
+			</isNull>				
+			<isNotNull property="cslrIssueTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_issue_time = #cslrIssueTime#
+			</isNotNull>
+			<isNull property="cslrIssueTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_issue_time = null
+			</isNull>				
+			<isNotNull property="cslrUpdateTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_update_time = #cslrUpdateTime#
+			</isNotNull>
+			<isNull property="cslrUpdateTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_update_time = null
+			</isNull>				
+			<isNotNull property="cslrAddTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_add_time = #cslrAddTime#
+			</isNotNull>
+			<isNull property="cslrAddTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_add_time = null
+			</isNull>				
+			<isNotNull property="cslrRemark" prepend=",">
+				cs_lucky_result$suffix$.cslr_remark = #cslrRemark#
+			</isNotNull>
+			<isNull property="cslrRemark" prepend=",">
+				cs_lucky_result$suffix$.cslr_remark = null
+			</isNull>				
+			<isNotNull property="cslrState" prepend=",">
+				cs_lucky_result$suffix$.cslr_state = #cslrState#
+			</isNotNull>
+			<isNull property="cslrState" prepend=",">
+				cs_lucky_result$suffix$.cslr_state = null
+			</isNull>				
+			<isNotNull property="cslrStatus" prepend=",">
+				cs_lucky_result$suffix$.cslr_status = #cslrStatus#
+			</isNotNull>
+			<isNull property="cslrStatus" prepend=",">
+				cs_lucky_result$suffix$.cslr_status = null
+			</isNull>				
+		where
+			cslr_id=#cslrId#
+	</update>
+	
+	<!-- 更新中奖结果非空字段 -->
+	<update id="updateCsLuckyResult$NotNull"  parameterClass="com.ccclubs.model.CsLuckyResult">
+		update cs_lucky_result$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cslrName" prepend=",">
+				cs_lucky_result$suffix$.cslr_name = #cslrName#
+			</isNotNull>		
+			<isNotNull property="cslrMember" prepend=",">
+				cs_lucky_result$suffix$.cslr_member = #cslrMember#
+			</isNotNull>		
+			<isNotNull property="cslrLucky" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky = #cslrLucky#
+			</isNotNull>		
+			<isNotNull property="cslrLuckyItem" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky_item = #cslrLuckyItem#
+			</isNotNull>		
+			<isNotNull property="cslrItemType" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_type = #cslrItemType#
+			</isNotNull>		
+			<isNotNull property="cslrItemIndex" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_index = #cslrItemIndex#
+			</isNotNull>		
+			<isNotNull property="cslrAmount" prepend=",">
+				cs_lucky_result$suffix$.cslr_amount = #cslrAmount#
+			</isNotNull>		
+			<isNotNull property="cslrFrom" prepend=",">
+				cs_lucky_result$suffix$.cslr_from = #cslrFrom#
+			</isNotNull>		
+			<isNotNull property="cslrIssueTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_issue_time = #cslrIssueTime#
+			</isNotNull>		
+			<isNotNull property="cslrUpdateTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_update_time = #cslrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cslrAddTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_add_time = #cslrAddTime#
+			</isNotNull>		
+			<isNotNull property="cslrRemark" prepend=",">
+				cs_lucky_result$suffix$.cslr_remark = #cslrRemark#
+			</isNotNull>		
+			<isNotNull property="cslrState" prepend=",">
+				cs_lucky_result$suffix$.cslr_state = #cslrState#
+			</isNotNull>		
+			<isNotNull property="cslrStatus" prepend=",">
+				cs_lucky_result$suffix$.cslr_status = #cslrStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cslr_id=#cslrId#
+	</update>
+	
+
+	<!-- 根据ID删除一个中奖结果 -->
+	<delete id="deleteCsLuckyResultById" parameterClass="java.util.HashMap">
+		delete from cs_lucky_result$suffix$ where cslr_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个中奖结果 -->
+	<update id="removeCsLuckyResultById" parameterClass="java.util.HashMap">
+		update cs_lucky_result$suffix$ set  cs_lucky_result$suffix$.cslr_status=-1  where cslr_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新中奖结果 -->
+	<update id="updateCsLuckyResultBy"  parameterClass="java.util.HashMap">
+		update cs_lucky_result$suffix$ set		
+			cslr_id=cslr_id
+			<isNotNull property="V_cslrId" prepend=",">
+				cs_lucky_result$suffix$.cslr_id = #V_cslrId#
+			</isNotNull>		
+			<isNotNull property="V_cslrName" prepend=",">
+				cs_lucky_result$suffix$.cslr_name = #V_cslrName#
+			</isNotNull>		
+			<isNotNull property="V_cslrMember" prepend=",">
+				cs_lucky_result$suffix$.cslr_member = #V_cslrMember#
+			</isNotNull>		
+			<isNotNull property="V_cslrLucky" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky = #V_cslrLucky#
+			</isNotNull>		
+			<isNotNull property="V_cslrLuckyItem" prepend=",">
+				cs_lucky_result$suffix$.cslr_lucky_item = #V_cslrLuckyItem#
+			</isNotNull>		
+			<isNotNull property="V_cslrItemType" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_type = #V_cslrItemType#
+			</isNotNull>		
+			<isNotNull property="V_cslrItemIndex" prepend=",">
+				cs_lucky_result$suffix$.cslr_item_index = #V_cslrItemIndex#
+			</isNotNull>		
+			<isNotNull property="V_cslrAmount" prepend=",">
+				cs_lucky_result$suffix$.cslr_amount = #V_cslrAmount#
+			</isNotNull>		
+			<isNotNull property="V_cslrFrom" prepend=",">
+				cs_lucky_result$suffix$.cslr_from = #V_cslrFrom#
+			</isNotNull>		
+			<isNotNull property="V_cslrIssueTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_issue_time = #V_cslrIssueTime#
+			</isNotNull>		
+			<isNotNull property="V_cslrUpdateTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_update_time = #V_cslrUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cslrAddTime" prepend=",">
+				cs_lucky_result$suffix$.cslr_add_time = #V_cslrAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cslrRemark" prepend=",">
+				cs_lucky_result$suffix$.cslr_remark = #V_cslrRemark#
+			</isNotNull>		
+			<isNotNull property="V_cslrState" prepend=",">
+				cs_lucky_result$suffix$.cslr_state = #V_cslrState#
+			</isNotNull>		
+			<isNotNull property="V_cslrStatus" prepend=",">
+				cs_lucky_result$suffix$.cslr_status = #V_cslrStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.cslr_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_lucky_result$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询-->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<isNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.cslr_lucky=cs_lucky$CsLucky.suffix$.csl_id
+			</isNull>
+			<isNotNull property="CsLucky.on">
+				left join cs_lucky cs_lucky$CsLucky.suffix$ on cs_lucky_result$suffix$.$CsLucky.on$=cs_lucky$CsLucky.suffix$.csl_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询-->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<isNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.cslr_lucky_item=cs_lucky_item$CsLuckyItem.suffix$.csli_id
+			</isNull>
+			<isNotNull property="CsLuckyItem.on">
+				left join cs_lucky_item cs_lucky_item$CsLuckyItem.suffix$ on cs_lucky_result$suffix$.$CsLuckyItem.on$=cs_lucky_item$CsLuckyItem.suffix$.csli_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_lucky_result$suffix$.cslr_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CslrMember"><!-- 调用一下CslrMember，把CsMember指向CslrMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖活动]查询条件sql片段 -->
+		<isNotNull property="CslrLucky"><!-- 调用一下CslrLucky，把CsLucky指向CslrLucky --></isNotNull>
+		<isNotNull property="CsLucky">
+			<include refid="CsLucky_part.cs_lucky_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[抽奖奖项]查询条件sql片段 -->
+		<isNotNull property="CslrLuckyItem"><!-- 调用一下CslrLuckyItem，把CsLuckyItem指向CslrLuckyItem --></isNotNull>
+		<isNotNull property="CsLuckyItem">
+			<include refid="CsLuckyItem_part.cs_lucky_item_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsLuckyResult_part.cs_lucky_result_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除中奖结果 -->
+	<update id="deleteCsLuckyResultBy"  parameterClass="java.util.HashMap">
+		delete from cs_lucky_result$suffix$ where 
+		cs_lucky_result$suffix$.cslr_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsLuckyResult_part.cs_lucky_result_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

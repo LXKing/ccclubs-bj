@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsRule_part">	
+	<!-- 规则条件sql片段  -->
+	<sql id="cs_rule_dynamic">
+		<dynamic>
+			<isNotEmpty property="csrId" prepend="and">
+			    $csrIdNot$ cs_rule$suffix$.csr_id = #csrId#
+			</isNotEmpty>
+			<isNotNull property="csrIdNot" prepend="and">
+				<isEmpty property="csrId">
+				$csrIdNot$ cs_rule$suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrName" prepend="and">			    
+			    (<isNotNull property="csrNameNot">
+			    cs_rule$suffix$.csr_name is null or length(cs_rule$suffix$.csr_name) &lt; 1 or
+			    </isNotNull>$csrNameNot$ cs_rule$suffix$.csr_name = #csrName#)
+			</isNotEmpty>
+			<isNotNull property="csrNameNot" prepend="and">
+				<isEmpty property="csrName">
+				$csrNameNot$ (cs_rule$suffix$.csr_name is null or length(cs_rule$suffix$.csr_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrExpression" prepend="and">			    
+			    (<isNotNull property="csrExpressionNot">
+			    cs_rule$suffix$.csr_expression is null or length(cs_rule$suffix$.csr_expression) &lt; 1 or
+			    </isNotNull>$csrExpressionNot$ cs_rule$suffix$.csr_expression = #csrExpression#)
+			</isNotEmpty>
+			<isNotNull property="csrExpressionNot" prepend="and">
+				<isEmpty property="csrExpression">
+				$csrExpressionNot$ (cs_rule$suffix$.csr_expression is null or length(cs_rule$suffix$.csr_expression) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrPriorityMin" prepend="and">
+			    $csrPriorityNot$  ( cs_rule$suffix$.csr_priority &gt;= #csrPriorityMin#
+			    <isEmpty property="csrPriorityMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csrPriorityMax" prepend="and">
+				<isEmpty property="csrPriorityMin">$csrPriorityNot$   (</isEmpty>
+			    cs_rule$suffix$.csr_priority &lt;= #csrPriorityMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csrPriority" prepend="and">
+			    $csrPriorityNot$ cs_rule$suffix$.csr_priority = #csrPriority#
+			</isNotEmpty>
+			<isNotNull property="csrPriorityNot" prepend="and">
+				<isEmpty property="csrPriorityMax"><isEmpty property="csrPriorityMin"><isEmpty property="csrPriority">
+				$csrPriorityNot$ cs_rule$suffix$.csr_priority is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csrMeas" prepend="and">			    
+			    (<isNotNull property="csrMeasNot">
+			    cs_rule$suffix$.csr_meas is null or length(cs_rule$suffix$.csr_meas) &lt; 1 or
+			    </isNotNull>$csrMeasNot$ cs_rule$suffix$.csr_meas = #csrMeas#)
+			</isNotEmpty>
+			<isNotNull property="csrMeasNot" prepend="and">
+				<isEmpty property="csrMeas">
+				$csrMeasNot$ (cs_rule$suffix$.csr_meas is null or length(cs_rule$suffix$.csr_meas) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrProfile" prepend="and">			    
+			    (<isNotNull property="csrProfileNot">
+			    cs_rule$suffix$.csr_profile is null or length(cs_rule$suffix$.csr_profile) &lt; 1 or
+			    </isNotNull>$csrProfileNot$ cs_rule$suffix$.csr_profile like #csrProfile#)
+			</isNotEmpty>
+			<isNotNull property="csrProfileNot" prepend="and">
+				<isEmpty property="csrProfile">
+				$csrProfileNot$ (cs_rule$suffix$.csr_profile is null or length(cs_rule$suffix$.csr_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csrStatus" prepend="and">
+			    $csrStatusNot$ cs_rule$suffix$.csr_status = #csrStatus#
+			</isNotEmpty>
+			<isNotNull property="csrStatusNot" prepend="and">
+				<isEmpty property="csrStatus">
+				$csrStatusNot$ cs_rule$suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 规则left join 条件sql片段 -->
+	<sql id="cs_rule_join">
+		<dynamic>
+			<isNotEmpty property="CsRule.csrId" prepend="and">
+			    $CsRule.csrIdNot$ cs_rule$CsRule.suffix$.csr_id = #CsRule.csrId#
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrIdNot" prepend="and">
+				<isEmpty property="CsRule.csrId">
+				$csrIdNot$ cs_rule$CsRule.suffix$.csr_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRule.csrName" prepend="and">
+				(<isNotNull property="CsRule.csrNameNot">
+			    cs_rule$CsRule.suffix$.csr_name is null or length(cs_rule$CsRule.suffix$.csr_name) &lt; 1 or
+			    </isNotNull>$CsRule.csrNameNot$ cs_rule$CsRule.suffix$.csr_name = #CsRule.csrName#)
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrNameNot" prepend="and">
+				<isEmpty property="CsRule.csrName">
+				$csrNameNot$ (cs_rule$CsRule.suffix$.csr_name is null or length(cs_rule$CsRule.suffix$.csr_name) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRule.csrExpression" prepend="and">
+				(<isNotNull property="CsRule.csrExpressionNot">
+			    cs_rule$CsRule.suffix$.csr_expression is null or length(cs_rule$CsRule.suffix$.csr_expression) &lt; 1 or
+			    </isNotNull>$CsRule.csrExpressionNot$ cs_rule$CsRule.suffix$.csr_expression = #CsRule.csrExpression#)
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrExpressionNot" prepend="and">
+				<isEmpty property="CsRule.csrExpression">
+				$csrExpressionNot$ (cs_rule$CsRule.suffix$.csr_expression is null or length(cs_rule$CsRule.suffix$.csr_expression) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRule.csrPriorityMin" prepend="and">
+			    $CsRule.csrPriorityNot$  ( cs_rule$CsRule.suffix$.csr_priority &gt;= #CsRule.csrPriorityMin#
+			    <isEmpty property="CsRule.csrPriorityMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsRule.csrPriorityMax" prepend="and">
+				<isEmpty property="CsRule.csrPriorityMin">$CsRule.csrPriorityNot$   (</isEmpty>
+			    cs_rule$CsRule.suffix$.csr_priority &lt;= #CsRule.csrPriorityMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsRule.csrPriority" prepend="and">
+			    $CsRule.csrPriorityNot$ cs_rule$CsRule.suffix$.csr_priority = #CsRule.csrPriority#
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrPriorityNot" prepend="and">
+				<isEmpty property="CsRule.csrPriorityMax"><isEmpty property="CsRule.csrPriorityMin"><isEmpty property="CsRule.csrPriority">
+				$csrPriorityNot$ cs_rule$CsRule.suffix$.csr_priority is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRule.csrMeas" prepend="and">
+				(<isNotNull property="CsRule.csrMeasNot">
+			    cs_rule$CsRule.suffix$.csr_meas is null or length(cs_rule$CsRule.suffix$.csr_meas) &lt; 1 or
+			    </isNotNull>$CsRule.csrMeasNot$ cs_rule$CsRule.suffix$.csr_meas = #CsRule.csrMeas#)
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrMeasNot" prepend="and">
+				<isEmpty property="CsRule.csrMeas">
+				$csrMeasNot$ (cs_rule$CsRule.suffix$.csr_meas is null or length(cs_rule$CsRule.suffix$.csr_meas) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRule.csrProfile" prepend="and">
+				(<isNotNull property="CsRule.csrProfileNot">
+			    cs_rule$CsRule.suffix$.csr_profile is null or length(cs_rule$CsRule.suffix$.csr_profile) &lt; 1 or
+			    </isNotNull>$CsRule.csrProfileNot$ cs_rule$CsRule.suffix$.csr_profile like #CsRule.csrProfile#)
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrProfileNot" prepend="and">
+				<isEmpty property="CsRule.csrProfile">
+				$csrProfileNot$ (cs_rule$CsRule.suffix$.csr_profile is null or length(cs_rule$CsRule.suffix$.csr_profile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsRule.csrStatus" prepend="and">
+			    $CsRule.csrStatusNot$ cs_rule$CsRule.suffix$.csr_status = #CsRule.csrStatus#
+			</isNotEmpty>
+			<isNotNull property="CsRule.csrStatusNot" prepend="and">
+				<isEmpty property="CsRule.csrStatus">
+				$csrStatusNot$ cs_rule$CsRule.suffix$.csr_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

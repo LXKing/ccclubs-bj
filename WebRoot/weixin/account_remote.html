@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享 - 远程遥控</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script type="text/javascript" src="js/baidu.js"></script>
+
+		<style type="text/css">
+	        html, body {
+	            margin: 0px;
+	            padding: 0px;
+	            overflow: hidden;
+	            background-color: transparent;
+	        }
+	
+	        body {
+	            background-image: url('images/bg.png');
+	            background-repeat: no-repeat;
+	            background-size: contain;
+	            -o-background-size: 100% 100%;
+	            -webkit-background-size: 100% 100%;
+	            -moz-background-size: 100% 100%;
+	            background-attachment: fixed;
+	            overflow: hidden;
+	            line-height: 150%;
+	        }
+	
+			a:link,a:visited{ text-decoration:none;  /*超链接无下划线*/}
+			a{ color:#FFFFFF; /*无链接时颜色*/ }
+			
+	        button, input {
+	            -webkit-tap-highlight-color: rgba(255,0,0,0);
+	        }
+	
+	        #BG {
+	            position: fixed;
+	            top: -50%;
+	            left: -50%;
+	            width: 200%;
+	            height: 200%;
+	            z-index: -1;
+	        }
+	
+	        #BGImage {
+	            position: absolute;
+	            top: 0;
+	            left: 0;
+	            right: 0;
+	            bottom: 0;
+	            margin: auto;
+	            min-width: 50%;
+	            min-height: 50%;
+	            z-index: -1;
+	        }
+	        #HeaderPage {
+	            height: 45px;
+	            vertical-align: middle;
+	            background-color: #27262b;
+	        }
+	
+	            #HeaderPage ul {
+	                list-style-type: none;
+	                margin: 0;
+	                padding: 0;
+	            }
+	
+	                #HeaderPage ul li {
+	                    display: inline;
+	                }
+	
+	                    #HeaderPage ul li a {
+	                        display: block;
+	                    }
+	
+	        #back {
+	            display: inline-block;
+	        }
+	
+	            #back a {
+	                margin-top: 10px;
+	                width: 15%;
+	                color: white;
+	                font-family: Calibri;
+	                punctuation-trim: start;
+	                vertical-align: super;
+	                text-align: center;
+	                float: left;
+	                text-decoration: none;
+	                letter-spacing: 0px;
+	                color: white;
+	            }
+	
+	        #TitleName {
+	            margin-top: 10px;
+	            width: 70%;
+	            float: left;
+	            color: white;
+	            font-size: 22px;
+	            font-family: 'Microsoft YaHei';
+	            vertical-align: super;
+	            text-align: center;
+	            text-decoration: solid;
+	            letter-spacing: 0px;
+	        }
+	
+	        #more a {
+	            float: right;
+	            width: 15%;
+	            color: white;
+	            font-size: 25px;
+	            font-family: 'Microsoft YaHei';
+	            vertical-align: auto;
+	            text-align: center;
+	            text-decoration: none;
+	            letter-spacing: 3px;
+	            font-weight: bolder;
+	        }
+	
+	
+	        #TopField {
+	            border-style: none;
+	            height: 22px;
+	            line-height: 30px;
+	            margin-top: 5px;
+	        }
+	
+	            #TopField a {
+	                height: 22px;
+	                line-height: 22px;
+	            }
+	
+	        #btnList, #btnList :link, #btnList :visited {
+	            margin-left: 2px;
+	        }
+	
+	            #btnList:hover, #btnList :active {
+	                margin-left: 2px;
+	                opacity: 0.5;
+	            }
+	
+	
+	        #btnInfo, #btnInfo :link, #btnInfo :visited {
+	            float: right;
+	            padding-right: 0px;
+	            margin-right: 0px;
+	        }
+	
+	            #btnInfo:hover, #btnInfo :active {
+	                float: right;
+	                padding-right: 0px;
+	                opacity: 0.5;
+	            }
+	
+	        .icon_list_normal3 {
+	            float: left;
+	            width: 65px;
+	            height: 30px;
+	            background: url(images/icon_list_normal1.png) no-repeat;
+	        }
+	
+	
+	
+	        .icon_info_normal3 {
+	            float: left;
+	            width: 65px;
+	            height: 30px;
+	            background: url(images/icon_info_normal1.png) no-repeat;
+	        }
+	
+	        #CarField {
+	            border-style: none;
+	            position: absolute;
+	            top: 75px;
+	            width: 100%;
+	            height: 400px;
+	            margin: 0;
+	            padding: 0;
+	        }
+	
+	        #CarImage {
+	            margin: 0 auto;
+	            padding: 0;
+	            width: 210px;
+	            height: 200px;
+	            background-image: url(images/bg_car_empty.png);
+	            background-repeat: no-repeat;
+	            background-size: 210px 200px;
+	            position: relative;
+	            margin-top: 30px;
+	        }
+	
+	        #CarText {
+	            display: block;
+	            height: 20px;
+	            width: 100%;
+	            color: white;
+	            font-size: 10px;
+	            font-family: 'Microsoft Tai Le';
+	            letter-spacing: 2px;
+	            text-align: center;
+	            position: absolute;
+	            letter-spacing: 1px;
+	            top: 142px;
+	        }
+	
+	
+	
+	        #ControlField {
+	            border-style: none;
+	            position: absolute;
+	            bottom: 0px;
+	            width: 100%;
+	            height: 200px;
+	            margin: 0;
+	            padding: 0;
+	        }
+	
+	        #ControlImage {
+	            width: 240px;
+	            height: 200px;
+	            padding: 0;
+	            margin: 0 auto;
+	            background-image: url(images/bg_stering_wheel.png);
+	            background-repeat: no-repeat;
+	            background-size: 240px 200px;
+	        }
+	
+	        .btnUnlock {
+	            display: table-cell;
+	            width: 75px;
+	            height: 75px;
+	            background-image: url(images/btn_open_normal.png);
+	            background-repeat: no-repeat;
+	            background-size: 75px 75px;
+	            position: relative;
+	            top: 25px;
+	            left: -20px;
+	        }
+	
+	        .btnUnlockTap {
+	            display: table-cell;
+	            width: 75px;
+	            height: 75px;
+	            background-image: url(images/btn_open_tap.png);
+	            background-repeat: no-repeat;
+	            background-size: 75px 75px;
+	            position: relative;
+	            top: 25px;
+	            left: -20px;
+	        }
+	
+	        .btnLock {
+	            display: table-cell;
+	            width: 75px;
+	            height: 75px;
+	            background-image: url(images/btn_lock_normal.png);
+	            background-repeat: no-repeat;
+	            background-size: 75px 75px;
+	            position: relative;
+	            top: 25px;
+	            left: 25px;
+	        }
+	
+	        .btnLockTap {
+	            display: table-cell;
+	            width: 75px;
+	            height: 75px;
+	            background-image: url(images/btn_lock_tap.png);
+	            background-repeat: no-repeat;
+	            background-size: 75px 75px;
+	            position: relative;
+	            top: 25px;
+	            left: 25px;
+	        }
+	
+	        .btnWhistle {
+	            display: table-cell;
+	            width: 87px;
+	            height: 81px;
+	            background-image: url(images/btn_whistle_normal.png);
+	            background-repeat: no-repeat;
+	            background-size: 87px 81px;
+	            position: relative;
+	            top: 47px;
+	            left: 2px;
+	        }
+	
+	        .btnWhistleTap {
+	            display: table-cell;
+	            width: 87px;
+	            height: 81px;
+	            background-image: url(images/btn_whistle_tap.png);
+	            background-repeat: no-repeat;
+	            background-size: 87px 81px;
+	            position: relative;
+	            top: 47px;
+	            left: 2px;
+	        }
+	
+	        .btnReturnBack {
+	            display: table;
+	            text-decoration: none;
+	            line-height: 60px;
+	        }
+	
+	        .imgReturnBack {
+	            display: table-cell;
+	            width: 60px;
+	            height: 60px;
+	            background-image: url(images/btn__car_back_normal.png);
+	            background-repeat: no-repeat;
+	            background-size: 60px 60px;
+	            position: absolute;
+	            bottom: 0px;
+	            right: 30px;
+	        }
+	
+	        .imgReturnBackTap {
+	            display: table-cell;
+	            width: 60px;
+	            height: 60px;
+	            background-image: url(images/btn__car_back_tap.png);
+	            background-repeat: no-repeat;
+	            background-size: 60px 60px;
+	            position: absolute;
+	            bottom: 0px;
+	            right: 30px;
+	        }
+	
+	        .txtReturnBack {
+	            display: table-cell;
+	            width: 40px;
+	            height: 60px;
+	            color: white;
+	            font-family: 'Microsoft YaHei';
+	            font-size: 18px;
+	            font-weight: bold;
+	            position: absolute;
+	            bottom: 0px;
+	            right: 5px;
+	        }
+	
+	        .txtReturnBackTap {
+	            display: table-cell;
+	            width: 40px;
+	            height: 60px;
+	            color: white;
+	            font-family: 'Microsoft YaHei';
+	            font-size: 18px;
+	            font-weight: bold;
+	            position: absolute;
+	            bottom: 0px;
+	            right: 5px;
+	            opacity: 0.5;
+	        }
+	
+	        .bg_dialog {
+	            width: 300px;
+	            height: 200px;
+	            background: url('images/bg_dialog.png') no-repeat;
+	            background-size: 300px 200px;
+	            background-position: center;
+	            padding: 0;
+	            margin: 0 auto;
+	            margin-top: 100px;
+	        }
+	
+	        .btn_dialog_normal {
+	            width: 160px;
+	            height: 48px;
+	            background: url(images/btn_dialog_normal.png) no-repeat;
+	        }
+	
+	        .btn_dialog_tap {
+	            width: 160px;
+	            height: 48px;
+	            background: url('images/btn_dialog_tap.png') no-repeat;
+	            text-decoration: none;
+	            color: #0f626a;
+	        }
+	
+	      
+	
+	        @-webkit-keyframes cloud {
+	            from {
+	                background-position: 0px 175px;
+	            }
+	
+	            to {
+	                background-position: 350px 175px;
+	            }
+	        }
+	
+	        .PopupDiv {
+	            padding: 0;
+	
+	            margin: 0;
+	            position: relative;
+	            top: 70px;
+	            height: 150px;
+	            width: 100%;
+	            z-index: 999;
+	        }
+	
+	        .PopupContent {
+	            width: 240px;
+	            height: 150px;
+	            z-index: 999;
+	            margin: 0 auto;
+	            background: url('images/bg_dialog.png') no-repeat;
+	            background-size: 240px 150px;
+	            background-position: center;
+	            color: #0ff6ff;
+	            font-size: 14px;
+	            text-align: center;
+	        }
+	
+	        .btnYes {
+	            display: inline-block;
+	            width: 80px;
+	            height: 24px;
+	            background: url('images/btn_dialog_normal.png') no-repeat;
+	            background-size: 80px 24px;
+	            background-position: center;
+	            padding: 0;
+	            text-align: center;
+	            color: #0ff6ff;
+	            font-size: 18px;
+	            font-weight: bold;
+	            text-decoration: none;
+	            letter-spacing: 2px;
+	        }
+	
+	        .btnYesTap {
+	            display: inline-block;
+	            width: 80px;
+	            height: 24px;
+	            background: url('images/btn_dialog_tap.png') no-repeat;
+	            background-size: 80px 24px;
+	            background-position: center;
+	            padding: 0;
+	            text-align: center;
+	            color: #0ff6ff;
+	            font-size: 18px;
+	            font-weight: bold;
+	            text-decoration: none;
+	            letter-spacing: 2px;
+	        }
+	
+	        .btnCancel {
+	            display: inline-block;
+	            width: 80px;
+	            height: 24px;
+	            background: url('images/btn_dialog_normal.png') no-repeat;
+	            background-size: 80px 24px;
+	            background-position: center;
+	            padding: 0;
+	            text-align: center;
+	            color: #0ff6ff;
+	            font-size: 18px;
+	            font-weight: bold;
+	            text-decoration: none;
+	            letter-spacing: 2px;
+	        }
+	
+	        .btnCancelTap {
+	            display: inline-block;
+	            width: 80px;
+	            height: 24px;
+	            background: url('images/btn_dialog_normal.png') no-repeat;
+	            background-size: 80px 24px;
+	            background-position: center;
+	            padding: 0;
+	            text-align: center;
+	            color: #0ff6ff;
+	            font-size: 18px;
+	            font-weight: bold;
+	            text-decoration: none;
+	            letter-spacing: 2px;
+	        }
+	
+	        .wrap {
+	            display: inline-block;
+	            height: 30px;
+	            width: 200px;
+	            background: url('images/bg_dialog_line.png') ;
+	            background-size: 200px 30px;
+	            -webkit-animation: cloud 2s linear infinite;
+	            -o-animation: cloud 2s linear infinite;
+	            z-index: 999;
+	        }
+	        .Close {
+	            display: inline-block;
+	            width: 24px;
+	            height: 24px;
+	            background: url('images/btn_dialog_tap.png') no-repeat;
+	            background-size: 24px 24px;
+	            background-position: center;
+	            padding:0;
+	            text-align: center;
+	            color: #0ff6ff;
+	            font-size: 24px;
+	            font-weight: bold;
+	            text-decoration: none;
+	            cursor:pointer;
+	            margin-right:10px;
+	        }
+	    </style>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/jquery.mobile-1.4.3.min.js"></script>
+	    <script type="text/javascript">
+	    	var controllType = "-1";//操作码
+			var orderStatus = '${csOrder.csoStatus}';
+			
+			//存储点击频率信息
+		    var VAR ={
+		        repeatTemp:[]
+		    }
+		    var COM = {
+	    		repeat:function(s,t){//限制执行频率，默认为15秒 允许执行时返回false
+	    			t = t ? t * 1000 : 10000;//毫秒
+	    			var time = microtime();
+	    			if(!VAR.repeatTemp[s]){
+	    				VAR.repeatTemp[s] = time;
+	                    return false;//允许
+	    			}else{
+	    				var ts = t - (time - VAR.repeatTemp[s]);
+	                    ts = parseInt(ts/1000);
+	    			}
+	    			if(ts > 0){
+	    				alert("频率限制：还有 "+ ts +"秒才可以再执行！");
+	                    return true;//禁止执行
+	    			}else{
+	    				VAR.repeatTemp[s] = time;//更新时间
+	                    return false;//允许
+	    			}
+	    		}
+			}
+		    //获取毫秒级时间戳
+		    function microtime(){
+		    	return new Date().getTime();
+			}
+			
+	        $(function () {
+	        	//订单前10分钟才可以取车
+				var msg = '${msg}';
+				if(msg!=null && msg!=''){
+					alert(msg);
+				}
+	        	
+	            $("#BG").width($(document).width());
+	            $("#BG").height($(document).height());
+	            $("#btnUnlock").mousedown(function () {
+	                $("#btnUnlock").removeClass("btnUnlock").addClass("btnUnlockTap");
+	                $("#PopupDiv").removeAttr("style", "display:none;").attr("style", "display:block");
+	                controllType = "1";
+	            });
+	            $("#btnUnlock").mouseup(function () {
+	                $("#btnUnlock").removeClass("btnUnlockTap").addClass("btnUnlock");
+	            });
+	
+	            $("#btnWhistle").mousedown(function () {
+	                $("#btnWhistle").removeClass("btnWhistle").addClass("btnWhistleTap");
+	                $("#PopupDiv").removeAttr("style", "display:none;").attr("style", "display:block");
+	                controllType = "3";
+	            });
+	
+	            $("#btnWhistle").mouseup(function () {
+	                $("#btnWhistle").removeClass("btnWhistleTap").addClass("btnWhistle");
+	            });
+	
+	            $("#btnLock").mousedown(function () {
+	                $("#btnLock").removeClass("btnLock").addClass("btnLockTap");
+	                $("#PopupDiv").removeAttr("style", "display:none;").attr("style", "display:block");
+	                controllType = "2";
+	            });
+	            $("#btnLock").mouseup(function () {
+	                $("#btnLock").removeClass("btnLockTap").addClass("btnLock");
+	            });
+	
+	            $("#btnReturnBack").mousedown(function () {
+	                $("#imgReturnBack").removeClass("imgReturnBack").addClass("imgReturnBackTap");
+	                $("#txtReturnBack").removeClass("txtReturnBack").addClass("txtReturnBackTap");
+	                //$("#PopupDiv").removeAttr("style", "display:none;").attr("style", "display:block");
+	                if(orderStatus=='0'){
+						alert("您尚未取车，暂不能还车结算");
+						setGuanBiDongHua();
+						return;
+					}
+	                if (confirm("请确认关闭车门后还车。")) {
+		                controllType = "4";
+	                	controll("4");
+	                }
+	            });
+	            $("#btnReturnBack").mouseup(function () {
+	                $("#imgReturnBack").removeClass("imgReturnBackTap").addClass("imgReturnBack");
+	                $("#txtReturnBack").removeClass("txtReturnBackTap").addClass("txtReturnBack");
+	            });
+	
+	            $("#btnYes").mousedown(function () {
+	                $("#btnYes").removeClass("btnYes").addClass("btnYesTap");
+	            });
+	            $("#btnYes").mouseup(function () {
+	                $("#btnYes").removeClass("btnYesTap").addClass("btnYes");
+	            });
+	            $("#btnCancel").mousedown(function () {
+	                $("#btnCancel").removeClass("btnCancel").addClass("btnCancelTap");
+	            });
+	            $("#btnCancel").mouseup(function () {
+	                $("#btnCancel").removeClass("btnCancelTap").addClass("btnCancel");
+	                $("#PopupDiv").removeAttr("style", "display:block;").attr("style", "display:none");
+	            });
+	            $("#btnYes").click(function () {
+		        	$("#tr3").attr("style", "display:none;");
+	                $("#tr4").removeAttr("style", "display:none;");
+	                if(controllType!="-1"){
+	                	var btn = COM.repeat('btnYes');
+	                	if(!btn){
+		                	controll(controllType);
+	                	}else{setGuanBiDongHua();return;}
+	                }
+	            });
+	
+	            $("#btnCloseDiv").bind("click", function (e) {
+	                $("#PopupDiv").removeAttr("style", "display:block;").attr("style", "display:none");
+	                $("#tr4").attr("style", "display:none;");
+	                $("#tr3").removeAttr("style", "display:none;");
+	            });
+	           
+	        });
+	        
+	        function controll(type){
+				$.ajax({
+					url: '${basePath}weixin/account_remoteCon.html',
+					type: "GET",
+					data: {
+						type: type,
+						orderId: '${csOrder.csoId}'
+					},
+					async: false,
+					success: function(data) {
+						switch (data) {
+							case "101":
+								location.href = '403.html';
+								break;
+							case "9999":
+								alert("订单已完结，不允许操作");
+								setGuanBiDongHua();
+								//订单详情
+								location.href="${basePath}weixin/account_orderdetail.html";
+								break;
+							case "444":
+								alert("您的订单尚未开始，在取车时间前10分钟开始就能操控小纷咯，享受开关门的乐趣。");
+								setGuanBiDongHua();
+								break;
+							case "111":
+								setTimeout("setGuanBiDongHua();", 3000);//3秒
+				                if(controllType=="1"){
+				                	setTimeout("location.reload();", 30000);
+				                }else if(controllType=="4"){
+				                	alert("您的订单正在结算中，欢迎再次使用！");
+				                }
+						}
+					}
+				});
+			}
+	        
+	        function setGuanBiDongHua(){
+				$("#PopupDiv").removeAttr("style", "display:block;").attr("style", "display:none");
+                $("#tr4").attr("style", "display:none;");
+                $("#tr3").removeAttr("style", "display:none;");
+	        }
+	        
+	        function goorder(){
+	        	location.href="${basePath}weixin/account_order.html";
+	        }
+	        function godetail(){
+	        	location.href="${basePath}weixin/account_orderdetail.html?order=${csOrder.csoId}";
+	        }
+	    </script>
+	</head>
+	
+	<body>
+		<div id="BG">
+	    </div>
+	    <article id="ActiclePage">
+	        <div id="TopField">
+	            <a href="#" onclick="goorder()" id="btnList" class="icon_list_normal3"><span style="margin:0 0 0 25px;">列表</span></a>
+	            <a href="#" onclick="godetail()" id="btnInfo" class="icon_info_normal3"><span style="margin:0 0 0 25px;">详情</span></a>
+	        </div>
+	        <div id="CarField">
+	            <div id="CarImage"></div>
+	            <span id="CarText">${carNum}</span>
+	        </div>
+	        <div id="ControlField">
+	            <div id="ControlImage">
+	                <a href="#Test" id="btnUnlock" data-rel="popup" class="btnUnlock"></a>
+	                <a href="#" id="btnWhistle" class="btnWhistle"></a>
+	                <a href="#" id="btnLock" class="btnLock"></a>
+	            </div>
+	            <a href="#" id="btnReturnBack" class="btnReturnBack"><span id="imgReturnBack" class="imgReturnBack"></span><span id="txtReturnBack" class="txtReturnBack">还车</span></a>
+	        </div>
+	        <div id="PopupDiv" class="PopupDiv" style="display:none;">
+	            <div class="PopupContent">
+	                <div align="center">
+	                    <table width="100%" height="100%" border="0" cellspacing="5" cellpadding="0">
+	                        <tr id="tr1">
+	                            <td height="70%" colspan="2">
+	                                <h2 style="text-align: center;">车辆操作中，请稍等...</h2>
+									<br />
+	                            </td>
+	                        </tr>
+	                        <tr id="tr2" style="display: none;">
+	                            <td height="70%"  colspan="2">
+	                                <h2>订单尚未开始</h2>
+	                                <br />
+	                                <h3>请确认订单时间 稍后再试</h3>
+	                            </td>
+	                        </tr>
+	                        <tr id="tr3">
+	                            <td width="50%" height="30%" align="right">
+	                                <a href="#" id="btnYes" class="btnYes">确定</a>
+	                            </td>
+	                            <td width="50%" align="left">
+	                                <a href="#firstview" id="btnCancel" class="btnCancel">取消</a>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </article>
+	</body>
+</html>

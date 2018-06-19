@@ -1,0 +1,1404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 车辆之SQL映射 -->
+	<resultMap id="CsCar" class="com.ccclubs.model.CsCar">
+		<result property="cscId" column="csc_id"/>
+		<result property="cscHost" column="csc_host"/>
+		<result property="cscNumber" column="csc_number"/>
+		<result property="cscCarNo" column="csc_car_no"/>
+		<result property="cscModel" column="csc_model"/>
+		<result property="cscOutlets" column="csc_outlets"/>
+		<result property="cscProvid" column="csc_provid"/>
+		<result property="cscRebate" column="csc_rebate"/>
+		<result property="cscIsAd" column="csc_is_ad"/>
+		<result property="cscLongitude" column="csc_longitude"/>
+		<result property="cscLatitude" column="csc_latitude"/>
+		<result property="cscMobile" column="csc_mobile"/>
+		<result property="cscPassword" column="csc_password"/>
+		<result property="cscOilCard" column="csc_oil_card"/>
+		<result property="cscVin" column="csc_vin"/>
+		<result property="cscEngineNo" column="csc_engine_no"/>
+		<result property="cscBuyDate" column="csc_buy_date"/>
+		<result property="cscBargainNo" column="csc_bargain_no"/>
+		<result property="cscTaxPrice" column="csc_tax_price"/>
+		<result property="cscBuyPrice" column="csc_buy_price"/>
+		<result property="cscCertific" column="csc_certific"/>
+		<result property="cscFactoryNo" column="csc_factory_no"/>
+		<result property="cscColor" column="csc_color"/>
+		<result property="cscPreview" column="csc_preview"/>
+		<result property="cscImages" column="csc_images"/>
+		<result property="cscMaintKm" column="csc_maint_km"/>
+		<result property="cscCheckIn" column="csc_check_in"/>
+		<result property="cscAnnualPre" column="csc_annual_pre"/>
+		<result property="cscAnnual" column="csc_annual"/>
+		<result property="cscAnnualInfo" column="csc_annual_info"/>
+		<result property="cscAnnualNext" column="csc_annual_next"/>
+		<result property="cscTiDate" column="csc_ti_date"/>
+		<result property="cscTiUnit" column="csc_ti_unit"/>
+		<result property="cscTiNo" column="csc_ti_no"/>
+		<result property="cscBiDate" column="csc_bi_date"/>
+		<result property="cscBiUnit" column="csc_bi_unit"/>
+		<result property="cscBiNo" column="csc_bi_no"/>
+		<result property="cscBiType" column="csc_bi_type"/>
+		<result property="cscBiLimit" column="csc_bi_limit"/>
+		<result property="cscBiCompany" column="csc_bi_company"/>
+		<result property="cscEditor" column="csc_editor"/>
+		<result property="cscUpdateTime" column="csc_update_time"/>
+		<result property="cscAddTime" column="csc_add_time"/>
+		<result property="cscRemark" column="csc_remark"/>
+		<result property="cscMemo" column="csc_memo"/>
+		<result property="cscOnPsd" column="csc_on_psd"/>
+		<result property="cscSetup" column="csc_setup"/>
+		<result property="cscDeviceVesion" column="csc_device_vesion"/>
+		<result property="cscMqttFlag" column="csc_mqtt_flag"/>
+		<result property="cscMask" column="csc_mask"/>
+		<result property="cscStatus" column="csc_status"/>
+	</resultMap>
+		
+	<!-- 获取所有车辆 -->
+	<select id="getCsCarList" resultMap="CsCar">
+		select cs_car$suffix$.* from cs_car$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.csc_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.csc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询-->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.csc_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car$suffix$.csc_status!=-1
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCar_part.cs_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取车辆分页 -->
+	<select id="getCsCarPage" parameterClass="java.util.HashMap" resultMap="CsCar">
+		select cs_car$suffix$.* from cs_car$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车型]查询 -->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.csc_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询 -->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.csc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询 -->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.csc_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car$suffix$.csc_status!=-1
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCar_part.cs_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csc_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取车辆总数 -->
+	<select id="getCsCarEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_car$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[车型]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.csc_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.csc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询,同张表只能外链接一次 -->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.csc_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		and cs_car$suffix$.csc_status!=-1
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsCar_part.cs_car_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取车辆 -->
+	<select id="getCsCarById" parameterClass="java.util.HashMap" resultMap="CsCar">
+		select cs_car$suffix$.* from cs_car$suffix$
+		where csc_id=#id#
+	</select>
+	
+		
+	<!-- 保存车辆 -->
+	<insert id="saveCsCar"  parameterClass="com.ccclubs.model.CsCar">
+		insert into cs_car$suffix$
+		(
+			cs_car$suffix$.csc_host
+			,cs_car$suffix$.csc_number
+			,cs_car$suffix$.csc_car_no
+			,cs_car$suffix$.csc_model
+			,cs_car$suffix$.csc_outlets
+			,cs_car$suffix$.csc_provid
+			,cs_car$suffix$.csc_rebate
+			,cs_car$suffix$.csc_is_ad
+			,cs_car$suffix$.csc_longitude
+			,cs_car$suffix$.csc_latitude
+			,cs_car$suffix$.csc_mobile
+			,cs_car$suffix$.csc_password
+			,cs_car$suffix$.csc_oil_card
+			,cs_car$suffix$.csc_vin
+			,cs_car$suffix$.csc_engine_no
+			,cs_car$suffix$.csc_buy_date
+			,cs_car$suffix$.csc_bargain_no
+			,cs_car$suffix$.csc_tax_price
+			,cs_car$suffix$.csc_buy_price
+			,cs_car$suffix$.csc_certific
+			,cs_car$suffix$.csc_factory_no
+			,cs_car$suffix$.csc_color
+			,cs_car$suffix$.csc_preview
+			,cs_car$suffix$.csc_images
+			,cs_car$suffix$.csc_maint_km
+			,cs_car$suffix$.csc_check_in
+			,cs_car$suffix$.csc_annual_pre
+			,cs_car$suffix$.csc_annual
+			,cs_car$suffix$.csc_annual_info
+			,cs_car$suffix$.csc_annual_next
+			,cs_car$suffix$.csc_ti_date
+			,cs_car$suffix$.csc_ti_unit
+			,cs_car$suffix$.csc_ti_no
+			,cs_car$suffix$.csc_bi_date
+			,cs_car$suffix$.csc_bi_unit
+			,cs_car$suffix$.csc_bi_no
+			,cs_car$suffix$.csc_bi_type
+			,cs_car$suffix$.csc_bi_limit
+			,cs_car$suffix$.csc_bi_company
+			,cs_car$suffix$.csc_editor
+			,cs_car$suffix$.csc_update_time
+			,cs_car$suffix$.csc_add_time
+			,cs_car$suffix$.csc_remark
+			,cs_car$suffix$.csc_memo
+			,cs_car$suffix$.csc_on_psd
+			,cs_car$suffix$.csc_setup
+			,cs_car$suffix$.csc_device_vesion
+			,cs_car$suffix$.csc_mqtt_flag
+			,cs_car$suffix$.csc_mask
+			,cs_car$suffix$.csc_status
+		)
+		values(
+			<isNotNull property="cscHost" prepend="">
+				#cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cscNumber" prepend=",">
+				#cscNumber#
+			</isNotNull>
+			<isNull property="cscNumber" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscCarNo" prepend=",">
+				#cscCarNo#
+			</isNotNull>
+			<isNull property="cscCarNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscModel" prepend=",">
+				#cscModel#
+			</isNotNull>
+			<isNull property="cscModel" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscOutlets" prepend=",">
+				#cscOutlets#
+			</isNotNull>
+			<isNull property="cscOutlets" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscProvid" prepend=",">
+				#cscProvid#
+			</isNotNull>
+			<isNull property="cscProvid" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscRebate" prepend=",">
+				#cscRebate#
+			</isNotNull>
+			<isNull property="cscRebate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscIsAd" prepend=",">
+				#cscIsAd#
+			</isNotNull>
+			<isNull property="cscIsAd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscLongitude" prepend=",">
+				#cscLongitude#
+			</isNotNull>
+			<isNull property="cscLongitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscLatitude" prepend=",">
+				#cscLatitude#
+			</isNotNull>
+			<isNull property="cscLatitude" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscMobile" prepend=",">
+				#cscMobile#
+			</isNotNull>
+			<isNull property="cscMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscPassword" prepend=",">
+				#cscPassword#
+			</isNotNull>
+			<isNull property="cscPassword" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscOilCard" prepend=",">
+				#cscOilCard#
+			</isNotNull>
+			<isNull property="cscOilCard" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscVin" prepend=",">
+				#cscVin#
+			</isNotNull>
+			<isNull property="cscVin" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscEngineNo" prepend=",">
+				#cscEngineNo#
+			</isNotNull>
+			<isNull property="cscEngineNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBuyDate" prepend=",">
+				#cscBuyDate#
+			</isNotNull>
+			<isNull property="cscBuyDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBargainNo" prepend=",">
+				#cscBargainNo#
+			</isNotNull>
+			<isNull property="cscBargainNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscTaxPrice" prepend=",">
+				#cscTaxPrice#
+			</isNotNull>
+			<isNull property="cscTaxPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBuyPrice" prepend=",">
+				#cscBuyPrice#
+			</isNotNull>
+			<isNull property="cscBuyPrice" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscCertific" prepend=",">
+				#cscCertific#
+			</isNotNull>
+			<isNull property="cscCertific" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscFactoryNo" prepend=",">
+				#cscFactoryNo#
+			</isNotNull>
+			<isNull property="cscFactoryNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscColor" prepend=",">
+				#cscColor#
+			</isNotNull>
+			<isNull property="cscColor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscPreview" prepend=",">
+				#cscPreview#
+			</isNotNull>
+			<isNull property="cscPreview" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscImages" prepend=",">
+				#cscImages#
+			</isNotNull>
+			<isNull property="cscImages" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscMaintKm" prepend=",">
+				#cscMaintKm#
+			</isNotNull>
+			<isNull property="cscMaintKm" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscCheckIn" prepend=",">
+				#cscCheckIn#
+			</isNotNull>
+			<isNull property="cscCheckIn" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAnnualPre" prepend=",">
+				#cscAnnualPre#
+			</isNotNull>
+			<isNull property="cscAnnualPre" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAnnual" prepend=",">
+				#cscAnnual#
+			</isNotNull>
+			<isNull property="cscAnnual" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAnnualInfo" prepend=",">
+				#cscAnnualInfo#
+			</isNotNull>
+			<isNull property="cscAnnualInfo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAnnualNext" prepend=",">
+				#cscAnnualNext#
+			</isNotNull>
+			<isNull property="cscAnnualNext" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscTiDate" prepend=",">
+				#cscTiDate#
+			</isNotNull>
+			<isNull property="cscTiDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscTiUnit" prepend=",">
+				#cscTiUnit#
+			</isNotNull>
+			<isNull property="cscTiUnit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscTiNo" prepend=",">
+				#cscTiNo#
+			</isNotNull>
+			<isNull property="cscTiNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBiDate" prepend=",">
+				#cscBiDate#
+			</isNotNull>
+			<isNull property="cscBiDate" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBiUnit" prepend=",">
+				#cscBiUnit#
+			</isNotNull>
+			<isNull property="cscBiUnit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBiNo" prepend=",">
+				#cscBiNo#
+			</isNotNull>
+			<isNull property="cscBiNo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBiType" prepend=",">
+				#cscBiType#
+			</isNotNull>
+			<isNull property="cscBiType" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBiLimit" prepend=",">
+				#cscBiLimit#
+			</isNotNull>
+			<isNull property="cscBiLimit" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscBiCompany" prepend=",">
+				#cscBiCompany#
+			</isNotNull>
+			<isNull property="cscBiCompany" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscEditor" prepend=",">
+				#cscEditor#
+			</isNotNull>
+			<isNull property="cscEditor" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscUpdateTime" prepend=",">
+				#cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscAddTime" prepend=",">
+				#cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscRemark" prepend=",">
+				#cscRemark#
+			</isNotNull>
+			<isNull property="cscRemark" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscMemo" prepend=",">
+				#cscMemo#
+			</isNotNull>
+			<isNull property="cscMemo" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscOnPsd" prepend=",">
+				#cscOnPsd#
+			</isNotNull>
+			<isNull property="cscOnPsd" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscSetup" prepend=",">
+				#cscSetup#
+			</isNotNull>
+			<isNull property="cscSetup" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscDeviceVesion" prepend=",">
+				#cscDeviceVesion#
+			</isNotNull>
+			<isNull property="cscDeviceVesion" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscMqttFlag" prepend=",">
+				#cscMqttFlag#
+			</isNotNull>
+			<isNull property="cscMqttFlag" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscMask" prepend=",">
+				#cscMask#
+			</isNotNull>
+			<isNull property="cscMask" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cscStatus" prepend=",">
+				#cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新车辆 -->
+	<update id="updateCsCar"  parameterClass="com.ccclubs.model.CsCar">
+		update cs_car$suffix$ set
+			<isNotNull property="cscHost" prepend="">
+				cs_car$suffix$.csc_host = #cscHost#
+			</isNotNull>
+			<isNull property="cscHost" prepend="">
+				cs_car$suffix$.csc_host = null
+			</isNull>				
+			<isNotNull property="cscNumber" prepend=",">
+				cs_car$suffix$.csc_number = #cscNumber#
+			</isNotNull>
+			<isNull property="cscNumber" prepend=",">
+				cs_car$suffix$.csc_number = null
+			</isNull>				
+			<isNotNull property="cscCarNo" prepend=",">
+				cs_car$suffix$.csc_car_no = #cscCarNo#
+			</isNotNull>
+			<isNull property="cscCarNo" prepend=",">
+				cs_car$suffix$.csc_car_no = null
+			</isNull>				
+			<isNotNull property="cscModel" prepend=",">
+				cs_car$suffix$.csc_model = #cscModel#
+			</isNotNull>
+			<isNull property="cscModel" prepend=",">
+				cs_car$suffix$.csc_model = null
+			</isNull>				
+			<isNotNull property="cscOutlets" prepend=",">
+				cs_car$suffix$.csc_outlets = #cscOutlets#
+			</isNotNull>
+			<isNull property="cscOutlets" prepend=",">
+				cs_car$suffix$.csc_outlets = null
+			</isNull>				
+			<isNotNull property="cscProvid" prepend=",">
+				cs_car$suffix$.csc_provid = #cscProvid#
+			</isNotNull>
+			<isNull property="cscProvid" prepend=",">
+				cs_car$suffix$.csc_provid = null
+			</isNull>				
+			<isNotNull property="cscRebate" prepend=",">
+				cs_car$suffix$.csc_rebate = #cscRebate#
+			</isNotNull>
+			<isNull property="cscRebate" prepend=",">
+				cs_car$suffix$.csc_rebate = null
+			</isNull>				
+			<isNotNull property="cscIsAd" prepend=",">
+				cs_car$suffix$.csc_is_ad = #cscIsAd#
+			</isNotNull>
+			<isNull property="cscIsAd" prepend=",">
+				cs_car$suffix$.csc_is_ad = null
+			</isNull>				
+			<isNotNull property="cscLongitude" prepend=",">
+				cs_car$suffix$.csc_longitude = #cscLongitude#
+			</isNotNull>
+			<isNull property="cscLongitude" prepend=",">
+				cs_car$suffix$.csc_longitude = null
+			</isNull>				
+			<isNotNull property="cscLatitude" prepend=",">
+				cs_car$suffix$.csc_latitude = #cscLatitude#
+			</isNotNull>
+			<isNull property="cscLatitude" prepend=",">
+				cs_car$suffix$.csc_latitude = null
+			</isNull>				
+			<isNotNull property="cscMobile" prepend=",">
+				cs_car$suffix$.csc_mobile = #cscMobile#
+			</isNotNull>
+			<isNull property="cscMobile" prepend=",">
+				cs_car$suffix$.csc_mobile = null
+			</isNull>				
+			<isNotNull property="cscPassword" prepend=",">
+				cs_car$suffix$.csc_password = #cscPassword#
+			</isNotNull>
+			<isNull property="cscPassword" prepend=",">
+				cs_car$suffix$.csc_password = null
+			</isNull>				
+			<isNotNull property="cscOilCard" prepend=",">
+				cs_car$suffix$.csc_oil_card = #cscOilCard#
+			</isNotNull>
+			<isNull property="cscOilCard" prepend=",">
+				cs_car$suffix$.csc_oil_card = null
+			</isNull>				
+			<isNotNull property="cscVin" prepend=",">
+				cs_car$suffix$.csc_vin = #cscVin#
+			</isNotNull>
+			<isNull property="cscVin" prepend=",">
+				cs_car$suffix$.csc_vin = null
+			</isNull>				
+			<isNotNull property="cscEngineNo" prepend=",">
+				cs_car$suffix$.csc_engine_no = #cscEngineNo#
+			</isNotNull>
+			<isNull property="cscEngineNo" prepend=",">
+				cs_car$suffix$.csc_engine_no = null
+			</isNull>				
+			<isNotNull property="cscBuyDate" prepend=",">
+				cs_car$suffix$.csc_buy_date = #cscBuyDate#
+			</isNotNull>
+			<isNull property="cscBuyDate" prepend=",">
+				cs_car$suffix$.csc_buy_date = null
+			</isNull>				
+			<isNotNull property="cscBargainNo" prepend=",">
+				cs_car$suffix$.csc_bargain_no = #cscBargainNo#
+			</isNotNull>
+			<isNull property="cscBargainNo" prepend=",">
+				cs_car$suffix$.csc_bargain_no = null
+			</isNull>				
+			<isNotNull property="cscTaxPrice" prepend=",">
+				cs_car$suffix$.csc_tax_price = #cscTaxPrice#
+			</isNotNull>
+			<isNull property="cscTaxPrice" prepend=",">
+				cs_car$suffix$.csc_tax_price = null
+			</isNull>				
+			<isNotNull property="cscBuyPrice" prepend=",">
+				cs_car$suffix$.csc_buy_price = #cscBuyPrice#
+			</isNotNull>
+			<isNull property="cscBuyPrice" prepend=",">
+				cs_car$suffix$.csc_buy_price = null
+			</isNull>				
+			<isNotNull property="cscCertific" prepend=",">
+				cs_car$suffix$.csc_certific = #cscCertific#
+			</isNotNull>
+			<isNull property="cscCertific" prepend=",">
+				cs_car$suffix$.csc_certific = null
+			</isNull>				
+			<isNotNull property="cscFactoryNo" prepend=",">
+				cs_car$suffix$.csc_factory_no = #cscFactoryNo#
+			</isNotNull>
+			<isNull property="cscFactoryNo" prepend=",">
+				cs_car$suffix$.csc_factory_no = null
+			</isNull>				
+			<isNotNull property="cscColor" prepend=",">
+				cs_car$suffix$.csc_color = #cscColor#
+			</isNotNull>
+			<isNull property="cscColor" prepend=",">
+				cs_car$suffix$.csc_color = null
+			</isNull>				
+			<isNotNull property="cscPreview" prepend=",">
+				cs_car$suffix$.csc_preview = #cscPreview#
+			</isNotNull>
+			<isNull property="cscPreview" prepend=",">
+				cs_car$suffix$.csc_preview = null
+			</isNull>				
+			<isNotNull property="cscImages" prepend=",">
+				cs_car$suffix$.csc_images = #cscImages#
+			</isNotNull>
+			<isNull property="cscImages" prepend=",">
+				cs_car$suffix$.csc_images = null
+			</isNull>				
+			<isNotNull property="cscMaintKm" prepend=",">
+				cs_car$suffix$.csc_maint_km = #cscMaintKm#
+			</isNotNull>
+			<isNull property="cscMaintKm" prepend=",">
+				cs_car$suffix$.csc_maint_km = null
+			</isNull>				
+			<isNotNull property="cscCheckIn" prepend=",">
+				cs_car$suffix$.csc_check_in = #cscCheckIn#
+			</isNotNull>
+			<isNull property="cscCheckIn" prepend=",">
+				cs_car$suffix$.csc_check_in = null
+			</isNull>				
+			<isNotNull property="cscAnnualPre" prepend=",">
+				cs_car$suffix$.csc_annual_pre = #cscAnnualPre#
+			</isNotNull>
+			<isNull property="cscAnnualPre" prepend=",">
+				cs_car$suffix$.csc_annual_pre = null
+			</isNull>				
+			<isNotNull property="cscAnnual" prepend=",">
+				cs_car$suffix$.csc_annual = #cscAnnual#
+			</isNotNull>
+			<isNull property="cscAnnual" prepend=",">
+				cs_car$suffix$.csc_annual = null
+			</isNull>				
+			<isNotNull property="cscAnnualInfo" prepend=",">
+				cs_car$suffix$.csc_annual_info = #cscAnnualInfo#
+			</isNotNull>
+			<isNull property="cscAnnualInfo" prepend=",">
+				cs_car$suffix$.csc_annual_info = null
+			</isNull>				
+			<isNotNull property="cscAnnualNext" prepend=",">
+				cs_car$suffix$.csc_annual_next = #cscAnnualNext#
+			</isNotNull>
+			<isNull property="cscAnnualNext" prepend=",">
+				cs_car$suffix$.csc_annual_next = null
+			</isNull>				
+			<isNotNull property="cscTiDate" prepend=",">
+				cs_car$suffix$.csc_ti_date = #cscTiDate#
+			</isNotNull>
+			<isNull property="cscTiDate" prepend=",">
+				cs_car$suffix$.csc_ti_date = null
+			</isNull>				
+			<isNotNull property="cscTiUnit" prepend=",">
+				cs_car$suffix$.csc_ti_unit = #cscTiUnit#
+			</isNotNull>
+			<isNull property="cscTiUnit" prepend=",">
+				cs_car$suffix$.csc_ti_unit = null
+			</isNull>				
+			<isNotNull property="cscTiNo" prepend=",">
+				cs_car$suffix$.csc_ti_no = #cscTiNo#
+			</isNotNull>
+			<isNull property="cscTiNo" prepend=",">
+				cs_car$suffix$.csc_ti_no = null
+			</isNull>				
+			<isNotNull property="cscBiDate" prepend=",">
+				cs_car$suffix$.csc_bi_date = #cscBiDate#
+			</isNotNull>
+			<isNull property="cscBiDate" prepend=",">
+				cs_car$suffix$.csc_bi_date = null
+			</isNull>				
+			<isNotNull property="cscBiUnit" prepend=",">
+				cs_car$suffix$.csc_bi_unit = #cscBiUnit#
+			</isNotNull>
+			<isNull property="cscBiUnit" prepend=",">
+				cs_car$suffix$.csc_bi_unit = null
+			</isNull>				
+			<isNotNull property="cscBiNo" prepend=",">
+				cs_car$suffix$.csc_bi_no = #cscBiNo#
+			</isNotNull>
+			<isNull property="cscBiNo" prepend=",">
+				cs_car$suffix$.csc_bi_no = null
+			</isNull>				
+			<isNotNull property="cscBiType" prepend=",">
+				cs_car$suffix$.csc_bi_type = #cscBiType#
+			</isNotNull>
+			<isNull property="cscBiType" prepend=",">
+				cs_car$suffix$.csc_bi_type = null
+			</isNull>				
+			<isNotNull property="cscBiLimit" prepend=",">
+				cs_car$suffix$.csc_bi_limit = #cscBiLimit#
+			</isNotNull>
+			<isNull property="cscBiLimit" prepend=",">
+				cs_car$suffix$.csc_bi_limit = null
+			</isNull>				
+			<isNotNull property="cscBiCompany" prepend=",">
+				cs_car$suffix$.csc_bi_company = #cscBiCompany#
+			</isNotNull>
+			<isNull property="cscBiCompany" prepend=",">
+				cs_car$suffix$.csc_bi_company = null
+			</isNull>				
+			<isNotNull property="cscEditor" prepend=",">
+				cs_car$suffix$.csc_editor = #cscEditor#
+			</isNotNull>
+			<isNull property="cscEditor" prepend=",">
+				cs_car$suffix$.csc_editor = null
+			</isNull>				
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_car$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>
+			<isNull property="cscUpdateTime" prepend=",">
+				cs_car$suffix$.csc_update_time = null
+			</isNull>				
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_car$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>
+			<isNull property="cscAddTime" prepend=",">
+				cs_car$suffix$.csc_add_time = null
+			</isNull>				
+			<isNotNull property="cscRemark" prepend=",">
+				cs_car$suffix$.csc_remark = #cscRemark#
+			</isNotNull>
+			<isNull property="cscRemark" prepend=",">
+				cs_car$suffix$.csc_remark = null
+			</isNull>				
+			<isNotNull property="cscMemo" prepend=",">
+				cs_car$suffix$.csc_memo = #cscMemo#
+			</isNotNull>
+			<isNull property="cscMemo" prepend=",">
+				cs_car$suffix$.csc_memo = null
+			</isNull>				
+			<isNotNull property="cscOnPsd" prepend=",">
+				cs_car$suffix$.csc_on_psd = #cscOnPsd#
+			</isNotNull>
+			<isNull property="cscOnPsd" prepend=",">
+				cs_car$suffix$.csc_on_psd = null
+			</isNull>				
+			<isNotNull property="cscSetup" prepend=",">
+				cs_car$suffix$.csc_setup = #cscSetup#
+			</isNotNull>
+			<isNull property="cscSetup" prepend=",">
+				cs_car$suffix$.csc_setup = null
+			</isNull>				
+			<isNotNull property="cscDeviceVesion" prepend=",">
+				cs_car$suffix$.csc_device_vesion = #cscDeviceVesion#
+			</isNotNull>
+			<isNull property="cscDeviceVesion" prepend=",">
+				cs_car$suffix$.csc_device_vesion = null
+			</isNull>				
+			<isNotNull property="cscMqttFlag" prepend=",">
+				cs_car$suffix$.csc_mqtt_flag = #cscMqttFlag#
+			</isNotNull>
+			<isNull property="cscMqttFlag" prepend=",">
+				cs_car$suffix$.csc_mqtt_flag = null
+			</isNull>				
+			<isNotNull property="cscMask" prepend=",">
+				cs_car$suffix$.csc_mask = #cscMask#
+			</isNotNull>
+			<isNull property="cscMask" prepend=",">
+				cs_car$suffix$.csc_mask = null
+			</isNull>				
+			<isNotNull property="cscStatus" prepend=",">
+				cs_car$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNull property="cscStatus" prepend=",">
+				cs_car$suffix$.csc_status = null
+			</isNull>				
+		where
+			csc_id=#cscId#
+	</update>
+	
+	<!-- 更新车辆非空字段 -->
+	<update id="updateCsCar$NotNull"  parameterClass="com.ccclubs.model.CsCar">
+		update cs_car$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cscHost" prepend=",">
+				cs_car$suffix$.csc_host = #cscHost#
+			</isNotNull>		
+			<isNotNull property="cscNumber" prepend=",">
+				cs_car$suffix$.csc_number = #cscNumber#
+			</isNotNull>		
+			<isNotNull property="cscCarNo" prepend=",">
+				cs_car$suffix$.csc_car_no = #cscCarNo#
+			</isNotNull>		
+			<isNotNull property="cscModel" prepend=",">
+				cs_car$suffix$.csc_model = #cscModel#
+			</isNotNull>		
+			<isNotNull property="cscOutlets" prepend=",">
+				cs_car$suffix$.csc_outlets = #cscOutlets#
+			</isNotNull>		
+			<isNotNull property="cscProvid" prepend=",">
+				cs_car$suffix$.csc_provid = #cscProvid#
+			</isNotNull>		
+			<isNotNull property="cscRebate" prepend=",">
+				cs_car$suffix$.csc_rebate = #cscRebate#
+			</isNotNull>		
+			<isNotNull property="cscIsAd" prepend=",">
+				cs_car$suffix$.csc_is_ad = #cscIsAd#
+			</isNotNull>		
+			<isNotNull property="cscLongitude" prepend=",">
+				cs_car$suffix$.csc_longitude = #cscLongitude#
+			</isNotNull>		
+			<isNotNull property="cscLatitude" prepend=",">
+				cs_car$suffix$.csc_latitude = #cscLatitude#
+			</isNotNull>		
+			<isNotNull property="cscMobile" prepend=",">
+				cs_car$suffix$.csc_mobile = #cscMobile#
+			</isNotNull>		
+			<isNotNull property="cscPassword" prepend=",">
+				cs_car$suffix$.csc_password = #cscPassword#
+			</isNotNull>		
+			<isNotNull property="cscOilCard" prepend=",">
+				cs_car$suffix$.csc_oil_card = #cscOilCard#
+			</isNotNull>		
+			<isNotNull property="cscVin" prepend=",">
+				cs_car$suffix$.csc_vin = #cscVin#
+			</isNotNull>		
+			<isNotNull property="cscEngineNo" prepend=",">
+				cs_car$suffix$.csc_engine_no = #cscEngineNo#
+			</isNotNull>		
+			<isNotNull property="cscBuyDate" prepend=",">
+				cs_car$suffix$.csc_buy_date = #cscBuyDate#
+			</isNotNull>		
+			<isNotNull property="cscBargainNo" prepend=",">
+				cs_car$suffix$.csc_bargain_no = #cscBargainNo#
+			</isNotNull>		
+			<isNotNull property="cscTaxPrice" prepend=",">
+				cs_car$suffix$.csc_tax_price = #cscTaxPrice#
+			</isNotNull>		
+			<isNotNull property="cscBuyPrice" prepend=",">
+				cs_car$suffix$.csc_buy_price = #cscBuyPrice#
+			</isNotNull>		
+			<isNotNull property="cscCertific" prepend=",">
+				cs_car$suffix$.csc_certific = #cscCertific#
+			</isNotNull>		
+			<isNotNull property="cscFactoryNo" prepend=",">
+				cs_car$suffix$.csc_factory_no = #cscFactoryNo#
+			</isNotNull>		
+			<isNotNull property="cscColor" prepend=",">
+				cs_car$suffix$.csc_color = #cscColor#
+			</isNotNull>		
+			<isNotNull property="cscPreview" prepend=",">
+				cs_car$suffix$.csc_preview = #cscPreview#
+			</isNotNull>		
+			<isNotNull property="cscImages" prepend=",">
+				cs_car$suffix$.csc_images = #cscImages#
+			</isNotNull>		
+			<isNotNull property="cscMaintKm" prepend=",">
+				cs_car$suffix$.csc_maint_km = #cscMaintKm#
+			</isNotNull>		
+			<isNotNull property="cscCheckIn" prepend=",">
+				cs_car$suffix$.csc_check_in = #cscCheckIn#
+			</isNotNull>		
+			<isNotNull property="cscAnnualPre" prepend=",">
+				cs_car$suffix$.csc_annual_pre = #cscAnnualPre#
+			</isNotNull>		
+			<isNotNull property="cscAnnual" prepend=",">
+				cs_car$suffix$.csc_annual = #cscAnnual#
+			</isNotNull>		
+			<isNotNull property="cscAnnualInfo" prepend=",">
+				cs_car$suffix$.csc_annual_info = #cscAnnualInfo#
+			</isNotNull>		
+			<isNotNull property="cscAnnualNext" prepend=",">
+				cs_car$suffix$.csc_annual_next = #cscAnnualNext#
+			</isNotNull>		
+			<isNotNull property="cscTiDate" prepend=",">
+				cs_car$suffix$.csc_ti_date = #cscTiDate#
+			</isNotNull>		
+			<isNotNull property="cscTiUnit" prepend=",">
+				cs_car$suffix$.csc_ti_unit = #cscTiUnit#
+			</isNotNull>		
+			<isNotNull property="cscTiNo" prepend=",">
+				cs_car$suffix$.csc_ti_no = #cscTiNo#
+			</isNotNull>		
+			<isNotNull property="cscBiDate" prepend=",">
+				cs_car$suffix$.csc_bi_date = #cscBiDate#
+			</isNotNull>		
+			<isNotNull property="cscBiUnit" prepend=",">
+				cs_car$suffix$.csc_bi_unit = #cscBiUnit#
+			</isNotNull>		
+			<isNotNull property="cscBiNo" prepend=",">
+				cs_car$suffix$.csc_bi_no = #cscBiNo#
+			</isNotNull>		
+			<isNotNull property="cscBiType" prepend=",">
+				cs_car$suffix$.csc_bi_type = #cscBiType#
+			</isNotNull>		
+			<isNotNull property="cscBiLimit" prepend=",">
+				cs_car$suffix$.csc_bi_limit = #cscBiLimit#
+			</isNotNull>		
+			<isNotNull property="cscBiCompany" prepend=",">
+				cs_car$suffix$.csc_bi_company = #cscBiCompany#
+			</isNotNull>		
+			<isNotNull property="cscEditor" prepend=",">
+				cs_car$suffix$.csc_editor = #cscEditor#
+			</isNotNull>		
+			<isNotNull property="cscUpdateTime" prepend=",">
+				cs_car$suffix$.csc_update_time = #cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cscAddTime" prepend=",">
+				cs_car$suffix$.csc_add_time = #cscAddTime#
+			</isNotNull>		
+			<isNotNull property="cscRemark" prepend=",">
+				cs_car$suffix$.csc_remark = #cscRemark#
+			</isNotNull>		
+			<isNotNull property="cscMemo" prepend=",">
+				cs_car$suffix$.csc_memo = #cscMemo#
+			</isNotNull>		
+			<isNotNull property="cscOnPsd" prepend=",">
+				cs_car$suffix$.csc_on_psd = #cscOnPsd#
+			</isNotNull>		
+			<isNotNull property="cscSetup" prepend=",">
+				cs_car$suffix$.csc_setup = #cscSetup#
+			</isNotNull>		
+			<isNotNull property="cscDeviceVesion" prepend=",">
+				cs_car$suffix$.csc_device_vesion = #cscDeviceVesion#
+			</isNotNull>		
+			<isNotNull property="cscMqttFlag" prepend=",">
+				cs_car$suffix$.csc_mqtt_flag = #cscMqttFlag#
+			</isNotNull>		
+			<isNotNull property="cscMask" prepend=",">
+				cs_car$suffix$.csc_mask = #cscMask#
+			</isNotNull>		
+			<isNotNull property="cscStatus" prepend=",">
+				cs_car$suffix$.csc_status = #cscStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			csc_id=#cscId#
+	</update>
+	
+
+	<!-- 根据ID删除一个车辆 -->
+	<delete id="deleteCsCarById" parameterClass="java.util.HashMap">
+		delete from cs_car$suffix$ where csc_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个车辆 -->
+	<update id="removeCsCarById" parameterClass="java.util.HashMap">
+		update cs_car$suffix$ set  cs_car$suffix$.csc_status=-1  where csc_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新车辆 -->
+	<update id="updateCsCarBy"  parameterClass="java.util.HashMap">
+		update cs_car$suffix$ set		
+			csc_id=csc_id
+			<isNotNull property="V_cscId" prepend=",">
+				cs_car$suffix$.csc_id = #V_cscId#
+			</isNotNull>		
+			<isNotNull property="V_cscHost" prepend=",">
+				cs_car$suffix$.csc_host = #V_cscHost#
+			</isNotNull>		
+			<isNotNull property="V_cscNumber" prepend=",">
+				cs_car$suffix$.csc_number = #V_cscNumber#
+			</isNotNull>		
+			<isNotNull property="V_cscCarNo" prepend=",">
+				cs_car$suffix$.csc_car_no = #V_cscCarNo#
+			</isNotNull>		
+			<isNotNull property="V_cscModel" prepend=",">
+				cs_car$suffix$.csc_model = #V_cscModel#
+			</isNotNull>		
+			<isNotNull property="V_cscOutlets" prepend=",">
+				cs_car$suffix$.csc_outlets = #V_cscOutlets#
+			</isNotNull>		
+			<isNotNull property="V_cscProvid" prepend=",">
+				cs_car$suffix$.csc_provid = #V_cscProvid#
+			</isNotNull>		
+			<isNotNull property="V_cscRebate" prepend=",">
+				cs_car$suffix$.csc_rebate = #V_cscRebate#
+			</isNotNull>		
+			<isNotNull property="V_cscIsAd" prepend=",">
+				cs_car$suffix$.csc_is_ad = #V_cscIsAd#
+			</isNotNull>		
+			<isNotNull property="V_cscLongitude" prepend=",">
+				cs_car$suffix$.csc_longitude = #V_cscLongitude#
+			</isNotNull>		
+			<isNotNull property="V_cscLatitude" prepend=",">
+				cs_car$suffix$.csc_latitude = #V_cscLatitude#
+			</isNotNull>		
+			<isNotNull property="V_cscMobile" prepend=",">
+				cs_car$suffix$.csc_mobile = #V_cscMobile#
+			</isNotNull>		
+			<isNotNull property="V_cscPassword" prepend=",">
+				cs_car$suffix$.csc_password = #V_cscPassword#
+			</isNotNull>		
+			<isNotNull property="V_cscOilCard" prepend=",">
+				cs_car$suffix$.csc_oil_card = #V_cscOilCard#
+			</isNotNull>		
+			<isNotNull property="V_cscVin" prepend=",">
+				cs_car$suffix$.csc_vin = #V_cscVin#
+			</isNotNull>		
+			<isNotNull property="V_cscEngineNo" prepend=",">
+				cs_car$suffix$.csc_engine_no = #V_cscEngineNo#
+			</isNotNull>		
+			<isNotNull property="V_cscBuyDate" prepend=",">
+				cs_car$suffix$.csc_buy_date = #V_cscBuyDate#
+			</isNotNull>		
+			<isNotNull property="V_cscBargainNo" prepend=",">
+				cs_car$suffix$.csc_bargain_no = #V_cscBargainNo#
+			</isNotNull>		
+			<isNotNull property="V_cscTaxPrice" prepend=",">
+				cs_car$suffix$.csc_tax_price = #V_cscTaxPrice#
+			</isNotNull>		
+			<isNotNull property="V_cscBuyPrice" prepend=",">
+				cs_car$suffix$.csc_buy_price = #V_cscBuyPrice#
+			</isNotNull>		
+			<isNotNull property="V_cscCertific" prepend=",">
+				cs_car$suffix$.csc_certific = #V_cscCertific#
+			</isNotNull>		
+			<isNotNull property="V_cscFactoryNo" prepend=",">
+				cs_car$suffix$.csc_factory_no = #V_cscFactoryNo#
+			</isNotNull>		
+			<isNotNull property="V_cscColor" prepend=",">
+				cs_car$suffix$.csc_color = #V_cscColor#
+			</isNotNull>		
+			<isNotNull property="V_cscPreview" prepend=",">
+				cs_car$suffix$.csc_preview = #V_cscPreview#
+			</isNotNull>		
+			<isNotNull property="V_cscImages" prepend=",">
+				cs_car$suffix$.csc_images = #V_cscImages#
+			</isNotNull>		
+			<isNotNull property="V_cscMaintKm" prepend=",">
+				cs_car$suffix$.csc_maint_km = #V_cscMaintKm#
+			</isNotNull>		
+			<isNotNull property="V_cscCheckIn" prepend=",">
+				cs_car$suffix$.csc_check_in = #V_cscCheckIn#
+			</isNotNull>		
+			<isNotNull property="V_cscAnnualPre" prepend=",">
+				cs_car$suffix$.csc_annual_pre = #V_cscAnnualPre#
+			</isNotNull>		
+			<isNotNull property="V_cscAnnual" prepend=",">
+				cs_car$suffix$.csc_annual = #V_cscAnnual#
+			</isNotNull>		
+			<isNotNull property="V_cscAnnualInfo" prepend=",">
+				cs_car$suffix$.csc_annual_info = #V_cscAnnualInfo#
+			</isNotNull>		
+			<isNotNull property="V_cscAnnualNext" prepend=",">
+				cs_car$suffix$.csc_annual_next = #V_cscAnnualNext#
+			</isNotNull>		
+			<isNotNull property="V_cscTiDate" prepend=",">
+				cs_car$suffix$.csc_ti_date = #V_cscTiDate#
+			</isNotNull>		
+			<isNotNull property="V_cscTiUnit" prepend=",">
+				cs_car$suffix$.csc_ti_unit = #V_cscTiUnit#
+			</isNotNull>		
+			<isNotNull property="V_cscTiNo" prepend=",">
+				cs_car$suffix$.csc_ti_no = #V_cscTiNo#
+			</isNotNull>		
+			<isNotNull property="V_cscBiDate" prepend=",">
+				cs_car$suffix$.csc_bi_date = #V_cscBiDate#
+			</isNotNull>		
+			<isNotNull property="V_cscBiUnit" prepend=",">
+				cs_car$suffix$.csc_bi_unit = #V_cscBiUnit#
+			</isNotNull>		
+			<isNotNull property="V_cscBiNo" prepend=",">
+				cs_car$suffix$.csc_bi_no = #V_cscBiNo#
+			</isNotNull>		
+			<isNotNull property="V_cscBiType" prepend=",">
+				cs_car$suffix$.csc_bi_type = #V_cscBiType#
+			</isNotNull>		
+			<isNotNull property="V_cscBiLimit" prepend=",">
+				cs_car$suffix$.csc_bi_limit = #V_cscBiLimit#
+			</isNotNull>		
+			<isNotNull property="V_cscBiCompany" prepend=",">
+				cs_car$suffix$.csc_bi_company = #V_cscBiCompany#
+			</isNotNull>		
+			<isNotNull property="V_cscEditor" prepend=",">
+				cs_car$suffix$.csc_editor = #V_cscEditor#
+			</isNotNull>		
+			<isNotNull property="V_cscUpdateTime" prepend=",">
+				cs_car$suffix$.csc_update_time = #V_cscUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cscAddTime" prepend=",">
+				cs_car$suffix$.csc_add_time = #V_cscAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cscRemark" prepend=",">
+				cs_car$suffix$.csc_remark = #V_cscRemark#
+			</isNotNull>		
+			<isNotNull property="V_cscMemo" prepend=",">
+				cs_car$suffix$.csc_memo = #V_cscMemo#
+			</isNotNull>		
+			<isNotNull property="V_cscOnPsd" prepend=",">
+				cs_car$suffix$.csc_on_psd = #V_cscOnPsd#
+			</isNotNull>		
+			<isNotNull property="V_cscSetup" prepend=",">
+				cs_car$suffix$.csc_setup = #V_cscSetup#
+			</isNotNull>		
+			<isNotNull property="V_cscDeviceVesion" prepend=",">
+				cs_car$suffix$.csc_device_vesion = #V_cscDeviceVesion#
+			</isNotNull>		
+			<isNotNull property="V_cscMqttFlag" prepend=",">
+				cs_car$suffix$.csc_mqtt_flag = #V_cscMqttFlag#
+			</isNotNull>		
+			<isNotNull property="V_cscMask" prepend=",">
+				cs_car$suffix$.csc_mask = #V_cscMask#
+			</isNotNull>		
+			<isNotNull property="V_cscStatus" prepend=",">
+				cs_car$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[车型]查询-->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<isNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.csc_model=cs_car_model$CsCarModel.suffix$.cscm_id
+			</isNull>
+			<isNotNull property="CsCarModel.on">
+				left join cs_car_model cs_car_model$CsCarModel.suffix$ on cs_car$suffix$.$CsCarModel.on$=cs_car_model$CsCarModel.suffix$.cscm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询-->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<isNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.csc_outlets=cs_outlets$CsOutlets.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOutlets.on">
+				left join cs_outlets cs_outlets$CsOutlets.suffix$ on cs_car$suffix$.$CsOutlets.on$=cs_outlets$CsOutlets.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询-->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<isNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.csc_provid=cs_provid$CsProvid.suffix$.csp_id
+			</isNull>
+			<isNotNull property="CsProvid.on">
+				left join cs_provid cs_provid$CsProvid.suffix$ on cs_car$suffix$.$CsProvid.on$=cs_provid$CsProvid.suffix$.csp_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		cs_car$suffix$.csc_status!=-1 and
+		
+		1=1 		
+		<!-- 多对一外链接[车型]查询条件sql片段 -->
+		<isNotNull property="CscModel"><!-- 调用一下CscModel，把CsCarModel指向CscModel --></isNotNull>
+		<isNotNull property="CsCarModel">
+			<include refid="CsCarModel_part.cs_car_model_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[网点]查询条件sql片段 -->
+		<isNotNull property="CscOutlets"><!-- 调用一下CscOutlets，把CsOutlets指向CscOutlets --></isNotNull>
+		<isNotNull property="CsOutlets">
+			<include refid="CsOutlets_part.cs_outlets_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[供应商]查询条件sql片段 -->
+		<isNotNull property="CscProvid"><!-- 调用一下CscProvid，把CsProvid指向CscProvid --></isNotNull>
+		<isNotNull property="CsProvid">
+			<include refid="CsProvid_part.cs_provid_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsCar_part.cs_car_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除车辆 -->
+	<update id="deleteCsCarBy"  parameterClass="java.util.HashMap">
+		delete from cs_car$suffix$ where 
+		cs_car$suffix$.csc_status!=-1 and
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsCar_part.cs_car_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>

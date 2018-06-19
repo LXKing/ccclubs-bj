@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="css/base.css" type="text/css"></link>
+<link rel="stylesheet" href="css/index.css" type="text/css"></link>
+<title>会员注册</title>
+</head>
+
+<body class="login-bg gradient">
+<div class="overall-layer registra_bg"></div>
+<form action="/manage/register_register.html" method="post" id="form_sm">
+<div class="registra">
+	<div class="registra-name">
+		<input type="tel" placeholder="请输入手机号码" id="name" name="membertel">
+	</div>
+	<div class="registra-name">
+		<input type="password" placeholder="请输入密码" id="password" name="memberpwd">
+	</div>
+	<div class="registra-name">
+		<input type="password" placeholder="请再次输入密码" id="passwords" name="memberpwds">
+	</div>
+	<div class="registra-name">
+		<input type="text" placeholder="请输入身份证号码" id="card_number" name="membercard">
+	</div>
+	<div class="registra-name">
+		<input type="text" placeholder="请输入驾驶证号码" id="driving_number" name="memberdig">
+	</div>
+	<div class="registra-name registra-file">
+		<a class="uploadButton" id="chooseImage">
+			<p id="chooseImage">请上传身份证正面</p>
+			<img src="" id="txtLicPic" width="100%" height="100%">
+		</a>
+	</div>
+	<div class="registra-name registra-file">
+		<a class="uploadButton" id="previewImage">
+			<p id="previewImage">请上传驾驶证正面</p>
+			<img src="" id="txtLicPic" width="100%" height="100%">
+		</a>
+	</div>
+</div>
+<input type="hidden" id="imageval1" name="cardImg">
+<input type="hidden" id="imageval2" name="digImg">
+</form>
+<div class="bottom_btn registra btn_bottom" id="btn"><bottom>登录</bottom></div>
+<div id="toast">
+	正在加载...
+</div>
+<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/manage.js?v=${lz:config('version')}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+whetherlog();//验证用户是否登录
+/*
+*提示信息
+*/
+<s:if test="#session.tips.notNull==true">
+//当session里有错误提示时，显示错误提示
+var tips="${tips.value}";
+if(tips!=""&&tips!=null&&tips!=undefined){
+	Toast.show(tips);
+}
+</s:if>
+//密码验证两次是否相同
+$("#card_number").focus(function(){
+	if($("#passwords").val()!=$("#password").val()){
+		Toast.show("两次密码不同，请重新输入");
+		$("#passwords").val("");
+	}
+})
+//手机号码验证
+$("#password").focus(function(){
+	var tel = /^1\d{10}$/;
+	if(!tel.test(document.getElementById("name").value)){
+		Toast.show("请输入正确的手机号码");
+		$("#name").val("");
+	}
+})
+//密码格式和个数验证
+$("#passwords").focus(function(){
+	var pwd = /^[a-zA-z]\w{3,15}$/;
+	if(!pwd.test(document.getElementById("password").value)){
+		Toast.show("请输入以字符开头的6到16位的密码");
+		$("#password").val("");
+	}
+})
+//验证身份证号码
+$("#driving_number").focus(function(){
+	var cardnumber = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+	if(!cardnumber.test(document.getElementById("card_number").value)){
+		Toast.show("请输入正确的身份证号码");
+		$("#card_number").val("");
+	}
+});
+//验证驾驶证号码
+$("#driving_number").blur(function(){
+	var cardnumber = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+	if(!cardnumber.test(document.getElementById("driving_number").value)){
+		Toast.show("请输入正确的驾驶证号码");
+		$("#driving_number").val("");
+	}
+});
+var btn=document.getElementById("btn");
+btn.addEventListener("touchend", function(){
+	$("#userpwd").removeClass("login_border");
+	$("#username").removeClass("login_border");
+	var name=document.getElementById("name").value;
+	var pwd=document.getElementById("password").value;
+	var card_number=document.getElementById("card_number").value;
+	var driving_number=document.getElementById("driving_number").value;
+	var imageval1=document.getElementById("imageval1").value;
+	var	imageval2=document.getElementById("imageval2").value;
+	if(name=="" || name==undefined || name==null){
+		Toast.show("手机号码不能为空");
+	}else if(pwd=="" || pwd==undefined || pwd==null){
+		Toast.show("密码不能为空");
+	}else if(card_number=="" || card_number==undefined || card_number==null){
+		Toast.show("身份证号不能为空");
+	}else if(driving_number=="" || driving_number==undefined || driving_number==null){
+		Toast.show("驾驶证号不能为空");
+	}else if(imageval1=="" || imageval1==undefined || imageval1==null){
+		Toast.show("请上传身份证图片");
+	}else if(imageval2=="" || imageval2==undefined || imageval2==null){
+		Toast.show("请上传驾驶证图片");
+	}else if($("#passwords").val()!=$("#password").val()){
+		Toast.show("两次密码不同，请重新输入");
+	}else{
+		document.getElementById("form_sm").submit();
+	}
+});
+</script>
+<script type="text/javascript">
+	  /*
+	   * 注意：
+	   * 1. 所有的JS接口只能在公众号绑定的域名下调用，公众号开发者需要先登录微信公众平台进入“公众号设置”的“功能设置”里填写“JS接口安全域名”。
+	   * 2. 如果发现在 Android 不能分享自定义内容，请到官网下载最新的包覆盖安装，Android 自定义分享接口需升级至 6.0.2.58 版本及以上。
+	   * 3. 常见问题及完整 JS-SDK 文档地址：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
+	   *
+	   * 开发中遇到问题详见文档“附录5-常见错误及解决办法”解决，如仍未能解决可通过以下渠道反馈：
+	   * 邮箱地址：weixin-open@qq.com
+	   * 邮件主题：【微信JS-SDK反馈】具体问题
+	   * 邮件内容说明：用简明的语言描述问题所在，并交代清楚遇到该问题的场景，可附上截屏图片，微信团队会尽快处理你的反馈。
+	   */
+	  wx.config({
+	      debug: false,
+	      appId: 'wxf7d08a80787fa584',
+	      timestamp: ${map.timestamp},
+	      nonceStr: '${map.nonceStr}',
+	      signature: '${map.signature}',
+	      jsApiList: [
+	        'checkJsApi',
+	        'closeWindow',
+	        'chooseImage',
+        	'previewImage',
+        	'uploadImage',
+        	'downloadImage'
+	      ]
+	  });
+	 $(document).ready(function() {
+		  // 5 图片接口
+		  var images = {
+		    localId: [],
+		    serverId: []
+		  };
+		  // 5.1 拍照、本地选图
+		  document.querySelector('#previewImage').onclick = function () {
+		  	//alert(isWeixin());
+			$('#save-btn').attr("disabled", true);
+		  	if(isWeixin()){
+		  		Toast.show('如果不能上传，请关闭当前页面后再重试');
+		  	 	// 微信环境下
+			    wx.chooseImage({
+			      success: function (res) {
+			        images.localId = res.localIds;
+			        //alert('已选择 ' + res.localIds.length + ' 张图片');
+			        if (images.localId.length == 0) {
+					      alert('请先选择图片');
+					      return;
+					}else if(images.localId.length >1) {
+					      alert('只能选择一张图片');
+					      return;
+					}
+					//images.serverId = [];
+					upload();
+			      }
+			    });
+			}else{
+				Toast.show("请用微信打开");
+		    }
+		    function upload() {
+		      wx.uploadImage({
+		        localId: images.localId[0],
+		        success: function (res) {
+		          $.get('/m/ajax_uploadWeixinPic.html?media='+res.serverId+'&sApp=memberinfo_edit&t=' + new Date().getTime(), function(data) {
+						var map = eval("("+data+")");
+						$("#previewImage img").attr('src',map.url);
+						$("#imageval2").val(map.url);
+					});
+		        },
+		        fail: function (res) {
+		        	$('#save-btn').removeAttr("disabled");
+		            alert(JSON.stringify(res));
+		        }
+		      });
+		    }
+		  };
+		  
+		  
+		  /*
+		  *
+		  */
+		  document.querySelector('#chooseImage').onclick = function () {
+		  	//alert(isWeixin());
+			$('#save-btn').attr("disabled", true);
+		  	if(isWeixin()){
+		  		Toast.show('如果不能上传，请关闭当前页面后再重试');
+		  	 	// 微信环境下
+			    wx.chooseImage({
+			      success: function (res) {
+			        images.localId = res.localIds;
+			        //alert('已选择 ' + res.localIds.length + ' 张图片');
+			        if (images.localId.length == 0) {
+					      alert('请先选择图片');
+					      return;
+					}else if(images.localId.length >1) {
+					      alert('只能选择一张图片');
+					      return;
+					}
+					//images.serverId = [];
+					upload();
+			      }
+			    });
+			}else{
+				Toast.show("请用微信打开");
+		    }
+		    function upload() {
+		      wx.uploadImage({
+		        localId: images.localId[0],
+		        success: function (res) {
+		          $.get('/m/ajax_uploadWeixinPic.html?media='+res.serverId+'&sApp=memberinfo_edit&t=' + new Date().getTime(), function(data) {
+						var map = eval("("+data+")");
+						$("#chooseImage img").attr('src',map.url);
+						$("#imageval1").val(map.url);
+					});
+		        },
+		        fail: function (res) {
+		        	$('#save-btn').removeAttr("disabled");
+		            alert(JSON.stringify(res));
+		        }
+		      });
+		    }
+		  };
+		  /***/
+	  });
+	  
+	function isWeixin(){
+		var ua = navigator.userAgent.toLowerCase();
+		if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		    return true;
+		} else {
+			return false;
+		}
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="CsUnitAirport_part">	
+	<!-- 机场服务条件sql片段  -->
+	<sql id="cs_unit_airport_dynamic">
+		<dynamic>
+			<isNotEmpty property="csuaId" prepend="and">
+			    $csuaIdNot$ cs_unit_airport$suffix$.csua_id = #csuaId#
+			</isNotEmpty>
+			<isNotNull property="csuaIdNot" prepend="and">
+				<isEmpty property="csuaId">
+				$csuaIdNot$ cs_unit_airport$suffix$.csua_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_airport$suffix$.csua_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="csuaHost" prepend="and">
+			    $csuaHostNot$ cs_unit_airport$suffix$.csua_host = #csuaHost#
+			</isNotEmpty>
+			<isNotNull property="csuaHostNot" prepend="and">
+				<isEmpty property="csuaHost">
+				$csuaHostNot$ cs_unit_airport$suffix$.csua_host is null
+				</isEmpty>
+			</isNotNull>		
+			<isNotEmpty property="csuaUnitInfo" prepend="and">
+			    $csuaUnitInfoNot$ cs_unit_airport$suffix$.csua_unit_info = #csuaUnitInfo#
+			</isNotEmpty>
+			<isNotNull property="csuaUnitInfoNot" prepend="and">
+				<isEmpty property="csuaUnitInfo">
+				$csuaUnitInfoNot$ cs_unit_airport$suffix$.csua_unit_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaType" prepend="and">
+			    $csuaTypeNot$ cs_unit_airport$suffix$.csua_type = #csuaType#
+			</isNotEmpty>
+			<isNotNull property="csuaTypeNot" prepend="and">
+				<isEmpty property="csuaType">
+				$csuaTypeNot$ cs_unit_airport$suffix$.csua_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaFlight" prepend="and">			    
+			    (<isNotNull property="csuaFlightNot">
+			    cs_unit_airport$suffix$.csua_flight is null or length(cs_unit_airport$suffix$.csua_flight) &lt; 1 or
+			    </isNotNull>$csuaFlightNot$ cs_unit_airport$suffix$.csua_flight like #csuaFlight#)
+			</isNotEmpty>
+			<isNotNull property="csuaFlightNot" prepend="and">
+				<isEmpty property="csuaFlight">
+				$csuaFlightNot$ (cs_unit_airport$suffix$.csua_flight is null or length(cs_unit_airport$suffix$.csua_flight) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaTimeStart" prepend="and">
+			    $csuaTimeNot$   (cs_unit_airport$suffix$.csua_time &gt;= #csuaTimeStart#
+			   <isEmpty property="csuaTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuaTimeEnd" prepend="and">
+				<isEmpty property="csuaTimeStart">$csuaTimeNot$   (</isEmpty>
+			    cs_unit_airport$suffix$.csua_time &lt;= #csuaTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csuaTime" prepend="and">
+			    $csuaTimeNot$ cs_unit_airport$suffix$.csua_time = #csuaTime#
+			</isNotEmpty>
+			<isNotNull property="csuaTimeNot" prepend="and">
+				<isEmpty property="csuaTimeStart"><isEmpty property="csuaTimeEnd"><isEmpty property="csuaTime">
+				$csuaTimeNot$ cs_unit_airport$suffix$.csua_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaContact" prepend="and">			    
+			    (<isNotNull property="csuaContactNot">
+			    cs_unit_airport$suffix$.csua_contact is null or length(cs_unit_airport$suffix$.csua_contact) &lt; 1 or
+			    </isNotNull>$csuaContactNot$ cs_unit_airport$suffix$.csua_contact like #csuaContact#)
+			</isNotEmpty>
+			<isNotNull property="csuaContactNot" prepend="and">
+				<isEmpty property="csuaContact">
+				$csuaContactNot$ (cs_unit_airport$suffix$.csua_contact is null or length(cs_unit_airport$suffix$.csua_contact) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaMobile" prepend="and">			    
+			    (<isNotNull property="csuaMobileNot">
+			    cs_unit_airport$suffix$.csua_mobile is null or length(cs_unit_airport$suffix$.csua_mobile) &lt; 1 or
+			    </isNotNull>$csuaMobileNot$ cs_unit_airport$suffix$.csua_mobile like #csuaMobile#)
+			</isNotEmpty>
+			<isNotNull property="csuaMobileNot" prepend="and">
+				<isEmpty property="csuaMobile">
+				$csuaMobileNot$ (cs_unit_airport$suffix$.csua_mobile is null or length(cs_unit_airport$suffix$.csua_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaCountMin" prepend="and">
+			    $csuaCountNot$  ( cs_unit_airport$suffix$.csua_count &gt;= #csuaCountMin#
+			    <isEmpty property="csuaCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuaCountMax" prepend="and">
+				<isEmpty property="csuaCountMin">$csuaCountNot$   (</isEmpty>
+			    cs_unit_airport$suffix$.csua_count &lt;= #csuaCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="csuaCount" prepend="and">
+			    $csuaCountNot$ cs_unit_airport$suffix$.csua_count = #csuaCount#
+			</isNotEmpty>
+			<isNotNull property="csuaCountNot" prepend="and">
+				<isEmpty property="csuaCountMax"><isEmpty property="csuaCountMin"><isEmpty property="csuaCount">
+				$csuaCountNot$ cs_unit_airport$suffix$.csua_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="csuaStatement" prepend="and">
+			    $csuaStatementNot$ cs_unit_airport$suffix$.csua_statement = #csuaStatement#
+			</isNotEmpty>
+			<isNotNull property="csuaStatementNot" prepend="and">
+				<isEmpty property="csuaStatement">
+				$csuaStatementNot$ cs_unit_airport$suffix$.csua_statement is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaUpdateTimeStart" prepend="and">
+			    $csuaUpdateTimeNot$   (cs_unit_airport$suffix$.csua_update_time &gt;= #csuaUpdateTimeStart#
+			   <isEmpty property="csuaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuaUpdateTimeEnd" prepend="and">
+				<isEmpty property="csuaUpdateTimeStart">$csuaUpdateTimeNot$   (</isEmpty>
+			    cs_unit_airport$suffix$.csua_update_time &lt;= #csuaUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csuaUpdateTime" prepend="and">
+			    $csuaUpdateTimeNot$ cs_unit_airport$suffix$.csua_update_time = #csuaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="csuaUpdateTimeNot" prepend="and">
+				<isEmpty property="csuaUpdateTimeStart"><isEmpty property="csuaUpdateTimeEnd"><isEmpty property="csuaUpdateTime">
+				$csuaUpdateTimeNot$ cs_unit_airport$suffix$.csua_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaAddTimeStart" prepend="and">
+			    $csuaAddTimeNot$   (cs_unit_airport$suffix$.csua_add_time &gt;= #csuaAddTimeStart#
+			   <isEmpty property="csuaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="csuaAddTimeEnd" prepend="and">
+				<isEmpty property="csuaAddTimeStart">$csuaAddTimeNot$   (</isEmpty>
+			    cs_unit_airport$suffix$.csua_add_time &lt;= #csuaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="csuaAddTime" prepend="and">
+			    $csuaAddTimeNot$ cs_unit_airport$suffix$.csua_add_time = #csuaAddTime#
+			</isNotEmpty>
+			<isNotNull property="csuaAddTimeNot" prepend="and">
+				<isEmpty property="csuaAddTimeStart"><isEmpty property="csuaAddTimeEnd"><isEmpty property="csuaAddTime">
+				$csuaAddTimeNot$ cs_unit_airport$suffix$.csua_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaRemark" prepend="and">			    
+			    (<isNotNull property="csuaRemarkNot">
+			    cs_unit_airport$suffix$.csua_remark is null or length(cs_unit_airport$suffix$.csua_remark) &lt; 1 or
+			    </isNotNull>$csuaRemarkNot$ cs_unit_airport$suffix$.csua_remark = #csuaRemark#)
+			</isNotEmpty>
+			<isNotNull property="csuaRemarkNot" prepend="and">
+				<isEmpty property="csuaRemark">
+				$csuaRemarkNot$ (cs_unit_airport$suffix$.csua_remark is null or length(cs_unit_airport$suffix$.csua_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="csuaStatus" prepend="and">
+			    $csuaStatusNot$ cs_unit_airport$suffix$.csua_status = #csuaStatus#
+			</isNotEmpty>
+			<isNotNull property="csuaStatusNot" prepend="and">
+				<isEmpty property="csuaStatus">
+				$csuaStatusNot$ cs_unit_airport$suffix$.csua_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 机场服务left join 条件sql片段 -->
+	<sql id="cs_unit_airport_join">
+		<dynamic>
+			<isNotEmpty property="CsUnitAirport.csuaId" prepend="and">
+			    $CsUnitAirport.csuaIdNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_id = #CsUnitAirport.csuaId#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaIdNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaId">
+				$csuaIdNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="HOSTS" prepend="and">
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_host in ($HOSTS$)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaHost" prepend="and">
+			    $CsUnitAirport.csuaHostNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_host = #CsUnitAirport.csuaHost#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaHostNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaHost">
+				$csuaHostNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_host is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaUnitInfo" prepend="and">
+			    $CsUnitAirport.csuaUnitInfoNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_unit_info = #CsUnitAirport.csuaUnitInfo#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaUnitInfoNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaUnitInfo">
+				$csuaUnitInfoNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_unit_info is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaType" prepend="and">
+			    $CsUnitAirport.csuaTypeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_type = #CsUnitAirport.csuaType#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaTypeNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaType">
+				$csuaTypeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_type is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaFlight" prepend="and">
+				(<isNotNull property="CsUnitAirport.csuaFlightNot">
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_flight is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_flight) &lt; 1 or
+			    </isNotNull>$CsUnitAirport.csuaFlightNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_flight like #CsUnitAirport.csuaFlight#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaFlightNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaFlight">
+				$csuaFlightNot$ (cs_unit_airport$CsUnitAirport.suffix$.csua_flight is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_flight) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaTimeStart" prepend="and">
+			    $CsUnitAirport.csuaTimeNot$   (cs_unit_airport$CsUnitAirport.suffix$.csua_time &gt;= #CsUnitAirport.csuaTimeStart#
+			   <isEmpty property="CsUnitAirport.csuaTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaTimeEnd" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaTimeStart">$CsUnitAirport.csuaTimeNot$   (</isEmpty>
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_time &lt;= #CsUnitAirport.csuaTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaTime" prepend="and">
+			    $CsUnitAirport.csuaTimeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_time = #CsUnitAirport.csuaTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaTimeNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaTimeStart"><isEmpty property="CsUnitAirport.csuaTimeEnd"><isEmpty property="CsUnitAirport.csuaTime">
+				$csuaTimeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaContact" prepend="and">
+				(<isNotNull property="CsUnitAirport.csuaContactNot">
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_contact is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_contact) &lt; 1 or
+			    </isNotNull>$CsUnitAirport.csuaContactNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_contact like #CsUnitAirport.csuaContact#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaContactNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaContact">
+				$csuaContactNot$ (cs_unit_airport$CsUnitAirport.suffix$.csua_contact is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_contact) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaMobile" prepend="and">
+				(<isNotNull property="CsUnitAirport.csuaMobileNot">
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_mobile is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_mobile) &lt; 1 or
+			    </isNotNull>$CsUnitAirport.csuaMobileNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_mobile like #CsUnitAirport.csuaMobile#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaMobileNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaMobile">
+				$csuaMobileNot$ (cs_unit_airport$CsUnitAirport.suffix$.csua_mobile is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_mobile) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaCountMin" prepend="and">
+			    $CsUnitAirport.csuaCountNot$  ( cs_unit_airport$CsUnitAirport.suffix$.csua_count &gt;= #CsUnitAirport.csuaCountMin#
+			    <isEmpty property="CsUnitAirport.csuaCountMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaCountMax" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaCountMin">$CsUnitAirport.csuaCountNot$   (</isEmpty>
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_count &lt;= #CsUnitAirport.csuaCountMax# )
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaCount" prepend="and">
+			    $CsUnitAirport.csuaCountNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_count = #CsUnitAirport.csuaCount#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaCountNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaCountMax"><isEmpty property="CsUnitAirport.csuaCountMin"><isEmpty property="CsUnitAirport.csuaCount">
+				$csuaCountNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_count is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaStatement" prepend="and">
+			    $CsUnitAirport.csuaStatementNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_statement = #CsUnitAirport.csuaStatement#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaStatementNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaStatement">
+				$csuaStatementNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_statement is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaUpdateTimeStart" prepend="and">
+			    $CsUnitAirport.csuaUpdateTimeNot$   (cs_unit_airport$CsUnitAirport.suffix$.csua_update_time &gt;= #CsUnitAirport.csuaUpdateTimeStart#
+			   <isEmpty property="CsUnitAirport.csuaUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaUpdateTimeEnd" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaUpdateTimeStart">$CsUnitAirport.csuaUpdateTimeNot$   (</isEmpty>
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_update_time &lt;= #CsUnitAirport.csuaUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaUpdateTime" prepend="and">
+			    $CsUnitAirport.csuaUpdateTimeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_update_time = #CsUnitAirport.csuaUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaUpdateTimeNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaUpdateTimeStart"><isEmpty property="CsUnitAirport.csuaUpdateTimeEnd"><isEmpty property="CsUnitAirport.csuaUpdateTime">
+				$csuaUpdateTimeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaAddTimeStart" prepend="and">
+			    $CsUnitAirport.csuaAddTimeNot$   (cs_unit_airport$CsUnitAirport.suffix$.csua_add_time &gt;= #CsUnitAirport.csuaAddTimeStart#
+			   <isEmpty property="CsUnitAirport.csuaAddTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaAddTimeEnd" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaAddTimeStart">$CsUnitAirport.csuaAddTimeNot$   (</isEmpty>
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_add_time &lt;= #CsUnitAirport.csuaAddTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="CsUnitAirport.csuaAddTime" prepend="and">
+			    $CsUnitAirport.csuaAddTimeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_add_time = #CsUnitAirport.csuaAddTime#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaAddTimeNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaAddTimeStart"><isEmpty property="CsUnitAirport.csuaAddTimeEnd"><isEmpty property="CsUnitAirport.csuaAddTime">
+				$csuaAddTimeNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_add_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaRemark" prepend="and">
+				(<isNotNull property="CsUnitAirport.csuaRemarkNot">
+			    cs_unit_airport$CsUnitAirport.suffix$.csua_remark is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_remark) &lt; 1 or
+			    </isNotNull>$CsUnitAirport.csuaRemarkNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_remark = #CsUnitAirport.csuaRemark#)
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaRemarkNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaRemark">
+				$csuaRemarkNot$ (cs_unit_airport$CsUnitAirport.suffix$.csua_remark is null or length(cs_unit_airport$CsUnitAirport.suffix$.csua_remark) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="CsUnitAirport.csuaStatus" prepend="and">
+			    $CsUnitAirport.csuaStatusNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_status = #CsUnitAirport.csuaStatus#
+			</isNotEmpty>
+			<isNotNull property="CsUnitAirport.csuaStatusNot" prepend="and">
+				<isEmpty property="CsUnitAirport.csuaStatus">
+				$csuaStatusNot$ cs_unit_airport$CsUnitAirport.suffix$.csua_status is null
+				</isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

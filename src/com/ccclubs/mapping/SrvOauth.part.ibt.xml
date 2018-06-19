@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap namespace="SrvOauth_part">	
+	<!-- 用户授权条件sql片段  -->
+	<sql id="srv_oauth_dynamic">
+		<dynamic>
+			<isNotEmpty property="soId" prepend="and">
+			    $soIdNot$ srv_oauth$suffix$.so_id = #soId#
+			</isNotEmpty>
+			<isNotNull property="soIdNot" prepend="and">
+				<isEmpty property="soId">
+				$soIdNot$ srv_oauth$suffix$.so_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="soToken" prepend="and">			    
+			    (<isNotNull property="soTokenNot">
+			    srv_oauth$suffix$.so_token is null or length(srv_oauth$suffix$.so_token) &lt; 1 or
+			    </isNotNull>$soTokenNot$ srv_oauth$suffix$.so_token = #soToken#)
+			</isNotEmpty>
+			<isNotNull property="soTokenNot" prepend="and">
+				<isEmpty property="soToken">
+				$soTokenNot$ (srv_oauth$suffix$.so_token is null or length(srv_oauth$suffix$.so_token) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="soUserIdMin" prepend="and">
+			    $soUserIdNot$  ( srv_oauth$suffix$.so_user_id &gt;= #soUserIdMin#
+			    <isEmpty property="soUserIdMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="soUserIdMax" prepend="and">
+				<isEmpty property="soUserIdMin">$soUserIdNot$   (</isEmpty>
+			    srv_oauth$suffix$.so_user_id &lt;= #soUserIdMax# )
+			</isNotEmpty>
+			<isNotEmpty property="soUserId" prepend="and">
+			    $soUserIdNot$ srv_oauth$suffix$.so_user_id = #soUserId#
+			</isNotEmpty>
+			<isNotNull property="soUserIdNot" prepend="and">
+				<isEmpty property="soUserIdMax"><isEmpty property="soUserIdMin"><isEmpty property="soUserId">
+				$soUserIdNot$ srv_oauth$suffix$.so_user_id is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>	
+			<isNotEmpty property="soApiClient" prepend="and">
+			    $soApiClientNot$ srv_oauth$suffix$.so_api_client = #soApiClient#
+			</isNotEmpty>
+			<isNotNull property="soApiClientNot" prepend="and">
+				<isEmpty property="soApiClient">
+				$soApiClientNot$ srv_oauth$suffix$.so_api_client is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="soTicket" prepend="and">			    
+			    (<isNotNull property="soTicketNot">
+			    srv_oauth$suffix$.so_ticket is null or length(srv_oauth$suffix$.so_ticket) &lt; 1 or
+			    </isNotNull>$soTicketNot$ srv_oauth$suffix$.so_ticket = #soTicket#)
+			</isNotEmpty>
+			<isNotNull property="soTicketNot" prepend="and">
+				<isEmpty property="soTicket">
+				$soTicketNot$ (srv_oauth$suffix$.so_ticket is null or length(srv_oauth$suffix$.so_ticket) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="soUpdateTimeStart" prepend="and">
+			    $soUpdateTimeNot$   (srv_oauth$suffix$.so_update_time &gt;= #soUpdateTimeStart#
+			   <isEmpty property="soUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="soUpdateTimeEnd" prepend="and">
+				<isEmpty property="soUpdateTimeStart">$soUpdateTimeNot$   (</isEmpty>
+			    srv_oauth$suffix$.so_update_time &lt;= #soUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="soUpdateTime" prepend="and">
+			    $soUpdateTimeNot$ srv_oauth$suffix$.so_update_time = #soUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="soUpdateTimeNot" prepend="and">
+				<isEmpty property="soUpdateTimeStart"><isEmpty property="soUpdateTimeEnd"><isEmpty property="soUpdateTime">
+				$soUpdateTimeNot$ srv_oauth$suffix$.so_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 用户授权left join 条件sql片段 -->
+	<sql id="srv_oauth_join">
+		<dynamic>
+			<isNotEmpty property="SrvOauth.soId" prepend="and">
+			    $SrvOauth.soIdNot$ srv_oauth$SrvOauth.suffix$.so_id = #SrvOauth.soId#
+			</isNotEmpty>
+			<isNotNull property="SrvOauth.soIdNot" prepend="and">
+				<isEmpty property="SrvOauth.soId">
+				$soIdNot$ srv_oauth$SrvOauth.suffix$.so_id is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvOauth.soToken" prepend="and">
+				(<isNotNull property="SrvOauth.soTokenNot">
+			    srv_oauth$SrvOauth.suffix$.so_token is null or length(srv_oauth$SrvOauth.suffix$.so_token) &lt; 1 or
+			    </isNotNull>$SrvOauth.soTokenNot$ srv_oauth$SrvOauth.suffix$.so_token = #SrvOauth.soToken#)
+			</isNotEmpty>
+			<isNotNull property="SrvOauth.soTokenNot" prepend="and">
+				<isEmpty property="SrvOauth.soToken">
+				$soTokenNot$ (srv_oauth$SrvOauth.suffix$.so_token is null or length(srv_oauth$SrvOauth.suffix$.so_token) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvOauth.soUserIdMin" prepend="and">
+			    $SrvOauth.soUserIdNot$  ( srv_oauth$SrvOauth.suffix$.so_user_id &gt;= #SrvOauth.soUserIdMin#
+			    <isEmpty property="SrvOauth.soUserIdMax">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvOauth.soUserIdMax" prepend="and">
+				<isEmpty property="SrvOauth.soUserIdMin">$SrvOauth.soUserIdNot$   (</isEmpty>
+			    srv_oauth$SrvOauth.suffix$.so_user_id &lt;= #SrvOauth.soUserIdMax# )
+			</isNotEmpty>
+			<isNotEmpty property="SrvOauth.soUserId" prepend="and">
+			    $SrvOauth.soUserIdNot$ srv_oauth$SrvOauth.suffix$.so_user_id = #SrvOauth.soUserId#
+			</isNotEmpty>
+			<isNotNull property="SrvOauth.soUserIdNot" prepend="and">
+				<isEmpty property="SrvOauth.soUserIdMax"><isEmpty property="SrvOauth.soUserIdMin"><isEmpty property="SrvOauth.soUserId">
+				$soUserIdNot$ srv_oauth$SrvOauth.suffix$.so_user_id is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvOauth.soApiClient" prepend="and">
+			    $SrvOauth.soApiClientNot$ srv_oauth$SrvOauth.suffix$.so_api_client = #SrvOauth.soApiClient#
+			</isNotEmpty>
+			<isNotNull property="SrvOauth.soApiClientNot" prepend="and">
+				<isEmpty property="SrvOauth.soApiClient">
+				$soApiClientNot$ srv_oauth$SrvOauth.suffix$.so_api_client is null
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvOauth.soTicket" prepend="and">
+				(<isNotNull property="SrvOauth.soTicketNot">
+			    srv_oauth$SrvOauth.suffix$.so_ticket is null or length(srv_oauth$SrvOauth.suffix$.so_ticket) &lt; 1 or
+			    </isNotNull>$SrvOauth.soTicketNot$ srv_oauth$SrvOauth.suffix$.so_ticket = #SrvOauth.soTicket#)
+			</isNotEmpty>
+			<isNotNull property="SrvOauth.soTicketNot" prepend="and">
+				<isEmpty property="SrvOauth.soTicket">
+				$soTicketNot$ (srv_oauth$SrvOauth.suffix$.so_ticket is null or length(srv_oauth$SrvOauth.suffix$.so_ticket) &lt; 1)
+				</isEmpty>
+			</isNotNull>
+			<isNotEmpty property="SrvOauth.soUpdateTimeStart" prepend="and">
+			    $SrvOauth.soUpdateTimeNot$   (srv_oauth$SrvOauth.suffix$.so_update_time &gt;= #SrvOauth.soUpdateTimeStart#
+			   <isEmpty property="SrvOauth.soUpdateTimeEnd">)</isEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="SrvOauth.soUpdateTimeEnd" prepend="and">
+				<isEmpty property="SrvOauth.soUpdateTimeStart">$SrvOauth.soUpdateTimeNot$   (</isEmpty>
+			    srv_oauth$SrvOauth.suffix$.so_update_time &lt;= #SrvOauth.soUpdateTimeEnd#)
+			</isNotEmpty>
+			<isNotEmpty property="SrvOauth.soUpdateTime" prepend="and">
+			    $SrvOauth.soUpdateTimeNot$ srv_oauth$SrvOauth.suffix$.so_update_time = #SrvOauth.soUpdateTime#
+			</isNotEmpty>
+			<isNotNull property="SrvOauth.soUpdateTimeNot" prepend="and">
+				<isEmpty property="SrvOauth.soUpdateTimeStart"><isEmpty property="SrvOauth.soUpdateTimeEnd"><isEmpty property="SrvOauth.soUpdateTime">
+				$soUpdateTimeNot$ srv_oauth$SrvOauth.suffix$.so_update_time is null
+				</isEmpty></isEmpty></isEmpty>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+</sqlMap>

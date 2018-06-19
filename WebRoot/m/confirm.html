@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>车纷享-订单确认</title>
+	</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="css/ccclubs-base-ui.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/table-view.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/app.css?v=${lz:config('version')}" />
+	<link rel="stylesheet" type="text/css" href="css/blue.css?v=${lz:config('version')}" />
+	<script type="text/javascript" src="${basePath}weixin/js/baidu.js"></script>
+
+	<body>
+		<!-- <header class="bar bar-nav">
+		<a class="icon icon-left-nav pull-left" href="index.html"></a>
+		<h1 class="title">
+			订单确认
+		</h1>
+		</header> -->
+		<form action="${basePath}m/confirm_alipay.html" class="input-group" id="alipayment" name="alipayment" method="post">
+		<div id="content" class="content bar-content">
+			<ul class="table-view padding-less confirm" style="margin-top: 0;">
+				<li class="table-view-cell media top-dur">
+					<div class="media-body"></div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						车型
+					</div>
+					<div class="badge">${carmodel}<span class="text-split"></span>${carnumber}</div>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						取车网点
+					</div>
+					<span class="badge">${getcaroutlet}</span>
+				</li>
+				<s:if test="#request.returncaroutletid!='null'">
+					<li class="table-view-cell media">
+						<div class="media-body">
+							还车网点
+						</div>
+						<span class="badge">${returncaroutlet}</span>
+					</li>
+				</s:if>
+				
+				<li class="table-view-cell media">
+					<div class="media-body">
+						预计取车时间
+					</div>
+					<span class="badge">${starttime}</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						预计还车时间
+					</div>
+					<span class="badge">${finishtime}</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						租金
+					</div>
+					<span class="badge">${rentPayment}元</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						千元免赔[预估]
+					</div>
+					<span class="badge">${insurancePayment}元</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						租车保证金
+					</div>
+					<span class="badge">${rentmargin}元</span>
+				</li>
+				<li class="table-view-cell media">
+					<div class="media-body">
+						里程费[预估]
+					</div>
+					<span class="badge">${rentmile}元</span>
+				</li>
+				<li class="table-view-cell media min-dur">
+					<div class="media-body"></div>
+				</li>
+				
+				<s:if test="#request.credit==true">
+					<s:if test="#request.freeze==0">
+						<li class="table-view-cell media">
+							<div class="media-body">
+								使用免押金金额
+							</div>
+							<span class="badge">${usecreditpay}元</span>
+						</li>
+					</s:if>
+					<s:else>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								使用免押金金额
+							</div>
+							<span class="badge">${usecreditpay}元</span>
+						</li>
+						<li class="table-view-cell media">
+							<div class="media-body">
+								冻结车纷享账户余额
+							</div>
+							<span class="badge">${freeze}元</span>
+						</li>
+					</s:else>
+				</s:if>
+				<s:else>
+					<li class="table-view-cell media">
+						<div class="media-body">
+							冻结车纷享账户余额
+						</div>
+						<span class="badge">${freeze}元</span>
+					</li>
+				</s:else>
+			</ul>
+			<ul class="table-view padding-less">
+				<li class="table-view-cell media">
+					<div class="media-body">
+						<span class="info-color">注：订单结束时将根据实际消费产生的费用结算。</span>
+					</div>
+				</li>
+			</ul>
+			<s:if test="#request.credit==false">
+				<ul class="table-view padding-less">
+					<li class="table-view-cell media">
+						<div class="media-body">
+							账户金额
+						</div>
+						<div class="badge">
+							<span>${usable}元</span>
+							<!-- <input id="money" type="checkbox" checked/> -->
+						</div>
+					</li>
+					<s:if test="#request.needpay!=0">
+					<li class="table-view-cell media">
+						<div class="media-body">
+							支付宝充值
+						</div>
+						<div class="badge">
+							<span>${lz:digit(needpay,2)}元</span>
+							<input type="hidden" id="alipayneedpay" value="${lz:digit(needpay,2)}">
+							<!-- <input id="money" type="checkbox" /> -->
+						</div>
+					</li>
+					</s:if>
+				</ul>
+			</s:if>
+			
+			<s:if test="#request.needpay!=0&&#request.credit==false">
+			<button id="index-alipay-btn" class="btn btn-ccclubs-reserve btn-block" onclick="alipay()">
+				确认充值
+			</button>
+			</s:if>
+			<s:else>
+			<button id="index-reserve-btn" class="btn btn-ccclubs-reserve btn-block" onclick="submitorder()">
+				提交订单
+			</button>
+			</s:else>
+			
+			<!--模态窗口-->
+			<!-- ajax 弹出层 -->
+			<div id="ccc-layer">
+				<div id="ccc-overlay"></div>
+				<div id="ccc-overpage">
+					<!-- 异步加载 -->
+					<div id="ccc-modal-box">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="toast">
+			正在加载...
+		</div>
+		</form>
+		<input id="carid" type="hidden" value="${carid}" />
+		<input id="csoAvoid" type="hidden" value="${csoAvoid}" />
+		<input id="freeHours" type="hidden" value="${freeHours}" />
+		<input id="yidiwd_value" type="hidden" value="${yidiwd_value}" />
+		<input id="csoutletLat" type="hidden" value="${csoutletLat}" />
+		<input id="csoutletLon" type="hidden" value="${csoutletLon}" />
+		<input id="outletName" type="hidden" value="${getcaroutlet}" />
+		
+		<script type="text/javascript" src="js/zepto-1.1.6.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/app.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript" src="js/icheck.min.js?v=${lz:config('version')}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+			  $('input').iCheck({
+			    checkboxClass: 'icheckbox_square-blue',
+			    increaseArea: '20%' // optional
+			  });
+			});
+			
+			function submitorder() {
+				var btn = $('#index-reserve-btn');
+				btn.attr("disabled", true);
+				
+				var free_val = $('#freeHours').val();
+				if(free_val==''||free_val==null){
+					free_val = 0;
+				}
+				if(!isNaN(free_val)&&free_val>=0){
+					
+				}
+				var insureType =  $('#csoAvoid').val();
+				var starttime = '${starttime}';
+				var finishtime = '${finishtime}';
+				var credit = ${credit};
+				var yidiwd_value = $('#yidiwd_value').val();
+				$.ajax({
+					type: 'get',
+            		url: 'confirm_submit.html',
+            		data:{
+            			freeHours:　free_val,
+            			csoStart: starttime,
+            			csoFinish: finishtime,
+            			csoAvoid: insureType,
+            			csoCar: $('#carid').val(),
+            			credit: credit,
+            			yidiwd_value: yidiwd_value
+            		},
+            		dataType: 'json',
+            		success: function(data){
+            			btn.removeAttr("disabled");
+            			if(data.state){
+            				//var address = Cache.get("address").data;
+            				//缓存常用地址
+            				/*if(address!=""&&address!=null){
+            					if(address.split(";").length>2){
+            						var array=address.split(";");
+            						array.pop();
+            						address=array[0]+";"+array[1];
+            					}
+            					var common_address=$('#csoutletLat').val()+","+$('#csoutletLon').val()+","+$('#outletName').val();
+            					address=common_address+";"+address;
+            					Cache.save("address", address);
+            				}else{
+            					Cache.remove("address");
+            					var common_address=$('#csoutletLat').val()+","+$('#csoutletLon').val()+","+$('#outletName').val();
+            					address=common_address;
+            					Cache.save("address", address);
+            				}*/
+            				
+            				location.href = "${basePath}m/home/order.html";
+            			}else{
+            				Toast.show(data.message);
+                            return;
+            			}
+            		},
+            		error: function(xhr, type){
+            			btn.removeAttr("disabled");
+            			Toast.show('通讯失败，请检查网络');
+                        return;
+            		}
+				});
+			}
+			
+			function alipay() {
+				var btn = $('#index-alipay-btn');
+				btn.attr("disabled", true);
+				
+				var alipayneedpay = $("#alipayneedpay").val();
+				location.href = "confirm_alipay.html?alipayneedpay="+alipayneedpay;
+				/* $.ajax({
+					type: 'get',
+            		url: 'confirm_alipay.html',
+            		data:{
+            			alipayneedpay: alipayneedpay
+            		},
+            		dataType: 'json',
+            		success: function(data){
+            			Toast.show(data.message);
+                        return;
+            		},
+            		error: function(xhr, type){
+            			btn.removeAttr("disabled");
+            			Toast.show('通讯失败，请检查网络');
+                        return;
+            		}
+				}); */
+			}
+		</script>
+	</body>
+
+</html>

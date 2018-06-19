@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html class="no-js" style="height: 100%;">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>车纷享-网点分布</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/baidu.js"></script>
+	</head>
+	<body style="height: 100%;">
+		<div class="bigmain" style="height: 100%;">
+			<div class="buytitle">
+				<div class="content">
+					<div class="goback">
+						<a href="index.html">返回</a>
+					</div>
+					<div class="golist">
+						<a href="parkinglot.html">&nbsp;</a>
+					</div>
+					<div class="showtitle">
+						网点分布
+					</div>
+				</div>
+			</div>
+			<div id="ccc-view-map" class="ccc-view-widewin" style="width: 100%; height: 100%;">
+			</div>
+		</div>
+		<input id="location" type="hidden" value="${point}" />
+		<%@ include file="include/wheel.html"%>
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<!-- 底部城市切换 -->
+		<script type="text/javascript" src="js/jquery.wheelmenu.min.js"></script>
+		<script src="js/wheel.define.js"></script>
+		<script type="text/javascript" src="http://map.qq.com/api/js?v=2.exp&key=0e2941f1708f3eb3d19c029c3802521b"></script>
+		<!--  <script src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>-->
+		<script>
+			var cccMapCont = document.getElementById('ccc-view-map');
+			var cccCenter = new qq.maps.LatLng(30.276611,120.161665);
+			if($('#location').val()!=null&&$('#location').val()!=""){
+				var pointArray = $("#location").val().split(',');
+				cccCenter = new qq.maps.LatLng(pointArray[0], pointArray[1]);
+			}
+			var cccMapOptions = {
+				center: cccCenter,
+				zoom: 10,
+				minZoom: 10,
+				mapTypeId: qq.maps.MapTypeId.ROADMAP,
+				mapTypeControl: false,
+			};
+			var cccBigger = new qq.maps.Size(654, 160);
+			var cccMap = new qq.maps.Map(cccMapCont, cccMapOptions);
+			var markerImg = '/images/icons/marker-sprites@2x.png';
+			var markerSize = new qq.maps.Size(34, 40);
+			var markerScaledSize = new qq.maps.Size(74, 141);
+			var markerShadow = new qq.maps.MarkerImage(
+				'/images/icons/marker-sprites@2x.png',
+				new qq.maps.Size(39, 33), //size
+				new qq.maps.Point(35, 7), //origin
+				new qq.maps.Point(7, 33), //anchor
+				new qq.maps.Size(74, 141) //scaled size
+			);
+			//网点
+			<s:iterator value="#request.listCsList" id="outlet">
+				var marker${outlet.csoId} = new qq.maps.Marker ({
+					position: new qq.maps.LatLng(${outlet.csoLatitude},${outlet.csoLongitude}),
+					icon: new qq.maps.MarkerImage(
+						markerImg,
+						markerSize,
+						new qq.maps.Point(0, 0),
+						new qq.maps.Point(7, 33),
+						markerScaledSize
+					),
+					animation: qq.maps.MarkerAnimation.DROP,
+					shadow: markerShadow,
+					title: '${outlet.csoName}',
+					map: cccMap
+				});
+				//marker${outlet.csoId}.info={id:${outlet.csoId}};
+				qq.maps.event.addListener(marker${outlet.csoId}, 'click', function() {
+					location.href = 'parkinglot_itemdetail.html?outlet=${outlet.csoId}';
+				});
+			</s:iterator>
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+			WeixinJSBridge.call('hideToolbar');
+		});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- author 飞啊飘啊 -->
+<!-- 感谢ibatis的持久层框架 -->
+
+<sqlMap>
+
+	
+
+	<!-- 惠免记录之SQL映射 -->
+	<resultMap id="CsUseRecord" class="com.ccclubs.model.CsUseRecord">
+		<result property="csurId" column="csur_id"/>
+		<result property="csurHost" column="csur_host"/>
+		<result property="csurProfile" column="csur_profile"/>
+		<result property="csurMember" column="csur_member"/>
+		<result property="csurFreeHour" column="csur_free_hour"/>
+		<result property="csurCoin" column="csur_coin"/>
+		<result property="csurGift" column="csur_gift"/>
+		<result property="csurOrder" column="csur_order"/>
+		<result property="csurCount" column="csur_count"/>
+		<result property="csurAddTime" column="csur_add_time"/>
+	</resultMap>
+		
+	<!-- 获取所有惠免记录 -->
+	<select id="getCsUseRecordList" resultMap="CsUseRecord">
+		select cs_use_record$suffix$.* from cs_use_record$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.csur_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询-->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<isNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.csur_free_hour=cs_free_hour$CsFreeHour.suffix$.csfh_id
+			</isNull>
+			<isNotNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.$CsFreeHour.on$=cs_free_hour$CsFreeHour.suffix$.csfh_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询-->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<isNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.csur_coin=cs_coin$CsCoin.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.$CsCoin.on$=cs_coin$CsCoin.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询-->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<isNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.csur_gift=cs_gift$CsGift.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.$CsGift.on$=cs_gift$CsGift.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.csur_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询条件sql片段 -->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<include refid="CsFreeHour_part.cs_free_hour_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询条件sql片段 -->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<include refid="CsCoin_part.cs_coin_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询条件sql片段 -->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<include refid="CsGift_part.cs_gift_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUseRecord_part.cs_use_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csur_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取惠免记录分页 -->
+	<select id="getCsUseRecordPage" parameterClass="java.util.HashMap" resultMap="CsUseRecord">
+		select cs_use_record$suffix$.* from cs_use_record$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询 -->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.csur_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询 -->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<isNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.csur_free_hour=cs_free_hour$CsFreeHour.suffix$.csfh_id
+			</isNull>
+			<isNotNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.$CsFreeHour.on$=cs_free_hour$CsFreeHour.suffix$.csfh_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询 -->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<isNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.csur_coin=cs_coin$CsCoin.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.$CsCoin.on$=cs_coin$CsCoin.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询 -->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<isNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.csur_gift=cs_gift$CsGift.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.$CsGift.on$=cs_gift$CsGift.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询 -->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.csur_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询条件sql片段 -->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<include refid="CsFreeHour_part.cs_free_hour_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询条件sql片段 -->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<include refid="CsCoin_part.cs_coin_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询条件sql片段 -->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<include refid="CsGift_part.cs_gift_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUseRecord_part.cs_use_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by csur_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取惠免记录总数 -->
+	<select id="getCsUseRecordEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_use_record$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.csur_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<isNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.csur_free_hour=cs_free_hour$CsFreeHour.suffix$.csfh_id
+			</isNull>
+			<isNotNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.$CsFreeHour.on$=cs_free_hour$CsFreeHour.suffix$.csfh_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<isNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.csur_coin=cs_coin$CsCoin.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.$CsCoin.on$=cs_coin$CsCoin.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<isNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.csur_gift=cs_gift$CsGift.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.$CsGift.on$=cs_gift$CsGift.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询,同张表只能外链接一次 -->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.csur_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+				
+		where 1=1 
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询条件sql片段 -->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<include refid="CsFreeHour_part.cs_free_hour_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询条件sql片段 -->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<include refid="CsCoin_part.cs_coin_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询条件sql片段 -->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<include refid="CsGift_part.cs_gift_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUseRecord_part.cs_use_record_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取惠免记录 -->
+	<select id="getCsUseRecordById" parameterClass="java.util.HashMap" resultMap="CsUseRecord">
+		select cs_use_record$suffix$.* from cs_use_record$suffix$
+		where csur_id=#id#
+	</select>
+	
+		
+	<!-- 保存惠免记录 -->
+	<insert id="saveCsUseRecord"  parameterClass="com.ccclubs.model.CsUseRecord">
+		insert into cs_use_record$suffix$
+		(
+			cs_use_record$suffix$.csur_host
+			,cs_use_record$suffix$.csur_profile
+			,cs_use_record$suffix$.csur_member
+			,cs_use_record$suffix$.csur_free_hour
+			,cs_use_record$suffix$.csur_coin
+			,cs_use_record$suffix$.csur_gift
+			,cs_use_record$suffix$.csur_order
+			,cs_use_record$suffix$.csur_count
+			,cs_use_record$suffix$.csur_add_time
+		)
+		values(
+			<isNotNull property="csurHost" prepend="">
+				#csurHost#
+			</isNotNull>
+			<isNull property="csurHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="csurProfile" prepend=",">
+				#csurProfile#
+			</isNotNull>
+			<isNull property="csurProfile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurMember" prepend=",">
+				#csurMember#
+			</isNotNull>
+			<isNull property="csurMember" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurFreeHour" prepend=",">
+				#csurFreeHour#
+			</isNotNull>
+			<isNull property="csurFreeHour" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurCoin" prepend=",">
+				#csurCoin#
+			</isNotNull>
+			<isNull property="csurCoin" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurGift" prepend=",">
+				#csurGift#
+			</isNotNull>
+			<isNull property="csurGift" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurOrder" prepend=",">
+				#csurOrder#
+			</isNotNull>
+			<isNull property="csurOrder" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurCount" prepend=",">
+				#csurCount#
+			</isNotNull>
+			<isNull property="csurCount" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="csurAddTime" prepend=",">
+				#csurAddTime#
+			</isNotNull>
+			<isNull property="csurAddTime" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新惠免记录 -->
+	<update id="updateCsUseRecord"  parameterClass="com.ccclubs.model.CsUseRecord">
+		update cs_use_record$suffix$ set
+			<isNotNull property="csurHost" prepend="">
+				cs_use_record$suffix$.csur_host = #csurHost#
+			</isNotNull>
+			<isNull property="csurHost" prepend="">
+				cs_use_record$suffix$.csur_host = null
+			</isNull>				
+			<isNotNull property="csurProfile" prepend=",">
+				cs_use_record$suffix$.csur_profile = #csurProfile#
+			</isNotNull>
+			<isNull property="csurProfile" prepend=",">
+				cs_use_record$suffix$.csur_profile = null
+			</isNull>				
+			<isNotNull property="csurMember" prepend=",">
+				cs_use_record$suffix$.csur_member = #csurMember#
+			</isNotNull>
+			<isNull property="csurMember" prepend=",">
+				cs_use_record$suffix$.csur_member = null
+			</isNull>				
+			<isNotNull property="csurFreeHour" prepend=",">
+				cs_use_record$suffix$.csur_free_hour = #csurFreeHour#
+			</isNotNull>
+			<isNull property="csurFreeHour" prepend=",">
+				cs_use_record$suffix$.csur_free_hour = null
+			</isNull>				
+			<isNotNull property="csurCoin" prepend=",">
+				cs_use_record$suffix$.csur_coin = #csurCoin#
+			</isNotNull>
+			<isNull property="csurCoin" prepend=",">
+				cs_use_record$suffix$.csur_coin = null
+			</isNull>				
+			<isNotNull property="csurGift" prepend=",">
+				cs_use_record$suffix$.csur_gift = #csurGift#
+			</isNotNull>
+			<isNull property="csurGift" prepend=",">
+				cs_use_record$suffix$.csur_gift = null
+			</isNull>				
+			<isNotNull property="csurOrder" prepend=",">
+				cs_use_record$suffix$.csur_order = #csurOrder#
+			</isNotNull>
+			<isNull property="csurOrder" prepend=",">
+				cs_use_record$suffix$.csur_order = null
+			</isNull>				
+			<isNotNull property="csurCount" prepend=",">
+				cs_use_record$suffix$.csur_count = #csurCount#
+			</isNotNull>
+			<isNull property="csurCount" prepend=",">
+				cs_use_record$suffix$.csur_count = null
+			</isNull>				
+			<isNotNull property="csurAddTime" prepend=",">
+				cs_use_record$suffix$.csur_add_time = #csurAddTime#
+			</isNotNull>
+			<isNull property="csurAddTime" prepend=",">
+				cs_use_record$suffix$.csur_add_time = null
+			</isNull>				
+		where
+			csur_id=#csurId#
+	</update>
+	
+	<!-- 更新惠免记录非空字段 -->
+	<update id="updateCsUseRecord$NotNull"  parameterClass="com.ccclubs.model.CsUseRecord">
+		update cs_use_record$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="csurHost" prepend=",">
+				cs_use_record$suffix$.csur_host = #csurHost#
+			</isNotNull>		
+			<isNotNull property="csurProfile" prepend=",">
+				cs_use_record$suffix$.csur_profile = #csurProfile#
+			</isNotNull>		
+			<isNotNull property="csurMember" prepend=",">
+				cs_use_record$suffix$.csur_member = #csurMember#
+			</isNotNull>		
+			<isNotNull property="csurFreeHour" prepend=",">
+				cs_use_record$suffix$.csur_free_hour = #csurFreeHour#
+			</isNotNull>		
+			<isNotNull property="csurCoin" prepend=",">
+				cs_use_record$suffix$.csur_coin = #csurCoin#
+			</isNotNull>		
+			<isNotNull property="csurGift" prepend=",">
+				cs_use_record$suffix$.csur_gift = #csurGift#
+			</isNotNull>		
+			<isNotNull property="csurOrder" prepend=",">
+				cs_use_record$suffix$.csur_order = #csurOrder#
+			</isNotNull>		
+			<isNotNull property="csurCount" prepend=",">
+				cs_use_record$suffix$.csur_count = #csurCount#
+			</isNotNull>		
+			<isNotNull property="csurAddTime" prepend=",">
+				cs_use_record$suffix$.csur_add_time = #csurAddTime#
+			</isNotNull>		
+			</dynamic>
+		where
+			csur_id=#csurId#
+	</update>
+	
+
+	<!-- 根据ID删除一个惠免记录 -->
+	<delete id="deleteCsUseRecordById" parameterClass="java.util.HashMap">
+		delete from cs_use_record$suffix$ where csur_id=#id#
+	</delete>
+
+
+	<!-- 根据条件更新惠免记录 -->
+	<update id="updateCsUseRecordBy"  parameterClass="java.util.HashMap">
+		update cs_use_record$suffix$ set		
+			csur_id=csur_id
+			<isNotNull property="V_csurId" prepend=",">
+				cs_use_record$suffix$.csur_id = #V_csurId#
+			</isNotNull>		
+			<isNotNull property="V_csurHost" prepend=",">
+				cs_use_record$suffix$.csur_host = #V_csurHost#
+			</isNotNull>		
+			<isNotNull property="V_csurProfile" prepend=",">
+				cs_use_record$suffix$.csur_profile = #V_csurProfile#
+			</isNotNull>		
+			<isNotNull property="V_csurMember" prepend=",">
+				cs_use_record$suffix$.csur_member = #V_csurMember#
+			</isNotNull>		
+			<isNotNull property="V_csurFreeHour" prepend=",">
+				cs_use_record$suffix$.csur_free_hour = #V_csurFreeHour#
+			</isNotNull>		
+			<isNotNull property="V_csurCoin" prepend=",">
+				cs_use_record$suffix$.csur_coin = #V_csurCoin#
+			</isNotNull>		
+			<isNotNull property="V_csurGift" prepend=",">
+				cs_use_record$suffix$.csur_gift = #V_csurGift#
+			</isNotNull>		
+			<isNotNull property="V_csurOrder" prepend=",">
+				cs_use_record$suffix$.csur_order = #V_csurOrder#
+			</isNotNull>		
+			<isNotNull property="V_csurCount" prepend=",">
+				cs_use_record$suffix$.csur_count = #V_csurCount#
+			</isNotNull>		
+			<isNotNull property="V_csurAddTime" prepend=",">
+				cs_use_record$suffix$.csur_add_time = #V_csurAddTime#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		<!-- 多对一外链接[会员帐号]查询-->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<isNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.csur_member=cs_member$CsMember.suffix$.csm_id
+			</isNull>
+			<isNotNull property="CsMember.on">
+				left join cs_member cs_member$CsMember.suffix$ on cs_use_record$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询-->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<isNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.csur_free_hour=cs_free_hour$CsFreeHour.suffix$.csfh_id
+			</isNull>
+			<isNotNull property="CsFreeHour.on">
+				left join cs_free_hour cs_free_hour$CsFreeHour.suffix$ on cs_use_record$suffix$.$CsFreeHour.on$=cs_free_hour$CsFreeHour.suffix$.csfh_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询-->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<isNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.csur_coin=cs_coin$CsCoin.suffix$.csc_id
+			</isNull>
+			<isNotNull property="CsCoin.on">
+				left join cs_coin cs_coin$CsCoin.suffix$ on cs_use_record$suffix$.$CsCoin.on$=cs_coin$CsCoin.suffix$.csc_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询-->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<isNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.csur_gift=cs_gift$CsGift.suffix$.csg_id
+			</isNull>
+			<isNotNull property="CsGift.on">
+				left join cs_gift cs_gift$CsGift.suffix$ on cs_use_record$suffix$.$CsGift.on$=cs_gift$CsGift.suffix$.csg_id			
+			</isNotNull>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询-->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<isNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.csur_order=cs_order$CsOrder.suffix$.cso_id
+			</isNull>
+			<isNotNull property="CsOrder.on">
+				left join cs_order cs_order$CsOrder.suffix$ on cs_use_record$suffix$.$CsOrder.on$=cs_order$CsOrder.suffix$.cso_id			
+			</isNotNull>
+		</isNotNull>
+		
+		
+		where 
+		
+		1=1 		
+		<!-- 多对一外链接[会员帐号]查询条件sql片段 -->
+		<isNotNull property="CsurMember"><!-- 调用一下CsurMember，把CsMember指向CsurMember --></isNotNull>
+		<isNotNull property="CsMember">
+			<include refid="CsMember_part.cs_member_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[免费小时]查询条件sql片段 -->
+		<isNotNull property="CsurFreeHour"><!-- 调用一下CsurFreeHour，把CsFreeHour指向CsurFreeHour --></isNotNull>
+		<isNotNull property="CsFreeHour">
+			<include refid="CsFreeHour_part.cs_free_hour_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[红包]查询条件sql片段 -->
+		<isNotNull property="CsurCoin"><!-- 调用一下CsurCoin，把CsCoin指向CsurCoin --></isNotNull>
+		<isNotNull property="CsCoin">
+			<include refid="CsCoin_part.cs_coin_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[优惠内容]查询条件sql片段 -->
+		<isNotNull property="CsurGift"><!-- 调用一下CsurGift，把CsGift指向CsurGift --></isNotNull>
+		<isNotNull property="CsGift">
+			<include refid="CsGift_part.cs_gift_join"/>
+		</isNotNull>
+		<!-- 多对一外链接[系统订单]查询条件sql片段 -->
+		<isNotNull property="CsurOrder"><!-- 调用一下CsurOrder，把CsOrder指向CsurOrder --></isNotNull>
+		<isNotNull property="CsOrder">
+			<include refid="CsOrder_part.cs_order_join"/>
+		</isNotNull>
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUseRecord_part.cs_use_record_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除惠免记录 -->
+	<update id="deleteCsUseRecordBy"  parameterClass="java.util.HashMap">
+		delete from cs_use_record$suffix$ where 
+		
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUseRecord_part.cs_use_record_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>
