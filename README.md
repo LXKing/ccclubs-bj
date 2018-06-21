@@ -12,6 +12,7 @@
 - tomcat 版本要求 6.0.18
     - window=>preferences=>server=>Runtime Environments=>add=>apache tomcat v6.0=>指定tomcat根目录，指定JDK7，创建成功 
 - Eclipse
+	- Eclipse Java EE IDE for Web Developers.
 
 ## 运行
 - 工程右键run as=>run on server,通过控制台旁边的servers可以看到相关的信息
