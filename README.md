@@ -9,6 +9,8 @@
 - tomcat 版本要求 6.0.18
     - window=>preferences=>server=>Runtime Environments=>add=>apache tomcat v6.0=>指定tomcat根目录，创建成功 
 - jdk 1.7
+    - window=>preferences=>java=>installed jres=>add=>standard vm=>选择jdk目录
+    - window=>preferences=>java=>compiler=>errors/warnings=>deprecated and restricted api=>全部调成warning
 - Eclipse
 
 ## 运行
