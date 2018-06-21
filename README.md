@@ -15,6 +15,7 @@
 
 ## 运行
 - 工程右键run as=>run on server,通过控制台旁边的servers可以看到相关的信息
+- tomcat服务器运行超时问题，在servers下面，双击服务器，修改timeout=>start值3600即可
 
 ## Eclipse工程报错问题，修改指定web.xml版本
 - \.settings\org.eclipse.wst.common.project.facet.core.xml
