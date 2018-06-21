@@ -23,3 +23,71 @@
 ```
   <installed facet="jst.web" version="2.4"/>
 ```
+
+# git 分支管理
+
+## 约定
+
+### 分支名称
+
+#### 需求编码名称
+第一期需求：stage1
+第N期需求: stageN
+北京出行开发分支命名为需求编号，请自行按照分支编号创建分支开发
+#### 开发分支名称
+```
+需求编号：PRD-180003
+互不干扰分支名称：bj_180003
+功能相同需求合并，则分支名称：bj_180003_180001
+```
+#### 测试发布分支名称
+```
+需求第一期：stage1
+开发分支合并到测试分支：bj_test_stage1
+```
+#### 预发布分支名称
+```
+需求第一期：stage1
+测试分支合并到预发布分支：bj_pre_stage1
+```
+#### 正式发布分支名称
+```
+需求第一期：stage1
+预发布分支合并到正式发布分支：bj_release_stage1
+```
+#### 标签分支名称
+```
+需求第一期：stage1
+总结需求内容，写入readme文件中
+正式发布分支合并到标签发布分支：bj_stage1
+```
+#### bug修复分支名称
+```
+需求第一期：stage1
+需求编号：PRD-180003
+bug修复分支：bj_bug_{第几期}_{版本，可选}_{需求编号，可选}
+例如：
+bj_test_stage1：bj_bug_stage1_test_180003
+
+```
+
+### 代码发布流程
+
+开发分支=>测试分支=>预发布分支=>正式分支=>标签分支(tag)=>删除（正式、预发布、测试、开发分支）
+
+### bug修复流程
+
+由需要修复的分支，创建出bug修复分支（命名参考以上“bug修复分支名称”），修复后合并到所修复的分支
+例如：
+bj_release_stage1=>bj_bug_stage1_release=>bj_release_stage1
+
+### 代码风格
+
+#### eclipse编码风格
+```
+http://120.26.220.241/BurningGroup/CodeReview.git
+```
+编码规范文件在StyleGuide目录VcEclipseStyle.xml
+
+Window=>Preferences=>Java=>Code Style=>Formatter
+
