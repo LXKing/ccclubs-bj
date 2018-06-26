@@ -232,13 +232,13 @@ public class DefaultAction extends BaseAction {
 
             String strUsername = $.getString("username", "");
             String strPass = $.getString("password", "");
-            Integer type = $.getInteger("type", null);// 默认密码登录；1-验证码登录
+            int type = $.getInteger("type", 0);// 默认密码登录；1-验证码登录
 
             if (SystemHelper.isNullOrEmpty(strUsername)) {
                 return returnError("102", "您还没有输入帐号");
             }
             if (SystemHelper.isNullOrEmpty(strPass)) {
-                if (type == null) {
+                if (type == 0) {
                     return returnError("103", "您还没有输入密码");
                 } else if (type == 1) {
                     return returnError("103", "您还没有输入验证码");
@@ -264,7 +264,7 @@ public class DefaultAction extends BaseAction {
                 return returnError("105", "该帐户已经失效，请联系客服");
             }
 
-            if (type == null) {
+            if (type == 0) {
                 if(!$.md5(strPassword).equals(user.getCsmPassword().toUpperCase()))
                     return returnError("106", "您输入的密码不正确，请重新输入");
             } else if (type == 1) {
