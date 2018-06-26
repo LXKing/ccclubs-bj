@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.ccclubs.action.api.scripts.CarScript;
 import com.ccclubs.action.api.scripts.TimelineScript;
+import com.ccclubs.action.app.official.dto.AppTip;
 import com.ccclubs.action.app.official.meal.MealExpress;
 import com.ccclubs.action.app.official.meal.MealHelper;
 import com.ccclubs.action.app.official.model.JsonFormat;
@@ -5735,6 +5736,33 @@ public class DefaultAction extends BaseAction{
 			// TODO: handle exception
 			return returnError(e);
 		}
+	}
+	
+	/**
+	 * 首页提示
+	 * @return
+	 */
+	public String getHomeTip() {
+	    try {
+	        CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+            if (member == null) {
+                return returnError("100", "登录授权无效");
+            }
+            // 查询验证信息
+            Short vreal = member.getCsmVReal();
+            List<AppTip> tips = new ArrayList<>();
+            if (vreal != null && 0 == vreal.intValue()) {
+                // 用户未认证时
+                AppTip appTip = new AppTip();
+                appTip.setMessage("您还未认证，点击前往认证 >");
+                appTip.setType(AppTip.Type.AUTH_REAL.ordinal());
+                appTip.setObjectId(null);
+                tips.add(appTip);
+            }
+            return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", tips))), CHARSET);
+	    } catch (Exception e) {
+            return returnError(e);
+	    }
 	}
 	
 	public Double $(Double value){
