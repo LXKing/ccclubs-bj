@@ -34,7 +34,7 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 	private CsMember $csmiMemberId;//关联对象[会员帐号]
 	private @caption("证件类型") @column("csmi_certify_type")      @note(" 1:身份证 2:护照 3:军官证 4:台胞证 5:港澳通行证 6:营业执照 7:公务员证 9:其它  ") Short csmiCertifyType;
 	private @caption("证件号码") @column("csmi_certify_num")      @note("  ") String csmiCertifyNum;
-	private @caption("证件图片") @column("csmi_certify_image")      @note("  ") String csmiCertifyImage;
+	private @caption("身份证反面") @column("csmi_certify_image")      @note("  ") String csmiCertifyImage;
 	private @caption("驾证号码") @column("csmi_driver_num")      @note("  ") String csmiDriverNum;
 	private @caption("驾证图片") @column("csmi_driver_image")      @note("  ") String csmiDriverImage;
 	private @caption("性别") @column("csmi_sex")      @note(" 0:女 1:男  ") Short csmiSex;
