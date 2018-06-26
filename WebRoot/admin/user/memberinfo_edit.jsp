@@ -15,15 +15,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMemberInfo.csmiId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.isAddType==true">
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
-	editables:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus",
+	editables:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus",
+	visibles:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus",
+	editables:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiUpdateTime,csmiAddTime,csmiStatus",
+	visibles:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiUpdateTime,csmiAddTime,csmiStatus,csmiOnCertifyImage",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -244,6 +244,12 @@ $(function(){
 		,"csMemberInfo.csmiStatus":function(el){
 			if(jQuery.trim(el.value)=="")
 				return "请选择状态";
+		}
+		</s:if>	
+		
+		<s:if test="#request.CTRL.e.csmiOnCertifyImage==true">
+		${lz:set("haveEditable",true)}
+		,"csMemberInfo.csmiOnCertifyImage":function(el){
 		}
 		</s:if>	
 	},function(){
@@ -518,12 +524,56 @@ $(function(){
 	${after$csmiCertifyNum}
 	</s:if>
 	
+	
+	
+	
+	${lz:set("注释","*****************证件图片字段的输入框代码*****************")}
+	${lz:set("注释","before$csmiOnCertifyImage和after$csmiOnCertifyImage变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csmiOnCertifyImage==true">
+	${before$csmiOnCertifyImage}
+	<dl class="csmiOnCertifyImage " minor  ref="csmiOnCertifyImage" style="width:98%;">
+		<dt>证件正面:</dt>
+		<s:if test="#request.CTRL.e.csmiOnCertifyImage==true">
+		${lz:set("haveEditable",true)}
+		<dd input="image">
+		<s:if test="#request.csMemberInfo$csmiOnCertifyImage!=null">${csMemberInfo$csmiOnCertifyImage}</s:if><s:else>
+		    <input type="text" class="input" maxlength="128" size="32" name="csMemberInfo.csmiOnCertifyImage" id="csmiOnCertifyImage"  value="${csMemberInfo.csmiOnCertifyImage}"/>
+			<button type="button" onclick="$.upload({type:'img',callback:function(url){if(url)$('#csmiOnCertifyImage').val(url)}})" class="button">设置图片</button>
+			<button type="button" onclick="$('#csmiOnCertifyImage').val('')" class="button">删除图片</button>
+			<button type="button" onclick="$.thumb({url:$('#csmiOnCertifyImage').val()})" class="button">查看图片</button>
+	 	 </s:else>
+	 	 
+	 	 
+	 	 <em>请上传会员信息的证件图片</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****证件图片字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input wide">
+		 		<textarea class="" style="display:none;" id="csmiOnCertifyImage">${csMemberInfo.csmiOnCertifyImage}</textarea>
+		 		<span>
+		 	${lz:set("isVacant",lz:vacant(csMemberInfo.csmiOnCertifyImage))}
+		 	<s:if test="#request.isVacant==false">
+		 	<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=96}else{this.height=96}" src="${csMemberInfo.csmiOnCertifyImage}"/>
+		 	</s:if>
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csmiOnCertifyImage}
+	</s:if>
+	
+	
 	${lz:set("注释","*****************证件图片字段的输入框代码*****************")}
 	${lz:set("注释","before$csmiCertifyImage和after$csmiCertifyImage变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmiCertifyImage==true">
 	${before$csmiCertifyImage}
 	<dl class="csmiCertifyImage " minor  ref="csmiCertifyImage" style="width:98%;">
-		<dt>证件图片:</dt>
+		<dt>证件反面:</dt>
 		<s:if test="#request.CTRL.e.csmiCertifyImage==true">
 		${lz:set("haveEditable",true)}
 		<dd input="image">
@@ -557,6 +607,11 @@ $(function(){
 	</dl>
 	${after$csmiCertifyImage}
 	</s:if>
+	
+	
+	
+	
+	
 	
 	${lz:set("注释","*****************驾证号码字段的输入框代码*****************")}
 	${lz:set("注释","before$csmiDriverNum和after$csmiDriverNum变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}

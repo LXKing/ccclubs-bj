@@ -336,7 +336,7 @@ ${after$form}
 			 <s:if test="#request.defines==null && #request.CTRL.l.csmiCertifyImage || #request.defines['csmiCertifyImage']!=null">
 			 <td <s:if test="#request.defines['csmiCertifyImage']>0">colspan="${defines["csmiCertifyImage"]}" ${all?"width":"iwidth"}="${defines["csmiCertifyImage"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=200":""} </s:else> tdid="7" ref="csmiCertifyImage"   title="证件图片">
 			 	<a class="${desc=="csmi_certify_image" ? "desc" : ""}${asc=="csmi_certify_image" ? "asc" : ""}" href="?${desc=="csmi_certify_image" ? "asc=csmi_certify_image" : ""}${(asc=="csmi_certify_image" || desc!="csmi_certify_image" )? "desc=csmi_certify_image" : ""}&${lz:queryss("UTF-8","desc","asc")}">
-			 	证件图片
+			 	身份证反面
 			 	</a>
 			 	${lz:set("checkeds[]","csmiCertifyImage")}
 			 </td>
