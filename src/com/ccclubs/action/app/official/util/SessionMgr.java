@@ -2,7 +2,7 @@ package com.ccclubs.action.app.official.util;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.TimeUnit;
 import com.ccclubs.helper.redis.DBIndex;
 import com.ccclubs.helper.redis.DefaultJRedisClient;
 import com.ccclubs.helper.redis.tag.APP_OFFICIAL;
@@ -96,4 +96,18 @@ public class SessionMgr {
 		jr.setValue(APP_OFFICIAL.PL_APP_MEMBER_SESSION + sessionToken, null);
 	}
 	
+	
+	/**
+	 * 放入session 指定有效时长
+	 * @param sessionToken
+	 * @param key
+	 * @param obj
+	 * @param timeout seconds
+	 */
+    public static void put(String sessionToken, String key, Object obj, long timeout){
+        Map<String, Object> val = getSessionStore(sessionToken);
+        if(val == null) val = new HashMap<String, Object>();
+        val.put(key, obj);
+        jr.setValue(APP_OFFICIAL.PL_APP_MEMBER_SESSION + sessionToken, val, timeout); 
+    }
 }
