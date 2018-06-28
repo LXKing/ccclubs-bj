@@ -23,7 +23,9 @@ public class SchedulingService {
 		车辆投放,定单调度,干预调度
 	}
 	
-	public static void scheduling(final Long car,final Long fromOutlets,final Long toOutlets,final Date outTime,final Date inTime,final DispatchType dispatchType,final Long order, final String remark){
+	public static void scheduling(final Long car,final Long fromOutlets
+	        ,final Long toOutlets,final Date outTime,final Date inTime
+	        ,final DispatchType dispatchType,final Long order, final String remark){
 
 		new Thread(){
 			public void run(){
@@ -39,7 +41,9 @@ public class SchedulingService {
 				 	,(short)1//方向 [非空]
 				 	,remark//说明 [非空]
 				 	,order//订单
-				 	,csOrder==null?("SrvUser@"+LoginHelper.getLoginId()):("CsMember@"+csOrder.getCsoUseMember())//操作人
+				 	,csOrder==null?
+				 	        ("SrvUser@"+LoginHelper.getLoginId())
+				 	        :("CsMember@"+csOrder.getCsoUseMember())//操作人
 				 	,order==null?(short)1:0//状态 [非空]
 				).save();
 				
@@ -53,7 +57,9 @@ public class SchedulingService {
 				 	,(short)0//方向 [非空]
 				 	,remark//说明 [非空]
 				 	,order//订单
-				 	,csOrder==null?("SrvUser@"+LoginHelper.getLoginId()):("CsMember@"+csOrder.getCsoUseMember())//操作人
+				 	,csOrder==null?
+				 	        ("SrvUser@"+LoginHelper.getLoginId())
+				 	        :("CsMember@"+csOrder.getCsoUseMember())//操作人
 				 	,order==null?(short)1:0//状态 [非空]
 				).save();
 				
@@ -77,7 +83,8 @@ public class SchedulingService {
 				for(CsScheduling csScheduling:CsScheduling.where().cssOrder(order).list(-1)){
 					csScheduling.delete();
 					//更新原网点车辆数
-					com.ccclubs.service.common.impl.SchedulingService.synOutletsCarCount(csScheduling.getCssOutlets());
+					com.ccclubs.service.common.impl.SchedulingService
+					.synOutletsCarCount(csScheduling.getCssOutlets());
 				}
 			}
 		}.start();
@@ -93,7 +100,8 @@ public class SchedulingService {
 			public void run(){
 				for(CsScheduling csScheduling:CsScheduling.where().cssOrder(order).list(-1)){
 					new CsScheduling(csScheduling.getCssId()).cssStatus((short)1).update();
-					com.ccclubs.service.common.impl.SchedulingService.synOutletsCarCount(csScheduling.getCssOutlets());
+					com.ccclubs.service.common.impl.SchedulingService
+					.synOutletsCarCount(csScheduling.getCssOutlets());
 				}
 			}
 		}.start();
@@ -107,7 +115,9 @@ public class SchedulingService {
 		new Thread(){
 			public void run(){
 				int count = CsCar.where().cscOutlets(outlets).count().shortValue()//当前车辆所在的网点
-				+CsOrder.where().csoOutlets(outlets).add("csoOutletsNot", "not").csoOutletsRet(outlets).definex("(cso_status<3 or cso_status=5)").count().shortValue();//加将要还到此网点的订单数
+				+CsOrder.where().csoOutlets(outlets).add("csoOutletsNot", "not")
+				.csoOutletsRet(outlets).definex("(cso_status<3 or cso_status=5)")
+				.count().shortValue();//加将要还到此网点的订单数
 				new CsOutlets(outlets).csoCarS((short)count).update();
 			}
 		}.start();
@@ -122,7 +132,8 @@ public class SchedulingService {
 	 * @param finish
 	 * @return
 	 */
-	public static String checkGetRetOutlets(Long car_id, Long outlets_get_id,Long outlets_ret_id, Date start, Date finish) {
+	public static String checkGetRetOutlets(Long car_id, Long outlets_get_id
+	        ,Long outlets_ret_id, Date start, Date finish) {
 		CsCar csCar = CsCar.get(car_id);
 		CsOutlets csOutlets = CsOutlets.get(outlets_ret_id);
 		
@@ -154,14 +165,17 @@ public class SchedulingService {
 			return null;
 		
 		//判断原网点是否支持借出
-		if(!CsOutlets.get(outlets_get_id).getCsoCanA())return "网点"+CsOutlets.getKeyValue(outlets_get_id)+"不支持车辆借出";
+		if(!CsOutlets.get(outlets_get_id).getCsoCanA())
+		    return "网点"+CsOutlets.getKeyValue(outlets_get_id)+"不支持车辆借出";
+		
 		//判断目标网点是否支持还入
-		if(!CsOutlets.get(outlets_ret_id).getCsoCanB())return "网点"+CsOutlets.getKeyValue(outlets_ret_id)+"不支持车辆借出";
+		if(!CsOutlets.get(outlets_ret_id).getCsoCanB())
+		    return "网点"+CsOutlets.getKeyValue(outlets_ret_id)+"不支持车辆借出";
 		
 		
 		//检查目标网点在目标时间内的车位数是否够用
-		Long inCount = CsScheduling.where().cssOutlets(outlets_ret_id).cssDir((short)0).count();//调入数
-		Long outCount = CsScheduling.where().cssOutlets(outlets_ret_id).cssDir((short)1).count();//调出数		
+		Long inCount = CsScheduling.where().cssOutlets(outlets_ret_id).cssTimeStart(start).cssTimeEnd(finish).cssDir((short)0).count();//调入数
+		Long outCount = CsScheduling.where().cssOutlets(outlets_ret_id).cssTimeStart(start).cssTimeEnd(finish).cssDir((short)1).count();//调出数		
 		if((csOutlets.getCsoPositionS()-(inCount-outCount))<=0)
 			return "目标网点"+csOutlets.getKeyValue()+"在"+$.date(finish, "yyyy-MM-dd HH:mm")+"无可用车位";
 		

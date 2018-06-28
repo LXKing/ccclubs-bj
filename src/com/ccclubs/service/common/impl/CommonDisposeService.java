@@ -346,7 +346,10 @@ public class CommonDisposeService implements ICommonDisposeService {
 		return csOrderDao.getCsOrderById(csOrder.getCsoId());
 	}
 	
-	public synchronized CsOrderCluster saveMealOrder(Long payMemberId, Long useMemberId, Long carId, Long outlets_get_id,Long outlets_ret_id, Date start, Long mealId, Long feeType, Long insureType, Double longPrice, Double freeHours, Long editor, From from, String src) throws MessageException {
+	public synchronized CsOrderCluster saveMealOrder(Long payMemberId
+	        , Long useMemberId, Long carId, Long outlets_get_id,Long outlets_ret_id
+	        , Date start, Long mealId, Long feeType, Long insureType, Double longPrice
+	        , Double freeHours, Long editor, From from, String src) throws MessageException {
 
 		SrvLock.lock(SrvLock.LockType.订单事务锁, "套餐添加");
 
