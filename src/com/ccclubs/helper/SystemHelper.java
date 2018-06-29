@@ -546,7 +546,8 @@ public class SystemHelper {
 	public static boolean isMobile(String mobile) {
 		if (mobile == null)
 			return false;
-		return Pattern.matches("^(1[7|3|4|5|8][0-9])\\d{8}$", mobile);
+		String mobileRegex = "^(1[3|4|5|7|8|9][0-9])\\d{8}$";
+		return Pattern.matches(mobileRegex, mobile);
 	}
 
 	/**

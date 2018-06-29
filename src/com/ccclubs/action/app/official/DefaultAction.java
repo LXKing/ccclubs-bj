@@ -365,7 +365,7 @@ public class DefaultAction extends BaseAction {
             CsMember csMember = CsMember.where().csmMobile(mobile).get();
 
             if (csMember == null && type != 2) {
-                return returnError("104", "手机号码不存在");
+                return returnError("104", "您还未注册");
             }
 
             if (csMember != null && type == 2) {
@@ -5972,7 +5972,7 @@ public class DefaultAction extends BaseAction {
             if (vreal != null && 0 == vreal.intValue()) {
                 // 用户未认证时
                 AppTip appTip = new AppTip();
-                appTip.setMessage("您还未认证，点击前往认证 >");
+                appTip.setMessage("您还未认证，点击前往认证");
                 appTip.setType(AppTip.Type.AUTH_REAL.ordinal());
                 appTip.setObjectId(null);
                 tips.add(appTip);
