@@ -87,9 +87,9 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		String md5 = $.md5(json);
 		
 		List<CsUpdate> list = new ArrayList();
-		Boolean bInReject = false;
+		//Boolean bInReject = false;
 		//如果查询参数中有下列字段中任意之一，则不作缓存
-		for(String reject:new String[]{"In-Reject","csuUpdateTime","csuUpdateTimeStart","csuUpdateTimeEnd","csuAddTime","csuAddTimeStart","csuAddTimeEnd"}){
+		/*for(String reject:new String[]{"In-Reject","csuUpdateTime","csuUpdateTimeStart","csuUpdateTimeEnd","csuAddTime","csuAddTimeStart","csuAddTimeEnd"}){
 			if(params.get(reject)!=null){
 				bInReject = true;
 				break;
@@ -118,13 +118,13 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 					MemCache.deleteValue(CsUpdate.M.class, md5);
 				}
 			}
-		}
+		}*/
 				
 		
 		if(size!=null && size!=-1)
 			params.put("limit", size);
 		list = this.getSqlMapClientTemplate().queryForList("getCsUpdateList", params);
-		if(!bInReject && size<1024){
+		/*if(!bInReject && size<1024){
 			List caches = new ArrayList();
 			for(CsUpdate csUpdate:list){
 				caches.add(csUpdate.getCsuId());
@@ -132,7 +132,7 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 			}
 			MemCache.setObject(CsUpdate.M.class, md5, caches, MemCache.defaultSeconds());
 			MemCache.setValue(CsUpdate.M.class, md5, json, MemCache.defaultSeconds());
-		}		
+		}	*/	
 		
 		return list;
 	}
@@ -251,18 +251,19 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		if(id==null || id.longValue()==0)
 			return null;
 	
-		CsUpdate csUpdate = MemCache.getObject(CsUpdate.class, id);
+		CsUpdate csUpdate;
+		/*= MemCache.getObject(CsUpdate.class, id);
 		if(csUpdate!=null)
-			return csUpdate;
+			return csUpdate;*/
 			
 		Map params=new HashMap();
 		params.put("id", id);
 		params = custom(params);
 		csUpdate = (CsUpdate) this.getSqlMapClientTemplate().queryForObject("getCsUpdateById",params);
-		if(csUpdate!=null)
+		/*if(csUpdate!=null)
 			MemCache.setValue(CsUpdate.class,id, csUpdate.getKeyValue());
 		if(csUpdate!=null)
-			MemCache.setObject(CsUpdate.class,id, csUpdate);
+			MemCache.setObject(CsUpdate.class,id, csUpdate);*/
 		return csUpdate;
 	}
 	
@@ -288,10 +289,10 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		csUpdate = custom(csUpdate);
 		Long id=$.parseLong(this.getSqlMapClientTemplate().insert("saveCsUpdate", csUpdate));
 		csUpdate = this.GetCsUpdateById(id);
-		MemCache.setValue(CsUpdate.class,id, csUpdate.getKeyValue());
+		/*MemCache.setValue(CsUpdate.class,id, csUpdate.getKeyValue());
 		MemCache.setObject(CsUpdate.class,id,csUpdate);
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 		return Trigger.on(CsUpdate.class,Trigger.SAVE,csUpdate);	
 	}
 
@@ -306,12 +307,12 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		csUpdate = custom(csUpdate);
 		this.getSqlMapClientTemplate().update("updateCsUpdate", csUpdate);
 		csUpdate = this.GetCsUpdateById(csUpdate.getCsuId());
-		if(csUpdate!=null){
+		/*if(csUpdate!=null){
 			MemCache.setValue(CsUpdate.class,csUpdate.getCsuId(), csUpdate.getKeyValue());
 			MemCache.setObject(CsUpdate.class,csUpdate.getCsuId(),csUpdate);
 		}
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 		Trigger.on(CsUpdate.class,Trigger.UPDATE,csUpdate);
 	}
 	/**
@@ -323,12 +324,12 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		csUpdate = custom(csUpdate);
 		this.getSqlMapClientTemplate().update("updateCsUpdate$NotNull", csUpdate);
 		csUpdate = this.GetCsUpdateById(csUpdate.getCsuId());
-		if(csUpdate!=null){
+		/*if(csUpdate!=null){
 			MemCache.setValue(CsUpdate.class,csUpdate.getCsuId(), csUpdate.getKeyValue());
 			MemCache.setObject(CsUpdate.class,csUpdate.getCsuId(),csUpdate);
 		}
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 		Trigger.on(CsUpdate.class,Trigger.UPDATE,csUpdate);
 	}
 
@@ -343,10 +344,10 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		params = custom(params);
 		Trigger.on(CsUpdate.class,Trigger.DELETE,params);
 		this.getSqlMapClientTemplate().delete("deleteCsUpdateById", params);
-		MemCache.deleteValue(CsUpdate.class, id);
+		/*MemCache.deleteValue(CsUpdate.class, id);
 		MemCache.deleteObject(CsUpdate.class, id);
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 	}
 	/**
 	 * 根据ID逻辑删除App更新 
@@ -360,10 +361,10 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		params = custom(params);
 		Trigger.on(CsUpdate.class,Trigger.DELETE,params);
 		this.getSqlMapClientTemplate().update("removeCsUpdateById", params);
-		MemCache.deleteValue(CsUpdate.class, id);
+		/*MemCache.deleteValue(CsUpdate.class, id);
 		MemCache.deleteObject(CsUpdate.class, id);
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 	}
 	/**
 	 * 根据条件更新App更新
@@ -377,7 +378,7 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 		for(Map.Entry<String,Object> entry:((Map<String,Object>)params).entrySet())
 			allParams.put(entry.getKey(), entry.getValue());
 		//如果更新条数大于255，则清空缓存
-		if(this.getCsUpdateCount(params)>255){
+		/*if(this.getCsUpdateCount(params)>255){
 			MemCache.clearValue(CsUpdate.class);
 			MemCache.clearObject(CsUpdate.class);
 		}else{
@@ -389,7 +390,7 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 			}
 		}
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 			
 		int rows = this.getSqlMapClientTemplate().update("updateCsUpdateBy", allParams);
 		Trigger.on(CsUpdate.class,Trigger.UPDATE,allParams);		
@@ -401,7 +402,7 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 	public void deleteCsUpdateByConfirm(Map params){
 		Trigger.on(CsUpdate.class,Trigger.DELETE,params);
 		//如果更新条数大于255，则清空缓存
-		if(this.getCsUpdateCount(params)>255){
+		/*if(this.getCsUpdateCount(params)>255){
 			MemCache.clearValue(CsUpdate.class);
 			MemCache.clearObject(CsUpdate.class);
 		}else{
@@ -413,7 +414,7 @@ public class CsUpdateDao extends SqlMapClientDaoSupport implements ICsUpdateDao
 			}
 		}
 		MemCache.clearObject(CsUpdate.M.class);
-		MemCache.clearValue(CsUpdate.M.class);
+		MemCache.clearValue(CsUpdate.M.class);*/
 		
 		int rows = this.getSqlMapClientTemplate().update("deleteCsUpdateBy", params);
 	}

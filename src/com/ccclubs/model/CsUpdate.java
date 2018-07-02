@@ -206,17 +206,17 @@ public @caption("App更新") @table("cs_update") class CsUpdate implements java.
 	 * @return
 	 */
 	public static @api String getKeyValue(Long id){	
-		String value = MemCache.getValue(CsUpdate.class, id);
+		/*String value = MemCache.getValue(CsUpdate.class, id);
 		if(!$.empty(value))
 			return value;	
 		if(id==null||id.longValue()==0)
-			return value;			
+			return value;	*/		
 		CsUpdate csUpdate = get(id);
 		if(csUpdate!=null){
 			String strValue = csUpdate.getCsuName$();
 			if(!"CsuName".equals("CsuName"))
 				strValue+="("+csUpdate.getCsuName$()+")";
-			MemCache.setValue(CsUpdate.class, id ,strValue);
+			//MemCache.setValue(CsUpdate.class, id ,strValue);
 			return strValue;
 		}
 		return null;
