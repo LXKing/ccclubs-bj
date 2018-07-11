@@ -17,6 +17,7 @@
 ## 运行
 - 工程右键run as=>run on server,通过控制台旁边的servers可以看到相关的信息
 - tomcat服务器运行超时问题，在servers下面，双击服务器，修改timeout=>start值3600即可
+- 在eclipse工作空间下面的“servers”修改server.xml配置，添加URIEncoding="UTF-8"这句，防止查询乱码。例如：\<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8"/>
 
 ## Eclipse工程报错问题，修改指定web.xml版本
 - \.settings\org.eclipse.wst.common.project.facet.core.xml
