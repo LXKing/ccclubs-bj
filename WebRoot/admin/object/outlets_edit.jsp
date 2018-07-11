@@ -149,7 +149,7 @@ $(function(){
 			if(el.value.length>32 && el.value.indexOf("[*]")==-1)
 				return "名称最大长度为32个字符";
 			if(jQuery.trim(el.value)!=""){
-				var exists = $.getObject("outlets_query.do",{exists:true,csoName:el.value});
+				var exists = $.getObject("outlets_queryDetails.do",{exists:true,csoName:el.value});
 				if(exists && exists.length>0){
 					if(${csOutlets.csoId==null} || exists[0].value!=$("#csoId").val())
 						return "名称已存在";						
