@@ -1134,7 +1134,7 @@ ${after$form}
 	}
 </s:if>
 
-	<s:if test="#session.ccclubs_login.suId==0">
+	<s:if test="#session.ccclubs_login.suId==0 || #request.hasEdit == true">
 	$(function(){
 		//修改接口退款任意字段
 		$(".table tbody td.td").dblclick(function(){
