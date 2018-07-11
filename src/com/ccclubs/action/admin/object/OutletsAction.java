@@ -498,6 +498,72 @@ public class OutletsAction
 	}
 
 
+	public String queryDetails(){
+	    try{
+            //根据当前的类，把表单参数转成Dao查询需要的Map参数格式,ActionHelper.getQueryFormParams这个东东在Lazy3q.jar中
+            Map<String,Object> params = ActionHelper.getQueryFormParams(CsOutlets.class);
+            //强制限制域
+            params.put("HOSTS",SystemHelper.testHost(null));
+            
+            //反强制限制域
+            
+            //取排序参数,放入查询条件中，取不到放入查询条件中也没关系，因为Dao层会判断的
+            String strAsc=$.getString("asc");//升序字段
+            params.put("asc", strAsc);//放入查询条件
+            String strDesc=$.getString("desc");//降序字段
+            params.put("desc",strDesc);//放入查询条件
+            if($.empty(strAsc) && $.empty(strDesc))//如果未传入排序字段
+                params.put("desc","cso_id");//那么，默认以主键降序，传给Dao层
+                                
+            String strTerm=$.getString("value");//智能搜索时的参数，一般都是主键后面那个字段
+            if(!$.empty(strTerm)){
+                if(strTerm.toLowerCase().startsWith("id:"))//如果查询条件以id:开头，则按ID查询
+                    params.put("csoId", strTerm.toLowerCase().replaceFirst("id:", ""));                 
+                else//按标识查询，模糊查询请带%
+                {
+                    String strDefinex = "";
+                    strDefinex+=" or cso_name like '"+strTerm.replaceAll("'", "''")+"'";
+                    strDefinex+=" or cso_area like '"+strTerm.replaceAll("'", "''")+"%'";
+                    strDefinex="(2=1 "+strDefinex+")";
+                    params.put("definex",strDefinex);
+                }                   
+            }
+            /************LAZY3Q_CODE_QUERY************/
+            /************LAZY3Q_CODE_QUERY************/
+
+            
+            //是否需要整个数据对象
+            Boolean bObject=$.getBoolean("object",false);
+            
+            List<CsOutlets> list = csOutletsService.getCsOutletsPage(0,$.getInteger("size",10),params).getResult();
+            
+            /**
+            * OK!取到数据拼成放入Map中，[{value,text,object:{...}},...]
+            * value:数据ID，text:数据标识,object,整个对象
+            **/
+            List<Map> result = new java.util.ArrayList();
+            for(CsOutlets csOutlets:list){
+                Map map = new HashMap();
+                map.put("value",csOutlets.getCsoId().toString());
+                map.put("text", $.js(csOutlets.getKeyValue()));
+                if(bObject==true)
+                    map.put("object",csOutlets);
+                result.add(map);
+            }
+            /************LAZY3Q_AFTER_QUERY************/
+            /************LAZY3Q_AFTER_QUERY************/
+
+            
+            //$.SendAjax这个函数，第一个参数不是字符串，会自动把第一个对象转成json格式的字符串
+            return $.SendAjax(result, "UTF-8");
+        }catch(Exception e){            
+            e.printStackTrace();
+            Logger.getRootLogger().error(e.getMessage(),e);
+            return $.SendAjax("[]", "UTF-8");
+        }   
+	}
+	
+	
 	/**
 	 * 根据名称或ID查询网点
 	 * 返回ajax数据
