@@ -641,7 +641,7 @@ public class RecordAction
 					strDefinex+=" or csr_remark like '"+strTerm.replaceAll("'", "''")+"%'";
 					strDefinex="(2=1 "+strDefinex+")";
 					params.put("definex",strDefinex);
-				}					
+				}
 			}
 			/************LAZY3Q_CODE_QUERY************/
 			/************LAZY3Q_CODE_QUERY************/
