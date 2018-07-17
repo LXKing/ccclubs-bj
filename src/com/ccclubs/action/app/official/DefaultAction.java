@@ -400,54 +400,44 @@ public class DefaultAction extends BaseAction {
         try {
             int type = $.getInteger("type", 0);
             String csmMobile = $.getString("mobile", "");
-            // String strValidCode = $.getString("txtCode", "");
             String strValidMobCode = $.getString("validCode", "");
             if ($.empty(csmMobile)) {
                 return returnError("101", "请输入手机号");
             }
-            // if ($.empty(strValidCode)) {
-            // // $.SetTips("未输入验证码，不能修改密码");
-            // return $.SendHtml("103", "UTF-8");
-            // }
             if ($.empty(strValidMobCode)) {
-                // $.SetTips("未输入短信校验码，不能修改密码");
                 return returnError("104", "未输入短信校验码，不能修改密码");
             }
             if (!SystemHelper.isMobile(csmMobile)) {
-                // $.SetTips("手机号码格式错误");
                 return returnError("105", "手机号码格式错误");
             }
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, FORGET_SMS_CODE))
-                    && type == 0) {
+            
+            if (type == 0 && !$.equals(strValidMobCode,
+                    (String) SessionMgr.get(csmMobile, FORGET_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
-            }
-
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, RESET_SMS_CODE))
-                    && type == 1) {
+            }else if (type == 1 && !$.equals(strValidMobCode,
+                    (String) SessionMgr.get(csmMobile, RESET_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
-            }
-
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))
-                    && type == 2) {
+            }else if (type == 2 && !$.equals(strValidMobCode,
+                    (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
             }
 
             CsMember existMember =
                     csMemberService.getCsMember($.add(CsMember.F.csmMobile, csmMobile));
-            if (existMember == null)
-                return returnError("111", "手机号不存在，不能修改密码");
 
             String token = UUIDGenerator.getUUID();
             String key = FORGET_TOKEN;
             switch (type) {
                 case 1:
                     key = RESET_TOKEN;
+                    if (existMember == null)
+                        return returnError("111", "手机号不存在，不能修改密码");
                     break;
                 case 2:
                     key = REGISTER_TOKEN;
                     break;
             }
-            SessionMgr.put(existMember.getCsmMobile(), key, token);
+            SessionMgr.put(csmMobile, key, token);
             return $.SendHtml($.json(JsonFormat.success().addValue(FORGET_TOKEN, token)), CHARSET);
         } catch (Exception ex) {
             return returnError(ex);
@@ -529,27 +519,35 @@ public class DefaultAction extends BaseAction {
         try {
 
             final short from = $.getShort("from");
+            final short type = $.getShort("type", (short) 0);
 
             final String csmMobile = $.getString("mobile", "");
             if ($.empty(csmMobile)) {
                 return returnError("101", "请输入手机号");
             }
 
-            String strValidMobCode = $.getString("validCode", "");
-            if ($.empty(strValidMobCode) && from != 2) {
-                return returnError("102", "未输入短信校验码，不能注册账号");
-            }
-
             if (!SystemHelper.isMobile(csmMobile)) {
                 return returnError("103", "手机号码格式错误");
             }
 
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))
-                    && from != 2) {
-                return returnError("104", "短信校验码输入错误");
+            String strValidMobCode = $.getString("validCode", "");
+            if (from != 2) {
+                if ($.empty(strValidMobCode)) {
+                    if (type == 0) {
+                        return returnError("102", "未输入短信校验码，不能注册账号");
+                    } else if (type == 1) {
+                        return returnError("102", "请先通过短信验证码校验");
+                    }
+                } else {
+                    if (type == 0 && !$.equals(strValidMobCode,
+                            (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))) {
+                        return returnError("104", "短信校验码输入错误");
+                    } else if (type == 1 && !$.equals(strValidMobCode,
+                            (String) SessionMgr.get(csmMobile, REGISTER_TOKEN))) {
+                        return returnError("104", "请先通过短信验证码校验");
+                    }
+                }
             }
-
-
 
             final String csmPassword = $.getString("txtPassWord", "");
             final String rePwd = $.getString("txtRePassWord", "");
@@ -619,16 +617,13 @@ public class DefaultAction extends BaseAction {
                         csMemberShipService.saveCsMemberShip(csMemberShip);
 
                         // 保存人员信息到cs_unit_person
-
-                        if (from == 2) {
-                            CsUnitPerson csUnitPerson = getUnitPerson(new CsUnitPerson(), host,
-                                    csUnitInfo.getCsuiId(), member.getCsmId(), -1l);
-                            csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-                            UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(), "REGIST_CODE",
-                                    $.str(csmMobile), "欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。",
-                                    SMSType.通知类短信,
-                                    $.add("mobile", $.str(csmMobile)).add("code", csmPassword));
-                        }
+                        CsUnitPerson csUnitPerson = getUnitPerson(new CsUnitPerson(), host,
+                                csUnitInfo.getCsuiId(), member.getCsmId(), -1l);
+                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
+                        UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(), "REGIST_CODE",
+                                $.str(csmMobile), "欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。",
+                                SMSType.通知类短信,
+                                $.add("mobile", $.str(csmMobile)).add("code", csmPassword));
 
                     }
 
@@ -765,6 +760,7 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("102", "用户尚未注册，请注册");
             }
+            final String realName = $.getString("realName");//真实姓名
             final String certifyNum = $.getString("certifyNum");
             final String certifyImg = $.getString("certifyImage");// 身份证反面
             final String onCertifyImg = $.getString("onCertifyImage");// 身份正面
@@ -791,6 +787,7 @@ public class DefaultAction extends BaseAction {
                         CsMemberInfo csMemberInfo = updateMemberInfo(member, certifyImg, certifyNum,
                                 driverImage, onCertifyImg);
                         csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                        member.setCsmName(realName);
                         csMemberService.updateCsMember$NotNull(
                                 updateAutoState(member, (short) 2, (short) 2));
                     }
@@ -1710,8 +1707,6 @@ public class DefaultAction extends BaseAction {
                 checkflag = 1;
             else
                 checkflag = 0;
-            // CsUnitInfo unit = CsUnitInfo.get(person.getCsupInfo());
-            // if(unit == null) return returnError("102", "用户未绑定企业");
 
             Double remain =
                     commonMoneyService.getCoin(member.getCsmHost(), member.getCsmId(), new Date());
@@ -1735,6 +1730,8 @@ public class DefaultAction extends BaseAction {
             data.put("vemail", member.getCsmVEmail());
             data.put("vreal", member.getCsmVReal());
             data.put("vmobile", member.getCsmVMobile());
+            data.put("vstatus", member.getVstatus());//认证状态
+            
             data.put("personId", person.getCsupId());
             data.put("unitInfoId", person.getCsupInfo());
             data.put("unitName",
@@ -1795,6 +1792,24 @@ public class DefaultAction extends BaseAction {
         } catch (Exception ex) {
             return returnError(ex);
         }
+    }
+    
+    /**
+     * 获取认证状态
+     * @return
+     */
+    public String getAuthStatus() {
+        CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
+        if (member == null) {
+            return returnError("100", "登录授权无效");
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", member.getCsmId());
+        data.put("vreal", member.getCsmVReal());
+        data.put("vdrive", member.getCsmVDrive());
+        data.put("vwork", member.getCsmVWork());
+        data.put("voffline", member.getCsmVMobile());
+        return $.SendHtml($.json(JsonFormat.success().setData($.$("map", data))), CHARSET);
     }
 
     /**
@@ -5955,6 +5970,7 @@ public class DefaultAction extends BaseAction {
 
     /**
      * 首页提示
+     * 
      * @return
      */
 

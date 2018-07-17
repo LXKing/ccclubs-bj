@@ -115,7 +115,8 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	private @caption("实名认证") @column("csm_v_real")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVReal;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("驾驶认证") @column("csm_v_drive")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVDrive;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 1:正常 0:禁用     
-	
+	private @caption("工作认证") @column("csm_v_work")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVWork;// 0:未认证 1:已认证 2:等待认证 3:认证失败
+	private @caption("线下认证") @column("csm_v_offline")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVOffline;// 0:未认证 1:已认证 2:等待认证 3:认证失败
 	//默认构造函数
 	public CsMember(){
 	
@@ -2869,12 +2870,68 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		this.csmStatus = csmStatus;
 		this.setSeted(F.csmStatus);
 	}
+	
+	public Short getCsmVWork() {
+        return csmVWork;
+    }
+
+    public void setCsmVWork(Short csmVWork) {
+        this.csmVWork = csmVWork;
+    }
+
+    public String getCsmVWork$(){
+        String strValue="";
+         if($.equals($.str(this.getCsmVWork()),"0"))
+            strValue=$.str("未认证");       
+         if($.equals($.str(this.getCsmVWork()),"1"))
+            strValue=$.str("已认证");       
+         if($.equals($.str(this.getCsmVWork()),"2"))
+            strValue=$.str("等待认证");      
+         if($.equals($.str(this.getCsmVWork()),"3"))
+            strValue=$.str("认证失败");      
+         return strValue;
+    }
+    
+    public Short getCsmVOffline() {
+        return csmVOffline;
+    }
+
+    public void setCsmVOffline(Short csmVOffline) {
+        this.csmVOffline = csmVOffline;
+    }
+	
+    public String getCsmVOffline$(){
+        String strValue="";
+         if($.equals($.str(this.getCsmVOffline()),"0"))
+            strValue=$.str("未认证");       
+         if($.equals($.str(this.getCsmVOffline()),"1"))
+            strValue=$.str("已认证");       
+         if($.equals($.str(this.getCsmVOffline()),"2"))
+            strValue=$.str("等待认证");      
+         if($.equals($.str(this.getCsmVOffline()),"3"))
+            strValue=$.str("认证失败");      
+         return strValue;
+    }
+    
+    public short getVstatus() {
+        if (this.getCsmVDrive() == 3 || this.getCsmVReal() == 3 || this.getCsmVWork() == 3
+                || this.getCsmVOffline() == 3) {
+            return 3;//四项认证存在认证失败
+        }else if(this.getCsmVDrive() == 1 && this.getCsmVReal() == 1 && this.getCsmVWork() == 1
+                && this.getCsmVOffline() == 1) {
+            return 1;//四项认证全部通过
+        }else if(this.getCsmVDrive() == 2 && this.getCsmVReal() == 2 && this.getCsmVWork() == 2
+                && this.getCsmVOffline() == 2) {
+            return 2;//四项认证都为等待认证
+        }else {
+            return 0;//四项认证存在未认证（低优先级）
+        }
+    }
+    
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
 
-	
-	
-	/**
+    /**
 	 * 用来获取当有字段关联对象时的获取方式,调用如${CsMember.obj.filedName}
 	 * 因为有些变态的模板语言不能识别$，所以不能以${CsMember.$filedName}获取关联对象
 	 */

@@ -28,6 +28,16 @@ public interface ICommonUtilService {
 	public Boolean sendTemplateSms(Long host,String flag,String mobile,String defaultTemplate,SMSType smsType, Map<String,String> params);
 
 	/**
+     * 发送模版短信
+     * @param flag 标识 
+     * @param mobile 手机号码
+     * @param smsType 
+     * @param params 参数列表
+     * @param append 附加信息
+     */
+    public Boolean sendTemplateSms(Long host,String flag,String mobile,String defaultTemplate,SMSType smsType, Map<String,String> params, String append);
+	
+	/**
 	 * 发送普通短信
 	 * @param mobile 手机号码
 	 * @param content 短信内容

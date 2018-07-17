@@ -1,30 +1,21 @@
 package com.ccclubs.action.admin.finance.alipay;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
-
 import com.alipay.config.AlipayConfig;
 import com.alipay.util.AlipaySubmit;
 import com.ccclubs.config.SYSTEM;
-import com.ccclubs.config.SYSTEM.RecordType;
-import com.ccclubs.helper.SystemHelper;
-import com.ccclubs.model.CsAlipayRecord;
 import com.ccclubs.model.CsAlipayRefund;
-import com.ccclubs.model.CsMember;
-import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsRefund;
 import com.ccclubs.service.admin.ICsAlipayRecordService;
 import com.ccclubs.service.admin.ICsAlipayRefundService;
 import com.ccclubs.service.admin.ICsMemberService;
 import com.ccclubs.service.admin.ICsRefundService;
 import com.ccclubs.service.common.ICommonMoneyService;
-import com.ccclubs.service.common.ICommonMoneyService.MoneyType;
 import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
 
@@ -123,7 +114,6 @@ public class AlipayAction {
 			return $.SendHtml(SYSTEM.ERROR_TIPS, "UTF-8");
 		}		
 	}
-		
 
 	public Double $(Double value){
 		return new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

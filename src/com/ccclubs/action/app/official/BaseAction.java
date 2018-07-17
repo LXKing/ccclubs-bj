@@ -74,6 +74,8 @@ public class BaseAction {
 		csMember.setCsmRebate(1d);//会员折扣，例如如果值为0.75表示75折，默认为1，没有折扣
 		csMember.setCsmVReal((short)0);
 		csMember.setCsmVDrive((short)0);
+		csMember.setCsmVWork((short)0);
+        csMember.setCsmVOffline((short)0);
 		csMember.setCsmMobile(csmMobile);
 		csMember.setCsmTemp(inviteCode);
 		return csMember;

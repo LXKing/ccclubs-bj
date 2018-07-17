@@ -27,6 +27,19 @@ public class UtilHelper {
 		return commonUtilService.sendTemplateSms(host,flag, mobile,defaultTemplate,smsType, params);
 	}
 	/**
+     * 发送模版短信
+     * @param flag 标识 
+     * @param mobile 手机号码
+     * @param params 参数列表
+     * @param append 附加信息
+     */
+    public static Boolean sendTemplateSMS(Long host,String flag, String mobile,String defaultTemplate,SMSType smsType,Map<String,String> params, String append) {
+
+        ICommonUtilService commonUtilService = Lazy.GetSpringBean("commonUtilService");
+        
+        return commonUtilService.sendTemplateSms(host,flag, mobile,defaultTemplate,smsType, params, append);
+    }
+	/**
 	 * 发送普通短信
 	 * @param mobile 手机号码
 	 * @param content 短信内容
