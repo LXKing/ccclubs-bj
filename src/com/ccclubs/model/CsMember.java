@@ -13,6 +13,7 @@ import com.lazy3q.web.tags.BodyTag;
 import com.lazy3q.web.util.Page;
 import com.lazy3q.lang.*;
 import com.lazy3q.util.Function;
+import com.ccclubs.constants.MemberRecStatus;
 import com.ccclubs.dao.impl.MemCache;
 
 @namespace("user/member")
@@ -2914,17 +2915,17 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
     }
     
     public short getVstatus() {
-        if (this.getCsmVDrive() == 3 || this.getCsmVReal() == 3 || this.getCsmVWork() == 3
-                || this.getCsmVOffline() == 3) {
-            return 3;//四项认证存在认证失败
-        }else if(this.getCsmVDrive() == 1 && this.getCsmVReal() == 1 && this.getCsmVWork() == 1
-                && this.getCsmVOffline() == 1) {
-            return 1;//四项认证全部通过
-        }else if(this.getCsmVDrive() == 2 && this.getCsmVReal() == 2 && this.getCsmVWork() == 2
-                && this.getCsmVOffline() == 2) {
-            return 2;//四项认证都为等待认证
+        if (this.getCsmVDrive() == MemberRecStatus.REC_FAIL || this.getCsmVReal() == MemberRecStatus.REC_FAIL || this.getCsmVWork() == MemberRecStatus.REC_FAIL
+                || this.getCsmVOffline() == MemberRecStatus.REC_FAIL) {
+            return MemberRecStatus.REC_FAIL;//四项认证存在认证失败
+        }else if(this.getCsmVDrive() == MemberRecStatus.REC_PASS && this.getCsmVReal() == MemberRecStatus.REC_PASS && this.getCsmVWork() == MemberRecStatus.REC_PASS
+                && this.getCsmVOffline() == MemberRecStatus.REC_PASS) {
+            return MemberRecStatus.REC_PASS;//四项认证全部通过
+        }else if(this.getCsmVDrive() == MemberRecStatus.WAIT_CHECK && this.getCsmVReal() == MemberRecStatus.WAIT_CHECK && this.getCsmVWork() == MemberRecStatus.WAIT_CHECK
+                && this.getCsmVOffline() == MemberRecStatus.WAIT_CHECK) {
+            return MemberRecStatus.WAIT_CHECK;//四项认证都为等待认证
         }else {
-            return 0;//四项认证存在未认证（低优先级）
+            return MemberRecStatus.NEVER_REC;//四项认证存在未认证（低优先级）
         }
     }
     
