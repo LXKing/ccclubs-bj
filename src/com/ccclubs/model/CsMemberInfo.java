@@ -34,7 +34,7 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 	private CsMember $csmiMemberId;//关联对象[会员帐号]
 	private @caption("证件类型") @column("csmi_certify_type")      @note(" 1:身份证 2:护照 3:军官证 4:台胞证 5:港澳通行证 6:营业执照 7:公务员证 9:其它  ") Short csmiCertifyType;
 	private @caption("证件号码") @column("csmi_certify_num")      @note("  ") String csmiCertifyNum;
-	private @caption("身份证反面") @column("csmi_certify_image")      @note("  ") String csmiCertifyImage;
+	private @caption("身份证反面") @column("csmi_certify_image")      @note(" 人像面 ") String csmiCertifyImage;
 	private @caption("驾证号码") @column("csmi_driver_num")      @note("  ") String csmiDriverNum;
 	private @caption("驾证图片") @column("csmi_driver_image")      @note("  ") String csmiDriverImage;
 	private @caption("性别") @column("csmi_sex")      @note(" 0:女 1:男  ") Short csmiSex;
@@ -50,7 +50,10 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 	private @caption("修改时间") @column("csmi_update_time")      @note("  ") Date csmiUpdateTime;
 	private @caption("添加时间") @column("csmi_add_time")      @note("  ") Date csmiAddTime;
 	private @caption("状态") @column("csmi_status")      @note(" 1:默认 2:保留  ") Short csmiStatus;
-	private @caption("身份证正面") @column("csmi_on_certify_image")      @note("") String csmiOnCertifyImage;
+	private @caption("身份证正面") @column("csmi_on_certify_image")      @note("国徽面") String csmiOnCertifyImage;
+	
+	private @caption("工作证明") @column("csmi_proof_of_employment")      @note("") String csmiProofOfEmployment;
+	private @caption("部门") @column("csmi_department")      @note("") String csmiDepartment;
 	
 	//默认构造函数
 	public CsMemberInfo(){
@@ -65,7 +68,13 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 	/**
 	 * 所有字段构造函数 
 	 */
-	public CsMemberInfo(Long csmiHost,String csmiName,Long csmiMemberId,Short csmiCertifyType,String csmiCertifyNum,String csmiCertifyImage,String csmiDriverNum,String csmiDriverImage,Short csmiSex,Date csmiBirthday,String csmiQq,String csmiNation,String csmiAddress,String csmiCompany,Long csmiPlace,String csmiPerson,String csmiContact,String csmiRelation,Date csmiUpdateTime,Date csmiAddTime,Short csmiStatus,String csmiOnCertifyImage){
+	public CsMemberInfo(Long csmiHost,String csmiName,Long csmiMemberId,Short csmiCertifyType,
+	        String csmiCertifyNum,String csmiCertifyImage,String csmiDriverNum,
+	        String csmiDriverImage,Short csmiSex,Date csmiBirthday,String csmiQq,
+	        String csmiNation,String csmiAddress,String csmiCompany,Long csmiPlace,
+	        String csmiPerson,String csmiContact,String csmiRelation,Date csmiUpdateTime,
+	        Date csmiAddTime,Short csmiStatus,String csmiOnCertifyImage,
+	        String csmiProofOfEmployment,String csmiDepartment){
 		this.csmiHost=csmiHost;
 		this.csmiName=csmiName;
 		this.csmiMemberId=csmiMemberId;
@@ -88,6 +97,9 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		this.csmiAddTime=csmiAddTime;
 		this.csmiStatus=csmiStatus;
 		this.csmiOnCertifyImage=csmiOnCertifyImage;
+		this.csmiProofOfEmployment=csmiProofOfEmployment;
+		this.csmiDepartment=csmiDepartment;
+		
 	}
 	
 	//设置非空字段
@@ -239,6 +251,20 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		return this;
 	}
 	
+	/** 工作证明 [非空]       **/
+    public CsMemberInfo csmiProofOfEmployment(String csmiProofOfEmployment){
+        this.csmiProofOfEmployment = csmiProofOfEmployment;
+        this.setSeted(F.csmiProofOfEmployment);
+        return this;
+    }
+    
+    /** 部门 [非空]       **/
+    public CsMemberInfo csmiDepartment(String csmiDepartment){
+        this.csmiDepartment = csmiDepartment;
+        this.setSeted(F.csmiDepartment);
+        return this;
+    }
+	
 	//克隆对象
 	public CsMemberInfo clone(){
 		CsMemberInfo clone = new CsMemberInfo();
@@ -265,6 +291,10 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		clone.csmiAddTime=this.csmiAddTime;
 		clone.csmiStatus=this.csmiStatus;
 		clone.csmiOnCertifyImage=this.csmiOnCertifyImage;
+	    clone.csmiProofOfEmployment=this.csmiProofOfEmployment;
+	    clone.csmiDepartment=this.csmiDepartment;
+
+		
 		return clone;
 	}
 	
@@ -1029,6 +1059,53 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		this.setSeted(F.csmiOnCertifyImage);
 	}
 	
+	
+	/*******************************工作证明**********************************/   
+    /**
+    * 工作证明 [非空]      
+    **/
+    public String getCsmiProofOfEmployment(){
+        return this.csmiProofOfEmployment;
+    }
+    /**
+    * 获取工作证明格式化(toString)
+    **/
+    public String getCsmiProofOfEmployment$(){
+        String strValue="";
+         strValue=$.str(this.getCsmiProofOfEmployment());
+         return strValue;
+    }
+    /**
+    * 工作证明 [非空]     
+    **/
+    public void setCsmiProofOfEmployment(String csmiProofOfEmployment){
+        this.csmiProofOfEmployment = csmiProofOfEmployment;
+        this.setSeted(F.csmiProofOfEmployment);
+    }
+    
+    /*******************************部门**********************************/    
+    /**
+    * 部门 [非空]      
+    **/
+    public String getCsmiDepartment(){
+        return this.csmiDepartment;
+    }
+    /**
+    * 获取部门格式化(toString)
+    **/
+    public String getCsmiDepartment$(){
+        String strValue="";
+         strValue=$.str(this.getCsmiDepartment());
+         return strValue;
+    }
+    /**
+    * 部门 [非空]     
+    **/
+    public void setCsmiDepartment(String csmiDepartment){
+        this.csmiDepartment = csmiDepartment;
+        this.setSeted(F.csmiDepartment);
+    }
+	
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
 
@@ -1273,7 +1350,25 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		public M csmiOnCertifyImageNull(){if(this.get("csmiOnCertifyImageNot")==null)this.put("csmiOnCertifyImageNot", "");this.put("csmiOnCertifyImage", null);return this;};
 		/** not .... */
 		public M csmiOnCertifyImageNot(){this.put("csmiOnCertifyImageNot", "not");return this;};
-	 	public M add(String key, Object value) {this.put(key, value);return this;}
+	 	
+		
+		
+        public M csmiProofOfEmployment(Object csmiProofOfEmployment){this.put("csmiProofOfEmployment", csmiProofOfEmployment);return this;};
+        /** and  is null */
+        public M csmiProofOfEmploymentNull(){if(this.get("csmiProofOfEmploymentNot")==null)this.put("csmiProofOfEmploymentNot", "");this.put("csmiProofOfEmployment", null);return this;};
+        /** not .... */
+        public M csmiProofOfEmploymentNot(){this.put("csmiProofOfEmploymentNot", "not");return this;};
+        
+        
+        
+        public M csmiDepartment(Object csmiDepartment){this.put("csmiDepartment", csmiDepartment);return this;};
+        /** and  is null */
+        public M csmiDepartmentNull(){if(this.get("csmiDepartmentNot")==null)this.put("csmiDepartmentNot", "");this.put("csmiDepartment", null);return this;};
+        /** not .... */
+        public M csmiDepartmentNot(){this.put("csmiDepartmentNot", "not");return this;};
+		
+		
+		public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
 	 	/** 获取所有会员信息 **/
 		public @api List<CsMemberInfo> list(Integer size){
@@ -1374,6 +1469,12 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		public final static @type(Short.class)  String csmiStatus="csmiStatus";
 		/** 身份证正面 [非空]       **/
 		public final static @type(String.class)  String csmiOnCertifyImage="csmiOnCertifyImage";
+		
+		/** 工作证明 [非空]       **/
+        public final static @type(String.class)  String csmiProofOfEmployment="csmiProofOfEmployment";
+        
+        /** 部门 [非空]       **/
+        public final static @type(String.class)  String csmiDepartment="csmiDepartment";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -1424,6 +1525,11 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		public final static String csmiStatus="csmi_status";
 		/** 身份证正面 [非空]       **/
 		public final static String csmiOnCertifyImage="csmi_on_certify_image";
+		
+		/** 工作证明 [非空]       **/
+        public final static String csmiProofOfEmployment="csmi_proof_of_employment";
+        /** 部门 [非空]       **/
+        public final static String csmiDepartment="csmi_department";
 		
 	 	public static String get(String name){
 			try {
