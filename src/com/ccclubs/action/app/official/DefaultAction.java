@@ -231,14 +231,14 @@ public class DefaultAction extends BaseAction {
 	 */
 	public String getUnderlineMember(){
 		try {
-//			CsMember member = OauthUtils.getOauth($.getString("access_token",""));
-//			if (member == null) {
-//				return returnError("100", "登录授权无效");
-//			}
+			CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+			if (member == null) {
+				return returnError("100", "登录授权无效");
+			}
 			//	
 			Map<String ,Object> params=new HashMap<>();
 			params.put("asc","cum_area");
-			Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),4,params);
+			Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),20,params);
 			//
 			Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
 			
