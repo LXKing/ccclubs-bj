@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+
+<sqlMap>
+	
+	
+	<!-- 线下人员管理之SQL映射 -->
+	<resultMap id="CsUnderlineMember" class="com.ccclubs.model.CsUnderlineMember">
+		<result property="cumId" column="cum_id"/>
+		<result property="cumHost" column="cum_host"/>
+		<result property="cumArea" column="cum_area"/>
+		<result property="cumUser" column="cum_user"/>
+		<result property="cumMobile" column="cum_mobile"/>
+		<result property="cumAddTime" column="cum_add_time"/>
+		<result property="cumUpdateTime" column="cum_update_time"/>
+		<result property="cumStatus" column="cum_status"/>
+	</resultMap>
+		
+	<!-- 获取所有线下人员管理 -->
+	<select id="getCsUnderlineMemberList" resultMap="CsUnderlineMember">
+		select cs_underline_member$suffix$.* from cs_underline_member$suffix$
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_underline_member$suffix$.cum_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnderlineMember_part.cs_underline_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cum_id desc
+			</isNull>
+		</isNull>
+		
+		
+		<isNotEmpty property="limit">
+			limit #limit# 
+		</isNotEmpty>
+		<isEmpty property="limit">
+			limit 255
+		</isEmpty>
+		
+	</select>
+	
+	
+	
+
+	<!-- 获取线下人员管理分页 -->
+	<select id="getCsUnderlineMemberPage" parameterClass="java.util.HashMap" resultMap="CsUnderlineMember">
+		select cs_underline_member$suffix$.* from cs_underline_member$suffix$	
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_underline_member$suffix$.cum_status!=-1
+		
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnderlineMember_part.cs_underline_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+			
+		<!-- 页面传递的降序字段 -->
+		<isNotEmpty property="desc">
+		   order by $desc$ desc
+		</isNotEmpty>
+		<!-- 页面传递的升序字段 -->
+		<isNotEmpty property="asc">
+		   order by  $asc$ asc
+		</isNotEmpty>
+		<!-- 自定排序字段 -->
+		<isNull property="asc">
+			<isNull property="desc">order by cum_id desc
+			</isNull>
+		</isNull>
+		
+		limit #limit# offset #offset#
+	</select>
+	
+	<!-- 获取线下人员管理总数 -->
+	<select id="getCsUnderlineMemberEval" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select $eval$ as eval from cs_underline_member$suffix$ 
+		
+		<!-- 自动定义扩展sql连接join,在参数map里放完整的join条件 -->
+		<isNotEmpty property="join">
+		    $join$
+		</isNotEmpty>
+				
+		where 1=1 
+		and cs_underline_member$suffix$.cum_status!=-1
+				
+		<!-- 动态条件sql片段 -->
+		<include refid="CsUnderlineMember_part.cs_underline_member_dynamic"/>
+		
+		<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+		<isNotEmpty property="definex" prepend="and">
+		    $definex$
+		</isNotEmpty>
+		
+	</select>
+	
+	<!-- 根据ID取线下人员管理 -->
+	<select id="getCsUnderlineMemberById" parameterClass="java.util.HashMap" resultMap="CsUnderlineMember">
+		select cs_underline_member$suffix$.* from cs_underline_member$suffix$
+		where cum_id=#id#
+	</select>
+	
+		
+	<!-- 保存线下人员管理 -->
+	<insert id="saveCsUnderlineMember"  parameterClass="com.ccclubs.model.CsUnderlineMember">
+		insert into cs_underline_member$suffix$
+		(
+			cs_underline_member$suffix$.cum_host
+			,cs_underline_member$suffix$.cum_area
+			,cs_underline_member$suffix$.cum_user
+			,cs_underline_member$suffix$.cum_mobile
+			,cs_underline_member$suffix$.cum_add_time
+			,cs_underline_member$suffix$.cum_update_time
+			,cs_underline_member$suffix$.cum_status
+		)
+		values(
+			<isNotNull property="cumHost" prepend="">
+				#cumHost#
+			</isNotNull>
+			<isNull property="cumHost" prepend="">
+				null
+			</isNull>			
+			<isNotNull property="cumArea" prepend=",">
+				#cumArea#
+			</isNotNull>
+			<isNull property="cumArea" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cumUser" prepend=",">
+				#cumUser#
+			</isNotNull>
+			<isNull property="cumUser" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cumMobile" prepend=",">
+				#cumMobile#
+			</isNotNull>
+			<isNull property="cumMobile" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cumAddTime" prepend=",">
+				#cumAddTime#
+			</isNotNull>
+			<isNull property="cumAddTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cumUpdateTime" prepend=",">
+				#cumUpdateTime#
+			</isNotNull>
+			<isNull property="cumUpdateTime" prepend=",">
+				null
+			</isNull>			
+			<isNotNull property="cumStatus" prepend=",">
+				#cumStatus#
+			</isNotNull>
+			<isNull property="cumStatus" prepend=",">
+				null
+			</isNull>			
+		)
+		<selectKey resultClass="java.lang.Long">
+		   SELECT @@IDENTITY AS id
+		</selectKey>
+	</insert>
+	
+
+	<!-- 更新线下人员管理 -->
+	<update id="updateCsUnderlineMember"  parameterClass="com.ccclubs.model.CsUnderlineMember">
+		update cs_underline_member$suffix$ set
+			<isNotNull property="cumHost" prepend="">
+				cs_underline_member$suffix$.cum_host = #cumHost#
+			</isNotNull>
+			<isNull property="cumHost" prepend="">
+				cs_underline_member$suffix$.cum_host = null
+			</isNull>				
+			<isNotNull property="cumArea" prepend=",">
+				cs_underline_member$suffix$.cum_area = #cumArea#
+			</isNotNull>
+			<isNull property="cumArea" prepend=",">
+				cs_underline_member$suffix$.cum_area = null
+			</isNull>				
+			<isNotNull property="cumUser" prepend=",">
+				cs_underline_member$suffix$.cum_user = #cumUser#
+			</isNotNull>
+			<isNull property="cumUser" prepend=",">
+				cs_underline_member$suffix$.cum_user = null
+			</isNull>				
+			<isNotNull property="cumMobile" prepend=",">
+				cs_underline_member$suffix$.cum_mobile = #cumMobile#
+			</isNotNull>
+			<isNull property="cumMobile" prepend=",">
+				cs_underline_member$suffix$.cum_mobile = null
+			</isNull>				
+			<isNotNull property="cumAddTime" prepend=",">
+				cs_underline_member$suffix$.cum_add_time = #cumAddTime#
+			</isNotNull>
+			<isNull property="cumAddTime" prepend=",">
+				cs_underline_member$suffix$.cum_add_time = null
+			</isNull>				
+			<isNotNull property="cumUpdateTime" prepend=",">
+				cs_underline_member$suffix$.cum_update_time = #cumUpdateTime#
+			</isNotNull>
+			<isNull property="cumUpdateTime" prepend=",">
+				cs_underline_member$suffix$.cum_update_time = null
+			</isNull>				
+			<isNotNull property="cumStatus" prepend=",">
+				cs_underline_member$suffix$.cum_status = #cumStatus#
+			</isNotNull>
+			<isNull property="cumStatus" prepend=",">
+				cs_underline_member$suffix$.cum_status = null
+			</isNull>				
+		where
+			cum_id=#cumId#
+	</update>
+	
+	<!-- 更新线下人员管理非空字段 -->
+	<update id="updateCsUnderlineMember$NotNull"  parameterClass="com.ccclubs.model.CsUnderlineMember">
+		update cs_underline_member$suffix$ 
+			<dynamic prepend="set">
+			<isNotNull property="cumHost" prepend=",">
+				cs_underline_member$suffix$.cum_host = #cumHost#
+			</isNotNull>		
+			<isNotNull property="cumArea" prepend=",">
+				cs_underline_member$suffix$.cum_area = #cumArea#
+			</isNotNull>		
+			<isNotNull property="cumUser" prepend=",">
+				cs_underline_member$suffix$.cum_user = #cumUser#
+			</isNotNull>		
+			<isNotNull property="cumMobile" prepend=",">
+				cs_underline_member$suffix$.cum_mobile = #cumMobile#
+			</isNotNull>		
+			<isNotNull property="cumAddTime" prepend=",">
+				cs_underline_member$suffix$.cum_add_time = #cumAddTime#
+			</isNotNull>		
+			<isNotNull property="cumUpdateTime" prepend=",">
+				cs_underline_member$suffix$.cum_update_time = #cumUpdateTime#
+			</isNotNull>		
+			<isNotNull property="cumStatus" prepend=",">
+				cs_underline_member$suffix$.cum_status = #cumStatus#
+			</isNotNull>		
+			</dynamic>
+		where
+			cum_id=#cumId#
+	</update>
+	
+
+	<!-- 根据ID删除一个线下人员管理 -->
+	<delete id="deleteCsUnderlineMemberById" parameterClass="java.util.HashMap">
+		delete from cs_underline_member$suffix$ where cum_id=#id#
+	</delete>
+	<!-- 根据ID逻辑删除一个线下人员管理 -->
+	<update id="removeCsUnderlineMemberById" parameterClass="java.util.HashMap">
+		update cs_underline_member$suffix$ set  cs_underline_member$suffix$.cum_status=-1  where cum_id=#id#
+	</update>
+
+
+	<!-- 根据条件更新线下人员管理 -->
+	<update id="updateCsUnderlineMemberBy"  parameterClass="java.util.HashMap">
+		update cs_underline_member$suffix$ set		
+			cum_id=cum_id
+			<isNotNull property="V_cumId" prepend=",">
+				cs_underline_member$suffix$.cum_id = #V_cumId#
+			</isNotNull>		
+			<isNotNull property="V_cumHost" prepend=",">
+				cs_underline_member$suffix$.cum_host = #V_cumHost#
+			</isNotNull>		
+			<isNotNull property="V_cumArea" prepend=",">
+				cs_underline_member$suffix$.cum_area = #V_cumArea#
+			</isNotNull>		
+			<isNotNull property="V_cumUser" prepend=",">
+				cs_underline_member$suffix$.cum_user = #V_cumUser#
+			</isNotNull>		
+			<isNotNull property="V_cumMobile" prepend=",">
+				cs_underline_member$suffix$.cum_mobile = #V_cumMobile#
+			</isNotNull>		
+			<isNotNull property="V_cumAddTime" prepend=",">
+				cs_underline_member$suffix$.cum_add_time = #V_cumAddTime#
+			</isNotNull>		
+			<isNotNull property="V_cumUpdateTime" prepend=",">
+				cs_underline_member$suffix$.cum_update_time = #V_cumUpdateTime#
+			</isNotNull>		
+			<isNotNull property="V_cumStatus" prepend=",">
+				cs_underline_member$suffix$.cum_status = #V_cumStatus#
+			</isNotNull>		
+			<!-- 自定义 -->
+			<isNotEmpty property="V_definex" prepend=",">
+			    $V_definex$
+			</isNotEmpty>
+		
+		
+		where 
+				and cs_underline_member$suffix$.cum_status!=-1
+ and
+		1=1 		
+		
+		and		
+
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+				<!-- 动态条件sql片段 -->
+				<include refid="CsUnderlineMember_part.cs_underline_member_dynamic"/>
+				
+				<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+				<isNotEmpty property="definex">
+				    and $definex$
+				</isNotEmpty>
+			</isEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+	<!-- 根据条件删除线下人员管理 -->
+	<update id="deleteCsUnderlineMemberBy"  parameterClass="java.util.HashMap">
+		delete from cs_underline_member$suffix$ where 
+		cs_underline_member$suffix$.cum_status!=-1 and
+				
+		<dynamic prepend="1=1">
+			<isEqual property="confirm" compareValue="1">
+			<!-- 动态条件sql片段 -->
+			<include refid="CsUnderlineMember_part.cs_underline_member_dynamic"/>
+			
+			<!-- 自动定义扩展sql条件definex,在参数map里放完整的sql条件,如 tc_status>=0 -->
+			<isNotEmpty property="definex">
+			   and $definex$
+			</isNotEmpty>
+			</isEqual>
+			<!-- 安全定义 -->
+			<isNotEqual property="confirm" compareValue="1">
+				1=2
+			</isNotEqual>
+		</dynamic>
+		
+	</update>
+	
+	
+</sqlMap>
