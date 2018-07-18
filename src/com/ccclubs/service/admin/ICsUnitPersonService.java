@@ -104,5 +104,13 @@ public interface ICsUnitPersonService
 	 * @param function
 	 */
 	public <T> T executeTransaction(Function function);
+	
+	/**
+	 * 更换单位同时更新支付关系
+	 * @param newData
+	 * @param oldData
+	 * @return
+	 */
+	public CsUnitPerson changeUnit(CsUnitPerson newData, CsUnitPerson oldData);
 
 }
