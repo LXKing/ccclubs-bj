@@ -78,6 +78,7 @@ import com.ccclubs.model.CsRecord;
 import com.ccclubs.model.CsRefund;
 import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsState;
+import com.ccclubs.model.CsUnderlineMember;
 import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitMt;
@@ -113,6 +114,7 @@ import com.ccclubs.service.admin.ICsRecordService;
 import com.ccclubs.service.admin.ICsRefundService;
 import com.ccclubs.service.admin.ICsSpecialCarService;
 import com.ccclubs.service.admin.ICsStateService;
+import com.ccclubs.service.admin.ICsUnderlineMemberService;
 import com.ccclubs.service.admin.ICsUnitGroupService;
 import com.ccclubs.service.admin.ICsUnitMtService;
 import com.ccclubs.service.admin.ICsUnitOrderService;
@@ -185,7 +187,7 @@ public class DefaultAction extends BaseAction {
     ICsUseRecordService csUseRecordService;
     ICsUnitPersonService csUnitPersonService;
     ICsCreditCardService csCreditCardService;
-
+    ICsUnderlineMemberService csUnderlineMemberService;
     final static String CHARSET = "utf-8";
     final static String FORGET_SMS_CODE = "forgetcode"; // 忘记密码的校验码
     final static String FORGET_TOKEN = "forget_token"; // 忘记密码校验通过的状态token
@@ -222,6 +224,47 @@ public class DefaultAction extends BaseAction {
         return returnError("9999", SYSTEM.ERROR_TIPS);
     }
 
+    
+    /**
+	 *	 线下认证
+	 * @return
+	 */
+	public String getUnderlineMember(){
+		try {
+//			CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+//			if (member == null) {
+//				return returnError("100", "登录授权无效");
+//			}
+			//	
+			Map<String ,Object> params=new HashMap<>();
+			params.put("asc","cum_area");
+			Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),4,params);
+			//
+			Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
+			Map<String ,Object> tempMap=null;
+			List<Map<String, Object>> tempList=null;
+			for (CsUnderlineMember data : page.getResult()) {
+				String area=data.getCumArea$();
+				//
+				tempMap= new HashMap<>();
+				tempMap.put("user", data.getCumUser());//对接人
+				tempMap.put("mobile", data.getCumMobile());
+//				tempMap.put("area", data.getCumArea$());
+				//
+				if(dataMap.containsKey(area)) {
+					dataMap.get(area).add(tempMap);
+				}else {
+					tempList=new ArrayList<>();
+					tempList.add(tempMap);
+					dataMap.put(area, tempList);
+				}
+			}
+			LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal()).add("count", page.getCount()).add("size", page.getSize());
+			return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", dataMap).add("page", pagemap))),CHARSET);
+		} catch (Exception e) {
+			return returnError(e);
+		}
+	}
     /**
      * 登录
      * 
@@ -6322,6 +6365,14 @@ public class DefaultAction extends BaseAction {
     public void setCsCreditCardService(ICsCreditCardService csCreditCardService) {
         this.csCreditCardService = csCreditCardService;
     }
+
+	public ICsUnderlineMemberService getCsUnderlineMemberService() {
+		return csUnderlineMemberService;
+	}
+
+	public void setCsUnderlineMemberService(ICsUnderlineMemberService csUnderlineMemberService) {
+		this.csUnderlineMemberService = csUnderlineMemberService;
+	}
 
 
 
