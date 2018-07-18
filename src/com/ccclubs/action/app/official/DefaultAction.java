@@ -241,6 +241,8 @@ public class DefaultAction extends BaseAction {
 			Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),4,params);
 			//
 			Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
+			
+			List<Object>dataList = new ArrayList<>();
 			Map<String ,Object> tempMap=null;
 			List<Map<String, Object>> tempList=null;
 			for (CsUnderlineMember data : page.getResult()) {
@@ -259,8 +261,17 @@ public class DefaultAction extends BaseAction {
 					dataMap.put(area, tempList);
 				}
 			}
+			//数据组装
+			for(String str:dataMap.keySet()) {
+				Map<String, Object>temp=new HashMap<>();
+				temp.put("area", str);
+				temp.put("list", dataMap.get(str));
+				dataList.add(temp);
+			}
+			
+			
 			LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal()).add("count", page.getCount()).add("size", page.getSize());
-			return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", dataMap).add("page", pagemap))),CHARSET);
+			return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap))),CHARSET);
 		} catch (Exception e) {
 			return returnError(e);
 		}
