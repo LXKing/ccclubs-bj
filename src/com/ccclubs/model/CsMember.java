@@ -2873,6 +2873,8 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	}
 	
 	public Short getCsmVWork() {
+	    if(this.csmVWork==null)
+	        return 0;
         return csmVWork;
     }
 
@@ -2894,6 +2896,8 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
     }
     
     public Short getCsmVOffline() {
+        if(this.csmVOffline==null)
+            return 0;
         return csmVOffline;
     }
 

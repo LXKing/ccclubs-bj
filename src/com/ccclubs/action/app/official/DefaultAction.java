@@ -1769,11 +1769,13 @@ public class DefaultAction extends BaseAction {
             data.put("headerImg", member.getCsmHeader());
             data.put("mobile", member.getCsmMobile());
             data.put("money", member.getCsmMoney());
-            data.put("vdrive", member.getCsmVDrive());
+            data.put("vdrive", member.getCsmVDrive());//驾驶证认证
             data.put("vemail", member.getCsmVEmail());
-            data.put("vreal", member.getCsmVReal());
+            data.put("vreal", member.getCsmVReal());//身份证认证
             data.put("vmobile", member.getCsmVMobile());
             data.put("vstatus", member.getVstatus());//认证状态
+            data.put("vwork", member.getCsmVWork());//工作认证
+            data.put("voffline", member.getCsmVOffline());//线下认证
             
             data.put("personId", person.getCsupId());
             data.put("unitInfoId", person.getCsupInfo());
@@ -1851,7 +1853,7 @@ public class DefaultAction extends BaseAction {
         data.put("vreal", member.getCsmVReal());
         data.put("vdrive", member.getCsmVDrive());
         data.put("vwork", member.getCsmVWork());
-        data.put("voffline", member.getCsmVMobile());
+        data.put("voffline", member.getCsmVOffline());
         return $.SendHtml($.json(JsonFormat.success().setData($.$("map", data))), CHARSET);
     }
 
