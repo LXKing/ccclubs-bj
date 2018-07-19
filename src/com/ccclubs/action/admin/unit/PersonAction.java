@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.UUID;
 import java.lang.reflect.Field;
-
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 
 import com.lazy3q.web.helper.$;
@@ -27,7 +27,12 @@ import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.helper.ActionHelper;
 import com.ccclubs.helper.LoginHelper;
 import com.ccclubs.helper.SystemHelper;
+import com.ccclubs.model.CsMember;
+import com.ccclubs.model.CsMemberShip;
+import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
+import com.ccclubs.service.admin.ICsMemberShipService;
+import com.ccclubs.service.admin.ICsUnitInfoService;
 import com.ccclubs.service.admin.ICsUnitPersonService;
 /************LAZY3Q_CODE_IMPORT************/
 /************LAZY3Q_CODE_IMPORT************/
@@ -42,6 +47,10 @@ import com.ccclubs.service.admin.ICsUnitPersonService;
 public class PersonAction
 {
 	ICsUnitPersonService csUnitPersonService;
+	
+	ICsMemberShipService csMemberShipService;
+	
+	ICsUnitInfoService csUnitInfoService;
 	
 	CsUnitPerson csUnitPerson;
 	
@@ -263,6 +272,7 @@ public class PersonAction
 								Map params = $.eval(PARAMS);
 								params.put("confirm", 1);
 								params.put("definex","1=1");
+								params.remove("csupInfo");//批量修改时禁止修改关联企业
 								csUnitPersonService.updateCsUnitPersonByConfirm(ActionHelper.getSetValuesFromModel(csUnitPerson), params);
 								LoggerHelper.writeLog(CsUnitPerson.class, "update", 
 											"批量修改了[用车人员]",
@@ -270,6 +280,7 @@ public class PersonAction
 											,null);
 							}else if(!$.empty(ids)){//根据ids批量更新
 								String[] array = ids.split(",");
+								csUnitPerson.setCsupInfo(null);//批量修改时禁止修改关联企业
 								for(String sid:array){
 									csUnitPerson.setCsupId(Long.valueOf(sid));
 									CsUnitPerson oldCsUnitPerson = CsUnitPerson.get(Long.valueOf(sid));
@@ -284,9 +295,12 @@ public class PersonAction
 								if($.empty($.getString("edittype"))){
 									//设置填充值
 									csUnitPerson.setCsupUpdateTime(new Date());
-									
 									CsUnitPerson oldCsUnitPerson = CsUnitPerson.get(csUnitPerson.getCsupId());
-									csUnitPersonService.updateCsUnitPerson$NotNull(csUnitPerson);
+									
+									//如果企业关联发生改变，修改支付关系
+									csUnitPerson = csUnitPersonService.changeUnit(csUnitPerson, oldCsUnitPerson);
+									
+		                            csUnitPersonService.updateCsUnitPerson$NotNull(csUnitPerson);
 									LoggerHelper.writeLog(CsUnitPerson.class, "update", 
 											"修改了[用车人员]["+oldCsUnitPerson.getCsupName()+"]",
 											(Long)$.getSession("ccclubs_login_id"),LoggerHelper.getUpdateDescription(oldCsUnitPerson, csUnitPerson,false)
@@ -309,6 +323,9 @@ public class PersonAction
 									
 									//从oldCsUnitPerson同步csUnitPerson未set过的值
 									csUnitPerson.mergeSet(oldCsUnitPerson);
+									
+									//如果企业关联发生改变，修改支付关系
+									csUnitPerson = csUnitPersonService.changeUnit(csUnitPerson, oldCsUnitPerson);
 											
 									csUnitPersonService.updateCsUnitPerson(csUnitPerson);
 									LoggerHelper.writeLog(CsUnitPerson.class, "update", 
