@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.ccclubs.config.Constant;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.model.CsMember;
@@ -123,99 +122,112 @@ public class BaseAction {
         
         return member;
     }
-	
-	/**
-	 * 会员详细信息
-	 * @param csMemberInfo
-	 * @param host
-	 * @param realName
-	 * @param csMember
-	 * @param sex
-	 * @return
-	 */
-	public CsMemberInfo getMemberInfo (CsMemberInfo csMemberInfo,Long host,String realName,CsMember csMember,short sex){
-		csMemberInfo.setCsmiHost(host);
-		csMemberInfo.setCsmiName(realName);
-		csMemberInfo.setCsmiMemberId(csMember.getCsmId());
-		csMemberInfo.setCsmiAddTime(new Date());
-		csMemberInfo.setCsmiUpdateTime(new Date());
-		csMemberInfo.setCsmiStatus((short)1);
-		csMemberInfo.setCsmiSex(sex);
-		return csMemberInfo;
-	}
-	
-	/**
-	 * 修改会员信息 身份证 驾驶证 
-	 * @param member
-	 * @param certifyImg
-	 * @param certifyNum
-	 * @param driverImage
-	 * @param onCertifyImg
-	 */
-	public CsMemberInfo updateMemberInfo(CsMember member,String certifyImg,String certifyNum,String driverImage,String onCertifyImg){
-		CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
-		csMemberInfo.setCsmiCertifyType((short)1);
-		csMemberInfo.setCsmiCertifyNum(certifyNum);
-		csMemberInfo.setCsmiCertifyImage(certifyImg);
-		csMemberInfo.setCsmiDriverImage(driverImage);
-		csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
-		return csMemberInfo;
-	}
-	
-	public CsMemberInfo updateMemberInfoCertifyImage(CsMember member,String certifyImg,String certifyNum,String realName,String onCertifyImg){
-        CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
-        csMemberInfo.setCsmiCertifyType((short)1);
+
+    /**
+     * 会员详细信息
+     * 
+     * @param csMemberInfo
+     * @param host
+     * @param realName
+     * @param csMember
+     * @param sex
+     * @return
+     */
+    public CsMemberInfo getMemberInfo(CsMemberInfo csMemberInfo, Long host, String realName,
+            CsMember csMember, short sex) {
+        csMemberInfo.setCsmiHost(host);
+        csMemberInfo.setCsmiName(realName);
+        csMemberInfo.setCsmiMemberId(csMember.getCsmId());
+        csMemberInfo.setCsmiAddTime(new Date());
+        csMemberInfo.setCsmiUpdateTime(new Date());
+        csMemberInfo.setCsmiStatus((short) 1);
+        csMemberInfo.setCsmiSex(sex);
+        return csMemberInfo;
+    }
+
+    /**
+     * 修改会员信息 身份证 驾驶证
+     * 
+     * @param member
+     * @param certifyImg
+     * @param certifyNum
+     * @param driverImage
+     * @param onCertifyImg
+     */
+    public CsMemberInfo updateMemberInfo(CsMember member, String certifyImg, String certifyNum,
+            String driverImage, String onCertifyImg) {
+        CsMemberInfo csMemberInfo =
+                CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+        csMemberInfo.setCsmiCertifyType((short) 1);
+        csMemberInfo.setCsmiCertifyNum(certifyNum);
+        csMemberInfo.setCsmiCertifyImage(certifyImg);
+        csMemberInfo.setCsmiDriverImage(driverImage);
+        csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
+        return csMemberInfo;
+    }
+
+    public CsMemberInfo updateMemberInfoCertifyImage(CsMember member, String certifyImg,
+            String certifyNum, String realName, String onCertifyImg) {
+        CsMemberInfo csMemberInfo =
+                CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+        csMemberInfo.setCsmiCertifyType((short) 1);
         csMemberInfo.setCsmiCertifyNum(certifyNum);
         csMemberInfo.setCsmiCertifyImage(certifyImg);
         csMemberInfo.setCsmiName(realName);
         csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
         return csMemberInfo;
     }
-	
-	public CsMemberInfo updateMemberInfoDriverImage(CsMember member,String driverImage){
-        CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
-       
+
+    public CsMemberInfo updateMemberInfoDriverImage(CsMember member, String driverImage) {
+        CsMemberInfo csMemberInfo =
+                CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+
         csMemberInfo.setCsmiDriverImage(driverImage);
         return csMemberInfo;
     }
-	
-	public CsMemberInfo updateMemberInfoWorkImage(CsMember member,String proofOfEmployment,String company,String department){
-        CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
-    
+
+    public CsMemberInfo updateMemberInfoWorkImage(CsMember member, String proofOfEmployment,
+            String company, String department) {
+        CsMemberInfo csMemberInfo =
+                CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+
         csMemberInfo.setCsmiProofOfEmployment(proofOfEmployment);
         csMemberInfo.setCsmiCompany(company);
         csMemberInfo.setCsmiDepartment(department);
-        
+
         return csMemberInfo;
     }
-	
-	/**
-	 * 会员关系表信息
-	 * @param csMemberShip
-	 * @param host
-	 * @param payMember
-	 * @param targeterMember
-	 * @return
-	 */
-	public CsMemberShip getMemberShip(CsMemberShip csMemberShip,Long host,Long payMember,Long targeterMember){
-		csMemberShip.setCsmsHost(host);
-		csMemberShip.setCsmsPayer(payMember);
-		csMemberShip.setCsmsTargeter(targeterMember);
-		csMemberShip.setCsmsAddTime(new Date());
-		csMemberShip.setCsmsStatus((short)1);
-		return csMemberShip;
-	}
-	
-	public CsUnitPerson getUnitPerson(CsUnitPerson csUnitPerson,long host ,Long infoId,Long memberId,Long groupId){
-		csUnitPerson.setCsupHost(host);
-		csUnitPerson.setCsupInfo(infoId);
-		csUnitPerson.setCsupMember(memberId);
-		csUnitPerson.setCsupAddTime(new Date());
-		csUnitPerson.setCsupUpdateTime(new Date());
-		csUnitPerson.setCsupName("");
-		csUnitPerson.setCsupGroup(groupId);
-		csUnitPerson.setCsupStatus((short)1);
-		return csUnitPerson;
-	}
-	
+
+    /**
+     * 会员关系表信息
+     * 
+     * @param csMemberShip
+     * @param host
+     * @param payMember
+     * @param targeterMember
+     * @return
+     */
+    public CsMemberShip getMemberShip(CsMemberShip csMemberShip, Long host, Long payMember,
+            Long targeterMember) {
+        csMemberShip.setCsmsHost(host);
+        csMemberShip.setCsmsPayer(payMember);
+        csMemberShip.setCsmsTargeter(targeterMember);
+        csMemberShip.setCsmsAddTime(new Date());
+        csMemberShip.setCsmsStatus((short) 1);
+        return csMemberShip;
+    }
+
+    public CsUnitPerson getUnitPerson(CsUnitPerson csUnitPerson, long host, Long infoId,
+            Long memberId, Long groupId) {
+        csUnitPerson.setCsupHost(host);
+        csUnitPerson.setCsupInfo(infoId);
+        csUnitPerson.setCsupMember(memberId);
+        csUnitPerson.setCsupAddTime(new Date());
+        csUnitPerson.setCsupUpdateTime(new Date());
+        csUnitPerson.setCsupName("");
+        csUnitPerson.setCsupGroup(groupId);
+        csUnitPerson.setCsupStatus((short) 1);
+        return csUnitPerson;
+    }
+
 }
