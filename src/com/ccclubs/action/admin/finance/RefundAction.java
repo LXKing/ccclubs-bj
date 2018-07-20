@@ -743,11 +743,13 @@ public class RefundAction
 								.csrAmount($.or(csRefund.getCsrAmount(),0d)+money)//退款额
 						);
 						
-						Map<String,String> typemap = $.add("0", "支付宝退款")
+						Map<String,String> typemap = 
+						        $.add("0", "支付宝退款")
 							.add("10", "招商银行退款")
-							.add("21", "银行卡转帐")
-							.add("22", "邮局汇款")
-							.add("23", "现金退款");
+							.add("21", "支付宝转帐")
+							.add("22", "银行卡转账")
+							.add("23", "邮局汇款")
+							.add("24", "现金退款");
 						//修改会员余额
 						commonMoneyService.updateMoney(
 							csRefund.getCsrMember(), 

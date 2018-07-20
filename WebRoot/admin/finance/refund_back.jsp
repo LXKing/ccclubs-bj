@@ -82,11 +82,11 @@
 			    	<select class="narrow" id="returnType" name="returnType">
 						<option value="">请选择</option>
 						<option value="0" ${csRefund.csrReturnType==0?"selected":""}>支付宝退款</option>
-						<option value="10" ${csRefund.csrReturnType==0?"selected":""}>招商银行退款</option>
-						<option value="21">支付宝转帐</option>
-						<option value="22">银行卡转帐</option>
-						<option value="23">邮局汇款</option>
-						<option value="24">现金退款</option>
+						<option value="10" ${csRefund.csrReturnType==10?"selected":""}>招商银行退款</option>
+						<option value="21" ${csRefund.csrReturnType==21?"selected":""}>支付宝转帐</option>
+						<option value="22" ${csRefund.csrReturnType==22?"selected":""}>银行卡转帐</option>
+						<option value="23" ${csRefund.csrReturnType==23?"selected":""}>邮局汇款</option>
+						<option value="24" ${csRefund.csrReturnType==24?"selected":""}>现金退款</option>
 					</select>
 				</td>
 			  </tr>

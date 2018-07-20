@@ -107,6 +107,24 @@ public class BaseAction {
 	}
 	
 	/**
+	 * 修改会员实名认证状态
+	 * */
+	public CsMember updateAutoState(CsMember member,Short vDriveState,Short vRealState,Short vWorkState){
+	    
+	    if(vDriveState!=null) {
+	        member.setCsmVDrive(vDriveState);
+	    }
+	    if(vRealState!=null) {
+            member.setCsmVReal(vRealState);
+        }
+	    if(vWorkState!=null) {
+            member.setCsmVWork(vWorkState);
+        }
+        
+        return member;
+    }
+	
+	/**
 	 * 会员详细信息
 	 * @param csMemberInfo
 	 * @param host
@@ -143,6 +161,33 @@ public class BaseAction {
 		csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
 		return csMemberInfo;
 	}
+	
+	public CsMemberInfo updateMemberInfoCertifyImage(CsMember member,String certifyImg,String certifyNum,String realName,String onCertifyImg){
+        CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+        csMemberInfo.setCsmiCertifyType((short)1);
+        csMemberInfo.setCsmiCertifyNum(certifyNum);
+        csMemberInfo.setCsmiCertifyImage(certifyImg);
+        csMemberInfo.setCsmiName(realName);
+        csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
+        return csMemberInfo;
+    }
+	
+	public CsMemberInfo updateMemberInfoDriverImage(CsMember member,String driverImage){
+        CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+       
+        csMemberInfo.setCsmiDriverImage(driverImage);
+        return csMemberInfo;
+    }
+	
+	public CsMemberInfo updateMemberInfoWorkImage(CsMember member,String proofOfEmployment,String company,String department){
+        CsMemberInfo csMemberInfo = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+    
+        csMemberInfo.setCsmiProofOfEmployment(proofOfEmployment);
+        csMemberInfo.setCsmiCompany(company);
+        csMemberInfo.setCsmiDepartment(department);
+        
+        return csMemberInfo;
+    }
 	
 	/**
 	 * 会员关系表信息
