@@ -116,10 +116,10 @@ public class BaseAction {
 	    if(vRealState!=null) {
             member.setCsmVReal(vRealState);
         }
-	    if(vWorkState!=null) {
+        if (vWorkState != null) {
             member.setCsmVWork(vWorkState);
         }
-        
+
         return member;
     }
 
