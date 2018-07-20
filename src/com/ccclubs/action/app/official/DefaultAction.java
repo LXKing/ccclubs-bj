@@ -763,13 +763,13 @@ public class DefaultAction extends BaseAction {
             final String certifyNum=$.getString("certifyNum");//身份证号码
             final String onCertifyImage=$.getString("onCertifyImage");//身份证反面（人像面）
             final String realName=$.getString("realName");//真实姓名
-            if (!$.empty(certifyImage)) {
+            if ($.empty(certifyImage)) {
                 return returnError("101", "身份证国徽面图片路径未上传，请上传图片。");
-            } if (!$.empty(certifyNum)) {
+            } if ($.empty(certifyNum)) {
                 return returnError("101", "身份证号码未填写，请填写。");
-            } if (!$.empty(onCertifyImage)) {
+            } if ($.empty(onCertifyImage)) {
                 return returnError("101", "身份证人像面图片路径未上传，请上传图片。");
-            } if (!$.empty(realName)) {
+            } if ($.empty(realName)) {
                 return returnError("101", "真实姓名未填写，请填写。");
             }
             
@@ -806,7 +806,7 @@ public class DefaultAction extends BaseAction {
             }
             
             final String driverImage=$.getString("driverImage");
-            if (!$.empty(driverImage)) {
+            if ($.empty(driverImage)) {
                 return returnError("101", "驾驶证图片路径未上传，请上传图片。");
             }
             
@@ -833,7 +833,7 @@ public class DefaultAction extends BaseAction {
      * 工作证名认证
      * 
      * */
-    public String authork() {
+    public String authWork() {
         try {
             final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
@@ -843,13 +843,13 @@ public class DefaultAction extends BaseAction {
             final String company=$.getString("company");//企业
             final String department=$.getString("department");//部门
             final String proofOfEmployment=$.getString("proofOfEmployment");//图片路径
-            if (!$.empty(company)) {
+            if ($.empty(company)) {
                 return returnError("101", "企业未填写，请填写。");
             }
-            if (!$.empty(department)) {
+            if ($.empty(department)) {
                 return returnError("101", "部门未填写，请填写。");
             }
-            if (!$.empty(proofOfEmployment)) {
+            if ($.empty(proofOfEmployment)) {
                 return returnError("101", "图片路径未上传，请上传图片。");
             }
             
@@ -913,14 +913,14 @@ public class DefaultAction extends BaseAction {
                 @Override
                 public <T> T execute(Object... arg0) {
                     // TODO Auto-generated method stub
-                    if (!$.empty(certifyImg)) {
+                    if ($.empty(certifyImg)) {
                         CsMemberInfo csMemberInfo = updateMemberInfo(member, certifyImg, certifyNum,
                                 driverImage, onCertifyImg);
                         csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
                         csMemberService.updateCsMember$NotNull(
                                 updateAutoState(member, (short) 2, (short) 2));
                     }
-                    if (!$.empty(cardNo)) {
+                    if ($.empty(cardNo)) {
                         updateCreditCard(member, cardNo, cardImage);
                     }
                     return null;
@@ -1024,6 +1024,43 @@ public class DefaultAction extends BaseAction {
             }
 
             return $.SendHtml($.json(JsonFormat.success().setData($.$("list", cldList))), CHARSET);
+        } catch (Exception e) {
+            return returnError(e);
+        }
+    }
+    
+    /**
+     * 企业部门
+     * 
+     * @return
+     */
+    public String getUnitGroup() {
+        try {
+            
+            Long unitId=$.getLong("unitId");
+            if(unitId==null) {
+                return returnError("100", "无企业参数");
+            }
+            /*List<CsArea> areaList = CsArea.getCsAreaList($.add(CsArea.F.csaStatus, 1), -1);
+            
+            List<Map<String, Object>> cldList = new ArrayList<Map<String, Object>>();
+
+            // 设置默认网点
+            cldList.add(defaultArea());
+            for (CsArea area : areaList) {
+                List<CsUnitInfo> unitInfoList =
+                        CsUnitInfo.getCsUnitInfoList($.add(CsUnitInfo.F.csuiArea, area.getCsaId())
+                                .add(CsUnitInfo.F.csuiStatus, 1), 1000);
+                cldList.add($.add("areaId", area.getCsaId()).add("areaName", area.getCsaName$())
+                        .add("unitList", assembleUnitInfo(unitInfoList)));
+                        
+            }*/
+            List<CsUnitGroup> groupList=CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
+            List<String> groupNameList=new ArrayList<>();
+            for(CsUnitGroup csUnitGroup:groupList) {
+                groupNameList.add(csUnitGroup.getCsugName$());
+            }
+            return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))), CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }

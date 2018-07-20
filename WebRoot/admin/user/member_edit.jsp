@@ -15,15 +15,32 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMember.csmId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.isAddType==true">
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
-	editables:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive",
+	editables:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,
+	csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,
+	csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,
+	csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,
+	csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive",
+	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,
+	csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,
+	csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,
+	csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,
+	csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"csmId,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
+	editables:"csmId,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,
+	csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,
+	csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,
+	csmEmail,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,
+	csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
+	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,
+	csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,
+	csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,
+	csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,
+	csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,
+	csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -85,7 +102,10 @@ ${lz:set("注释","****非法权限时的友情提醒****")}
 		<dt>操作日志:</dt>
 		<dd>
 		 	<s:if test="csMember.csmId!=null">	  		
-			<iframe class="state-input iframe-list hidden" onload="$(this).autoHeight()" id="logs" name="logs" frameborder='0' src="" url="${basePath}admin/systematic/log.do?canQuery=false&fields=cslName,cslUser,cslModel,cslType,cslDetail,cslAddTime&cslRelate=${csMember.csmId}&cslClass=CsMember&ctrl={mutual:'dialog',canAdd:false,canEdit:false,canDel:false,queryable:false}&size=8" height='0'></iframe>
+			<iframe class="state-input iframe-list hidden" 
+			onload="$(this).autoHeight()" id="logs" name="logs" 
+			frameborder='0' src="" url="${basePath}admin/systematic/log.do?canQuery=false&fields=cslName,cslUser,cslModel,cslType,cslDetail,cslAddTime&cslRelate=${csMember.csmId}&cslClass=CsMember&ctrl={mutual:'dialog',canAdd:false,canEdit:false,canDel:false,queryable:false}&size=8"
+			 height='0'></iframe>
 				<div class="iframe-list">
 					<a class="button" style="float:right;" onclick="$('#logs').attr('src',$('#logs').show().attr('url'));$(this).parent().remove();" href="javascript:void(0);"><img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778013.png"/>操作日志</a>
 					<div class="line" style="margin:0px;clear:none;width:450px;"></div>
@@ -1748,7 +1768,12 @@ $(function(){
 		<dd input="frame">
 		<s:if test="#request.csMember$csmInvoices!=null">${csMember$csmInvoices}</s:if><s:else>
 		  		<s:if test="csMember.csmId!=null">
-				<iframe class="state-input iframe-list hidden" onload="$(this).autoHeight()" id="csmInvoices" name="csmInvoices" frameborder='0' src="" url="${basePath}${proname}/finance/invoice.do?inFrame=true&canQuery=false&fields=csiTitle,csiContent,csiType,csiMoney,csiInvoiceTime,csiStatus&csiMember=${csMember.csmId}&ctrl={queryable:false,fields:{csiMember:{visible:true,editable:false,defaultValue:${csMember.csmId}}}}&size=8" height='0'></iframe>
+				<iframe class="state-input iframe-list hidden" 
+				onload="$(this).autoHeight()" id="csmInvoices" 
+				name="csmInvoices" frameborder='0' src="" 
+				url="${basePath}${proname}/finance/invoice.do?
+				inFrame=true&canQuery=false&fields=csiTitle,csiContent,csiType,csiMoney,csiInvoiceTime,csiStatus&csiMember=${csMember.csmId}&ctrl={queryable:false,fields:{csiMember:{visible:true,editable:false,defaultValue:${csMember.csmId}}}}&size=8" 
+				height='0'></iframe>
 				<div class="iframe-list">
 					<a class="button" style="float:right;" onclick="$('#csmInvoices').attr('src',$('#csmInvoices').show().attr('url'));$(this).parent().remove();" href="javascript:void(0);"><img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778013.png"/>点击显示记录详情</a>
 					<div class="line" style="margin:0px;clear:none;width:450px;"></div>
@@ -3701,12 +3726,12 @@ $(function(){
 	${after$csmVEmail}
 	</s:if>
 	
-	${lz:set("注释","*****************实名认证字段的输入框代码*****************")}
+	${lz:set("注释","*****************身份证认证字段的输入框代码*****************")}
 	${lz:set("注释","before$csmVReal和after$csmVReal变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmVReal==true">
 	${before$csmVReal}
 	<dl class="csmVReal " major  ref="csmVReal" >
-		<dt>实名认证:</dt>
+		<dt>身份证认证:</dt>
 		<s:if test="#request.CTRL.e.csmVReal==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">

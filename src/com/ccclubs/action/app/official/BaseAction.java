@@ -109,12 +109,13 @@ public class BaseAction {
 	 * */
 	public CsMember updateAutoState(CsMember member,Short vDriveState,Short vIdCardState,Short vWorkState){
 	    
-	    member.setCsmVReal((short)2);
+//	    member.setCsmVReal((short)2);
 	    if(vDriveState!=null) {
 	        member.setCsmVDrive(vDriveState);
 	    }
 	    if(vIdCardState!=null) {
-            member.setCsmVIdcard(vIdCardState);
+//            member.setCsmVIdcard(vIdCardState);
+	        member.setCsmVReal((short)2);
         }
 	    if(vWorkState!=null) {
             member.setCsmVWork(vWorkState);
