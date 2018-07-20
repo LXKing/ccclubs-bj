@@ -644,8 +644,7 @@ public class DefaultAction extends BaseAction {
             
             /****开始创建会员相关信息*****/
             //初始化会员账号
-            CsMember csMember = null;
-            csMemberService.executeTransaction(new Function() {
+            CsMember member = csMemberService.executeTransaction(new Function() {
 
                 @Override
                 public <T> T execute(Object... arg0) {
@@ -684,7 +683,7 @@ public class DefaultAction extends BaseAction {
 
                     }
 
-                    return null;
+                    return (T) csMember;
                 }
             });
 
@@ -695,9 +694,9 @@ public class DefaultAction extends BaseAction {
             if(skipLogin==1) {
                 //注册成功，后台登录
                 String token = UUIDGenerator.getUUID();
-                OauthUtils.saveToken(csMember.getCsmId().toString(), token);
+                OauthUtils.saveToken(member.getCsmId().toString(), token);
                 JsonFormat result = JsonFormat.success().setData(
-                        $.add("access_token", token).add("id", String.valueOf(csMember.getCsmId())));
+                        $.add("access_token", token).add("id", String.valueOf(member.getCsmId())));
                 return $.SendHtml($.json(result), SYSTEM.UTF8);
             }else {
                 //用户手动登录

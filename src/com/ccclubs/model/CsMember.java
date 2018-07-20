@@ -115,7 +115,7 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	private @caption("邮箱认证") @column("csm_v_email")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVEmail;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("实名认证") @column("csm_v_real")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVReal;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("驾驶认证") @column("csm_v_drive")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVDrive;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
-	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 1:正常 0:禁用     
+	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 0:禁用;1:正常;2:黑名单;     
 	private @caption("工作认证") @column("csm_v_work")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVWork;// 0:未认证 1:已认证 2:等待认证 3:认证失败
 	private @caption("线下认证") @column("csm_v_offline")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVOffline;// 0:未认证 1:已认证 2:等待认证 3:认证失败
 	//默认构造函数

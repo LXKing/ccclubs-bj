@@ -3722,7 +3722,7 @@ $(function(){
 		<s:if test="#request.CTRL.e.csmVReal==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">
-		<s:if test="#request.csMember$csmVReal!=null">${csMember$csmVReal}</s:if><s:else>
+		<s:if test="#request.csMember$csmVReal!=null">${csMember$csmVReal}{csMember.csmVReal}</s:if><s:else>
 		 	<select class="narrow" id="csmVReal" name="csMember.csmVReal">
 		 		<option value="">请选择</option>
 				<option value="0" ${csMember.csmVReal==0?"selected":""}>未认证</option>
@@ -3891,6 +3891,7 @@ $(function(){
 		 		<option value="">请选择</option>
 				<option value="1" ${csMember.csmStatus==1?"selected":""}>正常</option>
 				<option value="0" ${csMember.csmStatus==0?"selected":""}>禁用</option>
+				<option value="0" ${csMember.csmStatus==2?"selected":""}>黑名单</option>
 		 	</select>
 	 	 </s:else>
 	 	 
