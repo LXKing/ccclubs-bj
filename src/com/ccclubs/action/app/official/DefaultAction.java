@@ -751,41 +751,44 @@ public class DefaultAction extends BaseAction {
     /**
      * 身份证认证
      * 
-     * */
+     */
     public String authCertify() {
         try {
             final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            
-            final String certifyImage=$.getString("certifyImage");//身份证正面（国徽面）
-            final String certifyNum=$.getString("certifyNum");//身份证号码
-            final String onCertifyImage=$.getString("onCertifyImage");//身份证反面（人像面）
-            final String realName=$.getString("realName");//真实姓名
+
+            final String certifyImage = $.getString("certifyImage");// 身份证正面（国徽面）
+            final String certifyNum = $.getString("certifyNum");// 身份证号码
+            final String onCertifyImage = $.getString("onCertifyImage");// 身份证反面（人像面）
+            final String realName = $.getString("realName");// 真实姓名
             if ($.empty(certifyImage)) {
                 return returnError("101", "身份证国徽面图片路径未上传，请上传图片。");
-            } if ($.empty(certifyNum)) {
+            }
+            if ($.empty(certifyNum)) {
                 return returnError("101", "身份证号码未填写，请填写。");
-            } if ($.empty(onCertifyImage)) {
+            }
+            if ($.empty(onCertifyImage)) {
                 return returnError("101", "身份证人像面图片路径未上传，请上传图片。");
-            } if ($.empty(realName)) {
+            }
+            if ($.empty(realName)) {
                 return returnError("101", "真实姓名未填写，请填写。");
             }
-            
+
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    CsMemberInfo csMemberInfo = updateMemberInfoCertifyImage(member, certifyImage, certifyNum,
-                            realName, onCertifyImage);
+                    CsMemberInfo csMemberInfo = updateMemberInfoCertifyImage(member, certifyImage,
+                            certifyNum, realName, onCertifyImage);
                     csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
-                    csMemberService.updateCsMember$NotNull(
-                            updateAutoState(member,null,(short)2,null));
+                    csMemberService
+                            .updateCsMember$NotNull(updateAutoState(member, null, (short) 2, null));
                     return null;
                 }
             });
-            
-            
+
+
 
             return $.SendHtml($.json(JsonFormat.success()), CHARSET);
         } catch (Exception e) {
@@ -793,56 +796,56 @@ public class DefaultAction extends BaseAction {
             return returnError(e);
         }
     }
-    
+
     /**
      * 驾驶证认证
      * 
-     * */
+     */
     public String authDriverLicense() {
         try {
             final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            
-            final String driverImage=$.getString("driverImage");
+
+            final String driverImage = $.getString("driverImage");
             if ($.empty(driverImage)) {
                 return returnError("101", "驾驶证图片路径未上传，请上传图片。");
             }
-            
+
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    CsMemberInfo csMemberInfo = updateMemberInfoDriverImage(member,driverImage);
+                    CsMemberInfo csMemberInfo = updateMemberInfoDriverImage(member, driverImage);
                     csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
-                    csMemberService.updateCsMember$NotNull(
-                            updateAutoState(member,(short)2,null,null));
+                    csMemberService
+                            .updateCsMember$NotNull(updateAutoState(member, (short) 2, null, null));
                     return null;
                 }
             });
-            
-            
+
+
             return $.SendHtml($.json(JsonFormat.success()), CHARSET);
         } catch (Exception e) {
             // TODO: handle exception
             return returnError(e);
         }
     }
-    
+
     /**
      * 工作证名认证
      * 
-     * */
+     */
     public String authWork() {
         try {
             final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            
-            final String company=$.getString("company");//企业
-            final String department=$.getString("department");//部门
-            final String proofOfEmployment=$.getString("proofOfEmployment");//图片路径
+
+            final String company = $.getString("company");// 企业
+            final String department = $.getString("department");// 部门
+            final String proofOfEmployment = $.getString("proofOfEmployment");// 图片路径
             if ($.empty(company)) {
                 return returnError("101", "企业未填写，请填写。");
             }
@@ -852,16 +855,17 @@ public class DefaultAction extends BaseAction {
             if ($.empty(proofOfEmployment)) {
                 return returnError("101", "图片路径未上传，请上传图片。");
             }
-            
+
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    
-                    CsMemberInfo csMemberInfo = updateMemberInfoWorkImage(member,proofOfEmployment,company,department);
+
+                    CsMemberInfo csMemberInfo = updateMemberInfoWorkImage(member, proofOfEmployment,
+                            company, department);
                     csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
-                    csMemberService.updateCsMember$NotNull(
-                            updateAutoState(member, null ,null,(short)2));
-                    
+                    csMemberService
+                            .updateCsMember$NotNull(updateAutoState(member, null, null, (short) 2));
+
                     return null;
                 }
             });
@@ -872,8 +876,8 @@ public class DefaultAction extends BaseAction {
             return returnError(e);
         }
     }
-    
-    
+
+
     /**
      * 实名认证 身份证 驾驶证
      * 
@@ -1028,7 +1032,7 @@ public class DefaultAction extends BaseAction {
             return returnError(e);
         }
     }
-    
+
     /**
      * 企业部门
      * 
@@ -1036,31 +1040,32 @@ public class DefaultAction extends BaseAction {
      */
     public String getUnitGroup() {
         try {
-            
-            Long unitId=$.getLong("unitId");
-            if(unitId==null) {
+
+            Long unitId = $.getLong("unitId");
+            if (unitId == null) {
                 return returnError("100", "无企业参数");
             }
-            /*List<CsArea> areaList = CsArea.getCsAreaList($.add(CsArea.F.csaStatus, 1), -1);
-            
-            List<Map<String, Object>> cldList = new ArrayList<Map<String, Object>>();
-
-            // 设置默认网点
-            cldList.add(defaultArea());
-            for (CsArea area : areaList) {
-                List<CsUnitInfo> unitInfoList =
-                        CsUnitInfo.getCsUnitInfoList($.add(CsUnitInfo.F.csuiArea, area.getCsaId())
-                                .add(CsUnitInfo.F.csuiStatus, 1), 1000);
-                cldList.add($.add("areaId", area.getCsaId()).add("areaName", area.getCsaName$())
-                        .add("unitList", assembleUnitInfo(unitInfoList)));
-                        
-            }*/
-            List<CsUnitGroup> groupList=CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
-            List<String> groupNameList=new ArrayList<>();
-            for(CsUnitGroup csUnitGroup:groupList) {
+            /*
+             * List<CsArea> areaList = CsArea.getCsAreaList($.add(CsArea.F.csaStatus, 1), -1);
+             * 
+             * List<Map<String, Object>> cldList = new ArrayList<Map<String, Object>>();
+             * 
+             * // 设置默认网点 cldList.add(defaultArea()); for (CsArea area : areaList) { List<CsUnitInfo>
+             * unitInfoList = CsUnitInfo.getCsUnitInfoList($.add(CsUnitInfo.F.csuiArea,
+             * area.getCsaId()) .add(CsUnitInfo.F.csuiStatus, 1), 1000); cldList.add($.add("areaId",
+             * area.getCsaId()).add("areaName", area.getCsaName$()) .add("unitList",
+             * assembleUnitInfo(unitInfoList)));
+             * 
+             * }
+             */
+            List<CsUnitGroup> groupList =
+                    CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
+            List<String> groupNameList = new ArrayList<>();
+            for (CsUnitGroup csUnitGroup : groupList) {
                 groupNameList.add(csUnitGroup.getCsugName$());
             }
-            return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))), CHARSET);
+            return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))),
+                    CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }
@@ -6118,6 +6123,7 @@ public class DefaultAction extends BaseAction {
 
     /**
      * 首页提示
+     * 
      * @return
      */
 
