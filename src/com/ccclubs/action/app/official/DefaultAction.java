@@ -224,47 +224,53 @@ public class DefaultAction extends BaseAction {
         return returnError("9999", SYSTEM.ERROR_TIPS);
     }
 
-    
+
     /**
-	 *	 线下认证
-	 * @return
-	 */
-	public String getUnderlineMember(){
-		try {
-//			CsMember member = OauthUtils.getOauth($.getString("access_token",""));
-//			if (member == null) {
-//				return returnError("100", "登录授权无效");
-//			}
-			//	
-			Map<String ,Object> params=new HashMap<>();
-			params.put("asc","cum_area");
-			Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),4,params);
-			//
-			Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
-			Map<String ,Object> tempMap=null;
-			List<Map<String, Object>> tempList=null;
-			for (CsUnderlineMember data : page.getResult()) {
-				String area=data.getCumArea$();
-				//
-				tempMap= new HashMap<>();
-				tempMap.put("user", data.getCumUser());//对接人
-				tempMap.put("mobile", data.getCumMobile());
-//				tempMap.put("area", data.getCumArea$());
-				//
-				if(dataMap.containsKey(area)) {
-					dataMap.get(area).add(tempMap);
-				}else {
-					tempList=new ArrayList<>();
-					tempList.add(tempMap);
-					dataMap.put(area, tempList);
-				}
-			}
-			LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal()).add("count", page.getCount()).add("size", page.getSize());
-			return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", dataMap).add("page", pagemap))),CHARSET);
-		} catch (Exception e) {
-			return returnError(e);
-		}
-	}
+     * 线下认证
+     * 
+     * @return
+     */
+    public String getUnderlineMember() {
+        try {
+            // CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+            // if (member == null) {
+            // return returnError("100", "登录授权无效");
+            // }
+            //
+            Map<String, Object> params = new HashMap<>();
+            params.put("asc", "cum_area");
+            Page<CsUnderlineMember> page = csUnderlineMemberService
+                    .getCsUnderlineMemberPage($.getInteger("page", 0), 4, params);
+            //
+            Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
+            Map<String, Object> tempMap = null;
+            List<Map<String, Object>> tempList = null;
+            for (CsUnderlineMember data : page.getResult()) {
+                String area = data.getCumArea$();
+                //
+                tempMap = new HashMap<>();
+                tempMap.put("user", data.getCumUser());// 对接人
+                tempMap.put("mobile", data.getCumMobile());
+                // tempMap.put("area", data.getCumArea$());
+                //
+                if (dataMap.containsKey(area)) {
+                    dataMap.get(area).add(tempMap);
+                } else {
+                    tempList = new ArrayList<>();
+                    tempList.add(tempMap);
+                    dataMap.put(area, tempList);
+                }
+            }
+            LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
+                    .add("count", page.getCount()).add("size", page.getSize());
+            return $.SendHtml($.json(
+                    JsonFormat.success().setData($.Map("list", dataMap).add("page", pagemap))),
+                    CHARSET);
+        } catch (Exception e) {
+            return returnError(e);
+        }
+    }
+
     /**
      * 登录
      * 
@@ -277,6 +283,7 @@ public class DefaultAction extends BaseAction {
             String strUsername = $.getString("username", "");
             String strPass = $.getString("password", "");
             int type = $.getInteger("type", 0);// 默认密码登录；1-验证码登录
+            int checkAcc = $.getInteger("checkAcc", 0);// 默认0:校验是否创建企业用户；1-不校验
 
             if (SystemHelper.isNullOrEmpty(strUsername)) {
                 return returnError("102", "您还没有输入帐号");
@@ -318,11 +325,14 @@ public class DefaultAction extends BaseAction {
                     return returnError("106", "您输入的验证码不正确，请重新输入");
                 }
             }
-
-            CsUnitPerson person =
-                    CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
-            if (person == null)
-                return returnError("107", "您的注册还未完成，请继续完善信息");
+            
+            if(checkAcc==0) {
+                //校验企业用户信息
+                CsUnitPerson person =
+                        CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
+                if (person == null)
+                    return returnError("107", "您的注册还未完成，请继续完善信息");
+            }
 
             String sessionToken = SessionMgr.get(user.getCsmId$());
             if (StringUtils.isNotEmpty(sessionToken)) {
@@ -453,14 +463,14 @@ public class DefaultAction extends BaseAction {
             if (!SystemHelper.isMobile(csmMobile)) {
                 return returnError("105", "手机号码格式错误");
             }
-            
+
             if (type == 0 && !$.equals(strValidMobCode,
                     (String) SessionMgr.get(csmMobile, FORGET_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
-            }else if (type == 1 && !$.equals(strValidMobCode,
+            } else if (type == 1 && !$.equals(strValidMobCode,
                     (String) SessionMgr.get(csmMobile, RESET_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
-            }else if (type == 2 && !$.equals(strValidMobCode,
+            } else if (type == 2 && !$.equals(strValidMobCode,
                     (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
             }
@@ -563,6 +573,8 @@ public class DefaultAction extends BaseAction {
 
             final short from = $.getShort("from");
             final short type = $.getShort("type", (short) 0);
+            //默认0：跳转登录页；1-跳过登录
+            final short skipLogin = $.getShort("skipLogin", (short) 0);
 
             final String csmMobile = $.getString("mobile", "");
             if ($.empty(csmMobile)) {
@@ -629,8 +641,10 @@ public class DefaultAction extends BaseAction {
                 return returnError("108", "手机号已被注册,请去登录");
             }
             final String inviteCode = $.getString("inviteCode");
-
-
+            
+            /****开始创建会员相关信息*****/
+            //初始化会员账号
+            CsMember csMember = null;
             csMemberService.executeTransaction(new Function() {
 
                 @Override
@@ -677,9 +691,18 @@ public class DefaultAction extends BaseAction {
             // TODO Auto-generated method stub
             SessionMgr.remove(csmMobile, REGISTER_SMS_CODE);
             SessionMgr.remove(csmMobile, "registersms");
-
-            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
-
+            
+            if(skipLogin==1) {
+                //注册成功，后台登录
+                String token = UUIDGenerator.getUUID();
+                OauthUtils.saveToken(csMember.getCsmId().toString(), token);
+                JsonFormat result = JsonFormat.success().setData(
+                        $.add("access_token", token).add("id", String.valueOf(csMember.getCsmId())));
+                return $.SendHtml($.json(result), SYSTEM.UTF8);
+            }else {
+                //用户手动登录
+                return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+            }
         } catch (Exception ex) {
             // TODO: handle exception
             return returnError(ex);
@@ -803,7 +826,7 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("102", "用户尚未注册，请注册");
             }
-            final String realName = $.getString("realName");//真实姓名
+            final String realName = $.getString("realName");// 真实姓名
             final String certifyNum = $.getString("certifyNum");
             final String certifyImg = $.getString("certifyImage");// 身份证反面
             final String onCertifyImg = $.getString("onCertifyImage");// 身份正面
@@ -1769,14 +1792,14 @@ public class DefaultAction extends BaseAction {
             data.put("headerImg", member.getCsmHeader());
             data.put("mobile", member.getCsmMobile());
             data.put("money", member.getCsmMoney());
-            data.put("vdrive", member.getCsmVDrive());//驾驶证认证
+            data.put("vdrive", member.getCsmVDrive());// 驾驶证认证
             data.put("vemail", member.getCsmVEmail());
-            data.put("vreal", member.getCsmVReal());//身份证认证
+            data.put("vreal", member.getCsmVReal());// 身份证认证
             data.put("vmobile", member.getCsmVMobile());
-            data.put("vstatus", member.getVstatus());//认证状态
-            data.put("vwork", member.getCsmVWork());//工作认证
-            data.put("voffline", member.getCsmVOffline());//线下认证
-            
+            data.put("vstatus", member.getVstatus());// 认证状态
+            data.put("vwork", member.getCsmVWork());// 工作认证
+            data.put("voffline", member.getCsmVOffline());// 线下认证
+
             data.put("personId", person.getCsupId());
             data.put("unitInfoId", person.getCsupInfo());
             data.put("unitName",
@@ -1815,6 +1838,8 @@ public class DefaultAction extends BaseAction {
                 data.put("contact", memberInfo.getCsmiContact());
                 data.put("relation", memberInfo.getCsmiRelation());
                 data.put("status", memberInfo.getCsmiStatus());
+                // 工作证照片
+                data.put("workImage", memberInfo.getCsmiProofOfEmployment());
             } else {
                 data.put("certifyType", null);
                 data.put("certifyNum", null);
@@ -1829,6 +1854,8 @@ public class DefaultAction extends BaseAction {
                 data.put("contact", null);
                 data.put("relation", null);
                 data.put("status", null);
+                // 工作证照片
+                data.put("workImage", null);
             }
             data.put("isRefunding", commonMoneyService.isRefunding(member.getCsmId()));// 正在退款
             data.put("evcard", member.getCsmEvcard());
@@ -1838,9 +1865,10 @@ public class DefaultAction extends BaseAction {
             return returnError(ex);
         }
     }
-    
+
     /**
      * 获取认证状态
+     * 
      * @return
      */
     public String getAuthStatus() {
@@ -6368,13 +6396,13 @@ public class DefaultAction extends BaseAction {
         this.csCreditCardService = csCreditCardService;
     }
 
-	public ICsUnderlineMemberService getCsUnderlineMemberService() {
-		return csUnderlineMemberService;
-	}
+    public ICsUnderlineMemberService getCsUnderlineMemberService() {
+        return csUnderlineMemberService;
+    }
 
-	public void setCsUnderlineMemberService(ICsUnderlineMemberService csUnderlineMemberService) {
-		this.csUnderlineMemberService = csUnderlineMemberService;
-	}
+    public void setCsUnderlineMemberService(ICsUnderlineMemberService csUnderlineMemberService) {
+        this.csUnderlineMemberService = csUnderlineMemberService;
+    }
 
 
 

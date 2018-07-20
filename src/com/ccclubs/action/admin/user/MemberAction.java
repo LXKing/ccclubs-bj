@@ -1207,6 +1207,8 @@ public class MemberAction {
                 public <T> T execute(Object... arg0) {
                     if (csMember.getCsmId() == null)
                         throw new RuntimeException("表单方式审核会员出错，未发现会员ID");
+                    
+                    //两项认证成功，送积分
                     if (csMember.getCsmVDrive().shortValue() == 1
                             && csMember.getCsmVReal().shortValue() == 1) {
                         com.ccclubs.service.common.ICommonMoneyService commonMoneyService =
@@ -1276,8 +1278,6 @@ public class MemberAction {
                         CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
                                 .csupInfo(unitInfo).csupGroup(unitGroup).update();
                     }
-
-
 
                     LoggerHelper.writeLog(CsMember.class, "update",
                             "审核了[会员帐号][" + oldCsMember.getCsmMobile() + "]"
