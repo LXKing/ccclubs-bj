@@ -99,6 +99,26 @@ window.$on("readyStart",function(){
 	$("${lz:js(logHtml)}").insertAfter("dl[ref='csmMemos']");
 });
 </script>
+<s:if test="#request.CTRL.title=='修改会员帐号'">
+	<lz:set name="jsonString">
+		{
+			title:"修改会员帐号",
+			editable:true,
+			visible:true,
+			fields:{
+				csmId:{editable:false,visible:true}
+				,csmVReal:{editable:false,visible:false}
+				,csmVDrive:{editable:false,visible:false}
+				,csmVWork:{editable:false,visible:false}
+				,csmVOffline:{editable:false,visible:false}
+				,unitInfo:{editable:false,visible:false}
+				,unitGroup:{editable:false,visible:false}
+				,payMember:{editable:false,visible:false}
+			}
+		}
+	</lz:set>
+	${lz:set("CTRL",lz:CTRL(jsonString))}
+</s:if>
 <s:if test="#request.CTRL.title=='改号'">
 	<lz:set name="jsonString">
 		{
@@ -3718,7 +3738,7 @@ $(function(){
 	<s:if test="#request.CTRL.v.csmVReal==true">
 	${before$csmVReal}
 	<dl class="csmVReal " major  ref="csmVReal" >
-		<dt>实名认证:</dt>
+		<dt>身份认证:</dt>
 		<s:if test="#request.CTRL.e.csmVReal==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">
@@ -3915,6 +3935,46 @@ $(function(){
 		</s:else>
 	</dl>
 	${after$csmStatus}
+	</s:if>
+	
+	${lz:set("注释","*****************实名认证总状态字段的输入框代码*****************")}
+	${lz:set("注释","before$vstatus和after$vstatus变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.vStatus==true">
+	${before$vstatus}
+	<dl class="vstatus " major  ref="vstatus" >
+		<dt>认证状态:</dt>
+		<s:if test="#request.CTRL.e.vstatus==true">
+		${lz:set("haveEditable",true)}
+		<dd input="select">
+		<s:if test="#csMember$vstatus!=null">${csMember.vstatus}</s:if><s:else>
+		 	<select class="narrow" id="vstatus" name="csMember.vstatus">
+		 		<option value="0" ${csMember.vstatus==0?"selected":""}>未认证</option>
+				<option value="1" ${csMember.vstatus==1?"selected":""}>已认证</option>
+				<option value="2" ${csMember.vstatus==2?"selected":""}>等待认证</option>
+				<option value="3" ${csMember.vstatus==3?"selected":""}>认证失败</option>
+		 	</select>
+	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请选择会员帐号的可用状态</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****可用状态字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="vstatus">${csMember.vstatus}</textarea>
+		 		<span>
+		 	
+			 ${csMember.vstatus$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$vstatus}
 	</s:if>
 	
 	${lz:set("注释","*****************所属单位字段的输入框代码*****************")}

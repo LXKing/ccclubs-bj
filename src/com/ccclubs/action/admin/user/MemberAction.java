@@ -338,7 +338,7 @@ public class MemberAction {
                 CTRL.setObjectDefaultValue(csMember);
             /************ LAZY3Q_CODE_EDIT ************/
             /************ LAZY3Q_CODE_EDIT ************/
-
+            
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getRootLogger().error(e.getMessage(), e);
