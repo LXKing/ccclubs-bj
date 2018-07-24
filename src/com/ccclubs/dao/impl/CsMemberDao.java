@@ -82,7 +82,15 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 	
 	ICsMemberInfoDao csMemberInfoDao;
 	
-	/**
+	public ICsMemberInfoDao getCsMemberInfoDao() {
+        return csMemberInfoDao;
+    }
+
+    public void setCsMemberInfoDao(ICsMemberInfoDao csMemberInfoDao) {
+        this.csMemberInfoDao = csMemberInfoDao;
+    }
+
+    /**
 	 * 获取所有会员帐号
 	 * @return
 	 */	
