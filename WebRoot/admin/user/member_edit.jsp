@@ -15,15 +15,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMember.csmId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.isAddType==true">
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
-	editables:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive",
+	editables:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive",
+	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmInfo,csmOutlets,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"csmId,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
+	editables:"csmId,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,,csmVWork,csmVOffline,csmStatus",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
+	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,,csmVWork,csmVOffline,csmStatus",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -99,6 +99,26 @@ window.$on("readyStart",function(){
 	$("${lz:js(logHtml)}").insertAfter("dl[ref='csmMemos']");
 });
 </script>
+<s:if test="#request.CTRL.title=='修改会员帐号'">
+	<lz:set name="jsonString">
+		{
+			title:"修改会员帐号",
+			editable:true,
+			visible:true,
+			fields:{
+				csmId:{editable:false,visible:true}
+				,csmVReal:{editable:false,visible:false}
+				,csmVDrive:{editable:false,visible:false}
+				,csmVWork:{editable:false,visible:false}
+				,csmVOffline:{editable:false,visible:false}
+				,unitInfo:{editable:false,visible:false}
+				,unitGroup:{editable:false,visible:false}
+				,payMember:{editable:false,visible:false}
+			}
+		}
+	</lz:set>
+	${lz:set("CTRL",lz:CTRL(jsonString))}
+</s:if>
 <s:if test="#request.CTRL.title=='改号'">
 	<lz:set name="jsonString">
 		{
@@ -116,7 +136,7 @@ window.$on("readyStart",function(){
 	${lz:set("CTRL",lz:CTRL(jsonString))}
 </s:if>
 <s:if test="#request.CTRL.title=='审核'">
-	<s:if test="csMember.csmVReal==1 && csMember.csmVDrive==1">
+	<s:if test="csMember.csmVReal==1 && csMember.csmVDrive==1 && csMember.csmVWork==1 && csMember.csmVOffline==1 ">
 		${lz:set("message","温馨提示，该会员不在审核状态，不需审核")}
 	</s:if>
 	<lz:set name="jsonString">
@@ -131,6 +151,8 @@ window.$on("readyStart",function(){
 				,csmInfo:{editable:false,visible:true}
 				,csmVReal:{editable:true,visible:true}
 				,csmVDrive:{editable:true,visible:true}
+				,csmVWork:{editable:true,visible:true}
+				,csmVOffline:{editable:true,visible:true}
 				,csmRemark:{editable:true,visible:true}
 				,payMember:{editable:true,visible:true}
 				,unitInfo:{editable:true,visible:true}
@@ -668,7 +690,17 @@ $(function(){
 		${lz:set("haveEditable",true)}
 		,"csMember.csmVDrive":function(el){
 		}
+		</s:if>
+		<s:if test="#request.CTRL.e.csmVWork==true">
+		${lz:set("haveEditable",true)}
+		,"csMember.csmVWork":function(el){
+		}
 		</s:if>	
+		<s:if test="#request.CTRL.e.csmVOffline==true">
+		${lz:set("haveEditable",true)}
+		,"csMember.csmVOffline":function(el){
+		}
+		</s:if>
 		<s:if test="#request.CTRL.e.csmStatus==true">
 		${lz:set("haveEditable",true)}
 		,"csMember.csmStatus":function(el){
@@ -3706,11 +3738,11 @@ $(function(){
 	<s:if test="#request.CTRL.v.csmVReal==true">
 	${before$csmVReal}
 	<dl class="csmVReal " major  ref="csmVReal" >
-		<dt>实名认证:</dt>
+		<dt>身份认证:</dt>
 		<s:if test="#request.CTRL.e.csmVReal==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">
-		<s:if test="#request.csMember$csmVReal!=null">${csMember$csmVReal}</s:if><s:else>
+		<s:if test="#request.csMember$csmVReal!=null">${csMember$csmVReal}{csMember.csmVReal}</s:if><s:else>
 		 	<select class="narrow" id="csmVReal" name="csMember.csmVReal">
 		 		<option value="">请选择</option>
 				<option value="0" ${csMember.csmVReal==0?"selected":""}>未认证</option>
@@ -3783,6 +3815,88 @@ $(function(){
 	${after$csmVDrive}
 	</s:if>
 	
+	${lz:set("注释","*****************工作认证字段的输入框代码*****************")}
+	${lz:set("注释","before$csmVWork和after$csmVWork变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csmVWork==true">
+	${before$csmVWork}
+	<dl class="csmVWork " major  ref="csmVWork" >
+		<dt>工作认证:</dt>
+		<s:if test="#request.CTRL.e.csmVWork==true">
+		${lz:set("haveEditable",true)}
+		<dd input="select">
+		<s:if test="#request.csMember$csmVWork!=null">${csMember$csmVWork}</s:if><s:else>
+		 	<select class="narrow" id="csmVWork" name="csMember.csmVWork">
+		 		<option value="">请选择</option>
+				<option value="0" ${csMember.csmVWork==0?"selected":""}>未认证</option>
+				<option value="1" ${csMember.csmVWork==1?"selected":""}>已认证</option>
+				<option value="2" ${csMember.csmVWork==2?"selected":""}>等待认证</option>
+				<option value="3" ${csMember.csmVWork==3?"selected":""}>认证失败</option>
+		 	</select>
+	 	 </s:else>
+	 	 
+	 	 
+	 	 <em>请确认人员的单位和身份信息无误</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****实名认证字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="csmVWork">${csMember.csmVWork}</textarea>
+		 		<span>
+		 	
+			 ${csMember.csmVWork$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csmVWork}
+	</s:if>
+	
+	${lz:set("注释","*****************线下认证字段的输入框代码*****************")}
+	${lz:set("注释","before$csmVWork和after$csmVOffline变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csmVOffline==true">
+	${before$csmVOffline}
+	<dl class="csmVOffline " major  ref="csmVOffline" >
+		<dt>线下认证:</dt>
+		<s:if test="#request.CTRL.e.csmVOffline==true">
+		${lz:set("haveEditable",true)}
+		<dd input="select">
+		<s:if test="#request.csMember$csmVOffline!=null">${csMember$csmVOffline}</s:if><s:else>
+		 	<select class="narrow" id="csmVOffline" name="csMember.csmVOffline">
+		 		<option value="">请选择</option>
+				<option value="0" ${csMember.csmVOffline==0?"selected":""}>未认证</option>
+				<option value="1" ${csMember.csmVOffline==1?"selected":""}>已认证</option>
+				<option value="2" ${csMember.csmVOffline==2?"selected":""}>等待认证</option>
+				<option value="3" ${csMember.csmVOffline==3?"selected":""}>认证失败</option>
+		 	</select>
+	 	 </s:else>
+	 	 
+	 	 
+	 	 <em>请确认人员的单位和身份信息无误</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****实名认证字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="csmVOffline">${csMember.csmVOffline}</textarea>
+		 		<span>
+		 	
+			 ${csMember.csmVOffline$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csmVOffline}
+	</s:if>
+	
 	${lz:set("注释","*****************可用状态字段的输入框代码*****************")}
 	${lz:set("注释","before$csmStatus和after$csmStatus变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmStatus==true">
@@ -3797,6 +3911,7 @@ $(function(){
 		 		<option value="">请选择</option>
 				<option value="1" ${csMember.csmStatus==1?"selected":""}>正常</option>
 				<option value="0" ${csMember.csmStatus==0?"selected":""}>禁用</option>
+				<option value="0" ${csMember.csmStatus==2?"selected":""}>黑名单</option>
 		 	</select>
 	 	 </s:else>
 	 	 
@@ -3820,6 +3935,46 @@ $(function(){
 		</s:else>
 	</dl>
 	${after$csmStatus}
+	</s:if>
+	
+	${lz:set("注释","*****************实名认证总状态字段的输入框代码*****************")}
+	${lz:set("注释","before$vstatus和after$vstatus变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.vStatus==true">
+	${before$vstatus}
+	<dl class="vstatus " major  ref="vstatus" >
+		<dt>认证状态:</dt>
+		<s:if test="#request.CTRL.e.vstatus==true">
+		${lz:set("haveEditable",true)}
+		<dd input="select">
+		<s:if test="#csMember$vstatus!=null">${csMember.vstatus}</s:if><s:else>
+		 	<select class="narrow" id="vstatus" name="csMember.vstatus">
+		 		<option value="0" ${csMember.vstatus==0?"selected":""}>未认证</option>
+				<option value="1" ${csMember.vstatus==1?"selected":""}>已认证</option>
+				<option value="2" ${csMember.vstatus==2?"selected":""}>等待认证</option>
+				<option value="3" ${csMember.vstatus==3?"selected":""}>认证失败</option>
+		 	</select>
+	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请选择会员帐号的可用状态</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****可用状态字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="vstatus">${csMember.vstatus}</textarea>
+		 		<span>
+		 	
+			 ${csMember.vstatus$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$vstatus}
 	</s:if>
 	
 	${lz:set("注释","*****************所属单位字段的输入框代码*****************")}

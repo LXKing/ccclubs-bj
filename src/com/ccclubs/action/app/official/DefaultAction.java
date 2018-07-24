@@ -78,6 +78,7 @@ import com.ccclubs.model.CsRecord;
 import com.ccclubs.model.CsRefund;
 import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsState;
+import com.ccclubs.model.CsUnderlineMember;
 import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitMt;
@@ -113,6 +114,7 @@ import com.ccclubs.service.admin.ICsRecordService;
 import com.ccclubs.service.admin.ICsRefundService;
 import com.ccclubs.service.admin.ICsSpecialCarService;
 import com.ccclubs.service.admin.ICsStateService;
+import com.ccclubs.service.admin.ICsUnderlineMemberService;
 import com.ccclubs.service.admin.ICsUnitGroupService;
 import com.ccclubs.service.admin.ICsUnitMtService;
 import com.ccclubs.service.admin.ICsUnitOrderService;
@@ -185,7 +187,7 @@ public class DefaultAction extends BaseAction {
     ICsUseRecordService csUseRecordService;
     ICsUnitPersonService csUnitPersonService;
     ICsCreditCardService csCreditCardService;
-
+    ICsUnderlineMemberService csUnderlineMemberService;
     final static String CHARSET = "utf-8";
     final static String FORGET_SMS_CODE = "forgetcode"; // 忘记密码的校验码
     final static String FORGET_TOKEN = "forget_token"; // 忘记密码校验通过的状态token
@@ -222,6 +224,53 @@ public class DefaultAction extends BaseAction {
         return returnError("9999", SYSTEM.ERROR_TIPS);
     }
 
+
+    /**
+     * 线下认证
+     * 
+     * @return
+     */
+    public String getUnderlineMember() {
+        try {
+            // CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+            // if (member == null) {
+            // return returnError("100", "登录授权无效");
+            // }
+            //
+            Map<String, Object> params = new HashMap<>();
+            params.put("asc", "cum_area");
+            Page<CsUnderlineMember> page = csUnderlineMemberService
+                    .getCsUnderlineMemberPage($.getInteger("page", 0), 4, params);
+            //
+            Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
+            Map<String, Object> tempMap = null;
+            List<Map<String, Object>> tempList = null;
+            for (CsUnderlineMember data : page.getResult()) {
+                String area = data.getCumArea$();
+                //
+                tempMap = new HashMap<>();
+                tempMap.put("user", data.getCumUser());// 对接人
+                tempMap.put("mobile", data.getCumMobile());
+                // tempMap.put("area", data.getCumArea$());
+                //
+                if (dataMap.containsKey(area)) {
+                    dataMap.get(area).add(tempMap);
+                } else {
+                    tempList = new ArrayList<>();
+                    tempList.add(tempMap);
+                    dataMap.put(area, tempList);
+                }
+            }
+            LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
+                    .add("count", page.getCount()).add("size", page.getSize());
+            return $.SendHtml($.json(
+                    JsonFormat.success().setData($.Map("list", dataMap).add("page", pagemap))),
+                    CHARSET);
+        } catch (Exception e) {
+            return returnError(e);
+        }
+    }
+
     /**
      * 登录
      * 
@@ -234,6 +283,7 @@ public class DefaultAction extends BaseAction {
             String strUsername = $.getString("username", "");
             String strPass = $.getString("password", "");
             int type = $.getInteger("type", 0);// 默认密码登录；1-验证码登录
+            int checkAcc = $.getInteger("checkAcc", 0);// 默认0:校验是否创建企业用户；1-不校验
 
             if (SystemHelper.isNullOrEmpty(strUsername)) {
                 return returnError("102", "您还没有输入帐号");
@@ -275,11 +325,14 @@ public class DefaultAction extends BaseAction {
                     return returnError("106", "您输入的验证码不正确，请重新输入");
                 }
             }
-
-            CsUnitPerson person =
-                    CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
-            if (person == null)
-                return returnError("107", "您的注册还未完成，请继续完善信息");
+            
+            if(checkAcc==0) {
+                //校验企业用户信息
+                CsUnitPerson person =
+                        CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
+                if (person == null)
+                    return returnError("107", "您的注册还未完成，请继续完善信息");
+            }
 
             String sessionToken = SessionMgr.get(user.getCsmId$());
             if (StringUtils.isNotEmpty(sessionToken)) {
@@ -400,54 +453,44 @@ public class DefaultAction extends BaseAction {
         try {
             int type = $.getInteger("type", 0);
             String csmMobile = $.getString("mobile", "");
-            // String strValidCode = $.getString("txtCode", "");
             String strValidMobCode = $.getString("validCode", "");
             if ($.empty(csmMobile)) {
                 return returnError("101", "请输入手机号");
             }
-            // if ($.empty(strValidCode)) {
-            // // $.SetTips("未输入验证码，不能修改密码");
-            // return $.SendHtml("103", "UTF-8");
-            // }
             if ($.empty(strValidMobCode)) {
-                // $.SetTips("未输入短信校验码，不能修改密码");
                 return returnError("104", "未输入短信校验码，不能修改密码");
             }
             if (!SystemHelper.isMobile(csmMobile)) {
-                // $.SetTips("手机号码格式错误");
                 return returnError("105", "手机号码格式错误");
             }
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, FORGET_SMS_CODE))
-                    && type == 0) {
-                return returnError("110", "短信校验码输入错误");
-            }
 
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, RESET_SMS_CODE))
-                    && type == 1) {
+            if (type == 0 && !$.equals(strValidMobCode,
+                    (String) SessionMgr.get(csmMobile, FORGET_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
-            }
-
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))
-                    && type == 2) {
+            } else if (type == 1 && !$.equals(strValidMobCode,
+                    (String) SessionMgr.get(csmMobile, RESET_SMS_CODE))) {
+                return returnError("110", "短信校验码输入错误");
+            } else if (type == 2 && !$.equals(strValidMobCode,
+                    (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))) {
                 return returnError("110", "短信校验码输入错误");
             }
 
             CsMember existMember =
                     csMemberService.getCsMember($.add(CsMember.F.csmMobile, csmMobile));
-            if (existMember == null)
-                return returnError("111", "手机号不存在，不能修改密码");
 
             String token = UUIDGenerator.getUUID();
             String key = FORGET_TOKEN;
             switch (type) {
                 case 1:
                     key = RESET_TOKEN;
+                    if (existMember == null)
+                        return returnError("111", "手机号不存在，不能修改密码");
                     break;
                 case 2:
                     key = REGISTER_TOKEN;
                     break;
             }
-            SessionMgr.put(existMember.getCsmMobile(), key, token);
+            SessionMgr.put(csmMobile, key, token);
             return $.SendHtml($.json(JsonFormat.success().addValue(FORGET_TOKEN, token)), CHARSET);
         } catch (Exception ex) {
             return returnError(ex);
@@ -529,27 +572,37 @@ public class DefaultAction extends BaseAction {
         try {
 
             final short from = $.getShort("from");
+            final short type = $.getShort("type", (short) 0);
+            //默认0：跳转登录页；1-跳过登录
+            final short skipLogin = $.getShort("skipLogin", (short) 0);
 
             final String csmMobile = $.getString("mobile", "");
             if ($.empty(csmMobile)) {
                 return returnError("101", "请输入手机号");
             }
 
-            String strValidMobCode = $.getString("validCode", "");
-            if ($.empty(strValidMobCode) && from != 2) {
-                return returnError("102", "未输入短信校验码，不能注册账号");
-            }
-
             if (!SystemHelper.isMobile(csmMobile)) {
                 return returnError("103", "手机号码格式错误");
             }
 
-            if (!$.equals(strValidMobCode, (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))
-                    && from != 2) {
-                return returnError("104", "短信校验码输入错误");
+            String strValidMobCode = $.getString("validCode", "");
+            if (from != 2) {
+                if ($.empty(strValidMobCode)) {
+                    if (type == 0) {
+                        return returnError("102", "未输入短信校验码，不能注册账号");
+                    } else if (type == 1) {
+                        return returnError("102", "请先通过短信验证码校验");
+                    }
+                } else {
+                    if (type == 0 && !$.equals(strValidMobCode,
+                            (String) SessionMgr.get(csmMobile, REGISTER_SMS_CODE))) {
+                        return returnError("104", "短信校验码输入错误");
+                    } else if (type == 1 && !$.equals(strValidMobCode,
+                            (String) SessionMgr.get(csmMobile, REGISTER_TOKEN))) {
+                        return returnError("104", "请先通过短信验证码校验");
+                    }
+                }
             }
-
-
 
             final String csmPassword = $.getString("txtPassWord", "");
             final String rePwd = $.getString("txtRePassWord", "");
@@ -588,9 +641,10 @@ public class DefaultAction extends BaseAction {
                 return returnError("108", "手机号已被注册,请去登录");
             }
             final String inviteCode = $.getString("inviteCode");
-
-
-            csMemberService.executeTransaction(new Function() {
+            
+            /****开始创建会员相关信息*****/
+            //初始化会员账号
+            CsMember member = csMemberService.executeTransaction(new Function() {
 
                 @Override
                 public <T> T execute(Object... arg0) {
@@ -619,29 +673,35 @@ public class DefaultAction extends BaseAction {
                         csMemberShipService.saveCsMemberShip(csMemberShip);
 
                         // 保存人员信息到cs_unit_person
-
-                        if (from == 2) {
-                            CsUnitPerson csUnitPerson = getUnitPerson(new CsUnitPerson(), host,
-                                    csUnitInfo.getCsuiId(), member.getCsmId(), -1l);
-                            csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-                            UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(), "REGIST_CODE",
-                                    $.str(csmMobile), "欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。",
-                                    SMSType.通知类短信,
-                                    $.add("mobile", $.str(csmMobile)).add("code", csmPassword));
-                        }
+                        CsUnitPerson csUnitPerson = getUnitPerson(new CsUnitPerson(), host,
+                                csUnitInfo.getCsuiId(), member.getCsmId(), -1l);
+                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
+                        UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(), "REGIST_CODE",
+                                $.str(csmMobile), "欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。",
+                                SMSType.通知类短信,
+                                $.add("mobile", $.str(csmMobile)).add("code", csmPassword));
 
                     }
 
-                    return null;
+                    return (T) csMember;
                 }
             });
 
             // TODO Auto-generated method stub
             SessionMgr.remove(csmMobile, REGISTER_SMS_CODE);
             SessionMgr.remove(csmMobile, "registersms");
-
-            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
-
+            
+            if(skipLogin==1) {
+                //注册成功，后台登录
+                String token = UUIDGenerator.getUUID();
+                OauthUtils.saveToken(member.getCsmId().toString(), token);
+                JsonFormat result = JsonFormat.success().setData(
+                        $.add("access_token", token).add("id", String.valueOf(member.getCsmId())));
+                return $.SendHtml($.json(result), SYSTEM.UTF8);
+            }else {
+                //用户手动登录
+                return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+            }
         } catch (Exception ex) {
             // TODO: handle exception
             return returnError(ex);
@@ -749,6 +809,136 @@ public class DefaultAction extends BaseAction {
     }
 
     /**
+     * 身份证认证
+     * 
+     */
+    public String authCertify() {
+        try {
+            final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
+            if (member == null) {
+                return returnError("100", "登录授权无效");
+            }
+
+            final String certifyImage = $.getString("certifyImage");// 身份证正面（国徽面）
+            final String certifyNum = $.getString("certifyNum");// 身份证号码
+            final String onCertifyImage = $.getString("onCertifyImage");// 身份证反面（人像面）
+            final String realName = $.getString("realName");// 真实姓名
+            if ($.empty(certifyImage)) {
+                return returnError("101", "身份证国徽面图片路径未上传，请上传图片。");
+            }
+            if ($.empty(certifyNum)) {
+                return returnError("101", "身份证号码未填写，请填写。");
+            }
+            if ($.empty(onCertifyImage)) {
+                return returnError("101", "身份证人像面图片路径未上传，请上传图片。");
+            }
+            if ($.empty(realName)) {
+                return returnError("101", "真实姓名未填写，请填写。");
+            }
+
+            csMemberInfoService.executeTransaction(new Function() {
+                @Override
+                public <T> T execute(Object... arg0) {
+                    CsMemberInfo csMemberInfo = updateMemberInfoCertifyImage(member, certifyImage,
+                            certifyNum, realName, onCertifyImage);
+                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    csMemberService
+                            .updateCsMember$NotNull(updateAutoState(member, null, (short) 2, null));
+                    return null;
+                }
+            });
+
+
+
+            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return returnError(e);
+        }
+    }
+
+    /**
+     * 驾驶证认证
+     * 
+     */
+    public String authDriverLicense() {
+        try {
+            final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
+            if (member == null) {
+                return returnError("100", "登录授权无效");
+            }
+
+            final String driverImage = $.getString("driverImage");
+            if ($.empty(driverImage)) {
+                return returnError("101", "驾驶证图片路径未上传，请上传图片。");
+            }
+
+            csMemberInfoService.executeTransaction(new Function() {
+                @Override
+                public <T> T execute(Object... arg0) {
+                    CsMemberInfo csMemberInfo = updateMemberInfoDriverImage(member, driverImage);
+                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    csMemberService
+                            .updateCsMember$NotNull(updateAutoState(member, (short) 2, null, null));
+                    return null;
+                }
+            });
+
+
+            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return returnError(e);
+        }
+    }
+
+    /**
+     * 工作证名认证
+     * 
+     */
+    public String authWork() {
+        try {
+            final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
+            if (member == null) {
+                return returnError("100", "登录授权无效");
+            }
+
+            final String company = $.getString("company");// 企业
+            final String department = $.getString("department");// 部门
+            final String proofOfEmployment = $.getString("proofOfEmployment");// 图片路径
+            if ($.empty(company)) {
+                return returnError("101", "企业未填写，请填写。");
+            }
+            if ($.empty(department)) {
+                return returnError("101", "部门未填写，请填写。");
+            }
+            if ($.empty(proofOfEmployment)) {
+                return returnError("101", "图片路径未上传，请上传图片。");
+            }
+
+            csMemberInfoService.executeTransaction(new Function() {
+                @Override
+                public <T> T execute(Object... arg0) {
+
+                    CsMemberInfo csMemberInfo = updateMemberInfoWorkImage(member, proofOfEmployment,
+                            company, department);
+                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    csMemberService
+                            .updateCsMember$NotNull(updateAutoState(member, null, null, (short) 2));
+
+                    return null;
+                }
+            });
+
+            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return returnError(e);
+        }
+    }
+
+
+    /**
      * 实名认证 身份证 驾驶证
      * 
      * @return
@@ -765,6 +955,7 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("102", "用户尚未注册，请注册");
             }
+            final String realName = $.getString("realName");// 真实姓名
             final String certifyNum = $.getString("certifyNum");
             final String certifyImg = $.getString("certifyImage");// 身份证反面
             final String onCertifyImg = $.getString("onCertifyImage");// 身份正面
@@ -787,14 +978,15 @@ public class DefaultAction extends BaseAction {
                 @Override
                 public <T> T execute(Object... arg0) {
                     // TODO Auto-generated method stub
-                    if (!$.empty(certifyImg)) {
+                    if ($.empty(certifyImg)) {
                         CsMemberInfo csMemberInfo = updateMemberInfo(member, certifyImg, certifyNum,
                                 driverImage, onCertifyImg);
                         csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                        member.setCsmName(realName);
                         csMemberService.updateCsMember$NotNull(
                                 updateAutoState(member, (short) 2, (short) 2));
                     }
-                    if (!$.empty(cardNo)) {
+                    if ($.empty(cardNo)) {
                         updateCreditCard(member, cardNo, cardImage);
                     }
                     return null;
@@ -898,6 +1090,44 @@ public class DefaultAction extends BaseAction {
             }
 
             return $.SendHtml($.json(JsonFormat.success().setData($.$("list", cldList))), CHARSET);
+        } catch (Exception e) {
+            return returnError(e);
+        }
+    }
+
+    /**
+     * 企业部门
+     * 
+     * @return
+     */
+    public String getUnitGroup() {
+        try {
+
+            Long unitId = $.getLong("unitId");
+            if (unitId == null) {
+                return returnError("100", "无企业参数");
+            }
+            /*
+             * List<CsArea> areaList = CsArea.getCsAreaList($.add(CsArea.F.csaStatus, 1), -1);
+             * 
+             * List<Map<String, Object>> cldList = new ArrayList<Map<String, Object>>();
+             * 
+             * // 设置默认网点 cldList.add(defaultArea()); for (CsArea area : areaList) { List<CsUnitInfo>
+             * unitInfoList = CsUnitInfo.getCsUnitInfoList($.add(CsUnitInfo.F.csuiArea,
+             * area.getCsaId()) .add(CsUnitInfo.F.csuiStatus, 1), 1000); cldList.add($.add("areaId",
+             * area.getCsaId()).add("areaName", area.getCsaName$()) .add("unitList",
+             * assembleUnitInfo(unitInfoList)));
+             * 
+             * }
+             */
+            List<CsUnitGroup> groupList =
+                    CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
+            List<Map<String,Object>> groupNameList = new ArrayList<>();
+            for (CsUnitGroup csUnitGroup : groupList) {
+                groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
+            }
+            return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))),
+                    CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }
@@ -1710,8 +1940,6 @@ public class DefaultAction extends BaseAction {
                 checkflag = 1;
             else
                 checkflag = 0;
-            // CsUnitInfo unit = CsUnitInfo.get(person.getCsupInfo());
-            // if(unit == null) return returnError("102", "用户未绑定企业");
 
             Double remain =
                     commonMoneyService.getCoin(member.getCsmHost(), member.getCsmId(), new Date());
@@ -1731,10 +1959,14 @@ public class DefaultAction extends BaseAction {
             data.put("headerImg", member.getCsmHeader());
             data.put("mobile", member.getCsmMobile());
             data.put("money", member.getCsmMoney());
-            data.put("vdrive", member.getCsmVDrive());
+            data.put("vdrive", member.getCsmVDrive());// 驾驶证认证
             data.put("vemail", member.getCsmVEmail());
-            data.put("vreal", member.getCsmVReal());
+            data.put("vreal", member.getCsmVReal());// 身份证认证
             data.put("vmobile", member.getCsmVMobile());
+            data.put("vstatus", member.getVstatus());// 认证状态
+            data.put("vwork", member.getCsmVWork());// 工作认证
+            data.put("voffline", member.getCsmVOffline());// 线下认证
+
             data.put("personId", person.getCsupId());
             data.put("unitInfoId", person.getCsupInfo());
             data.put("unitName",
@@ -1773,6 +2005,8 @@ public class DefaultAction extends BaseAction {
                 data.put("contact", memberInfo.getCsmiContact());
                 data.put("relation", memberInfo.getCsmiRelation());
                 data.put("status", memberInfo.getCsmiStatus());
+                // 工作证照片
+                data.put("workImage", memberInfo.getCsmiProofOfEmployment());
             } else {
                 data.put("certifyType", null);
                 data.put("certifyNum", null);
@@ -1787,6 +2021,8 @@ public class DefaultAction extends BaseAction {
                 data.put("contact", null);
                 data.put("relation", null);
                 data.put("status", null);
+                // 工作证照片
+                data.put("workImage", null);
             }
             data.put("isRefunding", commonMoneyService.isRefunding(member.getCsmId()));// 正在退款
             data.put("evcard", member.getCsmEvcard());
@@ -1795,6 +2031,25 @@ public class DefaultAction extends BaseAction {
         } catch (Exception ex) {
             return returnError(ex);
         }
+    }
+
+    /**
+     * 获取认证状态
+     * 
+     * @return
+     */
+    public String getAuthStatus() {
+        CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
+        if (member == null) {
+            return returnError("100", "登录授权无效");
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", member.getCsmId());
+        data.put("vreal", member.getCsmVReal());
+        data.put("vdrive", member.getCsmVDrive());
+        data.put("vwork", member.getCsmVWork());
+        data.put("voffline", member.getCsmVOffline());
+        return $.SendHtml($.json(JsonFormat.success().setData($.$("map", data))), CHARSET);
     }
 
     /**
@@ -5955,6 +6210,7 @@ public class DefaultAction extends BaseAction {
 
     /**
      * 首页提示
+     * 
      * @return
      */
 
@@ -6305,6 +6561,14 @@ public class DefaultAction extends BaseAction {
 
     public void setCsCreditCardService(ICsCreditCardService csCreditCardService) {
         this.csCreditCardService = csCreditCardService;
+    }
+
+    public ICsUnderlineMemberService getCsUnderlineMemberService() {
+        return csUnderlineMemberService;
+    }
+
+    public void setCsUnderlineMemberService(ICsUnderlineMemberService csUnderlineMemberService) {
+        this.csUnderlineMemberService = csUnderlineMemberService;
     }
 
 

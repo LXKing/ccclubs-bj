@@ -1257,7 +1257,7 @@ ${after$form}
 			 <s:if test="#request.defines==null && #request.CTRL.l.csmVReal || #request.defines['csmVReal']!=null">
 			 <td <s:if test="#request.defines['csmVReal']>0">colspan="${defines["csmVReal"]}" ${all?"width":"iwidth"}="${defines["csmVReal"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="59" ref="csmVReal"   title="实名认证">
 			 	<a class="${desc=="csm_v_real" ? "desc" : ""}${asc=="csm_v_real" ? "asc" : ""}" href="?${desc=="csm_v_real" ? "asc=csm_v_real" : ""}${(asc=="csm_v_real" || desc!="csm_v_real" )? "desc=csm_v_real" : ""}&${lz:queryss("UTF-8","desc","asc")}">
-			 	实名认证
+			 	身份认证
 			 	</a>
 			 	${lz:set("checkeds[]","csmVReal")}
 			 </td>
@@ -1269,6 +1269,24 @@ ${after$form}
 			 	驾驶认证
 			 	</a>
 			 	${lz:set("checkeds[]","csmVDrive")}
+			 </td>
+			 </s:if>
+			 
+			 <s:if test="#request.defines==null && #request.CTRL.l.csmVWork || #request.defines['csmVWork']!=null">
+			 <td <s:if test="#request.defines['csmVWork']>0">colspan="${defines["csmVWork"]}" ${all?"width":"iwidth"}="${defines["csmVWork"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="60" ref="csmVWork"   title="工作认证">
+			 	<a class="${desc=="csm_v_work" ? "desc" : ""}${asc=="csm_v_work" ? "asc" : ""}" href="?${desc=="csm_v_work" ? "asc=csm_v_work" : ""}${(asc=="csm_v_work" || desc!="csm_v_work" )? "desc=csm_v_work" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	工作认证
+			 	</a>
+			 	${lz:set("checkeds[]","csmVWork")}
+			 </td>
+			 </s:if>
+			 
+			 <s:if test="#request.defines==null && #request.CTRL.l.csmVOffline || #request.defines['csmVOffline']!=null">
+			 <td <s:if test="#request.defines['csmVOffline']>0">colspan="${defines["csmVOffline"]}" ${all?"width":"iwidth"}="${defines["csmVOffline"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="60" ref="csmVDrive"   title="线下认证">
+			 	<a class="${desc=="csm_v_offline" ? "desc" : ""}${asc=="csm_v_offline" ? "asc" : ""}" href="?${desc=="csm_v_offline" ? "asc=csm_v_offline" : ""}${(asc=="csm_v_offline" || desc!="csm_v_offline" )? "desc=csm_v_offline" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	线下认证
+			 	</a>
+			 	${lz:set("checkeds[]","csmVOffline")}
 			 </td>
 			 </s:if>
 				

@@ -31,6 +31,8 @@
 		<result property="csmiAddTime" column="csmi_add_time"/>
 		<result property="csmiStatus" column="csmi_status"/>
 		<result property="csmiOnCertifyImage" column="csmi_on_certify_image"/>
+		<result property="csmiProofOfEmployment" column="csmi_proof_of_employment"/>
+		<result property="csmiDepartment" column="csmi_department"/>
 	</resultMap>
 		
 	<!-- 获取所有会员信息 -->
@@ -217,6 +219,8 @@
 			,cs_member_info$suffix$.csmi_add_time
 			,cs_member_info$suffix$.csmi_status
 			,cs_member_info$suffix$.csmi_on_certify_image
+			,cs_member_info$suffix$.csmi_proof_of_employment
+			,cs_member_info$suffix$.csmi_department
 		)
 		values(
 			<isNotNull property="csmiHost" prepend="">
@@ -350,7 +354,21 @@
 			</isNotNull>
 			<isNull property="csmiOnCertifyImage" prepend=",">
 				null
-			</isNull>			
+			</isNull>		
+			
+			<isNotNull property="csmiProofOfEmployment" prepend=",">
+				#csmiProofOfEmployment#
+			</isNotNull>
+			<isNull property="csmiProofOfEmployment" prepend=",">
+				null
+			</isNull>
+			<isNotNull property="csmiDepartment" prepend=",">
+				#csmiDepartment#
+			</isNotNull>
+			<isNull property="csmiDepartment" prepend=",">
+				null
+			</isNull>
+				
 		)
 		<selectKey resultClass="java.lang.Long">
 		   SELECT @@IDENTITY AS id
@@ -492,7 +510,22 @@
 			</isNotNull>
 			<isNull property="csmiOnCertifyImage" prepend=",">
 				cs_member_info$suffix$.csmi_on_certify_image = null
-			</isNull>				
+			</isNull>	
+			
+			<isNotNull property="csmiProofOfEmployment" prepend=",">
+				cs_member_info$suffix$.csmi_proof_of_employment = #csmiProofOfEmployment#
+			</isNotNull>
+			<isNull property="csmiProofOfEmployment" prepend=",">
+				cs_member_info$suffix$.csmi_proof_of_employment = null
+			</isNull>	
+			
+			<isNotNull property="csmiDepartment" prepend=",">
+				cs_member_info$suffix$.csmi_department = #csmiDepartment#
+			</isNotNull>
+			<isNull property="csmiDepartment" prepend=",">
+				cs_member_info$suffix$.csmi_department = null
+			</isNull>	
+						
 		where
 			csmi_id=#csmiId#
 	</update>
@@ -566,7 +599,16 @@
 			</isNotNull>		
 			<isNotNull property="csmiOnCertifyImage" prepend=",">
 				cs_member_info$suffix$.csmi_on_certify_image = #csmiOnCertifyImage#
-			</isNotNull>		
+			</isNotNull>
+			
+			<isNotNull property="csmiProofOfEmployment" prepend=",">
+				cs_member_info$suffix$.csmi_proof_of_employment = #csmiProofOfEmployment#
+			</isNotNull>
+			<isNotNull property="csmiDepartment" prepend=",">
+				cs_member_info$suffix$.csmi_department = #csmiDepartment#
+			</isNotNull>
+			
+					
 			</dynamic>
 		where
 			csmi_id=#csmiId#
@@ -655,7 +697,13 @@
 			</isNotNull>		
 			<isNotNull property="V_csmiOnCertifyImage" prepend=",">
 				cs_member_info$suffix$.csmi_on_certify_image = #V_csmiOnCertifyImage#
-			</isNotNull>		
+			</isNotNull>	
+			<isNotNull property="V_csmiProofOfEmployment" prepend=",">
+				cs_member_info$suffix$.csmi_proof_of_employment = #V_csmiProofOfEmployment#
+			</isNotNull>
+			<isNotNull property="V_csmiDepartment" prepend=",">
+				cs_member_info$suffix$.csmi_department = #V_csmiDepartment#
+			</isNotNull>	
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
 			    $V_definex$

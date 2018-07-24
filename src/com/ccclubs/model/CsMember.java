@@ -13,6 +13,7 @@ import com.lazy3q.web.tags.BodyTag;
 import com.lazy3q.web.util.Page;
 import com.lazy3q.lang.*;
 import com.lazy3q.util.Function;
+import com.ccclubs.constants.MemberRecStatus;
 import com.ccclubs.dao.impl.MemCache;
 
 @namespace("user/member")
@@ -114,8 +115,10 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	private @caption("邮箱认证") @column("csm_v_email")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVEmail;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("实名认证") @column("csm_v_real")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVReal;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("驾驶认证") @column("csm_v_drive")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVDrive;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
-	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 1:正常 0:禁用     
-	
+	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 0:禁用;1:正常;2:黑名单;     
+	private @caption("工作认证") @column("csm_v_work")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVWork;// 0:未认证 1:已认证 2:等待认证 3:认证失败
+	private @caption("线下认证") @column("csm_v_offline")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVOffline;// 0:未认证 1:已认证 2:等待认证 3:认证失败
+	private Short vstatus;
 	//默认构造函数
 	public CsMember(){
 	
@@ -126,7 +129,14 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		this.csmId = id;
 	}
 	
-	/**所有字段构造函数 CsMember(csmHost,csmUsername,csmPassword,csmGroup,csmMoney,csmCoupon,csmIntegral,csmGrow,csmGrade,csmRebate,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmUpdateTime,csmAddTime,csmLastTime,csmLastIp,csmLoginS,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmRegistIp,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus)
+	/**所有字段构造函数 CsMember(csmHost,csmUsername,csmPassword,csmGroup,csmMoney,csmCoupon,
+csmIntegral,csmGrow,csmGrade,csmRebate,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmHeader,
+csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,
+csmVipEnd,csmUpdateTime,csmAddTime,csmLastTime,csmLastIp,csmLoginS,csmFirstUse,csmLastUse,
+csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,
+csmFirstRecharge,csmRefundTime,csmRegistIp,csmAdder,csmTracker,csmRefer,csmReferType,
+csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,
+csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus)
 	 CsMember(
 	 	$.getLong("csmHost")//城市 [非空]
 	 	,$.getString("csmUsername")//用户名 [非空]
@@ -190,9 +200,26 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	 	,$.getShort("csmVReal")//实名认证
 	 	,$.getShort("csmVDrive")//驾驶认证
 	 	,$.getShort("csmStatus")//可用状态 [非空]
+	 	,$.getShort("csmVWork")//工作认证
+	 	,$.getShort("csmVIdcard")//身份证认证
+	 	,$.getShort("csmVOffline")//线下认证
 	 )
 	**/
-	public CsMember(Long csmHost,String csmUsername,String csmPassword,Long csmGroup,Double csmMoney,Double csmCoupon,Double csmIntegral,Integer csmGrow,Integer csmGrade,Double csmRebate,Short csmNotRevenue,String csmWeixinFlag,String csmAlipayFlag,String csmHeader,String csmEmail,String csmMobile,Long csmEvcard,String csmExpress,String csmTemp,String csmName,Long csmInfo,Long csmOutlets,Short csmIsVip,Date csmVipStart,Date csmVipEnd,Date csmUpdateTime,Date csmAddTime,Date csmLastTime,String csmLastIp,Integer csmLoginS,Date csmFirstUse,Date csmLastUse,Double csmAllRecharge,Long csmAllOrderS,Double csmAllUseTime,Long csmAllViolatS,Long csmUnViolatS,Long csmAllTroubleS,Date csmFirstRecharge,Date csmRefundTime,String csmRegistIp,Long csmAdder,Long csmTracker,Long csmRefer,Short csmReferType,Short csmFrom,String csmSrc,Long csmChannel,Long csmMarketPlan,Long csmActivity,Long csmSaler,String csmMarket,String csmTag,String csmMark,String csmVisitFlag,Long csmMask,String csmRemark,Short csmVMobile,Short csmVEmail,Short csmVReal,Short csmVDrive,Short csmStatus){
+	public CsMember(Long csmHost,String csmUsername,String csmPassword,Long csmGroup,
+	        Double csmMoney,Double csmCoupon,Double csmIntegral,Integer csmGrow,
+	        Integer csmGrade,Double csmRebate,Short csmNotRevenue,String csmWeixinFlag,
+	        String csmAlipayFlag,String csmHeader,String csmEmail,String csmMobile,
+	        Long csmEvcard,String csmExpress,String csmTemp,String csmName,Long csmInfo,
+	        Long csmOutlets,Short csmIsVip,Date csmVipStart,Date csmVipEnd,Date csmUpdateTime,
+	        Date csmAddTime,Date csmLastTime,String csmLastIp,Integer csmLoginS,Date csmFirstUse,
+	        Date csmLastUse,Double csmAllRecharge,Long csmAllOrderS,Double csmAllUseTime,
+	        Long csmAllViolatS,Long csmUnViolatS,Long csmAllTroubleS,Date csmFirstRecharge,
+	        Date csmRefundTime,String csmRegistIp,Long csmAdder,Long csmTracker,Long csmRefer,
+	        Short csmReferType,Short csmFrom,String csmSrc,Long csmChannel,Long csmMarketPlan,
+	        Long csmActivity,Long csmSaler,String csmMarket,String csmTag,String csmMark,
+	        String csmVisitFlag,Long csmMask,String csmRemark,Short csmVMobile,Short csmVEmail,
+	        Short csmVReal,Short csmVDrive,Short csmStatus ,Short csmVWork,
+	        Short csmVIdcard,Short csmVOffline){
 		this.csmHost=csmHost;
 		this.csmUsername=csmUsername;
 		this.csmPassword=csmPassword;
@@ -255,6 +282,8 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		this.csmVReal=csmVReal;
 		this.csmVDrive=csmVDrive;
 		this.csmStatus=csmStatus;
+		this.csmVOffline=csmVOffline;
+		this.csmVWork=csmVWork;
 	}
 	
 	//设置非空字段
@@ -644,6 +673,21 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		this.setSeted(F.csmVDrive);
 		return this;
 	}
+	
+	/** 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+    public CsMember csmVWork(Short csmVWork){
+        this.csmVWork = csmVWork;
+        this.setSeted(F.csmVWork);
+        return this;
+    }
+    /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+    public CsMember csmVOffline(Short csmVOffline){
+        this.csmVOffline = csmVOffline;
+        this.setSeted(F.csmVOffline);
+        return this;
+    }
+    
+	
 	/** 可用状态 [非空]   1:正常 0:禁用     **/
 	public CsMember csmStatus(Short csmStatus){
 		this.csmStatus = csmStatus;
@@ -2791,6 +2835,8 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	* 实名认证    0:未认证 1:已认证 2:等待认证 3:认证失败    
 	**/
 	public Short getCsmVReal(){
+	    if(this.csmVReal == null)
+            return 0;
 		return this.csmVReal;
 	}
 	/**
@@ -2820,6 +2866,8 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	* 驾驶认证    0:未认证 1:已认证 2:等待认证 3:认证失败    
 	**/
 	public Short getCsmVDrive(){
+	    if(this.csmVDrive == null)
+            return 0;
 		return this.csmVDrive;
 	}
 	/**
@@ -2844,6 +2892,7 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		this.csmVDrive = csmVDrive;
 		this.setSeted(F.csmVDrive);
 	}
+    
 	/*******************************可用状态**********************************/	
 	/**
 	* 可用状态 [非空]   1:正常 0:禁用    
@@ -2869,12 +2918,95 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		this.csmStatus = csmStatus;
 		this.setSeted(F.csmStatus);
 	}
+	
+	/*******************************线下认证**********************************/ 
+    /**
+    * 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败    
+    **/
+    public Short getCsmVOffline(){
+        if(this.csmVOffline == null)
+            return 0;
+        return this.csmVOffline;
+    }
+    /**
+    * 获取线下认证格式化(toString)
+    **/
+    public String getCsmVOffline$(){
+        String strValue="";
+         if($.equals($.str(this.getCsmVOffline()),"0"))
+            strValue=$.str("未认证");       
+         if($.equals($.str(this.getCsmVOffline()),"1"))
+            strValue=$.str("已认证");       
+         if($.equals($.str(this.getCsmVOffline()),"2"))
+            strValue=$.str("等待认证");      
+         if($.equals($.str(this.getCsmVOffline()),"3"))
+            strValue=$.str("认证失败");      
+         return strValue;
+    }
+    /**
+    * 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败    
+    **/
+    public void setCsmVOffline(Short csmVOffline){
+        this.csmVOffline = csmVOffline;
+        this.setSeted(F.csmVOffline);
+    }
+    
+    
+    /*******************************工作认证**********************************/ 
+    /**
+    * 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败    
+    **/
+    public Short getCsmVWork(){
+        if(this.csmVWork == null)
+            return 0;
+        return this.csmVWork;
+    }
+    /**
+    * 获取工作认证格式化(toString)
+    **/
+    public String getCsmVWork$(){
+        String strValue="";
+         if($.equals($.str(this.getCsmVWork()),"0"))
+            strValue=$.str("未认证");       
+         if($.equals($.str(this.getCsmVWork()),"1"))
+            strValue=$.str("已认证");       
+         if($.equals($.str(this.getCsmVWork()),"2"))
+            strValue=$.str("等待认证");      
+         if($.equals($.str(this.getCsmVWork()),"3"))
+            strValue=$.str("认证失败");      
+         return strValue;
+    }
+    /**
+    * 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败    
+    **/
+    public void setCsmVWork(Short csmVWork){
+        this.csmVWork = csmVWork;
+        this.setSeted(F.csmVWork);
+    }
+    
+    public void setVstatus(Short vstatus) {
+        this.vstatus = vstatus;
+    }
+    
+    public short getVstatus() {
+        if (this.getCsmVDrive() == MemberRecStatus.REC_FAIL || this.getCsmVReal() == MemberRecStatus.REC_FAIL || this.getCsmVWork() == MemberRecStatus.REC_FAIL
+                || this.getCsmVOffline() == MemberRecStatus.REC_FAIL) {
+            return MemberRecStatus.REC_FAIL;//四项认证存在认证失败
+        }else if(this.getCsmVDrive() == MemberRecStatus.REC_PASS && this.getCsmVReal() == MemberRecStatus.REC_PASS && this.getCsmVWork() == MemberRecStatus.REC_PASS
+                && this.getCsmVOffline() == MemberRecStatus.REC_PASS) {
+            return MemberRecStatus.REC_PASS;//四项认证全部通过
+        }else if(this.getCsmVDrive() == MemberRecStatus.WAIT_CHECK && this.getCsmVReal() == MemberRecStatus.WAIT_CHECK && this.getCsmVWork() == MemberRecStatus.WAIT_CHECK
+                && this.getCsmVOffline() == MemberRecStatus.WAIT_CHECK) {
+            return MemberRecStatus.WAIT_CHECK;//四项认证都为等待认证
+        }else {
+            return MemberRecStatus.NEVER_REC;//四项认证存在未认证（低优先级）
+        }
+    }
+    
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
 
-	
-	
-	/**
+    /**
 	 * 用来获取当有字段关联对象时的获取方式,调用如${CsMember.obj.filedName}
 	 * 因为有些变态的模板语言不能识别$，所以不能以${CsMember.$filedName}获取关联对象
 	 */
@@ -3429,6 +3561,35 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
  		public M csmVDriveNull(){if(this.get("csmVDriveNot")==null)this.put("csmVDriveNot", "");this.put("csmVDrive", null);return this;};
  		/** not .... */
  		public M csmVDriveNot(){this.put("csmVDriveNot", "not");return this;};
+ 		
+ 		
+ 		/** 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public M csmVWork(Object csmVWork){this.put("csmVWork", csmVWork);return this;};
+        /** and csm_v_work is null */
+        public M csmVWorkNull(){
+            if(this.get("csmVWorkNot")==null)this.put("csmVWorkNot", "");
+            this.put("csmVWork", null);return this;};
+        /** not .... */
+        public M csmVWorkNot(){this.put("csmVWorkNot", "not");return this;};
+        
+        /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public M csmVOffline(Object csmVOffline){this.put("csmVOffline", csmVOffline);return this;};
+        /** and csm_v_Offline is null */
+        public M csmVOfflineNull(){
+            if(this.get("csmVOfflineNot")==null)this.put("csmVOfflineNot", "");
+            this.put("csmVOffline", null);return this;};
+        /** not .... */
+        public M csmVOfflineNot(){this.put("csmVOfflineNot", "not");return this;};
+        /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public M csmVIdcard(Object csmVIdcard){
+            this.put("csmVIdcard", csmVIdcard);return this;};
+        /** and csm_v_Idcard is null */
+        public M csmVIdcardNull(){
+            if(this.get("csmVIdcardNot")==null)this.put("csmVIdcardNot", "");
+            this.put("csmVIdcard", null);return this;};
+        /** not .... */
+        public M csmVIdcardNot(){this.put("csmVIdcardNot", "not");return this;};
+ 		
 		/** 可用状态 [非空]   1:正常 0:禁用     **/
 		public M csmStatus(Object csmStatus){this.put("csmStatus", csmStatus);return this;};
 	 	/** and csm_status is null */
@@ -3690,6 +3851,14 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		public final static @type(Short.class)  String csmVReal="csmVReal";
 		/** 驾驶认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
 		public final static @type(Short.class)  String csmVDrive="csmVDrive";
+		
+		/** 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static @type(Short.class)  String csmVWork="csmVWork";
+        /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static @type(Short.class)  String csmVIdcard="csmVIdcard";
+        /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static @type(Short.class)  String csmVOffline="csmVOffline";
+		
 		/** 可用状态 [非空]   1:正常 0:禁用     **/
 		public final static @type(Short.class)  String csmStatus="csmStatus";
 	}
@@ -3820,6 +3989,14 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 		public final static String csmVReal="csm_v_real";
 		/** 驾驶认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
 		public final static String csmVDrive="csm_v_drive";
+		
+		/** 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static String csmVWork="csm_v_work";
+        /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static String csmVOffline="csm_v_offline";
+        /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static String csmVIdcard="csm_v_idcard";
+        
 		/** 可用状态 [非空]   1:正常 0:禁用     **/
 		public final static String csmStatus="csm_status";
 	 	public static String get(String name){
