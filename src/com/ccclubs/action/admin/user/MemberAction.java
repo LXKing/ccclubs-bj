@@ -18,11 +18,15 @@ import com.ccclubs.helper.LoginHelper;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.model.CsMember;
+import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.model.CsMemberShip;
 import com.ccclubs.model.CsOrder;
+import com.ccclubs.model.CsUnitGroup;
+import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
 import com.ccclubs.service.admin.ICsMemberService;
 import com.ccclubs.service.admin.ICsOrderService;
+import com.ccclubs.service.admin.ICsUnitPersonService;
 import com.ccclubs.service.common.ICommonMoneyService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.lazy3q.sql.Lazy3qDaoSupport;
@@ -45,6 +49,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 @SuppressWarnings("unchecked")
 public class MemberAction {
     ICsMemberService csMemberService;
+    ICsUnitPersonService csUnitPersonService;
 
     CsMember csMember;
     Lazy3qDaoSupport dao = $.getDao("ccclubs_system");
@@ -1277,6 +1282,40 @@ public class MemberAction {
                     if (unitInfo != null && unitGroup != null) {
                         CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
                                 .csupInfo(unitInfo).csupGroup(unitGroup).update();
+                    }
+                    
+                    
+                    if(csMember.getCsmVWork()==1) {
+                        //线下认证通过的判断是否需要CsUnitPerson关联
+                        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
+                        if(null==csUnitPersonForInsert) {
+                            CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(csMember.getCsmId()).get();
+                            if(null!=csMemberInfo) {
+                                CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
+                                if(null!=csUnitInfoForInsert) {
+                                    CsUnitGroup csUnitGroupForInsert=
+                                            CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
+                                    
+                                    if(null!=csUnitGroupForInsert) {
+                                        CsUnitPerson csUnitPerson=new CsUnitPerson();
+                                        csUnitPerson.setCsupAddTime(new Date());
+                                        csUnitPerson.setCsupFlag(null);
+                                        csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
+                                        csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
+                                        csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
+                                        csUnitPerson.setCsupMember(csMember.getCsmId());
+                                        csUnitPerson.setCsupMemo(null);
+                                        csUnitPerson.setCsupName(csMember.getCsmName());
+                                        csUnitPerson.setCsupRemark(null);
+                                        csUnitPerson.setCsupStatus((short)1);
+                                        csUnitPerson.setCsupUpdateTime(new Date());
+                                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
+                                    }
+                                }
+                                
+                                
+                            }
+                        }
                     }
 
                     LoggerHelper.writeLog(CsMember.class, "update",

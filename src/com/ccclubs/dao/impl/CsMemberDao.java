@@ -9,8 +9,10 @@ import org.springframework.orm.ibatis.SqlMapClientTemplate;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import com.ccclubs.dao.ICsMemberDao;
+import com.ccclubs.dao.ICsMemberInfoDao;
 import com.lazy3q.web.util.Page;
 import com.ccclubs.model.CsMember;
+import com.ccclubs.model.CsMemberInfo;
 import com.lazy3q.web.helper.$;
 
 /**
@@ -78,8 +80,17 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		return params;
 	}
 	
+	ICsMemberInfoDao csMemberInfoDao;
+	
+	public ICsMemberInfoDao getCsMemberInfoDao() {
+        return csMemberInfoDao;
+    }
 
-	/**
+    public void setCsMemberInfoDao(ICsMemberInfoDao csMemberInfoDao) {
+        this.csMemberInfoDao = csMemberInfoDao;
+    }
+
+    /**
 	 * 获取所有会员帐号
 	 * @return
 	 */	
@@ -96,6 +107,13 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		if(size!=null && size!=-1)
 			params.put("limit", size);
 		list = this.getSqlMapClientTemplate().queryForList("getCsMemberList", params);
+		if(null!=list&&list.size()>0)
+		for(int i=0 ;i<list.size();i++) {
+		    CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(list.get(i).getCsmInfo());
+		    if(null != csMemberInfo) {
+		        list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+		    }
+		}
 		
 		return list;
 	}
@@ -157,7 +175,14 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		
 		params.put("limit", size);
 		params.put("offset", (int)Page.test(page,size,count));
-		List list=this.getSqlMapClientTemplate().queryForList("getCsMemberPage", params);
+		List<CsMember> list=this.getSqlMapClientTemplate().queryForList("getCsMemberPage", params);
+		if(null!=list&&list.size()>0)
+	        for(int i=0 ;i<list.size();i++) {
+	            CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(list.get(i).getCsmInfo());
+	            if(null != csMemberInfo) {
+	                list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+	            }
+	        }
 		//返回一个包装分页对象
 		return new Page(page,size,count,list);
 	}
@@ -222,8 +247,14 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		params.put("id", id);
 		params = custom(params);
 		csMember = (CsMember) this.getSqlMapClientTemplate().queryForObject("getCsMemberById",params);
-		if(csMember!=null)
-			MemCache.setValue(CsMember.class,id, csMember.getKeyValue());
+		if(csMember!=null) {
+		    MemCache.setValue(CsMember.class,id, csMember.getKeyValue());
+		    CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(csMember.getCsmInfo());
+            if(null != csMemberInfo) {
+                csMember.setCsmRemark(csMember.getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+            }
+		}
+			
 		return csMember;
 	}
 	
@@ -236,7 +267,14 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		Map params=new HashMap();
 		params.put("id", id);
 		params = custom(params);
-		return  (CsMember) this.getSqlMapClientTemplate().queryForObject("getCsMemberById",params);
+		CsMember csMember=(CsMember) this.getSqlMapClientTemplate().queryForObject("getCsMemberById",params);
+		if(csMember!=null) {
+            CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(csMember.getCsmInfo());
+            if(null != csMemberInfo) {
+                csMember.setCsmRemark(csMember.getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+            }
+        }
+		return   csMember;
 	}
 	
 
