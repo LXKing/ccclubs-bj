@@ -1929,22 +1929,23 @@ public class DefaultAction extends BaseAction {
 
             CsUnitPerson person =
                     CsUnitPerson.getCsUnitPerson($.add("csupMember", member.getCsmId()));
-            if (person == null)
-                return returnError("101", "用户未绑定企业用户");
-
-            CsUnitGroup csUnitGroup =
-                    CsUnitGroup.getCsUnitGroup($.add("csugPerson", person.getCsupId()));
+//            if (person == null)
+//                return returnError("101", "用户未绑定企业用户");
+            CsUnitInfo unitInfo = null;
+            CsUnitGroup group = null;
+            if(person != null) {
+                unitInfo = person.get$csupInfo();
+                group = CsUnitGroup.getCsUnitGroup($.add("csugPerson", person.getCsupId()).add("csugStatus", 1));
+            }
 
             int checkflag;
-            if (csUnitGroup != null)
+            if (group != null)
                 checkflag = 1;
             else
                 checkflag = 0;
 
             Double remain =
                     commonMoneyService.getCoin(member.getCsmHost(), member.getCsmId(), new Date());
-
-            CsUnitGroup group = CsUnitGroup.get(person.getCsupGroup());
 
             CsCreditCard csCreditCard = csCreditCardService
                     .getCsCreditCard($.add(CsCreditCard.F.csccMember, member.getCsmId())
@@ -1967,21 +1968,36 @@ public class DefaultAction extends BaseAction {
             data.put("vwork", member.getCsmVWork());// 工作认证
             data.put("voffline", member.getCsmVOffline());// 线下认证
 
-            data.put("personId", person.getCsupId());
-            data.put("unitInfoId", person.getCsupInfo());
-            data.put("unitName",
-                    person.get$csupInfo() == null ? "" : person.get$csupInfo().getCsuiName$());
-            data.put("deptName", group == null ? "" : group.getCsugName$());
-            data.put("memberNum", person.getCsupName());
             data.put("coinRemain", remain);
-            data.put("csupflag",
-                    (person.getCsupFlag() != null && person.getCsupFlag().indexOf("1") > 0) ? 1
-                            : 0);
-            data.put("isapproved",
-                    (person.getCsupFlag() != null && person.getCsupFlag().indexOf("3") > 0) ? 1
-                            : 0);
-            data.put("rentflag", person.getCsupFlag());
             data.put("checkflag", checkflag);
+            //设置企业用户信息
+            if(person != null) {
+                data.put("personId", person.getCsupId());
+                data.put("memberNum", person.getCsupName());
+                data.put("csupflag",
+                        (person.getCsupFlag() != null && person.getCsupFlag().indexOf("1") > 0) ? 1
+                                : 0);
+                data.put("isapproved",
+                        (person.getCsupFlag() != null && person.getCsupFlag().indexOf("3") > 0) ? 1
+                                : 0);
+                data.put("rentflag", person.getCsupFlag());
+            }
+            //memberInfo企业部门信息优先设置
+            if(memberInfo != null){
+                data.put("unitName",memberInfo.getCsmiCompany$());
+                data.put("deptName", memberInfo.getCsmiDepartment$());
+            }
+            //设置企业信息
+            if(unitInfo != null) {
+                data.put("unitInfoId", unitInfo.getCsuiId());
+                data.put("unitName",unitInfo.getCsuiName$());
+            }
+            //设置企业部门信息
+            if(group != null) {
+                data.put("deptId", group.getCsugId());
+                data.put("deptName", group.getCsugName$());
+            }
+            
             if (csCreditCard == null) {// 信用卡
                 data.put("cardNo", "");
                 data.put("cardImage", "");
