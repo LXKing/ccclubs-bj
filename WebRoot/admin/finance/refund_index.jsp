@@ -1520,7 +1520,7 @@ ${after$form}
 	
 </s:if>
 
-	<s:if test="#session.ccclubs_login.suId==0">
+	<s:if test="#session.ccclubs_login.suId==0 || #request.hasRefund == true">
 	$(function(){
 		//修改会员退款任意字段
 		$(".table tbody td.td").dblclick(function(){

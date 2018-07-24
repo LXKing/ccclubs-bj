@@ -73,7 +73,21 @@ public class RefundAction
 			//根据当前的类，把表单参数转成Dao查询需要的Map参数格式,ActionHelper.getQueryFormParams这个东东在Lazy3q.jar中
 			Map<String,Object> objects = ActionHelper.getQueryFormParams(CsRefund.class);
 			$.setRequest("PARAMS",ActionHelper.getQueryFormParams(CsRefund.class));
-									
+			//有退款权限即可操作状态修改
+			boolean hasRefund = false;
+			String strlimitsId = $.getString("limitsid");
+			if (null != strlimitsId && strlimitsId.trim().length() != 0)
+		    {
+		      String[] array = strlimitsId.split("-");
+		      if (array.length == 2) {
+		          Integer limitsId = Integer.valueOf(Integer.parseInt(array[0]));
+		          //拥有扩展退款权限128
+		          if((limitsId & 128) == 128) {
+		              hasRefund = true;
+		          }
+		      }
+		    }
+			$.SetRequest("hasRefund", hasRefund);
 			//取排序参数,放入查询条件中，取不到放入查询条件中也没关系，因为Dao层会判断的
 			String strAsc=CsRefund.C.get($.forMat($.getString("asc")));//升序字段
 			objects.put("asc", strAsc);//放入查询条件
