@@ -5390,46 +5390,50 @@ public class DefaultAction extends BaseAction {
                 data.put("args", map);
             }
 
-            Integer appType = $.getInteger("appType", 1);
-            String appVersion = $.getString("version", "");
-            Map<String, Object> map = new HashMap<String, Object>();
-            int upgradeFlag = 0;
-            if (appType == 1) { // 1安卓
-                CsUpdate update = csUpdateService
-                        .getCsUpdate($.add(CsUpdate.F.csuType, 0).add(CsUpdate.F.csuStatus, 1));
-                if (update != null) {
-                    String versionList = getUpdateVersions(update.getCsuVersion$());
-                    if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
-                        upgradeFlag=1;
-                    } 
-                    if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
-                        upgradeFlag=1;
+            //获取app更新配置
+            if (type == 0 || type == 6) {
+                Integer appType = $.getInteger("appType", 1);
+                String appVersion = $.getString("version", "");
+                Map<String, Object> map = new HashMap<String, Object>();
+                int upgradeFlag = 0;
+                if (appType == 1) { // 1安卓
+                    CsUpdate update = csUpdateService
+                            .getCsUpdate($.add(CsUpdate.F.csuType, 0).add(CsUpdate.F.csuStatus, 1));
+                    if (update != null) {
+                        String versionList = getUpdateVersions(update.getCsuVersion$());
+                        if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
+                            upgradeFlag=1;
+                        } 
+                        if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
+                            upgradeFlag=1;
+                        }
+                        map.put("version", getVersion(update.getCsuVersion$()));
+                        map.put("fileUrl", update.getCsuFile());
+                        map.put("content", update.getCsuDescript()); // 1强制更新 0不更新
+                    } else {
+                       
+                        map.put("content", "");
                     }
-                    map.put("version", getVersion(update.getCsuVersion$()));
-                    map.put("fileUrl", update.getCsuFile());
-                    map.put("content", update.getCsuDescript()); // 1强制更新 0不更新
-                } else {
-                   
-                    map.put("content", "");
+                } else {//IOS
+                    
+                    CsUpdate update = csUpdateService
+                            .getCsUpdate($.add(CsUpdate.F.csuType, 1).add(CsUpdate.F.csuStatus, 1));
+                    if (update != null) {
+                        String versionList = getUpdateVersions(update.getCsuVersion$());
+                        if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
+                            upgradeFlag = 1;
+                        }
+                        if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
+                            upgradeFlag=1;
+                        }
+                    }
+                    
+                    map.put("content", update != null ? update.getCsuDescript() : "");
                 }
-            } else {//IOS
-                
-                CsUpdate update = csUpdateService
-                        .getCsUpdate($.add(CsUpdate.F.csuType, 1).add(CsUpdate.F.csuStatus, 1));
-                if (update != null) {
-                    String versionList = getUpdateVersions(update.getCsuVersion$());
-                    if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
-                        upgradeFlag = 1;
-                    }
-                    if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
-                        upgradeFlag=1;
-                    }
-                }
-                
-                map.put("content", update != null ? update.getCsuDescript() : "");
+                map.put("upgradeFlag", upgradeFlag);
+                data.put("update", map);
             }
-            map.put("upgradeFlag", upgradeFlag);
-            data.put("update", map);
+            
             //
             // CsUpdate update = csUpdateService.getCsUpdate($.add(CsUpdate.F.csuType, 0));
             // if(update!=null){
@@ -6630,4 +6634,3 @@ public class DefaultAction extends BaseAction {
 
 
 }
-
