@@ -667,8 +667,9 @@ public class DefaultAction extends BaseAction {
                     csMember = csMemberService.saveCsMember(csMember);
 
                     // 保存会员信息相关信息到cs_member_info
-                    CsMemberInfo csMemberInfo =
-                            getMemberInfo(new CsMemberInfo(), null, null, csMember, sex);
+                    Long csmHost = csMember.getCsmHost();
+                    CsMemberInfo csMemberInfo = getMemberInfo(new CsMemberInfo(),
+                           null != csmHost ? csMember.getCsmHost() : 1, null, csMember, sex);
                     csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
 
                     // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
