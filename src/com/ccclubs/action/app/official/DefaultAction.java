@@ -227,58 +227,64 @@ public class DefaultAction extends BaseAction {
         return returnError("9999", SYSTEM.ERROR_TIPS);
     }
 
-    
+
     /**
-     *   线下认证
+     * 线下认证
+     * 
      * @return
      */
-    public String getUnderlineMember(){
+    public String getUnderlineMember() {
         try {
-            CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+            CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            //  
-            Map<String ,Object> params=new HashMap<>();
-            params.put("asc","cum_area");
-            Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),20,params);
+            //
+            Map<String, Object> params = new HashMap<>();
+            params.put("asc", "cum_area");
+            Page<CsUnderlineMember> page = csUnderlineMemberService
+                    .getCsUnderlineMemberPage($.getInteger("page", 0), 20, params);
             //
             Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
-            
-            List<Object>dataList = new ArrayList<>();
-            Map<String ,Object> tempMap=null;
-            List<Map<String, Object>> tempList=null;
+
+            List<Object> dataList = new ArrayList<>();
+            Map<String, Object> tempMap = null;
+            List<Map<String, Object>> tempList = null;
             for (CsUnderlineMember data : page.getResult()) {
-                String area=data.getCumArea$();
+                String area = data.getCumArea$();
                 //
-                tempMap= new HashMap<>();
-                tempMap.put("user", data.getCumUser());//对接人
+                tempMap = new HashMap<>();
+                tempMap.put("user", data.getCumUser());// 对接人
                 tempMap.put("mobile", data.getCumMobile());
-//              tempMap.put("area", data.getCumArea$());
+                // tempMap.put("area", data.getCumArea$());
                 //
-                if(dataMap.containsKey(area)) {
+                if (dataMap.containsKey(area)) {
                     dataMap.get(area).add(tempMap);
-                }else {
-                    tempList=new ArrayList<>();
+                } else {
+                    tempList = new ArrayList<>();
                     tempList.add(tempMap);
                     dataMap.put(area, tempList);
                 }
             }
-            //数据组装
-            for(String str:dataMap.keySet()) {
-                Map<String, Object>temp=new HashMap<>();
+            // 数据组装
+            for (String str : dataMap.keySet()) {
+                Map<String, Object> temp = new HashMap<>();
                 temp.put("area", str);
                 temp.put("list", dataMap.get(str));
                 dataList.add(temp);
             }
-            
-            
-            LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal()).add("count", page.getCount()).add("size", page.getSize());
-            return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap))),CHARSET);
+
+
+            LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
+                    .add("count", page.getCount()).add("size", page.getSize());
+            return $.SendHtml($.json(
+                    JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap))),
+                    CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }
     }
+
     /**
      * 登录
      * 
@@ -333,9 +339,9 @@ public class DefaultAction extends BaseAction {
                     return returnError("106", "您输入的验证码不正确，请重新输入");
                 }
             }
-            
-            if(checkAcc==0) {
-                //校验企业用户信息
+
+            if (checkAcc == 0) {
+                // 校验企业用户信息
                 CsUnitPerson person =
                         CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
                 if (person == null)
@@ -580,8 +586,9 @@ public class DefaultAction extends BaseAction {
         try {
 
             final short from = $.getShort("from");
-            //默认0：跳转登录页；1-跳过登录
             final short type = $.getShort("type", (short) 0);
+            // 默认0：跳转登录页；1-跳过登录
+            final short skipLogin = $.getShort("skipLogin", (short) 0);
 
             final String csmMobile = $.getString("mobile", "");
             if ($.empty(csmMobile)) {
@@ -648,9 +655,9 @@ public class DefaultAction extends BaseAction {
                 return returnError("108", "手机号已被注册,请去登录");
             }
             final String inviteCode = $.getString("inviteCode");
-            
-            /****开始创建会员相关信息*****/
-            //初始化会员账号
+
+            /**** 开始创建会员相关信息 *****/
+            // 初始化会员账号
             CsMember member = csMemberService.executeTransaction(new Function() {
 
                 @Override
@@ -659,10 +666,11 @@ public class DefaultAction extends BaseAction {
                     CsMember csMember = getRegisterMember(new CsMember(), csmPassword, from,
                             csmMobile, inviteCode);
                     csMember = csMemberService.saveCsMember(csMember);
-                    
+
                     // 保存会员信息相关信息到cs_member_info
-                    CsMemberInfo csMemberInfo =
-                            getMemberInfo(new CsMemberInfo(), null, null, csMember, sex);
+                    Long csmHost = csMember.getCsmHost();
+                    CsMemberInfo csMemberInfo = getMemberInfo(new CsMemberInfo(),
+                            null != csmHost ? csMember.getCsmHost() : 1, null, csMember, sex);
                     csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
 
                     // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
@@ -671,7 +679,7 @@ public class DefaultAction extends BaseAction {
 
                     if (from == 2) {
                         Long host = csUnitInfo.getCsuiHost();
-                        //企业，车市信息更新到会员
+                        // 企业，车市信息更新到会员
                         CsMember member = updateMember(csMember, realName, host, unitName);
                         csMemberService.updateCsMember$NotNull(member);
                         csMemberInfo.setCsmiHost(host);
@@ -701,16 +709,16 @@ public class DefaultAction extends BaseAction {
             // TODO Auto-generated method stub
             SessionMgr.remove(csmMobile, REGISTER_SMS_CODE);
             SessionMgr.remove(csmMobile, "registersms");
-            
-            if(type==1) {
-                //注册成功，后台登录
+
+            if (skipLogin == 1) {
+                // 注册成功，后台登录
                 String token = UUIDGenerator.getUUID();
                 OauthUtils.saveToken(member.getCsmId().toString(), token);
                 JsonFormat result = JsonFormat.success().setData(
                         $.add("access_token", token).add("id", String.valueOf(member.getCsmId())));
                 return $.SendHtml($.json(result), SYSTEM.UTF8);
-            }else {
-                //用户手动登录
+            } else {
+                // 用户手动登录
                 return $.SendHtml($.json(JsonFormat.success()), CHARSET);
             }
         } catch (Exception ex) {
@@ -1133,7 +1141,7 @@ public class DefaultAction extends BaseAction {
              */
             List<CsUnitGroup> groupList =
                     CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
-            List<Map<String,Object>> groupNameList = new ArrayList<>();
+            List<Map<String, Object>> groupNameList = new ArrayList<>();
             for (CsUnitGroup csUnitGroup : groupList) {
                 groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
             }
@@ -1940,13 +1948,14 @@ public class DefaultAction extends BaseAction {
 
             CsUnitPerson person =
                     CsUnitPerson.getCsUnitPerson($.add("csupMember", member.getCsmId()));
-//            if (person == null)
-//                return returnError("101", "用户未绑定企业用户");
+            // if (person == null)
+            // return returnError("101", "用户未绑定企业用户");
             CsUnitInfo unitInfo = null;
             CsUnitGroup group = null;
-            if(person != null) {
+            if (person != null) {
                 unitInfo = person.get$csupInfo();
-                group = CsUnitGroup.getCsUnitGroup($.add("csugPerson", person.getCsupId()).add("csugStatus", 1));
+                group = CsUnitGroup.getCsUnitGroup(
+                        $.add("csugPerson", person.getCsupId()).add("csugStatus", 1));
             }
 
             int checkflag;
@@ -1981,8 +1990,8 @@ public class DefaultAction extends BaseAction {
 
             data.put("coinRemain", remain);
             data.put("checkflag", checkflag);
-            //设置企业用户信息
-            if(person != null) {
+            // 设置企业用户信息
+            if (person != null) {
                 data.put("personId", person.getCsupId());
                 data.put("memberNum", person.getCsupName());
                 data.put("csupflag",
@@ -1993,22 +2002,22 @@ public class DefaultAction extends BaseAction {
                                 : 0);
                 data.put("rentflag", person.getCsupFlag());
             }
-            //memberInfo企业部门信息优先设置
-            if(memberInfo != null){
-                data.put("unitName",memberInfo.getCsmiCompany$());
+            // memberInfo企业部门信息优先设置
+            if (memberInfo != null) {
+                data.put("unitName", memberInfo.getCsmiCompany$());
                 data.put("deptName", memberInfo.getCsmiDepartment$());
             }
-            //设置企业信息
-            if(unitInfo != null) {
+            // 设置企业信息
+            if (unitInfo != null) {
                 data.put("unitInfoId", unitInfo.getCsuiId());
-                data.put("unitName",unitInfo.getCsuiName$());
+                data.put("unitName", unitInfo.getCsuiName$());
             }
-            //设置企业部门信息
-            if(group != null) {
+            // 设置企业部门信息
+            if (group != null) {
                 data.put("deptId", group.getCsugId());
                 data.put("deptName", group.getCsugName$());
             }
-            
+
             if (csCreditCard == null) {// 信用卡
                 data.put("cardNo", "");
                 data.put("cardImage", "");
@@ -5202,10 +5211,10 @@ public class DefaultAction extends BaseAction {
         }
 
     }
-    
+
     /**
      * 非强制更新版本
-     * */
+     */
 
     String getVersion(String version) {
         if (version != null && version.indexOf("#") != -1) {
@@ -5213,11 +5222,11 @@ public class DefaultAction extends BaseAction {
         }
         return version;
     }
-    
-    
+
+
     /**
      * 指定强制更新版本
-     * */
+     */
 
     String getUpdateVersions(String version) {
         if (version != null && version.indexOf("#") != -1) {
@@ -5225,21 +5234,23 @@ public class DefaultAction extends BaseAction {
         }
         return null;
     }
+
     /**
      * 批量强制更新版本
-     * @param appVersion 客户端上传的版本号
-     *  @param version 配置的版本号
      * 
-     * */
-    
-    boolean getForceUpdateVersion(String appVersion,String version) {
+     * @param appVersion 客户端上传的版本号
+     * @param version 配置的版本号
+     * 
+     */
+
+    boolean getForceUpdateVersion(String appVersion, String version) {
         if (version != null && version.indexOf("#") != -1) {
-            Integer versionInt=Integer.valueOf(version.split("#")[2]);
-            Integer appVersionInt=Integer.valueOf(appVersion);
-            if(null!=versionInt&&null!=appVersionInt) {
-                return  versionInt>appVersionInt;
+            Integer versionInt = Integer.valueOf(version.split("#")[2]);
+            Integer appVersionInt = Integer.valueOf(appVersion);
+            if (null != versionInt && null != appVersionInt) {
+                return versionInt > appVersionInt;
             }
-            
+
         }
         return false;
     }
@@ -5394,7 +5405,7 @@ public class DefaultAction extends BaseAction {
                 data.put("args", map);
             }
 
-            //获取app更新配置
+            // 获取app更新配置
             if (type == 0 || type == 6) {
                 Integer appType = $.getInteger("appType", 1);
                 String appVersion = $.getString("version", "");
@@ -5406,20 +5417,20 @@ public class DefaultAction extends BaseAction {
                     if (update != null) {
                         String versionList = getUpdateVersions(update.getCsuVersion$());
                         if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
-                            upgradeFlag=1;
-                        } 
-                        if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
-                            upgradeFlag=1;
+                            upgradeFlag = 1;
+                        }
+                        if (getForceUpdateVersion(appVersion, update.getCsuVersion$())) {
+                            upgradeFlag = 1;
                         }
                         map.put("version", getVersion(update.getCsuVersion$()));
                         map.put("fileUrl", update.getCsuFile());
                         map.put("content", update.getCsuDescript()); // 1强制更新 0不更新
                     } else {
-                       
+
                         map.put("content", "");
                     }
-                } else {//IOS
-                    
+                } else {// IOS
+
                     CsUpdate update = csUpdateService
                             .getCsUpdate($.add(CsUpdate.F.csuType, 1).add(CsUpdate.F.csuStatus, 1));
                     if (update != null) {
@@ -5427,17 +5438,17 @@ public class DefaultAction extends BaseAction {
                         if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
                             upgradeFlag = 1;
                         }
-                        if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
-                            upgradeFlag=1;
+                        if (getForceUpdateVersion(appVersion, update.getCsuVersion$())) {
+                            upgradeFlag = 1;
                         }
                     }
-                    
+
                     map.put("content", update != null ? update.getCsuDescript() : "");
                 }
                 map.put("upgradeFlag", upgradeFlag);
                 data.put("update", map);
             }
-            
+
             //
             // CsUpdate update = csUpdateService.getCsUpdate($.add(CsUpdate.F.csuType, 0));
             // if(update!=null){
