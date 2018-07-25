@@ -6,19 +6,19 @@
 
 ### 项目说明
 ```
-admin 后台配置
-wechat 微信服务配置
-unit   企业服务配置
-thread 通信协议处理
-manage 移动端后台服务配置
-web 网站前台配置
-m   新版微信公众号服务配置
+admin    后台配置
+wechat   微信服务配置
+unit     企业服务配置
+thread   通信协议处理
+manage   移动端后台服务配置
+web      网站前台配置
+m        新版微信公众号服务配置
 m alipay 新版支付宝服务窗服务配置
-api  API服务配置，第三方对接
+api      API服务配置，第三方对接
 official 公务用车系统配置
-app  app服务配置，APP端
-receiver  网关程序系统配置
-site 地勤
+app      app服务配置，APP端
+receiver 网关程序系统配置
+site     地勤
 ```
 
 ## 工程运行环境
@@ -60,6 +60,7 @@ Window=>Preferences=>Java=>Code Style=>Formatter
 第N期需求: stageN
 北京出行开发分支命名，请按照以下流程中“括号内”的“命名规则”进行创建：
 
+```
 develop分支
 ↓
 开发者分支（命名bj_stage1_{开发者}）
@@ -91,6 +92,8 @@ develop分支
 标签分支（bj_stageN，总结“需求内容”并写入readme文件中）
 ↓
 删除（正式、预发布、测试、开发者分支）
+```
+
  
 
 
