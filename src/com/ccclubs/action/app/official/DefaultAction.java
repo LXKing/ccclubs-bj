@@ -5273,7 +5273,7 @@ public class DefaultAction extends BaseAction {
             // }
 
             int type = $.getInteger("type", 0); // 0:所有，1:banner信息，2:用户协议，3:帮助，4：配置参数
-            if (type > 5)
+            if (type > 6)
                 type = 0;
 
             final String ROOT_FLAG = "PLAPP_CONFIG"; // app配置根目录
