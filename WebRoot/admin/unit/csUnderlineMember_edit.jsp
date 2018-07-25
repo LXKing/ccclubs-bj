@@ -36,12 +36,10 @@ ${lz:set("注释","***************************************************")}
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta name="author" content="飞啊飘啊">
 	<meta name="hashcode" content="${window.hashcode}">
-	
+	<!-- lazy3q提供的系统js -->
+	<link href="${basePath}admin/css/${lz:or(style,lz:or(cookie.style.value,lz:config("style")))}" rel="stylesheet" type="text/css" />	
 	<!-- 感谢jquery提供的前端js库 -->
 	<script type="text/javascript" src="${basePath}admin/js/${lz:config("jauery_js")}"></script>
-	
-	<!-- lazy3q提供的系统js -->
-	<link href="${basePath}admin/css/${lz:Or(style,lz:Or(cookie.style.value,lz:config("style")))}" rel="stylesheet" type="text/css" />	
 	<script type="text/javascript" src="${basePath}admin/js/${lz:config("lazy3q_ui")}"></script>
 	
 	<!-- 用户自定义js(懒加载) -->
