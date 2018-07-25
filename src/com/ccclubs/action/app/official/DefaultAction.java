@@ -580,9 +580,8 @@ public class DefaultAction extends BaseAction {
         try {
 
             final short from = $.getShort("from");
-            final short type = $.getShort("type", (short) 0);
             //默认0：跳转登录页；1-跳过登录
-            final short skipLogin = $.getShort("skipLogin", (short) 0);
+            final short type = $.getShort("type", (short) 0);
 
             final String csmMobile = $.getString("mobile", "");
             if ($.empty(csmMobile)) {
@@ -703,7 +702,7 @@ public class DefaultAction extends BaseAction {
             SessionMgr.remove(csmMobile, REGISTER_SMS_CODE);
             SessionMgr.remove(csmMobile, "registersms");
             
-            if(skipLogin==1) {
+            if(type==1) {
                 //注册成功，后台登录
                 String token = UUIDGenerator.getUUID();
                 OauthUtils.saveToken(member.getCsmId().toString(), token);
