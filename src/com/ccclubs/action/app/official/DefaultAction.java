@@ -586,9 +586,8 @@ public class DefaultAction extends BaseAction {
         try {
 
             final short from = $.getShort("from");
-            final short type = $.getShort("type", (short) 0);
             // 默认0：跳转登录页；1-跳过登录
-            final short skipLogin = $.getShort("skipLogin", (short) 0);
+            final short type = $.getShort("type", (short) 0);
 
             final String csmMobile = $.getString("mobile", "");
             if ($.empty(csmMobile)) {
@@ -668,9 +667,8 @@ public class DefaultAction extends BaseAction {
                     csMember = csMemberService.saveCsMember(csMember);
 
                     // 保存会员信息相关信息到cs_member_info
-                    Long csmHost = csMember.getCsmHost();
-                    CsMemberInfo csMemberInfo = getMemberInfo(new CsMemberInfo(),
-                            null != csmHost ? csMember.getCsmHost() : 1, null, csMember, sex);
+                    CsMemberInfo csMemberInfo =
+                            getMemberInfo(new CsMemberInfo(), null, null, csMember, sex);
                     csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
 
                     // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
@@ -710,7 +708,7 @@ public class DefaultAction extends BaseAction {
             SessionMgr.remove(csmMobile, REGISTER_SMS_CODE);
             SessionMgr.remove(csmMobile, "registersms");
 
-            if (skipLogin == 1) {
+            if (type == 1) {
                 // 注册成功，后台登录
                 String token = UUIDGenerator.getUUID();
                 OauthUtils.saveToken(member.getCsmId().toString(), token);
