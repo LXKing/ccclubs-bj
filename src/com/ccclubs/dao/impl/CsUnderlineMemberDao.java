@@ -152,7 +152,12 @@ public class CsUnderlineMemberDao extends SqlMapClientDaoSupport implements ICsU
 		//取分页的队列
 		
 		params.put("limit", size);
-		params.put("offset", (int)Page.test(page,size,count));
+		if(page*size>count) {
+			params.put("offset", page*size);
+		}else {
+			params.put("offset", (int)Page.test(page,size,count));
+		}
+		
 		List list=this.getSqlMapClientTemplate().queryForList("getCsUnderlineMemberPage", params);
 		//返回一个包装分页对象
 		return new Page(page,size,count,list);
