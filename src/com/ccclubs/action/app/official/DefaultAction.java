@@ -664,10 +664,10 @@ public class DefaultAction extends BaseAction {
                     // TODO Auto-generated method stub
                     CsMember csMember = getRegisterMember(new CsMember(), csmPassword, from,
                             csmMobile, inviteCode);
+                    Long csmHost = csMember.getCsmHost();
                     csMember = csMemberService.saveCsMember(csMember);
 
                     // 保存会员信息相关信息到cs_member_info
-                    Long csmHost = csMember.getCsmHost();
                     CsMemberInfo csMemberInfo = getMemberInfo(new CsMemberInfo(),
                            null != csmHost ? csMember.getCsmHost() : 1, null, csMember, sex);
                     csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
