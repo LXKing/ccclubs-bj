@@ -4,6 +4,23 @@
 - applicationContext-import.xml
 - struts.xml
 
+### 项目说明
+```
+admin 后台配置
+wechat 微信服务配置
+unit   企业服务配置
+thread 通信协议处理
+manage 移动端后台服务配置
+web 网站前台配置
+m   新版微信公众号服务配置
+m alipay 新版支付宝服务窗服务配置
+api  API服务配置，第三方对接
+official 公务用车系统配置
+app  app服务配置，APP端
+receiver  网关程序系统配置
+site 地勤
+```
+
 ## 工程运行环境
 
 - jdk 1.7
@@ -25,72 +42,56 @@
 ```
   <installed facet="jst.web" version="2.4"/>
 ```
+# 统一代码风格
 
-# git 分支管理
-
-## 约定
-
-### 分支名称
-
-#### 需求编码名称
-第一期需求：stage1
-第N期需求: stageN
-北京出行开发分支命名为需求编号，请自行按照分支编号创建分支开发
-#### 开发分支名称
-```
-需求第一期：stage1
-需求编号：PRD-180003
-互不干扰分支名称：bj_stage1_180003
-功能相同需求合并，则分支名称：bj_stage1_180003_180001
-```
-#### 测试发布分支名称
-```
-需求第一期：stage1
-开发分支合并到测试分支：bj_test_stage1
-```
-#### 预发布分支名称
-```
-需求第一期：stage1
-测试分支合并到预发布分支：bj_pre_stage1
-```
-#### 正式发布分支名称
-```
-需求第一期：stage1
-预发布分支合并到正式发布分支：bj_release_stage1
-```
-#### 标签分支名称
-```
-需求第一期：stage1
-总结需求内容，写入readme文件中
-正式发布分支合并到标签发布分支：bj_stage1
-```
-#### bug修复分支名称
-```
-需求第一期：stage1
-需求编号：PRD-180003
-bug修复分支：bj_bug_{第几期}_{版本，可选}_{需求编号，可选}
-例如：
-bj_test_stage1：bj_bug_stage1_test_180003
-
-```
-
-### 代码发布流程
-
-开发分支=>测试分支=>预发布分支=>正式分支=>标签分支(tag)=>删除（正式、预发布、测试、开发分支）
-
-### bug修复流程
-
-由需要修复的分支，创建出bug修复分支（命名参考以上“bug修复分支名称”），修复后合并到所修复的分支
-例如：
-bj_release_stage1=>bj_bug_stage1_release=>bj_release_stage1
-
-### 代码风格
-
-#### eclipse编码风格
+## eclipse编码风格
 ```
 http://120.26.220.241/BurningGroup/CodeReview.git
 ```
 编码规范文件在StyleGuide目录VcEclipseStyle.xml
 
 Window=>Preferences=>Java=>Code Style=>Formatter
+
+# git 分支管理
+
+## 分支开发“代码发布流程”和“命名规则”
+
+第一期需求：stage1
+第N期需求: stageN
+北京出行开发分支命名，请按照以下流程中“括号内”的“命名规则”进行创建：
+
+develop分支
+↓
+开发者分支（命名bj_stage1_{开发者}）
+↓
+测试分支（bj_test_stageN）
+↓
+测试分支bug修复（bj_test_stageN_hotfix_{开发者}）
+↓
+↓合并回
+↓
+测试分支（bj_test_stageN）
+↓
+预发布分支（bj_pre_stageN）
+↓
+预发布分支bug修复（bj_pre_stageN_hotfix_{开发者}）
+↓
+↓合并回
+↓
+预发布分支（bj_pre_stageN）
+↓
+正式分支（bj_release_stageN）
+↓
+正式分支bug修复（bj_release_stageN_hotfix_{开发者}）
+↓
+↓合并回
+↓
+正式分支（bj_release_stageN）
+↓
+标签分支（bj_stageN，总结“需求内容”并写入readme文件中）
+↓
+删除（正式、预发布、测试、开发者分支）
+ 
+
+
 
