@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.ng.servlet.ServletHostConfig;
 import org.springframework.util.CollectionUtils;
 import com.ccclubs.action.api.scripts.CarScript;
 import com.ccclubs.action.api.scripts.TimelineScript;
@@ -659,20 +660,24 @@ public class DefaultAction extends BaseAction {
                     CsMember csMember = getRegisterMember(new CsMember(), csmPassword, from,
                             csmMobile, inviteCode);
                     csMember = csMemberService.saveCsMember(csMember);
+                    
+                    // 保存会员信息相关信息到cs_member_info
+                    CsMemberInfo csMemberInfo =
+                            getMemberInfo(new CsMemberInfo(), null, null, csMember, sex);
+                    csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
+
+                    // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
+                    csMember.setCsmInfo(csMemberInfo.getCsmiId());
+                    csMemberService.updateCsMember$NotNull(csMember);
 
                     if (from == 2) {
                         Long host = csUnitInfo.getCsuiHost();
+                        //企业，车市信息更新到会员
                         CsMember member = updateMember(csMember, realName, host, unitName);
                         csMemberService.updateCsMember$NotNull(member);
-
-                        // 保存会员信息相关信息到cs_member_info
-                        CsMemberInfo csMemberInfo =
-                                getMemberInfo(new CsMemberInfo(), host, realName, csMember, sex);
-                        csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
-
-                        // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
-                        csMember.setCsmInfo(csMemberInfo.getCsmiId());
-                        csMemberService.updateCsMember$NotNull(csMember);
+                        csMemberInfo.setCsmiHost(host);
+                        csMemberInfo.setCsmiName(realName);
+                        csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
 
                         // 保存会员关系到cs_member_ship表中
                         CsMemberShip csMemberShip =
