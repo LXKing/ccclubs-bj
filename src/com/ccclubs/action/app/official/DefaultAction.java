@@ -1,3 +1,5 @@
+
+
 package com.ccclubs.action.app.official;
 
 import java.io.IOException;
@@ -224,53 +226,58 @@ public class DefaultAction extends BaseAction {
         return returnError("9999", SYSTEM.ERROR_TIPS);
     }
 
-
+    
     /**
-     * 线下认证
-     * 
+     *   线下认证
      * @return
      */
-    public String getUnderlineMember() {
+    public String getUnderlineMember(){
         try {
-            // CsMember member = OauthUtils.getOauth($.getString("access_token",""));
-            // if (member == null) {
-            // return returnError("100", "登录授权无效");
-            // }
-            //
-            Map<String, Object> params = new HashMap<>();
-            params.put("asc", "cum_area");
-            Page<CsUnderlineMember> page = csUnderlineMemberService
-                    .getCsUnderlineMemberPage($.getInteger("page", 0), 4, params);
+            CsMember member = OauthUtils.getOauth($.getString("access_token",""));
+            if (member == null) {
+                return returnError("100", "登录授权无效");
+            }
+            //  
+            Map<String ,Object> params=new HashMap<>();
+            params.put("asc","cum_area");
+            Page<CsUnderlineMember> page = csUnderlineMemberService.getCsUnderlineMemberPage($.getInteger("page", 0),20,params);
             //
             Map<String, List<Map<String, Object>>> dataMap = new HashMap<>();
-            Map<String, Object> tempMap = null;
-            List<Map<String, Object>> tempList = null;
+            
+            List<Object>dataList = new ArrayList<>();
+            Map<String ,Object> tempMap=null;
+            List<Map<String, Object>> tempList=null;
             for (CsUnderlineMember data : page.getResult()) {
-                String area = data.getCumArea$();
+                String area=data.getCumArea$();
                 //
-                tempMap = new HashMap<>();
-                tempMap.put("user", data.getCumUser());// 对接人
+                tempMap= new HashMap<>();
+                tempMap.put("user", data.getCumUser());//对接人
                 tempMap.put("mobile", data.getCumMobile());
-                // tempMap.put("area", data.getCumArea$());
+//              tempMap.put("area", data.getCumArea$());
                 //
-                if (dataMap.containsKey(area)) {
+                if(dataMap.containsKey(area)) {
                     dataMap.get(area).add(tempMap);
-                } else {
-                    tempList = new ArrayList<>();
+                }else {
+                    tempList=new ArrayList<>();
                     tempList.add(tempMap);
                     dataMap.put(area, tempList);
                 }
             }
-            LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
-                    .add("count", page.getCount()).add("size", page.getSize());
-            return $.SendHtml($.json(
-                    JsonFormat.success().setData($.Map("list", dataMap).add("page", pagemap))),
-                    CHARSET);
+            //数据组装
+            for(String str:dataMap.keySet()) {
+                Map<String, Object>temp=new HashMap<>();
+                temp.put("area", str);
+                temp.put("list", dataMap.get(str));
+                dataList.add(temp);
+            }
+            
+            
+            LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal()).add("count", page.getCount()).add("size", page.getSize());
+            return $.SendHtml($.json(JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap))),CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }
     }
-
     /**
      * 登录
      * 
@@ -6623,3 +6630,4 @@ public class DefaultAction extends BaseAction {
 
 
 }
+
