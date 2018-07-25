@@ -5191,6 +5191,10 @@ public class DefaultAction extends BaseAction {
         }
 
     }
+    
+    /**
+     * 非强制更新版本
+     * */
 
     String getVersion(String version) {
         if (version != null && version.indexOf("#") != -1) {
@@ -5198,12 +5202,35 @@ public class DefaultAction extends BaseAction {
         }
         return version;
     }
+    
+    
+    /**
+     * 指定强制更新版本
+     * */
 
     String getUpdateVersions(String version) {
         if (version != null && version.indexOf("#") != -1) {
             return version.split("#")[1];
         }
         return null;
+    }
+    /**
+     * 批量强制更新版本
+     * @param appVersion 客户端上传的版本号
+     *  @param version 配置的版本号
+     * 
+     * */
+    
+    boolean getForceUpdateVersion(String appVersion,String version) {
+        if (version != null && version.indexOf("#") != -1) {
+            Integer versionInt=Integer.valueOf(version.split("#")[2]);
+            Integer appVersionInt=Integer.valueOf(appVersion);
+            if(null!=versionInt&&null!=appVersionInt) {
+                return  versionInt>appVersionInt;
+            }
+            
+        }
+        return false;
     }
 
     /**
@@ -5359,25 +5386,27 @@ public class DefaultAction extends BaseAction {
             Integer appType = $.getInteger("appType", 1);
             String appVersion = $.getString("version", "");
             Map<String, Object> map = new HashMap<String, Object>();
+            int upgradeFlag = 0;
             if (appType == 1) { // 1安卓
                 CsUpdate update = csUpdateService
                         .getCsUpdate($.add(CsUpdate.F.csuType, 0).add(CsUpdate.F.csuStatus, 1));
                 if (update != null) {
                     String versionList = getUpdateVersions(update.getCsuVersion$());
                     if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
-                        map.put("upgradeFlag", 1);
-                    } else {
-                        map.put("upgradeFlag", 0);
+                        upgradeFlag=1;
+                    } 
+                    if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
+                        upgradeFlag=1;
                     }
                     map.put("version", getVersion(update.getCsuVersion$()));
                     map.put("fileUrl", update.getCsuFile());
                     map.put("content", update.getCsuDescript()); // 1强制更新 0不更新
                 } else {
-                    map.put("upgradeFlag", 0);
+                   
                     map.put("content", "");
                 }
-            } else {
-                int upgradeFlag = 0;
+            } else {//IOS
+                
                 CsUpdate update = csUpdateService
                         .getCsUpdate($.add(CsUpdate.F.csuType, 1).add(CsUpdate.F.csuStatus, 1));
                 if (update != null) {
@@ -5385,10 +5414,14 @@ public class DefaultAction extends BaseAction {
                     if (versionList != null && in(appVersion, versionList, ",")) { // 匹配需要强制更新的版本如：2.3.0,2.4.0
                         upgradeFlag = 1;
                     }
+                    if(getForceUpdateVersion(appVersion,update.getCsuVersion$())) {
+                        upgradeFlag=1;
+                    }
                 }
-                map.put("upgradeFlag", upgradeFlag);
+                
                 map.put("content", update != null ? update.getCsuDescript() : "");
             }
+            map.put("upgradeFlag", upgradeFlag);
             data.put("update", map);
             //
             // CsUpdate update = csUpdateService.getCsUpdate($.add(CsUpdate.F.csuType, 0));
