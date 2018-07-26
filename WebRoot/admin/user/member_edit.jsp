@@ -4156,7 +4156,7 @@ $(function(){
 	
 	<s:if test="#request.CTRL.v.csmLockReason==true">
 	${before$csmLockReason}
-	<dl class="csmLockReason " major  ref="csmLockReason" id="csmLockReason_div" style="display:${#request.csMember$csmStatus == 0 ? "''": "none"}">
+	<dl class="csmLockReason " major  ref="csmLockReason" id="csmLockReason_div" style="display:${csMember.csmStatus == 0 ? "''": "none"}">
 		<dt>禁用原因:</dt>
 		<s:if test="#request.CTRL.e.csmLockReason==true">
 		${lz:set("haveEditable",true)}
@@ -4190,7 +4190,7 @@ $(function(){
 	${lz:set("注释","before$csmVOfflineCode和after$csmVOfflineCode变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmVOfflineCode==true">
 	${before$csmLockReason}
-	<dl class="csmVOfflineCode " major  ref="csmVOfflineCode"  id="csmVOfflineCode_div" style="display:${#request.csMember$csmVOffline == 1 ? "''": "none"}" >
+	<dl class="csmVOfflineCode " major  ref="csmVOfflineCode"  id="csmVOfflineCode_div" style="display:${csMember.csmVOffline  == 1 ? "''": "none"}" >
 		<dt>机器编码:</dt>
 		<s:if test="#request.CTRL.e.csmVOfflineCode==true">
 		${lz:set("haveEditable",true)}
