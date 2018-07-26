@@ -297,7 +297,6 @@ public class DefaultAction extends BaseAction {
             String strUsername = $.getString("username", "");
             String strPass = $.getString("password", "");
             int type = $.getInteger("type", 0);// 默认密码登录；1-验证码登录
-            int checkAcc = $.getInteger("checkAcc", 0);// 默认0:校验是否创建企业用户；1-不校验
 
             if (SystemHelper.isNullOrEmpty(strUsername)) {
                 return returnError("102", "您还没有输入帐号");
@@ -339,14 +338,12 @@ public class DefaultAction extends BaseAction {
                     return returnError("106", "您输入的验证码不正确，请重新输入");
                 }
             }
-
-            if (checkAcc == 0) {
-                // 校验企业用户信息
-                CsUnitPerson person =
-                        CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
-                if (person == null)
-                    return returnError("107", "您的注册还未完成，请继续完善信息");
-            }
+            
+          //校验企业用户信息
+//          CsUnitPerson person =
+//                  CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
+//          if (person == null)
+//              return returnError("107", "您的注册还未完成，请继续完善信息");
 
             String sessionToken = SessionMgr.get(user.getCsmId$());
             if (StringUtils.isNotEmpty(sessionToken)) {

@@ -118,8 +118,11 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 0:禁用;1:正常;2:黑名单;     
 	private @caption("工作认证") @column("csm_v_work")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVWork;// 0:未认证 1:已认证 2:等待认证 3:认证失败
 	private @caption("线下认证") @column("csm_v_offline")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVOffline;// 0:未认证 1:已认证 2:等待认证 3:认证失败
+	private @caption("禁用原因") @column("csm_lock_reason")    @note(" 禁用原因  ") String csmLockReason;// 禁用原因
+	private @caption("线下认证机器编码") @column("csm_v_offline_code")    @note(" 线下认证机器编码  ") String csmVOfflineCode;// 线下认证机器编码
 	private Short vstatus;
-	//默认构造函数
+
+    //默认构造函数
 	public CsMember(){
 	
 	}
@@ -2984,6 +2987,24 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         this.setSeted(F.csmVWork);
     }
     
+    public String getCsmLockReason() {
+        return csmLockReason;
+    }
+
+    public void setCsmLockReason(String csmLockReason) {
+        this.csmLockReason = csmLockReason;
+        this.setSeted(F.csmLockReason);
+    }
+
+    public String getCsmVOfflineCode() {
+        return csmVOfflineCode;
+    }
+
+    public void setCsmVOfflineCode(String csmVOfflineCode) {
+        this.csmVOfflineCode = csmVOfflineCode;
+        this.setSeted(F.csmVOfflineCode);
+    }
+    
     public void setVstatus(Short vstatus) {
         this.vstatus = vstatus;
     }
@@ -2995,11 +3016,11 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         }else if(this.getCsmVDrive() == MemberRecStatus.REC_PASS && this.getCsmVReal() == MemberRecStatus.REC_PASS && this.getCsmVWork() == MemberRecStatus.REC_PASS
                 && this.getCsmVOffline() == MemberRecStatus.REC_PASS) {
             return MemberRecStatus.REC_PASS;//四项认证全部通过
-        }else if(this.getCsmVDrive() == MemberRecStatus.WAIT_CHECK && this.getCsmVReal() == MemberRecStatus.WAIT_CHECK && this.getCsmVWork() == MemberRecStatus.WAIT_CHECK
-                && this.getCsmVOffline() == MemberRecStatus.WAIT_CHECK) {
-            return MemberRecStatus.WAIT_CHECK;//四项认证都为等待认证
+        }else if(this.getCsmVDrive() == MemberRecStatus.NEVER_REC || this.getCsmVReal() == MemberRecStatus.NEVER_REC || this.getCsmVWork() == MemberRecStatus.NEVER_REC
+                || this.getCsmVOffline() == MemberRecStatus.NEVER_REC) {
+            return MemberRecStatus.NEVER_REC;//四项认证存在未认证
         }else {
-            return MemberRecStatus.NEVER_REC;//四项认证存在未认证（低优先级）
+            return MemberRecStatus.WAIT_CHECK;//等待认证
         }
     }
     
@@ -3589,7 +3610,19 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
             this.put("csmVIdcard", null);return this;};
         /** not .... */
         public M csmVIdcardNot(){this.put("csmVIdcardNot", "not");return this;};
- 		
+        /** 禁用原因 **/
+        public M csmLockReason(Object csmLockReason){this.put("csmLockReason", csmLockReason);return this;};
+        /** and csm_lock_reason is null */
+        public M csmLockReasonNull(){if(this.get("csmLockReasonNot")==null)this.put("csmLockReasonNot", "");this.put("csmLockReason", null);return this;};
+        /** not .... */
+        public M csmLockReasonNot(){this.put("csmLockReasonNot", "not");return this;};
+        /** 线下认证机器编码 **/
+        public M csmVOfflineCode(Object csmVOfflineCode){this.put("csmVOfflineCode", csmVOfflineCode);return this;};
+        /** and csm_v_offline_code is null */
+        public M csmVOfflineCodeNull(){if(this.get("csmVOfflineCodeNot")==null)this.put("csmVOfflineCodeNot", "");this.put("csmVOfflineCode", null);return this;};
+        /** not .... */
+        public M csmVOfflineCodeNot(){this.put("csmVOfflineCodeNot", "not");return this;};
+        
 		/** 可用状态 [非空]   1:正常 0:禁用     **/
 		public M csmStatus(Object csmStatus){this.put("csmStatus", csmStatus);return this;};
 	 	/** and csm_status is null */
@@ -3858,6 +3891,10 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         public final static @type(Short.class)  String csmVIdcard="csmVIdcard";
         /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static @type(Short.class)  String csmVOffline="csmVOffline";
+        /** 禁用原因 **/
+        public final static @type(String.class)  String csmLockReason="csmLockReason";
+        /** 线下认证机器码 **/
+        public final static @type(String.class)  String csmVOfflineCode="csmVOfflineCode";        
 		
 		/** 可用状态 [非空]   1:正常 0:禁用     **/
 		public final static @type(Short.class)  String csmStatus="csmStatus";
@@ -3994,6 +4031,10 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         public final static String csmVWork="csm_v_work";
         /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static String csmVOffline="csm_v_offline";
+        /** 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static String csmLockReason="csm_lock_reason";
+        /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
+        public final static String csmVOfflineCode="csm_v_offline_code";
         /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static String csmVIdcard="csm_v_idcard";
         
