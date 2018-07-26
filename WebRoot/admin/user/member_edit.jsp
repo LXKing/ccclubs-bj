@@ -210,10 +210,23 @@ window.$on("readyStart",function(){
 				</div>
 			</dd>
 		</dl>
+		<dl style="width:98%;">
+			<dt>工作证图片:</dt>
+			<dd input="image">
+				<div class="state-input wide">
+					${lz:set("employmentImageLen",(lz:size(csMember.$csmInfo.csmiProofOfEmployment)))}
+					<s:if test="#request.employmentImageLen>0">
+						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiProofOfEmployment}"/>
+					</s:if>
+					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+				</div>
+			</dd>
+		</dl>
 	</lz:set>
 	${lz:set("CTRL",lz:CTRL(jsonString))}
 	<script>
 	$(function(){
+		
 		$("${lz:js(insertHtml)}").insertAfter("dl[ref='csmInfo']");
 		/*$("#memberForm").submit(function(){
 			if($("#csmVReal").val()=="1" && $("#csmVDrive").val()=="1" && $("#csmEvcard").val()==""){
@@ -745,7 +758,7 @@ $(function(){
 			if(jQuery.trim(el.value)=="" || jQuery.trim(el.value)==-1)
 				return "请选择部门";
 		}
-		</s:if>	
+		</s:if>
 		
 	},function(){
 		${lz:set("注释","****表单提交自定义判断，阻止提交返回提示字符串即可****")}

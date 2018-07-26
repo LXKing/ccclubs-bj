@@ -204,7 +204,6 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
 	 	,$.getShort("csmVDrive")//驾驶认证
 	 	,$.getShort("csmStatus")//可用状态 [非空]
 	 	,$.getShort("csmVWork")//工作认证
-	 	,$.getShort("csmVIdcard")//身份证认证
 	 	,$.getShort("csmVOffline")//线下认证
 	 )
 	**/
@@ -221,8 +220,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
 	        Short csmReferType,Short csmFrom,String csmSrc,Long csmChannel,Long csmMarketPlan,
 	        Long csmActivity,Long csmSaler,String csmMarket,String csmTag,String csmMark,
 	        String csmVisitFlag,Long csmMask,String csmRemark,Short csmVMobile,Short csmVEmail,
-	        Short csmVReal,Short csmVDrive,Short csmStatus ,Short csmVWork,
-	        Short csmVIdcard,Short csmVOffline){
+	        Short csmVReal,Short csmVDrive,Short csmStatus ,Short csmVWork, Short csmVOffline){
 		this.csmHost=csmHost;
 		this.csmUsername=csmUsername;
 		this.csmPassword=csmPassword;
@@ -3601,15 +3599,6 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
             this.put("csmVOffline", null);return this;};
         /** not .... */
         public M csmVOfflineNot(){this.put("csmVOfflineNot", "not");return this;};
-        /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
-        public M csmVIdcard(Object csmVIdcard){
-            this.put("csmVIdcard", csmVIdcard);return this;};
-        /** and csm_v_Idcard is null */
-        public M csmVIdcardNull(){
-            if(this.get("csmVIdcardNot")==null)this.put("csmVIdcardNot", "");
-            this.put("csmVIdcard", null);return this;};
-        /** not .... */
-        public M csmVIdcardNot(){this.put("csmVIdcardNot", "not");return this;};
         /** 禁用原因 **/
         public M csmLockReason(Object csmLockReason){this.put("csmLockReason", csmLockReason);return this;};
         /** and csm_lock_reason is null */
@@ -3887,8 +3876,6 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
 		
 		/** 工作认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static @type(Short.class)  String csmVWork="csmVWork";
-        /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
-        public final static @type(Short.class)  String csmVIdcard="csmVIdcard";
         /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static @type(Short.class)  String csmVOffline="csmVOffline";
         /** 禁用原因 **/
@@ -4035,8 +4022,6 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         public final static String csmLockReason="csm_lock_reason";
         /** 线下认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static String csmVOfflineCode="csm_v_offline_code";
-        /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
-        public final static String csmVIdcard="csm_v_idcard";
         
 		/** 可用状态 [非空]   1:正常 0:禁用     **/
 		public final static String csmStatus="csm_status";
