@@ -21,9 +21,9 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMember.csmId))}
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"csmId,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,,csmVWork,csmVOffline,csmStatus",
+	editables:"csmId,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmLockReason,csmVOfflineCode,csmStatus",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,,csmVWork,csmVOffline,csmStatus",
+	visibles:"csmId,csmHost,csmUsername,csmGroup,csmRebate,csmNotRevenue,csmOrders,csmAlipays,csmPacks,csmFreehours,csmCoins,csmRecords,csmBills,csmIntegrals,csmGrows,csmUseRecord,csmRefounds,csmViolats,csmTroubles,csmInvoices,csmAddresses,csmMemos,csmWeixinFlag,csmAlipayFlag,csmHeader,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmMarket,csmTag,csmMark,csmVisitFlag,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmLockReason,csmVOfflineCode,csmStatus",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -115,6 +115,7 @@ window.$on("readyStart",function(){
 				,unitGroup:{editable:false,visible:false}
 				,payMember:{editable:false,visible:false}
 				,csmVOfflineCode:{editable:false,visible:false}
+				,vstatus:{editable:false,visible:true}
 			}
 		}
 	</lz:set>
@@ -3899,7 +3900,7 @@ $(function(){
 		</dd>
 		</s:if>
 		<s:else>
-		${lz:set("注释","****实名认证字段非编辑模式或只读时的显示****")}
+		${lz:set("注释","****工作认证字段非编辑模式或只读时的显示****")}
 		<dd>
 		 	<div class="state-input narrow">
 		 		<textarea class="" style="display:none;" id="csmVWork">${csMember.csmVWork}</textarea>
@@ -3917,7 +3918,7 @@ $(function(){
 	</s:if>
 	
 	${lz:set("注释","*****************线下认证字段的输入框代码*****************")}
-	${lz:set("注释","before$csmVWork和after$csmVOffline变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	${lz:set("注释","before$csmVOffline和after$csmVOffline变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmVOffline==true">
 	${before$csmVOffline}
 	<dl class="csmVOffline " major  ref="csmVOffline" >
@@ -3940,7 +3941,7 @@ $(function(){
 		</dd>
 		</s:if>
 		<s:else>
-		${lz:set("注释","****实名认证字段非编辑模式或只读时的显示****")}
+		${lz:set("注释","****线下认证段非编辑模式或只读时的显示****")}
 		<dd>
 		 	<div class="state-input narrow">
 		 		<textarea class="" style="display:none;" id="csmVOffline">${csMember.csmVOffline}</textarea>
@@ -4002,7 +4003,7 @@ $(function(){
 	<s:if test="#request.CTRL.v.vStatus==true">
 	${before$vstatus}
 	<dl class="vstatus " major  ref="vstatus" >
-		<dt>认证状态:</dt>
+		<dt>认证总状态:</dt>
 		<s:if test="#request.CTRL.e.vstatus==true">
 		${lz:set("haveEditable",false)}
 		<dd input="select">
@@ -4020,7 +4021,7 @@ $(function(){
 		</dd>
 		</s:if>
 		<s:else>
-		${lz:set("注释","****可用状态字段非编辑模式或只读时的显示****")}
+		${lz:set("注释","****实名认证总状态字段非编辑模式或只读时的显示****")}
 		<dd>
 		 	<div class="state-input narrow">
 		 		<textarea class="" style="display:none;" id="vstatus">${csMember.vstatus}</textarea>
@@ -4176,7 +4177,7 @@ ${lz:set("注释","*****************禁用原因字段的输入框代码********
 		</dd>
 		</s:if>
 		<s:else>
-		${lz:set("注释","****可用状态字段非编辑模式或只读时的显示****")}
+		${lz:set("注释","****禁用原因字段非编辑模式或只读时的显示****")}
 		<dd>
 		 	<div class="state-input narrow">
 		 		<textarea class="" style="display:none;" id="csmLockReason">${csMember.csmLockReason}</textarea>
