@@ -114,6 +114,7 @@ window.$on("readyStart",function(){
 				,unitInfo:{editable:false,visible:false}
 				,unitGroup:{editable:false,visible:false}
 				,payMember:{editable:false,visible:false}
+				,csmVOfflineCode:{editable:false,visible:false}
 			}
 		}
 	</lz:set>
@@ -157,6 +158,7 @@ window.$on("readyStart",function(){
 				,payMember:{editable:true,visible:true}
 				,unitInfo:{editable:true,visible:true}
 				,unitGroup:{editable:true,visible:true}
+				,csmVOfflineCode:{editable:true,visible:true}
 			},
 			submits:[{name:"提交审核",value:"提交审核"}]
 		}
@@ -283,7 +285,22 @@ $(function(){
 window["lzFlashUrl"]="${ lz:config("lz.flash.url")==null ? basePath : ""}${ lz:config("lz.flash.url")==null ? "admin/flash/" : lz:config("lz.flash.url")}";
 window["uploadUrl"]="${ lz:config("upload.url")==null ? basePath : ""}${ lz:config("upload.url")==null ? "upload.do" :  lz:config("upload.url")}";
 
-
+function csmStatus_select(){
+	var csmStatusVal = $("#csmStatus").val();
+	if(csmStatusVal != 0){
+		$("#csmLockReason_div").css("display","none");
+	}else{
+		$("#csmLockReason_div").css("display","");
+	}
+}
+function csmVOffline_select(){
+	var csmVOfflineVal = $("#csmVOffline").val();
+	if(csmVOfflineVal != 1){
+		$("#csmVOfflineCode_div").css("display","none");
+	}else{
+		$("#csmVOfflineCode_div").css("display","");
+	}
+}
 $(function(){
 		 
 	${lz:set("haveEditable",false)}
@@ -3896,7 +3913,7 @@ $(function(){
 		${lz:set("haveEditable",true)}
 		<dd input="select">
 		<s:if test="#request.csMember$csmVOffline!=null">${csMember$csmVOffline}</s:if><s:else>
-		 	<select class="narrow" id="csmVOffline" name="csMember.csmVOffline">
+		 	<select class="narrow" id="csmVOffline" name="csMember.csmVOffline" onchange="csmVOffline_select()">
 		 		<option value="">请选择</option>
 				<option value="0" ${csMember.csmVOffline==0?"selected":""}>未认证</option>
 				<option value="1" ${csMember.csmVOffline==1?"selected":""}>已认证</option>
@@ -3937,7 +3954,7 @@ $(function(){
 		${lz:set("haveEditable",true)}
 		<dd input="select">
 		<s:if test="#request.csMember$csmStatus!=null">${csMember$csmStatus}</s:if><s:else>
-		 	<select class="narrow" id="csmStatus" name="csMember.csmStatus">
+		 	<select class="narrow" id="csmStatus" name="csMember.csmStatus" onchange="csmStatus_select()">
 		 		<option value="">请选择</option>
 				<option value="1" ${csMember.csmStatus==1?"selected":""}>正常</option>
 				<option value="0" ${csMember.csmStatus==0?"selected":""}>禁用</option>
@@ -4123,9 +4140,10 @@ $(function(){
 	
 	${lz:set("注释","*****************禁用原因字段的输入框代码*****************")}
 	${lz:set("注释","before$csmLockReason和after$csmLockReason变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	
 	<s:if test="#request.CTRL.v.csmLockReason==true">
 	${before$csmLockReason}
-	<dl class="csmLockReason " major  ref="csmLockReason" >
+	<dl class="csmLockReason " major  ref="csmLockReason" id="csmLockReason_div" style="display:${#request.csMember$csmStatus == 0 ? "''": "none"}">
 		<dt>禁用原因:</dt>
 		<s:if test="#request.CTRL.e.csmLockReason==true">
 		${lz:set("haveEditable",true)}
@@ -4152,16 +4170,15 @@ $(function(){
 	</dl>
 	${after$csmLockReason}
 	</s:if>
-	
+
 	
 		
-	
 	${lz:set("注释","*****************机器编码字段的输入框代码*****************")}
 	${lz:set("注释","before$csmVOfflineCode和after$csmVOfflineCode变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmVOfflineCode==true">
 	${before$csmLockReason}
-	<dl class="csmVOfflineCode " major  ref="csmVOfflineCode" >
-		<dt>禁用原因:</dt>
+	<dl class="csmVOfflineCode " major  ref="csmVOfflineCode"  id="csmVOfflineCode_div" style="display:${#request.csMember$csmVOffline == 1 ? "''": "none"}" >
+		<dt>机器编码:</dt>
 		<s:if test="#request.CTRL.e.csmVOfflineCode==true">
 		${lz:set("haveEditable",true)}
 		<dd input="text">
@@ -4187,6 +4204,7 @@ $(function(){
 	</dl>
 	${after$csmVOfflineCode}
 	</s:if>
+	
 	
 	
 	
