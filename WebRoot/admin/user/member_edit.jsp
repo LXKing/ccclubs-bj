@@ -3941,7 +3941,7 @@ $(function(){
 		 		<option value="">请选择</option>
 				<option value="1" ${csMember.csmStatus==1?"selected":""}>正常</option>
 				<option value="0" ${csMember.csmStatus==0?"selected":""}>禁用</option>
-				<option value="0" ${csMember.csmStatus==2?"selected":""}>黑名单</option>
+				<option value="-1" ${csMember.csmStatus==2?"selected":""}>黑名单</option>
 		 	</select>
 	 	 </s:else>
 	 	 
@@ -3974,7 +3974,7 @@ $(function(){
 	<dl class="vstatus " major  ref="vstatus" >
 		<dt>认证状态:</dt>
 		<s:if test="#request.CTRL.e.vstatus==true">
-		${lz:set("haveEditable",true)}
+		${lz:set("haveEditable",false)}
 		<dd input="select">
 		<s:if test="#csMember$vstatus!=null">${csMember.vstatus}</s:if><s:else>
 		 	<select class="narrow" id="vstatus" name="csMember.vstatus">
@@ -4118,6 +4118,77 @@ $(function(){
 	</dl>
 	${after$payMember}
 	</s:if>
+	
+	
+	
+	${lz:set("注释","*****************禁用原因字段的输入框代码*****************")}
+	${lz:set("注释","before$csmLockReason和after$csmLockReason变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csmLockReason==true">
+	${before$csmLockReason}
+	<dl class="csmLockReason " major  ref="csmLockReason" >
+		<dt>禁用原因:</dt>
+		<s:if test="#request.CTRL.e.csmLockReason==true">
+		${lz:set("haveEditable",true)}
+		<dd input="text">
+		<s:if test="#request.csMember$csmLockReason!=null">${csMember$csmLockReason}</s:if><s:else>
+		 	<input type="text" class="input narrow"  maxlength="32" name="csMember.csmLockReason" id="csmLockReason"  value="${csMember.csmLockReason}"/>
+	 	 </s:else>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****禁用原因字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="csmLockReason">${csMember.csmLockReason}</textarea>
+		 		<span>
+		 	
+			 ${csMember.csmLockReason$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csmLockReason}
+	</s:if>
+	
+	
+		
+	
+	${lz:set("注释","*****************机器编码字段的输入框代码*****************")}
+	${lz:set("注释","before$csmVOfflineCode和after$csmVOfflineCode变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csmVOfflineCode==true">
+	${before$csmLockReason}
+	<dl class="csmVOfflineCode " major  ref="csmVOfflineCode" >
+		<dt>禁用原因:</dt>
+		<s:if test="#request.CTRL.e.csmVOfflineCode==true">
+		${lz:set("haveEditable",true)}
+		<dd input="text">
+		<s:if test="#request.csMember$csmVOfflineCode!=null">${csMember$csmVOfflineCode}</s:if><s:else>
+		 	<input type="text" class="input narrow"  maxlength="32" name="csMember.csmVOfflineCode" id="csmVOfflineCode"  value="${csMember.csmVOfflineCode}"/>
+	 	 </s:else>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****机器编码字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="csmVOfflineCode">${csMember.csmVOfflineCode}</textarea>
+		 		<span>
+		 	
+			 ${csMember.csmVOfflineCode$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csmVOfflineCode}
+	</s:if>
+	
+	
 	
 	
 	

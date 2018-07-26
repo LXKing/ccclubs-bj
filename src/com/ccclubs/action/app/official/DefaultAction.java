@@ -859,6 +859,7 @@ public class DefaultAction extends BaseAction {
                 public <T> T execute(Object... arg0) {
                     CsMemberInfo csMemberInfo = updateMemberInfoCertifyImage(member, certifyImage,
                             certifyNum, realName, onCertifyImage);
+                    member.setCsmName(realName);
                     csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, (short) 2, null));
