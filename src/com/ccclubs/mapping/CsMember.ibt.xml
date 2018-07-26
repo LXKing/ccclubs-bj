@@ -77,6 +77,9 @@
 		<result property="csmVOffline" column="csm_v_offline"/>
 		
 		<result property="csmStatus" column="csm_status"/>
+		
+		<result property="csmLockReason" column="csm_lock_reason"/>
+		<result property="csmVOfflineCode" column="csm_v_offline_code"/>
 	</resultMap>
 		
 	<!-- 获取所有会员帐号 -->
@@ -760,6 +763,9 @@
 			,cs_member$suffix$.csm_v_offline
 			
 			,cs_member$suffix$.csm_status
+			
+			,cs_member$suffix$.csm_lock_reason
+			,cs_member$suffix$.csm_v_offline_code
 		)
 		values(
 			<isNotNull property="csmHost" prepend="">
@@ -1146,6 +1152,19 @@
 				#csmStatus#
 			</isNotNull>
 			<isNull property="csmStatus" prepend=",">
+				null
+			</isNull>
+			
+			<isNotNull property="csmLockReason" prepend=",">
+				#csmLockReason#
+			</isNotNull>
+			<isNull property="csmLockReason" prepend=",">
+				null
+			</isNull>
+			<isNotNull property="csmVOfflineCode" prepend=",">
+				#csmVOfflineCode#
+			</isNotNull>
+			<isNull property="csmVOfflineCode" prepend=",">
 				null
 			</isNull>			
 		)
@@ -1543,7 +1562,20 @@
 			</isNotNull>
 			<isNull property="csmStatus" prepend=",">
 				cs_member$suffix$.csm_status = null
-			</isNull>				
+			</isNull>	
+			
+			<isNotNull property="csmLockReason" prepend=",">
+				cs_member$suffix$.csm_lock_reason = #csmLockReason#
+			</isNotNull>
+			<isNull property="csmLockReason" prepend=",">
+				cs_member$suffix$.csm_lock_reason = null
+			</isNull>
+			<isNotNull property="csmVOfflineCode" prepend=",">
+				cs_member$suffix$.csm_v_offline_code = #csmVOfflineCode#
+			</isNotNull>
+			<isNull property="csmVOfflineCode" prepend=",">
+				cs_member$suffix$.csm_v_offline_code = null
+			</isNull>			
 		where
 			csm_id=#csmId#
 	</update>
@@ -1746,6 +1778,13 @@
 				
 			<isNotNull property="csmStatus" prepend=",">
 				cs_member$suffix$.csm_status = #csmStatus#
+			</isNotNull>
+			
+			<isNotNull property="csmLockReason" prepend=",">
+				cs_member$suffix$.csm_lock_reason = #csmLockReason#
+			</isNotNull>	
+			<isNotNull property="csmVOfflineCode" prepend=",">
+				cs_member$suffix$.csm_v_offline_code = #csmVOfflineCode#
 			</isNotNull>		
 			</dynamic>
 		where
@@ -1963,6 +2002,13 @@
 				
 			<isNotNull property="V_csmStatus" prepend=",">
 				cs_member$suffix$.csm_status = #V_csmStatus#
+			</isNotNull>
+			
+			<isNotNull property="V_csmLockReason" prepend=",">
+				cs_member$suffix$.csm_lock_reason = #V_csmLockReason#
+			</isNotNull>
+			<isNotNull property="V_csmVOfflineCode" prepend=",">
+				cs_member$suffix$.csm_v_offline_code = #V_csmVOfflineCode#
 			</isNotNull>		
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
