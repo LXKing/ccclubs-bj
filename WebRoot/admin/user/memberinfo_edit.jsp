@@ -705,7 +705,7 @@ $(function(){
 		<s:if test="#request.csMemberInfo$csmiProofOfEmployment!=null">${csMemberInfo$csmiProofOfEmployment}</s:if><s:else>
 		    <input type="text" class="input" maxlength="128" size="32" name="csMemberInfo.csmiProofOfEmployment" id="csmiProofOfEmployment"  value="${csMemberInfo.csmiProofOfEmployment}"/>
 			<button type="button" onclick="$.upload({type:'img',callback:function(url){if(url)$('#csmiProofOfEmployment').val(url)}})" class="button">设置图片</button>
-			<button type="button" onclick="$('#csmiDriverImage').val('')" class="button">删除图片</button>
+			<button type="button" onclick="$('#csmiProofOfEmployment').val('')" class="button">删除图片</button>
 			<button type="button" onclick="$.thumb({url:$('#csmiProofOfEmployment').val()})" class="button">查看图片</button>
 	 	 </s:else>
 	 	 
