@@ -14,15 +14,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMember.csmId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.all==true">
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可查询")}
-	queryables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmUpdateTime,csmAddTime,csmLastTime,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
+	queryables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmUpdateTime,csmAddTime,csmLastTime,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可显示在表格中")}
-	listables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmCoupon,csmIntegral,csmGrow,csmGrade,csmRebate,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmUpdateTime,csmAddTime,csmLastTime,csmLastIp,csmLoginS,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmRegistIp,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus",
+	listables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmCoupon,csmIntegral,csmGrow,csmGrade,csmRebate,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmUpdateTime,csmAddTime,csmLastTime,csmLastIp,csmLoginS,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmRegistIp,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可查询")}
-	queryables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmStatus",
+	queryables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可显示在表格中")}
-	listables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmStatus",
+	listables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -2819,6 +2819,54 @@ ${after$form}
 					<td ref="csmVDrive" class="td ">
 						 
 						 	${lz:or(item$csmVDrive[i.count-1],lz:left(item.csmVDrive$,100))}
+					</td>
+				</s:else>
+			</s:if>
+			
+			<s:if test="#request.defines==null && #request.CTRL.l.csmVWork || #request.defines['csmVWork']!=null">
+				<s:if test="#request.defines['csmVWork']>0">
+					${lz:set("注释","****csmVWork关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.csmVWork))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCsmVWork",lz:indexOf(fieldName,"csmVWork")>-1)}
+				  		<s:if test="#request.atCsmVWork==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****csmVWork字段的字串格式化输出****")}
+					<td ref="csmVWork" class="td ">
+						 
+						 	${lz:or(item$csmVWork[i.count-1],lz:left(item.csmVWork$,100))}
+					</td>
+				</s:else>
+			</s:if>
+			
+			<s:if test="#request.defines==null && #request.CTRL.l.csmVOffline || #request.defines['csmVOffline']!=null">
+				<s:if test="#request.defines['csmVOffline']>0">
+					${lz:set("注释","****csmVWork关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.csmVOffline))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCsmVOffline",lz:indexOf(fieldName,"csmVOffline")>-1)}
+				  		<s:if test="#request.atCsmVOffline==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****csmVOffline字段的字串格式化输出****")}
+					<td ref="csmVOffline" class="td ">
+						 
+						 	${lz:or(item$csmVOffline[i.count-1],lz:left(item.csmVOffline$,100))}
 					</td>
 				</s:else>
 			</s:if>
