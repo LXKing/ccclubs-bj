@@ -115,7 +115,7 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
 	private @caption("邮箱认证") @column("csm_v_email")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVEmail;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("实名认证") @column("csm_v_real")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVReal;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
 	private @caption("驾驶认证") @column("csm_v_drive")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVDrive;// 0:未认证 1:已认证 2:等待认证 3:认证失败     
-	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  ") Short csmStatus;// 非空 0:禁用;1:正常;2:黑名单;     
+	private @caption("可用状态") @column("csm_status")    @note(" 1:正常 0:禁用  -1:黑名单  ") Short csmStatus;// 非空 0:禁用  -1:黑名单;1:正常;2:黑名单;     
 	private @caption("工作认证") @column("csm_v_work")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVWork;// 0:未认证 1:已认证 2:等待认证 3:认证失败
 	private @caption("线下认证") @column("csm_v_offline")    @note(" 0:未认证 1:已认证 2:等待认证 3:认证失败  ") Short csmVOffline;// 0:未认证 1:已认证 2:等待认证 3:认证失败
 	private @caption("禁用原因") @column("csm_lock_reason")    @note(" 禁用原因  ") String csmLockReason;// 禁用原因
@@ -691,7 +691,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
     }
     
 	
-	/** 可用状态 [非空]   1:正常 0:禁用     **/
+	/** 可用状态 [非空]   1:正常 0:禁用  -1:黑名单     **/
 	public CsMember csmStatus(Short csmStatus){
 		this.csmStatus = csmStatus;
 		this.setSeted(F.csmStatus);
@@ -2898,7 +2898,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
     
 	/*******************************可用状态**********************************/	
 	/**
-	* 可用状态 [非空]   1:正常 0:禁用    
+	* 可用状态 [非空]   1:正常 0:禁用  -1:黑名单    
 	**/
 	public Short getCsmStatus(){
 		return this.csmStatus;
@@ -2915,7 +2915,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
 	 	 return strValue;
 	}
 	/**
-	* 可用状态 [非空]   1:正常 0:禁用    
+	* 可用状态 [非空]   1:正常 0:禁用  -1:黑名单    
 	**/
 	public void setCsmStatus(Short csmStatus){
 		this.csmStatus = csmStatus;
@@ -3623,7 +3623,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         /** not .... */
         public M csmVOfflineCodeNot(){this.put("csmVOfflineCodeNot", "not");return this;};
         
-		/** 可用状态 [非空]   1:正常 0:禁用     **/
+		/** 可用状态 [非空]   1:正常 0:禁用  -1:黑名单     **/
 		public M csmStatus(Object csmStatus){this.put("csmStatus", csmStatus);return this;};
 	 	/** and csm_status is null */
  		public M csmStatusNull(){if(this.get("csmStatusNot")==null)this.put("csmStatusNot", "");this.put("csmStatus", null);return this;};
@@ -3896,7 +3896,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         /** 线下认证机器码 **/
         public final static @type(String.class)  String csmVOfflineCode="csmVOfflineCode";        
 		
-		/** 可用状态 [非空]   1:正常 0:禁用     **/
+		/** 可用状态 [非空]   1:正常 0:禁用  -1:黑名单     **/
 		public final static @type(Short.class)  String csmStatus="csmStatus";
 	}
 	
@@ -4038,7 +4038,7 @@ csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmStatus
         /** 身份证认证    0:未认证 1:已认证 2:等待认证 3:认证失败     **/
         public final static String csmVIdcard="csm_v_idcard";
         
-		/** 可用状态 [非空]   1:正常 0:禁用     **/
+		/** 可用状态 [非空]   1:正常 0:禁用  -1:黑名单     **/
 		public final static String csmStatus="csm_status";
 	 	public static String get(String name){
 			try {
