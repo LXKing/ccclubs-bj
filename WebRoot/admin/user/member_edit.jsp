@@ -4151,23 +4151,32 @@ $(function(){
 	
 	
 	
-	${lz:set("注释","*****************禁用原因字段的输入框代码*****************")}
-	${lz:set("注释","before$csmLockReason和after$csmLockReason变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	
+${lz:set("注释","*****************禁用原因字段的输入框代码*****************")}
+	${lz:set("注释","before$csmLockReason和after$csmLockReason变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmLockReason==true">
 	${before$csmLockReason}
 	<dl class="csmLockReason " major  ref="csmLockReason" id="csmLockReason_div" style="display:${csMember.csmStatus == 0 ? "''": "none"}">
 		<dt>禁用原因:</dt>
 		<s:if test="#request.CTRL.e.csmLockReason==true">
-		${lz:set("haveEditable",true)}
-		<dd input="text">
-		<s:if test="#request.csMember$csmLockReason!=null">${csMember$csmLockReason}</s:if><s:else>
-		 	<input type="text" class="input narrow"  maxlength="32" name="csMember.csmLockReason" id="csmLockReason"  value="${csMember.csmLockReason}"/>
+		${lz:set("haveEditable",false)}
+		<dd input="select">
+		<s:if test="#csMember$csmLockReason!=null">${csMember.csmLockReason}</s:if><s:else>
+		 	<select class="narrow" id="csmLockReason" name="csMember.csmLockReason">
+		 		<option value="违章未处理" ${csMember.csmLockReason==违章未处理?"selected":""}>违章未处理</option>
+				<option value="离职员工" ${csMember.csmLockReason==离职员工?"selected":""}>离职员工</option>
+				<option value="事故未处理" ${csMember.csmLockReason==事故未处理?"selected":""}>事故未处理</option>
+				<option value="网点关闭" ${csMember.csmLockReason==网点关闭?"selected":""}>网点关闭</option>
+				<option value="销户" ${csMember.csmLockReason==销户?"selected":""}>销户</option>
+		 	</select>
 	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请选择禁用原因</em>
 		</dd>
 		</s:if>
 		<s:else>
-		${lz:set("注释","****禁用原因字段非编辑模式或只读时的显示****")}
+		${lz:set("注释","****可用状态字段非编辑模式或只读时的显示****")}
 		<dd>
 		 	<div class="state-input narrow">
 		 		<textarea class="" style="display:none;" id="csmLockReason">${csMember.csmLockReason}</textarea>
@@ -4183,7 +4192,6 @@ $(function(){
 	</dl>
 	${after$csmLockReason}
 	</s:if>
-
 	
 		
 	${lz:set("注释","*****************机器编码字段的输入框代码*****************")}
