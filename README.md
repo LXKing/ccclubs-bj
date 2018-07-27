@@ -67,7 +67,7 @@ develop分支
 ↓
 测试分支（bj_test_stageN）
 ↓
-测试分支bug修复（bj_test_stageN_hotfix_{开发者}）
+测试hotfix分支（bj_test_stageN_hotfix_{开发者}）
 ↓
 ↓合并回
 ↓
