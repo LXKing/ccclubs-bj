@@ -6294,10 +6294,10 @@ public class DefaultAction extends BaseAction {
             }
 
             // 查询验证信息
-            Short vreal = member.getCsmVReal();
+            short vstatus = member.getVstatus();
             List<AppTip> tips = new ArrayList<>();
 
-            if (vreal != null && 0 == vreal.intValue()) {
+            if (0 == vstatus) {
                 // 用户未认证时
                 AppTip appTip = new AppTip();
                 appTip.setMessage("您还未认证，点击前往认证");
