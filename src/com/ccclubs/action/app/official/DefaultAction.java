@@ -2276,7 +2276,7 @@ public class DefaultAction extends BaseAction {
             final CsRefund csRefund = csRefundService.getCsRefund(
                     $.add("csrMember", member.getCsmId()).add("definex", "csr_status<1"));
             if (csRefund == null)
-                return returnError("102", "没有可取消的退款");
+                return returnError("102", "退款正在处理中");
 
             csRefundService.updateCsRefund$NotNull(
                     new CsRefund().csrId(csRefund.getCsrId()).csrStatus((short) 4));
