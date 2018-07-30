@@ -3130,7 +3130,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             if (type == null)
@@ -3503,7 +3503,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             Page<CsSpecialCar> page =
@@ -3596,7 +3596,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             Long specialCarId = $.getLong("specialCarId");
@@ -3652,7 +3652,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             Long specialId = $.getLong("specialId");
@@ -3693,7 +3693,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             Long specialId = $.getLong("specialId");
@@ -4147,7 +4147,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("102", "用户无效");
+                return returnError("102", "会员不是企业账户");
             }
 
             CsOrder order = csOrderService.getCsOrderById(unitOrder.getCsuoOrder());
@@ -4193,7 +4193,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("102", "用户无效");
+                return returnError("102", "会员不是企业账户");
             }
 
             final CsOrder order = csOrderService.getCsOrderById(unitOrder.getCsuoOrder());
@@ -5702,7 +5702,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             Long specialId = $.getLong("specialId");
@@ -5749,7 +5749,7 @@ public class DefaultAction extends BaseAction {
             CsUnitPerson unitPerson =
                     CsUnitPerson.Get($.add(CsUnitPerson.F.csupMember, member.getCsmId()));
             if (unitPerson == null) {
-                return returnError("101", "用户无效");
+                return returnError("101", "会员不是企业账户");
             }
 
             final Long specialId = $.getLong("specialId");
