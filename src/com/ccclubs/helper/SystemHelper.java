@@ -549,6 +549,18 @@ public class SystemHelper {
 		String mobileRegex = "^(1[3|4|5|7|8|9][0-9])\\d{8}$";
 		return Pattern.matches(mobileRegex, mobile);
 	}
+	
+	/**
+	 * 是否是身份证号
+	 * @param idCard
+	 * @return
+	 */
+	public static Boolean isIdCardNo(String idCard) {
+        if(StringUtils.isEmpty(idCard))
+            return false;
+        String reg = "(^\\d{15}$)|(^\\d{17}(\\d|X|x)$)";
+        return Pattern.matches(reg, idCard);
+    }
 
 	/**
 	 * 判断字符串是否为空

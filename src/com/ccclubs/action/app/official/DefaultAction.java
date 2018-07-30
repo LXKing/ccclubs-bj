@@ -843,6 +843,8 @@ public class DefaultAction extends BaseAction {
             }
             if ($.empty(certifyNum)) {
                 return returnError("101", "身份证号码未填写，请填写。");
+            }else if(!SystemHelper.isIdCardNo(certifyNum)) {
+                return returnError("101", "身份证号码格式不正确。");
             }
             if ($.empty(onCertifyImage)) {
                 return returnError("101", "身份证人像面图片路径未上传，请上传图片。");
