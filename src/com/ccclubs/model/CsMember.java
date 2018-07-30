@@ -3278,6 +3278,10 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
      * 实名认证 0:未认证 1:已认证 2:等待认证 3:认证失败
      **/
     public Short getCsmVReal() {
+        return this.csmVReal;
+    }
+    
+    public Short getVReal() {
         if (this.csmVReal == null)
             return 0;
         return this.csmVReal;
@@ -3312,6 +3316,10 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
      * 驾驶认证 0:未认证 1:已认证 2:等待认证 3:认证失败
      **/
     public Short getCsmVDrive() {
+        return this.csmVDrive;
+    }
+    
+    public Short getVDrive() {
         if (this.csmVDrive == null)
             return 0;
         return this.csmVDrive;
@@ -3374,6 +3382,10 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
      * 线下认证 0:未认证 1:已认证 2:等待认证 3:认证失败
      **/
     public Short getCsmVOffline() {
+        return this.csmVOffline;
+    }
+    
+    public Short getVOffline() {
         if (this.csmVOffline == null)
             return 0;
         return this.csmVOffline;
@@ -3409,10 +3421,15 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
      * 工作认证 0:未认证 1:已认证 2:等待认证 3:认证失败
      **/
     public Short getCsmVWork() {
+        return this.csmVWork;
+    }
+    
+    public Short getVWork() {
         if (this.csmVWork == null)
             return 0;
         return this.csmVWork;
     }
+    
 
     /**
      * 获取工作认证格式化(toString)
@@ -3473,20 +3490,20 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
     }
 
     public short getVstatus() {
-        if (this.getCsmVDrive() == MemberRecStatus.REC_FAIL
-                || this.getCsmVReal() == MemberRecStatus.REC_FAIL
-                || this.getCsmVWork() == MemberRecStatus.REC_FAIL
-                || this.getCsmVOffline() == MemberRecStatus.REC_FAIL) {
+        if (this.getVDrive() == MemberRecStatus.REC_FAIL
+                || this.getVReal() == MemberRecStatus.REC_FAIL
+                || this.getVWork() == MemberRecStatus.REC_FAIL
+                || this.getVOffline() == MemberRecStatus.REC_FAIL) {
             return MemberRecStatus.REC_FAIL;// 四项认证存在认证失败
-        } else if (this.getCsmVDrive() == MemberRecStatus.REC_PASS
-                && this.getCsmVReal() == MemberRecStatus.REC_PASS
-                && this.getCsmVWork() == MemberRecStatus.REC_PASS
-                && this.getCsmVOffline() == MemberRecStatus.REC_PASS) {
+        } else if (this.getVDrive() == MemberRecStatus.REC_PASS
+                && this.getVReal() == MemberRecStatus.REC_PASS
+                && this.getVWork() == MemberRecStatus.REC_PASS
+                && this.getVOffline() == MemberRecStatus.REC_PASS) {
             return MemberRecStatus.REC_PASS;// 四项认证全部通过
-        } else if (this.getCsmVDrive() == MemberRecStatus.NEVER_REC
-                || this.getCsmVReal() == MemberRecStatus.NEVER_REC
-                || this.getCsmVWork() == MemberRecStatus.NEVER_REC
-                || this.getCsmVOffline() == MemberRecStatus.NEVER_REC) {
+        } else if (this.getVDrive() == MemberRecStatus.NEVER_REC
+                || this.getVReal() == MemberRecStatus.NEVER_REC
+                || this.getVWork() == MemberRecStatus.NEVER_REC
+                || this.getVOffline() == MemberRecStatus.NEVER_REC) {
             return MemberRecStatus.NEVER_REC;// 四项认证存在未认证
         } else {
             return MemberRecStatus.WAIT_CHECK;// 等待认证

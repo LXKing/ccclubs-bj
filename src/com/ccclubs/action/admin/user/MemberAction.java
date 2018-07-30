@@ -1140,8 +1140,8 @@ public class MemberAction {
                         csMember.setCsmVDrive($.getShort("csmVDrive"));
                         csMember.setCsmVReal($.getShort("csmVReal"));
                         csMember.csmUpdateTime(new Date());
-                        if (csMember.getCsmVDrive().shortValue() == 1
-                                && csMember.getCsmVReal().shortValue() == 1) {
+                        if (csMember.getVDrive().shortValue() == 1
+                                && csMember.getVReal().shortValue() == 1) {
                             com.ccclubs.service.common.ICommonMoneyService commonMoneyService =
                                     $.getBean("commonMoneyService");
                             com.ccclubs.service.admin.ICsRecordService csRecordService =
@@ -1214,8 +1214,8 @@ public class MemberAction {
                         throw new RuntimeException("表单方式审核会员出错，未发现会员ID");
                     
                     //两项认证成功，送积分
-                    if (csMember.getCsmVDrive().shortValue() == 1
-                            && csMember.getCsmVReal().shortValue() == 1) {
+                    if (csMember.getVDrive().shortValue() == 1
+                            && csMember.getVReal().shortValue() == 1) {
                         com.ccclubs.service.common.ICommonMoneyService commonMoneyService =
                                 $.getBean("commonMoneyService");
                         if (com.ccclubs.model.CsIntegralRecord.where()
@@ -1232,7 +1232,7 @@ public class MemberAction {
 
                     Short from = $.or(oldCsMember.getCsmFrom(), (short) 5);
 
-                    if (csMember.getCsmVReal() == 1 && csMember.getCsmVDrive() == 1 && from == 5
+                    if (csMember.getVReal() == 1 && csMember.getVDrive() == 1 && from == 5
                             && StringUtils.isNotEmpty(password)) {
                         csMember.setCsmPassword($.md5(password));
                     }
@@ -1240,12 +1240,12 @@ public class MemberAction {
 
                     // 只有审核通过才发送短信
                     short vprogress = 0;// 初始化原认证进度
-                    if (oldCsMember.getCsmVReal() == 1 && oldCsMember.getCsmVDrive() == 1
-                            && oldCsMember.getCsmVWork() == 1
-                            && oldCsMember.getCsmVOffline() == 1) {
+                    if (oldCsMember.getVReal() == 1 && oldCsMember.getVDrive() == 1
+                            && oldCsMember.getVWork() == 1
+                            && oldCsMember.getVOffline() == 1) {
                         vprogress = 4;// 四项认证完毕
-                    } else if (oldCsMember.getCsmVReal() == 1 && oldCsMember.getCsmVDrive() == 1
-                            && oldCsMember.getCsmVWork() == 1) {
+                    } else if (oldCsMember.getVReal() == 1 && oldCsMember.getVDrive() == 1
+                            && oldCsMember.getVWork() == 1) {
                         vprogress = 3;// 三项认证完毕
                     }
                     // 满足认证进度的发送短信
@@ -1254,15 +1254,15 @@ public class MemberAction {
                                 $.add(CsUnitPerson.F.csupMember, oldCsMember.getCsmId()));
                         if (csUnitPerson != null) {
                             String append = StringUtils.isNotEmpty(password)? "您的密码为："+password+"。" : null;
-                            if (csMember.getCsmVReal() == 1 && csMember.getCsmVDrive() == 1
-                                    && csMember.getCsmVWork() == 1
-                                    && csMember.getCsmVOffline() == 1) {
+                            if (csMember.getVReal() == 1 && csMember.getVDrive() == 1
+                                    && csMember.getVWork() == 1
+                                    && csMember.getVOffline() == 1) {
                                 UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
                                         "REC_AUTH_COMPLETE_FOUR", oldCsMember.getCsmMobile$(),
                                         null, SMSType.通知类短信,
                                         Collections.emptyMap(), append);
-                            }else if (csMember.getCsmVReal() == 1 && csMember.getCsmVDrive() == 1
-                                     && csMember.getCsmVWork() == 1 && vprogress < 3) {
+                            }else if (csMember.getVReal() == 1 && csMember.getVDrive() == 1
+                                     && csMember.getVWork() == 1 && vprogress < 3) {
                                  UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
                                          "REC_AUTH_COMPLETE_THREE", oldCsMember.getCsmMobile$(),
                                          null, SMSType.通知类短信,
