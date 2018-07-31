@@ -176,7 +176,7 @@ window.$on("readyStart",function(){
 			<dd input="image">
 				<div class="state-input wide">
 					${lz:set("certifyImageLen",(lz:size(csMember.$csmInfo.csmiCertifyImage)))}
-					<s:if test="#request.certifyImageLen>0">
+					<s:if test="#request.certifyImageLen1>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCertifyImage}"/>
 					</s:if>
 					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>

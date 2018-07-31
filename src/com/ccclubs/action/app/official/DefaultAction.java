@@ -856,10 +856,11 @@ public class DefaultAction extends BaseAction {
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    CsMemberInfo csMemberInfo = updateMemberInfoCertifyImage(member, certifyImage,
+                    
+                    csMemberInfoService.updateMemberInfoCertifyImage(member, certifyImage,
                             certifyNum, realName, onCertifyImage);
+                    
                     member.setCsmName(realName);
-                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, (short) 2, null));
                     return null;
@@ -894,8 +895,8 @@ public class DefaultAction extends BaseAction {
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    CsMemberInfo csMemberInfo = updateMemberInfoDriverImage(member, driverImage);
-                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    csMemberInfoService.updateMemberInfoDriverImage(member, driverImage);
+                    
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, (short) 2, null, null));
                     return null;
@@ -938,9 +939,9 @@ public class DefaultAction extends BaseAction {
                 @Override
                 public <T> T execute(Object... arg0) {
 
-                    CsMemberInfo csMemberInfo = updateMemberInfoWorkImage(member, proofOfEmployment,
+                    csMemberInfoService.updateMemberInfoWorkImage(member, proofOfEmployment,
                             company, department);
-                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, null, (short) 2));
 
@@ -997,9 +998,9 @@ public class DefaultAction extends BaseAction {
                 public <T> T execute(Object... arg0) {
                     // TODO Auto-generated method stub
                     if ($.empty(certifyImg)) {
-                        CsMemberInfo csMemberInfo = updateMemberInfo(member, certifyImg, certifyNum,
+                        csMemberInfoService.updateMemberInfo(member, certifyImg, certifyNum,
                                 driverImage, onCertifyImg);
-                        csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                        
                         member.setCsmName(realName);
                         csMemberService.updateCsMember$NotNull(
                                 updateAutoState(member, (short) 2, (short) 2));
