@@ -154,6 +154,7 @@ public class BaseAction {
      * @param driverImage
      * @param onCertifyImg
      */
+    @Deprecated
     public CsMemberInfo updateMemberInfo(CsMember member, String certifyImg, String certifyNum,
             String driverImage, String onCertifyImg) {
         CsMemberInfo csMemberInfo =
@@ -165,7 +166,8 @@ public class BaseAction {
         csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
         return csMemberInfo;
     }
-
+    
+    @Deprecated
     public CsMemberInfo updateMemberInfoCertifyImage(CsMember member, String certifyImg,
             String certifyNum, String realName, String onCertifyImg) {
         CsMemberInfo csMemberInfo =
@@ -178,6 +180,7 @@ public class BaseAction {
         return csMemberInfo;
     }
 
+    @Deprecated
     public CsMemberInfo updateMemberInfoDriverImage(CsMember member, String driverImage) {
         CsMemberInfo csMemberInfo =
                 CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
@@ -186,6 +189,7 @@ public class BaseAction {
         return csMemberInfo;
     }
 
+    @Deprecated
     public CsMemberInfo updateMemberInfoWorkImage(CsMember member, String proofOfEmployment,
             String company, String department) {
         CsMemberInfo csMemberInfo =
@@ -229,5 +233,5 @@ public class BaseAction {
         csUnitPerson.setCsupStatus((short) 1);
         return csUnitPerson;
     }
-
+    
 }

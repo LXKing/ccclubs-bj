@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.lazy3q.web.util.Page;
 import com.lazy3q.util.Function;
+import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
 
 /**
@@ -104,5 +105,54 @@ public interface ICsMemberInfoService
 	 * @param function
 	 */
 	public <T> T executeTransaction(Function function);
+	
+	/**
+	 * 创建初始化的会员详细信息
+	 * @param member
+	 * @return
+	 */
+	public CsMemberInfo createMemberInfoIfAbsent(CsMember member);
+	
+	/**
+	 * 更新身份证认证信息
+	 * @param member
+	 * @param certifyImg
+	 * @param certifyNum
+	 * @param realName
+	 * @param onCertifyImg
+	 * @return
+	 */
+	public CsMemberInfo updateMemberInfoCertifyImage(CsMember member, String certifyImg,
+            String certifyNum, String realName, String onCertifyImg);
+	/**
+	 * 更新驾照信息
+	 * @param member
+	 * @param driverImage
+	 * @return
+	 */
+	public CsMemberInfo updateMemberInfoDriverImage(CsMember member, String driverImage);
+	
+	/**
+	 * 更新工作证信息
+	 * @param member
+	 * @param proofOfEmployment
+	 * @param company
+	 * @param department
+	 * @return
+	 */
+	public CsMemberInfo updateMemberInfoWorkImage(CsMember member, String proofOfEmployment,
+	            String company, String department);
+	
+	/**
+     * 实名认证
+     * @param member
+     * @param certifyImg
+     * @param certifyNum
+     * @param driverImage
+     * @param onCertifyImg
+     * @return
+     */
+    public CsMemberInfo updateMemberInfo(CsMember member, String certifyImg, String certifyNum,
+            String driverImage, String onCertifyImg);
 
 }
