@@ -230,7 +230,7 @@ window.$on("readyStart",function(){
 	<script>
 	$(function(){
 		
-		$("${lz:js(insertHtml)}").insertAfter("dl[ref='csmInfo']");
+		
 		/*$("#memberForm").submit(function(){
 			if($("#csmVReal").val()=="1" && $("#csmVDrive").val()=="1" && $("#csmEvcard").val()==""){
 				Alert("认证通过的会员需要绑定会员卡");
@@ -295,6 +295,7 @@ window.$on("readyStart",function(){
 <script>
 $(function(){	
 	showTips("${tips.value}");
+	$("${lz:js(insertHtml)}").insertAfter("dl[ref='csmInfo']");
 });
 window["lzFlashUrl"]="${ lz:config("lz.flash.url")==null ? basePath : ""}${ lz:config("lz.flash.url")==null ? "admin/flash/" : lz:config("lz.flash.url")}";
 window["uploadUrl"]="${ lz:config("upload.url")==null ? basePath : ""}${ lz:config("upload.url")==null ? "upload.do" :  lz:config("upload.url")}";
@@ -4119,14 +4120,16 @@ $(function(){
 		<s:if test="#request.CTRL.e.payMember==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">${#request.payMembers }
-		<s:if test="#request.payMembers!=null">
-		 	<select class="narrow" id="payMember" name="payMember">
-		 		<option value="">请选择</option>
-				<s:iterator value="#request.payMembers" id="item" status="csmsPayer">
-			 		<option value="${item.csmId}" ${#request.payMember==#item.csmId ? "selected":"" }>${item.csmName}</option>
-				</s:iterator>
-		 	</select>
-	 	</s:if>
+		
+	 	
+	 	
+	 	<s:if test="#request.payMembers!=null">
+		 	<input title="支付账户" class="combox narrow" action="${basePath}${proname}/user/member_query.do?value={param}&csuiHost={csupHost}" 
+		 	type="text" id="payMember" name="payMember" text="${get:CsMember(payMember).csmName}" value="${payMember}" />
+		 			<a class="lookup" href="javascript:void(0);" 
+		 			onclick="if($.trim($('#payMember').val())==''){return;};window.href('${basePath}${proname}/user/member_details.do?key='+$('#payMember').val(),{ctrl:{editable:false}})"></a>
+	 	
+		</s:if>
 	 	 
 	 	 <b>*</b>
 	 	 <em>请选择会员支付账户</em>
