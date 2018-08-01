@@ -833,6 +833,9 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
+            if(member.getVReal()==1) {
+                return returnError("100", "已认证通过，请勿重复认证");
+            }
 
             final String certifyImage = $.getString("certifyImage");// 身份证正面（国徽面）
             final String certifyNum = $.getString("certifyNum");// 身份证号码
@@ -886,6 +889,9 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
+            if(member.getVDrive()==1) {
+                return returnError("100", "已认证通过，请勿重复认证");
+            }
 
             final String driverImage = $.getString("driverImage");
             if ($.empty(driverImage)) {
@@ -920,6 +926,9 @@ public class DefaultAction extends BaseAction {
             final CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
                 return returnError("100", "登录授权无效");
+            }
+            if(member.getVWork()==1) {
+                return returnError("100", "已认证通过，请勿重复认证");
             }
 
             final String company = $.getString("company");// 企业
