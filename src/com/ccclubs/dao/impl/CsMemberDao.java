@@ -111,7 +111,12 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		for(int i=0 ;i<list.size();i++) {
 		    CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(list.get(i).getCsmInfo());
 		    if(null != csMemberInfo) {
-		        list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+		        if((!list.get(i).getCsmRemark().contains(csMemberInfo.getCsmiCompany$()))
+                        ||(!list.get(i).getCsmRemark().contains(csMemberInfo.getCsmiDepartment$()))) {
+		            list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"\n公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+                }//如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+                
+		        
 		    }
 		}
 		
@@ -180,7 +185,12 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 	        for(int i=0 ;i<list.size();i++) {
 	            CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(list.get(i).getCsmInfo());
 	            if(null != csMemberInfo) {
-	                list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+	                if((!list.get(i).getCsmRemark().contains(csMemberInfo.getCsmiCompany$()))
+	                        ||(!list.get(i).getCsmRemark().contains(csMemberInfo.getCsmiDepartment$()))) {
+	                    list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"\n公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+	                }//如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+	                
+	            
 	            }
 	        }
 		//返回一个包装分页对象
@@ -251,7 +261,11 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		    MemCache.setValue(CsMember.class,id, csMember.getKeyValue());
 		    CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(csMember.getCsmInfo());
             if(null != csMemberInfo) {
-                csMember.setCsmRemark(csMember.getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+                if((!csMember.getCsmRemark().contains(csMemberInfo.getCsmiCompany$()))
+                        ||(!csMember.getCsmRemark().contains(csMemberInfo.getCsmiDepartment$()))) {
+                    csMember.setCsmRemark(csMember.getCsmRemark()+"/n公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment$());
+                }//如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+                
             }
 		}
 			
@@ -271,7 +285,11 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		if(csMember!=null) {
             CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(csMember.getCsmInfo());
             if(null != csMemberInfo) {
-                csMember.setCsmRemark(csMember.getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+                if((!csMember.getCsmRemark().contains(csMemberInfo.getCsmiCompany$()))
+                        ||(!csMember.getCsmRemark().contains(csMemberInfo.getCsmiDepartment$()))) {
+                    csMember.setCsmRemark(csMember.getCsmRemark()+"/n公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment$());
+                }//如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+                
             }
         }
 		return   csMember;

@@ -341,8 +341,54 @@ public class MemberAction {
                     }
                 }else {
                     CsUnitPerson nu = new CsUnitPerson();
-                    $.setRequest("unitPerson", nu);
                     List<CsMember> payMembers = new ArrayList<CsMember>();
+                    try {
+                        CsMemberInfo csmi = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, csMember.getCsmId()));
+                        if(null != csmi) {
+                            CsUnitInfo csui = null;
+                            if(StringUtils.isNotBlank(csmi.getCsmiCompany())) {
+                                Map<String, Object> map = $.Map();
+                                map.put("definex", "csui_name='"+csmi.getCsmiCompany()+"'");
+                                csui = CsUnitInfo.getCsUnitInfo(map);
+                            }
+                            if(null != csui) {
+                                nu = CsUnitPerson.getCsUnitPerson($.add(CsUnitPerson.F.csupInfo, csui.getCsuiId()));
+                                if(null == nu) {
+                                    nu = new CsUnitPerson();
+                                }else {
+                                    payMembers = nu.get$csupInfo().get$csuiMember();
+                                    if(null == payMembers) {
+                                        payMembers = new ArrayList<CsMember>();
+                                    }else {
+                                         String cm = csui.getCsuiMember();
+                                         if(StringUtils.isNotBlank(cm)) {
+                                             try {
+                                                String[] cma = cm.split(",");
+                                                 if(null != cma) {
+                                                     for(String a: cma) {
+                                                         if(StringUtils.isBlank(a)) {
+                                                             continue;
+                                                         }
+                                                         long ai = Long.parseLong(a.trim());
+                                                         if(ai > 0) {
+                                                             $.setRequest("payMember", a.trim());
+                                                             break;
+                                                         }
+                                                     }
+                                                 }
+                                            } catch (Exception e) {
+                                            }
+                                         }
+                                            
+                                    }
+                                }
+                            }
+                        }
+                        
+                    } catch (Exception e) {
+                         
+                    }
+                    $.setRequest("unitPerson", nu);
                     $.setRequest("payMembers", payMembers);
                     
                 }
