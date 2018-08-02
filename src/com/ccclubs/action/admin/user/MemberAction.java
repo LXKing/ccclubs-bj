@@ -345,7 +345,12 @@ public class MemberAction {
                     try {
                         CsMemberInfo csmi = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, csMember.getCsmId()));
                         if(null != csmi) {
-                            CsUnitInfo csui = CsUnitInfo.getCsUnitInfo($.add(CsUnitInfo.F.csuiName, csmi.getCsmiCompany()));
+                            CsUnitInfo csui = null;
+                            if(StringUtils.isNotBlank(csmi.getCsmiCompany())) {
+                                Map<String, Object> map = $.Map();
+                                map.put("definex", "csui_name='"+csmi.getCsmiCompany()+"'");
+                                csui = CsUnitInfo.getCsUnitInfo(map);
+                            }
                             if(null != csui) {
                                 nu = CsUnitPerson.getCsUnitPerson($.add(CsUnitPerson.F.csupInfo, csui.getCsuiId()));
                                 if(null == nu) {
