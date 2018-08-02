@@ -179,7 +179,7 @@ window.$on("readyStart",function(){
 					<s:if test="#request.certifyImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCertifyImage}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传身份证人像面照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
@@ -191,7 +191,7 @@ window.$on("readyStart",function(){
 					<s:if test="#request.onCertifyImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiOnCertifyImage}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传身份证国徽面照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
@@ -221,7 +221,7 @@ window.$on("readyStart",function(){
 					<s:if test="#request.employmentImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiProofOfEmployment}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传工作证照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
