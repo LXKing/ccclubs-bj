@@ -1212,112 +1212,32 @@ public class MemberAction {
                 public <T> T execute(Object... arg0) {
                     if (csMember.getCsmId() == null)
                         throw new RuntimeException("表单方式审核会员出错，未发现会员ID");
-                    
-                    //两项认证成功，送积分
-                    if (csMember.getVDrive().shortValue() == 1
-                            && csMember.getVReal().shortValue() == 1) {
-                        com.ccclubs.service.common.ICommonMoneyService commonMoneyService =
-                                $.getBean("commonMoneyService");
-                        if (com.ccclubs.model.CsIntegralRecord.where()
-                                .csrMember(csMember.getCsmId()).csrType(IntegralType.注册送积分.name())
-                                .get() == null)
-                            commonMoneyService.updateIntegralByRule(csMember.getCsmId(), 1d,
-                                    IntegralType.注册送积分, "资料审核通过得积分", null);
-                    } 
-                    // 审核通过发送短信
-                    CsMember oldCsMember = CsMember.get(csMember.getCsmId());
-                    String password = StringUtils.isEmpty(oldCsMember.getCsmPassword()) ? $.zerofill($.rand(999999), 6) : null;// 自动生成6位随机密码
                     String remark = csMember.getCsmRemark();
-                    csMember.setCsmRemark("");
+                    CsMember oldCsMember = CsMember.get(csMember.getCsmId());
 
-                    Short from = $.or(oldCsMember.getCsmFrom(), (short) 5);
-
-                    if (csMember.getVReal() == 1 && csMember.getVDrive() == 1 && from == 5
-                            && StringUtils.isNotEmpty(password)) {
-                        csMember.setCsmPassword($.md5(password));
-                    }
-                    csMember.update();
-
-                    // 只有审核通过才发送短信
-                    short vprogress = 0;// 初始化原认证进度
-                    if (oldCsMember.getVReal() == 1 && oldCsMember.getVDrive() == 1
-                            && oldCsMember.getVWork() == 1
-                            && oldCsMember.getVOffline() == 1) {
-                        vprogress = 4;// 四项认证完毕
-                    } else if (oldCsMember.getVReal() == 1 && oldCsMember.getVDrive() == 1
-                            && oldCsMember.getVWork() == 1) {
-                        vprogress = 3;// 三项认证完毕
-                    }
-                    // 满足认证进度的发送短信
-                    if (vprogress < 4 && !$.empty(oldCsMember.getCsmMobile()) && from == 5) {
-                        CsUnitPerson csUnitPerson = CsUnitPerson.getCsUnitPerson(
-                                $.add(CsUnitPerson.F.csupMember, oldCsMember.getCsmId()));
-                        if (csUnitPerson != null) {
-                            String append = StringUtils.isNotEmpty(password)? "您的密码为："+password+"。" : null;
-                            if (csMember.getVReal() == 1 && csMember.getVDrive() == 1
-                                    && csMember.getVWork() == 1
-                                    && csMember.getVOffline() == 1) {
-                                UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
-                                        "REC_AUTH_COMPLETE_FOUR", oldCsMember.getCsmMobile$(),
-                                        null, SMSType.通知类短信,
-                                        Collections.emptyMap(), append);
-                            }else if (csMember.getVReal() == 1 && csMember.getVDrive() == 1
-                                     && csMember.getVWork() == 1 && vprogress < 3) {
-                                 UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
-                                         "REC_AUTH_COMPLETE_THREE", oldCsMember.getCsmMobile$(),
-                                         null, SMSType.通知类短信,
-                                         Collections.emptyMap(), append);
-                             }
-                        }
-                    }
-
+                    /**
+                     * 会员审核流程：
+                     * 1、用户认证通过，赠送积分；2、认证进度提醒短信；
+                     * 3、身份证、驾驶证、工作证认证状态变更失败发送短信提示；
+                     * 4、工作证认证成功；绑定企业和部门、创建企业用户记录；
+                     */
+                    csMemberService.verify(oldCsMember, csMember);
+                    
+                    //会员支付账号变更
                     String payMember = $.getString("payMember");
                     if (!$.empty(payMember)) {
                         CsMemberShip.where().csmsTargeter(csMember.getCsmId()).set()
                                 .csmsPayer(payMember).update();
                     }
+                    //会员企业部门信息变更
                     Long unitInfo = $.getLong("unitInfo");
                     Long unitGroup = $.getLong("unitGroup");
-
                     if (unitInfo != null && unitGroup != null) {
                         CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
                                 .csupInfo(unitInfo).csupGroup(unitGroup).update();
                     }
                     
-                    
-                    if(csMember.getCsmVWork()==1) {
-                        //线下认证通过的判断是否需要CsUnitPerson关联
-                        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
-                        if(null==csUnitPersonForInsert) {
-                            CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(csMember.getCsmId()).get();
-                            if(null!=csMemberInfo) {
-                                CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
-                                if(null!=csUnitInfoForInsert) {
-                                    CsUnitGroup csUnitGroupForInsert=
-                                            CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
-                                    
-                                    if(null!=csUnitGroupForInsert) {
-                                        CsUnitPerson csUnitPerson=new CsUnitPerson();
-                                        csUnitPerson.setCsupAddTime(new Date());
-                                        csUnitPerson.setCsupFlag(null);
-                                        csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
-                                        csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
-                                        csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
-                                        csUnitPerson.setCsupMember(csMember.getCsmId());
-                                        csUnitPerson.setCsupMemo(null);
-                                        csUnitPerson.setCsupName(csMember.getCsmName());
-                                        csUnitPerson.setCsupRemark(null);
-                                        csUnitPerson.setCsupStatus((short)1);
-                                        csUnitPerson.setCsupUpdateTime(new Date());
-                                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-                                    }
-                                }
-                                
-                                
-                            }
-                        }
-                    }
-
+                    //日志输出
                     LoggerHelper.writeLog(CsMember.class, "update",
                             "审核了[会员帐号][" + oldCsMember.getCsmMobile() + "]"
                                     + ($.empty(payMember) ? "" : "修改支付会员"),
