@@ -179,7 +179,7 @@ window.$on("readyStart",function(){
 					<s:if test="#request.certifyImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCertifyImage}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传身份证人像面照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
@@ -191,7 +191,7 @@ window.$on("readyStart",function(){
 					<s:if test="#request.onCertifyImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiOnCertifyImage}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传身份证国徽面照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
@@ -202,14 +202,14 @@ window.$on("readyStart",function(){
 			</dd>
 		</dl>
 		<dl style="width:98%;">
-			<dt>驾证图片:</dt>
+			<dt>驾驶证图片:</dt>
 			<dd input="image">
 				<div class="state-input wide">
 					${lz:set("driverImageLen",(lz:size(csMember.$csmInfo.csmiDriverImage)))}
 					<s:if test="#request.driverImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiDriverImage}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传驾驶证照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
@@ -221,7 +221,7 @@ window.$on("readyStart",function(){
 					<s:if test="#request.employmentImageLen>0">
 						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiProofOfEmployment}"/>
 					</s:if>
-					<s:else><center><font color="red"><h4>未上传驾证照片，建议审核不通过</h4></font></center></s:else>
+					<s:else><center><font color="red"><h4>未上传工作证照片，建议审核不通过</h4></font></center></s:else>
 				</div>
 			</dd>
 		</dl>
@@ -230,7 +230,7 @@ window.$on("readyStart",function(){
 	<script>
 	$(function(){
 		
-		$("${lz:js(insertHtml)}").insertAfter("dl[ref='csmInfo']");
+		
 		/*$("#memberForm").submit(function(){
 			if($("#csmVReal").val()=="1" && $("#csmVDrive").val()=="1" && $("#csmEvcard").val()==""){
 				Alert("认证通过的会员需要绑定会员卡");
@@ -295,6 +295,7 @@ window.$on("readyStart",function(){
 <script>
 $(function(){	
 	showTips("${tips.value}");
+	$("${lz:js(insertHtml)}").insertAfter("dl[ref='csmInfo']");
 });
 window["lzFlashUrl"]="${ lz:config("lz.flash.url")==null ? basePath : ""}${ lz:config("lz.flash.url")==null ? "admin/flash/" : lz:config("lz.flash.url")}";
 window["uploadUrl"]="${ lz:config("upload.url")==null ? basePath : ""}${ lz:config("upload.url")==null ? "upload.do" :  lz:config("upload.url")}";
@@ -4119,14 +4120,16 @@ $(function(){
 		<s:if test="#request.CTRL.e.payMember==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">${#request.payMembers }
-		<s:if test="#request.payMembers!=null">
-		 	<select class="narrow" id="payMember" name="payMember">
-		 		<option value="">请选择</option>
-				<s:iterator value="#request.payMembers" id="item" status="csmsPayer">
-			 		<option value="${item.csmId}" ${#request.payMember==#item.csmId ? "selected":"" }>${item.csmName}</option>
-				</s:iterator>
-		 	</select>
-	 	</s:if>
+		
+	 	
+	 	
+	 	<s:if test="#request.payMembers!=null">
+		 	<input title="支付账户" class="combox narrow" action="${basePath}${proname}/user/member_query.do?value={param}&csuiHost={csupHost}" 
+		 	type="text" id="payMember" name="payMember" text="${get:CsMember(payMember).csmName}" value="${payMember}" />
+		 			<a class="lookup" href="javascript:void(0);" 
+		 			onclick="if($.trim($('#payMember').val())==''){return;};window.href('${basePath}${proname}/user/member_details.do?key='+$('#payMember').val(),{ctrl:{editable:false}})"></a>
+	 	
+		</s:if>
 	 	 
 	 	 <b>*</b>
 	 	 <em>请选择会员支付账户</em>

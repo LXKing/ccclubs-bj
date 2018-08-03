@@ -1,11 +1,13 @@
 package com.ccclubs.service.admin.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import com.lazy3q.util.Function;
-
+import com.ccclubs.dao.ICsMemberDao;
 import com.ccclubs.dao.ICsMemberInfoDao;
 import com.lazy3q.web.util.Page;
+import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.service.admin.ICsMemberInfoService;
 import com.lazy3q.web.helper.$;
@@ -18,8 +20,9 @@ public class CsMemberInfoService implements ICsMemberInfoService
 {
 	ICsMemberInfoDao csMemberInfoDao;
 	
-
-	/**
+	ICsMemberDao csMemberDao;
+	
+    /**
 	 * 获取所有会员信息
 	 * @return
 	 */
@@ -165,4 +168,95 @@ public class CsMemberInfoService implements ICsMemberInfoService
 	{
 		this.csMemberInfoDao = csMemberInfoDao;
 	}
+
+    public ICsMemberDao getCsMemberDao() {
+        return csMemberDao;
+    }
+
+    public void setCsMemberDao(ICsMemberDao csMemberDao) {
+        this.csMemberDao = csMemberDao;
+    }
+
+    @Override
+    public CsMemberInfo updateMemberInfoCertifyImage(CsMember member, String certifyImg,
+            String certifyNum, String realName, String onCertifyImg) {
+        CsMemberInfo csMemberInfo = createMemberInfoIfAbsent(member);
+        //设置身份证信息
+        csMemberInfo.setCsmiCertifyType((short) 1);
+        csMemberInfo.setCsmiCertifyNum(certifyNum);
+        csMemberInfo.setCsmiCertifyImage(certifyImg);
+        csMemberInfo.setCsmiName(realName);
+        csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
+        
+        csMemberInfoDao.updateCsMemberInfo$NotNull(csMemberInfo);
+        return csMemberInfo;
+    }
+
+    @Override
+    public CsMemberInfo updateMemberInfoDriverImage(CsMember member, String driverImage) {
+        CsMemberInfo csMemberInfo = createMemberInfoIfAbsent(member);
+        //设置驾照信息
+        csMemberInfo.setCsmiDriverImage(driverImage);
+        csMemberInfoDao.updateCsMemberInfo$NotNull(csMemberInfo);
+        return csMemberInfo;
+    }
+
+    @Override
+    public CsMemberInfo updateMemberInfoWorkImage(CsMember member, String proofOfEmployment,
+            String company, String department) {
+        CsMemberInfo csMemberInfo = createMemberInfoIfAbsent(member);
+        //设置工作证信息
+        csMemberInfo.setCsmiProofOfEmployment(proofOfEmployment);
+        csMemberInfo.setCsmiCompany(company);
+        csMemberInfo.setCsmiDepartment(department);
+
+        csMemberInfoDao.updateCsMemberInfo$NotNull(csMemberInfo);
+        return csMemberInfo;
+    }
+    
+    @Override
+    public CsMemberInfo updateMemberInfo(CsMember member, String certifyImg, String certifyNum,
+            String driverImage, String onCertifyImg) {
+        CsMemberInfo csMemberInfo = createMemberInfoIfAbsent(member);
+        
+        csMemberInfo.setCsmiCertifyType((short) 1);
+        csMemberInfo.setCsmiCertifyNum(certifyNum);
+        csMemberInfo.setCsmiCertifyImage(certifyImg);
+        csMemberInfo.setCsmiDriverImage(driverImage);
+        csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
+        
+        csMemberInfoDao.updateCsMemberInfo$NotNull(csMemberInfo);
+        return csMemberInfo;
+    }
+    
+    public CsMemberInfo createMemberInfoIfAbsent(CsMember member) {
+        //查会员详细信息
+        CsMemberInfo csMemberInfo =
+                CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, member.getCsmId()));
+        
+        if(csMemberInfo == null) {
+            // 保存会员信息相关信息到cs_member_info
+            csMemberInfo = initMemberInfo(new CsMemberInfo(),
+                    null != member.getCsmHost() ? member.getCsmHost() : 1, null, member, (short)0);
+            csMemberInfo = this.saveCsMemberInfo(csMemberInfo);
+            
+            // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
+            member.setCsmInfo(csMemberInfo.getCsmiId());
+            csMemberDao.updateCsMember$NotNull(member);
+        }
+        
+        return csMemberInfo;
+    }
+    
+    public CsMemberInfo initMemberInfo(CsMemberInfo csMemberInfo, Long host, String realName,
+            CsMember csMember, short sex) {
+        csMemberInfo.setCsmiHost(host);
+        csMemberInfo.setCsmiName(realName);
+        csMemberInfo.setCsmiMemberId(csMember.getCsmId());
+        csMemberInfo.setCsmiAddTime(new Date());
+        csMemberInfo.setCsmiUpdateTime(new Date());
+        csMemberInfo.setCsmiStatus((short) 1);
+        csMemberInfo.setCsmiSex(sex);
+        return csMemberInfo;
+    }
 }
