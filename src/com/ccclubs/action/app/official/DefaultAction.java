@@ -5415,9 +5415,9 @@ public class DefaultAction extends BaseAction {
             }
 
             // 获取app更新配置
-            if (type == 0 || type == 6) {
+            if (type == 0 || type == 6 || type == 4 ) {
                 Integer appType = $.getInteger("appType", 1);
-                String appVersion = $.getString("version", "");
+                String appVersion = $.getString("version", "1000");
                 Map<String, Object> map = new HashMap<String, Object>();
                 int upgradeFlag = 0;
                 if (appType == 1) { // 1安卓
