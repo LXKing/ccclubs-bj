@@ -4041,7 +4041,7 @@ $(function(){
 	
 	${lz:set("注释","*****************所属单位字段的输入框代码*****************")}
 	${lz:set("注释","before$infoList和after$infoList变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
-	<s:if test="#request.CTRL.v.unitInfo==true && (csMember.csmVReal!=1 || csMember.csmVDrive!=1) && #request.unitPerson != null">
+	<s:if test="#request.CTRL.v.unitInfo==true &&  #request.unitPerson != null">
 	${before$unitInfo}
 	<dl class="unitInfo " major  ref="unitInfo" >
 		<dt>所属单位:</dt>			
@@ -4077,7 +4077,7 @@ $(function(){
 	
 	${lz:set("注释","*****************所属分组字段的输入框代码*****************")}
 	${lz:set("注释","before$unitGroup和after$unitGroup变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
-	<s:if test="#request.CTRL.v.unitGroup==true && (csMember.csmVReal!=1 || csMember.csmVDrive!=1) && #request.unitPerson != null">
+	<s:if test="#request.CTRL.v.unitGroup==true &&  #request.unitPerson != null">
 	${before$unitGroup}
 	<dl class="unitGroup " major  ref="unitGroup" >
 		<dt>所属部门:</dt>			
@@ -4113,7 +4113,7 @@ $(function(){
 	
 	${lz:set("注释","*****************支付会员字段的输入框代码*****************")}
 	${lz:set("注释","before$payMember和after$payMember变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
-	<s:if test="#request.CTRL.v.payMember==true && (csMember.csmVReal!=1 || csMember.csmVDrive!=1) && #request.payMembers != null">
+	<s:if test="#request.CTRL.v.payMember==true && #request.payMembers != null">
 	${before$payMember}
 	<dl class="payMember " major  ref="payMember" >
 		<dt>支付账户:</dt>			

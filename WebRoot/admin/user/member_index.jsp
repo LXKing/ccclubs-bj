@@ -1298,6 +1298,15 @@ ${after$form}
 			 	${lz:set("checkeds[]","csmStatus")}
 			 </td>
 			 </s:if>
+			 
+			 <s:if test="#request.defines==null && #request.CTRL.l.csmLockReason || #request.defines['csmLockReason']!=null">
+			 <td <s:if test="#request.defines['csmLockReason']>0">colspan="${defines["csmLockReason"]}" ${all?"width":"iwidth"}="${defines["csmLockReason"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="61" ref="csmLockReason"   title="禁用原因">
+			 	<a class="${desc=="csmLockReason" ? "desc" : ""}${asc=="csmLockReason" ? "asc" : ""}" href="?${desc=="csmLockReason" ? "asc=csmLockReason" : ""}${(asc=="csmLockReason" || desc!="csmLockReason" )? "desc=csmLockReason" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	禁用原因
+			 	</a>
+			 	${lz:set("checkeds[]","csmLockReason")}
+			 </td>
+			 </s:if>
 		 
 		 	${lz:set("注释","****数据列表列头最后两列****")}
 			<td rowspan="2" width="60" tdid="62" class="options" ref="options">操作</td>
@@ -2899,6 +2908,35 @@ ${after$form}
 					</td>
 				</s:else>
 			</s:if>
+			
+			<s:if test="#request.defines==null && #request.CTRL.l.csmLockReason || #request.defines['csmLockReason']!=null">
+				<s:if test="#request.defines['csmLockReason']>0">
+					${lz:set("注释","****csmLockReason关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.csmLockReason))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCsmLockReason",lz:indexOf(fieldName,"csmLockReason")>-1)}
+				  		<s:if test="#request.atCsmLockReason==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****csmLockReason字段的字串格式化输出****")}
+					<td ref="csmLockReason" class="td ">
+						 <s:if test="#request.alias==null">
+							 <s:if test="#request.CTRL.canEdit==true">
+							 	<!--<a class="modify" href="javascript:Update('${item.csmId}','csmLockReason')"></a>-->
+							 </s:if>
+					     </s:if>
+						 
+						 	${lz:or(item$csmLockReason[i.count-1],lz:left(item.csmLockReason$,100))}
+					</td>
+				</s:else>
+			</s:if>
 		   ${lz:set("注释","*****************数据列表数据部分结束*****************")}		  
 		  
 		   
@@ -4250,6 +4288,29 @@ ${after$form}
 					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 				</s:else>
 			 </s:if>
+			 
+			 <s:if test="#request.defines==null && #request.CTRL.l.csmLockReason || #request.defines['csmLockReason']!=null">
+				<s:if test="#request.defines['csmLockReason']>0">
+					${lz:set("注释","****csmLockReason关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("atCsmLockReason",lz:indexOf(fieldName,"csmLockReason")>-1)}				  		
+				  		<s:if test="#request.atCsmLockReason==true">
+				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				  			<s:if test="#request.isList==true">
+				  				<lz:set name="arrFieldName">csmLockReason[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
+				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
+				 			</s:if>
+				 			<s:else>
+								<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+							</s:else>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+				</s:else>
+			 </s:if>
+			 
 			 <s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 		  	 <s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 		 </tr>
@@ -4418,6 +4479,7 @@ ${after$form}
 		var params = {entrypoint:"${entrypoint}",id:id,method:flag,ctrl:{title:"更新会员帐号",visible:false,editable:false,fields:{}}};
 		for(var o in fieldNames[flag])
 			params.ctrl["fields"][o]={visible:true,editable:true};
+		//console.log(params);
 		href(url,params);
 	}
 	
@@ -4431,6 +4493,7 @@ ${after$form}
 	fieldNames["mark"]={};
 	fieldNames["visited"]={};
 	fieldNames["status"]={};
+	//fieldNames["csmLockReason"]={};
 	fieldNames["group"]["csmGroup"]=true;
 	fieldNames["not_revenue"]["csmNotRevenue"]=true;
 	fieldNames["express"]["csmExpress"]=true;
@@ -4440,6 +4503,7 @@ ${after$form}
 	fieldNames["mark"]["csmMark"]=true;
 	fieldNames["visited"]["csmVisitFlag"]=true;
 	fieldNames["status"]["csmStatus"]=true;
+	//fieldNames["csmLockReason"]["csmLockReason"]=true;
 	
 </s:if>
 
