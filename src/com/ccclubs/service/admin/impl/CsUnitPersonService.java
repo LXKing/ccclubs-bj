@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import com.lazy3q.util.Function;
 import com.ccclubs.dao.ICsMemberShipDao;
 import com.ccclubs.dao.ICsUnitInfoDao;
@@ -194,6 +196,8 @@ public class CsUnitPersonService implements ICsUnitPersonService {
         this.csUnitInfoDao = csUnitInfoDao;
     }
 
+    
+    @Override
     public CsUnitPerson changeUnit(CsUnitPerson newData, CsUnitPerson oldData) {
         CsMember payMember = null;// 企业支付账号关联会员初始化
         if (newData.getCsupInfo() != null && oldData != null && (oldData.getCsupInfo() == null
@@ -227,6 +231,87 @@ public class CsUnitPersonService implements ICsUnitPersonService {
         } else {
             newData.setCsupInfo(null);// 不更新单位id
         }
+        //更新企业用户信息
+        this.updateCsUnitPerson(newData);
         return newData;
     }
+    
+    /**
+     * 会员绑定企业和支付账号
+     * @param memberId
+     * @param unitId
+     * @param unitGroupId
+     */
+    @Override
+    @Transactional
+    public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId) {
+        if(unitId!=null && memberId!=null) {
+            CsMember member = CsMember.get(memberId);
+            
+            //当前要绑定的企业
+            CsUnitInfo csUnitInfo = csUnitInfoDao.getCsUnitInfoById(unitId);
+            //会员关联企业用户信息
+            CsUnitPerson unitPerson = CsUnitPerson.where().csupMember(memberId).get();
+            if(null==unitPerson) {
+                //企业用户不存在，执行新增操作
+                unitPerson = new CsUnitPerson();
+                unitPerson.setCsupGroup(unitGroupId);
+                unitPerson.setCsupInfo(unitId);
+                unitPerson.setCsupAddTime(new Date());
+                unitPerson.setCsupFlag(null);
+                unitPerson.setCsupHost(member.getCsmHost());
+                unitPerson.setCsupMember(member.getCsmId());
+                unitPerson.setCsupMemo(null);
+                if(StringUtils.isEmpty(member.getCsmName())) {
+                    unitPerson.setCsupName(member.getCsmMobile());
+                }else {
+                    unitPerson.setCsupName(member.getCsmName());    
+                }
+                
+                unitPerson.setCsupRemark(null);
+                unitPerson.setCsupStatus((short)1);
+                unitPerson.setCsupUpdateTime(new Date());
+                this.saveCsUnitPerson(unitPerson);
+                //绑定会员支付账号关系
+                saveMemberShip(memberId, csUnitInfo);
+            }else {
+                //企业用户已存在，执行更新操作
+                CsUnitPerson.where().csupMember(memberId).set()
+                .csupInfo(unitId).csupGroup(unitGroupId).update();
+                
+                if (unitPerson.getCsupInfo()!=null && unitPerson.getCsupInfo()!=unitId.longValue()) {
+                    //绑定会员支付账号关系
+                    saveMemberShip(memberId, csUnitInfo);
+                }
+            }  
+        }
+    }
+    
+    /**
+     * 保存会员支付关系 
+     * @param memberId 会员id
+     * @param csUnitInfo 会员绑定的企业
+     */
+    public void saveMemberShip(Long memberId, CsUnitInfo csUnitInfo) {
+        List<CsMember> members = csUnitInfo.get$csuiMember();
+        if (members.size() > 0) {
+            CsMember payMember = members.get(0);
+            CsMemberShip ship = csMemberShipDao.getCsMemberShip(
+                    $.add("csmsTargeter", memberId).add("csmsStatus", 1));
+            if (ship == null) {
+                new CsMemberShip(payMember.getCsmHost()// 城市 [非空]
+                        , payMember.getCsmId()// 付款帐号 [非空]
+                        , memberId// 使用帐号 [非空]
+                        , new Date()// 添加时间 [非空]
+                        , "创建支付关系"// 备注
+                        , (short) 1// 状态 [非空]
+                ).save();
+            } else {
+                ship.setCsmsPayer(payMember.getCsmId());
+                ship.setCsmsRemark("更换单位更新支付关系");
+                csMemberShipDao.updateCsMemberShip$NotNull(ship);
+            }
+        }
+    }
+    
 }

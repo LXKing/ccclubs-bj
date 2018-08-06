@@ -272,17 +272,19 @@ window.$on("readyStart",function(){
 					success:function(data){
 						var data = $.parseJSON(data);
 						var options = "<option value=\"\">请选择</option>";
-						for(var i=0;i<data.length;i++){
+						var payer = "${request.payMember}";
+ 						for(var i=0;i<data.length;i++){
 							options+="<option value=\""+data[i].csmId+"\" > "+data[i].csmName+"</option>";
 						}
 						$("#payMember").html(options);
-						$("#payMember").find("option[value=\""+${request.payMember}+"\"]").attr("selected",true);
+						//$("#payMember").find("option[value=\""+${request.payMember}+"\"]").attr("selected",true);
+						//$("#payMember").val(payer);
 					}	
 			    });
 			});
 		}
 		
-	});
+	})
 	
 	
 	
@@ -4119,12 +4121,10 @@ $(function(){
 		<dt>支付账户:</dt>			
 		<s:if test="#request.CTRL.e.payMember==true">
 		${lz:set("haveEditable",true)}
-		<dd input="select">${#request.payMembers }
-		
-	 	
+		<dd input="select">${#request.payMembers}
 	 	
 	 	<s:if test="#request.payMembers!=null">
-		 	<input title="支付账户" class="combox narrow" action="${basePath}${proname}/user/member_query.do?value={param}&csuiHost={csupHost}" 
+		 	<input title="支付账户" class="combox narrow" action="${basePath}${proname}/user/member_query.do?" 
 		 	type="text" id="payMember" name="payMember" text="${get:CsMember(payMember).csmName}" value="${payMember}" />
 		 			<a class="lookup" href="javascript:void(0);" 
 		 			onclick="if($.trim($('#payMember').val())==''){return;};window.href('${basePath}${proname}/user/member_details.do?key='+$('#payMember').val(),{ctrl:{editable:false}})"></a>

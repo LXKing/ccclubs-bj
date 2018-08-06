@@ -195,7 +195,7 @@ public class CsMemberService implements ICsMemberService
 	    authFailNotice(old, fresh);
 	    
 	    //工作证认证成功；绑定企业和部门、创建企业用户记录
-	    doAuthWorkSuccess(old, fresh);
+	    doAuthWorkSuccess(fresh);
 	}
 	
 	/**
@@ -302,37 +302,37 @@ public class CsMemberService implements ICsMemberService
 	 * @param old 数据库数据
      * @param fresh 用户请求数据
 	 */
-	public void doAuthWorkSuccess(CsMember old, CsMember fresh) {
+	public void doAuthWorkSuccess(CsMember fresh) {
 	    if(fresh.getCsmVWork()==1) {
-            //线下认证通过的判断是否需要CsUnitPerson关联
-            CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(fresh.getCsmId()).get();
-            if(null==csUnitPersonForInsert) {
-                CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
-                if(null!=csMemberInfo) {
-                    CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
-                    if(null!=csUnitInfoForInsert) {
-                        CsUnitGroup csUnitGroupForInsert=
-                                CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
-                        
-                        if(null!=csUnitGroupForInsert) {
-                            CsUnitPerson csUnitPerson=new CsUnitPerson();
-                            csUnitPerson.setCsupAddTime(new Date());
-                            csUnitPerson.setCsupFlag(null);
-                            csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
-                            csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
-                            csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
-                            csUnitPerson.setCsupMember(fresh.getCsmId());
-                            csUnitPerson.setCsupMemo(null);
-                            csUnitPerson.setCsupName(fresh.getCsmName());
-                            csUnitPerson.setCsupRemark(null);
-                            csUnitPerson.setCsupStatus((short)1);
-                            csUnitPerson.setCsupUpdateTime(new Date());
-                            CsUnitPersonService csUnitPersonService = $.getBean("csUnitPersonService");
-                            csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-                        }
-                    }
-                }
-            }
-        }
+	        //线下认证通过的判断是否需要CsUnitPerson关联
+	        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(fresh.getCsmId()).get();
+	        if(null==csUnitPersonForInsert) {
+	            CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
+	            if(null!=csMemberInfo) {
+	                CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
+	                if(null!=csUnitInfoForInsert) {
+	                    CsUnitGroup csUnitGroupForInsert=
+	                            CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
+	                    
+	                    if(null!=csUnitGroupForInsert) {
+	                        CsUnitPerson csUnitPerson=new CsUnitPerson();
+	                        csUnitPerson.setCsupAddTime(new Date());
+	                        csUnitPerson.setCsupFlag(null);
+	                        csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
+	                        csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
+	                        csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
+	                        csUnitPerson.setCsupMember(fresh.getCsmId());
+	                        csUnitPerson.setCsupMemo(null);
+	                        csUnitPerson.setCsupName(fresh.getCsmName());
+	                        csUnitPerson.setCsupRemark(null);
+	                        csUnitPerson.setCsupStatus((short)1);
+	                        csUnitPerson.setCsupUpdateTime(new Date());
+	                        CsUnitPersonService csUnitPersonService = $.getBean("csUnitPersonService");
+	                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
+	                    }
+	                }
+	            }
+	        }
+	    }
 	}
 }

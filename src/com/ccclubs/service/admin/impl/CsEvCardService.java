@@ -1,12 +1,18 @@
 package com.ccclubs.service.admin.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import com.lazy3q.util.Function;
 
 import com.ccclubs.dao.ICsEvCardDao;
+import com.ccclubs.helper.LoggerHelper;
+import com.ccclubs.helper.SystemHelper;
 import com.lazy3q.web.util.Page;
 import com.ccclubs.model.CsEvCard;
+import com.ccclubs.model.CsMember;
 import com.ccclubs.service.admin.ICsEvCardService;
 import com.lazy3q.web.helper.$;
 
@@ -163,5 +169,43 @@ public class CsEvCardService implements ICsEvCardService
 	public void setCsEvCardDao(ICsEvCardDao csEvCardDao)
 	{
 		this.csEvCardDao = csEvCardDao;
+	}
+	
+	/**
+	 * 后台自动为会员绑定ev卡；注意添加分布式锁（暂不实现）
+	 * @param member
+	 */
+	@Transactional
+	public void autoBindEvCard(CsMember member) {
+	    //会员为空这不做绑定ev卡流程
+	    if (member == null) {
+            return;
+        }
+	    //初始化ev卡
+	    CsEvCard csEvCard = new CsEvCard();
+	    
+	    long count = 1;
+	    while (count > 0) {
+	        String number = RandomStringUtils.random(8);
+	        String rfid = RandomStringUtils.random(12);
+	        //检索ev卡编号是否已存在，存在则重新生成编号，否则使用当前编号生成ev卡信息
+	        count = this.getCsEvCardCount($.add("csec_number", number).add("csec_rfid", "rfid"));
+	        csEvCard.setCsecNumber(number);
+	        csEvCard.setCsecRfid(rfid);
+	    }
+	    csEvCard.setCsecHost(member.getCsmHost());
+	    csEvCard.setCsecRemark("自动绑定");
+	    csEvCard.setCsecAddTime(new Date());
+	    csEvCard.setCsecFlag((short) 1);//已绑定
+	    csEvCard.setCsecStatus((short) 1);//正常
+	    //保存ev卡
+	    csEvCard = this.saveCsEvCard(csEvCard);
+	    //输入会员绑定ev卡日志
+	    LoggerHelper.writeLog(CsEvCard.class,"add","自动添加[会员卡]["+csEvCard.getCsecNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csEvCard,csEvCard.getCsecId());
+	    
+	    //会员绑定ev卡
+	    member.setCsmEvcard(csEvCard.getCsecId());
+	    CsMemberService memberService = $.getBean("csMemberService");
+	    memberService.updateCsMember$NotNull(member);
 	}
 }

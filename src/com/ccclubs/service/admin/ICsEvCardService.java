@@ -6,6 +6,7 @@ import java.util.Map;
 import com.lazy3q.web.util.Page;
 import com.lazy3q.util.Function;
 import com.ccclubs.model.CsEvCard;
+import com.ccclubs.model.CsMember;
 
 /**
  * 会员卡的Service接口
@@ -104,5 +105,11 @@ public interface ICsEvCardService
 	 * @param function
 	 */
 	public <T> T executeTransaction(Function function);
+	
+	/**
+     * 后台自动为会员绑定ev卡；注意添加分布式锁（暂不实现）
+     * @param member
+     */
+	public void autoBindEvCard(CsMember member);
 
 }

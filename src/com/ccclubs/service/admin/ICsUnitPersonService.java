@@ -112,5 +112,13 @@ public interface ICsUnitPersonService
 	 * @return
 	 */
 	public CsUnitPerson changeUnit(CsUnitPerson newData, CsUnitPerson oldData);
+	
+	/**
+	 * 
+	 * @param memberId
+	 * @param unitId
+	 * @param unitGroupId
+	 */
+	public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId);
 
 }
