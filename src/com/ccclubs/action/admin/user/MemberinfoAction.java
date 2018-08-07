@@ -2,35 +2,23 @@ package com.ccclubs.action.admin.user;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.UUID;
-import java.lang.reflect.Field;
-
 import org.apache.log4j.Logger;
-
-import com.lazy3q.web.helper.$;
-import com.lazy3q.web.node.Export;
-import com.lazy3q.lang.*;
-import com.lazy3q.web.util.Ctrl;
-import com.lazy3q.web.helper.ConfigHelper;
-import com.lazy3q.web.helper.WebHelper.LzMap;
-import com.lazy3q.web.util.Page;
-import com.lazy3q.web.util.Tree;
-import com.lazy3q.util.Function;
-import com.lazy3q.util.Meet;
-
-import com.opensymphony.xwork2.ActionContext;
-		   
-import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.helper.ActionHelper;
-import com.ccclubs.helper.LoginHelper;
+import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.service.admin.ICsMemberInfoService;
 /************LAZY3Q_CODE_IMPORT************/
 /************LAZY3Q_CODE_IMPORT************/
+import com.lazy3q.util.Function;
+import com.lazy3q.web.helper.$;
+import com.lazy3q.web.helper.ConfigHelper;
+import com.lazy3q.web.node.Export;
+import com.lazy3q.web.util.Ctrl;
+import com.lazy3q.web.util.Page;
 
 
 /**
@@ -138,8 +126,7 @@ public class MemberinfoAction
 	 * 会员信息添加/编辑页面
 	 * @return
 	 */
-	public String edit()
-	{		
+	public String edit() {		
 		try{
 			final Ctrl CTRL = $.setRequest("CTRL",$.CTRL($.getString("ctrl")));//可自定义配置控制器,定义哪些字段可显示、可编辑、是否可查询等
 			$.setRequest("editorpoint",$.hex($.getUrlPath()+"?"+$.querys("UTF-8")));//编辑页状态串(包含进入编辑页面时的地址和参数)
