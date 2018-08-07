@@ -1329,7 +1329,7 @@ public class MemberAction {
                     String payMember = $.getString("payMember");
                     if (!$.empty(payMember)) {
                         CsMemberShip cms = CsMemberShip.where().csmsTargeter(csMember.getCsmId()).get();
-                        if(null == cms) {
+                        if(null == cms && (vprogress == 4 || csMember.getCsmVWork()==1)) {//工作认证或者全认证，插入会员关系，会员单位
                             CsMember newcsMember = CsMember.get(csMember.getCsmId());
                             CsMemberShip csms = new CsMemberShip();
                             csms.setCsmsAddTime(new Date());
@@ -1356,7 +1356,7 @@ public class MemberAction {
                     if (unitInfo != null && unitGroup != null) {
                         
                         CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
-                        if(null==csUnitPersonForInsert) {
+                        if(null==csUnitPersonForInsert && (vprogress == 4 || csMember.getCsmVWork()==1)) {//工作认证或者全认证，插入会员关系，会员单位
                             CsMember newcsMember = CsMember.get(csMember.getCsmId());
                             CsUnitPerson csUnitPerson=new CsUnitPerson();
                             csUnitPerson.setCsupAddTime(new Date());
