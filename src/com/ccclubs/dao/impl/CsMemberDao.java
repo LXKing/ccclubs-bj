@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.orm.ibatis.SqlMapClientTemplate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import com.ccclubs.dao.ICsMemberDao;
@@ -111,14 +110,58 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		for(int i=0 ;i<list.size();i++) {
 		    CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(list.get(i).getCsmInfo());
 		    if(null != csMemberInfo) {
-		        list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+		        //如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+		        CsMember cm = list.get(i);
+		        if(null != cm) {
+		            list.get(i).setCsmRemark(this.getMemo(cm.getCsmRemark(), csMemberInfo.getCsmiCompany$(), csMemberInfo.getCsmiDepartment$()));
+		        }
+		        
 		    }
 		}
 		
 		return list;
 	}
 	
-	
+	private String getMemo(String memo, String com, String group) {
+	    boolean blankCom = StringUtils.isBlank(com);
+        boolean blankGroup = StringUtils.isBlank(group);
+        boolean blankMemo = StringUtils.isBlank(memo);
+
+        if (blankMemo) {
+            memo = "";
+        } else {
+            memo = memo.trim()+";";
+        }
+        if (blankCom && blankGroup) {
+            return memo;
+        } else {
+            if (blankCom) {
+                com = "";
+            } else {
+                com = com.trim();
+            }
+            if (blankGroup) {
+                group = "";
+            } else {
+                group = group.trim();
+            }
+            StringBuilder cg = new StringBuilder();
+            cg.append("公司:").append(com).append(",部门:").append(group).append(";");
+            StringBuilder mm = new StringBuilder();
+            if (!memo.contains(cg.toString())) {
+                if (blankMemo) {
+                    mm.append(cg.toString());
+                } else {
+                    mm.append(memo).append("\n");
+                    mm.append(cg.toString());
+                }
+            } else {
+                mm.append(memo);
+            }
+            return mm.toString();
+        }
+
+    }
 	/**
 	 * 获取会员帐号统计
 	 * @return
@@ -180,7 +223,12 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 	        for(int i=0 ;i<list.size();i++) {
 	            CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(list.get(i).getCsmInfo());
 	            if(null != csMemberInfo) {
-	                list.get(i).setCsmRemark(list.get(i).getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+	                //如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+	                CsMember cm = list.get(i);
+	                if(null != cm) {
+	                    list.get(i).setCsmRemark(this.getMemo(cm.getCsmRemark(), csMemberInfo.getCsmiCompany$(), csMemberInfo.getCsmiDepartment$()));
+	                }
+	            
 	            }
 	        }
 		//返回一个包装分页对象
@@ -251,7 +299,8 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		    MemCache.setValue(CsMember.class,id, csMember.getKeyValue());
 		    CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(csMember.getCsmInfo());
             if(null != csMemberInfo) {
-                csMember.setCsmRemark(csMember.getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+                //如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+                csMember.setCsmRemark(this.getMemo(csMember.getCsmRemark(), csMemberInfo.getCsmiCompany$(), csMemberInfo.getCsmiDepartment$()));
             }
 		}
 			
@@ -271,7 +320,8 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 		if(csMember!=null) {
             CsMemberInfo csMemberInfo = csMemberInfoDao.getCsMemberInfoById(csMember.getCsmInfo());
             if(null != csMemberInfo) {
-                csMember.setCsmRemark(csMember.getCsmRemark()+"    公司："+csMemberInfo.getCsmiCompany$()+"\n单位："+csMemberInfo.getCsmiDepartment());
+                //如果单位或者部门为空，则会被转化为字符串null，则会不进入if中的语句，仅为不同单位和部门或不存在时往后添加公司和单位
+                csMember.setCsmRemark(this.getMemo(csMember.getCsmRemark(), csMemberInfo.getCsmiCompany$(), csMemberInfo.getCsmiDepartment$()));
             }
         }
 		return   csMember;

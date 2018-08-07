@@ -1,6 +1,7 @@
 package com.ccclubs.action.admin.user;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
 import com.ccclubs.service.admin.ICsMemberService;
+import com.ccclubs.service.admin.ICsMemberShipService;
 import com.ccclubs.service.admin.ICsOrderService;
 import com.ccclubs.service.admin.ICsUnitPersonService;
 import com.ccclubs.service.common.ICommonMoneyService;
@@ -50,7 +52,8 @@ import edu.emory.mathcs.backport.java.util.Collections;
 public class MemberAction {
     ICsMemberService csMemberService;
     ICsUnitPersonService csUnitPersonService;
-
+    ICsMemberShipService csMemberShipService;
+    
     CsMember csMember;
     Lazy3qDaoSupport dao = $.getDao("ccclubs_system");
 
@@ -336,6 +339,58 @@ public class MemberAction {
                     if (memberShip != null) {
                         $.setRequest("payMember", memberShip.getCsmsPayer());
                     }
+                }else {
+                    CsUnitPerson nu = new CsUnitPerson();
+                    List<CsMember> payMembers = new ArrayList<CsMember>();
+                    try {
+                        CsMemberInfo csmi = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, csMember.getCsmId()));
+                        if(null != csmi) {
+                            CsUnitInfo csui = null;
+                            if(StringUtils.isNotBlank(csmi.getCsmiCompany())) {
+                                Map<String, Object> map = $.Map();
+                                map.put("definex", "csui_name='"+csmi.getCsmiCompany()+"'");
+                                csui = CsUnitInfo.getCsUnitInfo(map);
+                            }
+                            if(null != csui) {
+                                nu = CsUnitPerson.getCsUnitPerson($.add(CsUnitPerson.F.csupInfo, csui.getCsuiId()));
+                                if(null == nu) {
+                                    nu = new CsUnitPerson();
+                                }else {
+                                    payMembers = nu.get$csupInfo().get$csuiMember();
+                                    if(null == payMembers) {
+                                        payMembers = new ArrayList<CsMember>();
+                                    }else {
+                                         String cm = csui.getCsuiMember();
+                                         if(StringUtils.isNotBlank(cm)) {
+                                             try {
+                                                String[] cma = cm.split(",");
+                                                 if(null != cma) {
+                                                     for(String a: cma) {
+                                                         if(StringUtils.isBlank(a)) {
+                                                             continue;
+                                                         }
+                                                         long ai = Long.parseLong(a.trim());
+                                                         if(ai > 0) {
+                                                             $.setRequest("payMember", a.trim());
+                                                             break;
+                                                         }
+                                                     }
+                                                 }
+                                            } catch (Exception e) {
+                                            }
+                                         }
+                                            
+                                    }
+                                }
+                            }
+                        }
+                        
+                    } catch (Exception e) {
+                         
+                    }
+                    $.setRequest("unitPerson", nu);
+                    $.setRequest("payMembers", payMembers);
+                    
                 }
             }
             // 根据自定义配置ctrl中配置的默认值信息设置默认值
@@ -1273,15 +1328,64 @@ public class MemberAction {
 
                     String payMember = $.getString("payMember");
                     if (!$.empty(payMember)) {
-                        CsMemberShip.where().csmsTargeter(csMember.getCsmId()).set()
-                                .csmsPayer(payMember).update();
+                        CsMemberShip cms = CsMemberShip.where().csmsTargeter(csMember.getCsmId()).get();
+                        if(null == cms) {
+                            CsMember newcsMember = CsMember.get(csMember.getCsmId());
+                            CsMemberShip csms = new CsMemberShip();
+                            csms.setCsmsAddTime(new Date());
+                            csms.setCsmsHost(newcsMember.getCsmHost());
+                            csms.setCsmsPayer(Long.parseLong(payMember));
+                            csms.setCsmsRemark(null);
+                            csms.setCsmsStatus((short)1);
+                            csms.setCsmsTargeter(newcsMember.getCsmId());
+                            csMemberShipService.saveCsMemberShip(csms); 
+                            /*try {
+                                ActionHelper.executeActionScript(CsMemberShip.class, "会员审核", csms, csms);
+                            } catch (Exception e) {
+                               
+                            }*/
+                        }else {
+                            CsMemberShip.where().csmsTargeter(csMember.getCsmId()).set()
+                            .csmsPayer(payMember).update();
+                        }
+                        
                     }
                     Long unitInfo = $.getLong("unitInfo");
                     Long unitGroup = $.getLong("unitGroup");
 
                     if (unitInfo != null && unitGroup != null) {
-                        CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
-                                .csupInfo(unitInfo).csupGroup(unitGroup).update();
+                        
+                        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
+                        if(null==csUnitPersonForInsert) {
+                            CsMember newcsMember = CsMember.get(csMember.getCsmId());
+                            CsUnitPerson csUnitPerson=new CsUnitPerson();
+                            csUnitPerson.setCsupAddTime(new Date());
+                            csUnitPerson.setCsupFlag(null);
+                            csUnitPerson.setCsupGroup(unitGroup);
+                            csUnitPerson.setCsupHost(newcsMember.getCsmHost());
+                            csUnitPerson.setCsupInfo(unitInfo);
+                            csUnitPerson.setCsupMember(newcsMember.getCsmId());
+                            csUnitPerson.setCsupMemo(null);
+                            if(StringUtils.isEmpty(newcsMember.getCsmName())) {
+                                csUnitPerson.setCsupName(newcsMember.getCsmMobile());
+                            }else {
+                                csUnitPerson.setCsupName(newcsMember.getCsmName());    
+                            }
+                            
+                            csUnitPerson.setCsupRemark(null);
+                            csUnitPerson.setCsupStatus((short)1);
+                            csUnitPerson.setCsupUpdateTime(new Date());
+                            csUnitPersonService.saveCsUnitPerson(csUnitPerson);
+                            
+                            /*try {
+                                ActionHelper.executeActionScript(CsUnitPerson.class, "会员审核", csUnitPerson, csUnitPerson);
+                            } catch (Exception e) {
+                               
+                            }*/
+                        }else {
+                            CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
+                            .csupInfo(unitInfo).csupGroup(unitGroup).update();
+                        }
                     }
                     
                     
@@ -1441,6 +1545,23 @@ public class MemberAction {
 
     public void setCsMemberService(ICsMemberService csMemberService) {
         this.csMemberService = csMemberService;
+    }
+    
+    public ICsUnitPersonService getCsUnitPersonService() {
+        return csUnitPersonService;
+    }
+    
+    public void setcsUnitPersonService(ICsUnitPersonService csUnitPersonService) {
+        this.csUnitPersonService = csUnitPersonService;
+    }
+    public ICsMemberShipService getCsMemberShipService()
+    {
+        return csMemberShipService;
+    }
+
+    public void setCsMemberShipService(ICsMemberShipService csMemberShipService)
+    {
+        this.csMemberShipService = csMemberShipService;
     }
 
     public CsMember getCsMember() {

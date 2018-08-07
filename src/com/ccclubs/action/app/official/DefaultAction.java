@@ -833,6 +833,9 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
+            if(member.getVReal()==1) {
+                return returnError("100", "已认证通过，请勿重复认证");
+            }
 
             final String certifyImage = $.getString("certifyImage");// 身份证正面（国徽面）
             final String certifyNum = $.getString("certifyNum");// 身份证号码
@@ -856,10 +859,11 @@ public class DefaultAction extends BaseAction {
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    CsMemberInfo csMemberInfo = updateMemberInfoCertifyImage(member, certifyImage,
+                    
+                    csMemberInfoService.updateMemberInfoCertifyImage(member, certifyImage,
                             certifyNum, realName, onCertifyImage);
+                    
                     member.setCsmName(realName);
-                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, (short) 2, null));
                     return null;
@@ -885,6 +889,9 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
+            if(member.getVDrive()==1) {
+                return returnError("100", "已认证通过，请勿重复认证");
+            }
 
             final String driverImage = $.getString("driverImage");
             if ($.empty(driverImage)) {
@@ -894,8 +901,8 @@ public class DefaultAction extends BaseAction {
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    CsMemberInfo csMemberInfo = updateMemberInfoDriverImage(member, driverImage);
-                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    csMemberInfoService.updateMemberInfoDriverImage(member, driverImage);
+                    
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, (short) 2, null, null));
                     return null;
@@ -920,6 +927,9 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
+            if(member.getVWork()==1) {
+                return returnError("100", "已认证通过，请勿重复认证");
+            }
 
             final String company = $.getString("company");// 企业
             final String department = $.getString("department");// 部门
@@ -938,9 +948,9 @@ public class DefaultAction extends BaseAction {
                 @Override
                 public <T> T execute(Object... arg0) {
 
-                    CsMemberInfo csMemberInfo = updateMemberInfoWorkImage(member, proofOfEmployment,
+                    csMemberInfoService.updateMemberInfoWorkImage(member, proofOfEmployment,
                             company, department);
-                    csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                    
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, null, (short) 2));
 
@@ -997,9 +1007,9 @@ public class DefaultAction extends BaseAction {
                 public <T> T execute(Object... arg0) {
                     // TODO Auto-generated method stub
                     if ($.empty(certifyImg)) {
-                        CsMemberInfo csMemberInfo = updateMemberInfo(member, certifyImg, certifyNum,
+                        csMemberInfoService.updateMemberInfo(member, certifyImg, certifyNum,
                                 driverImage, onCertifyImg);
-                        csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+                        
                         member.setCsmName(realName);
                         csMemberService.updateCsMember$NotNull(
                                 updateAutoState(member, (short) 2, (short) 2));
@@ -1953,8 +1963,10 @@ public class DefaultAction extends BaseAction {
             CsUnitGroup group = null;
             if (person != null) {
                 unitInfo = person.get$csupInfo();
-                group = CsUnitGroup.getCsUnitGroup(
-                        $.add("csugPerson", person.getCsupId()).add("csugStatus", 1));
+                if (person.getCsupGroup() != null) {
+                    group = CsUnitGroup.getCsUnitGroup(
+                            $.add("csugGroup", person.getCsupGroup()).add("csugStatus", 1));
+                }
             }
 
             int checkflag;
@@ -5405,9 +5417,9 @@ public class DefaultAction extends BaseAction {
             }
 
             // 获取app更新配置
-            if (type == 0 || type == 6) {
+            if (type == 0 || type == 6 || type == 4 ) {
                 Integer appType = $.getInteger("appType", 1);
-                String appVersion = $.getString("version", "");
+                String appVersion = $.getString("version", "1000");
                 Map<String, Object> map = new HashMap<String, Object>();
                 int upgradeFlag = 0;
                 if (appType == 1) { // 1安卓
