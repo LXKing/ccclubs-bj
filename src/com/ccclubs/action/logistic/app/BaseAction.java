@@ -35,6 +35,8 @@ import com.ccclubs.model.CsCleanRecord;
 import com.ccclubs.model.CsEvent;
 import com.ccclubs.model.CsLog;
 import com.ccclubs.model.CsMaintain;
+import com.ccclubs.model.CsMember;
+import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsOutlets;
 import com.ccclubs.model.CsRetcheck;
@@ -54,6 +56,8 @@ import com.ccclubs.service.admin.ICsCleanRecordService;
 import com.ccclubs.service.admin.ICsEventService;
 import com.ccclubs.service.admin.ICsLogService;
 import com.ccclubs.service.admin.ICsMaintainService;
+import com.ccclubs.service.admin.ICsMemberInfoService;
+import com.ccclubs.service.admin.ICsMemberService;
 import com.ccclubs.service.admin.ICsOrderService;
 import com.ccclubs.service.admin.ICsOutletsService;
 import com.ccclubs.service.admin.ICsRetcheckService;
@@ -1795,6 +1799,115 @@ public class BaseAction extends OutsideStatisticsUtil{
 			}
 			re.setState(true).setData(subMap).setCode(200).setMessage("启动管理");
 			jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+	}
+	
+	
+	
+	
+	/**
+	 * 审核中心
+	 */
+	public void verify_center(){
+		ResponseEnvelope<String> re = new ResponseEnvelope<String>();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		try {
+			String token = $.getString("sessionToken");
+			SrvUser user = OauthUtils.getSrvOauth(token);
+			if(user == null){
+				re.setState(false).setMessage("未登录").setCode(201);
+				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+				return;
+			}
+			//
+			ICsMemberService csMemberService = $.GetSpringBean("csMemberService");
+			ICsMemberInfoService csMemberInfoService = $.GetSpringBean("csMemberInfoService");
+			//
+			String mobile = $.getString("mobile");
+			CsMember csMember = csMemberService.getCsMember($.add(CsMember.F.csmMobile, mobile));
+			
+			Map<String, Object> mapData = new HashMap<String, Object>();
+			if(csMember!=null) {
+				//0:未认证 1:已认证 2:等待认证 3:认证失败
+				
+				Short	offline=csMember.getCsmVOffline();
+				String  offlineString=null;
+				if(0==offline.intValue()) {
+					offlineString="未认证";
+				}else if(1==offline.intValue()) {
+					offlineString="已认证";
+				}else if(2==offline.intValue()) {
+					offlineString="等待认证";
+				}else if(3==offline.intValue()) {
+					offlineString="认证失败";
+				}
+				mapData.put("offline",offlineString );
+				
+				CsMemberInfo csMemberInfo=csMemberInfoService.getCsMemberInfo($.add(CsMemberInfo.F.csmiId, csMember.getCsmInfo()));    
+				if(csMemberInfo!=null) {
+					mapData.put("name", csMemberInfo.getCsmiName());
+					mapData.put("certifyNum", csMemberInfo.getCsmiCertifyNum());
+					mapData.put("onCertifyImage", csMemberInfo.getCsmiOnCertifyImage());
+					mapData.put("certifyImage", csMemberInfo.getCsmiCertifyImage());//反面
+					mapData.put("driverImage", csMemberInfo.getCsmiDriverImage());
+				}
+			}
+			//
+			re.setState(true).setCode(200).setMessage("审核中心").setData(mapData);
+			jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("首页菜单发生异常：" + e.getMessage());
+			re.setSuccess(false).setState(false).setMessage("系统繁忙，请稍后再试").setCode(9999);
+			jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+		}
+	}
+	
+	/**
+	 * 审核提交
+	 */
+	public void verify_submit(){
+		ResponseEnvelope<String> re = new ResponseEnvelope<String>();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		try {
+			String token = $.getString("sessionToken");
+			SrvUser user = OauthUtils.getSrvOauth(token);
+			if(user == null){
+				re.setState(false).setMessage("未登录").setCode(201);
+				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+				return;
+			}
+			//
+			ICsMemberService csMemberService = $.GetSpringBean("csMemberService");
+			//
+			String mobile = $.getString("mobile");
+			//0:未认证 1:已认证  3:认证失败
+			Short type = $.getShort("type");
+			//
+			if(type.intValue()!=0&&type.intValue()!=1&&type.intValue()!=3) {
+				re.setState(false).setCode(200).setMessage("认证值不在范围内");
+				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+				return;
+				
+			}
+			CsMember csMember = csMemberService.getCsMember($.add(CsMember.F.csmMobile, mobile));
+			if(csMember!=null) {
+				CsMember memberTemp=new CsMember();
+				//
+				memberTemp.setCsmId(csMember.getCsmId());
+				memberTemp.setCsmVOffline(type);
+				memberTemp.setCsmVReal(type);
+				memberTemp.setCsmVWork(type);
+				csMemberService.updateCsMember$NotNull(memberTemp);
+			}
+			//
+			re.setState(true).setCode(200).setMessage("审核提交成功");
+			jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("首页菜单发生异常：" + e.getMessage());
+			re.setSuccess(false).setState(false).setMessage("系统繁忙，请稍后再试").setCode(9999);
+			jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+		}
 	}
 	
 	
