@@ -598,7 +598,7 @@ public class MemberAction {
                                     csMember.setCsmCoupon(oldCsMember.getCsmCoupon());
                                     csMember.setCsmIntegral(oldCsMember.getCsmIntegral());
                                     csMember.setCsmGrow(oldCsMember.getCsmGrow());
-                                    csMember.setCsmGrade(oldCsMember.getCsmGrade());
+//                                    csMember.setCsmGrade(oldCsMember.getCsmGrade());
                                     csMember.setCsmMobile(oldCsMember.getCsmMobile());
                                     csMember.setCsmUpdateTime(oldCsMember.getCsmUpdateTime());
                                     csMember.setCsmAddTime(oldCsMember.getCsmAddTime());

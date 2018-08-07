@@ -401,13 +401,16 @@ $(function(){
 		<s:if test="#request.CTRL.e.csmGrade==true">
 		${lz:set("haveEditable",true)}
 		,"csMember.csmGrade":function(el){
-			if(jQuery.trim(el.value)=="")
+			/* if(jQuery.trim(el.value)==""){
 				return "会员等级不能为空";
-				if(el.value.length>10)
-					return "数字太大了";
-					 var pattern = /^-?(0|[1-9][0-9]*)?$/;
-					 if(!pattern.test(el.value))
-						return "请输入正确格式的数字";			
+			} */
+			/* if(el.value.length>10){
+				return "数字太大了";
+			}
+			var pattern = /^-?(0|[1-9][0-9]*)?$/;
+			if(!pattern.test(el.value)){
+				return "请输入正确格式的数字";			
+			} */
 		}
 		</s:if>	
 		<s:if test="#request.CTRL.e.csmRebate==true">
@@ -1160,7 +1163,7 @@ $(function(){
 		${lz:set("haveEditable",true)}
 		<dd input="number">
 		<s:if test="#request.csMember$csmGrade!=null">${csMember$csmGrade}</s:if><s:else>
-			<input onkeyup="var reg=/^-?(([1-9]\d{0,9})|0)?/;this.value=this.value.match(reg)?this.value.match(reg)[0]:''" type="text" class="input narrow"  maxlength="8" name="csMember.csmGrade" id="csmGrade"  value="${csMember.csmGrade}"/>
+			<input type="text" class="input narrow"  maxlength="8" name="csMember.csmGrade" id="csmGrade"  value="${csMember.csmGrade}"/>
 	 	 </s:else>
 	 	 
 	 	 <b>*</b>
@@ -4006,7 +4009,7 @@ $(function(){
 	<dl class="vstatus " major  ref="vstatus" >
 		<dt>认证总状态:</dt>
 		<s:if test="#request.CTRL.e.vstatus==true">
-		${lz:set("haveEditable",false)}
+		${lz:set("haveEditable",true)}
 		<dd input="select">
 		<s:if test="#csMember$vstatus!=null">${csMember.vstatus}</s:if><s:else>
 		 	<select class="narrow" id="vstatus" name="csMember.vstatus">
@@ -4163,7 +4166,7 @@ ${lz:set("注释","*****************禁用原因字段的输入框代码********
 	<dl class="csmLockReason " major  ref="csmLockReason" id="csmLockReason_div" style="display:${csMember.csmStatus == 0 ? "''": "none"}">
 		<dt>禁用原因:</dt>
 		<s:if test="#request.CTRL.e.csmLockReason==true">
-		${lz:set("haveEditable",false)}
+		${lz:set("haveEditable",true)}
 		<dd input="select">
 		<s:if test="#csMember$csmLockReason!=null">${csMember.csmLockReason}</s:if><s:else>
 		 	<select class="narrow" id="csmLockReason" name="csMember.csmLockReason">
@@ -4201,7 +4204,7 @@ ${lz:set("注释","*****************禁用原因字段的输入框代码********
 	${lz:set("注释","*****************机器编码字段的输入框代码*****************")}
 	${lz:set("注释","before$csmVOfflineCode和after$csmVOfflineCode变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.csmVOfflineCode==true">
-	${before$csmLockReason}
+	${before$csmVOfflineCode}
 	<dl class="csmVOfflineCode " major  ref="csmVOfflineCode"  id="csmVOfflineCode_div" style="display:${csMember.csmVOffline  == 1 ? "''": "none"}" >
 		<dt>机器编码:</dt>
 		<s:if test="#request.CTRL.e.csmVOfflineCode==true">
@@ -4229,13 +4232,6 @@ ${lz:set("注释","*****************禁用原因字段的输入框代码********
 	</dl>
 	${after$csmVOfflineCode}
 	</s:if>
-	
-	
-	
-	
-	
-	
-				
 				<div class="line"></div>
 				<center class="buttons">
 					${lz:set("注释","*****************before$buttons变量为预留变量，可在自定义代码中使用lz:set标签注入代码*****************")}
@@ -4247,33 +4243,33 @@ ${lz:set("注释","*****************禁用原因字段的输入框代码********
 						${lz:set("submitsCount",lz:size(CTRL.submits))}
 						<s:if test="#request.submitsCount>0">
 							<s:iterator value="#request.CTRL.submits" id="submit" status="i">
-					<button class="button" type="submit" name="submiter" value="${submit.value}">&nbsp;&nbsp;${submit.name}&nbsp;&nbsp;</button>
+								<button class="button" type="submit" name="submiter" value="${submit.value}">&nbsp;&nbsp;${submit.name}&nbsp;&nbsp;</button>
 							</s:iterator>
 						</s:if>
 						<s:else>
-					<s:if test="#request.complete!=null && #request.complete!=''">
-						${lz:set("注释","****如果调用时传入了complete完成句柄，那么只能提交到本页面，由action控制调用该句柄****")}
-						<button title="保存数据,不关闭窗口,刷新原列表" class="button" type="submit" name="submiter" value="保存">
-							&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778030.png"/>
-							保存&nbsp;&nbsp;</button>
-					</s:if>
-					<s:else>
-						<button title="保存数据,关闭窗口,刷新原列表" class="button" type="submit" name="submiter" value="完成">
-						&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/Badge-tick.png"/>
-						完成&nbsp;&nbsp;</button>
-						<button title="保存数据,不关闭窗口,刷新原列表" class="button" type="submit" name="submiter" value="保存">
-							&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778030.png"/>
-							保存&nbsp;&nbsp;</button>
-					</s:else>
+							<s:if test="#request.complete!=null && #request.complete!=''">
+								${lz:set("注释","****如果调用时传入了complete完成句柄，那么只能提交到本页面，由action控制调用该句柄****")}
+								<button title="保存数据,不关闭窗口,刷新原列表" class="button" type="submit" name="submiter" value="保存">
+									&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778030.png"/>
+									保存&nbsp;&nbsp;</button>
+							</s:if>
+							<s:else>
+								<button title="保存数据,关闭窗口,刷新原列表" class="button" type="submit" name="submiter" value="完成">
+								&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/Badge-tick.png"/>
+								完成&nbsp;&nbsp;</button>
+								<button title="保存数据,不关闭窗口,刷新原列表" class="button" type="submit" name="submiter" value="保存">
+									&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778030.png"/>
+									保存&nbsp;&nbsp;</button>
+							</s:else>
 						</s:else>
-					<button class="button" type="reset" value="重置">
-						&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778045.png"/>
-						重置&nbsp;&nbsp;</button>
+						<button class="button" type="reset" value="重置">
+							&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/2008825642250778045.png"/>
+							重置&nbsp;&nbsp;</button>
 					</s:if>
 					<s:else>
-					<button title="不保存数据,关闭窗口,不刷新原列表" class="button" onclick="cancel();" type="button">
-						&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/Badge-tick.png"/>
-						确定&nbsp;&nbsp;</button>
+						<button title="不保存数据,关闭窗口,不刷新原列表" class="button" onclick="cancel();" type="button">
+							&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/Badge-tick.png"/>
+							确定&nbsp;&nbsp;</button>
 					</s:else>
 					<button title="不保存数据,关闭窗口,不刷新原列表" class="button" onclick="cancel();" type="button">
 						&nbsp;<img align="absmiddle" width="20" src="${basePath}admin/images/icons/Badge-multiply.png"/>
