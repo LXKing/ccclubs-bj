@@ -1979,6 +1979,8 @@ public class DefaultAction extends BaseAction {
             CsCreditCard csCreditCard = csCreditCardService
                     .getCsCreditCard($.add(CsCreditCard.F.csccMember, member.getCsmId())
                             .add(CsCreditCard.F.csccType, 1));
+            
+            CsEvCard csEvCard= member.get$csmEvcard();
             CsMemberInfo memberInfo = member.get$csmInfo();
 
             LzMap data = new LzMap();
@@ -2017,12 +2019,12 @@ public class DefaultAction extends BaseAction {
                 data.put("deptName", memberInfo.getCsmiDepartment$());
             }
             // 设置企业信息
-            if (unitInfo != null) {
+            if (unitInfo != null&&member.getCsmVWork()==1) {
                 data.put("unitInfoId", unitInfo.getCsuiId());
                 data.put("unitName", unitInfo.getCsuiName$());
             }
             // 设置企业部门信息
-            if (group != null) {
+            if (group != null&&member.getCsmVWork()==1) {
                 data.put("deptId", group.getCsugId());
                 data.put("deptName", group.getCsugName$());
             }
@@ -2070,7 +2072,12 @@ public class DefaultAction extends BaseAction {
                 data.put("workImage", null);
             }
             data.put("isRefunding", commonMoneyService.isRefunding(member.getCsmId()));// 正在退款
-            data.put("evcard", member.getCsmEvcard());
+            if(csEvCard!=null) {
+                data.put("evcard", csEvCard.getCsecNumber$());
+                }
+            else {
+                data.put("evcard", member.getCsmEvcard());
+            }
             data.put("coupon", member.getCsmCoupon());
             return $.SendHtml($.json(JsonFormat.success().setData($.$("map", data))), CHARSET);
         } catch (Exception ex) {
