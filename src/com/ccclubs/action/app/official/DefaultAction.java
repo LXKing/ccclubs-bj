@@ -1963,8 +1963,10 @@ public class DefaultAction extends BaseAction {
             CsUnitGroup group = null;
             if (person != null) {
                 unitInfo = person.get$csupInfo();
-                group = CsUnitGroup.getCsUnitGroup(
-                        $.add("csugPerson", person.getCsupId()).add("csugStatus", 1));
+                if (person.getCsupGroup() != null) {
+                    group = CsUnitGroup.getCsUnitGroup(
+                            $.add("csugGroup", person.getCsupGroup()).add("csugStatus", 1));
+                }
             }
 
             int checkflag;
