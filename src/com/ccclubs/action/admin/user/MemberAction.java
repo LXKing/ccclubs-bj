@@ -1356,6 +1356,11 @@ public class MemberAction {
                     if (unitInfo != null && unitGroup != null) {
                         
                         CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
+                        if(null!=csUnitPersonForInsert&&csMember.getCsmVWork()!=1) {//已经存在工作认证的绑定关系，将企业用户置为无效
+                            CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
+                            .csupStatus(0).update();
+                        }
+                      
                         if(null==csUnitPersonForInsert && (vprogress == 4 || csMember.getCsmVWork()==1)) {//工作认证或者全认证，插入会员关系，会员单位
                             CsMember newcsMember = CsMember.get(csMember.getCsmId());
                             CsUnitPerson csUnitPerson=new CsUnitPerson();
@@ -1384,11 +1389,17 @@ public class MemberAction {
                             }*/
                         }else {
                             CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
-                            .csupInfo(unitInfo).csupGroup(unitGroup).update();
+                            .csupInfo(unitInfo).csupGroup(unitGroup).csupStatus(1).update();
                         }
                     }
                     
-                    
+                    if(csMember.getCsmVWork()!=1) {
+                        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
+                        if(null!=csUnitPersonForInsert) {
+                            CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
+                            .csupStatus(0).update();
+                        }
+                    }
                     if(csMember.getCsmVWork()==1) {
                         //线下认证通过的判断是否需要CsUnitPerson关联
                         CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
@@ -1419,6 +1430,25 @@ public class MemberAction {
                                 
                                 
                             }
+                        }
+                        else {//已经存在企业会员账户
+                            CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(csMember.getCsmId()).get();
+                            if(null!=csMemberInfo) {
+                                CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
+                                if(null!=csUnitInfoForInsert) {
+                                    CsUnitGroup csUnitGroupForInsert=
+                                            CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
+                                    
+                                    if(null!=csUnitGroupForInsert) {
+                                        CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
+                                        .csupGroup(csUnitGroupForInsert.getCsugId())
+                                        .csupHost(csUnitInfoForInsert.getCsuiHost())
+                                        .csupInfo(csUnitInfoForInsert.getCsuiId())
+                                        .csupStatus((short)1).update();
+                                    }
+                                 }
+                            }
+                            
                         }
                     }
 
