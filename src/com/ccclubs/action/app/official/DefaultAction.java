@@ -1965,7 +1965,7 @@ public class DefaultAction extends BaseAction {
                 unitInfo = person.get$csupInfo();
                 if (person.getCsupGroup() != null) {
                     group = CsUnitGroup.getCsUnitGroup(
-                            $.add("csugGroup", person.getCsupGroup()).add("csugStatus", 1));
+                            $.add("csugId", person.getCsupGroup()).add("csugStatus", 1));
                 }
             }
 
