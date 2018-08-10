@@ -253,7 +253,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 			Set<String> outletsList=new HashSet();
 			if(outletsIdArray!=null&&outletsIdArray.length>0) {
                 for(String olId:outletsIdArray) {
-                    outletsList.add(olId);
+                    outletsList.add(olId.trim());
                 }
             }
 			
@@ -264,7 +264,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 			    outletsList.clear();
 			    //网点有限制并且用户的可操控网点包含上传的网点，则直接匹配此网点
 				outletsSQL = "=" + outlet;
-				outletsList.add(outlet);
+				outletsList.add(outlet.trim());
 			}else{
 			    outletsList.clear();
 				if(!region.equals("0")){//如果区域有限制，则查询此区域的网点
@@ -272,14 +272,14 @@ public class BaseAction extends OutsideStatisticsUtil{
 					List<CsOutlets>  csOutletsList =  csOutletsService.getCsOutletsList($.add(CsOutlets.F.csoArea, region),Integer.MAX_VALUE);
 					if(null!=csOutletsList&&csOutletsList.size()>0) {
 					    for(CsOutlets csOutlets:csOutletsList) {
-					        outletsList.add(csOutlets.getCsoId$());
+					        outletsList.add(csOutlets.getCsoId$().trim());
 					    }
 					}
 				}else{//如果都没有限制则查询用户可见的所有网点
 					outletsSQL = " in ("+outletsIds+")";
 					if(outletsIdArray!=null&&outletsIdArray.length>0) {
 					    for(String olId:outletsIdArray) {
-					        outletsList.add(olId);
+					        outletsList.add(olId.trim());
 					    }
 					}
 				}
@@ -325,8 +325,8 @@ public class BaseAction extends OutsideStatisticsUtil{
                     CarManage carManage=(CarManage) rs.converttoModel(map, CarManage.class);
                     //csOrderService.getCsOrder(params)
                     Map params = $.add(CsOrder.F.csoCar, carManage.getCsc_id())
-                            .add("asc", "cso_start_time")
-                            .add("definex", " "+CsOrder.C.csoTakeTime +" is not null");
+                            .add("definex", " "+CsOrder.C.csoTakeTime +" is not null")
+                            .add("desc", "cso_start_time");
                     List<CsOrder> ol = csOrderService.getCsOrderList(params, 1);
                     CsOrder csOrder=null;
                     if(null !=ol&&ol.size()>0) {
@@ -342,7 +342,7 @@ public class BaseAction extends OutsideStatisticsUtil{
                     int orderStatus=csOrder.getCsoStatus();
                     if(usestatus.equals("0") || usestatus.equals("1")){//使用中（待还入）车辆逻辑
                         if(orderStatus==1||orderStatus==2||orderStatus==5) {
-                            if(outletsList.contains(csOrder.getCsoOutletsRet$())) {//判断此车会还在此网点
+                            if(outletsList.contains(csOrder.getCsoOutletsRet().toString())) {//判断此车会还在此网点
                                 carManage.setCsc_use("1");
                                 carManageList.add(carManage);
                             }
