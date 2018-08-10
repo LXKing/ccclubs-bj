@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.UUID;
 import java.lang.reflect.Field;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.lazy3q.web.helper.$;
@@ -274,6 +274,21 @@ public class CarAction
 									csCar.setCscStatus((short)2);
 								csCar.setCscCarNo(sItem.length()>2?cscCarNo.replace("*", sItem.substring(2, sItem.length())):cscCarNo.replace("*",sItem));
 								csCar.setCscMqttFlag(cscMqttFlag.replace("*",sItem));
+								
+								/**
+								 * 2018-8-7 车机中心对接
+                                 *  车辆表增加【终端序列号（必填）、车辆绑定的平台类型、车辆网络通讯类型、】
+								 */
+								if (StringUtils.isEmpty(csCar.getCscTerNo())) {
+								    throw new RuntimeException("终端序列号必填");
+								}
+								if (null == csCar.getCscBindPlatform()) {
+								    csCar.setCscBindPlatform((short) 0);
+								}
+								if (null == csCar.getCscNetType()) {
+								    csCar.setCscNetType((short) 0);
+								}
+								
 								//根据自定义的默认值信息设置默认值
 								if(CTRL!=null)
 									CTRL.setObjectDefaultValue(csCar);
@@ -285,6 +300,15 @@ public class CarAction
 								csCar=csCarService.saveCsCar(csCar);			
 								
 								on("save",csCar,csCar);
+								
+								/**
+								 * 【车机中心对接】
+								 * 如果是4G并且绑定车机中心的车，车辆添加成功后，调用车机中心车辆注册
+								 */
+								if (1 == csCar.getCscNetType() && 1 == csCar.getCscBindPlatform()) {
+								    // TODO 调用车机中心车辆注册
+								    
+								}
 							}							
 							
 							csCarService.updateCsCar$NotNull(csCar);						

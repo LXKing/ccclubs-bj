@@ -2,14 +2,71 @@
 
 <!-- author qsxiaogang -->
 
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean class="com.ccclubs.action.receiver.CarStatusReceiverThread" init-method="start">
+	<!-- <bean class="com.ccclubs.action.receiver.CarStatusReceiverThread" init-method="start">
 		<property name="csOrderService" ref="csOrderService"></property>
 		<property name="commonOrderService" ref="commonOrderService"></property>
 	</bean>
 	<bean class="com.ccclubs.action.receiver.OrderInfoReceiverThread" init-method="start">
 		<property name="csOrderService" ref="csOrderService"></property>
 		<property name="commonDisposeService" ref="commonDisposeService"></property>
+	</bean> -->
+	
+	<!-- 车机中心对外提供指令类api接口服务 -->
+	<bean id="vcCmdApiService"
+		class="com.ccclubs.action.receiver.VcCmdApiService"
+		scope="prototype">
 	</bean>
+	
+	<!-- ========================================================= -->
+	<!-- 						阿里云MQ消费者                  				   -->
+	<!-- ========================================================= -->
+	<bean id="vcOnsReceiver"
+		class="com.ccclubs.action.receiver.VCOnsReceiver"
+		scope="prototype">
+		<property name="csStateService" ref="csStateService"></property>
+		<property name="csHistoryStateService" ref="csHistoryStateService"></property>
+	</bean>
+	<!-- 多 CID 订阅同一个 Topic，可以创建多个 ConsumerBean -->
+	<bean id="consumer"
+		class="com.aliyun.openservices.ons.api.bean.ConsumerBean"
+		scope="prototype"  
+		init-method="start" destroy-method="shutdown">
+		<property name="properties"> <!--消费者配置信息 -->
+			<props>
+				<prop key="ConsumerId">CID_terminal_ser</prop>
+				<prop key="AccessKey">M6dHCyKyKYUCNbW4</prop>
+				<prop key="SecretKey">k6gOSH3dNJjFYze4CuxbBWS1PWqvVk</prop>
+				<prop key="ConsumeThreadNums">30</prop>
+			</props>
+		</property>
+		<property name="subscriptionTable">
+			<map>
+				<entry value-ref="vcOnsReceiver">
+					<key>
+						<bean
+							class="com.aliyun.openservices.ons.api.bean.Subscription">
+							<property name="topic" value="ser" />
+							<property name="expression" value="JT_0200||JT_0201||JT_0704||JT_0900_01||JT_0900_FD||MQTT_41||MQTT_66||MQTT_42||MQTT_64||MQTT_43||MQTT_44||MQTT_45||MQTT_52||MQTT_53||MQTT_60||MQTT_68||MQTT_69||MQTT_6B||MQTT_6C||JT_01F0||JT_7F04" /><!--expression 即 
+								Tag，可以设置成具体的 Tag，如 taga||tagb||tagc，也可设置成*。 *仅代表订阅所有 Tag，不支持通配 -->
+						</bean>
+					</key>
+				</entry>
+				<!--更多的订阅添加 entry 节点即可，如下所示 -->
+				<!-- <entry value-ref="vcOnsReceiver">
+					<key>
+						<bean
+							class="com.aliyun.openservices.ons.api.bean.Subscription">
+							<property name="topic" value="TopicTestMQ-Other" /> 订阅另外一个 Topic
+							<property name="expression" value="taga||tagb" /> 订阅多个 Tag
+						</bean>
+					</key>
+				</entry> -->
+			</map>
+		</property>
+	</bean>
+	
 </beans>

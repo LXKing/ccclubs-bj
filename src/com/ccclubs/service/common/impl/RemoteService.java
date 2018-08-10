@@ -1,10 +1,11 @@
 package com.ccclubs.service.common.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -13,13 +14,18 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import com.ccclubs.action.receiver.CarStatusReceiver.ConnectTimerTask;
+import com.ccclubs.action.vc.enums.VcCmdEnum;
+import com.ccclubs.action.vc.service.VcCmdApiService;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.UtilHelper;
+import com.ccclubs.model.CsCar;
 import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsRemote;
+import com.ccclubs.service.admin.ICsCarService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.ccclubs.util.mq.entity.RemoteOption;
 import com.lazy3q.web.helper.$;
+import com.lazy3q.web.helper.SpringBeanHelper;
 import com.lazy3q.web.helper.WebHelper;
 
 public class RemoteService implements MqttCallback {
@@ -31,6 +37,16 @@ public class RemoteService implements MqttCallback {
 	private final static String PASSWORD = "513387369";
 
 	private static MqttConnectOptions conOpt = null;
+	
+	/**
+	 * 车辆信息查询
+	 */
+	private static ICsCarService csCarService = SpringBeanHelper.GetBean("csCarService");
+	
+	/**
+	 * 车机中心对外提供指令类api服务
+	 */
+	private static VcCmdApiService vcCmdApiService = SpringBeanHelper.GetBean("vcCmdApiService");
 
 	static {
 		try {
@@ -198,24 +214,40 @@ public class RemoteService implements MqttCallback {
 		return topic;
 	}
 
+	/**
+	 * 处理远程控制指令（发送并更新指令记录状态）
+	 * @param remote
+	 */
 	static void customDealRemoteCommend(CsRemote remote) {
+	    // 如果ID不存在则为新命令，初始指令状态为：失败
 		if (remote.getCsrId() == null) {
 			remote.setCsrState((short) 2);
 			remote = remote.save();
 		}
+		// 指令发送方式：0 ：网关，1：短信（默认从网关发送）
 		if (remote.getCsrWay() == null)
 			remote.setCsrWay((short) 0);
+		
 		if (remote.get$csrCar().getCscDeviceVesion().shortValue() == 0) {
+		    // 下位机版本为1.0版本时
 			remote.setCsrCode(getDefaultRemoteCommend(remote));
+			// 更新指令结果为未知
 			remote.setCsrState((short) 0);
 			remote.update();
 		} else {
+		    // 下位机版本为2.0版本时
 			if (remote.getCsrWay().shortValue() == 0 || $.empty(remote.get$csrCar().getCscMobile())) {
-				remote.setCsrCode(getMQTTRemoteCommend(remote));
+			    // 用网关方式发送时
+			    
+			    dealMqttRemoteCommandByPlatformType(remote);
+				// 更新指令结果为已发送
 				remote.setCsrState((short) 1);
 				remote.update();
 			} else if (remote.getCsrWay().shortValue() == 1) {
+			    // 用短信方式发送时
+			    
 				remote.setCsrCode(getRemoteSMSContent(remote));
+				// 更新指令结果为已发送
 				remote.setCsrState((short) 1);
 				remote.update();
 			}
@@ -223,11 +255,51 @@ public class RemoteService implements MqttCallback {
 	}
 	
 	/**
+	 *  【抽离】根据车辆所属平台类型调用不同的发送方式
+	 *  2018-8-3
+	 * @param remote
+	 */
+	private static void dealMqttRemoteCommandByPlatformType(CsRemote remote) {
+	    /**
+         * TODO
+         * 1. 根据车辆所属平台类型调用不同的发送方式
+         *      车辆挂载自己平台时：调用自己的mqtt发送方式
+         *      车辆挂载车机中心时：调用车机中心api接口发送
+         */
+	    Short bindPlatform = remote.get$csrCar().getCscBindPlatform();
+	    
+	    if(0 == bindPlatform) {
+	        // 挂载在自己的业务平台（北京出行平台）
+            remote.setCsrCode(getMQTTRemoteCommend(remote));
+        } else if (1 == bindPlatform) {
+            // 挂载在车机中心: 调用车机中心的api
+            // 车牌号
+            String carNo = remote.get$csrCar().getCscNumber();
+            if (1 != remote.get$csrCar().getCscNetType()) {
+                // 车辆的网络通讯类型不为4G
+                throw new IllegalArgumentException("车机中心简单指令下发时发现该车不是4G车：车牌号=" + carNo);
+            }
+            Short bjCmdCode = remote.getCsrType();
+            VcCmdEnum cmdCode = VcCmdEnum.getByBjCmdCode(bjCmdCode);
+            if (null == cmdCode) {
+                throw new IllegalArgumentException("车机中心不支持的指令码：" + cmdCode);
+            }
+            String vin = remote.get$csrCar().getCscVin();
+            if (StringUtils.isEmpty(vin)) {
+                throw new IllegalArgumentException("车机中心指令下发时找不到车辆的vin码：车牌号" + carNo);
+            }
+            Long messageId = vcCmdApiService.sendControlCmd(cmdCode, vin);
+            // 设置控制指令ID,对应后面从车机中心收到的远程指令结果
+            remote.setCsrMessageId(messageId);
+        }
+	} 
+	
+	/**
 	 * 车辆远程控制，转到远程调用统一服务
 	 * @param remote
 	 */
 	public static void dealRemoteCommend(CsRemote remote) {
-		customDealRemoteCommend(remote);  //临时方案，新版的远程控制专用应用未上线
+		customDealRemoteCommend(remote);  // 临时方案，新版的远程控制专用应用未上线
 		
 		//redirectRemoteCommend(remote.getCsrId());
 	}
@@ -265,7 +337,8 @@ public class RemoteService implements MqttCallback {
 			remote.update();
 		} else {
 			if (remote.getCsrWay().shortValue() == 0 || $.empty(remote.get$csrCar().getCscMobile())) {
-				remote.setCsrCode(getMQTTRemoteCommend(remote));
+//				remote.setCsrCode(getMQTTRemoteCommend(remote));
+			    dealMqttRemoteCommandByPlatformType(remote);
 				remote.setCsrState((short) 1);
 				remote.update();
 			} else if (remote.getCsrWay().shortValue() == 1) {

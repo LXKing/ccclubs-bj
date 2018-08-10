@@ -17,12 +17,15 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
+import com.aliyun.openservices.ons.api.Action;
+import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
+import com.ccclubs.action.vc.service.VcCmdApiService;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.DateHelper;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.model.CsCar;
 import com.ccclubs.model.CsOrder;
+import com.ccclubs.service.admin.ICsCarService;
 import com.ccclubs.service.admin.ICsOrderService;
 import com.ccclubs.service.common.From;
 import com.ccclubs.service.common.ICommonDisposeService;
@@ -52,6 +55,11 @@ public class OrderInfoReceiverThread extends Thread {
 
 	ICsOrderService csOrderService;
 	ICommonDisposeService commonDisposeService;
+	
+	// TODO 未注入
+	ICsCarService csCarService;
+	// TODO 未注入
+	VcCmdApiService vcCmdApiService;
 
 	private final static int CONSTANT_SCAN_INTERVAL = 30;
 	private final static int CONSTANT_DATE_LIMIT = 20; // 订单时间与现在相比，超过10天以上的订单不发送
@@ -489,8 +497,7 @@ public class OrderInfoReceiverThread extends Thread {
 				if (orderList.get(downStream.mOrderId) != null) {
 
 					if (!orderList.get(downStream.mOrderId).getOrderAchieve()) {
-						mqttClientPublish.publish(getTopic(downStream.mCarNum),
-								downStream.getBytes(), 0, false);
+					    dealOrderByNetType(downStream);
 						writeLog("发送订单，订单号： " + downStream.mOrderId + "，车牌号："
 								+ downStream.mCarNum + "，topic："
 								+ getTopic(downStream.mCarNum));
@@ -516,8 +523,7 @@ public class OrderInfoReceiverThread extends Thread {
 					orderList.put(downStream.mOrderId, new OrderSendResult(
 							false, false, new Date()));
 
-					mqttClientPublish.publish(getTopic(downStream.mCarNum),
-							downStream.getBytes(), 0, false);
+					dealOrderByNetType(downStream);
 					writeLog("发送订单，订单号： " + downStream.mOrderId + "，车牌号："
 							+ downStream.mCarNum + "，topic："
 							+ getTopic(downStream.mCarNum));
@@ -540,8 +546,7 @@ public class OrderInfoReceiverThread extends Thread {
 				orderList.put(downStream.mOrderId, new OrderSendResult(false,
 						true, new Date()));
 
-				mqttClientPublish.publish(getTopic(downStream.mCarNum),
-						downStream.getBytes(), 0, false);
+				dealOrderByNetType(downStream);
 				writeLog("发送订单，订单号： " + downStream.mOrderId + "，车牌号："
 						+ downStream.mCarNum + "，topic："
 						+ getTopic(downStream.mCarNum));
@@ -552,6 +557,36 @@ public class OrderInfoReceiverThread extends Thread {
 			e.printStackTrace();
 			writeLog(e.getMessage() + " - publishOrder exception");
 		}
+	}
+	
+	/**
+	 * 根据下发订单的车机选择合适的方式下发订单
+	 *     北京业务平台车：mqtt下发
+	 *     车机中心车：网关下发
+	 * @param downStream
+	 * @throws Exception
+	 */
+	private Long dealOrderByNetType(OrderDownStream downStream) throws Exception {
+	    Long messageId = null;
+	    // 根据终端序列号查找车信息
+        Map<String, Object> carQueryMap = new HashMap<>();
+        // 1:上线
+        carQueryMap.put("cscStatus", (short)1);
+        carQueryMap.put("cscNumber", downStream.mCarNum);
+        // 查询 车牌号并且状态为上线的车辆
+        CsCar carInfo = csCarService.getCsCar(carQueryMap);
+        if (null == carInfo) {
+            throw new IllegalArgumentException("找不到该车牌号对应的车辆: 车牌号=" + downStream.mCarNum);
+        }
+        if (1 == carInfo.getCscBindPlatform() && 1 == carInfo.getCscNetType()) {
+           // 调用车机中心下发订单请求（网关方式下发订单）
+            messageId = vcCmdApiService.publishCarOrderInAuth(downStream, carInfo.getCscVin());
+        } else {
+            // mqtt方式下发订单
+            mqttClientPublish.publish(getTopic(downStream.mCarNum),
+                    downStream.getBytes(), 0, false);
+        }
+        return messageId;
 	}
 
 	/**

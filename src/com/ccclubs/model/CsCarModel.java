@@ -34,10 +34,15 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 	private @caption("修改时间") @column("cscm_update_time")    @note("  ") Date cscmUpdateTime;// 非空     
 	private @caption("添加时间") @column("cscm_add_time")    @note("  ") Date cscmAddTime;// 非空     
 	private @caption("备注") @column("cscm_remark")    @note("  ") String cscmRemark;//     
-	private @caption("状态") @column("cscm_status")    @note(" 1:正常 0:无效  ") Short cscmStatus;// 非空 1:正常 0:无效     
+	private @caption("状态") @column("cscm_status")    @note(" 1:正常 0:无效  ") Short cscmStatus;// 非空 1:正常 0:无效    
+	
+	/**
+	 * 【车机中心对接】新增字段车型标志(公告车型备案型号)
+	 */
+	private @caption("车型标志") @column("cscm_flag")    @note("   ") String cscmFlag;// 
 	
 	//默认构造函数
-	public CsCarModel(){
+	public CsCarModel() {
 	
 	}
 	
@@ -64,7 +69,7 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 	 	,$.getShort("cscmStatus")//状态 [非空]
 	 )
 	**/
-	public CsCarModel(String cscmName,Short cscmType,Short cscmFile,Integer cscmSeatS,String cscmTrunk,String cscmVolume,String cscmCapacity,String cscmThumb,String cscmImage,String cscmDetails,Date cscmUpdateTime,Date cscmAddTime,String cscmRemark,Short cscmStatus){
+	public CsCarModel(String cscmName,Short cscmType,Short cscmFile,Integer cscmSeatS,String cscmTrunk,String cscmVolume,String cscmCapacity,String cscmThumb,String cscmImage,String cscmDetails,Date cscmUpdateTime,Date cscmAddTime,String cscmRemark,Short cscmStatus, String cscmFlag){
 		this.cscmName=cscmName;
 		this.cscmType=cscmType;
 		this.cscmFile=cscmFile;
@@ -79,6 +84,8 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		this.cscmAddTime=cscmAddTime;
 		this.cscmRemark=cscmRemark;
 		this.cscmStatus=cscmStatus;
+		
+		this.cscmFlag= cscmFlag;
 	}
 	
 	//设置非空字段
@@ -182,6 +189,12 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		this.setSeted(F.cscmStatus);
 		return this;
 	}
+	/** 车型标志     **/
+    public CsCarModel cscmFlag(String cscmFlag){
+        this.cscmFlag = cscmFlag;
+        this.setSeted(F.cscmFlag);
+        return this;
+    }
 	
 	
 	//克隆对象
@@ -194,6 +207,7 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		clone.cscmUpdateTime=this.cscmUpdateTime;
 		clone.cscmAddTime=this.cscmAddTime;
 		clone.cscmStatus=this.cscmStatus;
+		clone.cscmFlag=this.cscmFlag;
 		return clone;
 	}
 	
@@ -756,6 +770,28 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		this.cscmStatus = cscmStatus;
 		this.setSeted(F.cscmStatus);
 	}
+	/*******************************车型标志**********************************/  
+    /**
+    * 车型标志       
+    **/
+    public String getCscmFlag(){
+        return this.cscmFlag;
+    }
+    /**
+    * 获取车型标志格式化(toString)
+    **/
+    public String getCscmFlag$(){
+        String strValue="";
+         strValue=$.str(this.getCscmFlag());
+         return strValue;
+    }
+    /**
+    * 车型标志       
+    **/
+    public void setCscmFlag(String cscmFlag){
+        this.cscmFlag = cscmFlag;
+        this.setSeted(F.cscmFlag);
+    }
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
 
@@ -920,6 +956,17 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
  		public M cscmStatusNot(){this.put("cscmStatusNot", "not");return this;};
 	 	public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
+	 	
+	 	/**
+	 	 * 【车机中心对接】新增字段
+	 	 */
+	 	/** 车型标志       **/
+        public M cscmFlag(Object cscmFlag){this.put("cscmFlag", cscmFlag);return this;};
+        /** and cscm_flag is null */
+        public M cscmFlagNull(){if(this.get("cscmFlagNot")==null)this.put("cscmFlagNot", "");this.put("cscmFlag", null);return this;};
+        /** not .... */
+        public M cscmFlagNot(){this.put("cscmFlagNot", "not");return this;};
+        
 	 	/** 获取所有车型 **/
 		public @api List<CsCarModel> list(Integer size){
 			return getCsCarModelList(this,size);
@@ -1003,6 +1050,8 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		public final static @type(String.class) @like String cscmRemark="cscmRemark";
 		/** 状态 [非空]   1:正常 0:无效     **/
 		public final static @type(Short.class)  String cscmStatus="cscmStatus";
+		/** 车型标志     **/
+        public final static @type(String.class)  String cscmFlag="cscmFlag";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -1037,6 +1086,9 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		public final static String cscmRemark="cscm_remark";
 		/** 状态 [非空]   1:正常 0:无效     **/
 		public final static String cscmStatus="cscm_status";
+		/** 车型标志        **/
+        public final static String cscmFlag="cscmFlag";
+        
 	 	public static String get(String name){
 			try {
 				Field field = C.class.getField(name);
