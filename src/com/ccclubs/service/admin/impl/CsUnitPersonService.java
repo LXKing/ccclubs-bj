@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import com.lazy3q.util.Function;
 import com.ccclubs.dao.ICsMemberShipDao;
 import com.ccclubs.dao.ICsUnitInfoDao;
@@ -194,6 +196,8 @@ public class CsUnitPersonService implements ICsUnitPersonService {
         this.csUnitInfoDao = csUnitInfoDao;
     }
 
+    
+    @Override
     public CsUnitPerson changeUnit(CsUnitPerson newData, CsUnitPerson oldData) {
         CsMember payMember = null;// 企业支付账号关联会员初始化
         if (newData.getCsupInfo() != null && oldData != null && (oldData.getCsupInfo() == null
@@ -227,6 +231,119 @@ public class CsUnitPersonService implements ICsUnitPersonService {
         } else {
             newData.setCsupInfo(null);// 不更新单位id
         }
+        //更新企业用户信息
+        this.updateCsUnitPerson(newData);
         return newData;
     }
+    
+    /**
+     * 会员绑定企业和支付账号
+     * @param memberId
+     * @param unitId
+     * @param unitGroupId
+     * @param payer
+     */
+    @Override
+    @Transactional
+    public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId, Long payer) {
+        if(unitId!=null && memberId!=null) {
+            CsMember member = CsMember.get(memberId);
+            
+            //当前要绑定的企业
+            CsUnitInfo csUnitInfo = csUnitInfoDao.getCsUnitInfoById(unitId);
+            //会员关联企业用户信息
+            CsUnitPerson unitPerson = CsUnitPerson.where().csupMember(memberId).get();
+            if(null==unitPerson && member.getVWork()==1) {
+                //企业用户不存在，执行新增操作
+                unitPerson = new CsUnitPerson();
+                unitPerson.setCsupGroup(unitGroupId);
+                unitPerson.setCsupInfo(unitId);
+                unitPerson.setCsupAddTime(new Date());
+                unitPerson.setCsupFlag(null);
+                unitPerson.setCsupHost(member.getCsmHost());
+                unitPerson.setCsupMember(member.getCsmId());
+                unitPerson.setCsupMemo(null);
+                if(StringUtils.isEmpty(member.getCsmName())) {
+                    unitPerson.setCsupName(member.getCsmMobile());
+                }else {
+                    unitPerson.setCsupName(member.getCsmName());    
+                }
+                
+                unitPerson.setCsupRemark(null);
+                unitPerson.setCsupStatus((short)1);
+                unitPerson.setCsupUpdateTime(new Date());
+                this.saveCsUnitPerson(unitPerson);
+                //绑定会员支付账号关系
+                saveMemberShip(member, csUnitInfo, payer);
+            }else {
+                //企业用户已存在，执行更新操作
+                if(member.getVWork() == 1) {
+                    CsUnitPerson.where().csupMember(member.getCsmId()).set()
+                    .csupInfo(unitId).csupGroup(unitGroupId).csupStatus(1).update();
+                }else {
+                    CsUnitPerson.where().csupMember(member.getCsmId()).set()
+                    .csupInfo(unitId).csupGroup(unitGroupId).csupStatus(0).update();
+                }
+                //绑定会员支付账号关系
+                saveMemberShip(member, csUnitInfo, payer);
+            }  
+        }
+    }
+    
+    /**
+     * 保存会员支付关系 
+     * @param memberId 会员id
+     * @param csUnitInfo 会员绑定的企业
+     */
+    public void saveMemberShip(CsMember member, CsUnitInfo csUnitInfo, Long payer) {
+        Long memberId = member.getCsmId();
+        List<CsMember> payers = csUnitInfo.get$csuiMember();
+        if (payers.size() > 0) {
+            CsMember payMember = null;
+            
+            //未指定支付账号，默认第一个
+            if(payer==null) {
+                payMember = payers.get(0);
+            }else{
+                //匹配指定支付账号
+                for (CsMember csMember : payers) {
+                    if(csMember.getCsmId().longValue() == payer) {
+                        payMember = csMember; 
+                    }
+                }
+                //匹配指定支付账号失败，默认第一个
+                if (payMember == null) {
+                    payMember = payers.get(0);
+                }
+            }
+            
+            CsMemberShip ship = csMemberShipDao.getCsMemberShip(
+                    $.add("csmsTargeter", memberId));
+            //支付关系状态
+            short shipStatus = member.getVWork()==1 ? (short)1 : (short)0;
+            
+            //无支付关系记录且工作认证通过，则创建支付关系
+            if (ship==null && shipStatus==1) {
+                new CsMemberShip(payMember.getCsmHost()// 城市 [非空]
+                        , payMember.getCsmId()// 付款帐号 [非空]
+                        , memberId// 使用帐号 [非空]
+                        , new Date()// 添加时间 [非空]
+                        , "创建支付关系"// 备注
+                        , shipStatus// 状态 [非空]
+                ).save();
+            } else {
+                ship.setCsmsStatus(shipStatus);
+                //满足条件才更新
+                if(ship.getCsmsPayer()==null || payMember.getCsmId().longValue()!=ship.getCsmsPayer()) {
+                    ship.setCsmsPayer(payMember.getCsmId());
+                    ship.setCsmsRemark("支付账号变更");
+                    csMemberShipDao.updateCsMemberShip$NotNull(ship);
+                }else if(ship.getCsmsStatus()==null || shipStatus!=ship.getCsmsStatus()) {
+                    ship.setCsmsRemark("支付账号状态变更");
+                    csMemberShipDao.updateCsMemberShip$NotNull(ship);
+                }
+            }
+        }
+    }
+    
 }

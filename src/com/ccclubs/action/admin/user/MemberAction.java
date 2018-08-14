@@ -1269,207 +1269,31 @@ public class MemberAction {
                 public <T> T execute(Object... arg0) {
                     if (csMember.getCsmId() == null)
                         throw new RuntimeException("表单方式审核会员出错，未发现会员ID");
-
-                    // 两项认证成功，送积分
-                    if (csMember.getVDrive().shortValue() == 1
-                            && csMember.getVReal().shortValue() == 1) {
-                        com.ccclubs.service.common.ICommonMoneyService commonMoneyService =
-                                $.getBean("commonMoneyService");
-                        if (com.ccclubs.model.CsIntegralRecord.where()
-                                .csrMember(csMember.getCsmId()).csrType(IntegralType.注册送积分.name())
-                                .get() == null)
-                            commonMoneyService.updateIntegralByRule(csMember.getCsmId(), 1d,
-                                    IntegralType.注册送积分, "资料审核通过得积分", null);
-                    }
-                    // 审核通过发送短信
-                    CsMember oldCsMember = CsMember.get(csMember.getCsmId());
-                    String password = StringUtils.isEmpty(oldCsMember.getCsmPassword())
-                            ? $.zerofill($.rand(999999), 6)
-                            : null;// 自动生成6位随机密码
                     String remark = csMember.getCsmRemark();
-                    csMember.setCsmRemark("");
+                    CsMember oldCsMember = CsMember.get(csMember.getCsmId());
 
-                    Short from = $.or(oldCsMember.getCsmFrom(), (short) 5);
-
-                    if (csMember.getVReal() == 1 && csMember.getVDrive() == 1 && from == 5
-                            && StringUtils.isNotEmpty(password)) {
-                        csMember.setCsmPassword($.md5(password));
-                    }
-                    csMember.update();
-
-                    // 只有审核通过才发送短信
-                    short vprogress = 0;// 初始化原认证进度
-                    if (oldCsMember.getVReal() == 1 && oldCsMember.getVDrive() == 1
-                            && oldCsMember.getVWork() == 1 && oldCsMember.getVOffline() == 1) {
-                        vprogress = 4;// 四项认证完毕
-                    } else if (oldCsMember.getVReal() == 1 && oldCsMember.getVDrive() == 1
-                            && oldCsMember.getVWork() == 1) {
-                        vprogress = 3;// 三项认证完毕
-                    }
-                    // 满足认证进度的发送短信
-                    if (vprogress < 4 && !$.empty(oldCsMember.getCsmMobile()) && from == 5) {
-                        CsUnitPerson csUnitPerson = CsUnitPerson.getCsUnitPerson(
-                                $.add(CsUnitPerson.F.csupMember, oldCsMember.getCsmId()));
-                        if (csUnitPerson != null) {
-                            String append =
-                                    StringUtils.isNotEmpty(password) ? "您的密码为：" + password + "。"
-                                            : null;
-                            if (csMember.getVReal() == 1 && csMember.getVDrive() == 1
-                                    && csMember.getVWork() == 1 && csMember.getVOffline() == 1) {
-                                UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
-                                        "REC_AUTH_COMPLETE_FOUR", oldCsMember.getCsmMobile$(), null,
-                                        SMSType.通知类短信, Collections.emptyMap(), append);
-                            } else if (csMember.getVReal() == 1 && csMember.getVDrive() == 1
-                                    && csMember.getVWork() == 1 && vprogress < 3) {
-                                UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
-                                        "REC_AUTH_COMPLETE_THREE", oldCsMember.getCsmMobile$(),
-                                        null, SMSType.通知类短信, Collections.emptyMap(), append);
-                            }
-                        }
-                    }
-
-                    String payMember = $.getString("payMember");
-                    if (!$.empty(payMember)) {
-                        CsMemberShip cms =
-                                CsMemberShip.where().csmsTargeter(csMember.getCsmId()).get();
-                        if (null == cms && (vprogress == 4 || csMember.getCsmVWork() == 1)) {// 工作认证或者全认证，插入会员关系，会员单位
-                            CsMember newcsMember = CsMember.get(csMember.getCsmId());
-                            CsMemberShip csms = new CsMemberShip();
-                            csms.setCsmsAddTime(new Date());
-                            csms.setCsmsHost(newcsMember.getCsmHost());
-                            csms.setCsmsPayer(Long.parseLong(payMember));
-                            csms.setCsmsRemark(null);
-                            csms.setCsmsStatus((short) 1);
-                            csms.setCsmsTargeter(newcsMember.getCsmId());
-                            csMemberShipService.saveCsMemberShip(csms);
-                            /*
-                             * try { ActionHelper.executeActionScript(CsMemberShip.class, "会员审核",
-                             * csms, csms); } catch (Exception e) {
-                             * 
-                             * }
-                             */
-                        } else {
-                            //工作认证未通过，支付帐号值为待审核
-                            if(vprogress == 4 || csMember.getCsmVWork() == 1) {
-                                CsMemberShip.where().csmsTargeter(csMember.getCsmId()).set()
-                                .csmsPayer(payMember).csmsStatus(1).update();
-                            }else {
-                                CsMemberShip.where().csmsTargeter(csMember.getCsmId()).set()
-                                .csmsPayer(payMember).csmsStatus(0).update();
-                            }
-                            
-                        }
-
-                    }
-                    Long unitInfo = $.getLong("unitInfo");
-                    Long unitGroup = $.getLong("unitGroup");
-
-                    if (unitInfo != null && unitGroup != null) {
-
-                        CsUnitPerson csUnitPersonForInsert =
-                                CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
-                        if (null == csUnitPersonForInsert
-                                && (vprogress == 4 || csMember.getCsmVWork() == 1)) {// 工作认证或者全认证，插入会员关系，会员单位
-                            CsMember newcsMember = CsMember.get(csMember.getCsmId());
-                            CsUnitPerson csUnitPerson = new CsUnitPerson();
-                            csUnitPerson.setCsupAddTime(new Date());
-                            csUnitPerson.setCsupFlag(null);
-                            csUnitPerson.setCsupGroup(unitGroup);
-                            csUnitPerson.setCsupHost(newcsMember.getCsmHost());
-                            csUnitPerson.setCsupInfo(unitInfo);
-                            csUnitPerson.setCsupMember(newcsMember.getCsmId());
-                            csUnitPerson.setCsupMemo(null);
-                            if (StringUtils.isEmpty(newcsMember.getCsmName())) {
-                                csUnitPerson.setCsupName(newcsMember.getCsmMobile());
-                            } else {
-                                csUnitPerson.setCsupName(newcsMember.getCsmName());
-                            }
-
-                            csUnitPerson.setCsupRemark(null);
-                            csUnitPerson.setCsupStatus((short) 1);
-                            csUnitPerson.setCsupUpdateTime(new Date());
-                            csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-
-                            /*
-                             * try { ActionHelper.executeActionScript(CsUnitPerson.class, "会员审核",
-                             * csUnitPerson, csUnitPerson); } catch (Exception e) {
-                             * 
-                             * }
-                             */
-                        } else {
-                            // 已经存在工作认证的绑定关系，将企业用户置为无效
-                            if(vprogress == 4 || csMember.getCsmVWork() == 1) {
-                                CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
-                                .csupInfo(unitInfo).csupGroup(unitGroup).csupStatus(1).update();
-                            }else {
-                                CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
-                                .csupInfo(unitInfo).csupGroup(unitGroup).csupStatus(0).update();
-                            }
-                            
-                        }
-                    }
- 
-                    if (csMember.getCsmVWork() == 1) {
-                        // 线下认证通过的判断是否需要CsUnitPerson关联
-                        CsUnitPerson csUnitPersonForInsert =
-                                CsUnitPerson.where().csupMember(csMember.getCsmId()).get();
-                        if (null == csUnitPersonForInsert) {
-                            CsMemberInfo csMemberInfo =
-                                    CsMemberInfo.where().csmiId(csMember.getCsmId()).get();
-                            if (null != csMemberInfo) {
-                                CsUnitInfo csUnitInfoForInsert = CsUnitInfo.where()
-                                        .csuiName(csMemberInfo.getCsmiCompany()).get();
-                                if (null != csUnitInfoForInsert) {
-                                    CsUnitGroup csUnitGroupForInsert = CsUnitGroup.where()
-                                            .csugName(csMemberInfo.getCsmiDepartment())
-                                            .csugInfo(csUnitInfoForInsert.getCsuiId()).get();
-
-                                    if (null != csUnitGroupForInsert) {
-                                        CsUnitPerson csUnitPerson = new CsUnitPerson();
-                                        csUnitPerson.setCsupAddTime(new Date());
-                                        csUnitPerson.setCsupFlag(null);
-                                        csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
-                                        csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
-                                        csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
-                                        csUnitPerson.setCsupMember(csMember.getCsmId());
-                                        csUnitPerson.setCsupMemo(null);
-                                        csUnitPerson.setCsupName(csMember.getCsmName());
-                                        csUnitPerson.setCsupRemark(null);
-                                        csUnitPerson.setCsupStatus((short) 1);
-                                        csUnitPerson.setCsupUpdateTime(new Date());
-                                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-                                    }
-                                }
-
-
-                            }
-                        } else {// 已经存在企业会员账户
-                            CsMemberInfo csMemberInfo =
-                                    CsMemberInfo.where().csmiId(csMember.getCsmId()).get();
-                            if (null != csMemberInfo) {
-                                CsUnitInfo csUnitInfoForInsert = CsUnitInfo.where()
-                                        .csuiName(csMemberInfo.getCsmiCompany()).get();
-                                if (null != csUnitInfoForInsert) {
-                                    CsUnitGroup csUnitGroupForInsert = CsUnitGroup.where()
-                                            .csugName(csMemberInfo.getCsmiDepartment())
-                                            .csugInfo(csUnitInfoForInsert.getCsuiId()).get();
-
-                                    if (null != csUnitGroupForInsert) {
-                                        CsUnitPerson.where().csupMember(csMember.getCsmId()).set()
-                                                .csupGroup(csUnitGroupForInsert.getCsugId())
-                                                .csupHost(csUnitInfoForInsert.getCsuiHost())
-                                                .csupInfo(csUnitInfoForInsert.getCsuiId())
-                                                .csupStatus((short) 1).update();
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-
+                    /**
+                     * 会员审核流程：
+                     * 1、用户认证通过，赠送积分；2、认证进度提醒短信；
+                     * 3、身份证、驾驶证、工作证认证状态变更失败发送短信提示；
+                     * 4、工作证认证成功；绑定企业和部门、创建企业用户记录；
+                     */
+                    csMemberService.verify(oldCsMember, csMember);
+                    
+                    /**
+                     * 会员绑定企业和支付账号：
+                     * 1、校验memberId和unitId非空
+                     * 2、会员关联企业用户为空则创建企业用户
+                     * 3、设置会员支付关系
+                     */
+                    Long unitId = $.getLong("unitInfo");
+                    Long unitGroupId = $.getLong("unitGroup");
+                    Long payMember = $.getLong("payMember");
+                    csUnitPersonService.setUnitAndPayMember(csMember.getCsmId(), unitId, unitGroupId, payMember);
+                    
+                    //日志输出
                     LoggerHelper.writeLog(CsMember.class, "update",
-                            "审核了[会员帐号][" + oldCsMember.getCsmMobile() + "]"
-                                    + ($.empty(payMember) ? "" : "修改支付会员"),
+                            "审核了[会员帐号][" + oldCsMember.getCsmMobile() + "]",
                             LoginHelper.getLoginId(),
                             LoggerHelper.getUpdateDescription(oldCsMember, csMember, false) + " - "
                                     + remark,
@@ -1486,7 +1310,7 @@ public class MemberAction {
         return $.Redirect($.empty($.getString("entrypoint")) ? $.xeh($.getString("editorpoint"))
                 : $.xeh($.getString("entrypoint")));
     }
-
+    
     /**
      * 批量充值 //会员ID|订单ID|积分充值数|充值描述
      * 
@@ -1536,6 +1360,112 @@ public class MemberAction {
             $.SetTips("系统繁忙,请稍候再试");
         }
         return $.Redirect("member.do");
+    }
+
+    /**
+     * 根据真实姓名或ID查询企业支付账号信息
+     * 
+     * @return
+     */
+    public String getPayers() {
+        try {
+            // 根据当前的类，把表单参数转成Dao查询需要的Map参数格式,ActionHelper.getQueryFormParams这个东东在Lazy3q.jar中
+            Map<String, Object> params = ActionHelper.getQueryFormParams(CsMember.class);
+            // 强制限制域
+            params.put("HOSTS", SystemHelper.testHost(null));
+
+            // 反强制限制域
+            if (params.get("csmRefer") != null && params.get("csmReferNot") == null) {
+                params.remove("HOSTS");
+            }
+
+            // 取排序参数,放入查询条件中，取不到放入查询条件中也没关系，因为Dao层会判断的
+            String strAsc = $.getString("asc");// 升序字段
+            params.put("asc", strAsc);// 放入查询条件
+            String strDesc = $.getString("desc");// 降序字段
+            params.put("desc", strDesc);// 放入查询条件
+            if ($.empty(strAsc) && $.empty(strDesc))// 如果未传入排序字段
+                params.put("desc", "csm_id");// 那么，默认以主键降序，传给Dao层
+
+            String strTerm = $.getString("value");// 智能搜索时的参数，一般都是主键后面那个字段
+            if (!$.empty(strTerm)) {
+                if (strTerm.toLowerCase().startsWith("id:"))// 如果查询条件以id:开头，则按ID查询
+                    params.put("csmId", strTerm.toLowerCase().replaceFirst("id:", ""));
+                else// 按标识查询，模糊查询请带%
+                {
+                    String strDefinex = "";
+                    strDefinex += " or csm_mobile like '" + strTerm.replaceAll("'", "''") + "%'";
+                    strDefinex += " or csm_name like '" + strTerm.replaceAll("'", "''") + "%'";
+                    strDefinex = "(2=1 " + strDefinex + ")";
+                    params.put("definex", strDefinex);
+                }
+            }
+            /************ LAZY3Q_CODE_QUERY ************/
+
+            // 查询会员时取消域限制
+            params.remove("HOSTS");
+            params.remove("csmHost");
+
+            if (!$.empty(strTerm)) {
+                if (strTerm.toLowerCase().startsWith("id")) {// 如果查询条件以id:开头，则按ID查询
+                    if (strTerm.length() < 6)
+                        return $.SendAjax("[]", "UTF-8");
+                    params.put("csmId", strTerm.toLowerCase().replaceFirst("id:", ""));
+                } else {// 按标识查询，模糊查询请带%
+                    String strDefinex = "";
+                    if (java.util.regex.Pattern.matches("[\\d]+", strTerm.replace("%", ""))) {
+                        if (strTerm.length() < 6)
+                            return $.SendAjax("[]", "UTF-8");
+                        strDefinex += " csm_mobile like '" + strTerm.replaceAll("'", "''") + "%'";
+                    } else {
+                        if (strTerm.length() < 2)
+                            return $.SendAjax("[]", "UTF-8");
+                        strDefinex += " csm_name like '" + strTerm.replaceAll("'", "''") + "%'";
+                    }
+                    params.put("definex", strDefinex);
+                }
+            }
+            /************ LAZY3Q_CODE_QUERY ************/
+
+
+            // 是否需要整个数据对象
+            Boolean bObject = $.getBoolean("object", false);
+
+            List<CsMember> list = csMemberService
+                    .getCsMemberPage(0, $.getInteger("size", 10), params).getResult();
+
+            /**
+             * OK!取到数据拼成放入Map中，[{value,text,object:{...}},...] value:数据ID，text:数据标识,object,整个对象
+             **/
+            List<Map> result = new java.util.ArrayList();
+            for (CsMember csMember : list) {
+                Map map = new HashMap();
+                map.put("value", csMember.getCsmId().toString());
+                map.put("text", $.js(csMember.getKeyValue()));
+                if (bObject == true)
+                    map.put("object", csMember);
+                result.add(map);
+            }
+            /************ LAZY3Q_AFTER_QUERY ************/
+            result.clear();
+            for (CsMember csMember : list) {
+                Map map = new HashMap();
+                map.put("value", csMember.getCsmId().toString());
+                map.put("text", $.js(csMember.getCsmHost$() + "-" + csMember.getKeyValue()));
+                if (bObject == true)
+                    map.put("object", csMember);
+                result.add(map);
+            }
+            /************ LAZY3Q_AFTER_QUERY ************/
+
+
+            // $.SendAjax这个函数，第一个参数不是字符串，会自动把第一个对象转成json格式的字符串
+            return $.SendAjax(result, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getRootLogger().error(e.getMessage(), e);
+            return $.SendAjax("[]", "UTF-8");
+        }
     }
 
     public Double getDouble(String sDouble) {

@@ -104,5 +104,12 @@ public interface ICsMemberService
 	 * @param function
 	 */
 	public <T> T executeTransaction(Function function);
+	
+	/**
+     * 审核用户认证信息
+     * @param old 数据库数据
+     * @param fresh 用户请求数据
+     */
+    public void verify(CsMember old, CsMember fresh);
 
 }

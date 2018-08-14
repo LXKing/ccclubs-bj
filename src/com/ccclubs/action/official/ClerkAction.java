@@ -1,14 +1,11 @@
 package com.ccclubs.action.official;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
-
 import com.ccclubs.action.unit.UnitLoginHelper;
 import com.ccclubs.config.CommonMessage;
 import com.ccclubs.config.Constant;
@@ -19,7 +16,6 @@ import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.model.CsMemberShip;
-import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
@@ -222,6 +218,9 @@ public class ClerkAction {
 						if(csUnitPersonService.saveCsUnitPerson(csUnitPerson) != null){
 							LoggerHelper.writeLog(CsUnitUser.class,"add","添加了[人员信息]["+csUnitPerson.getCsupName()+"]",(Long)$.getSession("ccclubs_login_id"), csUnitPerson);
 							$.SetTips("保存人员信息成功");
+							
+                            UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),"REGIST_CODE",csMember.getCsmMobile$(),"欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。"
+                                    ,SMSType.通知类短信,$.add("mobile", csMember.getCsmMobile$()).add("code", password));
 						}else{
 							$.SetTips("系统繁忙，请稍后再试！");
 						}
