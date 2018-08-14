@@ -296,6 +296,13 @@ ${after$form}
 					<s:if test="#request.defines==null && #request.CTRL.l.cscStatus || #request.defines['cscStatus']!=null">
 						<a href="javascript:void(0);" onclick="UpdateSel('status')">状态</a>
 					</s:if>
+					
+					<%-- <s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
+						<a href="javascript:void(0);" onclick="UpdateSel('terNo')">终端序列号</a>
+					</s:if>
+					<s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
+						<a href="javascript:void(0);" onclick="UpdateSel('bindPlatform')">车辆绑定平台</a>
+					</s:if> --%>
 					</td>  <td class="r"></td></tr><tr>  <td class="bl"></td>  <td class="b"></td>  <td class="br"></td></tr>
 					</tbody></table
 				</dd>
@@ -758,7 +765,7 @@ ${after$form}
 			 
 			 <!-- 车机中心对接新增字段 -->
 			 <s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
-			 <td <s:if test="#request.defines['cscTerNo']>0">colspan="${defines["cscTerNo"]}" ${all?"width":"iwidth"}="${defines["cscTerNo"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="49" ref="cscStatus"   title="终端序列号">
+			 <td <s:if test="#request.defines['cscTerNo']>0">colspan="${defines["cscTerNo"]}" ${all?"width":"iwidth"}="${defines["cscTerNo"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="49" ref="cscTerNo"   title="终端序列号">
 			 	<a class="${desc=="csc_ter_no" ? "desc" : ""}${asc=="csc_ter_no" ? "asc" : ""}" href="?${desc=="csc_ter_no" ? "asc=csc_ter_no" : ""}${(asc=="csc_ter_no" || desc!="csc_ter_no" )? "desc=csc_ter_no" : ""}&${lz:queryss("UTF-8","desc","asc")}">
 			 	终端序列号
 			 	</a>
@@ -2029,6 +2036,52 @@ ${after$form}
 					</td>
 				</s:else>
 			</s:if>
+			
+			<!-- 车机中心对接新增字段 -->
+			<s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
+				<s:if test="#request.defines['cscTerNo']>0">
+					${lz:set("注释","****cscTerNo关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.cscTerNo))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCscTerNo",lz:indexOf(fieldName,"cscStatus")>-1)}
+				  		<s:if test="#request.atCscTerNo==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****cscTerNo字段的字串格式化输出****")}
+					<td ref="cscTerNo" class="td ">
+						 	${lz:or(item$cscTerNo[i.count-1],lz:left(item.cscTerNo$,100))}
+					</td>
+				</s:else>
+			</s:if>
+			<s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
+				<s:if test="#request.defines['cscBindPlatform']>0">
+					${lz:set("注释","****cscBindPlatform关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.cscBindPlatform))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCscBindPlatform",lz:indexOf(fieldName,"cscStatus")>-1)}
+				  		<s:if test="#request.atCscBindPlatform==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****cscStatus字段的字串格式化输出****")}
+					<td ref="cscBindPlatform" class="td ">
+						 	${lz:or(item$cscBindPlatform[i.count-1],lz:left(item.cscBindPlatform$,100))}
+					</td>
+				</s:else>
+			</s:if>
 		   ${lz:set("注释","*****************数据列表数据部分结束*****************")}		  
 		  
 		   
@@ -3130,6 +3183,7 @@ ${after$form}
 					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 				</s:else>
 			 </s:if>
+			
 			 <s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
 				<s:if test="#request.defines['cscBindPlatform']>0">
 					${lz:set("注释","****cscBindPlatform关联表的子级字段：如果用户勾选了要显示的话****")}

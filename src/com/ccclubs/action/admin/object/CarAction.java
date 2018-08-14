@@ -61,7 +61,7 @@ import com.lazy3q.sql.Lazy3qDaoSupport;
 public class CarAction
 {
 	ICsCarService csCarService;
-	// TODO 未注入
+	
 	VcCmdApiService vcCmdApiService;
 	
 	CsCar csCar;
@@ -253,6 +253,17 @@ public class CarAction
 							String cscCarNo = csCar.getCscCarNo();
 							String cscMqttFlag = csCar.getCscMqttFlag();
 							for(String sItem:sArray){
+							    /**
+                                 * 【车机中心对接】
+                                 * 校验终端序列号和vin字段
+                                 */
+                                if (1 == csCar.getCscBindPlatform()) {
+                                    if (StringUtils.isBlank(csCar.getCscVin()) || StringUtils.isBlank(csCar.getCscTerNo())) {
+                                        $.SetTips("新增绑定在车机中心的车辆时，终端序列号和vin码必填");
+                                        return null;
+                                    }
+                                }
+                                
 								if(!$.empty(sItem))
 								csCar.setCscNumber(String.valueOf(sItem));
 							
@@ -332,13 +343,20 @@ public class CarAction
 						    /**
                              * 如果更新了vin码或者是终端序列号，说明是单个修改
                              */
-                            if (csCar.getCscVin() != null || csCar.getCscTerNo() != null) {
+                            if (1 == csCar.getCscBindPlatform() || StringUtils.isNotBlank(csCar.getCscVin())|| StringUtils.isNotBlank(csCar.getCscTerNo())) {
                                 CsCar oldCarInfo = csCarService.getCsCarById(csCar.getCscId());
                                 if (null == oldCarInfo) {
-                                    throw new IllegalArgumentException("查不到车辆信息：carId=" + csCar.getCscId());
+                                    $.SetTips("查不到车辆信息：carId=" + csCar.getCscId());
+                                    return null;
+                                }
+                                if (1 == csCar.getCscBindPlatform()) {
+                                    if (StringUtils.isBlank(csCar.getCscVin()) || StringUtils.isBlank(csCar.getCscTerNo())) {
+                                        $.SetTips("变更车辆绑定平台时，终端序列号和vin码必填");
+                                        return null;
+                                    }
                                 }
                                 // 查询原vin码，看是否更改
-                                if (csCar.getCscVin() != null && !csCar.getCscVin().equals(oldCarInfo.getCscVin())) {
+                                if (StringUtils.isNotBlank(csCar.getCscVin()) && !csCar.getCscVin().equals(oldCarInfo.getCscVin())) {
                                     /**
                                      * 更改vin码：
                                      * 1. 先终端解绑
@@ -366,7 +384,7 @@ public class CarAction
                                         }
                                     }
                                 }
-                                if (csCar.getCscTerNo() != null && !csCar.getCscTerNo().equals(oldCarInfo.getCscTerNo())) {
+                                if (StringUtils.isNotBlank(csCar.getCscTerNo()) && !csCar.getCscTerNo().equals(oldCarInfo.getCscTerNo())) {
                                     /**
                                      * 更改终端序列号
                                      * 1. 原终端解绑
@@ -1047,27 +1065,28 @@ public class CarAction
 		this.csCarService = csCarService;
 	}
 
-	public CsCar getCsCar()
-	{
+	public CsCar getCsCar() {
 		return csCar;
 	}
-
-	public void setCsCar(CsCar csCar)
-	{
+	
+	public void setCsCar(CsCar csCar) {
 		this.csCar = csCar;
 	}
-
-
-
+	
 	public Long getProperty() {
 		return property;
 	}
-
-
-
+	
 	public void setProperty(Long property) {
 		this.property = property;
 	}
 	
+    public VcCmdApiService getVcCmdApiService() {
+        return vcCmdApiService;
+    }
+    
+    public void setVcCmdApiService(VcCmdApiService vcCmdApiService) {
+        this.vcCmdApiService = vcCmdApiService;
+    }
 	
 }

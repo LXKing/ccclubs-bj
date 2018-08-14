@@ -249,7 +249,7 @@ public class VcCmdApiService {
      */
     private static String apiUrl(String uri) {
         return new StringBuilder()
-                .append("http").append("://").append(API_HOST).append(":").append(API_PORT).append("/")
+                .append("http").append("://").append(API_HOST).append(":").append(API_PORT)
                 .append(uri).toString();
     }
     
@@ -286,7 +286,16 @@ public class VcCmdApiService {
      */
     private static JSONObject dealApiPost(String reqDes, String url, String params) {
         // 发送post请求
-        String apiResult = APICallHelper.doPostJSON(url, params, apiHeader(params));
+//        String apiResult = APICallHelper.doPostJSON(url, params, apiHeader(params));
+        
+        // ---测试,待删除---
+        String apiResult = "{\r\n" + 
+                "success: true,\r\n" + 
+                "code: 100000,\r\n" + 
+                "data: {\"messageId\": 222}" + 
+                "}";
+        // ---测试,待删除---
+        
         // 日志记录
         StringBuilder traceSb = new StringBuilder();
         traceSb.append(reqDes).append(": ")
