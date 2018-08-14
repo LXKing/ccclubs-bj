@@ -1811,13 +1811,13 @@ public class BaseAction extends OutsideStatisticsUtil{
 		ResponseEnvelope<String> re = new ResponseEnvelope<String>();
 		HttpServletResponse response = ServletActionContext.getResponse();
 		try {
-//			String token = $.getString("sessionToken");
-//			SrvUser user = OauthUtils.getSrvOauth(token);
-//			if(user == null){
-//				re.setState(false).setMessage("未登录").setCode(201);
-//				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
-//				return;
-//			}
+			String token = $.getString("sessionToken");
+			SrvUser user = OauthUtils.getSrvOauth(token);
+			if(user == null){
+				re.setState(false).setMessage("未登录").setCode(201);
+				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+				return;
+			}
 			//
 			ICsMemberService csMemberService = $.GetSpringBean("csMemberService");
 			ICsMemberInfoService csMemberInfoService = $.GetSpringBean("csMemberInfoService");
@@ -1870,13 +1870,13 @@ public class BaseAction extends OutsideStatisticsUtil{
 		ResponseEnvelope<String> re = new ResponseEnvelope<String>();
 		HttpServletResponse response = ServletActionContext.getResponse();
 		try {
-//			String token = $.getString("sessionToken");
-//			SrvUser user = OauthUtils.getSrvOauth(token);
-//			if(user == null){
-//				re.setState(false).setMessage("未登录").setCode(201);
-//				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
-//				return;
-//			}
+			String token = $.getString("sessionToken");
+			SrvUser user = OauthUtils.getSrvOauth(token);
+			if(user == null){
+				re.setState(false).setMessage("未登录").setCode(201);
+				jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);
+				return;
+			}
 			//
 			String mobile = $.getString("mobile");
 			//0:未认证 1:已认证  3:认证失败
