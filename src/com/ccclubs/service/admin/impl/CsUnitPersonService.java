@@ -241,10 +241,11 @@ public class CsUnitPersonService implements ICsUnitPersonService {
      * @param memberId
      * @param unitId
      * @param unitGroupId
+     * @param payer
      */
     @Override
     @Transactional
-    public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId) {
+    public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId, Long payer) {
         if(unitId!=null && memberId!=null) {
             CsMember member = CsMember.get(memberId);
             
@@ -252,7 +253,7 @@ public class CsUnitPersonService implements ICsUnitPersonService {
             CsUnitInfo csUnitInfo = csUnitInfoDao.getCsUnitInfoById(unitId);
             //会员关联企业用户信息
             CsUnitPerson unitPerson = CsUnitPerson.where().csupMember(memberId).get();
-            if(null==unitPerson) {
+            if(null==unitPerson && member.getVWork()==1) {
                 //企业用户不存在，执行新增操作
                 unitPerson = new CsUnitPerson();
                 unitPerson.setCsupGroup(unitGroupId);
@@ -273,16 +274,18 @@ public class CsUnitPersonService implements ICsUnitPersonService {
                 unitPerson.setCsupUpdateTime(new Date());
                 this.saveCsUnitPerson(unitPerson);
                 //绑定会员支付账号关系
-                saveMemberShip(memberId, csUnitInfo);
+                saveMemberShip(member, csUnitInfo, payer);
             }else {
                 //企业用户已存在，执行更新操作
-                CsUnitPerson.where().csupMember(memberId).set()
-                .csupInfo(unitId).csupGroup(unitGroupId).update();
-                
-                if (unitPerson.getCsupInfo()!=null && unitPerson.getCsupInfo()!=unitId.longValue()) {
-                    //绑定会员支付账号关系
-                    saveMemberShip(memberId, csUnitInfo);
+                if(member.getVWork() == 1) {
+                    CsUnitPerson.where().csupMember(member.getCsmId()).set()
+                    .csupInfo(unitId).csupGroup(unitGroupId).csupStatus(1).update();
+                }else {
+                    CsUnitPerson.where().csupMember(member.getCsmId()).set()
+                    .csupInfo(unitId).csupGroup(unitGroupId).csupStatus(0).update();
                 }
+                //绑定会员支付账号关系
+                saveMemberShip(member, csUnitInfo, payer);
             }  
         }
     }
@@ -292,23 +295,50 @@ public class CsUnitPersonService implements ICsUnitPersonService {
      * @param memberId 会员id
      * @param csUnitInfo 会员绑定的企业
      */
-    public void saveMemberShip(Long memberId, CsUnitInfo csUnitInfo) {
-        List<CsMember> members = csUnitInfo.get$csuiMember();
-        if (members.size() > 0) {
-            CsMember payMember = members.get(0);
+    public void saveMemberShip(CsMember member, CsUnitInfo csUnitInfo, Long payer) {
+        Long memberId = member.getCsmId();
+        List<CsMember> payers = csUnitInfo.get$csuiMember();
+        if (payers.size() > 0) {
+            CsMember payMember = null;
+            
+            //未指定支付账号，默认第一个
+            if(payer==null) {
+                payMember = payers.get(0);
+            }else{
+                //匹配指定支付账号
+                for (CsMember csMember : payers) {
+                    if(csMember.getCsmId().longValue() == payer) {
+                        payMember = csMember; 
+                    }
+                }
+                //匹配指定支付账号失败，默认第一个
+                if (payMember == null) {
+                    payMember = payers.get(0);
+                }
+            }
+            
             CsMemberShip ship = csMemberShipDao.getCsMemberShip(
-                    $.add("csmsTargeter", memberId).add("csmsStatus", 1));
-            if (ship == null) {
+                    $.add("csmsTargeter", memberId));
+            //支付关系状态
+            short shipStatus = member.getVWork()==1 ? (short)1 : (short)0;
+            
+            //无支付关系记录且工作认证通过，则创建支付关系
+            if (ship==null && shipStatus==1) {
                 new CsMemberShip(payMember.getCsmHost()// 城市 [非空]
                         , payMember.getCsmId()// 付款帐号 [非空]
                         , memberId// 使用帐号 [非空]
                         , new Date()// 添加时间 [非空]
                         , "创建支付关系"// 备注
-                        , (short) 1// 状态 [非空]
+                        , shipStatus// 状态 [非空]
                 ).save();
             } else {
-                ship.setCsmsPayer(payMember.getCsmId());
-                ship.setCsmsRemark("更换单位更新支付关系");
+                if(ship.getCsmsPayer()==null || payMember.getCsmId().longValue()!=ship.getCsmsPayer()) {
+                    ship.setCsmsPayer(payMember.getCsmId());
+                    ship.setCsmsRemark("支付账号变更");
+                }else {
+                    ship.setCsmsRemark("支付账号状态变更");
+                    ship.setCsmsStatus(shipStatus);
+                }
                 csMemberShipDao.updateCsMemberShip$NotNull(ship);
             }
         }

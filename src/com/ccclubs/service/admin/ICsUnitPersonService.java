@@ -114,11 +114,12 @@ public interface ICsUnitPersonService
 	public CsUnitPerson changeUnit(CsUnitPerson newData, CsUnitPerson oldData);
 	
 	/**
-	 * 
+	 * 会员绑定企业和支付账号
 	 * @param memberId
 	 * @param unitId
 	 * @param unitGroupId
+	 * @param payer
 	 */
-	public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId);
+	public void setUnitAndPayMember(Long memberId, Long unitId, Long unitGroupId,Long payer);
 
 }

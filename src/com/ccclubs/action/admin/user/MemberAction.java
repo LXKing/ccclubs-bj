@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import jxl.Sheet;
-import jxl.Workbook;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import com.ccclubs.config.SYSTEM;
@@ -17,12 +15,10 @@ import com.ccclubs.helper.ActionHelper;
 import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.helper.LoginHelper;
 import com.ccclubs.helper.SystemHelper;
-import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.model.CsMemberShip;
 import com.ccclubs.model.CsOrder;
-import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
 import com.ccclubs.service.admin.ICsMemberService;
@@ -30,7 +26,6 @@ import com.ccclubs.service.admin.ICsMemberShipService;
 import com.ccclubs.service.admin.ICsOrderService;
 import com.ccclubs.service.admin.ICsUnitPersonService;
 import com.ccclubs.service.common.ICommonMoneyService;
-import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.lazy3q.sql.Lazy3qDaoSupport;
 import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
@@ -40,7 +35,8 @@ import com.lazy3q.web.node.Export;
 import com.lazy3q.web.util.Ctrl;
 import com.lazy3q.web.util.Page;
 import com.opensymphony.xwork2.ActionContext;
-import edu.emory.mathcs.backport.java.util.Collections;
+import jxl.Sheet;
+import jxl.Workbook;
 
 
 /**
@@ -1285,7 +1281,8 @@ public class MemberAction {
                      */
                     Long unitId = $.getLong("unitInfo");
                     Long unitGroupId = $.getLong("unitGroup");
-                    csUnitPersonService.setUnitAndPayMember(csMember.getCsmId(), unitId, unitGroupId);
+                    Long payMember = $.getLong("payMember");
+                    csUnitPersonService.setUnitAndPayMember(csMember.getCsmId(), unitId, unitGroupId, payMember);
                     
                     //日志输出
                     LoggerHelper.writeLog(CsMember.class, "update",
