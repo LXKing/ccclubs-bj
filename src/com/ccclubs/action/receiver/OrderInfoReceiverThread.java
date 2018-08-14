@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,9 +57,7 @@ public class OrderInfoReceiverThread extends Thread {
 	ICsOrderService csOrderService;
 	ICommonDisposeService commonDisposeService;
 	
-	// TODO 未注入
 	ICsCarService csCarService;
-	// TODO 未注入
 	VcCmdApiService vcCmdApiService;
 
 	private final static int CONSTANT_SCAN_INTERVAL = 30;
@@ -497,7 +496,9 @@ public class OrderInfoReceiverThread extends Thread {
 				if (orderList.get(downStream.mOrderId) != null) {
 
 					if (!orderList.get(downStream.mOrderId).getOrderAchieve()) {
-					    dealOrderByNetType(downStream);
+					 // mqtt方式下发订单
+			            mqttClientPublish.publish(getTopic(downStream.mCarNum),
+			                    downStream.getBytes(), 0, false);
 						writeLog("发送订单，订单号： " + downStream.mOrderId + "，车牌号："
 								+ downStream.mCarNum + "，topic："
 								+ getTopic(downStream.mCarNum));
@@ -566,8 +567,8 @@ public class OrderInfoReceiverThread extends Thread {
 	 * @param downStream
 	 * @throws Exception
 	 */
-	private Long dealOrderByNetType(OrderDownStream downStream) throws Exception {
-	    Long messageId = null;
+	private boolean dealOrderByNetType(OrderDownStream downStream) throws Exception {
+	    boolean sendResult;
 	    // 根据终端序列号查找车信息
         Map<String, Object> carQueryMap = new HashMap<>();
         // 1:上线
@@ -578,15 +579,16 @@ public class OrderInfoReceiverThread extends Thread {
         if (null == carInfo) {
             throw new IllegalArgumentException("找不到该车牌号对应的车辆: 车牌号=" + downStream.mCarNum);
         }
-        if (1 == carInfo.getCscBindPlatform() && 1 == carInfo.getCscNetType()) {
+        if (1 == carInfo.getCscBindPlatform()) {
            // 调用车机中心下发订单请求（网关方式下发订单）
-            messageId = vcCmdApiService.publishCarOrderInAuth(downStream, carInfo.getCscVin());
+            sendResult = vcCmdApiService.publishCarOrderInAuth(downStream, carInfo.getCscVin());
         } else {
             // mqtt方式下发订单
             mqttClientPublish.publish(getTopic(downStream.mCarNum),
                     downStream.getBytes(), 0, false);
+            sendResult = true;
         }
-        return messageId;
+        return sendResult;
 	}
 
 	/**
@@ -1150,6 +1152,28 @@ public class OrderInfoReceiverThread extends Thread {
 			}
 		}
 	}
+	
+	/**
+	 * 提供一个可以从其他业务操作orderList的方式
+	 * 当收到订单回复时，调用该方式，移除订单结果信息
+	 * @param carNo
+	 * @param orderId
+	 * @param funCode
+	 */
+	public static void removeCachedOrderReult (String carNo, Long orderId, byte funCode) {
+	    Objects.requireNonNull(carNo);
+	    Objects.requireNonNull(orderId);
+	    
+	    // 接收订单二次确认信息
+        if (funCode == ORDER_STREAM_FUC_CODE) {
+            writeLog("收到来自 车牌号：" + carNo + "，订单号："
+                    + orderId + " 订单回复");
+            if (orderList != null && orderList.get(orderId) != null) {
+                orderList.remove(orderId);
+                updateOrderState(orderId, 2);
+            }
+        }
+	}
 
 	public ICsOrderService getCsOrderService() {
 		return csOrderService;
@@ -1167,5 +1191,23 @@ public class OrderInfoReceiverThread extends Thread {
 			ICommonDisposeService commonDisposeService) {
 		this.commonDisposeService = commonDisposeService;
 	}
+
+    public ICsCarService getCsCarService() {
+        return csCarService;
+    }
+
+    public VcCmdApiService getVcCmdApiService() {
+        return vcCmdApiService;
+    }
+
+    public void setCsCarService(ICsCarService csCarService) {
+        this.csCarService = csCarService;
+    }
+
+    public void setVcCmdApiService(VcCmdApiService vcCmdApiService) {
+        this.vcCmdApiService = vcCmdApiService;
+    }
+	
+	
 
 }

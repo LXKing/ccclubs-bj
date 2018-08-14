@@ -36,10 +36,10 @@ import com.ccclubs.service.admin.ICsHistoryStateService;
 import com.ccclubs.service.admin.ICsOrderService;
 import com.ccclubs.service.admin.ICsRemoteService;
 import com.ccclubs.service.admin.ICsStateService;
-import com.ccclubs.service.admin.impl.CsRemoteService;
 import com.ccclubs.util.mq.ICarStatus;
 import com.ccclubs.util.mq.TerminalStatus;
 import com.ccclubs.util.mq.entity.FurtherCar;
+import com.ccclubs.util.mq.entity.OrderUpStream;
 import com.ccclubs.util.mq.entity.RemoteOption;
 import com.ccclubs.util.mq.entity.TakeCar;
 import com.lazy3q.sql.Lazy3qDaoSupport;
@@ -55,19 +55,14 @@ public class VCOnsReceiver implements MessageListener {
     
     ICsHistoryStateService csHistoryStateService;
     
-    // TODO 未注入
     CarOrderScheduledPoolExecuter carOrderScheduledPoolExecuter;
     
-    // TODO 未注入
     ICsOrderService csOrderService;
     
-    // TODO 未注入
     ICsCarService csCarService;
     
-    // TODO 未注入
     VcCmdApiService vcCmdApiService;
     
-    // TODO 未注入
     ICsRemoteService csRemoteService;
     
     /**
@@ -134,9 +129,9 @@ public class VCOnsReceiver implements MessageListener {
                     $.trace("状态数据异常：该终端序列号 [" + terNo + "] 找不到对应的车辆信息 ");
                     return Action.CommitMessage;
                 } else {
-                    //  绑定平台为车机中心                                                                       车辆网络通信类型为4G（即4G车）
-                    if (1 != carInfo.getCscBindPlatform() || 1 != carInfo.getCscNetType()) {
-                        $.trace("该车辆不是绑定车机中心[" + carInfo.getCscBindPlatform() + "]，或者通信类型不是4G[" + carInfo.getCscNetType() + "]");
+                    //  绑定平台为车机中心                                                                      
+                    if (1 != carInfo.getCscBindPlatform()) {
+                        $.trace("该车辆不是绑定车机中心[" + carInfo.getCscBindPlatform() + "]");
                         return Action.CommitMessage;
                     }
                 }
@@ -245,6 +240,24 @@ public class VCOnsReceiver implements MessageListener {
                         furtherCar.mFucCode=ORDER_FURTHER_FUC_CODE_E;
                         updateFurtherCarForOns(furtherCar);
                     }
+                }
+                break;
+            case MQTT_ORDER_ACK:
+                // 终端接收到订单后，终端主动上报一个应答信息
+                
+                // 订单应答功能码
+                byte funCode = 0x44;
+                OrderUpStream orderUpStream = null;
+                try {
+                    orderUpStream = OrderUpStream.readObject(
+                            msg.getBody(), OrderUpStream.class);
+                } catch (Exception e) {
+                    $.trace("订单应答序列化失败： " + e.getMessage());
+                }
+                if (orderUpStream != null
+                        && orderUpStream.mFucCode == funCode) {
+                    
+                    OrderInfoReceiverThread.removeCachedOrderReult(orderUpStream.mCarNum, orderUpStream.mOrderId, orderUpStream.mFucCode);
                 }
                 break;
                 default:
@@ -767,5 +780,70 @@ public class VCOnsReceiver implements MessageListener {
             e.printStackTrace();
             writeLog(e.getMessage());
         }
+    }
+
+    public ICsStateService getCsStateService() {
+        return csStateService;
+    }
+
+    public ICsHistoryStateService getCsHistoryStateService() {
+        return csHistoryStateService;
+    }
+
+    public CarOrderScheduledPoolExecuter getCarOrderScheduledPoolExecuter() {
+        return carOrderScheduledPoolExecuter;
+    }
+
+    public ICsOrderService getCsOrderService() {
+        return csOrderService;
+    }
+
+    public ICsCarService getCsCarService() {
+        return csCarService;
+    }
+
+    public VcCmdApiService getVcCmdApiService() {
+        return vcCmdApiService;
+    }
+
+    public ICsRemoteService getCsRemoteService() {
+        return csRemoteService;
+    }
+
+    public BlockingQueue<ICarStatus> getCarStatusQueue() {
+        return carStatusQueue;
+    }
+
+    public void setCsStateService(ICsStateService csStateService) {
+        this.csStateService = csStateService;
+    }
+
+    public void setCsHistoryStateService(ICsHistoryStateService csHistoryStateService) {
+        this.csHistoryStateService = csHistoryStateService;
+    }
+
+    public void setCarOrderScheduledPoolExecuter(
+            CarOrderScheduledPoolExecuter carOrderScheduledPoolExecuter) {
+        this.carOrderScheduledPoolExecuter = carOrderScheduledPoolExecuter;
+    }
+
+    public void setCsOrderService(ICsOrderService csOrderService) {
+        this.csOrderService = csOrderService;
+    }
+
+    public void setCsCarService(ICsCarService csCarService) {
+        this.csCarService = csCarService;
+    }
+
+    public void setVcCmdApiService(VcCmdApiService vcCmdApiService) {
+        this.vcCmdApiService = vcCmdApiService;
+    }
+
+    public void setCsRemoteService(ICsRemoteService csRemoteService) {
+        this.csRemoteService = csRemoteService;
+    }
+
+    public void setCarStatusQueue(BlockingQueue<ICarStatus> carStatusQueue) {
+        this.carStatusQueue = carStatusQueue;
     }
 }

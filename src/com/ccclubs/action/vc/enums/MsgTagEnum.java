@@ -8,7 +8,12 @@ public enum MsgTagEnum {
      * CAR_ALARM_FUC_CODE
      * 远程指令结果
      */
-    MQTT_REMOTE("terminal_remote_16", 0x43);
+    MQTT_REMOTE("terminal_remote_16", 0x43),
+    
+    /**
+     * 订单接收状态回复
+     */
+    MQTT_ORDER_ACK("terminal_order_16", 0x44);
     
     private String tag;
     private Integer hex;

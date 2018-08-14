@@ -35,7 +35,22 @@ public class VcApiCons {
     public static final String VC_API_CAR_REGISTER = "/operate/vehicleRegister";
     
     /**
+     * 车辆基本信息修改
+     */
+    public static final String VC_API_CAR_INFO_UPDATE = "/operate/vehicleModify";
+    
+    /**
      * 订单下发
      */
     public static final String VC_API_CAR_ORDER = "/command/issueAuthOrderData";
+    
+    /**
+     * 终端车辆绑定
+     */
+    public static final String VC_API_CAR_BIND_TER = "/operate/bindVehicle";
+    
+    /**
+     * 终端车辆解除绑定
+     */
+    public static final String VC_API_CAR_UNBIND_TER = "/operate/unbindVehicle";
 }

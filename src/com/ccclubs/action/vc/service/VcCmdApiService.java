@@ -10,7 +10,9 @@ import org.apache.commons.codec.digest.HmacUtils;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSONObject;
 import com.ccclubs.action.vc.constant.VcApiCons;
+import com.ccclubs.action.vc.dto.BindVehicleInput;
 import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
+import com.ccclubs.action.vc.dto.UnBindVehicleInput;
 import com.ccclubs.action.vc.dto.VcSimpleCmdApiResp;
 import com.ccclubs.action.vc.dto.VehicleRegisterInput;
 import com.ccclubs.action.vc.enums.VcCmdEnum;
@@ -28,8 +30,7 @@ import com.lazy3q.web.helper.$;
  * @date 2018-8-3
  */
 public class VcCmdApiService {
-    
-    // TODO 注入
+   
     private ICsCarService csCarService;
 
     /*************************************************
@@ -79,18 +80,21 @@ public class VcCmdApiService {
         String params = paramJson.toJSONString();
         // 组装post请求
         JSONObject apiResult = dealApiPost("发送控制指令", reqUrl, params);
-        if (null != apiResult) {
+        
+        if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
             return apiResult.getJSONObject("data").getLong("messageId");
+        } else {
+            $.trace("调用车机中心简单指令失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
+            return null;
         }
-        return null;
     }
     
     /**
      * 发送车辆注册信息，调用车机中心车辆注册
      * @param newCar
-     * @return
+     * @return          返回的异常信息
      */
-    public void sendCarRegister(CsCar newCar) {
+    public boolean sendCarRegister(CsCar newCar) {
         Objects.requireNonNull(newCar);
         
         VehicleRegisterInput registerInput = new VehicleRegisterInput();
@@ -128,7 +132,13 @@ public class VcCmdApiService {
         String reqUrl = apiUrl(VcApiCons.VC_API_CAR_REGISTER);
         String params = JSON.toJSONString(registerInput);
         
-        dealApiPost("发送车辆注册", reqUrl, params);
+        JSONObject apiResult = dealApiPost("发送车辆注册", reqUrl, params);
+        if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
+            return true;
+        } else {
+            $.trace("调用车机中心api发送车辆注册失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
+            return false;
+        }
     }
     
     /**
@@ -137,7 +147,7 @@ public class VcCmdApiService {
      * @param vin           车辆vin码（必填）
      * @return              下发的指令ID（用于接收结果回调）
      */
-    public Long publishCarOrderInAuth(OrderDownStream downStream, String vin) {
+    public boolean publishCarOrderInAuth(OrderDownStream downStream, String vin) {
         Objects.requireNonNull(vin);
         
         IssueAuthOrderInput apiOrderInput = new IssueAuthOrderInput();
@@ -153,10 +163,62 @@ public class VcCmdApiService {
         String params = JSON.toJSONString(apiOrderInput);
         
         JSONObject apiResult = dealApiPost("订单下发", reqUrl, params);
-        if (null != apiResult) {
-            return apiResult.getJSONObject("data").getLong("messageId");
+        if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
+            return true;
+        } else {
+            $.trace("调用车机中心带认证订单下发接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
+            return false;
         }
-        return null;
+    }
+    
+    /**
+     * 调用车机中心车辆绑定终端接口
+     * @param carInfo       车辆信息：必须包含vin和终端序列号
+     * @return              true: 绑定成功，false：绑定失败
+     */
+    public boolean carBindTerminal(CsCar carInfo) {
+        Objects.requireNonNull(carInfo.getCscTerNo());
+        Objects.requireNonNull(carInfo.getCscVin());
+        
+        BindVehicleInput bindInput = new BindVehicleInput();
+        bindInput.setTeNo(carInfo.getCscTerNo());
+        bindInput.setVin(carInfo.getCscVin());
+        
+        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_BIND_TER);
+        String params = JSON.toJSONString(bindInput);
+        
+        JSONObject apiResult = dealApiPost("车辆绑定终端", reqUrl, params);
+        if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
+            return true;
+        } else {
+            $.trace("调用车机中心车辆绑定终端接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
+            return false;
+        }
+    }
+    
+    /**
+     * 车辆与终端取消绑定
+     * @param carInfo
+     * @return          true: 绑定成功，false：绑定失败
+     */
+    public boolean carUnbindTerminal(CsCar carInfo) {
+        Objects.requireNonNull(carInfo.getCscTerNo());
+        Objects.requireNonNull(carInfo.getCscVin());
+        
+        UnBindVehicleInput unbindInput = new UnBindVehicleInput();
+        unbindInput.setTeNo(carInfo.getCscTerNo());
+        unbindInput.setVin(carInfo.getCscVin());
+        
+        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_UNBIND_TER);
+        String params = JSON.toJSONString(unbindInput);
+        
+        JSONObject apiResult = dealApiPost("车辆与终端解除绑定", reqUrl, params);
+        if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
+            return true;
+        } else {
+            $.trace("调用车机中心车辆取消绑定终端接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
+            return false;
+        }
     }
     
     
@@ -236,15 +298,18 @@ public class VcCmdApiService {
         try {
             respJson = JSON.parseObject(apiResult);
         } catch (Exception e) {
-            $.trace("车机中心返回的结果异常，json序列化失败");
+            $.trace("车机中心返回的结果异常，json序列化失败: apiResult=" + apiResult);
             throw new IllegalStateException("车机中心返回的结果异常，json序列化失败");
         }
-        if (VcApiCons.VC_API_CODE_SUCCESS == respJson.getIntValue("code")) {
-            return respJson;
-        } else {
-            $.trace("调用车机中心api失败： url=[" + url + "]");
-            return null;
-        }
+        return respJson;
+    }
+
+    public ICsCarService getCsCarService() {
+        return csCarService;
+    }
+
+    public void setCsCarService(ICsCarService csCarService) {
+        this.csCarService = csCarService;
     }
     
     

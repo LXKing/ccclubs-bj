@@ -664,6 +664,20 @@ $(function(){
 				return "请选择状态";
 		}
 		</s:if>	
+		<s:if test="#request.CTRL.e.cscTerNo==true">
+		${lz:set("haveEditable",true)}
+		,"csCar.cscTerNo":function(el){
+			if(jQuery.trim(el.value)=="")
+				return "请填写终端序列号";
+		}
+		</s:if>	
+		<s:if test="#request.CTRL.e.cscBindPlatform==true">
+		${lz:set("haveEditable",true)}
+		,"csCar.cscBindPlatform":function(el){
+			if(jQuery.trim(el.value)=="")
+				return "请选择车辆挂载平台";
+		}
+		</s:if>	
 	},function(){
 		${lz:set("注释","****表单提交自定义判断，阻止提交返回提示字符串即可****")}
 		/******************************LAZY3Q_FORM_VALIDATE******************************/
@@ -3065,6 +3079,80 @@ $(function(){
 		</s:else>
 	</dl>
 	${after$cscStatus}
+	</s:if>
+	
+	${lz:set("注释","*****************终端序列号字段的输入框代码*****************")}
+	${lz:set("注释","before$cscTerNo和after$cscTerNo变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.cscTerNo==true">
+	${before$cscTerNo}
+	<dl class="cscTerNo " major  ref="cscTerNo" >
+		<dt>车牌名称:</dt>
+		<s:if test="#request.CTRL.e.cscTerNo==true">
+		${lz:set("haveEditable",true)}
+		<dd input="text">
+		<s:if test="#request.csCar$cscTerNo!=null">${csCar$cscTerNo}</s:if><s:else>
+		 	<input type="text" class="input narrow"  maxlength="32" name="csCar.cscTerNo" id="cscTerNo"  value="${csCar.cscTerNo}"/>
+	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请输入要绑定的终端序列号</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****车牌名称字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="cscTerNo">${csCar.cscTerNo}</textarea>
+		 		<span>
+		 	
+			 ${csCar.cscTerNo$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$cscTerNo}
+	</s:if>
+	
+	${lz:set("注释","*****************车辆所挂载平台字段的输入框代码*****************")}
+	${lz:set("注释","before$cscBindPlatform和after$cscBindPlatform变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.cscBindPlatform==true">
+	${before$cscBindPlatform}
+	<dl class="cscBindPlatform " major  ref="cscBindPlatform" >
+		<dt>状　　态:</dt>
+		<s:if test="#request.CTRL.e.cscBindPlatform==true">
+		${lz:set("haveEditable",true)}
+		<dd input="select">
+		<s:if test="#request.csCar$cscBindPlatform!=null">${csCar$cscBindPlatform}</s:if><s:else>
+		 	<select class="narrow" id="cscBindPlatform" name="csCar.cscBindPlatform">
+		 		<option value="">请选择</option>
+				<option value="0" ${csCar.cscBindPlatform==0?"selected":""}>北京出行平台</option>
+				<option value="1" ${csCar.cscBindPlatform==1?"selected":""}>车机中心平台</option>
+		 	</select>
+	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请选择车辆所挂载平台</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****车辆所挂载平台字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="cscBindPlatform">${csCar.cscBindPlatform}</textarea>
+		 		<span>
+		 	
+			 ${csCar.cscBindPlatform$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$cscBindPlatform}
 	</s:if>
 				
 				<div class="line"></div>

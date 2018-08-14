@@ -275,10 +275,6 @@ public class RemoteService implements MqttCallback {
             // 挂载在车机中心: 调用车机中心的api
             // 车牌号
             String carNo = remote.get$csrCar().getCscNumber();
-            if (1 != remote.get$csrCar().getCscNetType()) {
-                // 车辆的网络通讯类型不为4G
-                throw new IllegalArgumentException("车机中心简单指令下发时发现该车不是4G车：车牌号=" + carNo);
-            }
             Short bjCmdCode = remote.getCsrType();
             VcCmdEnum cmdCode = VcCmdEnum.getByBjCmdCode(bjCmdCode);
             if (null == cmdCode) {

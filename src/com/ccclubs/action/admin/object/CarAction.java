@@ -40,6 +40,7 @@ import com.ccclubs.model.CsUserType;
 import com.ccclubs.model.Restriction;
 import com.ccclubs.model.SrvHost;
 import com.ccclubs.service.admin.ICsOutletsService;
+import com.ccclubs.action.vc.service.VcCmdApiService;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.config.SYSTEM.RuleName;
 import com.ccclubs.dao.ICsGoodsDao;
@@ -60,6 +61,8 @@ import com.lazy3q.sql.Lazy3qDaoSupport;
 public class CarAction
 {
 	ICsCarService csCarService;
+	// TODO 未注入
+	VcCmdApiService vcCmdApiService;
 	
 	CsCar csCar;
 	//下线标签
@@ -285,9 +288,6 @@ public class CarAction
 								if (null == csCar.getCscBindPlatform()) {
 								    csCar.setCscBindPlatform((short) 0);
 								}
-								if (null == csCar.getCscNetType()) {
-								    csCar.setCscNetType((short) 0);
-								}
 								
 								//根据自定义的默认值信息设置默认值
 								if(CTRL!=null)
@@ -304,10 +304,18 @@ public class CarAction
 								/**
 								 * 【车机中心对接】
 								 * 如果是4G并且绑定车机中心的车，车辆添加成功后，调用车机中心车辆注册
+								 * 1: 绑定车机中心
 								 */
-								if (1 == csCar.getCscNetType() && 1 == csCar.getCscBindPlatform()) {
-								    // TODO 调用车机中心车辆注册
-								    
+								if (1 == csCar.getCscBindPlatform()) {
+								    // 调用车机中心车辆注册
+								    boolean isRegisterd = vcCmdApiService.sendCarRegister(csCar);
+                                    if (isRegisterd) {
+                                        // 车辆绑定终端
+                                        boolean bindSuccess = vcCmdApiService.carBindTerminal(csCar);
+                                        if (bindSuccess) {
+                                            // 注册成功
+                                        }
+                                    }
 								}
 							}							
 							
@@ -320,17 +328,73 @@ public class CarAction
 							LoggerHelper.writeLog(CsCar.class,"add","添加了[车辆]["+csCar.getCscNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csCar,csCar.getCscId());
 							$.SetTips("保存车辆成功");
 						}else{
+						    
+						    /**
+                             * 如果更新了vin码或者是终端序列号，说明是单个修改
+                             */
+                            if (csCar.getCscVin() != null || csCar.getCscTerNo() != null) {
+                                CsCar oldCarInfo = csCarService.getCsCarById(csCar.getCscId());
+                                if (null == oldCarInfo) {
+                                    throw new IllegalArgumentException("查不到车辆信息：carId=" + csCar.getCscId());
+                                }
+                                // 查询原vin码，看是否更改
+                                if (csCar.getCscVin() != null && !csCar.getCscVin().equals(oldCarInfo.getCscVin())) {
+                                    /**
+                                     * 更改vin码：
+                                     * 1. 先终端解绑
+                                     * 2. 后注册一份新车
+                                     * 3. 再绑定终端
+                                     * FIXME 如果中间某个过程调用失败，如何处理？
+                                     */
+                                    boolean isUnbindSuccess = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
+                                    if (isUnbindSuccess) {
+                                        // 新建car
+                                        CsCar newCar = new CsCar();
+                                        // 从请求参数中同步set过的值
+                                        newCar.mergeSet(csCar);
+                                        // 从oldCsCar同步csCar未set过的值
+                                        newCar.mergeSet(oldCarInfo);
+                                        boolean isRegisterd = vcCmdApiService.sendCarRegister(newCar);
+                                        if (isRegisterd) {
+                                            CsCar newBind = new CsCar();
+                                            newBind.setCscTerNo(oldCarInfo.getCscTerNo());
+                                            newBind.setCscVin(csCar.getCscVin());
+                                            boolean bindSuccess = vcCmdApiService.carBindTerminal(newBind);
+                                            if (bindSuccess) {
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                                if (csCar.getCscTerNo() != null && !csCar.getCscTerNo().equals(oldCarInfo.getCscTerNo())) {
+                                    /**
+                                     * 更改终端序列号
+                                     * 1. 原终端解绑
+                                     * 2. 绑定新终端
+                                     */
+                                    boolean isUnbindSuccess = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
+                                    if (isUnbindSuccess) {
+                                        CsCar newBind = new CsCar();
+                                        newBind.setCscTerNo(oldCarInfo.getCscTerNo());
+                                        newBind.setCscVin(csCar.getCscVin());
+                                        vcCmdApiService.carBindTerminal(newBind);
+                                    }
+                                }
+                            }
+                            
 							String PARAMS = $.getString("PARAMS");
 							String ids=$.getString("ids");
 							if(!$.empty(PARAMS)){//根据查询条件批量更新
 								Map params = $.eval(PARAMS);
 								params.put("confirm", 1);
 								params.put("definex","1=1");
-								csCarService.updateCsCarByConfirm(ActionHelper.getSetValuesFromModel(csCar), params);
+								Map carParamsMap = ActionHelper.getSetValuesFromModel(csCar);
+								csCarService.updateCsCarByConfirm(carParamsMap, params);
 								LoggerHelper.writeLog(CsCar.class, "update", 
 											"批量修改了[车辆]",
 											(Long)$.getSession("ccclubs_login_id"),LoggerHelper.getUpdateDescription(null,csCar,false)
 											,null);
+								
 							}else if(!$.empty(ids)){//根据ids批量更新
 								String[] array = ids.split(",");
 								for(String sid:array){

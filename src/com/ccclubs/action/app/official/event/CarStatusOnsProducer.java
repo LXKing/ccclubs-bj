@@ -1,6 +1,5 @@
 package com.ccclubs.action.app.official.event;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -10,13 +9,8 @@ import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSONObject;
-import com.ccclubs.action.vc.constant.VcApiCons;
-import com.ccclubs.action.vc.dto.VcSimpleCmdResult;
 import com.ccclubs.action.vc.enums.MsgTagEnum;
 import com.ccclubs.model.CsCar;
-import com.ccclubs.model.CsHistoryState;
-import com.ccclubs.model.CsRemote;
-import com.ccclubs.model.CsState;
 import com.ccclubs.service.admin.ICsCarService;
 import com.ccclubs.util.mq.ICarStatus;
 import com.ccclubs.util.mq.TerminalStatus;
@@ -71,9 +65,9 @@ public class CarStatusOnsProducer implements MessageListener {
                     $.trace("状态数据异常：该终端序列号 [" + terNo + "] 找不到对应的车辆信息 ");
                     return Action.CommitMessage;
                 } else {
-                    //  绑定平台为车机中心                                                                       车辆网络通信类型为4G（即4G车）
-                    if (1 != carInfo.getCscBindPlatform() || 1 != carInfo.getCscNetType()) {
-                        $.trace("该车辆不是绑定车机中心[" + carInfo.getCscBindPlatform() + "]，或者通信类型不是4G[" + carInfo.getCscNetType() + "]");
+                    //  绑定平台为车机中心                                                                     
+                    if (1 != carInfo.getCscBindPlatform()) {
+                        $.trace("该车辆不是绑定车机中心[" + carInfo.getCscBindPlatform() + "]");
                         return Action.CommitMessage;
                     }
                 }
