@@ -1849,6 +1849,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 					mapData.put("onCertifyImage", csMemberInfo.getCsmiOnCertifyImage());
 					mapData.put("certifyImage", csMemberInfo.getCsmiCertifyImage());//反面
 					mapData.put("driverImage", csMemberInfo.getCsmiDriverImage());
+					mapData.put("checkPhoto", csMemberInfo.getCsmiCheckPhoto());//机审照片
 				}
 			}
 			//
@@ -1877,8 +1878,6 @@ public class BaseAction extends OutsideStatisticsUtil{
 				return;
 			}
 			//
-			ICsMemberService csMemberService = $.GetSpringBean("csMemberService");
-			//
 			String mobile = $.getString("mobile");
 			//0:未认证 1:已认证  3:认证失败
 			Short type = $.getShort("type");
@@ -1889,6 +1888,12 @@ public class BaseAction extends OutsideStatisticsUtil{
 				return;
 				
 			}
+			//
+			String checkPhoto = $.getString("checkPhoto");
+			//
+			ICsMemberService csMemberService = $.GetSpringBean("csMemberService");
+			ICsMemberInfoService csMemberInfoService = $.GetSpringBean("csMemberInfoService");
+			//
 			CsMember csMember = csMemberService.getCsMember($.add(CsMember.F.csmMobile, mobile));
 			if(csMember!=null) {
 				CsMember memberTemp=new CsMember();
@@ -1898,7 +1903,17 @@ public class BaseAction extends OutsideStatisticsUtil{
 				memberTemp.setCsmVReal(type);
 				memberTemp.setCsmVWork(type);
 				csMemberService.updateCsMember$NotNull(memberTemp);
+				//
+				CsMemberInfo csMemberInfo=csMemberInfoService.getCsMemberInfo($.add(CsMemberInfo.F.csmiId, csMember.getCsmInfo()));    
+				if(checkPhoto!=null) {
+					if(csMemberInfo.getCsmiCheckPhoto()==null|| !csMemberInfo.getCsmiCheckPhoto().equals(checkPhoto)) {
+						csMemberInfo.setCsmiCheckPhoto(checkPhoto);
+						csMemberInfo.setCsmiUpdateTime(new Date());
+						csMemberInfoService.updateCsMemberInfo$NotNull(csMemberInfo);
+					}
+				}
 			}
+			
 			//
 			re.setState(true).setCode(200).setMessage("审核提交成功");
 			jsonWriter.outJsonOrJsonp($.getString("callback"), re, response);

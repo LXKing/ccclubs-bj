@@ -54,7 +54,8 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 	
 	private @caption("工作证明") @column("csmi_proof_of_employment")      @note("") String csmiProofOfEmployment;
 	private @caption("部门") @column("csmi_department")      @note("") String csmiDepartment;
-	
+	private @caption("机审照片") @column("csmi_check_photo")      @note("") String csmiCheckPhoto;
+
 	//默认构造函数
 	public CsMemberInfo(){
 	
@@ -265,6 +266,13 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
         return this;
     }
 	
+		/** 机审照片 [可空]       **/
+	public CsMemberInfo csmiCheckPhoto(String csmiCheckPhoto){
+		this.csmiCheckPhoto = csmiCheckPhoto;
+		this.setSeted(F.csmiCheckPhoto);
+		return this;
+	}
+	
 	//克隆对象
 	public CsMemberInfo clone(){
 		CsMemberInfo clone = new CsMemberInfo();
@@ -290,6 +298,7 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		clone.csmiUpdateTime=this.csmiUpdateTime;
 		clone.csmiAddTime=this.csmiAddTime;
 		clone.csmiStatus=this.csmiStatus;
+		clone.csmiNation=this.csmiNation;
 		clone.csmiOnCertifyImage=this.csmiOnCertifyImage;
 	    clone.csmiProofOfEmployment=this.csmiProofOfEmployment;
 	    clone.csmiDepartment=this.csmiDepartment;
@@ -1106,6 +1115,29 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
         this.setSeted(F.csmiDepartment);
     }
 	
+		/*******************************机审照片**********************************/	
+	/**
+	* 机审照片 [可空]      
+	**/
+	public String getCsmiCheckPhoto(){
+		return this.csmiCheckPhoto;
+	}
+	/**
+	* 获取机审照片格式化(toString)
+	**/
+	public String getCsmiCheckPhoto$(){
+		String strValue="";
+		 strValue=$.str(this.getCsmiCheckPhoto());
+	 	 return strValue;
+	}
+	/**
+	* 机审照片 [可空]     
+	**/
+	public void setCsmiCheckPhoto(String csmiCheckPhoto){
+		this.csmiCheckPhoto = csmiCheckPhoto;
+		this.setSeted(F.csmiCheckPhoto);
+	}
+	
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
 
@@ -1367,7 +1399,12 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
         /** not .... */
         public M csmiDepartmentNot(){this.put("csmiDepartmentNot", "not");return this;};
 		
-		
+			/** 机审照片 [可空]       **/
+		public M csmiCheckPhoto(Object csmiCheckPhoto){this.put("csmiCheckPhoto", csmiCheckPhoto);return this;};
+		/** and csmi_check_photo is null */
+		public M csmiCheckPhotoNull(){if(this.get("csmiCheckPhotoNot")==null)this.put("csmiCheckPhotoNot", "");this.put("csmiCheckPhoto", null);return this;};
+		/** not .... */
+		public M csmiCheckPhotoNot(){this.put("csmiCheckPhotoNot", "not");return this;};
 		public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
 	 	/** 获取所有会员信息 **/
@@ -1475,6 +1512,8 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
         
         /** 部门 [非空]       **/
         public final static @type(String.class)  String csmiDepartment="csmiDepartment";
+		/** 机审照片 [可空]       **/
+		public final static @type(String.class)  String csmiCheckPhoto="csmiCheckPhoto";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -1530,6 +1569,8 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
         public final static String csmiProofOfEmployment="csmi_proof_of_employment";
         /** 部门 [非空]       **/
         public final static String csmiDepartment="csmi_department";
+		/** 机审照片 [可空]       **/
+		public final static String csmiCheckPhoto="csmi_check_photo";
 		
 	 	public static String get(String name){
 			try {
