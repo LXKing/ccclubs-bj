@@ -225,6 +225,20 @@ window.$on("readyStart",function(){
 				</div>
 			</dd>
 		</dl>
+		
+		<dl style="width:98%;">
+			<dt>机审图片:</dt>
+			<dd input="image">
+				<div class="state-input wide">
+					${lz:set("csmiCheckPhotoLen",(lz:size(csMember.$csmInfo.csmiCheckPhoto)))}
+					<s:if test="#request.csmiCheckPhotoLen>0">
+						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCheckPhoto}"/>
+					</s:if>
+					<s:else><center><font color="red"><h4>未上传机审图片，建议审核不通过</h4></font></center></s:else>
+				</div>
+			</dd>
+		</dl>
+		
 	</lz:set>
 	${lz:set("CTRL",lz:CTRL(jsonString))}
 	<script>
