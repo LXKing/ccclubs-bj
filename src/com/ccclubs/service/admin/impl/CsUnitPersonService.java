@@ -253,28 +253,30 @@ public class CsUnitPersonService implements ICsUnitPersonService {
             CsUnitInfo csUnitInfo = csUnitInfoDao.getCsUnitInfoById(unitId);
             //会员关联企业用户信息
             CsUnitPerson unitPerson = CsUnitPerson.where().csupMember(memberId).get();
-            if(null==unitPerson && member.getVWork()==1) {
-                //企业用户不存在，执行新增操作
-                unitPerson = new CsUnitPerson();
-                unitPerson.setCsupGroup(unitGroupId);
-                unitPerson.setCsupInfo(unitId);
-                unitPerson.setCsupAddTime(new Date());
-                unitPerson.setCsupFlag(null);
-                unitPerson.setCsupHost(member.getCsmHost());
-                unitPerson.setCsupMember(member.getCsmId());
-                unitPerson.setCsupMemo(null);
-                if(StringUtils.isEmpty(member.getCsmName())) {
-                    unitPerson.setCsupName(member.getCsmMobile());
-                }else {
-                    unitPerson.setCsupName(member.getCsmName());    
+            if(null==unitPerson) {
+                if(member.getVWork()==1) {
+                    //企业用户不存在，执行新增操作
+                    unitPerson = new CsUnitPerson();
+                    unitPerson.setCsupGroup(unitGroupId);
+                    unitPerson.setCsupInfo(unitId);
+                    unitPerson.setCsupAddTime(new Date());
+                    unitPerson.setCsupFlag(null);
+                    unitPerson.setCsupHost(member.getCsmHost());
+                    unitPerson.setCsupMember(member.getCsmId());
+                    unitPerson.setCsupMemo(null);
+                    if(StringUtils.isEmpty(member.getCsmName())) {
+                        unitPerson.setCsupName(member.getCsmMobile());
+                    }else {
+                        unitPerson.setCsupName(member.getCsmName());    
+                    }
+                    
+                    unitPerson.setCsupRemark(null);
+                    unitPerson.setCsupStatus((short)1);
+                    unitPerson.setCsupUpdateTime(new Date());
+                    this.saveCsUnitPerson(unitPerson);
+                    //绑定会员支付账号关系
+                    saveMemberShip(member, csUnitInfo, payer);
                 }
-                
-                unitPerson.setCsupRemark(null);
-                unitPerson.setCsupStatus((short)1);
-                unitPerson.setCsupUpdateTime(new Date());
-                this.saveCsUnitPerson(unitPerson);
-                //绑定会员支付账号关系
-                saveMemberShip(member, csUnitInfo, payer);
             }else {
                 //企业用户已存在，执行更新操作
                 if(member.getVWork() == 1) {
@@ -332,14 +334,16 @@ public class CsUnitPersonService implements ICsUnitPersonService {
                         , shipStatus// 状态 [非空]
                 ).save();
             } else {
+                ship.setCsmsStatus(shipStatus);
+                //满足条件才更新
                 if(ship.getCsmsPayer()==null || payMember.getCsmId().longValue()!=ship.getCsmsPayer()) {
                     ship.setCsmsPayer(payMember.getCsmId());
                     ship.setCsmsRemark("支付账号变更");
-                }else {
+                    csMemberShipDao.updateCsMemberShip$NotNull(ship);
+                }else if(ship.getCsmsStatus()==null || shipStatus!=ship.getCsmsStatus()) {
                     ship.setCsmsRemark("支付账号状态变更");
-                    ship.setCsmsStatus(shipStatus);
+                    csMemberShipDao.updateCsMemberShip$NotNull(ship);
                 }
-                csMemberShipDao.updateCsMemberShip$NotNull(ship);
             }
         }
     }
