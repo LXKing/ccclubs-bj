@@ -122,7 +122,7 @@ $(function(){
 		$("${lz:js(fileHtml)}").insertBefore("dl[ref=cscCount]");
 		$(".form").attr("enctype","multipart/form-data");
 		$(".cscCount").remove();
-		$(".validity_def").remove();
+		//$(".validity_def").remove();
 	});
 	</script>
 </s:if>
