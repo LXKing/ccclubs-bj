@@ -196,6 +196,13 @@ public class CsMemberService implements ICsMemberService
 	    
 	    //工作证认证成功；绑定企业和部门、创建企业用户记录
 	    doAuthWorkSuccess(fresh);
+	    
+	    //自动绑定ev卡逻辑处理开始
+	    CsEvCardService csEvCardService = $.getBean("csEvCardService");
+	    //获取会员绑定的ev卡
+	    fresh.setCsmEvcard(old.getCsmEvcard());
+	    //自动绑定ev卡操作
+	    csEvCardService.autoBindEvCard(fresh);
 	}
 	
 	/**
