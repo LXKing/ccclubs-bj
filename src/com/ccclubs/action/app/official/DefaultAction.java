@@ -338,12 +338,12 @@ public class DefaultAction extends BaseAction {
                     return returnError("106", "您输入的验证码不正确，请重新输入");
                 }
             }
-            
-          //校验企业用户信息
-//          CsUnitPerson person =
-//                  CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
-//          if (person == null)
-//              return returnError("107", "您的注册还未完成，请继续完善信息");
+
+            // 校验企业用户信息
+            // CsUnitPerson person =
+            // CsUnitPerson.getCsUnitPerson($.add("csupMember", user.getCsmId()));
+            // if (person == null)
+            // return returnError("107", "您的注册还未完成，请继续完善信息");
 
             String sessionToken = SessionMgr.get(user.getCsmId$());
             if (StringUtils.isNotEmpty(sessionToken)) {
@@ -666,7 +666,7 @@ public class DefaultAction extends BaseAction {
 
                     // 保存会员信息相关信息到cs_member_info
                     CsMemberInfo csMemberInfo = getMemberInfo(new CsMemberInfo(),
-                           null != csmHost ? csMember.getCsmHost() : 1, null, csMember, sex);
+                            null != csmHost ? csMember.getCsmHost() : 1, null, csMember, sex);
                     csMemberInfo = csMemberInfoService.saveCsMemberInfo(csMemberInfo);
 
                     // 保存会员信息相关信息到cs_member_info成功后，生成对应的csmiId,生成完成后反写到cs_member表中的csm_Info字段中
@@ -833,7 +833,7 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            if(member.getVReal()==1) {
+            if (member.getVReal() == 1) {
                 return returnError("100", "已认证通过，请勿重复认证");
             }
 
@@ -846,7 +846,7 @@ public class DefaultAction extends BaseAction {
             }
             if ($.empty(certifyNum)) {
                 return returnError("101", "身份证号码未填写，请填写。");
-            }else if(!SystemHelper.isIdCardNo(certifyNum)) {
+            } else if (!SystemHelper.isIdCardNo(certifyNum)) {
                 return returnError("101", "身份证号码格式不正确。");
             }
             if ($.empty(onCertifyImage)) {
@@ -859,10 +859,10 @@ public class DefaultAction extends BaseAction {
             csMemberInfoService.executeTransaction(new Function() {
                 @Override
                 public <T> T execute(Object... arg0) {
-                    
+
                     csMemberInfoService.updateMemberInfoCertifyImage(member, certifyImage,
                             certifyNum, realName, onCertifyImage);
-                    
+
                     member.setCsmName(realName);
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, (short) 2, null));
@@ -889,7 +889,7 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            if(member.getVDrive()==1) {
+            if (member.getVDrive() == 1) {
                 return returnError("100", "已认证通过，请勿重复认证");
             }
 
@@ -902,7 +902,7 @@ public class DefaultAction extends BaseAction {
                 @Override
                 public <T> T execute(Object... arg0) {
                     csMemberInfoService.updateMemberInfoDriverImage(member, driverImage);
-                    
+
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, (short) 2, null, null));
                     return null;
@@ -927,7 +927,7 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-            if(member.getVWork()==1) {
+            if (member.getVWork() == 1) {
                 return returnError("100", "已认证通过，请勿重复认证");
             }
 
@@ -950,7 +950,7 @@ public class DefaultAction extends BaseAction {
 
                     csMemberInfoService.updateMemberInfoWorkImage(member, proofOfEmployment,
                             company, department);
-                    
+
                     csMemberService
                             .updateCsMember$NotNull(updateAutoState(member, null, null, (short) 2));
 
@@ -1009,7 +1009,7 @@ public class DefaultAction extends BaseAction {
                     if ($.empty(certifyImg)) {
                         csMemberInfoService.updateMemberInfo(member, certifyImg, certifyNum,
                                 driverImage, onCertifyImg);
-                        
+
                         member.setCsmName(realName);
                         csMemberService.updateCsMember$NotNull(
                                 updateAutoState(member, (short) 2, (short) 2));
@@ -1965,7 +1965,7 @@ public class DefaultAction extends BaseAction {
                 unitInfo = person.get$csupInfo();
                 if (person.getCsupGroup() != null) {
                     group = CsUnitGroup.getCsUnitGroup(
-                            $.add("csugGroup", person.getCsupGroup()).add("csugStatus", 1));
+                            $.add("csugId", person.getCsupGroup()).add("csugStatus", 1));
                 }
             }
 
@@ -1981,6 +1981,8 @@ public class DefaultAction extends BaseAction {
             CsCreditCard csCreditCard = csCreditCardService
                     .getCsCreditCard($.add(CsCreditCard.F.csccMember, member.getCsmId())
                             .add(CsCreditCard.F.csccType, 1));
+
+            CsEvCard csEvCard = member.get$csmEvcard();
             CsMemberInfo memberInfo = member.get$csmInfo();
 
             LzMap data = new LzMap();
@@ -2019,12 +2021,12 @@ public class DefaultAction extends BaseAction {
                 data.put("deptName", memberInfo.getCsmiDepartment$());
             }
             // 设置企业信息
-            if (unitInfo != null) {
+            if (unitInfo != null && member.getCsmVWork() == 1) {
                 data.put("unitInfoId", unitInfo.getCsuiId());
                 data.put("unitName", unitInfo.getCsuiName$());
             }
             // 设置企业部门信息
-            if (group != null) {
+            if (group != null && member.getCsmVWork() == 1) {
                 data.put("deptId", group.getCsugId());
                 data.put("deptName", group.getCsugName$());
             }
@@ -2072,7 +2074,11 @@ public class DefaultAction extends BaseAction {
                 data.put("workImage", null);
             }
             data.put("isRefunding", commonMoneyService.isRefunding(member.getCsmId()));// 正在退款
-            data.put("evcard", member.getCsmEvcard());
+            if (csEvCard != null) {
+                data.put("evcard", csEvCard.getCsecNumber$());
+            } else {
+                data.put("evcard", member.getCsmEvcard());
+            }
             data.put("coupon", member.getCsmCoupon());
             return $.SendHtml($.json(JsonFormat.success().setData($.$("map", data))), CHARSET);
         } catch (Exception ex) {
@@ -5417,9 +5423,9 @@ public class DefaultAction extends BaseAction {
             }
 
             // 获取app更新配置
-            if (type == 0 || type == 6) {
+            if (type == 0 || type == 6 || type == 4) {
                 Integer appType = $.getInteger("appType", 1);
-                String appVersion = $.getString("version", "");
+                String appVersion = $.getString("version", "1000");
                 Map<String, Object> map = new HashMap<String, Object>();
                 int upgradeFlag = 0;
                 if (appType == 1) { // 1安卓

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jxl.Sheet;
+import jxl.Workbook;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import com.ccclubs.config.SYSTEM;
@@ -15,10 +17,12 @@ import com.ccclubs.helper.ActionHelper;
 import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.helper.LoginHelper;
 import com.ccclubs.helper.SystemHelper;
+import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.model.CsMemberShip;
 import com.ccclubs.model.CsOrder;
+import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
 import com.ccclubs.service.admin.ICsMemberService;
@@ -26,6 +30,7 @@ import com.ccclubs.service.admin.ICsMemberShipService;
 import com.ccclubs.service.admin.ICsOrderService;
 import com.ccclubs.service.admin.ICsUnitPersonService;
 import com.ccclubs.service.common.ICommonMoneyService;
+import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.lazy3q.sql.Lazy3qDaoSupport;
 import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
@@ -35,8 +40,7 @@ import com.lazy3q.web.node.Export;
 import com.lazy3q.web.util.Ctrl;
 import com.lazy3q.web.util.Page;
 import com.opensymphony.xwork2.ActionContext;
-import jxl.Sheet;
-import jxl.Workbook;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 
 /**
@@ -49,7 +53,7 @@ public class MemberAction {
     ICsMemberService csMemberService;
     ICsUnitPersonService csUnitPersonService;
     ICsMemberShipService csMemberShipService;
-    
+
     CsMember csMember;
     Lazy3qDaoSupport dao = $.getDao("ccclubs_system");
 
@@ -326,7 +330,7 @@ public class MemberAction {
             else {
                 CsUnitPerson unitPerson = CsUnitPerson
                         .getCsUnitPerson($.add(CsUnitPerson.F.csupMember, csMember.getCsmId()));
-                if (unitPerson != null) {
+                if (unitPerson != null && csMember.getCsmVWork() == 1) {
                     $.setRequest("unitPerson", unitPerson);
                     List<CsMember> payMembers = unitPerson.get$csupInfo().get$csuiMember();
                     $.setRequest("payMembers", payMembers);
@@ -335,58 +339,60 @@ public class MemberAction {
                     if (memberShip != null) {
                         $.setRequest("payMember", memberShip.getCsmsPayer());
                     }
-                }else {
+                } else {
                     CsUnitPerson nu = new CsUnitPerson();
                     List<CsMember> payMembers = new ArrayList<CsMember>();
                     try {
-                        CsMemberInfo csmi = CsMemberInfo.Get($.add(CsMemberInfo.F.csmiMemberId, csMember.getCsmId()));
-                        if(null != csmi) {
+                        CsMemberInfo csmi = CsMemberInfo
+                                .Get($.add(CsMemberInfo.F.csmiMemberId, csMember.getCsmId()));
+                        if (null != csmi) {
                             CsUnitInfo csui = null;
-                            if(StringUtils.isNotBlank(csmi.getCsmiCompany())) {
+                            if (StringUtils.isNotBlank(csmi.getCsmiCompany())) {
                                 Map<String, Object> map = $.Map();
-                                map.put("definex", "csui_name='"+csmi.getCsmiCompany()+"'");
+                                map.put("definex", "csui_name='" + csmi.getCsmiCompany() + "'");
                                 csui = CsUnitInfo.getCsUnitInfo(map);
                             }
-                            if(null != csui) {
-                                nu = CsUnitPerson.getCsUnitPerson($.add(CsUnitPerson.F.csupInfo, csui.getCsuiId()));
-                                if(null == nu) {
+                            if (null != csui) {
+                                nu = CsUnitPerson.getCsUnitPerson(
+                                        $.add(CsUnitPerson.F.csupInfo, csui.getCsuiId()));
+                                if (null == nu) {
                                     nu = new CsUnitPerson();
-                                }else {
+                                } else {
                                     payMembers = nu.get$csupInfo().get$csuiMember();
-                                    if(null == payMembers) {
+                                    if (null == payMembers) {
                                         payMembers = new ArrayList<CsMember>();
-                                    }else {
-                                         String cm = csui.getCsuiMember();
-                                         if(StringUtils.isNotBlank(cm)) {
-                                             try {
+                                    } else {
+                                        String cm = csui.getCsuiMember();
+                                        if (StringUtils.isNotBlank(cm)) {
+                                            try {
                                                 String[] cma = cm.split(",");
-                                                 if(null != cma) {
-                                                     for(String a: cma) {
-                                                         if(StringUtils.isBlank(a)) {
-                                                             continue;
-                                                         }
-                                                         long ai = Long.parseLong(a.trim());
-                                                         if(ai > 0) {
-                                                             $.setRequest("payMember", a.trim());
-                                                             break;
-                                                         }
-                                                     }
-                                                 }
+                                                if (null != cma) {
+                                                    for (String a : cma) {
+                                                        if (StringUtils.isBlank(a)) {
+                                                            continue;
+                                                        }
+                                                        long ai = Long.parseLong(a.trim());
+                                                        if (ai > 0) {
+                                                            $.setRequest("payMember", a.trim());
+                                                            break;
+                                                        }
+                                                    }
+                                                }
                                             } catch (Exception e) {
                                             }
-                                         }
-                                            
+                                        }
+
                                     }
                                 }
                             }
                         }
-                        
+
                     } catch (Exception e) {
-                         
+
                     }
                     $.setRequest("unitPerson", nu);
                     $.setRequest("payMembers", payMembers);
-                    
+
                 }
             }
             // 根据自定义配置ctrl中配置的默认值信息设置默认值
@@ -394,7 +400,7 @@ public class MemberAction {
                 CTRL.setObjectDefaultValue(csMember);
             /************ LAZY3Q_CODE_EDIT ************/
             /************ LAZY3Q_CODE_EDIT ************/
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getRootLogger().error(e.getMessage(), e);
@@ -594,7 +600,7 @@ public class MemberAction {
                                     csMember.setCsmCoupon(oldCsMember.getCsmCoupon());
                                     csMember.setCsmIntegral(oldCsMember.getCsmIntegral());
                                     csMember.setCsmGrow(oldCsMember.getCsmGrow());
-                                    csMember.setCsmGrade(oldCsMember.getCsmGrade());
+                                    // csMember.setCsmGrade(oldCsMember.getCsmGrade());
                                     csMember.setCsmMobile(oldCsMember.getCsmMobile());
                                     csMember.setCsmUpdateTime(oldCsMember.getCsmUpdateTime());
                                     csMember.setCsmAddTime(oldCsMember.getCsmAddTime());
@@ -1250,6 +1256,7 @@ public class MemberAction {
         }
     }
 
+
     /**
      * 表单方式审核会员
      * 
@@ -1303,7 +1310,7 @@ public class MemberAction {
         return $.Redirect($.empty($.getString("entrypoint")) ? $.xeh($.getString("editorpoint"))
                 : $.xeh($.getString("entrypoint")));
     }
-
+    
     /**
      * 批量充值 //会员ID|订单ID|积分充值数|充值描述
      * 
@@ -1354,7 +1361,7 @@ public class MemberAction {
         }
         return $.Redirect("member.do");
     }
-    
+
     /**
      * 根据真实姓名或ID查询企业支付账号信息
      * 
@@ -1514,21 +1521,20 @@ public class MemberAction {
     public void setCsMemberService(ICsMemberService csMemberService) {
         this.csMemberService = csMemberService;
     }
-    
+
     public ICsUnitPersonService getCsUnitPersonService() {
         return csUnitPersonService;
     }
-    
+
     public void setcsUnitPersonService(ICsUnitPersonService csUnitPersonService) {
         this.csUnitPersonService = csUnitPersonService;
     }
-    public ICsMemberShipService getCsMemberShipService()
-    {
+
+    public ICsMemberShipService getCsMemberShipService() {
         return csMemberShipService;
     }
 
-    public void setCsMemberShipService(ICsMemberShipService csMemberShipService)
-    {
+    public void setCsMemberShipService(ICsMemberShipService csMemberShipService) {
         this.csMemberShipService = csMemberShipService;
     }
 

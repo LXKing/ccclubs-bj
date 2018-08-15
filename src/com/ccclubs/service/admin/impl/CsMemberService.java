@@ -339,7 +339,28 @@ public class CsMemberService implements ICsMemberService
 	                    }
 	                }
 	            }
-	        }
+	        }else {// 已经存在企业会员账户
+                CsMemberInfo csMemberInfo =
+                        CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
+                if (null != csMemberInfo) {
+                    CsUnitInfo csUnitInfoForInsert = CsUnitInfo.where()
+                            .csuiName(csMemberInfo.getCsmiCompany()).get();
+                    if (null != csUnitInfoForInsert) {
+                        CsUnitGroup csUnitGroupForInsert = CsUnitGroup.where()
+                                .csugName(csMemberInfo.getCsmiDepartment())
+                                .csugInfo(csUnitInfoForInsert.getCsuiId()).get();
+
+                        if (null != csUnitGroupForInsert) {
+                            CsUnitPerson.where().csupMember(fresh.getCsmId()).set()
+                                    .csupGroup(csUnitGroupForInsert.getCsugId())
+                                    .csupHost(csUnitInfoForInsert.getCsuiHost())
+                                    .csupInfo(csUnitInfoForInsert.getCsuiId())
+                                    .csupStatus((short) 1).update();
+                        }
+                    }
+                }
+
+            }
 	    }
 	}
 }
