@@ -183,74 +183,76 @@ public class CsEvCardService implements ICsEvCardService
 	    
         CsEvCard csEvCard = this.getCsEvCardById(member.getCsmEvcard());
         if(csEvCard==null) {
-            String cardSuffix = "BJ";
-            String macSuffix = "XN";
-            //获取最大卡号
-            CsEvCard card = CsEvCard.where().csecNumber(cardSuffix).get();
-            String cardNo = "";
-            if (card!=null) {
-                cardNo = card.getCsecNumber();
-            }
-            if (StringUtils.isEmpty(cardNo)) {
-                cardNo = "10000";//5位数起步
-            }else {
-                cardNo = cardNo.replaceAll(cardSuffix, "");
-            }
-            Integer cno = Integer.parseInt(cardNo);
-            
-            //获取最大机器编号
-            card = CsEvCard.where().csecRfid(macSuffix).get();
-            String macNo = "";
-            if (card!=null) {
-                macNo = card.getCsecRfid();
-            }
-            if(StringUtils.isEmpty(macNo)) {
-                macNo = "100000";//6位数起步
-            }else {
-                macNo = macNo.replaceAll(macSuffix, "");
-            }
-            Integer mno = Integer.parseInt(macNo);
-            
-            //初始化ev卡
-            csEvCard = new CsEvCard();
-            
-            long count = 1;
-            while (count > 0) {
-                //ev卡编号数字位自加1
-                cno++;
-                cardNo = cno.toString() + cardSuffix;
-                //设置ev卡编号
-                csEvCard.setCsecNumber(cardNo);
-                //检索ev卡编号是否已存在，存在则重新生成编号，否则使用当前编号生成ev卡信息
-                count = this.getCsEvCardCount($.add(CsEvCard.F.csecNumber, cardNo));
-            }
-            csEvCard.setCsecHost(member.getCsmHost());
-            csEvCard.setCsecRemark("自动绑定");
-            csEvCard.setCsecAddTime(new Date());
-            csEvCard.setCsecFlag((short) 1);//已绑定
-            csEvCard.setCsecStatus((short) 1);//正常
-            //保存ev卡
-            csEvCard = this.saveCsEvCard(csEvCard);
-            //输入会员绑定ev卡日志
-            LoggerHelper.writeLog(CsEvCard.class,"add","自动添加[会员卡]["+csEvCard.getCsecNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csEvCard,csEvCard.getCsecId());
-            
-            //会员绑定ev卡
-            member.setCsmEvcard(csEvCard.getCsecId());
-            CsMemberService memberService = $.getBean("csMemberService");
-            memberService.updateCsMember$NotNull(member);
-            
-            count = 1;
-            while (count > 0) {
-                //机器编号数字位自加1
-                mno++;
+            if(member.getVWork()==1) {
+                String cardSuffix = "BJ";
+                String macSuffix = "XN";
+                //获取最大卡号
+                CsEvCard card = CsEvCard.where().csecNumber(cardSuffix).get();
+                String cardNo = "";
+                if (card!=null) {
+                    cardNo = card.getCsecNumber();
+                }
+                if (StringUtils.isEmpty(cardNo)) {
+                    cardNo = "10000";//5位数起步
+                }else {
+                    cardNo = cardNo.replaceAll(cardSuffix, "");
+                }
+                Integer cno = Integer.parseInt(cardNo);
                 
-                macNo = mno.toString() + macSuffix;
-                //设置机器编号
-                csEvCard.setCsecRfid(macNo);
-                //检索ev卡机器编号是否已存在，存在则重新生成机器编号，否则使用当前机器编号更新ev卡信息
-                count = this.getCsEvCardCount($.add(CsEvCard.F.csecRfid, cardNo));
+                //获取最大机器编号
+                card = CsEvCard.where().csecRfid(macSuffix).get();
+                String macNo = "";
+                if (card!=null) {
+                    macNo = card.getCsecRfid();
+                }
+                if(StringUtils.isEmpty(macNo)) {
+                    macNo = "100000";//6位数起步
+                }else {
+                    macNo = macNo.replaceAll(macSuffix, "");
+                }
+                Integer mno = Integer.parseInt(macNo);
+                
+                //初始化ev卡
+                csEvCard = new CsEvCard();
+                
+                long count = 1;
+                while (count > 0) {
+                    //ev卡编号数字位自加1
+                    cno++;
+                    cardNo = cno.toString() + cardSuffix;
+                    //设置ev卡编号
+                    csEvCard.setCsecNumber(cardNo);
+                    //检索ev卡编号是否已存在，存在则重新生成编号，否则使用当前编号生成ev卡信息
+                    count = this.getCsEvCardCount($.add(CsEvCard.F.csecNumber, cardNo));
+                }
+                csEvCard.setCsecHost(member.getCsmHost());
+                csEvCard.setCsecRemark("自动绑定");
+                csEvCard.setCsecAddTime(new Date());
+                csEvCard.setCsecFlag((short) 1);//已绑定
+                csEvCard.setCsecStatus((short) 1);//正常
+                //保存ev卡
+                csEvCard = this.saveCsEvCard(csEvCard);
+                //输入会员绑定ev卡日志
+                LoggerHelper.writeLog(CsEvCard.class,"add","自动添加[会员卡]["+csEvCard.getCsecNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csEvCard,csEvCard.getCsecId());
+                
+                //会员绑定ev卡
+                member.setCsmEvcard(csEvCard.getCsecId());
+                CsMemberService memberService = $.getBean("csMemberService");
+                memberService.updateCsMember$NotNull(member);
+                
+                count = 1;
+                while (count > 0) {
+                    //机器编号数字位自加1
+                    mno++;
+                    
+                    macNo = mno.toString() + macSuffix;
+                    //设置机器编号
+                    csEvCard.setCsecRfid(macNo);
+                    //检索ev卡机器编号是否已存在，存在则重新生成机器编号，否则使用当前机器编号更新ev卡信息
+                    count = this.getCsEvCardCount($.add(CsEvCard.F.csecRfid, cardNo));
+                }
+                this.updateCsEvCard$NotNull(csEvCard);
             }
-            this.updateCsEvCard$NotNull(csEvCard);
         }else {
             if(member.getVWork()==1) {
                 //工作证认证成功，ev卡状态有效
