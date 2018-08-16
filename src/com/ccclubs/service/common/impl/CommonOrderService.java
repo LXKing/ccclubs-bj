@@ -1025,7 +1025,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 					}
 					
 					pack.setParam(begin, end, minRentPrice.getCspPrice(), price);
-					boolean bool = eval($.add("$", pack), pack.getRule());
+					boolean bool = (boolean) eval($.add("$", pack), pack.getRule());
 					if(bool){
 						begin = pack.getStart();
 						end   = pack.getFinish();
