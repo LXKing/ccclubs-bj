@@ -330,7 +330,7 @@ public class MemberAction {
             else {
                 CsUnitPerson unitPerson = CsUnitPerson
                         .getCsUnitPerson($.add(CsUnitPerson.F.csupMember, csMember.getCsmId()));
-                if (unitPerson != null && csMember.getCsmVWork() == 1) {
+                if (unitPerson != null && csMember.getVWork() == 1) {
                     $.setRequest("unitPerson", unitPerson);
                     List<CsMember> payMembers = unitPerson.get$csupInfo().get$csuiMember();
                     $.setRequest("payMembers", payMembers);

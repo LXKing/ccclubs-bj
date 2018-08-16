@@ -310,7 +310,7 @@ public class CsMemberService implements ICsMemberService
      * @param fresh 用户请求数据
 	 */
 	public void doAuthWorkSuccess(CsMember fresh) {
-	    if(fresh.getCsmVWork()==1) {
+	    if(fresh.getVWork()==1) {
 	        //线下认证通过的判断是否需要CsUnitPerson关联
 	        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(fresh.getCsmId()).get();
 	        if(null==csUnitPersonForInsert) {
