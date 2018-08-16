@@ -33,6 +33,7 @@
 		<result property="csmiOnCertifyImage" column="csmi_on_certify_image"/>
 		<result property="csmiProofOfEmployment" column="csmi_proof_of_employment"/>
 		<result property="csmiDepartment" column="csmi_department"/>
+		<result property="csmiCheckPhoto" column="csmi_check_photo"/>
 	</resultMap>
 		
 	<!-- 获取所有会员信息 -->
@@ -221,6 +222,7 @@
 			,cs_member_info$suffix$.csmi_on_certify_image
 			,cs_member_info$suffix$.csmi_proof_of_employment
 			,cs_member_info$suffix$.csmi_department
+			,cs_member_info$suffix$.csmi_check_photo
 		)
 		values(
 			<isNotNull property="csmiHost" prepend="">
@@ -362,10 +364,18 @@
 			<isNull property="csmiProofOfEmployment" prepend=",">
 				null
 			</isNull>
+			
 			<isNotNull property="csmiDepartment" prepend=",">
 				#csmiDepartment#
 			</isNotNull>
 			<isNull property="csmiDepartment" prepend=",">
+				null
+			</isNull>
+			
+			<isNotNull property="csmiCheckPhoto" prepend=",">
+				#csmiCheckPhoto#
+			</isNotNull>
+			<isNull property="csmiCheckPhoto" prepend=",">
 				null
 			</isNull>
 				
@@ -525,6 +535,13 @@
 			<isNull property="csmiDepartment" prepend=",">
 				cs_member_info$suffix$.csmi_department = null
 			</isNull>	
+			
+			<isNotNull property="csmiCheckPhoto" prepend=",">
+			    cs_member_info$suffix$.csmi_check_photo = #csmiCheckPhoto#
+			</isNotNull>
+			<isNull property="csmiCheckPhoto" prepend=",">
+			    cs_member_info$suffix$.csmi_check_photo = null
+			</isNull>
 						
 		where
 			csmi_id=#csmiId#
@@ -608,7 +625,10 @@
 				cs_member_info$suffix$.csmi_department = #csmiDepartment#
 			</isNotNull>
 			
-					
+			<isNotNull property="csmiCheckPhoto" prepend=",">
+		        cs_member_info$suffix$.csmi_check_photo = #csmiCheckPhoto#
+		    </isNotNull>
+				
 			</dynamic>
 		where
 			csmi_id=#csmiId#
@@ -718,7 +738,9 @@
 				left join cs_member cs_member$CsMember.suffix$ on cs_member_info$suffix$.$CsMember.on$=cs_member$CsMember.suffix$.csm_id			
 			</isNotNull>
 		</isNotNull>
-		
+		<isNotNull property="V_csmiCheckPhoto" prepend=",">
+		    cs_member_info$suffix$.csmi_check_photo = #V_csmiCheckPhoto#
+		</isNotNull>
 		
 		where 
 				and cs_member_info$suffix$.csmi_status!=-1
