@@ -1,8 +1,11 @@
 package com.ccclubs.action.vc.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -13,12 +16,10 @@ import com.ccclubs.action.vc.constant.VcApiCons;
 import com.ccclubs.action.vc.dto.BindVehicleInput;
 import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
 import com.ccclubs.action.vc.dto.UnBindVehicleInput;
-import com.ccclubs.action.vc.dto.VcSimpleCmdApiResp;
 import com.ccclubs.action.vc.dto.VehicleRegisterInput;
 import com.ccclubs.action.vc.enums.VcCmdEnum;
 import com.ccclubs.action.vc.enums.VcColorMap;
 import com.ccclubs.helper.APICallHelper;
-import com.ccclubs.helper.DateHelper;
 import com.ccclubs.model.CsCar;
 import com.ccclubs.service.admin.ICsCarService;
 import com.ccclubs.util.DateUtil;
@@ -45,6 +46,14 @@ public class VcCmdApiService {
      * api端口
      */
     private static final int API_PORT = Integer.parseInt($.config("vc_api_port"));
+    /**
+     * api域名
+     */
+    private static final String CMD_HOST = $.config("vc_cmd_host");
+    /**
+     * api端口
+     */
+    private static final int CMD_PORT = Integer.parseInt($.config("vc_cmd_port"));
     /**
      * api调用者身份appid
      */
@@ -76,7 +85,7 @@ public class VcCmdApiService {
 //        paramJson.put("resultType", 1);// 默认采用异步方式调用，且当前业务平台需要用异步方式
         
         // 请求url
-        String reqUrl = apiUrl(VcApiCons.VC_API_CMD_SIMPLE);
+        String reqUrl = apiUrl(VcApiCons.VC_API_CMD_SIMPLE, true);
         String params = paramJson.toJSONString();
         // 组装post请求
         JSONObject apiResult = dealApiPost("发送控制指令", reqUrl, params);
@@ -84,6 +93,7 @@ public class VcCmdApiService {
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
             return apiResult.getJSONObject("data").getLong("messageId");
         } else {
+            // {"message":"Terminal is not online at current time","traceId":"150dd8e7-4353-493a-b127-f66a60c066e4","code":101024}
             $.trace("调用车机中心简单指令失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
             return null;
         }
@@ -98,15 +108,16 @@ public class VcCmdApiService {
         Objects.requireNonNull(newCar);
         
         VehicleRegisterInput registerInput = new VehicleRegisterInput();
+        // 车牌号必填
         registerInput.setCsvCarNo(newCar.getCscNumber());
-        // 发动机号必填
-        registerInput.setCsvVin(newCar.getCscVin());
         // vin码必填
+        registerInput.setCsvVin(newCar.getCscVin());
+        // 发动机号必填
         registerInput.setCsvEngineNo(newCar.getCscEngineNo());
         // 合格证号必填
         registerInput.setCsvCertific(newCar.getCscCertific());
         // 映射车身颜色必填
-        VcColorMap colorMap = VcColorMap.getByBjColorCode(newCar.getCscColor());
+        VcColorMap colorMap = (null==newCar.getCscColor())?null:VcColorMap.getByBjColorCode(newCar.getCscColor() & 0xFFFF);
         if (null == colorMap) {
             // 默认为黑色
             registerInput.setCsvColorCode((byte) 0);
@@ -115,26 +126,41 @@ public class VcCmdApiService {
         }
         registerInput.setCsvInteriorColorCode(null);
         // 车型标志(车型备案号)必填
+        if (null == newCar.get$cscModel().getCscmFlag()) {
+            $.trace("调用车机中心api发送车辆注册失败： 车型备案号不能为空");
+            return false;
+        }
         registerInput.setCsvModel(newCar.get$cscModel().getCscmFlag());
         // 出厂日期（北京出行的购车日期-车机中心的出厂日期）必填
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (null != newCar.getCscBuyDate()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             registerInput.setCsvProdDate(sdf.format(newCar.getCscBuyDate()));
+        } else {
+            registerInput.setCsvProdDate(sdf.format(new Date()));
         }
         // 终端序列号（在北京业务平台中必须存在）
         registerInput.setTeNo(newCar.getCscTerNo());
+        
         /**
          * 北京业务平台车型备案号和车型代码没有，填充空字符串
          */
         registerInput.setCsvModelCodeFull("");
         registerInput.setCsvModelCodeSimple("");
+        List<VehicleRegisterInput> inputs = new ArrayList<>();
+        inputs.add(registerInput);
+        JSONObject paraJson = new JSONObject();
+        paraJson.put("inputs", inputs);
         
-        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_REGISTER);
-        String params = JSON.toJSONString(registerInput);
+        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_REGISTER, false);
+        String params = paraJson.toJSONString();
         
         JSONObject apiResult = dealApiPost("发送车辆注册", reqUrl, params);
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
-            return true;
+            if (apiResult.getJSONObject("data").getJSONArray("success").size() > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             $.trace("调用车机中心api发送车辆注册失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
             return false;
@@ -159,7 +185,7 @@ public class VcCmdApiService {
         apiOrderInput.setRfid(downStream.mRfid);
         apiOrderInput.setAuthCode(downStream.mCode);
         
-        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_ORDER);
+        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_ORDER, true);
         String params = JSON.toJSONString(apiOrderInput);
         
         JSONObject apiResult = dealApiPost("订单下发", reqUrl, params);
@@ -184,7 +210,7 @@ public class VcCmdApiService {
         bindInput.setTeNo(carInfo.getCscTerNo());
         bindInput.setVin(carInfo.getCscVin());
         
-        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_BIND_TER);
+        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_BIND_TER, false);
         String params = JSON.toJSONString(bindInput);
         
         JSONObject apiResult = dealApiPost("车辆绑定终端", reqUrl, params);
@@ -209,7 +235,7 @@ public class VcCmdApiService {
         unbindInput.setTeNo(carInfo.getCscTerNo());
         unbindInput.setVin(carInfo.getCscVin());
         
-        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_UNBIND_TER);
+        String reqUrl = apiUrl(VcApiCons.VC_API_CAR_UNBIND_TER, false);
         String params = JSON.toJSONString(unbindInput);
         
         JSONObject apiResult = dealApiPost("车辆与终端解除绑定", reqUrl, params);
@@ -245,12 +271,19 @@ public class VcCmdApiService {
     /**
      * 构造请求url
      * @param uri
+     * @param cmd   是否为指令下发
      * @return
      */
-    private static String apiUrl(String uri) {
-        return new StringBuilder()
-                .append("http").append("://").append(API_HOST).append(":").append(API_PORT)
+    private static String apiUrl(String uri, boolean cmd) {
+        StringBuilder urlSb = new StringBuilder();
+        if (cmd) {
+            urlSb.append("http").append("://").append(CMD_HOST).append(":").append(CMD_PORT)
+            .append(uri).toString();
+        } else {
+            urlSb.append("http").append("://").append(API_HOST).append(":").append(API_PORT)
                 .append(uri).toString();
+        }
+        return urlSb.toString();
     }
     
     /**
@@ -286,14 +319,14 @@ public class VcCmdApiService {
      */
     private static JSONObject dealApiPost(String reqDes, String url, String params) {
         // 发送post请求
-//        String apiResult = APICallHelper.doPostJSON(url, params, apiHeader(params));
+        String apiResult = APICallHelper.doPostJSON(url, params, apiHeader(params));
         
         // ---测试,待删除---
-        String apiResult = "{\r\n" + 
-                "success: true,\r\n" + 
-                "code: 100000,\r\n" + 
-                "data: {\"messageId\": 222}" + 
-                "}";
+//        String apiResult = "{\r\n" + 
+//                "success: true,\r\n" + 
+//                "code: 100000,\r\n" + 
+//                "data: {\"messageId\": 222}" + 
+//                "}";
         // ---测试,待删除---
         
         // 日志记录
@@ -319,6 +352,31 @@ public class VcCmdApiService {
 
     public void setCsCarService(ICsCarService csCarService) {
         this.csCarService = csCarService;
+    }
+    
+    /**
+     * 为
+     *  BigDecimal
+     *  Integer
+     * 提供为null时的null返回
+     * @param value
+     * @return
+     */
+    private String emptyReturnForValue(Object value) {
+        if (null == value) {
+            return null;
+        }
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal)value).toPlainString();
+        }
+        if (value instanceof Integer) {
+            return ""+value;
+        }
+        return null;
+    }
+    
+    public static void main(String[] args) {
+        new VcCmdApiService().sendCarRegister(null);
     }
     
     

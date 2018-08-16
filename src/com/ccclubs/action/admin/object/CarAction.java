@@ -318,6 +318,7 @@ public class CarAction
 								 * 1: 绑定车机中心
 								 */
 								if (1 == csCar.getCscBindPlatform()) {
+								    boolean vcApiAllSuccessed = false;
 								    // 调用车机中心车辆注册
 								    boolean isRegisterd = vcCmdApiService.sendCarRegister(csCar);
                                     if (isRegisterd) {
@@ -325,7 +326,11 @@ public class CarAction
                                         boolean bindSuccess = vcCmdApiService.carBindTerminal(csCar);
                                         if (bindSuccess) {
                                             // 注册成功
+                                            vcApiAllSuccessed = true;
                                         }
+                                    }
+                                    if (!vcApiAllSuccessed) {
+                                        throw new IllegalStateException("调用车机中心api异常");
                                     }
 								}
 							}							
@@ -364,14 +369,13 @@ public class CarAction
                                      * 3. 再绑定终端
                                      * FIXME 如果中间某个过程调用失败，如何处理？
                                      */
+                                    boolean vcApiAllSuccessed = false;
                                     boolean isUnbindSuccess = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
                                     if (isUnbindSuccess) {
                                         // 新建car
                                         CsCar newCar = new CsCar();
                                         // 从请求参数中同步set过的值
                                         newCar.mergeSet(csCar);
-                                        // 从oldCsCar同步csCar未set过的值
-                                        newCar.mergeSet(oldCarInfo);
                                         boolean isRegisterd = vcCmdApiService.sendCarRegister(newCar);
                                         if (isRegisterd) {
                                             CsCar newBind = new CsCar();
@@ -379,9 +383,12 @@ public class CarAction
                                             newBind.setCscVin(csCar.getCscVin());
                                             boolean bindSuccess = vcCmdApiService.carBindTerminal(newBind);
                                             if (bindSuccess) {
-                                                
+                                                vcApiAllSuccessed = true;
                                             }
                                         }
+                                    }
+                                    if (!vcApiAllSuccessed) {
+                                        throw new IllegalStateException("调用车机中心api异常");
                                     }
                                 }
                                 if (StringUtils.isNotBlank(csCar.getCscTerNo()) && !csCar.getCscTerNo().equals(oldCarInfo.getCscTerNo())) {
@@ -390,12 +397,22 @@ public class CarAction
                                      * 1. 原终端解绑
                                      * 2. 绑定新终端
                                      */
+                                    boolean vcApiAllSuccessed = false;
+                                    CsCar newUnBind = new CsCar();
+                                    newUnBind.setCscTerNo(oldCarInfo.getCscTerNo());
+                                    newUnBind.setCscVin(csCar.getCscVin());
                                     boolean isUnbindSuccess = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
                                     if (isUnbindSuccess) {
                                         CsCar newBind = new CsCar();
-                                        newBind.setCscTerNo(oldCarInfo.getCscTerNo());
+                                        newBind.setCscTerNo(csCar.getCscTerNo());
                                         newBind.setCscVin(csCar.getCscVin());
-                                        vcCmdApiService.carBindTerminal(newBind);
+                                        boolean unbindSuccess = vcCmdApiService.carBindTerminal(newBind);
+                                        if (unbindSuccess) {
+                                            vcApiAllSuccessed = true;
+                                        }
+                                    }
+                                    if (!vcApiAllSuccessed) {
+                                        throw new IllegalStateException("调用车机中心api异常");
                                     }
                                 }
                             }

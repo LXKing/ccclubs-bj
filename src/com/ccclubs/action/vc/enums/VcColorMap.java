@@ -75,7 +75,7 @@ public enum VcColorMap {
      * @param bjColorCode
      * @return
      */
-    public static VcColorMap getByBjColorCode(int bjColorCode) {
+    public static VcColorMap getByBjColorCode(Integer bjColorCode) {
         for (VcColorMap color: VcColorMap.values()) {
             if (color.getBjColorCode() == bjColorCode) {
                 return color;

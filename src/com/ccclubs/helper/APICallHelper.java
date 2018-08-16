@@ -39,7 +39,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-
+import com.cmcc.mm7.vasp.common.MMConstants.Charset;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -228,7 +228,7 @@ public abstract class APICallHelper {
     	try{
 	        httpClient = ssl ? createSSLClientDefault() : HttpClients.createDefault();
 	        HttpPost httpPost = new HttpPost(url);
-	        httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+	        httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json;charset=utf-8");
 	        httpPost.addHeader("Accept", "application/json");
 	        
 	        if(headers!=null){
@@ -237,11 +237,13 @@ public abstract class APICallHelper {
 				  }
 	        }
 	        
-	        StringEntity se = new StringEntity(json);
+	        StringEntity se = new StringEntity(json, Charset.UTF8);
 	        se.setContentType("application/json");
 	        se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 	        httpPost.setEntity(se);
-	        httpClient.execute(httpPost);
+	        
+	        // FIXME 为什么要调用两次？失败重试？[2018-8-16屏蔽]
+//	        httpClient.execute(httpPost);
 	        
 	        String body = invoke(httpClient, httpPost);
 	        return body;

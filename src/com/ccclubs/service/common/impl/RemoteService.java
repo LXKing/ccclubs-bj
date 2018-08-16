@@ -285,6 +285,9 @@ public class RemoteService implements MqttCallback {
                 throw new IllegalArgumentException("车机中心指令下发时找不到车辆的vin码：车牌号" + carNo);
             }
             Long messageId = vcCmdApiService.sendControlCmd(cmdCode, vin);
+            if (null == messageId) {
+                throw new RuntimeException("指令下发异常： vin=" + vin + ",cmdCode=" + cmdCode);
+            }
             // 设置控制指令ID,对应后面从车机中心收到的远程指令结果
             remote.setCsrMessageId(messageId);
         }
