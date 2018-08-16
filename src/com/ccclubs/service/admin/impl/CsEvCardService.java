@@ -10,6 +10,7 @@ import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.model.CsEvCard;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.service.admin.ICsEvCardService;
+import com.ccclubs.service.admin.ICsMemberService;
 import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
 import com.lazy3q.web.util.Page;
@@ -170,20 +171,23 @@ public class CsEvCardService implements ICsEvCardService
 	}
 	
 	/**
-	 * 后台自动为会员绑定ev卡；注意添加分布式锁（暂不实现）
-	 * @param member
-	 */
+     * 后台自动为会员绑定ev卡；注意添加分布式锁（暂不实现）
+     * @param memberId 会员id
+     * @param hostId 城市id
+     * @param cardId 已绑定的ev卡id
+     * @param vwork 工作认证状态
+     */
+	@Override
 	@Transactional
-	public void autoBindEvCard(CsMember member) {
+	public void autoBindEvCard(Long memberId, Long hostId, Long cardId, short vwork) {
+	    //初始化会员对象
+	    CsMember member = new CsMember();
+	    member.setCsmId(memberId);
 	    
-	    //会员为空这不做绑定ev卡流程
-        if (member == null) {
-            return;
-        }
-	    
-        CsEvCard csEvCard = this.getCsEvCardById(member.getCsmEvcard());
+	    //获取已绑定ev卡
+        CsEvCard csEvCard = this.getCsEvCardById(cardId);
         if(csEvCard==null) {
-            if(member.getVWork()==1) {
+            if(vwork==1) {
                 String cardSuffix = "BJ";
                 String macSuffix = "XN";
                 //获取最大卡号
@@ -225,20 +229,11 @@ public class CsEvCardService implements ICsEvCardService
                     //检索ev卡编号是否已存在，存在则重新生成编号，否则使用当前编号生成ev卡信息
                     count = this.getCsEvCardCount($.add(CsEvCard.F.csecNumber, cardNo));
                 }
-                csEvCard.setCsecHost(member.getCsmHost());
+                csEvCard.setCsecHost(hostId);
                 csEvCard.setCsecRemark("自动绑定");
                 csEvCard.setCsecAddTime(new Date());
                 csEvCard.setCsecFlag((short) 1);//已绑定
                 csEvCard.setCsecStatus((short) 1);//正常
-                //保存ev卡
-                csEvCard = this.saveCsEvCard(csEvCard);
-                //输入会员绑定ev卡日志
-                LoggerHelper.writeLog(CsEvCard.class,"add","自动添加[会员卡]["+csEvCard.getCsecNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csEvCard,csEvCard.getCsecId());
-                
-                //会员绑定ev卡
-                member.setCsmEvcard(csEvCard.getCsecId());
-                CsMemberService memberService = $.getBean("csMemberService");
-                memberService.updateCsMember$NotNull(member);
                 
                 count = 1;
                 while (count > 0) {
@@ -251,7 +246,17 @@ public class CsEvCardService implements ICsEvCardService
                     //检索ev卡机器编号是否已存在，存在则重新生成机器编号，否则使用当前机器编号更新ev卡信息
                     count = this.getCsEvCardCount($.add(CsEvCard.F.csecRfid, cardNo));
                 }
-                this.updateCsEvCard$NotNull(csEvCard);
+                
+                //保存ev卡
+                csEvCard = this.saveCsEvCard(csEvCard);
+                
+                //会员绑定ev卡
+                member.setCsmEvcard(csEvCard.getCsecId());
+                ICsMemberService memberService = $.getBean("csMemberService");
+                memberService.updateCsMember$NotNull(member);
+                
+                //输入会员绑定ev卡日志
+                LoggerHelper.writeLog(CsEvCard.class,"add","自动添加[会员卡]["+csEvCard.getCsecNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csEvCard,csEvCard.getCsecId());
             }
         }else {
             if(member.getVWork()==1) {
