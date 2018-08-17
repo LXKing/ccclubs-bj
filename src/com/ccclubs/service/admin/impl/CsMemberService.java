@@ -254,13 +254,13 @@ public class CsMemberService implements ICsMemberService
                 String append = StringUtils.isNotEmpty(password)? "您的密码为："+password+"。" : null;
                 if (fresh.getVReal() == 1 && fresh.getVDrive() == 1
                         && fresh.getVWork() == 1
-                        && fresh.getVOffline() == 1) {
+                        && fresh.getVOffline() == 1 && old.getVOffline() != 1) {
                     UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
                             SmsFlagEnum.实名认证四证通过.getFlag(), old.getCsmMobile$(),
                             null, SMSType.通知类短信,
                             Collections.emptyMap(), append);
                 }else if (fresh.getVReal() == 1 && fresh.getVDrive() == 1
-                         && fresh.getVWork() == 1 && vprogress < 3) {
+                         && fresh.getVWork() == 1 && vprogress < 3 && old.getVOffline() != 1) {
                      UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
                              SmsFlagEnum.实名认证三证通过.getFlag(), old.getCsmMobile$(),
                              null, SMSType.通知类短信,
