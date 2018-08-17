@@ -334,13 +334,14 @@ public class CsUnitPersonService implements ICsUnitPersonService {
                         , shipStatus// 状态 [非空]
                 ).save();
             } else {
-                ship.setCsmsStatus(shipStatus);
                 //满足条件才更新
                 if(ship.getCsmsPayer()==null || payMember.getCsmId().longValue()!=ship.getCsmsPayer()) {
+                    ship.setCsmsStatus(shipStatus);
                     ship.setCsmsPayer(payMember.getCsmId());
                     ship.setCsmsRemark("支付账号变更");
                     csMemberShipDao.updateCsMemberShip$NotNull(ship);
                 }else if(ship.getCsmsStatus()==null || shipStatus!=ship.getCsmsStatus()) {
+                    ship.setCsmsStatus(shipStatus);
                     ship.setCsmsRemark("支付账号状态变更");
                     csMemberShipDao.updateCsMemberShip$NotNull(ship);
                 }
