@@ -259,7 +259,7 @@ public class CsEvCardService implements ICsEvCardService
                 LoggerHelper.writeLog(CsEvCard.class,"add","自动添加[会员卡]["+csEvCard.getCsecNumber()+"]",(Long)$.getSession("ccclubs_login_id"), csEvCard,csEvCard.getCsecId());
             }
         }else {
-            if(member.getVWork()==1) {
+            if(1 == vwork) {
                 //工作证认证成功，ev卡状态有效
                 csEvCard.setCsecStatus((short)1); 
             }else {

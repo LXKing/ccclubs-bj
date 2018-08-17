@@ -194,9 +194,6 @@ public class CsMemberService implements ICsMemberService
 	    //身份证、驾驶证、工作证认证状态变更失败发送短信提示
 	    authFailNotice(old, fresh);
 	    
-	    //工作证认证成功；绑定企业和部门、创建企业用户记录
-	    doAuthWorkSuccess(fresh);
-	    
 	    //自动绑定ev卡逻辑处理开始
 	    ICsEvCardService csEvCardService = $.getBean("csEvCardService");
 	    //自动绑定ev卡操作
@@ -301,64 +298,5 @@ public class CsMemberService implements ICsMemberService
                     Collections.emptyMap());
 	    }
     }
-	
-	/**
-	 * 工作证认证成功；绑定企业和部门、创建企业用户记录
-	 * @param old 数据库数据
-     * @param fresh 用户请求数据
-	 */
-	public void doAuthWorkSuccess(CsMember fresh) {
-	    if(fresh.getVWork()==1) {
-	        //线下认证通过的判断是否需要CsUnitPerson关联
-	        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(fresh.getCsmId()).get();
-	        if(null==csUnitPersonForInsert) {
-	            CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
-	            if(null!=csMemberInfo) {
-	                CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
-	                if(null!=csUnitInfoForInsert) {
-	                    CsUnitGroup csUnitGroupForInsert=
-	                            CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
-	                    
-	                    if(null!=csUnitGroupForInsert) {
-	                        CsUnitPerson csUnitPerson=new CsUnitPerson();
-	                        csUnitPerson.setCsupAddTime(new Date());
-	                        csUnitPerson.setCsupFlag(null);
-	                        csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
-	                        csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
-	                        csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
-	                        csUnitPerson.setCsupMember(fresh.getCsmId());
-	                        csUnitPerson.setCsupMemo(null);
-	                        csUnitPerson.setCsupName(fresh.getCsmName());
-	                        csUnitPerson.setCsupRemark(null);
-	                        csUnitPerson.setCsupStatus((short)1);
-	                        csUnitPerson.setCsupUpdateTime(new Date());
-	                        ICsUnitPersonService csUnitPersonService = $.getBean("csUnitPersonService");
-	                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-	                    }
-	                }
-	            }
-	        }else {// 已经存在企业会员账户
-                CsMemberInfo csMemberInfo =
-                        CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
-                if (null != csMemberInfo) {
-                    CsUnitInfo csUnitInfoForInsert = CsUnitInfo.where()
-                            .csuiName(csMemberInfo.getCsmiCompany()).get();
-                    if (null != csUnitInfoForInsert) {
-                        CsUnitGroup csUnitGroupForInsert = CsUnitGroup.where()
-                                .csugName(csMemberInfo.getCsmiDepartment())
-                                .csugInfo(csUnitInfoForInsert.getCsuiId()).get();
 
-                        if (null != csUnitGroupForInsert) {
-                            CsUnitPerson.where().csupMember(fresh.getCsmId()).set()
-                                    .csupGroup(csUnitGroupForInsert.getCsugId())
-                                    .csupHost(csUnitInfoForInsert.getCsuiHost())
-                                    .csupInfo(csUnitInfoForInsert.getCsuiId())
-                                    .csupStatus((short) 1).update();
-                        }
-                    }
-                }
-
-            }
-	    }
-	}
 }
