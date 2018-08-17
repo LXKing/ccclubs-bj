@@ -277,21 +277,21 @@ public class CsMemberService implements ICsMemberService
 	 */
 	public void authFailNotice(CsMember old, CsMember fresh) {
 	    //发身份证提醒短信
-	    if(old.getVReal()!=MemberRecStatus.REC_FAIL && fresh.getVReal()!=MemberRecStatus.REC_FAIL) {
+	    if(old.getVReal()!=MemberRecStatus.REC_FAIL && fresh.getVReal()==MemberRecStatus.REC_FAIL) {
 	        UtilHelper.sendTemplateSMS(old.getCsmHost(),
                     SmsFlagEnum.身份证认证失败.getFlag(), old.getCsmMobile$(),
                     null, SMSType.通知类短信,
                     Collections.emptyMap());
 	    }
 	    //发驾驶证提醒短信
-	    if(old.getVDrive()!=MemberRecStatus.REC_FAIL && fresh.getVDrive()!=MemberRecStatus.REC_FAIL) {
+	    if(old.getVDrive()!=MemberRecStatus.REC_FAIL && fresh.getVDrive()==MemberRecStatus.REC_FAIL) {
 	        UtilHelper.sendTemplateSMS(old.getCsmHost(),
                     SmsFlagEnum.驾驶证认证失败.getFlag(), old.getCsmMobile$(),
                     null, SMSType.通知类短信,
                     Collections.emptyMap());
 	    }
 	    //发工作证提醒短信
-	    if(old.getVWork()!=MemberRecStatus.REC_FAIL && fresh.getVWork()!=MemberRecStatus.REC_FAIL) {
+	    if(old.getVWork()!=MemberRecStatus.REC_FAIL && fresh.getVWork()==MemberRecStatus.REC_FAIL) {
 	        UtilHelper.sendTemplateSMS(old.getCsmHost(),
                     SmsFlagEnum.工作证认证失败.getFlag(), old.getCsmMobile$(),
                     null, SMSType.通知类短信,
