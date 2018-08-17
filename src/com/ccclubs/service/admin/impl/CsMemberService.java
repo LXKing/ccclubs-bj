@@ -247,7 +247,7 @@ public class CsMemberService implements ICsMemberService
             vprogress = 3;// 三项认证完毕
         }
         // 满足认证进度的发送短信
-        if (vprogress < 4 && !$.empty(old.getCsmMobile()) && from == 5) {
+        if (vprogress < 4 && !$.empty(old.getCsmMobile())) {
             CsUnitPerson csUnitPerson = CsUnitPerson.getCsUnitPerson(
                     $.add(CsUnitPerson.F.csupMember, old.getCsmId()));
             if (csUnitPerson != null) {
