@@ -74,6 +74,11 @@ public class OrderInfoReceiverThread extends Thread {
 			.config("applicationOrderInfoReceiver");
 	private final static String MQTT_CLIENT_PUBLISH = $
 			.config("applicationOrderInfoPublish");
+	
+	/**
+	 * MQTT 订阅topic列表
+	 */
+	private final static String MQTT_SUBSCRIBE_TOPIC = $.config("mqtt_subscribe_topic_list");
 
 	private final static String ORDER_DOWN_STREAM_TEMPLATE = "car/ser/{0}/rt_0/{1}/pri_0";
 
@@ -151,7 +156,7 @@ public class OrderInfoReceiverThread extends Thread {
 	@Override
 	public void run() {
 		try {
-
+		    
 			ConnectTimerTask task = new ConnectTimerTask();
 			connectTimer.schedule(task, 1 * 1000, 30 * 1000);
 
@@ -590,35 +595,23 @@ public class OrderInfoReceiverThread extends Thread {
         }
         return sendResult;
 	}
-
+	
 	/**
 	 * 订阅指定主题，远程，订单，区分城市
 	 * 
 	 * @param mqttClient
 	 */
 	public static void subscribeTopic(MqttClient mqttClient) {
-		try {
-			// 杭州
-			// 远程操作的回复
-//			mqttClient.subscribe("ser/car/hzc/rt_0/+/pri_2");
-//			// 订单的回复
-//			mqttClient.subscribe("ser/car/hzc/rt_0/+/pri_3");
-//			// 北京
-//			// 远程操作的回复
-//			mqttClient.subscribe("ser/car/bjh/rt_0/+/pri_2");
-//			// 订单的回复
-//			mqttClient.subscribe("ser/car/bjh/rt_0/+/pri_3");
-
-			// 北京
-			// 远程操作的回复
-			 mqttClient.subscribe("ser/car/bjp/rt_0/+/pri_2");
-//			 订单的回复
-			 mqttClient.subscribe("ser/car/bjp/rt_0/+/pri_3");
-		} catch (Exception e) {
-			e.printStackTrace();
-			writeLog(e.getMessage() + " - subscribeTopic exception");
-		}
-	}
+	    try {
+	      String[] topic = MQTT_SUBSCRIBE_TOPIC.split(",");
+	      for (int i = 0; i < topic.length && topic[i].length() > 0; i++) {
+	        mqttClient.subscribe(topic[i]);
+	      }
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      writeLog(e.getMessage() + " - subscribeTopic exception");
+	    }
+	  }
 
 	/**
 	 * 根据车牌号，组织发送话题
@@ -1210,4 +1203,7 @@ public class OrderInfoReceiverThread extends Thread {
 	
 	
 
+    public static void main(String[] args) {
+        subscribeTopic(null);
+    }
 }

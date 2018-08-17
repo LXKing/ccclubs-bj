@@ -45,7 +45,7 @@ public class VcCmdApiService {
     /**
      * api端口
      */
-    private static final int API_PORT = Integer.parseInt($.config("vc_api_port"));
+    private static final Integer API_PORT = $.config("vc_api_port")==null?null:Integer.parseInt($.config("vc_api_port"));
     /**
      * api域名
      */
@@ -53,7 +53,7 @@ public class VcCmdApiService {
     /**
      * api端口
      */
-    private static final int CMD_PORT = Integer.parseInt($.config("vc_cmd_port"));
+    private static final Integer CMD_PORT = $.config("vc_cmd_port")==null?null:Integer.parseInt($.config("vc_cmd_port"));
     /**
      * api调用者身份appid
      */
@@ -277,11 +277,17 @@ public class VcCmdApiService {
     private static String apiUrl(String uri, boolean cmd) {
         StringBuilder urlSb = new StringBuilder();
         if (cmd) {
-            urlSb.append("http").append("://").append(CMD_HOST).append(":").append(CMD_PORT)
-            .append(uri).toString();
+            urlSb.append("http").append("://").append(CMD_HOST);
+            if (null != CMD_PORT) {
+                urlSb.append(":").append(CMD_PORT);
+            }
+            urlSb.append(uri).toString();
         } else {
-            urlSb.append("http").append("://").append(API_HOST).append(":").append(API_PORT)
-                .append(uri).toString();
+            urlSb.append("http").append("://").append(API_HOST);
+            if (null != API_PORT) {
+                urlSb.append(":").append(API_PORT);
+            }
+            urlSb.append(uri).toString();
         }
         return urlSb.toString();
     }

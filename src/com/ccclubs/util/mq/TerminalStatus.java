@@ -11,9 +11,7 @@ import com.ccclubs.util.mq.entity.CarStatusIV;
  * 终端上传的状态数据
  * Created by qsxiaogang on 2017/6/3.
  */
-public class TerminalStatus implements ICarStatus, Serializable {
-
-    private static final long serialVersionUID = 1999426779084374974L;
+public class TerminalStatus  {// implements ICarStatus,
     /**
      * 终端序列号
      */
@@ -237,10 +235,6 @@ public class TerminalStatus implements ICarStatus, Serializable {
 
     public void setCssKey(Integer cssKey) {
         this.cssKey = cssKey;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
     public String getCssNumber() {
@@ -619,39 +613,39 @@ public class TerminalStatus implements ICarStatus, Serializable {
         this.autopilot = autopilot;
     }
 
-    @Override
-    public String getCarNum() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public int getTime() {
-        return null==getCssCurrentTime()?0:getCssCurrentTime().intValue();
-    }
-
-    @Override
-    public long getOrderId() {
-        return getOrderId();
-    }
-
-    @Override
-    public int getCarStatus() {
-        // mqtt_66中的CarStatus就是CssRented
-        return getCssRented();
-    }
-
-    @Override
-    public int getCarFuel() {
-        // 车机中心不传递该值
-        return 0;
-    }
-
-    @Override
-    public int getCarElectric() {
-        // 车机中心不传递该值
-        return 0;
-    }
+//    @Override
+//    public String getCarNum() {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
+//
+//    @Override
+//    public int getTime() {
+//        return null==getCssCurrentTime()?0:getCssCurrentTime().intValue();
+//    }
+//
+//    @Override
+//    public long getOrderId() {
+//        return getOrderId();
+//    }
+//
+//    @Override
+//    public int getCarStatus() {
+//        // mqtt_66中的CarStatus就是CssRented
+//        return getCssRented();
+//    }
+//
+//    @Override
+//    public int getCarFuel() {
+//        // 车机中心不传递该值
+//        return 0;
+//    }
+//
+//    @Override
+//    public int getCarElectric() {
+//        // 车机中心不传递该值
+//        return 0;
+//    }
     
 
 }
