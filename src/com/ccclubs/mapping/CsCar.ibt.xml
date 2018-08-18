@@ -61,6 +61,9 @@
 		<result property="cscMqttFlag" column="csc_mqtt_flag"/>
 		<result property="cscMask" column="csc_mask"/>
 		<result property="cscStatus" column="csc_status"/>
+		
+		<result property="cscTerNo" column="csc_ter_no"/>
+		<result property="cscBindPlatform" column="csc_bind_platform"/>
 	</resultMap>
 		
 	<!-- 获取所有车辆 -->
@@ -365,6 +368,9 @@
 			,cs_car$suffix$.csc_mqtt_flag
 			,cs_car$suffix$.csc_mask
 			,cs_car$suffix$.csc_status
+			
+			,cs_car$suffix$.csc_ter_no
+			,cs_car$suffix$.csc_bind_platform
 		)
 		values(
 			<isNotNull property="cscHost" prepend="">
@@ -666,7 +672,20 @@
 			</isNotNull>
 			<isNull property="cscStatus" prepend=",">
 				null
-			</isNull>			
+			</isNull>	
+			
+			<isNotNull property="cscTerNo" prepend=",">
+				#cscTerNo#
+			</isNotNull>
+			<isNull property="cscTerNo" prepend=",">
+				null
+			</isNull>		
+			<isNotNull property="cscBindPlatform" prepend=",">
+				#cscBindPlatform#
+			</isNotNull>
+			<isNull property="cscBindPlatform" prepend=",">
+				0
+			</isNull>
 		)
 		<selectKey resultClass="java.lang.Long">
 		   SELECT @@IDENTITY AS id
@@ -976,6 +995,19 @@
 			</isNotNull>
 			<isNull property="cscStatus" prepend=",">
 				cs_car$suffix$.csc_status = null
+			</isNull>		
+			
+			<isNotNull property="cscTerNo" prepend=",">
+				cs_car$suffix$.csc_ter_no = #cscTerNo#
+			</isNotNull>
+			<isNull property="cscTerNo" prepend=",">
+				cs_car$suffix$.csc_ter_no = null
+			</isNull>	
+			<isNotNull property="cscBindPlatform" prepend=",">
+				cs_car$suffix$.csc_bind_platform = #cscBindPlatform#
+			</isNotNull>
+			<isNull property="cscBindPlatform" prepend=",">
+				cs_car$suffix$.csc_bind_platform = 0
 			</isNull>				
 		where
 			csc_id=#cscId#
@@ -1134,7 +1166,14 @@
 			</isNotNull>		
 			<isNotNull property="cscStatus" prepend=",">
 				cs_car$suffix$.csc_status = #cscStatus#
-			</isNotNull>		
+			</isNotNull>
+			
+			<isNotNull property="cscTerNo" prepend=",">
+				cs_car$suffix$.csc_ter_no = #cscTerNo#
+			</isNotNull>	
+			<isNotNull property="cscBindPlatform" prepend=",">
+				cs_car$suffix$.csc_bind_platform = #cscBindPlatform#
+			</isNotNull>			
 			</dynamic>
 		where
 			csc_id=#cscId#
@@ -1307,7 +1346,13 @@
 			</isNotNull>		
 			<isNotNull property="V_cscStatus" prepend=",">
 				cs_car$suffix$.csc_status = #V_cscStatus#
-			</isNotNull>		
+			</isNotNull>
+			<isNotNull property="V_cscTerNo" prepend=",">
+				cs_car$suffix$.csc_ter_no = #V_cscTerNo#
+			</isNotNull>	
+			<isNotNull property="V_cscBindPlatform" prepend=",">
+				cs_car$suffix$.csc_bind_platform = #V_cscBindPlatform#
+			</isNotNull>			
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
 			    $V_definex$

@@ -42,7 +42,11 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 	private @caption("数据发送状态") @column("csr_state")      @note(" 0:未发送 1:已发送 2:组装中  ") Short csrState;
 	private @caption("操作结果") @column("csr_status")      @note(" 0:未知 1:操作成功 2:操作失败  ") Short csrStatus;
 	private @caption("控制原因") @column("csr_case")    @relate("$csrCase") @RelateClass(SrvProperty.class)  @note("查询REMOTE_CASE") Long csrCase;
+	// 设置控制指令ID,对应后面从车机中心收到的远程指令结果
+	private @caption("消息ID") @column("csr_message_id")    @note("  ") Long csrMessageId;
+	
 	private SrvProperty $csrCase;//关联对象[控制原因]
+	
 	
 	//默认构造函数
 	public CsRemote(){
@@ -57,7 +61,7 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 	/**
 	 * 所有字段构造函数 
 	 */
-	public CsRemote(Long csrHost,String csrNumber,Long csrCar,Short csrWay,Short csrType,String csrCode,Long csrEditor,String csrRemark,Date csrUpdateTime,Date csrAddTime,Short csrState,Short csrStatus,Long csrCase){
+	public CsRemote(Long csrHost,String csrNumber,Long csrCar,Short csrWay,Short csrType,String csrCode,Long csrEditor,String csrRemark,Date csrUpdateTime,Date csrAddTime,Short csrState,Short csrStatus,Long csrCase, Long csrMessageId){
 		this.csrHost=csrHost;
 		this.csrNumber=csrNumber;
 		this.csrCar=csrCar;
@@ -71,6 +75,7 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 		this.csrState=csrState;
 		this.csrStatus=csrStatus;
 		this.csrCase=csrCase;
+		this.csrMessageId = csrMessageId;
 	}
 	
 	//设置非空字段
@@ -162,6 +167,14 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 		this.setSeted(F.csrCase);
 		return this;
 	}
+	/**
+	 * 消息ID
+	 */
+	public CsRemote csrMessageId(Long csrMessageId){
+        this.csrMessageId = csrMessageId;
+        this.setSeted(F.csrMessageId);
+        return this;
+    }
 	
 	//克隆对象
 	public CsRemote clone(){
@@ -180,6 +193,7 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 		clone.csrState=this.csrState;
 		clone.csrStatus=this.csrStatus;
 		clone.csrCase=this.csrCase;
+		clone.csrMessageId = this.csrMessageId;
 		return clone;
 	}
 	
@@ -786,6 +800,30 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
  		$.SetRequest("SrvProperty$"+this.getCsrCase(), srvProperty);
 	 	return srvProperty;
 	}
+ 	
+ 	/*******************************消息ID**********************************/ 
+    /**
+    * 消息ID  
+    **/
+    public Long getCsrMessageId(){
+        return this.csrMessageId;
+    }
+    /**
+    * 获取消息ID格式化(toString)
+    **/
+    public String getCsrMessageId$(){
+        String strValue="";
+         strValue=$.str(this.getCsrMessageId());
+         return strValue;
+    }
+    /**
+    * 消息ID  
+    **/
+    public void setCsrMessageId(Long csrMessageId){
+        this.csrMessageId = csrMessageId;
+        this.setSeted(F.csrMessageId);
+    }
+    
 	
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
@@ -993,6 +1031,18 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 		public M csrCaseMax(Object max){this.put("csrCaseMax", max);return this;};
 	 	public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
+	 	
+	 	/** 消息ID       **/
+        public M csrMessageId(Object csrMessageId){this.put("csrMessageId", csrMessageId);return this;};
+        /** and csr_message_id is null */
+        public M csrMessageIdNull(){if(this.get("csrMessageIdNot")==null)this.put("csrMessageIdNot", "");this.put("csrMessageId", null);return this;};
+        /** not .... */
+        public M csrMessageIdNot(){this.put("csrMessageIdNot", "not");return this;};
+        /** and csr_message_id >= ? */
+        public M csrMessageIdMin(Object min){this.put("csrMessageIdMin", min);return this;};
+        /** and csr_message_id <= ? */
+        public M csrMessageIdMax(Object max){this.put("csrMessageIdMax", max);return this;};
+        
 	 	/** 获取所有远程控制 **/
 		public @api List<CsRemote> list(Integer size){
 			return getCsRemoteList(this,size);
@@ -1070,6 +1120,8 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 		public final static @type(Short.class)  String csrStatus="csrStatus";
 		/** 控制原因 [非空]       **/
 		public final static @type(Long.class)  String csrCase="csrCase";
+		/** 消息ID       **/
+        public final static @type(Long.class)  String csrMessageId="csrMessageId";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -1102,6 +1154,8 @@ public @caption("远程控制") @table("cs_remote") class CsRemote implements ja
 		public final static String csrStatus="csr_status";
 		/** 控制原因 [非空]       **/
 		public final static String csrCase="csr_case";
+		/** 消息ID      **/
+        public final static String csrMessageId="csrMessageId";
 		
 	 	public static String get(String name){
 			try {

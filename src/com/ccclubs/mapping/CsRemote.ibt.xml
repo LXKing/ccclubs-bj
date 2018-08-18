@@ -22,6 +22,7 @@
 		<result property="csrState" column="csr_state"/>
 		<result property="csrStatus" column="csr_status"/>
 		<result property="csrCase" column="csr_case"/>
+		<result property="csrMessageId" column="csr_message_id"/>
 	</resultMap>
 		
 	<!-- 获取所有远程控制 -->
@@ -242,6 +243,7 @@
 			,cs_remote$suffix$.csr_state
 			,cs_remote$suffix$.csr_status
 			,cs_remote$suffix$.csr_case
+			,cs_remote$suffix$.csr_message_id
 		)
 		values(
 			<isNotNull property="csrHost" prepend="">
@@ -321,7 +323,13 @@
 			</isNotNull>
 			<isNull property="csrCase" prepend=",">
 				null
-			</isNull>			
+			</isNull>	
+			<isNotNull property="csrMessageId" prepend=",">
+				#csrMessageId#
+			</isNotNull>
+			<isNull property="csrMessageId" prepend=",">
+				null
+			</isNull>		
 		)
 		<selectKey resultClass="java.lang.Long">
 		   SELECT @@IDENTITY AS id
@@ -409,6 +417,12 @@
 			</isNotNull>
 			<isNull property="csrCase" prepend=",">
 				cs_remote$suffix$.csr_case = null
+			</isNull>
+			<isNotNull property="csrMessageId" prepend=",">
+				cs_remote$suffix$.csr_message_id = #csrMessageId#
+			</isNotNull>
+			<isNull property="csrMessageId" prepend=",">
+				cs_remote$suffix$.csr_message_id = null
 			</isNull>				
 		where
 			csr_id=#csrId#
@@ -456,6 +470,9 @@
 			</isNotNull>		
 			<isNotNull property="csrCase" prepend=",">
 				cs_remote$suffix$.csr_case = #csrCase#
+			</isNotNull>		
+			<isNotNull property="csrMessageId" prepend=",">
+				cs_remote$suffix$.csr_message_id = #csrMessageId#
 			</isNotNull>		
 			</dynamic>
 		where
@@ -518,7 +535,11 @@
 			</isNotNull>		
 			<isNotNull property="V_csrCase" prepend=",">
 				cs_remote$suffix$.csr_case = #V_csrCase#
-			</isNotNull>		
+			</isNotNull>	
+			
+			<isNotNull property="V_csrMessageId" prepend=",">
+				cs_remote$suffix$.csr_message_id = #V_csrMessageId#
+			</isNotNull>	
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
 			    $V_definex$

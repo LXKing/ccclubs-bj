@@ -145,7 +145,14 @@
 				 ${item.cscStatus==1?"可租用":""}
 				 ${item.cscStatus==2?"不可用":""}
 				 ${item.cscStatus==0?"无效":""}
-			</td>			
+			</td>	
+			<td ref="cscTerNo" class="" title="${item.cscTerNo}">
+				 ${item.cscTerNo$}
+			</td>
+			<td ref="cscBindPlatform" class="">				
+				 ${item.cscStatus==0?"北京出行平台":""}
+				 ${item.cscStatus==1?"车机中心平台":""}
+			</td>		
 			<td>
 				<s:if test="#request.select!=false">
 				<a onClick="caller.onSelectCar(${item.cscId},'${item.cscNumber}',${item.cscOutlets},'${item.cscOutlets$}');$.closeModalDialog();" href="javascript:void(0)">选择此车</a>

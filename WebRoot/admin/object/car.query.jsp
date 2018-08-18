@@ -999,6 +999,53 @@
 				</dl>
 			</s:if>
 			${lz:set("注释","*****************状态字段的查询代码结束*****************")}
-			
-			
 			${after$cscStatus}
+			
+			 ${before$cscTerNo}
+			 ${lz:set("注释","*****************终端序列号字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "cscTerNo" : (lz:join(relateObject,"$cscTerNo")))}
+			 ${lz:set("cname",lz:join(relateObject,".cscTerNo"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.cscTerNo || #request.defines['cscTerNo']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"cscVin":relateObject}" id="form-dl-cscVin">
+					<dt>终端序列号：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.cscTerNoYesNot=="not"?"checked-not":""}${data.cscTerNoYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.cscTerNoYesNot}"/>
+			 			<input type="text" class="input" size="16"  maxlength="32" name="${NAME}" id="${NAME}"  value="${data.cscTerNo}"/>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************终端序列号字段的查询代码结束*****************")}
+			${after$cscOilCard}
+			
+			${before$cscSetup}
+			 
+			 ${lz:set("注释","*****************车辆挂载的平台字段的查询输入框代码*****************")}
+			 ${lz:set("NAME",relateObject==null? "cscBindPlatform" : (lz:join(relateObject,"$cscBindPlatform")))}
+			 ${lz:set("cname",lz:join(relateObject,".cscBindPlatform"))}
+			 ${lz:set("data",relateObject==null?objects:objects[lz:ForMat(relateObject)])}
+			 <s:if test="#request.defines==null && #request.CTRL.q.cscSetup || #request.defines['cscSetup']!=null || #request.children[#request.cname]!=null">
+			 	${lz:set("haveQuery",true)}
+				<dl group="${relateObject==null?"cscSetup":relateObject}" id="form-dl-cscSetup">
+					<dt>车机安装：</dt>
+					<dd>
+					
+						<a href="javascript:void(0);" title="不包含" class="checkbox ${data.cscBindPlatformYesNot=="not"?"checked-not":""}${data.cscBindPlatformYesNot=="yes"?"checked-yes":""}" for="${NAME}YesNot"></a>
+						<input class="YesNot" type="hidden" name="${NAME}YesNot" id="${NAME}YesNot" value="${data.cscBindPlatformYesNot}"/>
+			 		<select id="${NAME}" name="${NAME}" >
+			 			<option value="">请选择</option>
+							<option value="0" ${data.cscBindPlatform==0?"selected":""}>北京出行平台</option>
+							<option value="1" ${data.cscBindPlatform==1?"selected":""}>车机中心平台</option>
+			 		</select>
+		 	 		
+					</dd>
+				</dl>
+			</s:if>
+			${lz:set("注释","*****************车辆挂载的平台字段的查询代码结束*****************")}
+			
+			
+			${after$cscSetup}
