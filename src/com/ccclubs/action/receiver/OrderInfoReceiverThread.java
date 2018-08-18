@@ -20,6 +20,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import com.aliyun.openservices.ons.api.Action;
 import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
+import com.ccclubs.action.vc.dto.VcApiResult;
 import com.ccclubs.action.vc.service.VcCmdApiService;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.DateHelper;
@@ -572,8 +573,8 @@ public class OrderInfoReceiverThread extends Thread {
 	 * @param downStream
 	 * @throws Exception
 	 */
-	private boolean dealOrderByNetType(OrderDownStream downStream) throws Exception {
-	    boolean sendResult;
+	private VcApiResult dealOrderByNetType(OrderDownStream downStream) throws Exception {
+	    VcApiResult sendResult;
 	    // 根据终端序列号查找车信息
         Map<String, Object> carQueryMap = new HashMap<>();
         // 1:上线
@@ -591,7 +592,7 @@ public class OrderInfoReceiverThread extends Thread {
             // mqtt方式下发订单
             mqttClientPublish.publish(getTopic(downStream.mCarNum),
                     downStream.getBytes(), 0, false);
-            sendResult = true;
+            sendResult = VcApiResult.ofOk(null);
         }
         return sendResult;
 	}

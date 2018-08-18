@@ -19,7 +19,7 @@ public class Main {
 		/**
 		 * FIXME 非常非常非常差的实现方式，了解业务的请重写
 		 */
-		CarStatusOnsProducer.carStatusQueue = carStatusQueue;
+//		CarStatusOnsProducer.carStatusQueue = carStatusQueue;
 		
 		CarStatusConsumer consumer = new CarStatusConsumer(carStatusQueue);
 		consumer.start();

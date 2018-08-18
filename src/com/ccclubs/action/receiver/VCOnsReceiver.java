@@ -26,6 +26,7 @@ import com.ccclubs.action.vc.enums.MsgTagEnum;
 import com.ccclubs.action.vc.enums.VcCmdEnum;
 import com.ccclubs.action.vc.service.CarOrderScheduledPoolExecuter;
 import com.ccclubs.action.vc.service.VcCmdApiService;
+import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.DateHelper;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.model.CsCar;
@@ -106,6 +107,9 @@ public class VCOnsReceiver implements MessageListener {
         String tag = msg.getTag();
         byte[] msgBody = msg.getBody();
         String msgStr = new String(msgBody, Charset.forName("UTF-8"));
+        $.trace("ONS EVENT: ------------------------------------------------------------");
+        $.trace("ONS TAG: " + tag);
+        $.trace("ONS EVENT: ------------------------------------------------------------");
         System.out.println("tag: " + tag);
         System.out.println("received msg:" + msgStr);
         
@@ -159,7 +163,6 @@ public class VCOnsReceiver implements MessageListener {
                 correctionOrderStatus(currentCsState, carInfo);
                 break;
             case MQTT_REMOTE:// 下行命令结果返回
-                $.trace("MQTT_REMOTE ------------");
                 Object oj = JSON.parse(msgBody, new Feature[] {});
                 JSONObject remoteJson = JSONObject.parseObject(oj.toString());
                
@@ -189,72 +192,39 @@ public class VCOnsReceiver implements MessageListener {
                 // 更新指令执行结果
                 csRemoteService.updateCsRemote$NotNull(cmdRemote);
                 writeLog("收到来自 车牌号：" + cmdRemote.getCsrNumber() + "，远程操作回复");
-                
-                /**
-                 * 根据指令类型分别处理
-                 */
-                VcCmdEnum cmd = VcCmdEnum.getByBjCmdCode(cmdRemote.getCsrType());
-                if (null != cmd) {
-                    String carNumber = cmdRemote.getCsrNumber();
-                    if (VcCmdEnum.CMD_GET_CAR == cmd) {
-                        // 取车应答
-                        // 根据车牌号获取当前订单信息
-                        Map<String, Object> orderQuery = new HashMap<>();
-                        // 1:使用中(因为订单下发时的状态就是1)
-                        orderQuery.put("csoStatus", 1);
-                        orderQuery.put("csoCarNumber", carNumber);
-                        CsOrder currOrder = csOrderService.getCsOrder(orderQuery);
-                        if (null == currOrder) {
-                            throw new IllegalStateException("取车时找不到订单信息：carNo=" + carNumber);
-                        }
-                        // 获取最新的一条状态数据
-                        Map<String, Object> stateQuery = new HashMap<>();
-                        stateQuery.put("cssNumber", carNumber);
-                        stateQuery.put("cssOrder", currOrder.getCsoId());
-                        CsState latelyState = csStateService.getCsState(stateQuery);
-                        if (null == latelyState) {
-                            throw new IllegalStateException("取车时找不到最新状态数据：carNo=" + carNumber);
-                        }
-                        int obdMile = Integer.valueOf(latelyState.getCssObdMile());
-                        TakeCar takeCar = new TakeCar();
-                        takeCar.mCarNum = carNumber;
-                        takeCar.mOrderId = currOrder.getCsoId();
-                        // 这个时间取当前时间，因为ons消息中没有附带下位机时间
-                        takeCar.mTakeTime = (int) System.currentTimeMillis();
-                        updateTakeCarForOns(takeCar, obdMile);
-                    } else if (VcCmdEnum.CMD_BACK_CAR == cmd) {
-                        // 还车应答
-                        // 根据车牌号获取当前订单信息
-                        Map<String, Object> orderQuery = new HashMap<>();
-                        // 1:使用中
-                        orderQuery.put("csoStatus", 1);
-                        orderQuery.put("csoCarNumber", carNumber);
-                        CsOrder currOrder = csOrderService.getCsOrder(orderQuery);
-                        if (null == currOrder) {
-                            throw new IllegalStateException("取车时找不到订单信息：carNo=" + carNumber);
-                        }
-                        // 获取最新的一条状态数据
-                        Map<String, Object> stateQuery = new HashMap<>();
-                        stateQuery.put("cssNumber", carNumber);
-                        stateQuery.put("cssOrder", currOrder.getCsoId());
-                        CsState latelyState = csStateService.getCsState(stateQuery);
-                        FurtherCar furtherCar = new FurtherCar();
-                        furtherCar.mCarNum=carNumber;
-                        furtherCar.mFurtherTime=(int) System.currentTimeMillis();
-                        furtherCar.mOrderId=currOrder.getCsoId();
-                        // 订单里程=最新CsState中的里程-订单中的电里程
-                        int electricMile = SystemHelper.toInt(currOrder.getCsoElectric());
-                        int orderMiles = Integer.valueOf(latelyState.getCssObdMile()) - electricMile;
-                        furtherCar.mMiles=orderMiles;
-                        // 设置为电动车
-                        furtherCar.mFucCode=ORDER_FURTHER_FUC_CODE_E;
-                        updateFurtherCarForOns(furtherCar);
-                    }
+                break;
+            case MQTT_TAKE_CAR_ACK:
+                TakeCar takeCar = null;
+                try {
+                    takeCar = TakeCar.readObject(msgBody, TakeCar.class);
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    $.trace("take car translate fail");
+                }
+                $.trace("takeCar: " + takeCar);
+                if (takeCar != null && takeCar.mFucCode == MsgTagEnum.MQTT_TAKE_CAR_ACK.getHex()) {
+                    updateTakeCarForOns(takeCar);
+                }
+                break;
+            case MQTT_FURTHER_CAR_ACK_V1:
+            case MQTT_FURTHER_CAR_ACK_V2:
+                $.trace("MQTT_FURTHER_CAR_ACK ---------");
+                FurtherCar furtherCar = null;
+                try {
+                    furtherCar = FurtherCar.readObject(msgBody, FurtherCar.class);
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    $.trace("back car translate fail");
+                }
+                if (furtherCar != null) {
+                    $.trace("furtherCar: " + furtherCar);
+                    updateFurtherCarForOns(furtherCar);
                 }
                 break;
             case MQTT_ORDER_ACK:
                 // 终端接收到订单后，终端主动上报一个应答信息
-                $.trace("MQTT_ORDER_ACK ");
                 // 订单应答功能码
                 byte funCode = 0x44;
                 OrderUpStream orderUpStream = null;
@@ -430,7 +400,6 @@ public class VCOnsReceiver implements MessageListener {
                         $.trace("订单不存在： id=", currentCsState.getCssOrder());
                         return;
                     }
-                    $.trace("-7-");
                     Short orderStatus = csOrder.getCsoStatus();
                     if (3 == orderStatus || 4 == orderStatus || 7 == orderStatus) {
                         // 该订单状态是已取消（3）,已完成（4）或者已作废（7），发送初始化命令
@@ -442,15 +411,13 @@ public class VCOnsReceiver implements MessageListener {
                             return;
                         }
                         // 发送初始化命令（初始化命令会初始化订单数据）
-                        Long messageId = vcCmdApiService.sendControlCmd(VcCmdEnum.CMD_INIT, vin);
+                        vcCmdApiService.sendControlCmd(VcCmdEnum.CMD_INIT, vin);
                         writeLog(VCOnsReceiver.class.getResource("/").toURI().getPath() + "RemoteTemp/" + DateHelper.formatDate(new Date(), "yyyy-MM-dd") + ".txt", currentCsState.getCssNumber() + "  " + currentCsState.getCssOrder() + " 车机上的订单状态为已取消或者已作废，发送初始化！");
                         return;
                     }
-                    $.trace("-8-");
                     Integer carStatus = Integer.valueOf(currentCsState.getCssRented());
                     if (null != carStatus && carStatus >= 3 && 0 == orderStatus) {
                         // 车辆状态 >= 3 时，如果订单状态是 0 ，则将订单状态变更为 1
-                        $.trace("-9-");
                         
                         CsOrder orderUpdate = new CsOrder();
                         orderUpdate.setCsoId(csOrder.getCsoId());
@@ -460,7 +427,6 @@ public class VCOnsReceiver implements MessageListener {
                         writeLog(VCOnsReceiver.class.getResource("/").toURI().getPath() + "RemoteTemp/" + DateHelper.formatDate(new Date(), "yyyy-MM-dd") + ".txt", currentCsState.getCssNumber() + " 车机上的状态已经是在使用中，更新已预订状态为使用中");
                     }
                 } catch (Throwable e) {
-                    $.trace("-10-");
                     writeLog(e.getMessage() + " correctionOrderStatus 更正订单状态出错");
                     e.printStackTrace();
                 }
@@ -569,19 +535,16 @@ public class VCOnsReceiver implements MessageListener {
      * 
      * @param takeCar
      */
-    private static void updateTakeCarForOns(TakeCar takeCar, int obdMile) {
+    private static void updateTakeCarForOns(TakeCar takeCar) {
         try {
             String takeTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .format(new Date());
+                    .format(new Date(takeCar.mTakeTime * 1000l
+                            + SYSTEM.MACHINE_TIME));
+            $.trace("takeTime: " + takeTime);
+            
             String strSql = "UPDATE " + ORDER_TABLE
                     + " SET cso_status = 1, cso_take_time = '" + takeTime
-                    /**
-                     * 【车机中心对接】2018-8-10
-                     * 取车时，将实时状态数据中的obd里程放入订单的电里程中
-                     */
-                    + "', cso_electric = " + obdMile
-                    + " WHERE cso_id = " + takeCar.mOrderId
-                    + " AND cso_car_number = '" + takeCar.mCarNum + "'";
+                    + "' WHERE cso_id = " + takeCar.mOrderId;
             dao.executeUpdate(strSql);
             writeLog("收到来自 车牌号：" + takeCar.mCarNum + "，订单号：" + takeCar.mOrderId
                     + " 取车回复，取车内容，实际取车时间：" + takeTime);
@@ -606,14 +569,15 @@ public class VCOnsReceiver implements MessageListener {
      */
     private static void updateFurtherCarForOns(FurtherCar furtherCar) {
         try {
-//            String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//                    .format(new Date(furtherCar.mFurtherTime * 1000l
-//                            + SYSTEM.MACHINE_TIME));
+            String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .format(new Date(furtherCar.mFurtherTime * 1000l
+                            + SYSTEM.MACHINE_TIME));
+            $.trace("retTime: " + retTime);
             /**
              * 获取当前时间为还车时间
              * (因为不是mqtt返回，没有下位机时间)
              */
-            String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//            String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             Long currentTime = System.currentTimeMillis();
             String memo = "";
             // 实际还车时间
@@ -868,22 +832,5 @@ public class VCOnsReceiver implements MessageListener {
 
     public void setCarStatusQueue(BlockingQueue<ICarStatus> carStatusQueue) {
         this.carStatusQueue = carStatusQueue;
-    }
-    
-
-    public static void main(String args[]) {
-//        String msgStr = "\"{\\\"code\\\":1000000,\\\"data\\\":{\\\"controlStatus\\\":514,\\\"cssCharging\\\":\r\n" + 
-//                "0,\\\"cssCurrentTime\\\":1534487973000,\\\"cssDoor\\\":0,\\\"cssEngine\\\":2,\\\"cssEvBattery\\\r\n" + 
-//                "\":0,\\\"cssLatitude\\\":30.187027,\\\"cssLight\\\":0,\\\"cssLock\\\":0,\\\"cssLongitude\\\":120.\r\n" + 
-//                "176680,\\\"cssObdMile\\\":56},\\\"message\\\":\\\"操作成功\\\",\\\"messageId\\\":138122397,\\\"suc\r\n" + 
-//                "cess\\\":true}\"";
-//        
-//        
-//        Object body = JSON.parse(msgStr, new Feature[] {});
-//        JSONObject remoteJsonObject = (JSONObject) JSONObject.parse(remoteJson);
-//        VcSimpleCmdResult<?> cmdResult = remoteJsonObject.toJavaObject(VcSimpleCmdResult.class);
-//        Long messageId = cmdResult.getMessageId();
-//        $.trace("remote messageId: " + messageId);
-        
     }
 }

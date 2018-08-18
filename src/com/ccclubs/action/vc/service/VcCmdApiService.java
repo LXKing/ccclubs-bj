@@ -16,9 +16,11 @@ import com.ccclubs.action.vc.constant.VcApiCons;
 import com.ccclubs.action.vc.dto.BindVehicleInput;
 import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
 import com.ccclubs.action.vc.dto.UnBindVehicleInput;
+import com.ccclubs.action.vc.dto.VcApiResult;
 import com.ccclubs.action.vc.dto.VehicleRegisterInput;
 import com.ccclubs.action.vc.enums.VcCmdEnum;
 import com.ccclubs.action.vc.enums.VcColorMap;
+import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.APICallHelper;
 import com.ccclubs.model.CsCar;
 import com.ccclubs.service.admin.ICsCarService;
@@ -74,7 +76,7 @@ public class VcCmdApiService {
      * @param vin           车辆vin码
      * @return              指令ID
      */
-    public Long sendControlCmd(VcCmdEnum cmdEnum, String vin) {
+    public VcApiResult sendControlCmd(VcCmdEnum cmdEnum, String vin) {
         Objects.requireNonNull(cmdEnum);
         Objects.requireNonNull(vin);
         
@@ -91,11 +93,13 @@ public class VcCmdApiService {
         JSONObject apiResult = dealApiPost("发送控制指令", reqUrl, params);
         
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
-            return apiResult.getJSONObject("data").getLong("messageId");
+            Long messageId = apiResult.getJSONObject("data").getLong("messageId");
+            return VcApiResult.ofOk(messageId);
         } else {
-            // {"message":"Terminal is not online at current time","traceId":"150dd8e7-4353-493a-b127-f66a60c066e4","code":101024}
+            // 调用失败，记录失败原因
+            String errorMsg = apiResult.getString("message");
             $.trace("调用车机中心简单指令失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
-            return null;
+            return VcApiResult.ofFail(errorMsg);
         }
     }
     
@@ -104,9 +108,10 @@ public class VcCmdApiService {
      * @param newCar
      * @return          返回的异常信息
      */
-    public boolean sendCarRegister(CsCar newCar) {
+    public VcApiResult sendCarRegister(CsCar newCar) {
         Objects.requireNonNull(newCar);
         
+        VcApiResult apiRes = new VcApiResult();
         VehicleRegisterInput registerInput = new VehicleRegisterInput();
         // 车牌号必填
         registerInput.setCsvCarNo(newCar.getCscNumber());
@@ -128,7 +133,7 @@ public class VcCmdApiService {
         // 车型标志(车型备案号)必填
         if (null == newCar.get$cscModel().getCscmFlag()) {
             $.trace("调用车机中心api发送车辆注册失败： 车型备案号不能为空");
-            return false;
+            return VcApiResult.ofFail("调用车机中心api发送车辆注册失败： 车型备案号不能为空");
         }
         registerInput.setCsvModel(newCar.get$cscModel().getCscmFlag());
         // 出厂日期（北京出行的购车日期-车机中心的出厂日期）必填
@@ -157,13 +162,14 @@ public class VcCmdApiService {
         JSONObject apiResult = dealApiPost("发送车辆注册", reqUrl, params);
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
             if (apiResult.getJSONObject("data").getJSONArray("success").size() > 0) {
-                return true;
+                return VcApiResult.ofOk(null);
             } else {
-                return false;
+                return VcApiResult.ofFail(apiResult.toJSONString());
             }
         } else {
-            $.trace("调用车机中心api发送车辆注册失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
-            return false;
+            String errorMsg = "调用车机中心api发送车辆注册失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]";
+            $.trace(errorMsg);
+            return VcApiResult.ofFail(errorMsg);
         }
     }
     
@@ -173,15 +179,17 @@ public class VcCmdApiService {
      * @param vin           车辆vin码（必填）
      * @return              下发的指令ID（用于接收结果回调）
      */
-    public boolean publishCarOrderInAuth(OrderDownStream downStream, String vin) {
+    public VcApiResult publishCarOrderInAuth(OrderDownStream downStream, String vin) {
         Objects.requireNonNull(vin);
         
         IssueAuthOrderInput apiOrderInput = new IssueAuthOrderInput();
         apiOrderInput.setVin(vin);
         apiOrderInput.setOrderId(downStream.mOrderId);
         // 时间格式化
-        apiOrderInput.setStartTime(DATE_UTIL.longToString((long)downStream.mStartTime, null));// 会不会溢出?
-        apiOrderInput.setEndTime(DATE_UTIL.longToString((long)downStream.mEndTime, null));
+        apiOrderInput.setStartTime(DATE_UTIL.longToString((downStream.mStartTime * 1000L + SYSTEM.MACHINE_TIME), null));
+        apiOrderInput.setEndTime(DATE_UTIL.longToString((downStream.mEndTime * 1000L + SYSTEM.MACHINE_TIME), null));
+//        apiOrderInput.setStartTime(DATE_UTIL.longToString((long)downStream.mStartTime, null));// 会不会溢出?
+//        apiOrderInput.setEndTime(DATE_UTIL.longToString((long)downStream.mEndTime, null));
         apiOrderInput.setRfid(downStream.mRfid);
         apiOrderInput.setAuthCode(downStream.mCode);
         
@@ -190,10 +198,11 @@ public class VcCmdApiService {
         
         JSONObject apiResult = dealApiPost("订单下发", reqUrl, params);
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
-            return true;
+            return VcApiResult.ofOk(null);
         } else {
-            $.trace("调用车机中心带认证订单下发接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
-            return false;
+            String errorMsg = "调用车机中心带认证订单下发接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]";
+            $.trace(errorMsg);
+            return VcApiResult.ofFail(errorMsg);
         }
     }
     
@@ -202,7 +211,7 @@ public class VcCmdApiService {
      * @param carInfo       车辆信息：必须包含vin和终端序列号
      * @return              true: 绑定成功，false：绑定失败
      */
-    public boolean carBindTerminal(CsCar carInfo) {
+    public VcApiResult carBindTerminal(CsCar carInfo) {
         Objects.requireNonNull(carInfo.getCscTerNo());
         Objects.requireNonNull(carInfo.getCscVin());
         
@@ -215,10 +224,11 @@ public class VcCmdApiService {
         
         JSONObject apiResult = dealApiPost("车辆绑定终端", reqUrl, params);
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
-            return true;
+            return VcApiResult.ofOk(null);
         } else {
-            $.trace("调用车机中心车辆绑定终端接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
-            return false;
+            String errorMsg = "调用车机中心车辆绑定终端接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]";
+            $.trace(errorMsg);
+            return VcApiResult.ofFail(errorMsg);
         }
     }
     
@@ -227,7 +237,7 @@ public class VcCmdApiService {
      * @param carInfo
      * @return          true: 绑定成功，false：绑定失败
      */
-    public boolean carUnbindTerminal(CsCar carInfo) {
+    public VcApiResult carUnbindTerminal(CsCar carInfo) {
         Objects.requireNonNull(carInfo.getCscTerNo());
         Objects.requireNonNull(carInfo.getCscVin());
         
@@ -240,10 +250,11 @@ public class VcCmdApiService {
         
         JSONObject apiResult = dealApiPost("车辆与终端解除绑定", reqUrl, params);
         if (VcApiCons.VC_API_CODE_SUCCESS == apiResult.getIntValue("code")) {
-            return true;
+            return VcApiResult.ofOk(null);
         } else {
-            $.trace("调用车机中心车辆取消绑定终端接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]");
-            return false;
+            String errorMsg = "调用车机中心车辆取消绑定终端接口失败： url=[" + reqUrl + "], resp=[" + apiResult.toJSONString() + "]";
+            $.trace(errorMsg);
+            return VcApiResult.ofFail(errorMsg);
         }
     }
     
@@ -382,7 +393,7 @@ public class VcCmdApiService {
     }
     
     public static void main(String[] args) {
-        new VcCmdApiService().sendCarRegister(null);
+        new VcCmdApiService().sendControlCmd(VcCmdEnum.CMD_DOOR_CLOSE, "");
     }
     
     

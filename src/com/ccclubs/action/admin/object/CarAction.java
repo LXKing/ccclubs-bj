@@ -40,6 +40,7 @@ import com.ccclubs.model.CsUserType;
 import com.ccclubs.model.Restriction;
 import com.ccclubs.model.SrvHost;
 import com.ccclubs.service.admin.ICsOutletsService;
+import com.ccclubs.action.vc.dto.VcApiResult;
 import com.ccclubs.action.vc.service.VcCmdApiService;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.config.SYSTEM.RuleName;
@@ -320,11 +321,11 @@ public class CarAction
 								if (1 == csCar.getCscBindPlatform()) {
 								    boolean vcApiAllSuccessed = false;
 								    // 调用车机中心车辆注册
-								    boolean isRegisterd = vcCmdApiService.sendCarRegister(csCar);
-                                    if (isRegisterd) {
+								    VcApiResult register = vcCmdApiService.sendCarRegister(csCar);
+                                    if (register.isSuccess()) {
                                         // 车辆绑定终端
-                                        boolean bindSuccess = vcCmdApiService.carBindTerminal(csCar);
-                                        if (bindSuccess) {
+                                        VcApiResult bind = vcCmdApiService.carBindTerminal(csCar);
+                                        if (bind.isSuccess()) {
                                             // 注册成功
                                             vcApiAllSuccessed = true;
                                         }
@@ -370,19 +371,19 @@ public class CarAction
                                      * FIXME 如果中间某个过程调用失败，如何处理？
                                      */
                                     boolean vcApiAllSuccessed = false;
-                                    boolean isUnbindSuccess = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
-                                    if (isUnbindSuccess) {
+                                    VcApiResult unbind = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
+                                    if (unbind.isSuccess()) {
                                         // 新建car
                                         CsCar newCar = new CsCar();
                                         // 从请求参数中同步set过的值
                                         newCar.mergeSet(csCar);
-                                        boolean isRegisterd = vcCmdApiService.sendCarRegister(newCar);
-                                        if (isRegisterd) {
+                                        VcApiResult registerd = vcCmdApiService.sendCarRegister(newCar);
+                                        if (registerd.isSuccess()) {
                                             CsCar newBind = new CsCar();
                                             newBind.setCscTerNo(oldCarInfo.getCscTerNo());
                                             newBind.setCscVin(csCar.getCscVin());
-                                            boolean bindSuccess = vcCmdApiService.carBindTerminal(newBind);
-                                            if (bindSuccess) {
+                                            VcApiResult bind = vcCmdApiService.carBindTerminal(newBind);
+                                            if (bind.isSuccess()) {
                                                 vcApiAllSuccessed = true;
                                             }
                                         }
@@ -401,13 +402,13 @@ public class CarAction
                                     CsCar newUnBind = new CsCar();
                                     newUnBind.setCscTerNo(oldCarInfo.getCscTerNo());
                                     newUnBind.setCscVin(csCar.getCscVin());
-                                    boolean isUnbindSuccess = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
-                                    if (isUnbindSuccess) {
+                                    VcApiResult unbind = vcCmdApiService.carUnbindTerminal(oldCarInfo); 
+                                    if (unbind.isSuccess()) {
                                         CsCar newBind = new CsCar();
                                         newBind.setCscTerNo(csCar.getCscTerNo());
                                         newBind.setCscVin(csCar.getCscVin());
-                                        boolean unbindSuccess = vcCmdApiService.carBindTerminal(newBind);
-                                        if (unbindSuccess) {
+                                        VcApiResult bind = vcCmdApiService.carBindTerminal(newBind);
+                                        if (bind.isSuccess()) {
                                             vcApiAllSuccessed = true;
                                         }
                                     }
