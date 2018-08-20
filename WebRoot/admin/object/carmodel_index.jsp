@@ -16,13 +16,13 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csCarModel.cscmId))}
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可查询")}
 	queryables:"cscmId,cscmName,cscmType,cscmFile,cscmUpdateTime,cscmAddTime,cscmStatus",
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可显示在表格中")}
-	listables:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmUpdateTime,cscmAddTime,cscmRemark,cscmStatus",
+	listables:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmUpdateTime,cscmAddTime,cscmRemark,cscmStatus,cscmFlag",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可查询")}
 	queryables:"cscmId,cscmName,cscmType,cscmFile,cscmUpdateTime,cscmAddTime,cscmStatus",
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可显示在表格中")}
-	listables:"cscmId,cscmName,cscmType,cscmFile,cscmTrunk,cscmUpdateTime,cscmAddTime,cscmStatus",
+	listables:"cscmId,cscmName,cscmType,cscmFile,cscmTrunk,cscmUpdateTime,cscmAddTime,cscmStatus,cscmFlag",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -422,7 +422,16 @@ ${after$form}
 			 	${lz:set("checkeds[]","cscmStatus")}
 			 </td>
 			 </s:if>
-		 
+			 
+			 <!-- 车机中心对接新增字段: 车型标志（车型备案号） -->
+		 	 <s:if test="#request.defines==null && #request.CTRL.l.cscmFlag || #request.defines['cscmFlag']!=null">
+			 <td <s:if test="#request.defines['cscmFlag']>0">colspan="${defines["cscmFlag"]}" ${all?"width":"iwidth"}="${defines["cscmFlag"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="16" ref="cscmFlag"   title="车型标志">
+			 	<a class="${desc=="cscm_flag" ? "desc" : ""}${asc=="cscm_flag" ? "asc" : ""}" href="?${desc=="cscm_flag" ? "asc=cscm_flag" : ""}${(asc=="cscm_flag" || desc!="cscm_flag" )? "desc=cscm_flag" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	车型标志
+			 	</a>
+			 	${lz:set("checkeds[]","cscmFlag")}
+			 </td>
+			 </s:if>
 		 	${lz:set("注释","****数据列表列头最后两列****")}
 			<td rowspan="2" width="60" tdid="17" class="options" ref="options">操作</td>
 			<td rowspan="2" width="105" class="operation" tdid="18" ref="operation">
@@ -847,6 +856,30 @@ ${after$form}
 					</td>
 				</s:else>
 			</s:if>
+			
+			<!-- 车机中心对接新增字段 -->
+			<s:if test="#request.defines==null && #request.CTRL.l.cscmFlag || #request.defines['cscmFlag']!=null">
+				<s:if test="#request.defines['cscmFlag']>0">
+					${lz:set("注释","****cscmFlag关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.cscmFlag))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCscmFlag",lz:indexOf(fieldName,"cscmFlag")>-1)}
+				  		<s:if test="#request.atCscmFlag==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****cscmFlag字段的字串格式化输出****")}
+					<td ref="cscmFlag" class="td ">
+						 	${lz:or(item$cscmFlag[i.count-1],lz:left(item.cscmFlag$,100))}
+					</td>
+				</s:else>
+			</s:if>
 		   ${lz:set("注释","*****************数据列表数据部分结束*****************")}		  
 		  
 		   
@@ -1209,6 +1242,29 @@ ${after$form}
 				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
 				  			<s:if test="#request.isList==true">
 				  				<lz:set name="arrFieldName">cscmStatus[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
+				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
+				 			</s:if>
+				 			<s:else>
+								<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+							</s:else>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+				</s:else>
+			 </s:if>
+			 
+			 <!-- 车机中心对接新增字段 -->
+			 <s:if test="#request.defines==null && #request.CTRL.l.cscmFlag || #request.defines['cscmFlag']!=null">
+				<s:if test="#request.defines['cscmFlag']>0">
+					${lz:set("注释","****cscmFlag关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("atCscmFlag",lz:indexOf(fieldName,"cscmStatus")>-1)}				  		
+				  		<s:if test="#request.atCscmFlag==true">
+				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				  			<s:if test="#request.isList==true">
+				  				<lz:set name="arrFieldName">cscmFlag[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
 				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
 				 			</s:if>
 				 			<s:else>

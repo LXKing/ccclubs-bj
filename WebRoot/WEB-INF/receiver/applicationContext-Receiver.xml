@@ -2,14 +2,77 @@
 
 <!-- author qsxiaogang -->
 
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean class="com.ccclubs.action.receiver.CarStatusReceiverThread" init-method="start">
+	<!-- <bean class="com.ccclubs.action.receiver.CarStatusReceiverThread" init-method="start">
 		<property name="csOrderService" ref="csOrderService"></property>
 		<property name="commonOrderService" ref="commonOrderService"></property>
-	</bean>
+	</bean> -->
 	<bean class="com.ccclubs.action.receiver.OrderInfoReceiverThread" init-method="start">
 		<property name="csOrderService" ref="csOrderService"></property>
 		<property name="commonDisposeService" ref="commonDisposeService"></property>
+		<property name="csCarService" ref="csCarService"></property>
+		<property name="vcCmdApiService" ref="vcCmdApiService"></property>
 	</bean>
+	
+	<!-- 车机中心对外提供指令类api接口服务 -->
+	<bean id="vcCmdApiService"
+		class="com.ccclubs.action.vc.service.VcCmdApiService"
+		scope="prototype">
+		<property name="csCarService" ref="csCarService"></property>
+	</bean>
+	
+	<!-- ========================================================= -->
+	<!-- 						阿里云MQ消费者                  				   -->
+	<!-- ========================================================= -->
+	<bean id="vcOnsReceiver"
+		class="com.ccclubs.action.receiver.VCOnsReceiver">
+		<property name="csStateService" ref="csStateService"></property>
+		<property name="csHistoryStateService" ref="csHistoryStateService"></property>
+		<property name="csOrderService" ref="csOrderService"></property>
+		<property name="carOrderScheduledPoolExecuter" ref="carOrderScheduledPoolExecuter"></property>
+		<property name="csRemoteService" ref="csRemoteService"></property>
+		<property name="csCarService" ref="csCarService"></property>
+		<property name="vcCmdApiService" ref="vcCmdApiService"></property>
+	</bean>
+	<!-- 多 CID 订阅同一个 Topic，可以创建多个 ConsumerBean -->
+	<bean id="onsStateConsumer"
+		class="com.aliyun.openservices.ons.api.bean.ConsumerBean"
+		init-method="start" destroy-method="shutdown">
+		<property name="properties"> <!--消费者配置信息 -->
+			<props>
+				<prop key="ConsumerId">CID_terminal_bjcx_test</prop>
+				<prop key="AccessKey">M6dHCyKyKYUCNbW4</prop>
+				<prop key="SecretKey">k6gOSH3dNJjFYze4CuxbBWS1PWqvVk</prop>
+				<prop key="ConsumeThreadNums">30</prop>
+			</props>
+		</property>
+		<property name="subscriptionTable">
+			<map>
+				<entry value-ref="vcOnsReceiver">
+					<key>
+						<bean
+							class="com.aliyun.openservices.ons.api.bean.Subscription">
+							<property name="topic" value="terminal" />
+							<property name="expression" value="terminal_status_16||terminal_remote_16||terminal_order_16||terminal_takecar_16||terminal_furthercar_16" /><!--expression 即 
+								Tag，可以设置成具体的 Tag，如 taga||tagb||tagc，也可设置成*。 *仅代表订阅所有 Tag，不支持通配 -->
+						</bean>
+					</key>
+				</entry>
+				<!--更多的订阅添加 entry 节点即可，如下所示 -->
+				<!-- <entry value-ref="vcOnsReceiver">
+					<key>
+						<bean
+							class="com.aliyun.openservices.ons.api.bean.Subscription">
+							<property name="topic" value="TopicTestMQ-Other" /> 订阅另外一个 Topic
+							<property name="expression" value="taga||tagb" /> 订阅多个 Tag
+						</bean>
+					</key>
+				</entry> -->
+			</map>
+		</property>
+	</bean>
+	
 </beans>

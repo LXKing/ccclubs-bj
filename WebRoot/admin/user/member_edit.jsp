@@ -225,11 +225,24 @@ window.$on("readyStart",function(){
 				</div>
 			</dd>
 		</dl>
+		
+		<dl style="width:98%;">
+			<dt>机审图片:</dt>
+			<dd input="image">
+				<div class="state-input wide">
+					${lz:set("csmiCheckPhotoLen",(lz:size(csMember.$csmInfo.csmiCheckPhoto)))}
+					<s:if test="#request.csmiCheckPhotoLen>0">
+						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCheckPhoto}"/>
+					</s:if>
+					<s:else><center><font color="red"><h4>未上传机审图片，建议审核不通过</h4></font></center></s:else>
+				</div>
+			</dd>
+		</dl>
+		
 	</lz:set>
 	${lz:set("CTRL",lz:CTRL(jsonString))}
 	<script>
 	$(function(){
-		
 		
 		/*$("#memberForm").submit(function(){
 			if($("#csmVReal").val()=="1" && $("#csmVDrive").val()=="1" && $("#csmEvcard").val()==""){
@@ -264,7 +277,7 @@ window.$on("readyStart",function(){
 		if($("#unitInfo").length>0){
 			$("#unitInfo").change(function(){
 				$.ajax({
-					url:"${basePath}${namespace}info_getInfoPayMember.do".replace("user","unit"),
+					url:"${basePath}${proname}/user/member_getPayers.do",
 					data:{
 						"csuiId":$("#unitInfo").val()
 					},
@@ -276,15 +289,31 @@ window.$on("readyStart",function(){
 							options+="<option value=\""+data[i].csmId+"\" > "+data[i].csmName+"</option>";
 						}
 						$("#payMember").html(options);
-						$("#payMember").find("option[value=\""+${request.payMember}+"\"]").attr("selected",true);
+						$("#payMember").find("option[value='"+"${request.payMember}"+"']").attr("selected",true);
 					}	
 			    });
 			});
 		}
 		
+		$.ajax({
+			url:"${basePath}${proname}/user/member_getPayers.do",
+			data:{
+				"csuiId":"${request.unitPerson.csupInfo}"
+			},
+			datetype:"json",
+			success:function(data){
+				var data = $.parseJSON(data);
+				var options = "<option value=\"\">请选择</option>";
+				for(var i=0;i<data.length;i++){
+					options+="<option value=\""+data[i].csmId+"\" > "+data[i].csmName+"</option>";
+				}
+				$("#payMember").html(options);
+				$("#payMember").find("option[value='"+"${request.payMember}"+"']").attr("selected",true);
+			}	
+	    });
+		
+		
 	});
-	
-	
 	
 	</script>
 </s:if>
@@ -4123,15 +4152,13 @@ $(function(){
 		<s:if test="#request.CTRL.e.payMember==true">
 		${lz:set("haveEditable",true)}
 		<dd input="select">${#request.payMembers }
-		
-	 	
 	 	
 	 	<s:if test="#request.payMembers!=null">
-		 	<input title="支付账户" class="combox narrow" action="${basePath}${proname}/user/member_query.do?value={param}&csuiHost={csupHost}" 
-		 	type="text" id="payMember" name="payMember" text="${get:CsMember(payMember).csmName}" value="${payMember}" />
-		 			<a class="lookup" href="javascript:void(0);" 
+	 		<select id="payMember" name="payMember" style="width: 225px; height: 25px;">
+	 			<option value="">请选择</option>
+	 		</select>
+		 	<a class="lookup" href="javascript:void(0);" 
 		 			onclick="if($.trim($('#payMember').val())==''){return;};window.href('${basePath}${proname}/user/member_details.do?key='+$('#payMember').val(),{ctrl:{editable:false}})"></a>
-	 	
 		</s:if>
 	 	 
 	 	 <b>*</b>

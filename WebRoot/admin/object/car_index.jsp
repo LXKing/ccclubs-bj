@@ -16,13 +16,13 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csCar.cscId))}
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可查询")}
 	queryables:"cscId,cscHost,cscNumber,cscCarNo,cscModel,cscOutlets,cscProvid,cscRebate,cscIsAd,cscMobile,cscOilCard,cscVin,cscEngineNo,cscBuyDate,cscBargainNo,cscCertific,cscFactoryNo,cscColor,cscAnnualPre,cscAnnual,cscAnnualNext,cscTiUnit,cscTiNo,cscBiUnit,cscBiType,cscEditor,cscUpdateTime,cscAddTime,cscRemark,cscMemo,cscOnPsd,cscSetup,cscDeviceVesion,cscMqttFlag,cscMask,cscStatus",
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可显示在表格中")}
-	listables:"cscId,cscHost,cscNumber,cscCarNo,cscModel,cscOutlets,cscProvid,cscRebate,cscIsAd,cscMobile,cscPassword,cscOilCard,cscVin,cscEngineNo,cscBuyDate,cscBargainNo,cscTaxPrice,cscBuyPrice,cscCertific,cscFactoryNo,cscColor,cscPreview,cscImages,cscMaintKm,cscCheckIn,cscAnnualPre,cscAnnual,cscAnnualInfo,cscAnnualNext,cscTiDate,cscTiUnit,cscTiNo,cscBiDate,cscBiUnit,cscBiNo,cscBiType,cscBiLimit,cscBiCompany,cscEditor,cscUpdateTime,cscAddTime,cscRemark,cscMemo,cscOnPsd,cscSetup,cscDeviceVesion,cscMqttFlag,cscMask,cscStatus",
+	listables:"cscId,cscHost,cscNumber,cscCarNo,cscModel,cscOutlets,cscProvid,cscRebate,cscIsAd,cscMobile,cscPassword,cscOilCard,cscVin,cscEngineNo,cscBuyDate,cscBargainNo,cscTaxPrice,cscBuyPrice,cscCertific,cscFactoryNo,cscColor,cscPreview,cscImages,cscMaintKm,cscCheckIn,cscAnnualPre,cscAnnual,cscAnnualInfo,cscAnnualNext,cscTiDate,cscTiUnit,cscTiNo,cscBiDate,cscBiUnit,cscBiNo,cscBiType,cscBiLimit,cscBiCompany,cscEditor,cscUpdateTime,cscAddTime,cscRemark,cscMemo,cscOnPsd,cscSetup,cscDeviceVesion,cscMqttFlag,cscMask,cscStatus,cscTerNo,cscBindPlatform",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可查询")}
 	queryables:"cscId,cscHost,cscNumber,cscModel,cscOutlets,cscVin,cscEngineNo,cscAnnualNext,cscTiUnit,cscRemark,cscSetup,cscStatus",
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可显示在表格中")}
-	listables:"cscId,cscHost,cscNumber,cscModel,cscOutlets,cscVin,cscEngineNo,cscAnnualNext,cscTiUnit,cscBiCompany,cscRemark,cscSetup,cscStatus",
+	listables:"cscId,cscHost,cscNumber,cscModel,cscOutlets,cscVin,cscEngineNo,cscAnnualNext,cscTiUnit,cscBiCompany,cscRemark,cscSetup,cscStatus,cscTerNo,cscBindPlatform",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -296,6 +296,13 @@ ${after$form}
 					<s:if test="#request.defines==null && #request.CTRL.l.cscStatus || #request.defines['cscStatus']!=null">
 						<a href="javascript:void(0);" onclick="UpdateSel('status')">状态</a>
 					</s:if>
+					
+					<%-- <s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
+						<a href="javascript:void(0);" onclick="UpdateSel('terNo')">终端序列号</a>
+					</s:if>
+					<s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
+						<a href="javascript:void(0);" onclick="UpdateSel('bindPlatform')">车辆绑定平台</a>
+					</s:if> --%>
 					</td>  <td class="r"></td></tr><tr>  <td class="bl"></td>  <td class="b"></td>  <td class="br"></td></tr>
 					</tbody></table
 				</dd>
@@ -753,6 +760,24 @@ ${after$form}
 			 	状态
 			 	</a>
 			 	${lz:set("checkeds[]","cscStatus")}
+			 </td>
+			 </s:if>
+			 
+			 <!-- 车机中心对接新增字段 -->
+			 <s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
+			 <td <s:if test="#request.defines['cscTerNo']>0">colspan="${defines["cscTerNo"]}" ${all?"width":"iwidth"}="${defines["cscTerNo"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="49" ref="cscTerNo"   title="终端序列号">
+			 	<a class="${desc=="csc_ter_no" ? "desc" : ""}${asc=="csc_ter_no" ? "asc" : ""}" href="?${desc=="csc_ter_no" ? "asc=csc_ter_no" : ""}${(asc=="csc_ter_no" || desc!="csc_ter_no" )? "desc=csc_ter_no" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	终端序列号
+			 	</a>
+			 	${lz:set("checkeds[]","cscTerNo")}
+			 </td>
+			 </s:if>
+			 <s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
+			 <td <s:if test="#request.defines['cscBindPlatform']>0">colspan="${defines["cscBindPlatform"]}" ${all?"width":"iwidth"}="${defines["cscBindPlatform"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="49" ref="cscBindPlatform"   title="车辆绑定平台">
+			 	<a class="${desc=="csc_bind_platform" ? "desc" : ""}${asc=="csc_bind_platform" ? "asc" : ""}" href="?${desc=="csc_bind_platform" ? "asc=csc_bind_platform" : ""}${(asc=="csc_bind_platform" || desc!="csc_bind_platform" )? "desc=csc_bind_platform" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	车辆绑定平台
+			 	</a>
+			 	${lz:set("checkeds[]","cscBindPlatform")}
 			 </td>
 			 </s:if>
 		 
@@ -2011,6 +2036,52 @@ ${after$form}
 					</td>
 				</s:else>
 			</s:if>
+			
+			<!-- 车机中心对接新增字段 -->
+			<s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
+				<s:if test="#request.defines['cscTerNo']>0">
+					${lz:set("注释","****cscTerNo关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.cscTerNo))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCscTerNo",lz:indexOf(fieldName,"cscStatus")>-1)}
+				  		<s:if test="#request.atCscTerNo==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****cscTerNo字段的字串格式化输出****")}
+					<td ref="cscTerNo" class="td ">
+						 	${lz:or(item$cscTerNo[i.count-1],lz:left(item.cscTerNo$,100))}
+					</td>
+				</s:else>
+			</s:if>
+			<s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
+				<s:if test="#request.defines['cscBindPlatform']>0">
+					${lz:set("注释","****cscBindPlatform关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.cscBindPlatform))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCscBindPlatform",lz:indexOf(fieldName,"cscStatus")>-1)}
+				  		<s:if test="#request.atCscBindPlatform==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****cscStatus字段的字串格式化输出****")}
+					<td ref="cscBindPlatform" class="td ">
+						 	${lz:or(item$cscBindPlatform[i.count-1],lz:left(item.cscBindPlatform$,100))}
+					</td>
+				</s:else>
+			</s:if>
 		   ${lz:set("注释","*****************数据列表数据部分结束*****************")}		  
 		  
 		   
@@ -3089,6 +3160,52 @@ ${after$form}
 					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 				</s:else>
 			 </s:if>
+			 
+			 <!-- 车机中心对接新增字段 -->
+			 <s:if test="#request.defines==null && #request.CTRL.l.cscTerNo || #request.defines['cscTerNo']!=null">
+				<s:if test="#request.defines['cscTerNo']>0">
+					${lz:set("注释","****cscTerNo关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("atCscTerNo",lz:indexOf(fieldName,"cscTerNo")>-1)}				  		
+				  		<s:if test="#request.atCscTerNo==true">
+				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				  			<s:if test="#request.isList==true">
+				  				<lz:set name="arrFieldName">cscTerNo[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
+				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
+				 			</s:if>
+				 			<s:else>
+								<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+							</s:else>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+				</s:else>
+			 </s:if>
+			
+			 <s:if test="#request.defines==null && #request.CTRL.l.cscBindPlatform || #request.defines['cscBindPlatform']!=null">
+				<s:if test="#request.defines['cscBindPlatform']>0">
+					${lz:set("注释","****cscBindPlatform关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("atCscBindPlatform",lz:indexOf(fieldName,"cscBindPlatform")>-1)}				  		
+				  		<s:if test="#request.atCscBindPlatform==true">
+				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				  			<s:if test="#request.isList==true">
+				  				<lz:set name="arrFieldName">cscBindPlatform[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
+				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
+				 			</s:if>
+				 			<s:else>
+								<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+							</s:else>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+				</s:else>
+			 </s:if>
+			 
 			 <s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 		  	 <s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
 		 </tr>
@@ -3287,6 +3404,10 @@ ${after$form}
 	fieldNames["vesion"]["cscDeviceVesion"]=true;
 	fieldNames["mqtt"]["cscMqttFlag"]=true;
 	fieldNames["status"]["cscStatus"]=true;
+	
+	/* 车机中心对接新增  */
+	fieldNames["terNo"]["cscTerNo"]=true;
+	fieldNames["bindPlatform"]["cscBindPlatform"]=true;
 	
 </s:if>
 

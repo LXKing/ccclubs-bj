@@ -25,6 +25,9 @@
 		<result property="cscmAddTime" column="cscm_add_time"/>
 		<result property="cscmRemark" column="cscm_remark"/>
 		<result property="cscmStatus" column="cscm_status"/>
+		
+		<!-- 车机中心对接增加字段 -->
+		<result property="cscmFlag" column="cscm_flag"/>
 	</resultMap>
 		
 	<!-- 获取所有车型 -->
@@ -158,6 +161,7 @@
 			,cs_car_model$suffix$.cscm_add_time
 			,cs_car_model$suffix$.cscm_remark
 			,cs_car_model$suffix$.cscm_status
+			,cs_car_model$suffix$.cscm_flag
 		)
 		values(
 			<isNotNull property="cscmName" prepend="">
@@ -243,7 +247,14 @@
 			</isNotNull>
 			<isNull property="cscmStatus" prepend=",">
 				null
-			</isNull>			
+			</isNull>	
+			
+			<isNotNull property="cscmFlag" prepend=",">
+				#cscmFlag#
+			</isNotNull>
+			<isNull property="cscmFlag" prepend=",">
+				null
+			</isNull>		
 		)
 		<selectKey resultClass="java.lang.Long">
 		   SELECT @@IDENTITY AS id
@@ -337,7 +348,14 @@
 			</isNotNull>
 			<isNull property="cscmStatus" prepend=",">
 				cs_car_model$suffix$.cscm_status = null
-			</isNull>				
+			</isNull>			
+			
+			<isNotNull property="cscmFlag" prepend=",">
+				cs_car_model$suffix$.cscm_flag = #cscmFlag#
+			</isNotNull>
+			<isNull property="cscmFlag" prepend=",">
+				cs_car_model$suffix$.cscm_flag = null
+			</isNull>			
 		where
 			cscm_id=#cscmId#
 	</update>
@@ -388,6 +406,10 @@
 			<isNotNull property="cscmStatus" prepend=",">
 				cs_car_model$suffix$.cscm_status = #cscmStatus#
 			</isNotNull>		
+			
+			<isNotNull property="cscmFlag" prepend=",">
+				cs_car_model$suffix$.cscm_flag = #cscmFlag#
+			</isNotNull>	
 			</dynamic>
 		where
 			cscm_id=#cscmId#
@@ -453,6 +475,10 @@
 			<isNotNull property="V_cscmStatus" prepend=",">
 				cs_car_model$suffix$.cscm_status = #V_cscmStatus#
 			</isNotNull>		
+			
+			<isNotNull property="V_cscmFlag" prepend=",">
+				cs_car_model$suffix$.cscmFlag = #V_cscmFlag#
+			</isNotNull>
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
 			    $V_definex$

@@ -4,24 +4,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import com.lazy3q.util.Function;
-import com.ccclubs.action.admin.csm.CsmqAction;
 import com.ccclubs.config.SYSTEM.IntegralType;
 import com.ccclubs.constants.MemberRecStatus;
 import com.ccclubs.constants.SmsFlagEnum;
 import com.ccclubs.dao.ICsMemberDao;
 import com.ccclubs.helper.UtilHelper;
-import com.lazy3q.web.util.Page;
-import edu.emory.mathcs.backport.java.util.Collections;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
-import com.ccclubs.model.CsMemberShip;
 import com.ccclubs.model.CsUnitGroup;
 import com.ccclubs.model.CsUnitInfo;
 import com.ccclubs.model.CsUnitPerson;
+import com.ccclubs.service.admin.ICsEvCardService;
 import com.ccclubs.service.admin.ICsMemberService;
+import com.ccclubs.service.admin.ICsUnitPersonService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
+import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
+import com.lazy3q.web.util.Page;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * 会员帐号的Service实现
@@ -194,15 +194,10 @@ public class CsMemberService implements ICsMemberService
 	    //身份证、驾驶证、工作证认证状态变更失败发送短信提示
 	    authFailNotice(old, fresh);
 	    
-	    //工作证认证成功；绑定企业和部门、创建企业用户记录
-	    doAuthWorkSuccess(fresh);
-	    
 	    //自动绑定ev卡逻辑处理开始
-	    CsEvCardService csEvCardService = $.getBean("csEvCardService");
-	    //获取会员绑定的ev卡
-	    fresh.setCsmEvcard(old.getCsmEvcard());
+	    ICsEvCardService csEvCardService = $.getBean("csEvCardService");
 	    //自动绑定ev卡操作
-	    csEvCardService.autoBindEvCard(fresh);
+	    csEvCardService.autoBindEvCard(fresh.getCsmId(), old.getCsmHost(), old.getCsmEvcard(), fresh.getVWork());
 	}
 	
 	/**
@@ -252,20 +247,20 @@ public class CsMemberService implements ICsMemberService
             vprogress = 3;// 三项认证完毕
         }
         // 满足认证进度的发送短信
-        if (vprogress < 4 && !$.empty(old.getCsmMobile()) && from == 5) {
+        if (vprogress < 4 && !$.empty(old.getCsmMobile())) {
             CsUnitPerson csUnitPerson = CsUnitPerson.getCsUnitPerson(
                     $.add(CsUnitPerson.F.csupMember, old.getCsmId()));
             if (csUnitPerson != null) {
                 String append = StringUtils.isNotEmpty(password)? "您的密码为："+password+"。" : null;
                 if (fresh.getVReal() == 1 && fresh.getVDrive() == 1
                         && fresh.getVWork() == 1
-                        && fresh.getVOffline() == 1) {
+                        && fresh.getVOffline() == 1 && old.getVOffline() != 1) {
                     UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
                             SmsFlagEnum.实名认证四证通过.getFlag(), old.getCsmMobile$(),
                             null, SMSType.通知类短信,
                             Collections.emptyMap(), append);
                 }else if (fresh.getVReal() == 1 && fresh.getVDrive() == 1
-                         && fresh.getVWork() == 1 && vprogress < 3) {
+                         && fresh.getVWork() == 1 && vprogress < 3 && old.getVOffline() != 1) {
                      UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),
                              SmsFlagEnum.实名认证三证通过.getFlag(), old.getCsmMobile$(),
                              null, SMSType.通知类短信,
@@ -282,85 +277,26 @@ public class CsMemberService implements ICsMemberService
 	 */
 	public void authFailNotice(CsMember old, CsMember fresh) {
 	    //发身份证提醒短信
-	    if(old.getVReal()!=MemberRecStatus.REC_FAIL && fresh.getVReal()!=MemberRecStatus.REC_FAIL) {
+	    if(old.getVReal()!=MemberRecStatus.REC_FAIL && fresh.getVReal()==MemberRecStatus.REC_FAIL) {
 	        UtilHelper.sendTemplateSMS(old.getCsmHost(),
                     SmsFlagEnum.身份证认证失败.getFlag(), old.getCsmMobile$(),
                     null, SMSType.通知类短信,
                     Collections.emptyMap());
 	    }
 	    //发驾驶证提醒短信
-	    if(old.getVDrive()!=MemberRecStatus.REC_FAIL && fresh.getVDrive()!=MemberRecStatus.REC_FAIL) {
+	    if(old.getVDrive()!=MemberRecStatus.REC_FAIL && fresh.getVDrive()==MemberRecStatus.REC_FAIL) {
 	        UtilHelper.sendTemplateSMS(old.getCsmHost(),
                     SmsFlagEnum.驾驶证认证失败.getFlag(), old.getCsmMobile$(),
                     null, SMSType.通知类短信,
                     Collections.emptyMap());
 	    }
 	    //发工作证提醒短信
-	    if(old.getVWork()!=MemberRecStatus.REC_FAIL && fresh.getVWork()!=MemberRecStatus.REC_FAIL) {
+	    if(old.getVWork()!=MemberRecStatus.REC_FAIL && fresh.getVWork()==MemberRecStatus.REC_FAIL) {
 	        UtilHelper.sendTemplateSMS(old.getCsmHost(),
                     SmsFlagEnum.工作证认证失败.getFlag(), old.getCsmMobile$(),
                     null, SMSType.通知类短信,
                     Collections.emptyMap());
 	    }
     }
-	
-	/**
-	 * 工作证认证成功；绑定企业和部门、创建企业用户记录
-	 * @param old 数据库数据
-     * @param fresh 用户请求数据
-	 */
-	public void doAuthWorkSuccess(CsMember fresh) {
-	    if(fresh.getCsmVWork()==1) {
-	        //线下认证通过的判断是否需要CsUnitPerson关联
-	        CsUnitPerson csUnitPersonForInsert = CsUnitPerson.where().csupMember(fresh.getCsmId()).get();
-	        if(null==csUnitPersonForInsert) {
-	            CsMemberInfo csMemberInfo = CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
-	            if(null!=csMemberInfo) {
-	                CsUnitInfo csUnitInfoForInsert=CsUnitInfo.where().csuiName(csMemberInfo.getCsmiCompany()).get();
-	                if(null!=csUnitInfoForInsert) {
-	                    CsUnitGroup csUnitGroupForInsert=
-	                            CsUnitGroup.where().csugName(csMemberInfo.getCsmiDepartment()).csugInfo(csUnitInfoForInsert.getCsuiId()).get();
-	                    
-	                    if(null!=csUnitGroupForInsert) {
-	                        CsUnitPerson csUnitPerson=new CsUnitPerson();
-	                        csUnitPerson.setCsupAddTime(new Date());
-	                        csUnitPerson.setCsupFlag(null);
-	                        csUnitPerson.setCsupGroup(csUnitGroupForInsert.getCsugId());
-	                        csUnitPerson.setCsupHost(csUnitInfoForInsert.getCsuiHost());
-	                        csUnitPerson.setCsupInfo(csUnitInfoForInsert.getCsuiId());
-	                        csUnitPerson.setCsupMember(fresh.getCsmId());
-	                        csUnitPerson.setCsupMemo(null);
-	                        csUnitPerson.setCsupName(fresh.getCsmName());
-	                        csUnitPerson.setCsupRemark(null);
-	                        csUnitPerson.setCsupStatus((short)1);
-	                        csUnitPerson.setCsupUpdateTime(new Date());
-	                        CsUnitPersonService csUnitPersonService = $.getBean("csUnitPersonService");
-	                        csUnitPersonService.saveCsUnitPerson(csUnitPerson);
-	                    }
-	                }
-	            }
-	        }else {// 已经存在企业会员账户
-                CsMemberInfo csMemberInfo =
-                        CsMemberInfo.where().csmiId(fresh.getCsmId()).get();
-                if (null != csMemberInfo) {
-                    CsUnitInfo csUnitInfoForInsert = CsUnitInfo.where()
-                            .csuiName(csMemberInfo.getCsmiCompany()).get();
-                    if (null != csUnitInfoForInsert) {
-                        CsUnitGroup csUnitGroupForInsert = CsUnitGroup.where()
-                                .csugName(csMemberInfo.getCsmiDepartment())
-                                .csugInfo(csUnitInfoForInsert.getCsuiId()).get();
 
-                        if (null != csUnitGroupForInsert) {
-                            CsUnitPerson.where().csupMember(fresh.getCsmId()).set()
-                                    .csupGroup(csUnitGroupForInsert.getCsugId())
-                                    .csupHost(csUnitInfoForInsert.getCsuiHost())
-                                    .csupInfo(csUnitInfoForInsert.getCsuiId())
-                                    .csupStatus((short) 1).update();
-                        }
-                    }
-                }
-
-            }
-	    }
-	}
 }

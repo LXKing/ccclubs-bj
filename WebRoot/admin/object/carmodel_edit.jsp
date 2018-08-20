@@ -15,15 +15,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csCarModel.cscmId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.isAddType==true">
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
-	editables:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmRemark,cscmStatus",
+	editables:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmRemark,cscmStatus,cscmFlag",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmRemark,cscmStatus",
+	visibles:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmRemark,cscmStatus,cscmFlag",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmRemark,cscmStatus",
+	editables:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmRemark,cscmStatus,cscmFlag",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmUpdateTime,cscmAddTime,cscmRemark,cscmStatus",
+	visibles:"cscmId,cscmName,cscmType,cscmFile,cscmSeatS,cscmTrunk,cscmVolume,cscmCapacity,cscmThumb,cscmImage,cscmDetails,cscmCars,cscmUpdateTime,cscmAddTime,cscmRemark,cscmStatus,cscmFlag",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -836,6 +836,40 @@ $(function(){
 		</s:else>
 	</dl>
 	${after$cscmStatus}
+	</s:if>
+	
+	<!-- 车机中心对接新增字段：车型标志 -->
+	${lz:set("注释","*****************车型标志字段的输入框代码*****************")}
+	${lz:set("注释","before$cscmFlag和after$cscmFlag变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.cscmFlag==true">
+	${before$cscmFlag}
+	<dl class="cscmFlag " major  ref="cscmFlag" >
+		<dt>车型标志:</dt>
+		<s:if test="#request.CTRL.e.cscmFlag==true">
+		${lz:set("haveEditable",true)}
+		<dd input="text">
+		<s:if test="#request.csCarModel$cscmFlag!=null">${csCarModel$cscmFlag}</s:if><s:else>
+		 	<input type="text" class="input narrow"  maxlength="32" name="csCarModel.cscmFlag" id="cscmFlag"  value="${csCarModel.cscmFlag}"/>
+	 	 </s:else>
+	 	 <em>请输入车型的车型标志</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****车型标志字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="cscmFlag">${csCarModel.cscmFlag}</textarea>
+		 		<span>
+		 	
+			 ${csCarModel.cscmFlag$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$cscmName}
 	</s:if>
 				
 				<div class="line"></div>

@@ -82,6 +82,8 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 	private @caption("程序掩码") @column("csc_mask")    @note(" 1:假定条件  ") Long cscMask;// 1:假定条件     
 	private @caption("状态") @column("csc_status")    @note(" 1:上线 2:下线 3:企业可租 0:无效  ") Short cscStatus;// 非空 1:上线 2:下线 3:企业可租 0:无效     
 	
+	private @caption("绑定的终端序列号") @column("csc_ter_no")    @note("  ") String cscTerNo;
+	private @caption("车辆挂载的平台") @column("csc_bind_platform")    @note(" 0：北京平台，1：车机中心  ") Short cscBindPlatform;// 0：自己业务平台，1：车机中心
 	//默认构造函数
 	public CsCar(){
 	
@@ -146,7 +148,7 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 	 	,$.getShort("cscStatus")//状态 [非空]
 	 )
 	**/
-	public CsCar(Long cscHost,String cscNumber,String cscCarNo,Long cscModel,Long cscOutlets,Long cscProvid,Double cscRebate,Boolean cscIsAd,Double cscLongitude,Double cscLatitude,String cscMobile,String cscPassword,String cscOilCard,String cscVin,String cscEngineNo,Date cscBuyDate,String cscBargainNo,Double cscTaxPrice,Double cscBuyPrice,String cscCertific,String cscFactoryNo,Short cscColor,String cscPreview,String cscImages,Integer cscMaintKm,Date cscCheckIn,Date cscAnnualPre,Date cscAnnual,String cscAnnualInfo,Date cscAnnualNext,Date cscTiDate,Date cscTiUnit,String cscTiNo,Date cscBiDate,Date cscBiUnit,String cscBiNo,String cscBiType,Double cscBiLimit,String cscBiCompany,Long cscEditor,Date cscUpdateTime,Date cscAddTime,String cscRemark,String cscMemo,String cscOnPsd,Short cscSetup,Short cscDeviceVesion,String cscMqttFlag,Long cscMask,Short cscStatus){
+	public CsCar(Long cscHost,String cscNumber,String cscCarNo,Long cscModel,Long cscOutlets,Long cscProvid,Double cscRebate,Boolean cscIsAd,Double cscLongitude,Double cscLatitude,String cscMobile,String cscPassword,String cscOilCard,String cscVin,String cscEngineNo,Date cscBuyDate,String cscBargainNo,Double cscTaxPrice,Double cscBuyPrice,String cscCertific,String cscFactoryNo,Short cscColor,String cscPreview,String cscImages,Integer cscMaintKm,Date cscCheckIn,Date cscAnnualPre,Date cscAnnual,String cscAnnualInfo,Date cscAnnualNext,Date cscTiDate,Date cscTiUnit,String cscTiNo,Date cscBiDate,Date cscBiUnit,String cscBiNo,String cscBiType,Double cscBiLimit,String cscBiCompany,Long cscEditor,Date cscUpdateTime,Date cscAddTime,String cscRemark,String cscMemo,String cscOnPsd,Short cscSetup,Short cscDeviceVesion,String cscMqttFlag,Long cscMask,Short cscStatus, String cscTerNo, Short cscBindPlatform){
 		this.cscHost=cscHost;
 		this.cscNumber=cscNumber;
 		this.cscCarNo=cscCarNo;
@@ -197,6 +199,9 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 		this.cscMqttFlag=cscMqttFlag;
 		this.cscMask=cscMask;
 		this.cscStatus=cscStatus;
+		
+		this.cscTerNo=cscTerNo;
+		this.cscBindPlatform=cscBindPlatform;
 	}
 	
 	//设置非空字段
@@ -521,6 +526,17 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 		return this;
 	}
 	
+	public CsCar cscTerNo(String cscTerNo) {
+	    this.cscTerNo = cscTerNo;
+	    this.setSeted(F.cscTerNo);
+	    return this;
+	}
+	
+	public CsCar cscBindPlatform(Short cscBindPlatform) {
+	    this.cscBindPlatform = cscBindPlatform;
+	    this.setSeted(F.cscBindPlatform);
+	    return this;
+	}
 	
 	//克隆对象
 	public CsCar clone(){
@@ -536,6 +552,9 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 		clone.cscUpdateTime=this.cscUpdateTime;
 		clone.cscAddTime=this.cscAddTime;
 		clone.cscStatus=this.cscStatus;
+		
+		clone.cscTerNo=this.cscTerNo;
+		clone.cscBindPlatform=this.cscBindPlatform;
 		return clone;
 	}
 	
@@ -2117,6 +2136,54 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 		this.cscStatus = cscStatus;
 		this.setSeted(F.cscStatus);
 	}
+	
+	/*******************************终端序列号**********************************/  
+
+    public String getCscTerNo(){
+        return this.cscTerNo;
+    }
+    /**
+    * 获取终端序列号格式化(toString)
+    **/
+    public String getCscTerNo$(){    
+         return $.str(getCscTerNo());
+    }
+    /**
+    * 终端序列号
+    **/
+    public void setCscTerNo(String cscTerNo){
+        this.cscTerNo = cscTerNo;
+        this.setSeted(F.cscTerNo);
+    }
+    
+    /*******************************绑定平台**********************************/   
+    /**
+    * 所绑定平台  0: 北京平台, 1： 车机中心 
+    **/
+    public Short getCscBindPlatform(){
+        return this.cscBindPlatform;
+    }
+    /**
+    * 获取状态格式化(toString)
+    **/
+    public String getCscBindPlatform$(){
+        String strValue="";
+         if($.equals($.str(this.getCscBindPlatform()),"0"))
+            strValue=$.str("北京平台");        
+         if($.equals($.str(this.getCscBindPlatform()),"1"))
+            strValue=$.str("车机中心");        
+         return strValue;
+    }
+    /**
+    * 所绑定平台  0: 北京平台, 1： 车机中心 
+    **/
+    public void setCscBindPlatform(Short cscBindPlatform){
+        this.cscBindPlatform = cscBindPlatform;
+        this.setSeted(F.cscBindPlatform);
+    }
+    
+    
+    
 	/************LAZY3Q_DEFINE_CODE************/
 	public class TimelineMap extends HashMap{
 		@Override
@@ -2581,6 +2648,23 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
  		public M cscStatusNot(){this.put("cscStatusNot", "not");return this;};
 	 	public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
+	 	
+	 	// -----------------------------------------------------------
+	 	/**   终端号      **/
+        public M cscTerNo(Object cscTerNo){this.put("cscTerNo", cscTerNo);return this;};
+        /** and csc_ter_no is null */
+        public M cscTerNoNull(){if(this.get("cscTerNoNot")==null)this.put("cscTerNoNot", "");this.put("cscTerNo", null);return this;};
+        /** not .... */
+        public M cscTerNoNot(){this.put("cscTerNoNot", "not");return this;};
+        
+        // -----------------------------------------------------------
+        /**   绑定平台      **/
+        public M cscBindPlatform(Object cscBindPlatform){this.put("cscBindPlatform", cscBindPlatform);return this;};
+        /** and csc_bind_platform is null */
+        public M cscBindPlatformNull(){if(this.get("cscBindPlatformNot")==null)this.put("cscBindPlatformNot", "");this.put("cscBindPlatform", null);return this;};
+        /** not .... */
+        public M cscBindPlatformNot(){this.put("cscBindPlatformNot", "not");return this;};
+        
 	 	/** 获取所有车辆 **/
 		public @api List<CsCar> list(Integer size){
 			return getCsCarList(this,size);
@@ -2796,6 +2880,9 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 		public final static @type(Long.class)  String cscMask="cscMask";
 		/** 状态 [非空]   1:上线 2:下线 3:企业可租 0:无效     **/
 		public final static @type(Short.class)  String cscStatus="cscStatus";
+		
+		public final static @type(Short.class) String cscTerNo="cscTerNo";
+		public final static @type(Short.class) String cscBindPlatform="cscBindPlatform";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -2902,6 +2989,10 @@ public @caption("车辆") @table("cs_car") class CsCar implements java.io.Serial
 		public final static String cscMask="csc_mask";
 		/** 状态 [非空]   1:上线 2:下线 3:企业可租 0:无效     **/
 		public final static String cscStatus="csc_status";
+		
+        public final static String cscTerNo="csc_ter_no";
+        public final static String cscBindPlatform="csc_bind_platform";
+        
 	 	public static String get(String name){
 			try {
 				Field field = C.class.getField(name);

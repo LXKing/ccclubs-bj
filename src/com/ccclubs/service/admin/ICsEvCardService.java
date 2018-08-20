@@ -107,9 +107,12 @@ public interface ICsEvCardService
 	public <T> T executeTransaction(Function function);
 	
 	/**
-     * 后台自动为会员绑定ev卡；注意添加分布式锁（暂不实现）
-     * @param member
-     */
-	public void autoBindEvCard(CsMember member);
+	 * 后台自动为会员绑定ev卡；注意添加分布式锁（暂不实现）
+	 * @param memberId 会员id
+	 * @param hostId 城市id
+	 * @param cardId 已绑定的ev卡id
+	 * @param vwork 工作认证状态
+	 */
+	public void autoBindEvCard(Long memberId, Long hostId, Long cardId, short vwork);
 
 }

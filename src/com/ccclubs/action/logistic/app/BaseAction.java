@@ -1978,12 +1978,10 @@ public class BaseAction extends OutsideStatisticsUtil{
 				//
 				memberTemp.setCsmId(csMember.getCsmId());
 				memberTemp.setCsmVOffline(type);
-				memberTemp.setCsmVReal(type);
-				memberTemp.setCsmVWork(type);
 				csMemberService.updateCsMember$NotNull(memberTemp);
 				//
 				CsMemberInfo csMemberInfo=csMemberInfoService.getCsMemberInfo($.add(CsMemberInfo.F.csmiId, csMember.getCsmInfo()));    
-				if(checkPhoto!=null) {
+				if(checkPhoto!=null&&StringUtils.isNotBlank(checkPhoto)) {
 					if(csMemberInfo.getCsmiCheckPhoto()==null|| !csMemberInfo.getCsmiCheckPhoto().equals(checkPhoto)) {
 						csMemberInfo.setCsmiCheckPhoto(checkPhoto);
 						csMemberInfo.setCsmiUpdateTime(new Date());

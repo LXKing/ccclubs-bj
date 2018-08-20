@@ -2098,10 +2098,10 @@ public class DefaultAction extends BaseAction {
         }
         Map<String, Object> data = new HashMap<>();
         data.put("id", member.getCsmId());
-        data.put("vreal", member.getCsmVReal());
-        data.put("vdrive", member.getCsmVDrive());
-        data.put("vwork", member.getCsmVWork());
-        data.put("voffline", member.getCsmVOffline());
+        data.put("vreal", member.getVReal());
+        data.put("vdrive", member.getVDrive());
+        data.put("vwork", member.getVWork());
+        data.put("voffline", member.getVOffline());
         return $.SendHtml($.json(JsonFormat.success().setData($.$("map", data))), CHARSET);
     }
 

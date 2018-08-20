@@ -56,7 +56,6 @@ public class MemberAction {
 
     CsMember csMember;
     Lazy3qDaoSupport dao = $.getDao("ccclubs_system");
-
     /**
      * 会员帐号管理首页
      * 
@@ -330,7 +329,7 @@ public class MemberAction {
             else {
                 CsUnitPerson unitPerson = CsUnitPerson
                         .getCsUnitPerson($.add(CsUnitPerson.F.csupMember, csMember.getCsmId()));
-                if (unitPerson != null && csMember.getCsmVWork() == 1) {
+                if (unitPerson != null && csMember.getVWork() == 1) {
                     $.setRequest("unitPerson", unitPerson);
                     List<CsMember> payMembers = unitPerson.get$csupInfo().get$csuiMember();
                     $.setRequest("payMembers", payMembers);
@@ -1368,103 +1367,32 @@ public class MemberAction {
      * @return
      */
     public String getPayers() {
-        try {
-            // 根据当前的类，把表单参数转成Dao查询需要的Map参数格式,ActionHelper.getQueryFormParams这个东东在Lazy3q.jar中
-            Map<String, Object> params = ActionHelper.getQueryFormParams(CsMember.class);
-            // 强制限制域
-            params.put("HOSTS", SystemHelper.testHost(null));
+        //初始化支付账号结果
+        List<Map> mapList = new ArrayList<Map>();
+        
+        //根据当前的类，把表单参数转成Dao查询需要的Map参数格式,ActionHelper.getQueryFormParams这个东东在Lazy3q.jar中
+        Map<String,Object> params = ActionHelper.getQueryFormParams(CsUnitInfo.class);
 
-            // 反强制限制域
-            if (params.get("csmRefer") != null && params.get("csmReferNot") == null) {
-                params.remove("HOSTS");
-            }
-
-            // 取排序参数,放入查询条件中，取不到放入查询条件中也没关系，因为Dao层会判断的
-            String strAsc = $.getString("asc");// 升序字段
-            params.put("asc", strAsc);// 放入查询条件
-            String strDesc = $.getString("desc");// 降序字段
-            params.put("desc", strDesc);// 放入查询条件
-            if ($.empty(strAsc) && $.empty(strDesc))// 如果未传入排序字段
-                params.put("desc", "csm_id");// 那么，默认以主键降序，传给Dao层
-
-            String strTerm = $.getString("value");// 智能搜索时的参数，一般都是主键后面那个字段
-            if (!$.empty(strTerm)) {
-                if (strTerm.toLowerCase().startsWith("id:"))// 如果查询条件以id:开头，则按ID查询
-                    params.put("csmId", strTerm.toLowerCase().replaceFirst("id:", ""));
-                else// 按标识查询，模糊查询请带%
-                {
-                    String strDefinex = "";
-                    strDefinex += " or csm_mobile like '" + strTerm.replaceAll("'", "''") + "%'";
-                    strDefinex += " or csm_name like '" + strTerm.replaceAll("'", "''") + "%'";
-                    strDefinex = "(2=1 " + strDefinex + ")";
-                    params.put("definex", strDefinex);
+        if(params.get("csuiId") == null) {
+            return $.SendAjax(mapList, "UTF-8");
+        }else {
+            //获取当前单位
+            String csuiId = params.get("csuiId").toString();
+            params.clear();
+            params.put("csuiId", csuiId);
+            params.put("desc","csui_id");//那么，默认以主键降序，传给Dao层
+            CsUnitInfo csUnitInfo = CsUnitInfo.getCsUnitInfo(params);
+            String csmIds = $.str(csUnitInfo.getCsuiMember()).replace("#","").trim();
+            if(!$.empty(csUnitInfo.getCsuiMember())){
+                List<CsMember> items = CsMember.getCsMemberList($.add("definex","csm_id in ("+csmIds+")"),-1);
+                for(CsMember item1:items){
+                    Map map = new HashMap();
+                    map.put("csmId", item1.getCsmId$());
+                    map.put("csmName", item1.getCsmName());
+                    mapList.add(map);
                 }
             }
-            /************ LAZY3Q_CODE_QUERY ************/
-
-            // 查询会员时取消域限制
-            params.remove("HOSTS");
-            params.remove("csmHost");
-
-            if (!$.empty(strTerm)) {
-                if (strTerm.toLowerCase().startsWith("id")) {// 如果查询条件以id:开头，则按ID查询
-                    if (strTerm.length() < 6)
-                        return $.SendAjax("[]", "UTF-8");
-                    params.put("csmId", strTerm.toLowerCase().replaceFirst("id:", ""));
-                } else {// 按标识查询，模糊查询请带%
-                    String strDefinex = "";
-                    if (java.util.regex.Pattern.matches("[\\d]+", strTerm.replace("%", ""))) {
-                        if (strTerm.length() < 6)
-                            return $.SendAjax("[]", "UTF-8");
-                        strDefinex += " csm_mobile like '" + strTerm.replaceAll("'", "''") + "%'";
-                    } else {
-                        if (strTerm.length() < 2)
-                            return $.SendAjax("[]", "UTF-8");
-                        strDefinex += " csm_name like '" + strTerm.replaceAll("'", "''") + "%'";
-                    }
-                    params.put("definex", strDefinex);
-                }
-            }
-            /************ LAZY3Q_CODE_QUERY ************/
-
-
-            // 是否需要整个数据对象
-            Boolean bObject = $.getBoolean("object", false);
-
-            List<CsMember> list = csMemberService
-                    .getCsMemberPage(0, $.getInteger("size", 10), params).getResult();
-
-            /**
-             * OK!取到数据拼成放入Map中，[{value,text,object:{...}},...] value:数据ID，text:数据标识,object,整个对象
-             **/
-            List<Map> result = new java.util.ArrayList();
-            for (CsMember csMember : list) {
-                Map map = new HashMap();
-                map.put("value", csMember.getCsmId().toString());
-                map.put("text", $.js(csMember.getKeyValue()));
-                if (bObject == true)
-                    map.put("object", csMember);
-                result.add(map);
-            }
-            /************ LAZY3Q_AFTER_QUERY ************/
-            result.clear();
-            for (CsMember csMember : list) {
-                Map map = new HashMap();
-                map.put("value", csMember.getCsmId().toString());
-                map.put("text", $.js(csMember.getCsmHost$() + "-" + csMember.getKeyValue()));
-                if (bObject == true)
-                    map.put("object", csMember);
-                result.add(map);
-            }
-            /************ LAZY3Q_AFTER_QUERY ************/
-
-
-            // $.SendAjax这个函数，第一个参数不是字符串，会自动把第一个对象转成json格式的字符串
-            return $.SendAjax(result, "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getRootLogger().error(e.getMessage(), e);
-            return $.SendAjax("[]", "UTF-8");
+            return $.SendAjax(mapList, "UTF-8");
         }
     }
 

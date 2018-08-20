@@ -15,15 +15,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMemberInfo.csmiId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.isAddType==true">
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
-	editables:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
+	editables:"csmiId,csmiCheckPhoto,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
+	visibles:"csmiId,csmiCheckPhoto,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
+	editables:"csmiId,csmiCheckPhoto,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csmiId,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiUpdateTime,csmiAddTime,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
+	visibles:"csmiId,csmiCheckPhoto,csmiHost,csmiName,csmiMemberId,csmiCertifyType,csmiCertifyNum,csmiCertifyImage,csmiDriverNum,csmiDriverImage,csmiSex,csmiUpdateTime,csmiAddTime,csmiStatus,csmiOnCertifyImage,csmiProofOfEmployment",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -732,6 +732,60 @@ $(function(){
 	</dl>
 	${after$csmiProofOfEmployment}
 	</s:if>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	${lz:set("注释","*****************工作证图片字段的输入框代码*****************")}
+	${lz:set("注释","before$csmiCheckPhoto和after$csmiCheckPhoto变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csmiCheckPhoto==true">
+	${before$csmiCheckPhoto}
+	<dl class="csmiDriverImage " minor  ref="csmiCheckPhoto" style="width:98%;">
+		<dt>机审照片:</dt>
+		<s:if test="#request.CTRL.e.csmiCheckPhoto==true">
+		${lz:set("haveEditable",true)}
+		<dd input="image">
+		<s:if test="#request.csMemberInfo$csmiCheckPhoto!=null">${csMemberInfo$csmiCheckPhoto}</s:if><s:else>
+		    <input type="text" class="input" maxlength="128" size="32" name="csMemberInfo.csmiCheckPhoto" id="csmiCheckPhoto"  value="${csMemberInfo.csmiCheckPhoto}"/>
+			<button type="button" onclick="$.upload({type:'img',callback:function(url){if(url)$('#csmiCheckPhoto').val(url)}})" class="button">设置图片</button>
+			<button type="button" onclick="$('#csmiCheckPhoto').val('')" class="button">删除图片</button>
+			<button type="button" onclick="$.thumb({url:$('#csmiCheckPhoto').val()})" class="button">查看图片</button>
+	 	 </s:else>
+	 	 
+	 	 
+	 	 <em>请上传会员信息的工作证图片</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****工作证图片字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input wide">
+		 		<textarea class="" style="display:none;" id="csmiCheckPhoto">${csMemberInfo.csmiCheckPhoto}</textarea>
+		 		<span>
+		 	${lz:set("isVacant",lz:vacant(csMemberInfo.csmiCheckPhoto))}
+		 	<s:if test="#request.isVacant==false">
+		 	<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=96}else{this.height=96}" src="${csMemberInfo.csmiCheckPhoto}"/>
+		 	</s:if>
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csmiCheckPhoto}
+	</s:if>
+	
+	
+	
+	
+	
 	
 	${lz:set("注释","*****************性别字段的输入框代码*****************")}
 	${lz:set("注释","before$csmiSex和after$csmiSex变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}

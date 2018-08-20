@@ -16,6 +16,10 @@ public class Main {
 	    
 		CarStatusProducer producer = new CarStatusProducer(carStatusQueue);
 		producer.init();
+		/**
+		 * FIXME 非常非常非常差的实现方式，了解业务的请重写
+		 */
+//		CarStatusOnsProducer.carStatusQueue = carStatusQueue;
 		
 		CarStatusConsumer consumer = new CarStatusConsumer(carStatusQueue);
 		consumer.start();
