@@ -940,9 +940,9 @@ public class DefaultAction extends BaseAction {
             if ($.empty(department)) {
                 return returnError("101", "部门未填写，请填写。");
             }
-            if ($.empty(proofOfEmployment)) {
+            /*if ($.empty(proofOfEmployment)) {
                 return returnError("101", "图片路径未上传，请上传图片。");
-            }
+            }*/
 
             csMemberInfoService.executeTransaction(new Function() {
                 @Override

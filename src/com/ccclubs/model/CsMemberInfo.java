@@ -252,7 +252,7 @@ public @caption("会员信息") @table("cs_member_info") class CsMemberInfo impl
 		return this;
 	}
 	
-	/** 工作证明 [非空]       **/
+	/** 工作证明 [可空]       **/
     public CsMemberInfo csmiProofOfEmployment(String csmiProofOfEmployment){
         this.csmiProofOfEmployment = csmiProofOfEmployment;
         this.setSeted(F.csmiProofOfEmployment);
