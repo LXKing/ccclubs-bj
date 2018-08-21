@@ -465,8 +465,7 @@ public class OauthAction {
 	}
 	
 	public String code(){
-		System.out.println(""+$.getSession("ddid"));
-		
+		System.out.println($.getSession("ddid"));
 		$.setSession("ddid", 99910);
 		if($.empty($.config("release.online"))){
 			$.SendHtml($.getSession(SYSTEM.REGIST_VAILD_CODE)+"", "UTF-8");

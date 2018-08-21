@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -89,8 +88,6 @@ public class BaseAction extends OutsideStatisticsUtil{
 	ICsCarOnService csCarOnService;
 	ICsMaintainService csMaintainService;
 	ITbProblemService tbProblemService;
-	ICsOrderService csOrderService;
-	ICsOutletsService csOutletsService;
 	
 	final static short UPDATE_TYPE = 2;									//后勤app标识
 	final static String NORMAL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";		//常用日期格式化
@@ -253,39 +250,16 @@ public class BaseAction extends OutsideStatisticsUtil{
 			
 			SrvUserExp srvUserExp = SrvUserExp.getSrvUserExp($.add(SrvUserExp.F.sueUser, user.getSuId()));
 			String outletsIds = $.or(srvUserExp.getSueOutlets(), "");
-			String[] outletsIdArray=outletsIds.split(",");
-			Set<String> outletsList=new HashSet();
-			if(outletsIdArray!=null&&outletsIdArray.length>0) {
-                for(String olId:outletsIdArray) {
-                    outletsList.add(olId.trim());
-                }
-            }
 			
 			String outletsSQL = "";
-			
 			//=======================================================================================
-			if(!outlet.equals("0") && outletsList.contains(outlet)){
-			    outletsList.clear();
-			    //网点有限制并且用户的可操控网点包含上传的网点，则直接匹配此网点
+			if(!outlet.equals("0") && outletsIds.indexOf(outlet)!=-1){
 				outletsSQL = "=" + outlet;
-				outletsList.add(outlet.trim());
 			}else{
-			    outletsList.clear();
-				if(!region.equals("0")){//如果区域有限制，则查询此区域的网点
+				if(!region.equals("0")){
 					outletsSQL = " in (select coo.cso_id from cs_outlets coo where coo.cso_area=" + region + ")";
-					List<CsOutlets>  csOutletsList =  csOutletsService.getCsOutletsList($.add(CsOutlets.F.csoArea, region),Integer.MAX_VALUE);
-					if(null!=csOutletsList&&csOutletsList.size()>0) {
-					    for(CsOutlets csOutlets:csOutletsList) {
-					        outletsList.add(csOutlets.getCsoId$().trim());
-					    }
-					}
-				}else{//如果都没有限制则查询用户可见的所有网点
+				}else{
 					outletsSQL = " in ("+outletsIds+")";
-					if(outletsIdArray!=null&&outletsIdArray.length>0) {
-					    for(String olId:outletsIdArray) {
-					        outletsList.add(olId.trim());
-					    }
-					}
 				}
 			}
 			
@@ -295,9 +269,9 @@ public class BaseAction extends OutsideStatisticsUtil{
 			
 			List<Map> list = new ArrayList<Map>();
 			String ordebySQL = " order by CAST(cst.css_ev_battery AS SIGNED) asc";
-			/*		
-			if(usestatus.equals("0") || usestatus.equals("2")){//空闲中（在网点）车辆逻辑
-				String tmpSQL = whereSQL + " and exists (select 1 from cs_order o where o.cso_car = cc.csc_id and o.cso_status not in (1,2,5))";
+					
+			if(usestatus.equals("0") || usestatus.equals("2")){
+				String tmpSQL = whereSQL + " and not exists (select 1 from cs_order o where o.cso_car = cc.csc_id and o.cso_status in (1,2,5))";
 				String sql = "SELECT cc.csc_id,cc.csc_host,cc.csc_car_no,cc.csc_model,cc.csc_outlets,cc.csc_longitude,cc.csc_latitude,cc.csc_status,cc.csc_images," +
 						" cst.css_endurance,cst.css_ev_battery,cst.css_power,cst.css_charging,csm.cscm_name as model_name,csl.cso_name as outlet_name, 2 csc_use from cs_car cc LEFT JOIN cs_state cst on cst.css_number=cc.csc_number " +
 						" LEFT JOIN cs_car_model csm on csm.cscm_id = cc.csc_model INNER JOIN cs_outlets csl on csl.cso_id = cc.csc_outlets "+ tmpSQL + ordebySQL;
@@ -305,75 +279,23 @@ public class BaseAction extends OutsideStatisticsUtil{
 				list.addAll($.getDao("ccclubs_system").executeQuery(sql));
 			}
 			
-			if(usestatus.equals("0") || usestatus.equals("1")){//使用中（待还入）车辆逻辑
+			if(usestatus.equals("0") || usestatus.equals("1")){
 				String tmpSQL = whereSQL + " and exists (select 1 from cs_order o where o.cso_car = cc.csc_id and o.cso_status in (1,2,5) and o.cso_outlets_ret "+outletsSQL+")";
 				String sql = "SELECT cc.csc_id,cc.csc_host,cc.csc_car_no,cc.csc_model,cc.csc_outlets,cc.csc_longitude,cc.csc_latitude,cc.csc_status,cc.csc_images," +
 						" cst.css_endurance,cst.css_ev_battery,cst.css_power,cst.css_charging,csm.cscm_name as model_name,csl.cso_name as outlet_name, 1 csc_use from cs_car cc LEFT JOIN cs_state cst on cst.css_number=cc.csc_number " +
 						" LEFT JOIN cs_car_model csm on csm.cscm_id = cc.csc_model INNER JOIN cs_outlets csl on csl.cso_id = cc.csc_outlets "+ tmpSQL + ordebySQL;
 				log.debug("sql:" + sql);
 				list.addAll($.getDao("ccclubs_system").executeQuery(sql));
-			}*/
+			}
 			
-            String sql = "SELECT cc.csc_id,cc.csc_host,cc.csc_car_no,cc.csc_model,cc.csc_outlets,cc.csc_longitude,cc.csc_latitude,cc.csc_status,cc.csc_images," +
-                    " cst.css_endurance,cst.css_ev_battery,cst.css_power,cst.css_charging,csm.cscm_name as model_name,csl.cso_name as outlet_name from cs_car cc LEFT JOIN cs_state cst on cst.css_number=cc.csc_number " +
-                    " LEFT JOIN cs_car_model csm on csm.cscm_id = cc.csc_model INNER JOIN cs_outlets csl on csl.cso_id = cc.csc_outlets "+ whereSQL + ordebySQL;
-            log.debug("sql:" + sql);
-            list.addAll($.getDao("ccclubs_system").executeQuery(sql));
-            Rs2bean rs = new Rs2bean();
-            List<CarManage> carManageList =new ArrayList<CarManage>();
-            for(int i=0; i<list.size(); i++){
-                Map map = list.get(i);
-                if (map != null) {
-                    //carManageList.add((CarManage) rs.converttoModel(map, CarManage.class));
-                    
-                    CarManage carManage=(CarManage) rs.converttoModel(map, CarManage.class);
-                    //csOrderService.getCsOrder(params)
-                    Map params = $.add(CsOrder.F.csoCar, carManage.getCsc_id())
-                            .add("definex", " "+CsOrder.C.csoTakeTime +" is not null")
-                            .add("desc", "cso_start_time");
-                    List<CsOrder> ol = csOrderService.getCsOrderList(params, 1);
-                    CsOrder csOrder=null;
-                    if(null !=ol&&ol.size()>0) {
-                        csOrder=ol.get(0);
-                    }
-                    if(null ==csOrder) {//此车还没有过订单
-                        carManage.setCsc_use("2");
-                        carManageList.add(carManage);
-                        continue;
-                    }
-                    
-                    
-                    int orderStatus=csOrder.getCsoStatus();
-                    if(usestatus.equals("0") || usestatus.equals("1")){//使用中（待还入）车辆逻辑
-                        if(orderStatus==1||orderStatus==2||orderStatus==5) {
-                            if(outletsList.contains(csOrder.getCsoOutletsRet().toString())) {//判断此车会还在此网点
-                                carManage.setCsc_use("1");
-                                carManageList.add(carManage);
-                            }
-                        }
-                    }
-                    
-                    if(usestatus.equals("0") || usestatus.equals("2")){//空闲中（在网点）车辆逻辑
-                        if(orderStatus!=1&&orderStatus!=2&&orderStatus!=5) {
-                            carManage.setCsc_use("2");
-                            carManageList.add(carManage);
-                        }
-                    }
-                    
-                }
-                    
-                    
-                    
-            }
-            
-            
-            
-            
 			List<CarManage> carlist = new ArrayList<CarManage>();
 			Map<String, Object> res = new HashMap<String, Object>();
-			
-			for(int i=0; i<carManageList.size(); i++){
-					CarManage carm = carManageList.get(i);
+			Rs2bean rs = new Rs2bean();
+			for(int i=0; i<list.size(); i++){
+				Map map = list.get(i);
+				if (map != null) {
+					CarManage carm = (CarManage) rs.converttoModel(map, CarManage.class);
+					
 					//查询使用状态和还入网点，取今天的订单
 					Calendar calendar = Calendar.getInstance();
 					calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -425,7 +347,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 					}else{
 						carlist.add(carm);
 					}
-				
+				}
 			}
 			
 			re.setState(true).setCode(200).setMessage("车辆管理").setData(carlist);
@@ -2008,22 +1930,6 @@ public class BaseAction extends OutsideStatisticsUtil{
 	
 	public void setSrvPropertyService(ISrvPropertyService srvPropertyService) {
 		this.srvPropertyService = srvPropertyService;
-	}
-	
-	public void setCsOrderService(ICsOrderService csOrderService) {
-	    this.csOrderService=csOrderService;
-	}
-	
-	public ICsOrderService getCsOrderService() {
-	    return csOrderService;
-	}
-	
-	public void setCsOutletsService(ICsOutletsService csOutletsService) {
-	    this.csOutletsService=csOutletsService;
-	}
-	
-	public ICsOutletsService getCsOutletsService() {
-	    return csOutletsService;
 	}
 	
 	public ICsCarService getCsCarService() {
