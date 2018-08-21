@@ -172,6 +172,14 @@ public class CsEvCardDao extends SqlMapClientDaoSupport implements ICsEvCardDao
 		return (Long)result.get("eval");
 	}
 	
+	public Long getCount(Map params)
+    {
+        params = custom(params);
+        params.put("eval","count(*)");
+        Map result = (Map) this.getSqlMapClientTemplate().queryForObject("getCsEvCardEval", params);
+        return (Long)result.get("eval");
+    }
+	
 	/**
 	 * 获取会员卡自定义求和表达式,比如求ID平均值:eval="avg(id)"
 	 * @return

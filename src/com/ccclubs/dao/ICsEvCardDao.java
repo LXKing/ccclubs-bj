@@ -31,6 +31,12 @@ public interface ICsEvCardDao
 	public Long getCsEvCardCount(Map params);
 	
 	/**
+     * 获取会员卡总数
+     * @return
+     */
+	public Long getCount(Map params);
+	
+	/**
 	 * 获取会员卡自定义求和表达式,比如求和:eval="sum(id)"
 	 * @return
 	 */	
