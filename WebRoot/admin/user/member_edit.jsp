@@ -3964,7 +3964,7 @@ $(function(){
 		 		<option value="">请选择</option>
 				<option value="0" ${csMember.csmVOffline==0?"selected":""}>未认证</option>
 				<option value="1" ${csMember.csmVOffline==1?"selected":""}>已认证</option>
-				<option value="2" ${csMember.csmVOffline==2?"selected":""}>等待认证</option>
+				<%-- <option value="2" ${csMember.csmVOffline==2?"selected":""}>等待认证</option> --%>
 				<option value="3" ${csMember.csmVOffline==3?"selected":""}>认证失败</option>
 		 	</select>
 	 	 </s:else>

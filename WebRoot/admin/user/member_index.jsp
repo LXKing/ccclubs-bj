@@ -14,15 +14,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csMember.csmId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.all==true">
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可查询")}
-	queryables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmUpdateTime,csmAddTime,csmLastTime,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
+	queryables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmUpdateTime,csmAddTime,csmLastTime,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus,vstatus",
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可显示在表格中")}
-	listables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmCoupon,csmIntegral,csmGrow,csmGrade,csmRebate,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmUpdateTime,csmAddTime,csmLastTime,csmLastIp,csmLoginS,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmRegistIp,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
+	listables:"csmId,csmHost,csmUsername,csmGroup,csmMoney,csmCoupon,csmIntegral,csmGrow,csmGrade,csmRebate,csmNotRevenue,csmWeixinFlag,csmAlipayFlag,csmEmail,csmMobile,csmEvcard,csmExpress,csmTemp,csmName,csmInfo,csmOutlets,csmIsVip,csmVipStart,csmVipEnd,csmUpdateTime,csmAddTime,csmLastTime,csmLastIp,csmLoginS,csmFirstUse,csmLastUse,csmAllRecharge,csmAllOrderS,csmAllUseTime,csmAllViolatS,csmUnViolatS,csmAllTroubleS,csmFirstRecharge,csmRefundTime,csmRegistIp,csmAdder,csmTracker,csmRefer,csmReferType,csmFrom,csmSrc,csmChannel,csmMarketPlan,csmActivity,csmSaler,csmMarket,csmTag,csmMark,csmVisitFlag,csmMask,csmRemark,csmVMobile,csmVEmail,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus,vstatus",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可查询")}
-	queryables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
+	queryables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus,vstatus",
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可显示在表格中")}
-	listables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus",
+	listables:"csmId,csmHost,csmMobile,csmEvcard,csmName,csmInfo,csmFrom,csmRemark,csmVReal,csmVDrive,csmVWork,csmVOffline,csmStatus,vstatus",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -713,6 +713,9 @@ ${after$form}
 					<s:if test="#request.defines==null && #request.CTRL.l.csmStatus || #request.defines['csmStatus']!=null">
 						<a href="javascript:void(0);" onclick="UpdateSel('status')">可用状态</a>
 					</s:if>
+					<s:if test="#request.defines==null && #request.CTRL.l.vstatus || #request.defines['vstatus']!=null">
+						<a href="javascript:void(0);">认证总状态</a>
+					</s:if>
 					</td>  <td class="r"></td></tr><tr>  <td class="bl"></td>  <td class="b"></td>  <td class="br"></td></tr>
 					</tbody></table
 				</dd>
@@ -1296,6 +1299,14 @@ ${after$form}
 			 	可用状态
 			 	</a>
 			 	${lz:set("checkeds[]","csmStatus")}
+			 </td>
+			 </s:if>
+			 <s:if test="#request.defines==null && #request.CTRL.l.vstatus || #request.defines['vstatus']!=null">
+			 <td <s:if test="#request.defines['vstatus']>0">colspan="${defines["vstatus"]}" ${all?"width":"iwidth"}="${defines["vstatus"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=120":""} </s:else> tdid="61" ref="vstatus"   title="认证总状态">
+			 	<a class="${desc=="vstatus" ? "desc" : ""}${asc=="vstatus" ? "asc" : ""}" href="?${desc=="vstatus" ? "asc=vstatus" : ""}${(asc=="vstatus" || desc!="vstatus" )? "desc=vstatus" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	认证总状态
+			 	</a>
+			 	${lz:set("checkeds[]","vstatus")}
 			 </td>
 			 </s:if>
 			 
@@ -2909,6 +2920,33 @@ ${after$form}
 				</s:else>
 			</s:if>
 			
+			<s:if test="#request.defines==null && #request.CTRL.l.vstatus || #request.defines['vstatus']!=null">
+				<s:if test="#request.defines['vstatus']>0">
+					${lz:set("注释","****csmStatus关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.vstatus))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atVstatus",lz:indexOf(fieldName,"vstatus")>-1)}
+				  		<s:if test="#request.atVstatus==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****csmStatus字段的字串格式化输出****")}
+					<td ref="vstatus" class="td ">
+						 <s:if test="#request.alias==null">
+							 
+					     </s:if>
+						 
+						 	${lz:or(item$vstatus[i.count-1],lz:left(item.vstatus$,100))}
+					</td>
+				</s:else>
+			</s:if>
+			
 			<s:if test="#request.defines==null && #request.CTRL.l.csmLockReason || #request.defines['csmLockReason']!=null">
 				<s:if test="#request.defines['csmLockReason']>0">
 					${lz:set("注释","****csmLockReason关联表的子级字段：如果用户勾选了要显示的话****")}
@@ -4276,6 +4314,28 @@ ${after$form}
 				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
 				  			<s:if test="#request.isList==true">
 				  				<lz:set name="arrFieldName">csmStatus[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
+				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
+				 			</s:if>
+				 			<s:else>
+								<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+							</s:else>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					<s:if test="#k.count==1"><td class="blank" rowspan="${rowspan-1}">&nbsp;</td></s:if>
+				</s:else>
+			 </s:if>
+			 
+			 <s:if test="#request.defines==null && #request.CTRL.l.vstatus || #request.defines['vstatus']!=null">
+				<s:if test="#request.defines['vstatus']>0">
+					${lz:set("注释","****csmStatus关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("atVstatus",lz:indexOf(fieldName,"vstatus")>-1)}				  		
+				  		<s:if test="#request.atVstatus==true">
+				  			${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				  			<s:if test="#request.isList==true">
+				  				<lz:set name="arrFieldName">vstatus[${k.count}]${lz:split(fieldName,"\\[\\]")[1]}</lz:set>
 				 				<td class="onemore">${lz:left(lz:el(item,arrFieldName),100)}</td>
 				 			</s:if>
 				 			<s:else>

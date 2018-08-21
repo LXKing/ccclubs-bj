@@ -221,7 +221,7 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
                                                                                                               // 3:认证失败
     private @caption("禁用原因") @column("csm_lock_reason") @note(" 禁用原因  ") String csmLockReason;// 禁用原因
     private @caption("线下认证机器编码") @column("csm_v_offline_code") @note(" 线下认证机器编码  ") String csmVOfflineCode;// 线下认证机器编码
-    private Short vstatus;
+    private @caption("认证总状态") @note(" 认证总状态  ") Short vstatus;
 
     // 默认构造函数
     public CsMember() {

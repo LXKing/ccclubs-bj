@@ -227,6 +227,7 @@ public class CsMemberDao extends SqlMapClientDaoSupport implements ICsMemberDao
 	                CsMember cm = list.get(i);
 	                if(null != cm) {
 	                    list.get(i).setCsmRemark(this.getMemo(cm.getCsmRemark(), csMemberInfo.getCsmiCompany$(), csMemberInfo.getCsmiDepartment$()));
+	                    list.get(i).setVstatus(cm.getVstatus());
 	                }
 	            
 	            }
