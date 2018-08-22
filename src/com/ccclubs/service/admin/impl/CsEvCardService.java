@@ -52,6 +52,15 @@ public class CsEvCardService implements ICsEvCardService
 	}
 	
 	/**
+     * 获取会员卡总数
+     * @return
+     */
+    public Long getCount(Map params)
+    {
+        return csEvCardDao.getCsEvCardCount(params);
+    }
+	
+	/**
 	 * 获取会员卡自定义求和表达式,比如求和:eval="sum(id)"
 	 * @return
 	 */	
@@ -191,26 +200,26 @@ public class CsEvCardService implements ICsEvCardService
                 String cardSuffix = "BJ";
                 String macSuffix = "XN";
                 //获取最大卡号
-                CsEvCard card = CsEvCard.where().csecNumber(cardSuffix).get();
+                CsEvCard card = CsEvCard.getCsEvCard($.add(CsEvCard.F.csecNumber, "%"+cardSuffix));
                 String cardNo = "";
                 if (card!=null) {
                     cardNo = card.getCsecNumber();
                 }
                 if (StringUtils.isEmpty(cardNo)) {
-                    cardNo = "10000";//5位数起步
+                    cardNo = "70000";//5位数起步
                 }else {
                     cardNo = cardNo.replaceAll(cardSuffix, "");
                 }
                 Integer cno = Integer.parseInt(cardNo);
                 
                 //获取最大机器编号
-                card = CsEvCard.where().csecRfid(macSuffix).get();
+                card = CsEvCard.getCsEvCard($.add("csecRfidLike", "%"+macSuffix));
                 String macNo = "";
                 if (card!=null) {
                     macNo = card.getCsecRfid();
                 }
                 if(StringUtils.isEmpty(macNo)) {
-                    macNo = "100000";//6位数起步
+                    macNo = "160000";//6位数起步
                 }else {
                     macNo = macNo.replaceAll(macSuffix, "");
                 }
@@ -227,7 +236,7 @@ public class CsEvCardService implements ICsEvCardService
                     //设置ev卡编号
                     csEvCard.setCsecNumber(cardNo);
                     //检索ev卡编号是否已存在，存在则重新生成编号，否则使用当前编号生成ev卡信息
-                    count = this.getCsEvCardCount($.add(CsEvCard.F.csecNumber, cardNo));
+                    count = this.getCount($.add(CsEvCard.F.csecNumber, cardNo));
                 }
                 csEvCard.setCsecHost(hostId);
                 csEvCard.setCsecRemark("自动绑定");
@@ -244,7 +253,7 @@ public class CsEvCardService implements ICsEvCardService
                     //设置机器编号
                     csEvCard.setCsecRfid(macNo);
                     //检索ev卡机器编号是否已存在，存在则重新生成机器编号，否则使用当前机器编号更新ev卡信息
-                    count = this.getCsEvCardCount($.add(CsEvCard.F.csecRfid, cardNo));
+                    count = this.getCount($.add(CsEvCard.F.csecRfid, macNo));
                 }
                 
                 //保存ev卡
