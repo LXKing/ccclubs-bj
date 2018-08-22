@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import com.ccclubs.action.unit.UnitLoginHelper;
+import com.ccclubs.config.ArgumentKey;
 import com.ccclubs.config.CommonMessage;
 import com.ccclubs.config.Constant;
 import com.ccclubs.helper.ActionHelper;
 import com.ccclubs.helper.LoggerHelper;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.helper.UtilHelper;
+import com.ccclubs.model.CsArgument;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
 import com.ccclubs.model.CsMemberShip;
@@ -219,8 +221,14 @@ public class ClerkAction {
 							LoggerHelper.writeLog(CsUnitUser.class,"add","添加了[人员信息]["+csUnitPerson.getCsupName()+"]",(Long)$.getSession("ccclubs_login_id"), csUnitPerson);
 							$.SetTips("保存人员信息成功");
 							
-                            UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),"REGIST_CODE",csMember.getCsmMobile$(),"欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。"
-                                    ,SMSType.通知类短信,$.add("mobile", csMember.getCsmMobile$()).add("code", password));
+							CsArgument ca = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "OFFICE_ADD_PERSON_SMS_FLAG"));
+							if(null != ca) {
+							    if("true".equals(ca.getCsaValue$())) {
+							        UtilHelper.sendTemplateSMS(csUnitPerson.getCsupHost(),"REGIST_CODE",csMember.getCsmMobile$(),"欢迎使用北京出行，你的系统登录名为{mobile}，密码为{code}。"
+	                                        ,SMSType.通知类短信,$.add("mobile", csMember.getCsmMobile$()).add("code", password));
+							    }
+							}
+                            
 						}else{
 							$.SetTips("系统繁忙，请稍后再试！");
 						}
