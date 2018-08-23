@@ -175,21 +175,22 @@ window.$on("readyStart",function(){
 			<dt>身份证人像面:</dt>
 			<dd input="image">
 				<div class="state-input wide">
-					${lz:set("certifyImageLen",(lz:size(csMember.$csmInfo.csmiCertifyImage)))}
-					<s:if test="#request.certifyImageLen>0">
-						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCertifyImage}"/>
+					${lz:set("onCertifyImageLen",(lz:size(csMember.$csmInfo.csmiOnCertifyImage)))}
+					<s:if test="#request.onCertifyImageLen>0">
+						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiOnCertifyImage}"/>
 					</s:if>
 					<s:else><center><font color="red"><h4>未上传身份证人像面照片，建议审核不通过</h4></font></center></s:else>
 				</div>
+				
 			</dd>
 		</dl>
 		<dl style="width:98%;">
 			<dt>身份证国徽面:</dt>
 			<dd input="image">
 				<div class="state-input wide">
-					${lz:set("onCertifyImageLen",(lz:size(csMember.$csmInfo.csmiOnCertifyImage)))}
-					<s:if test="#request.onCertifyImageLen>0">
-						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiOnCertifyImage}"/>
+					${lz:set("certifyImageLen",(lz:size(csMember.$csmInfo.csmiCertifyImage)))}
+					<s:if test="#request.certifyImageLen>0">
+						<img onclick="$.thumb({url:this.src})" style="margin:10px;padding:1px;border:1px solid;" onload="if(this.width>this.height){this.width=300}else{this.height=300}" src="${csMember.$csmInfo.csmiCertifyImage}"/>
 					</s:if>
 					<s:else><center><font color="red"><h4>未上传身份证国徽面照片，建议审核不通过</h4></font></center></s:else>
 				</div>

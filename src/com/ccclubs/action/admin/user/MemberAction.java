@@ -384,6 +384,16 @@ public class MemberAction {
                                     }
                                 }
                             }
+                            //所属部门
+                            CsUnitGroup cug = null;
+                            if (StringUtils.isNotBlank(csmi.getCsmiDepartment())) {
+                                Map<String, Object> map = $.Map();
+                                map.put("definex", "csug_name='" + csmi.getCsmiDepartment() + "'");
+                                cug = CsUnitGroup.getCsUnitGroup(map);
+                                if(null != cug) {
+                                    nu.setCsupGroup(cug.getCsugId());
+                                }
+                            }
                         }
 
                     } catch (Exception e) {
@@ -522,6 +532,9 @@ public class MemberAction {
                                     csMember.setCsmVDrive((short) 0);
                                 if (csMember.getCsmStatus() == null)
                                     csMember.setCsmStatus((short) 1);
+                                if(csMember.getCsmStatus() == 1) {
+                                    csMember.setCsmLockReason("");
+                                }
 
                                 // 根据自定义的默认值信息设置默认值
                                 if (CTRL != null)
@@ -628,6 +641,9 @@ public class MemberAction {
                                     csMember.setCsmActivity(oldCsMember.getCsmActivity());
                                     csMember.setCsmSaler(oldCsMember.getCsmSaler());
                                     csMember.setCsmMask(oldCsMember.getCsmMask());
+                                    if(csMember.getCsmStatus() == 1) {
+                                        csMember.setCsmLockReason("");
+                                    }
 
                                     // 设置填充值
                                     if (csMember.getCsmUpdateTime() == null)

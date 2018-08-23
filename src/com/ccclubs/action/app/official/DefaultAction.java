@@ -2042,7 +2042,7 @@ public class DefaultAction extends BaseAction {
             }
             if (memberInfo != null) {
                 data.put("certifyType", memberInfo.getCsmiCertifyType());
-                data.put("certifyNum", memberInfo.getCsmiCertifyNum());
+                data.put("certifyNum", StringUtils.trimToEmpty(memberInfo.getCsmiCertifyNum()));
                 data.put("certifyImage", memberInfo.getCsmiCertifyImage());
                 data.put("driverNum", memberInfo.getCsmiDriverNum());
                 data.put("driverImage", memberInfo.getCsmiDriverImage());
@@ -2769,7 +2769,7 @@ public class DefaultAction extends BaseAction {
         mapdata.put("alias", data.getCsuoAlias());
         mapdata.put("mobile", data.getCsuoMobile());
         mapdata.put("profile", data.getCsuoProfile());
-        mapdata.put("idcard", data.getCsuoIdcard());
+        mapdata.put("idcard", StringUtils.trimToEmpty(data.getCsuoIdcard()));
         mapdata.put("dayPrice", data.getCsuoDayPrice());
         mapdata.put("hourPrice", data.getCsuoHourPrice());
         mapdata.put("kmPrice", data.getCsuoKmPrice());

@@ -3,6 +3,7 @@ package com.ccclubs.service.admin.impl;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import com.lazy3q.util.Function;
 import com.ccclubs.dao.ICsMemberDao;
 import com.ccclubs.dao.ICsMemberInfoDao;
@@ -183,7 +184,7 @@ public class CsMemberInfoService implements ICsMemberInfoService
         CsMemberInfo csMemberInfo = createMemberInfoIfAbsent(member);
         //设置身份证信息
         csMemberInfo.setCsmiCertifyType((short) 1);
-        csMemberInfo.setCsmiCertifyNum(certifyNum);
+        csMemberInfo.setCsmiCertifyNum(StringUtils.trimToEmpty(certifyNum));
         csMemberInfo.setCsmiCertifyImage(certifyImg);
         csMemberInfo.setCsmiName(realName);
         csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
@@ -220,7 +221,7 @@ public class CsMemberInfoService implements ICsMemberInfoService
         CsMemberInfo csMemberInfo = createMemberInfoIfAbsent(member);
         
         csMemberInfo.setCsmiCertifyType((short) 1);
-        csMemberInfo.setCsmiCertifyNum(certifyNum);
+        csMemberInfo.setCsmiCertifyNum(StringUtils.trimToEmpty(certifyNum));
         csMemberInfo.setCsmiCertifyImage(certifyImg);
         csMemberInfo.setCsmiDriverImage(driverImage);
         csMemberInfo.setCsmiOnCertifyImage(onCertifyImg);
