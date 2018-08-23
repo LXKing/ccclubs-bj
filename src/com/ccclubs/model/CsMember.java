@@ -2558,7 +2558,11 @@ public @caption("会员帐号") @table("cs_member") class CsMember implements ja
     public String getCsmAdder$() {
         String strValue = "";
         if (this.getCsmAdder() != null) {
-            strValue += $.str(SrvUser.getKeyValue(this.getCsmAdder()));
+            if(null != this.csmFrom && 5 == this.csmFrom) {
+                strValue +=$.str(CsUnitUser.getKeyValue(this.getCsmAdder()));
+            }else {
+                strValue += $.str(SrvUser.getKeyValue(this.getCsmAdder()));
+            }
         }
         return strValue;
     }
