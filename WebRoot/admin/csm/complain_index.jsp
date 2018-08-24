@@ -679,13 +679,12 @@ ${after$form}
 				<s:else>
 					${lz:set("注释","****cscObject字段的字串格式化输出****")}
 					<td ref="cscObject" class="td ">
-						 <a <s:if test="#item.cscObject!=null && #item.cscObject!=''"> onclick="window.href('${basePath}${proname}/service/order_details.do?key=${fn:split(item.cscObject$,"@")[1]}',{ctrl:{editable:false,visible:true}})" href="javascript:void(0);"</s:if>>
+						 <a <s:if test="#item.cscObject!=null && #item.cscObject!=''"> onclick="window.href('${basePath}${proname}/service/order_details.do?key=${fn:split(item.cscObject,"@")[1]}',{ctrl:{editable:false,visible:true}})" href="javascript:void(0);"</s:if>>
 						 	${lz:or(item$cscObject[i.count-1],lz:left(item.cscObject$,100))}</a>
 					</td>
 				</s:else>
 			</s:if>
-			 
-			 
+		
 			<s:if test="#request.defines==null && #request.CTRL.l.cscMember || #request.defines['cscMember']!=null">
 				<s:if test="#request.defines['cscMember']>0">
 					${lz:set("注释","****cscMember关联表的子级字段：如果用户勾选了要显示的话****")}
@@ -1146,7 +1145,7 @@ ${after$form}
 	/**
 	* 添加意见反馈
 	**/
-	function AddComplain(parent){		
+	function AddComplain(parent){
 		var url = "${basePath}${namespace}complain_edit.do?edittype=save";
 		var params = {entrypoint:"${entrypoint}",parent:(parent?parent:""),ctrl:${ctrl==null?"{title:'添加意见反馈'}":lz:json(ctrl)}};
 		href(url,params);
@@ -1167,6 +1166,8 @@ ${after$form}
 	$(function(){
 		//修改意见反馈任意字段
 		$(".table tbody td.td").dblclick(function(){
+			if($(this).attr("ref")=="cscAddTime")
+				return;
 			var url = "${basePath}${namespace}complain_edit.do";
 			var params = {entrypoint:"${entrypoint}",id:$(this).parents("tr:eq(0)").attr("id"),method:"any",ctrl:{title:"更新意见反馈",visible:false,editable:false,fields:{}}};
 			params.ctrl["fields"][$(this).attr("ref")]={visible:true,editable:true};
