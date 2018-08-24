@@ -380,7 +380,7 @@ ${after$form}
 			<s:if test="#request.defines==null && #request.CTRL.l.cscUpdateTime || #request.defines['cscUpdateTime']!=null">
 			 <td <s:if test="#request.defines['cscUpdateTime']>0">colspan="${defines["cscUpdateTime"]}" ${all?"width":"iwidth"}="${defines["cscUpdateTime"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=140":""} </s:else> tdid="10" ref="cscUpdateTime"   title="更新时间">
 			 	<a class="${desc=="csc_update_time" ? "desc" : ""}${asc=="csc_update_time" ? "asc" : ""}" href="?${desc=="csc_update_time" ? "asc=csc_update_time" : ""}${(asc=="csc_update_time" || desc!="csc_update_time" )? "desc=csc_update_time" : ""}&${lz:queryss("UTF-8","desc","asc")}">
-			 	更新时间
+			 	处理时间
 			 	</a>
 			 	${lz:set("checkeds[]","cscUpdateTime")}
 			 </td>
@@ -679,13 +679,12 @@ ${after$form}
 				<s:else>
 					${lz:set("注释","****cscObject字段的字串格式化输出****")}
 					<td ref="cscObject" class="td ">
-						 <a <s:if test="#item.cscObject!=null && #item.cscObject!=''"> onclick="window.href('${basePath}${proname}/service/order_details.do?key=${fn:split(item.cscObject$,"@")[1]}',{ctrl:{editable:false,visible:true}})" href="javascript:void(0);"</s:if>>
+						 <a <s:if test="#item.cscObject!=null && #item.cscObject!=''"> onclick="window.href('${basePath}${proname}/service/order_details.do?key=${fn:split(item.cscObject,"@")[1]}',{ctrl:{editable:false,visible:true}})" href="javascript:void(0);"</s:if>>
 						 	${lz:or(item$cscObject[i.count-1],lz:left(item.cscObject$,100))}</a>
 					</td>
 				</s:else>
 			</s:if>
-			 
-			 
+		
 			<s:if test="#request.defines==null && #request.CTRL.l.cscMember || #request.defines['cscMember']!=null">
 				<s:if test="#request.defines['cscMember']>0">
 					${lz:set("注释","****cscMember关联表的子级字段：如果用户勾选了要显示的话****")}
@@ -727,8 +726,8 @@ ${after$form}
 				 			${lz:set("sizeList",lz:size(item.cscAddTime))}
 				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
 				 		</s:if>
-				  		${lz:set("atcscAddTime",lz:indexOf(fieldName,"cscAddTime")>-1)}
-				  		<s:if test="#request.atcscAddTime==true">
+				  		${lz:set("atCscAddTime",lz:indexOf(fieldName,"cscAddTime")>-1)}
+				  		<s:if test="#request.atCscAddTime==true">
 				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
 				 		</s:if>
 				 	</s:iterator>
@@ -1146,7 +1145,7 @@ ${after$form}
 	/**
 	* 添加意见反馈
 	**/
-	function AddComplain(parent){		
+	function AddComplain(parent){
 		var url = "${basePath}${namespace}complain_edit.do?edittype=save";
 		var params = {entrypoint:"${entrypoint}",parent:(parent?parent:""),ctrl:${ctrl==null?"{title:'添加意见反馈'}":lz:json(ctrl)}};
 		href(url,params);
@@ -1167,6 +1166,8 @@ ${after$form}
 	$(function(){
 		//修改意见反馈任意字段
 		$(".table tbody td.td").dblclick(function(){
+			if($(this).attr("ref")=="cscAddTime")
+				return;
 			var url = "${basePath}${namespace}complain_edit.do";
 			var params = {entrypoint:"${entrypoint}",id:$(this).parents("tr:eq(0)").attr("id"),method:"any",ctrl:{title:"更新意见反馈",visible:false,editable:false,fields:{}}};
 			params.ctrl["fields"][$(this).attr("ref")]={visible:true,editable:true};

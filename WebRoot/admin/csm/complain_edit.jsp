@@ -1057,7 +1057,7 @@ $(function(){
 	<s:if test="#request.CTRL.v.cscUpdateTime==true">
 	${before$cscUpdateTime}
 	<dl class="cscUpdateTime " major  ref="cscUpdateTime" >
-		<dt>更新时间:</dt>
+		<dt>处理时间:</dt>
 		<s:if test="#request.CTRL.e.cscUpdateTime==true">
 		${lz:set("haveEditable",true)}
 		<dd input="datetime">
