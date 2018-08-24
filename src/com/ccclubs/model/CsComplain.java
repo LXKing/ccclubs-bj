@@ -38,8 +38,8 @@ public @caption("意见反馈") @table("cs_complain") class CsComplain implement
 	private @caption("订单来源") @column("csc_source")      @note(" 1:订单 2:帮助反馈") String cscSource;
 	private @caption("外部关联") @column("csc_object")      @note("  ") String cscObject;
 	private Object $cscObject;//泛关联对象，对象类名由csrObject字段中标明
-	private @caption("评定等级") @column("csc_level")      @note(" 0:未评分 1:一星 2:二星 3:三星 4:四星 5:五星  ") Short cscLevel;
-	private @caption("评定等级") @column("csc_level1")      @note(" 0:未评分 1:一星 2:二星 3:三星 4:四星 5:五星  ") Short cscLevel1;
+	private @caption("车辆整洁评分") @column("csc_level")      @note(" 0:未评分 1:一星 2:二星 3:三星 4:四星 5:五星  ") Short cscLevel;
+	private @caption("车辆性能评分") @column("csc_level1")      @note(" 0:未评分 1:一星 2:二星 3:三星 4:四星 5:五星  ") Short cscLevel1;
 	
 	//默认构造函数
 	public CsComplain(){

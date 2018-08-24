@@ -1051,6 +1051,48 @@ $(function(){
 	</s:if>
 	
 				
+		
+	${lz:set("注释","*****************添加时间字段的输入框代码*****************")}
+	${lz:set("注释","before$cscUpdateTime和after$cscUpdateTime变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.cscUpdateTime==true">
+	${before$cscUpdateTime}
+	<dl class="cscUpdateTime " major  ref="cscUpdateTime" >
+		<dt>更新时间:</dt>
+		<s:if test="#request.CTRL.e.cscUpdateTime==true">
+		${lz:set("haveEditable",true)}
+		<dd input="datetime">
+		<s:if test="#request.csComplain$cscUpdateTime!=null">${csComplain$cscUpdateTime}</s:if><s:else>
+		 	<input onchange="void(0);" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" type="text" class="input narrow" maxlength="19" name="csComplain.cscUpdateTime" id="cscUpdateTime"  value="<s:date name="csComplain.cscUpdateTime" format="yyyy-MM-dd HH:mm:ss"/>"/>
+	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请选择意见反馈的添加时间</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****添加时间字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="cscUpdateTime">${csComplain.cscUpdateTime}</textarea>
+		 		<span>
+		 	
+			 ${csComplain.cscUpdateTime$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$cscUpdateTime}
+	</s:if>
+			
+				
+				
+				
+				
+				
+				
 				<div class="line"></div>
 				<center class="buttons">
 					${lz:set("注释","*****************before$buttons变量为预留变量，可在自定义代码中使用lz:set标签注入代码*****************")}

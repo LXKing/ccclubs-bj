@@ -21,7 +21,7 @@ public class CreateUnitBillThread {
 
 	private Date date;
 	private Lazy3qDaoSupport dao;
-	private String sql = "SELECT u.csuo_host, u.csuo_unit_info,u.csuo_unit_group,count(u.csuo_id) as csub_order_s, SUM(u.csuo_pay_real) as csuo_pay_real ,SUM(csuo_mileage) as csuo_mileage, SUM(o.cso_duration) as cso_duration  from cs_unit_order u LEFT JOIN cs_order o on u.csuo_order = o.cso_id where o.cso_status = 4 and o.cso_start_time BETWEEN '%s' and '%s' and u.csuo_unit_info = %s GROUP BY u.csuo_unit_group ";
+	private String sql = "SELECT u.csuo_host, u.csuo_unit_info,u.csuo_unit_group,count(u.csuo_id) as csub_order_s, sum(u.csuo_pay_need) as csuo_pay_need, SUM(u.csuo_pay_real) as csuo_pay_real ,SUM(csuo_mileage) as csuo_mileage, SUM(o.cso_duration) as cso_duration  from cs_unit_order u LEFT JOIN cs_order o on u.csuo_order = o.cso_id where o.cso_status = 4 and o.cso_start_time BETWEEN '%s' and '%s' and u.csuo_unit_info = %s GROUP BY u.csuo_unit_group ";
 	private String month = null;
 	private CsUnitBill csUnitBill = null;
 
@@ -39,6 +39,7 @@ public class CreateUnitBillThread {
 	public void createBill(CsUnitInfo csUnitInfo) {
 		List<Map> mapList = dao.executeQuery(String.format(sql, $.date(getMonthMinDay(date), "yyyy-MM-dd"),
 				$.date(getMonthMaxDay(date), "yyyy-MM-dd"), csUnitInfo.getCsuiId()));
+
 		for (Map map : mapList) {
 			Long unit_host = (Long) map.get("csuo_host");
 			Long unit_id = (Long) map.get("csuo_unit_info");
@@ -47,7 +48,8 @@ public class CreateUnitBillThread {
 			Double csuo_pay_real = (Double) map.get("csuo_pay_real");
 			Double csuo_mileage = (Double) map.get("csuo_mileage");
 			Double cso_duration = (Double) map.get("cso_duration");
-
+			Double csuo_need_pay=(Double) map.get("csuo_need_pay");
+			
 			csUnitBill = CsUnitBill.Get($.add(CsUnitBill.F.csubUnit, unit_id).add(CsUnitBill.F.csubGroup, unit_group)
 					.add(CsUnitBill.F.csubMonth, month));
 			if (csUnitBill == null) {
@@ -64,6 +66,7 @@ public class CreateUnitBillThread {
 			csUnitBill.setCsubOrderS(unit_order_s.intValue());
 			csUnitBill.setCsubUnit(unit_id);
 			csUnitBill.setCsubGroup(unit_group);
+			csUnitBill.setCsubNeedPay(csuo_need_pay.doubleValue());
 			csUnitBill.setCsubRealPay(csuo_pay_real.doubleValue());
 			csUnitBill.setCsubMileage(csuo_mileage.doubleValue());
 			csUnitBill.setCsubDuration(cso_duration.doubleValue());
