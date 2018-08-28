@@ -308,7 +308,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 					String dateConditionEnd = SystemHelper.formatDate(end, "yyyy-MM-dd");
 					Map params = $.add(CsOrder.F.csoCar, carm.getCsc_id())
 							.add("asc", "(now()-cso_start_time)")
-							.add("definex", " cso_start_time BETWEEN STR_TO_DATE('" + dateCondition + " 00:00:00','%Y-%m-%d %H:%i:%s') and STR_TO_DATE('" + dateConditionEnd +" 23:59:59','%Y-%m-%d %H:%i:%s') and cso_status not in (3,7) ");
+							.add("definex", "  cso_status not in (3,7) and ( cso_start_time BETWEEN STR_TO_DATE('\" + dateCondition + \" 00:00:00','%Y-%m-%d %H:%i:%s') and STR_TO_DATE('\" + dateConditionEnd +\" 23:59:59','%Y-%m-%d %H:%i:%s') or cso_finish_time   BETWEEN STR_TO_DATE('2018-08-28 00:00:00','%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('2018-08-29 23:59:59','%Y-%m-%d %H:%i:%s')  )");
 					List<CsOrder> ol = csOrderService.getCsOrderList(params, -1);
 					
 					if(!ol.isEmpty()){
@@ -335,6 +335,13 @@ public class BaseAction extends OutsideStatisticsUtil{
 							if(co.getCsoFinishTime().after(du.StringtoDate(dateConditionEnd+" 23:59:59", null))){
 								finish = du.StringtoDate(dateConditionEnd+" 23:59:59", null);
 							}
+							//
+							if(co.getCsoStartTime().before(du.StringtoDate(dateCondition+" 00:00:00", null)) 
+								&&	co.getCsoFinishTime().after(du.StringtoDate(dateCondition+" 00:00:00", null))	
+									){
+								co.setCsoStartTime(du.StringtoDate(dateCondition+" 00:00:00", null));
+							}
+							//
 							long width = (finish.getTime() - co.getCsoStartTime().getTime()) / 1000 / 60;
 							long left = (co.getCsoStartTime().getTime() -  du.StringtoDate(dateCondition + " 00:00:00", null).getTime()) / 1000 / 60;
 							if (left < 0 || width < 0){
@@ -1831,7 +1838,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 				
 				Short	offline=csMember.getCsmVOffline();
 				String  offlineString=null;
-				if(0==offline.intValue()) {
+				if(null==offline||0==offline.intValue()) {
 					offlineString="未认证";
 				}else if(1==offline.intValue()) {
 					offlineString="已认证";
