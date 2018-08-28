@@ -1831,7 +1831,7 @@ public class BaseAction extends OutsideStatisticsUtil{
 				
 				Short	offline=csMember.getCsmVOffline();
 				String  offlineString=null;
-				if(0==offline.intValue()) {
+				if(null==offline||0==offline.intValue()) {
 					offlineString="未认证";
 				}else if(1==offline.intValue()) {
 					offlineString="已认证";
