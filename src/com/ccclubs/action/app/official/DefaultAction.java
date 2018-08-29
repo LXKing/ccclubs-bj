@@ -6330,6 +6330,39 @@ public class DefaultAction extends BaseAction {
             return returnError(e);
         }
     }
+    
+    /**
+     * 获取应用配置信息
+     * 
+     * @return
+     */
+    public String getContent() {
+        try {
+            int type = $.getInteger("type", 0);
+
+            String flag = "没你要的数据，哈哈哈";
+            LzMap data = new LzMap();
+            if(type == 6) {
+                flag = "PRICE_ADJUST_TIP";
+            }else if(type == 7) {
+                flag = "PRICE_RULE";
+            }else if(type == 8) {
+                flag = "MEAL_USAGE";
+            }
+            
+            CsContent content = csContentService.getCsContent($
+                    .add(CsContent.F.cscFlag, flag).add(CsContent.F.cscStatus, 1));
+            if (content != null) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                data.put("title", content.getCscTitle());
+                data.put("content", content.getCscContent());
+            }
+
+            return $.SendHtml($.json(JsonFormat.success().setData(data)), CHARSET);
+        } catch (Exception ex) {
+            return $.SendHtml($.json(JsonFormat.error("-1", "网络繁忙")), CHARSET);
+        }
+    }
 
     public Double $(Double value) {
         if (value == null)
