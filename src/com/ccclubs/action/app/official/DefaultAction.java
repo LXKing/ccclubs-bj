@@ -6338,18 +6338,8 @@ public class DefaultAction extends BaseAction {
      */
     public String getContent() {
         try {
-            int type = $.getInteger("type", 0);
-
-            String flag = "没你要的数据，哈哈哈";
+            String flag = $.getString("flag", "没你要的数据，哈哈哈");
             LzMap data = new LzMap();
-            if(type == 6) {
-                flag = "PRICE_ADJUST_TIP";
-            }else if(type == 7) {
-                flag = "PRICE_RULE";
-            }else if(type == 8) {
-                flag = "MEAL_USAGE";
-            }
-            
             CsContent content = csContentService.getCsContent($
                     .add(CsContent.F.cscFlag, flag).add(CsContent.F.cscStatus, 1));
             if (content != null) {
