@@ -3,6 +3,7 @@ package com.ccclubs.model;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.Map;
+import org.apache.commons.lang3.time.DateUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -612,6 +613,15 @@ public @caption("红包") @table("cs_coin") class CsCoin implements java.io.Seri
 	public void setCscEnd(Date cscEnd){
 		this.cscEnd = cscEnd;
 		this.setSeted(F.cscEnd);
+	}
+	
+	public String getCscEndText() {
+	    String strValue="";
+	    Date d = this.getCscEnd();
+	    d = DateUtils.addDays(d, 1);
+	    d = DateUtils.addSeconds(d, -1);
+        strValue=$.str($.date(d,"yyyy-MM-dd HH:mm:ss"));
+        return strValue;
 	}
 	/*******************************序列号**********************************/	
 	/**
