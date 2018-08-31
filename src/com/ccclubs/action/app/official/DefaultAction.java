@@ -285,6 +285,39 @@ public class DefaultAction extends BaseAction {
         }
     }
 
+    private String appVersionLogin(HttpServletRequest request) {
+        CsArgument ca = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "APP_VERSION_LOGIN_FLAG"));
+        if(null != ca) {
+            //是否禁止非配置版本登录的开关
+            if("true".equals(ca.getCsaValue$())) {
+                //可登录版本列表
+                CsArgument cv = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "APP_VERSION_ACCESS_LIST"));
+                String av = null == cv || StringUtils.isBlank(cv.getCsaValue$()) ? "" : cv.getCsaValue$();
+                //不可登录版本提示信息
+                CsArgument tip = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "APP_VERSION_LOGIN_MSG"));
+                String at = null == tip || StringUtils.isBlank(tip.getCsaValue$()) ? "版本过低，被禁止登录，请升级程序" : tip.getCsaValue$();
+                if(StringUtils.isNotBlank(av)) {
+                    String[] an = av.split(",");
+                    //获取移动端内部版本号
+                    String appInnerVersion = request.getHeader("appInnerVersion");
+                    appInnerVersion = StringUtils.isBlank(appInnerVersion)  ? "" : appInnerVersion;
+                    rentAppLogger.info("appInnerVersion:"+appInnerVersion);
+                    boolean flag = false;
+                    if(StringUtils.isNotBlank(appInnerVersion) && null != an) {
+                        for(String aa : an) {
+                            if(appInnerVersion.equals(aa)) {
+                                flag = true;
+                            }
+                        }
+                    }
+                    if(!flag) {
+                        return returnError("102", at);
+                    }
+                }
+            }
+        }
+        return null;
+    }
     /**
      * 登录
      * 
@@ -293,7 +326,7 @@ public class DefaultAction extends BaseAction {
     public String login() {
         try {
             HttpServletRequest request = ServletActionContext.getRequest();
-
+            
             String strUsername = $.getString("username", "");
             String strPass = $.getString("password", "");
             int type = $.getInteger("type", 0);// 默认密码登录；1-验证码登录
@@ -307,6 +340,11 @@ public class DefaultAction extends BaseAction {
                 } else if (type == 1) {
                     return returnError("103", "您还没有输入验证码");
                 }
+            }
+            
+            String ret = this.appVersionLogin(request);
+            if(null != ret) {
+                return ret;
             }
 
             // String strPassword = RSAUtil.decrypt(strPass);
@@ -1365,6 +1403,11 @@ public class DefaultAction extends BaseAction {
         CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
         if (member == null) {
             return returnError("100", "登录授权无效");
+        }
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String ret = this.appVersionLogin(request);
+        if(null != ret) {
+            return ret;  
         }
 
         Long takeOutletsId = $.getLong("takeOutletsId");
