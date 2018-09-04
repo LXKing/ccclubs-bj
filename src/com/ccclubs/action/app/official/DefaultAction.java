@@ -50,6 +50,7 @@ import com.ccclubs.action.weixin.WeixinHelper;
 import com.ccclubs.config.ArgumentKey;
 import com.ccclubs.config.CommonMessage;
 import com.ccclubs.config.SYSTEM;
+import com.ccclubs.constants.MemberRecStatus;
 import com.ccclubs.exception.MessageException;
 import com.ccclubs.helper.CacheStoreHelper;
 import com.ccclubs.helper.SystemHelper;
@@ -1403,6 +1404,23 @@ public class DefaultAction extends BaseAction {
         CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
         if (member == null) {
             return returnError("100", "登录授权无效");
+        }
+        if(MemberRecStatus.REC_PASS != member.getVstatus()) {
+            StringBuilder sb = new StringBuilder();
+            if(MemberRecStatus.REC_PASS != member.getVDrive()) {
+                sb.append("驾驶证认证未通过,");
+            }
+            if(MemberRecStatus.REC_PASS != member.getVReal()) {
+                sb.append("实名认证未通过,");
+            }
+            if(MemberRecStatus.REC_PASS != member.getVWork()) {
+                sb.append("工作认证未通过,");
+            }
+            if(MemberRecStatus.REC_PASS != member.getVOffline()) {
+                sb.append("线下认证未通过,");
+            }
+            sb.append("不能下单");
+            return returnError("100", sb.toString());
         }
         HttpServletRequest request = ServletActionContext.getRequest();
         String ret = this.appVersionLogin(request);
