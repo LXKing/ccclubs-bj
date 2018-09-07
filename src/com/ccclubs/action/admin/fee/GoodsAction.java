@@ -198,8 +198,8 @@ public class GoodsAction
 			//Token技术建议百度下，就是为了防止重复提交
 			final String requestCsGoodsToken = $.getString("csGoodsToken");
 			final String sessionCsGoodsToken = $.getSession("csGoodsToken");
-			final String ruleparams = $.getString("ruleparams");
-			csGoods.setCsgProfile(ruleparams);
+//			final String ruleparams = $.getString("ruleparams");
+//			csGoods.setCsgProfile(ruleparams);
 			if($.equals(requestCsGoodsToken,sessionCsGoodsToken)){
 				$.removeSession("csGoodsToken");//移除令牌				
 				//多个写数据动作合并事务过程（当这个过程中发生任务错误时，由spring控制处理数据回滚，把所有修改的，添加的，删除的....统统恢复）
