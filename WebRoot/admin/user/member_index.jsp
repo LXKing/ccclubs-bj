@@ -711,7 +711,7 @@ ${after$form}
 						<a href="javascript:void(0);" onclick="UpdateSel('visited')">回访标记</a>
 					</s:if>
 					<s:if test="#request.defines==null && #request.CTRL.l.csmStatus || #request.defines['csmStatus']!=null">
-						<a href="javascript:void(0);" onclick="UpdateSel('status')">可用状态</a>
+						<a href="javascript:void(0);">可用状态</a>  <!-- onclick="UpdateSel('status')" -->
 					</s:if>
 					<s:if test="#request.defines==null && #request.CTRL.l.vstatus || #request.defines['vstatus']!=null">
 						<a href="javascript:void(0);">认证总状态</a>

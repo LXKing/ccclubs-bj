@@ -1152,7 +1152,10 @@ public class DefaultAction extends BaseAction {
                     CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
             List<Map<String, Object>> groupNameList = new ArrayList<>();
             for (CsUnitGroup csUnitGroup : groupList) {
-                groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
+                if (csUnitGroup.getCsugStatus()==1) {
+                    groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
+                }
+                
             }
             return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))),
                     CHARSET);
