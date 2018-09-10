@@ -1071,7 +1071,7 @@ $(function(){
 		 		<textarea class="" style="display:none;" id="cscEnd">${csCoin.cscEnd}</textarea>
 		 		<span>
 		 	
-			 ${csCoin.cscEnd$}
+			 ${csCoin.cscEndText}
 	 	  
 	 	 		&nbsp;	
 	 	 		</span>

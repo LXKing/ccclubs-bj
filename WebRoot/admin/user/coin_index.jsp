@@ -679,7 +679,7 @@ ${after$form}
 					${lz:set("注释","****cscEnd字段的字串格式化输出****")}
 					<td ref="cscEnd" class="td ">
 						 
-						 	${lz:or(item$cscEnd[i.count-1],lz:left(item.cscEnd$,100))}
+						 	${lz:or(item$cscEnd[i.count-1],lz:left(item.cscEndText,100))}
 					</td>
 				</s:else>
 			</s:if>
