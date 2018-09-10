@@ -1188,14 +1188,15 @@ public class DefaultAction extends BaseAction {
              * }
              */
             List<CsUnitGroup> groupList =
-                    CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
+                    CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId).add(CsUnitGroup.F.csugStatus, 1), -1);
             List<Map<String, Object>> groupNameList = new ArrayList<>();
-            for (CsUnitGroup csUnitGroup : groupList) {
-                if (csUnitGroup.getCsugStatus()==1) {
+            if(null!=groupList) {
+                for (CsUnitGroup csUnitGroup : groupList) {
                     groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
-                }
-                
+                     
+                 }
             }
+            
             return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))),
                     CHARSET);
         } catch (Exception e) {
