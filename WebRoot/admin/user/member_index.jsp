@@ -2910,9 +2910,9 @@ ${after$form}
 					${lz:set("注释","****csmStatus字段的字串格式化输出****")}
 					<td ref="csmStatus" class="td ">
 						 <s:if test="#request.alias==null">
-							 <s:if test="#request.CTRL.canEdit==true">
+							<%--  <s:if test="#request.CTRL.canEdit==true">
 							 	<a class="modify" href="javascript:Update('${item.csmId}','status')"></a>
-							 </s:if>
+							 </s:if> --%>
 					     </s:if>
 						 
 						 	${lz:or(item$csmStatus[i.count-1],lz:left(item.csmStatus$,100))}
@@ -4571,6 +4571,8 @@ ${after$form}
 	$(function(){
 		//修改会员帐号任意字段
 		$(".table tbody td.td").dblclick(function(){
+			if($(this).attr("ref")=="csmStatus")
+				return;
 			var url = "${basePath}${namespace}member_edit.do";
 			var params = {entrypoint:"${entrypoint}",id:$(this).parents("tr:eq(0)").attr("id"),method:"any",ctrl:{title:"更新会员帐号",visible:false,editable:false,fields:{}}};
 			params.ctrl["fields"][$(this).attr("ref")]={visible:true,editable:true};
