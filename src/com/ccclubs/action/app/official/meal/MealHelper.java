@@ -137,14 +137,13 @@ public class MealHelper {
 	}
 	
 	public static void main(String[] args) {
-		
-//		Date date = new DateUtil().StringtoDate("2016-04-11", "yyyy-MM-dd");
-//		List<CsOrder> orderList = calcMealOrders("{time:\"540#480#960#480#960#480#960#480#960#480\", rule:\"1\"}", date);
-//		for(CsOrder o : orderList){
-//			String start = new DateUtil().dateToString(o.getCsoStartTime(), "yyyy-MM-dd HH:mm:ss");
-//			String finish = new DateUtil().dateToString(o.getCsoFinishTime(), "yyyy-MM-dd HH:mm:ss");
-//			System.out.println(start+"\t"+finish);
-//		}
+	    Date date = new DateUtil().StringtoDate("2016-04-11", "yyyy-MM-dd");
+		List<CsOrder> orderList = calcMealOrders("{time:\"540#480#960#480#960#480#960#480#960#480\", rule:\"1\",sep:\"1\"}", date);
+		for(CsOrder o : orderList){
+			String start = new DateUtil().dateToString(o.getCsoStartTime(), "yyyy-MM-dd HH:mm:ss");
+			String finish = new DateUtil().dateToString(o.getCsoFinishTime(), "yyyy-MM-dd HH:mm:ss");
+			System.out.println(start+"\t"+finish);
+		}
 		
 //		Calendar current = Calendar.getInstance();
 //		current.set(Calendar.DAY_OF_WEEK, 5+1);
