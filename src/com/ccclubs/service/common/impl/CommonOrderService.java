@@ -1310,7 +1310,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         //订单明细集合初始化
         List<CsOrderDetail> results = new ArrayList<>(); 
         //获取计费规则
-        Map<String, TimeSlot> slotMap = getRules(csFeeTypeSet.getCsftsDefault(), outletsId, modelId, userType, productId);
+        Map<String, TimeSlot> slotMap = getRules(csFeeTypeSet.getCsftsOutlets(), outletsId, modelId, userType, productId);
         
         int days = TimeUtil.getDaysBetween(start, end, null);
         if(days>0) {
