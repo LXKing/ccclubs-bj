@@ -1601,11 +1601,15 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 end = TimeUtil.addHour(start, 24);
             }
             detil = buildOrderDetail(daySlot, start, end, 1);
-            detil.setCsodRemark("按天计费：按天封顶计费最优惠");
+            //消费计价明细
+            String expenseDetail = TimeUtil.format(start, null) + "~" + TimeUtil.format(end, null)
+            + "；按天计费：按天封顶计费最优惠。24小时封顶计费：" + dayFee + "/小时。";
+            detil.setCsodRemark(expenseDetail);
             // 清楚其他计费记录
             details.clear();
             // 保留当前计费记录
             details.add(detil);
+            System.out.println(expenseDetail);
         }
 
         return details;
@@ -1635,31 +1639,54 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         double hourFee = hourSlot.getPrice();// 小时封顶收费
         double tempMuniteFee = minutes * minuteFee;// 分钟计费总价
         double fee = hourFee / 60;// 小时计费单价
-
-        if (fee > minuteFee) {
+        String expenseDetail = "";//消费计价明细
+        
+        //普通时长计费
+        if (fee >= minuteFee) {
+            // 分钟计费优惠于小时计费
             detil = buildOrderDetail(minuteSlot, timeBlock.getStartTime(), timeBlock.getEndTime(),
                     minutes);
-            detil.setCsodRemark("普通时长计费：分钟计费优惠于小时计费");
+            expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
+                    + TimeUtil.format(timeBlock.getEndTime(), null) + "；普通时长计费：分钟计费优惠于小时计费。小时计费："
+                    + hourFee + "/小时，" + "分钟计费:" + minuteFee + "/分钟，总费用：" + tempMuniteFee + "，总时长："
+                    + minutes + "分钟。";
+            detil.setCsodRemark(expenseDetail);
             details.add(detil);
-            System.out.println("普通时长计费：分钟计费优惠于小时计费。小时计费：" + hourFee + "/小时，" + "分钟计费:" + minuteFee
-                    + "/分钟，总费用：" + tempMuniteFee + "，总时长："+minutes+"分钟。");
+            System.out.println(expenseDetail);
         } else {
-            // 小时计费单价优惠于分钟计费时：总费用=hours*hourFee+(minutes*minuteFee||hourFee)
+            // 小时计费单价优惠于分钟计费：总费用=hours*hourFee+(minutes*minuteFee||hourFee)
             Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
             detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, 1);
-            detil.setCsodRemark("普通时长计费：小时计费优惠于分钟计费");
+            expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
+                    + TimeUtil.format(temp, null) + "；普通时长计费：小时计费优惠于分钟计费。小时计费：" + hourFee + "/小时，"
+                    + "分钟计费:" + minuteFee + "/分钟，总小时数：" + hours + "小时，总费用：" + hourFee * hours + "。";
+            detil.setCsodRemark(expenseDetail);
+            System.out.println(expenseDetail);
             // 不满一小时的最低收费
-            tempMuniteFee = normalMinutes * minuteFee;
-            if (tempMuniteFee > hourFee) {
-                detil = buildOrderDetail(hourSlot, temp, timeBlock.getEndTime(), 1);
-                detil.setCsodRemark("普通时长计费：小时计费优惠于分钟计费");
-                details.add(detil);
-                System.out.println("普通时长计费：小时计费优惠于分钟计费。小时计费：" + hourFee + "/小时，" + "分钟计费:" + minuteFee
-                        + "/分钟，分钟计费总费用：" + tempMuniteFee + "，总时长："+normalMinutes+"分钟，小时封顶计费："+hourFee+"。");
-            } else {
-                detil = buildOrderDetail(minuteSlot, temp, timeBlock.getEndTime(), normalMinutes);
-                detil.setCsodRemark("普通时长计费：分钟计费不满足小时计费封顶条件");
-                details.add(detil);
+            if(normalMinutes>0) {
+                tempMuniteFee = normalMinutes * minuteFee;
+                if (tempMuniteFee > hourFee) {
+                    //分钟计费满足小时计费封顶
+                    detil = buildOrderDetail(hourSlot, temp, timeBlock.getEndTime(), 1);
+                    expenseDetail = TimeUtil.format(temp, null) + "~"
+                            + TimeUtil.format(timeBlock.getEndTime(), null)
+                            + "；时长不满一小时，普通时长计费：小时计费优惠于分钟计费。小时计费：" + hourFee + "/小时，" + "分钟计费:"
+                            + minuteFee + "/分钟，分钟计费总费用：" + tempMuniteFee + "，总时长：" + normalMinutes
+                            + "分钟，小时封顶计费：" + hourFee + "。";
+                    detil.setCsodRemark(expenseDetail);
+                    details.add(detil);
+                    System.out.println(expenseDetail);
+                } else {
+                    //分钟计费不满足小时计费封顶
+                    detil = buildOrderDetail(minuteSlot, temp, timeBlock.getEndTime(), normalMinutes);
+                    expenseDetail = TimeUtil.format(temp, null) + "~"
+                            + TimeUtil.format(timeBlock.getEndTime(), null)
+                            + "；时长不满一小时，普通时长计费：分钟计费优惠于小时计费。小时计费：" + hourFee + "/小时，" + "分钟计费:"
+                            + minuteFee + "/分钟，总费用：" + tempMuniteFee + "，总时长：" + minutes + "分钟。";
+                    detil.setCsodRemark(expenseDetail);
+                    details.add(detil);
+                    System.out.println(expenseDetail);
+                }
             }
         }
 
@@ -1692,9 +1719,10 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         double minuteFee = minuteSlot.getPrice();// 分钟收费单价
         double hourFee = hourSlot.getPrice();// 小时封顶收费
         double nightFee = nightSlot.getPrice();// 夜租封顶费用
-        double tempMuniteFee;// 费用临时寄存器
-        double tempHourFee;// 费用临时寄存器
-        double totalFee;// 费用临时寄存器
+        double tempMuniteFee;// 分钟计费总费用
+        double tempHourFee;// 小时计费总费用
+        double totalFee;// 总费用
+        String expenseDetail = "";//消费计价明细
 
         // 分钟计费
         tempMuniteFee = minutes * minuteFee;
@@ -1702,30 +1730,77 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         tempHourFee = hourFee * hours;
         // 小时、分钟组合计费
         totalFee = normalMinutes * minuteFee;
+        if(totalFee>hourFee) {
+            totalFee = hourFee;
+        }
         totalFee = totalFee + tempHourFee;
 
         // 分钟计费、小时计费、夜租计费取最优惠组合
         if (totalFee < nightFee || tempMuniteFee < nightFee) {
+            //夜租时段:分钟计费最优惠
             if (totalFee >= tempMuniteFee) {
                 detil = buildOrderDetail(minuteSlot, timeBlock.getStartTime(),
                         timeBlock.getEndTime(), minutes);
-                detil.setCsodRemark("夜租一时长计费：分钟计费最优惠。");
+                expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
+                        + TimeUtil.format(timeBlock.getEndTime(), null) + "；"+ruleName.name()+"时长计费：分钟计费最优惠。小时计费："
+                        + hourFee + "/小时，" + "分钟计费：" + minuteFee + "/分钟，夜租封顶计费：" + nightFee
+                        + ",总费用：" + tempMuniteFee + "，总时长：" + minutes + "分钟。";
+                detil.setCsodRemark(expenseDetail);
                 details.add(detil);
+                System.out.println(expenseDetail);
             } else {
+                //夜租时段:分钟计费、小时计费组合最优惠
+                //小时计费明细
                 Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
                 detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
-                detil.setCsodRemark("夜租一时长计费：分钟计费、小时计费组合最优惠。");
+                expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
+                        + TimeUtil.format(temp, null) + "；"+ruleName.name()+"时长计费：分钟计费、小时计费组合最优惠。小时计费：" + hourFee
+                        + "/小时，" + "分钟计费：" + minuteFee + "/分钟，夜租封顶计费：" + nightFee + ",小时费用："
+                        + hourFee * hours + "，总时长：" + hours + "小时。";
+                detil.setCsodRemark(expenseDetail);
                 details.add(detil);
-
-                detil = buildOrderDetail(minuteSlot, temp, timeBlock.getEndTime(), normalMinutes);
-                detil.setCsodRemark("夜租一时长计费：分钟计费、小时计费组合最优惠。");
-                details.add(detil);
+                System.out.println(expenseDetail);
+                
+                //不足一小时的分钟数计费
+                if(normalMinutes>0) {
+                    totalFee = normalMinutes*minuteFee;
+                    if(totalFee>hourFee) {
+                        //分钟计费满足小时计费封顶
+                        detil = buildOrderDetail(hourSlot, temp, timeBlock.getEndTime(), 1);
+                        expenseDetail = TimeUtil.format(temp, null) + "~"
+                                + TimeUtil.format(timeBlock.getEndTime(), null)
+                                + "；"+ruleName.name()+"时长计费：分钟计费最优惠。小时计费：" + hourFee + "/小时，" + "分钟计费：" + minuteFee
+                                + "/分钟，夜租封顶计费：" + nightFee + ",不足一小时费用(满足封顶)：" + hourFee + "，总时长："
+                                + normalMinutes + "分钟。";
+                        detil.setCsodRemark(expenseDetail);
+                        details.add(detil);
+                        System.out.println(expenseDetail);
+                    }else {
+                        //分钟计费不满足小时计费封顶
+                        detil = buildOrderDetail(minuteSlot, temp, timeBlock.getEndTime(), normalMinutes);
+                        expenseDetail = TimeUtil.format(temp, null) + "~"
+                                + TimeUtil.format(timeBlock.getEndTime(), null)
+                                + "；"+ruleName.name()+"时长计费：分钟计费最优惠。小时计费：" + hourFee + "/小时，" + "分钟计费：" + minuteFee
+                                + "/分钟，夜租封顶计费：" + nightFee + ",不足一小时费用(不满足封顶)：" + totalFee + "，总时长："
+                                + normalMinutes + "分钟。";
+                        detil.setCsodRemark(expenseDetail);
+                        details.add(detil);
+                        System.out.println(expenseDetail);
+                    } 
+                }
             }
         } else {
+            //夜租封顶计费最优惠
             detil = buildOrderDetail(nightSlot, timeBlock.getStartTime(), timeBlock.getEndTime(),
                     1);
-            detil.setCsodRemark("夜租一时长计费：夜租一封顶计费最优惠");
+            expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
+                    + TimeUtil.format(timeBlock.getEndTime(), null)
+                    + "；"+ruleName.name()+"时长计费：夜租一封顶计费最优惠。小时计费：" + hourFee + "/小时，" + "分钟计费：" + minuteFee
+                    + "/分钟，夜租封顶计费：" + nightFee + ",组合计费费用(满足封顶)：" + totalFee + "，总时长："
+                    + minutes + "分钟。";
+            detil.setCsodRemark(expenseDetail);
             details.add(detil);
+            System.out.println(expenseDetail);
         }
 
         return details;

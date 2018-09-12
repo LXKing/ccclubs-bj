@@ -103,6 +103,9 @@ public class TimeUtil {
         if (date == null) {
             return null;
         }
+        if(StringUtils.isEmpty(pattern)) {
+            pattern = DATE.FORMAT_DEFAULT;
+        }
         try {
             return DateFormatUtils.format(date, pattern);
         } catch (Exception e) {
@@ -463,29 +466,22 @@ public class TimeUtil {
      * @param start 较小的时间
      * @param end 较大的时间
      * @return 相差天数
-     * @throws ParseException
      */
     public static Integer getDaysBetween(Date start, Date end, RoundMode mode) {
-        try {
-            if (start == null || end == null)
-                return null;
-            start = DF.yyyy_MM_dd.parse(DF.yyyy_MM_dd.format(start));
-            end = DF.yyyy_MM_dd.parse(DF.yyyy_MM_dd.format(end));
-            Long startTime = start.getTime();
-            Long endTime = end.getTime();
-            Long interval = endTime - startTime;
-            interval = interval / (24 * 3600 * 1000);
-            if (mode != null && mode == RoundMode.Ceiling) {
-                Long rest = interval % (24 * 3600 * 1000);
-                if (rest > 0) {
-                    interval += 1;
-                }
+        if (start == null || end == null)
+            return null;
+        long startTime = start.getTime();
+        long endTime = end.getTime();
+        long interval = endTime - startTime;
+        Long days = interval / (24 * 3600 * 1000);
+        if (mode != null && mode == RoundMode.Ceiling) {
+            long rest = interval % (24 * 3600 * 1000);
+            if (rest > 0) {
+                days += 1;
             }
-
-            return interval.intValue();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
+
+        return days.intValue();
     }
 
     /**
@@ -499,18 +495,18 @@ public class TimeUtil {
         if (start == null || end == null) {
             return null;
         }
-        Long startTime = start.getTime();
-        Long endTime = end.getTime();
-        Long interval = endTime - startTime;
-        interval = interval / (3600 * 1000);
+        long startTime = start.getTime();
+        long endTime = end.getTime();
+        long interval = endTime - startTime;
+        Long hours = interval / (3600 * 1000);
         if (mode != null && mode == RoundMode.Ceiling) {
-            Long rest = interval % (3600 * 1000);
+            long rest = interval % (3600 * 1000);
             if (rest > 0) {
-                interval += 1;
+                hours += 1;
             }
         }
 
-        return interval.intValue();
+        return hours.intValue();
     }
 
     /**
@@ -524,17 +520,17 @@ public class TimeUtil {
         if (start == null || end == null) {
             return null;
         }
-        Long startTime = start.getTime();
-        Long endTime = end.getTime();
-        Long interval = endTime - startTime;
-        interval = interval / 60000;
+        long startTime = start.getTime();
+        long endTime = end.getTime();
+        long interval = endTime - startTime;
+        Long minutes = interval / 60000;
         if (mode != null && mode == RoundMode.Ceiling) {
-            Long rest = interval % 60000;
+            long rest = interval % 60000;
             if (rest > 0) {
-                interval += 1;
+                minutes += 1;
             }
         }
 
-        return interval.intValue();
+        return minutes.intValue();
     }
 }
