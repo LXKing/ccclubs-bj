@@ -157,6 +157,19 @@ public class CommonDisposeService implements ICommonDisposeService {
 
 		CsCar csoCar = csCarDao.getCsCarById(carId);
 
+		//判断车辆是否已被租用
+		Long carCount=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoCar", csoCar.getCscId()));
+		if(carCount!=null&&carCount>0) {
+			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "车辆已被租用，请更换车辆");
+		}
+		
+		//
+		//判断会员是否已存在订单（已预订、使用中）
+		Long count=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoUseMember", useMemberId));
+		if(count!=null&&count>0) {
+			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "每个会员仅允许租用一辆车");
+		}
+		
 		if (payMemberId == null)
 			payMemberId = useMemberId;
 
@@ -226,8 +239,8 @@ public class CommonDisposeService implements ICommonDisposeService {
 
 		csOrder.setCsoLongPrice(longPrice);
 
-		if (commonOrderService.isExistOrderByTime(carId, start, finish, null))
-			throw new MessageException(ErrorCode.ORDER_CONFLICT, "当前订单时间已经被其它订单占用");
+//		if (commonOrderService.isExistOrderByTime(carId, start, finish, null))
+//			throw new MessageException(ErrorCode.ORDER_CONFLICT, "当前订单时间已经被其它订单占用");
 
 		// 获取小时数
 		int allhours = (int) ((finish.getTime() - start.getTime()) / SYSTEM.HOUR);
@@ -266,7 +279,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 				throw new MessageException(ErrorCode.ORDER_CREDIT_UN_REPAY, "会员有未结算的信用帐单，不能以信用模式租车");
 			}
 			if (csCreditCard == null && canMoney < $(csOrder.getCsoMarginNeed() + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() - csOrder.getCsoPayCoin()))
-				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员可用余额不足");
+				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "当前账户[余额+现金券]不足，不允许下单");
 			if (canMoney < 0)
 				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员已欠费，不能下单");
 		}
@@ -364,6 +377,20 @@ public class CommonDisposeService implements ICommonDisposeService {
 		if (payMemberId == null)payMemberId = useMemberId;
 		if (outlets_ret_id == null)outlets_ret_id = outlets_get_id;
 		CsCar csoCar = csCarDao.getCsCarById(carId);
+		//
+		//判断车辆是否已被租用
+		Long carCount=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoCar", csoCar.getCscId()));
+		if(carCount!=null&&carCount>0) {
+			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "车辆已被租用，请更换车辆");
+		}
+		
+		//
+		//判断会员是否已存在订单（已预订、使用中）
+		Long count=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoUseMember", useMemberId));
+		if(count!=null&&count>0) {
+			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "每个会员仅允许租用一辆车");
+		}
+		//
 		CsMember member = CsMember.get(payMemberId);
 		CsItem item = CsItem.get(mealId);
 		if(item == null)
@@ -401,7 +428,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 		Double canMoney = commonMoneyService.getUsableAmount(payMemberId);
 		//canMoney = canMoney-member.getCsmCoupon();   //优惠券不可以用
 		if(canMoney < (item.getCsiPrice() + me.getMargin())){
-			throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员可用余额不足");
+			throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "当前账户[余额+现金券]不足，不允许下单");
 		}
 		
 		Double totalFee = item.getCsiPrice()+defineMargin;

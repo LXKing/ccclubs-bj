@@ -18,6 +18,7 @@ public class Pack {
 	private String rule;
 	private Date start;
 	private Date finish;
+	private Date startTimeIn;
 	private String name;
 	private Integer cycle = 1;
 	
@@ -30,9 +31,10 @@ public class Pack {
 	
 	private boolean ruleSuccess = false;	//规则状态
 	
-	public Pack(Date start, Date finish, String rule, Integer cycle){
-		this.start = start;
-		this.finish = finish;
+	public Pack(Date start, Date finish, Date startTimeIn, String rule, Integer cycle){
+		this.start = start;//规则开始时间
+		this.finish = finish;//规则结束时间
+		this.startTimeIn=startTimeIn;//夜租订单开始时间
 		this.minutes = (this.finish.getTime() - this.start.getTime()) / SYSTEM.MINUTE;
 		
 		this.rule = rule;
@@ -60,6 +62,8 @@ public class Pack {
 		startCalendar.setTime(ordbegin);
 		Calendar finishCalendar = Calendar.getInstance();
 		finishCalendar.setTime(ordbegin);
+		Calendar startTimeInCalender=Calendar.getInstance();
+		startTimeInCalender.setTime(ordbegin);
 		
 		//1、日期+时间限定的
 		Calendar cal = Calendar.getInstance();
@@ -83,6 +87,11 @@ public class Pack {
 				}
 			}
 			
+			
+			if (params.get("startTimeIn")!=null) {
+                startTimeInCalender.setTime(DateUtils.add(startCalendar.getTime(), Calendar.MINUTE, Integer.valueOf(params.get("startTimeIn").toString())));
+            }
+			
 		
 			if(params.get("timeLength")!=null){
 				finishCalendar.setTime(DateUtils.add(startCalendar.getTime(), Calendar.MINUTE, Integer.valueOf(params.get("timeLength").toString())));
@@ -95,7 +104,7 @@ public class Pack {
 			}
 		}
 		
-		Pack pack = new Pack(startCalendar.getTime(), finishCalendar.getTime(), rule, cycle);
+		Pack pack = new Pack(startCalendar.getTime(), finishCalendar.getTime(),startTimeInCalender.getTime(), rule, cycle);
 		return pack;
 	}
 	
@@ -132,6 +141,19 @@ public class Pack {
 			}
 		}
 		return count;
+	}
+	
+	/**
+	 * 下单时间在范围内
+	 * */
+	public boolean timeStartIn() {
+	    boolean flag=false;
+	    if(start!=null&& _start!=null&& startTimeIn!=null){
+	        if (_start.getTime()>=start.getTime()&&_start.getTime()<startTimeIn.getTime()) {
+	            flag = true;
+            }
+	    }
+	    return flag;
 	}
 	
 	/**

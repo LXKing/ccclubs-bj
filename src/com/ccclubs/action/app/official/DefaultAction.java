@@ -19,13 +19,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.ng.servlet.ServletHostConfig;
 import org.springframework.util.CollectionUtils;
+
 import com.ccclubs.action.api.scripts.CarScript;
 import com.ccclubs.action.api.scripts.TimelineScript;
 import com.ccclubs.action.app.official.dto.AppTip;
@@ -50,7 +52,9 @@ import com.ccclubs.action.weixin.WeixinHelper;
 import com.ccclubs.config.ArgumentKey;
 import com.ccclubs.config.CommonMessage;
 import com.ccclubs.config.SYSTEM;
+import com.ccclubs.constants.MemberRecStatus;
 import com.ccclubs.exception.MessageException;
+import com.ccclubs.helper.APICallHelper;
 import com.ccclubs.helper.CacheStoreHelper;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.helper.SystemHelper.Prices;
@@ -68,6 +72,8 @@ import com.ccclubs.model.CsCreditCard;
 import com.ccclubs.model.CsDriver;
 import com.ccclubs.model.CsEvCard;
 import com.ccclubs.model.CsFavoriteAddress;
+import com.ccclubs.model.CsFeeTypeSet;
+import com.ccclubs.model.CsGoods;
 import com.ccclubs.model.CsItem;
 import com.ccclubs.model.CsMember;
 import com.ccclubs.model.CsMemberInfo;
@@ -77,8 +83,11 @@ import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsOrderCluster;
 import com.ccclubs.model.CsOutlets;
 import com.ccclubs.model.CsPowerPile;
+import com.ccclubs.model.CsPrice;
+import com.ccclubs.model.CsProduct;
 import com.ccclubs.model.CsRecord;
 import com.ccclubs.model.CsRefund;
+import com.ccclubs.model.CsRule;
 import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsState;
 import com.ccclubs.model.CsUnderlineMember;
@@ -148,6 +157,7 @@ import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
 import com.lazy3q.web.helper.WebHelper.LzMap;
 import com.lazy3q.web.util.Page;
+
 import net.sf.json.JSONObject;
 
 public class DefaultAction extends BaseAction {
@@ -285,6 +295,39 @@ public class DefaultAction extends BaseAction {
         }
     }
 
+    private String appVersionLogin(HttpServletRequest request) {
+        CsArgument ca = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "APP_VERSION_LOGIN_FLAG"));
+        if(null != ca) {
+            //是否禁止非配置版本登录的开关
+            if("true".equals(ca.getCsaValue$())) {
+                //可登录版本列表
+                CsArgument cv = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "APP_VERSION_ACCESS_LIST"));
+                String av = null == cv || StringUtils.isBlank(cv.getCsaValue$()) ? "" : cv.getCsaValue$();
+                //不可登录版本提示信息
+                CsArgument tip = CsArgument.getCsArgument($.add(CsArgument.F.csaFlag, "APP_VERSION_LOGIN_MSG"));
+                String at = null == tip || StringUtils.isBlank(tip.getCsaValue$()) ? "版本过低，被禁止登录，请升级程序" : tip.getCsaValue$();
+                if(StringUtils.isNotBlank(av)) {
+                    String[] an = av.split(",");
+                    //获取移动端内部版本号
+                    String appInnerVersion = request.getHeader("appInnerVersion");
+                    appInnerVersion = StringUtils.isBlank(appInnerVersion)  ? "" : appInnerVersion;
+                    rentAppLogger.info("appInnerVersion:"+appInnerVersion);
+                    boolean flag = false;
+                    if(StringUtils.isNotBlank(appInnerVersion) && null != an) {
+                        for(String aa : an) {
+                            if(appInnerVersion.equals(aa)) {
+                                flag = true;
+                            }
+                        }
+                    }
+                    if(!flag) {
+                        return returnError("102", at);
+                    }
+                }
+            }
+        }
+        return null;
+    }
     /**
      * 登录
      * 
@@ -293,7 +336,7 @@ public class DefaultAction extends BaseAction {
     public String login() {
         try {
             HttpServletRequest request = ServletActionContext.getRequest();
-
+            
             String strUsername = $.getString("username", "");
             String strPass = $.getString("password", "");
             int type = $.getInteger("type", 0);// 默认密码登录；1-验证码登录
@@ -307,6 +350,11 @@ public class DefaultAction extends BaseAction {
                 } else if (type == 1) {
                     return returnError("103", "您还没有输入验证码");
                 }
+            }
+            
+            String ret = this.appVersionLogin(request);
+            if(null != ret) {
+                return ret;
             }
 
             // String strPassword = RSAUtil.decrypt(strPass);
@@ -1149,11 +1197,15 @@ public class DefaultAction extends BaseAction {
              * }
              */
             List<CsUnitGroup> groupList =
-                    CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId), -1);
+                    CsUnitGroup.getCsUnitGroupList($.add(CsUnitGroup.F.csugInfo, unitId).add(CsUnitGroup.F.csugStatus, 1), -1);
             List<Map<String, Object>> groupNameList = new ArrayList<>();
-            for (CsUnitGroup csUnitGroup : groupList) {
-                groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
+            if(null!=groupList) {
+                for (CsUnitGroup csUnitGroup : groupList) {
+                    groupNameList.add($.add("name", csUnitGroup.getCsugName$()));
+                     
+                 }
             }
+            
             return $.SendHtml($.json(JsonFormat.success().setData($.$("list", groupNameList))),
                     CHARSET);
         } catch (Exception e) {
@@ -1365,6 +1417,28 @@ public class DefaultAction extends BaseAction {
         CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
         if (member == null) {
             return returnError("100", "登录授权无效");
+        }
+        if(MemberRecStatus.REC_PASS != member.getVstatus()) {
+            StringBuilder sb = new StringBuilder();
+            if(MemberRecStatus.REC_PASS != member.getVDrive()) {
+                sb.append("驾驶证认证未通过,");
+            }
+            if(MemberRecStatus.REC_PASS != member.getVReal()) {
+                sb.append("实名认证未通过,");
+            }
+            if(MemberRecStatus.REC_PASS != member.getVWork()) {
+                sb.append("工作认证未通过,");
+            }
+            if(MemberRecStatus.REC_PASS != member.getVOffline()) {
+                sb.append("线下认证未通过,");
+            }
+            sb.append("不能下单");
+            return returnError("100", sb.toString());
+        }
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String ret = this.appVersionLogin(request);
+        if(null != ret) {
+            return ret;  
         }
 
         Long takeOutletsId = $.getLong("takeOutletsId");
@@ -1650,6 +1724,7 @@ public class DefaultAction extends BaseAction {
                 return returnError("103", "请先选择取车网点");
 
             // 套餐ID
+            CsItem item=null;
             Long mealId = $.getLong("mealId", 0L);
             Page<CsCar> page = new Page<CsCar>(1, 5, 0, new ArrayList<CsCar>());
             if (mealId > 0) {
@@ -1661,7 +1736,7 @@ public class DefaultAction extends BaseAction {
                 Map<String, Object> params = $.Map().add("cscStatus", 1);
                 StringBuffer definex = new StringBuffer();
 
-                CsItem item = CsItem.get(mealId);
+                 item = CsItem.get(mealId);
                 if (item == null) {
                     return returnError("104", "套餐无效");
                 }
@@ -1688,7 +1763,7 @@ public class DefaultAction extends BaseAction {
                     definex.append(")");
 
                     definex.append(" and csc_outlets = " + takeOutletsId);
-                    definex.append(")");
+                    definex.append(" AND csc_status IN(1,3) )");
                     // ==============================================
 
                     params.put("definex", definex);
@@ -1731,7 +1806,7 @@ public class DefaultAction extends BaseAction {
                 definex.append(")");
 
                 definex.append(" and csc_outlets = " + takeOutletsId);
-                definex.append(")");
+                definex.append(" AND csc_status IN(1,3) )");
                 // ==============================================
 
                 params.put("definex", definex);
@@ -1767,7 +1842,13 @@ public class DefaultAction extends BaseAction {
                 data.put("outletsName", car.get$cscOutlets().getCsoName());
                 data.put("outletsLatitude", car.get$cscOutlets().getCsoLatitude());
                 data.put("outletsLongitude", car.get$cscOutlets().getCsoLongitude());
-
+                //
+                //套餐价格
+                if(item!=null) {
+                	data.put("mealPrice", item.getCsiPrice());
+                }
+                //
+                
                 String carImg = car.getCscPreview();
                 if (carImg == null || carImg.equals("")) {
                     CsCarModel carmodel = car.get$cscModel();
@@ -1798,6 +1879,11 @@ public class DefaultAction extends BaseAction {
                 carmodel.put("volume", cm.getCscmVolume()); // 排量
                 data.put("carmodel", carmodel);
 
+                //天租金
+                data.put("dayRent", car.getValues().get("dayPrice"));
+                //分钟租金
+                data.put("feePerMin", car.getValues().get("feePerMin"));
+        		//
                 dataList.add(data);
             }
             LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
@@ -1844,7 +1930,28 @@ public class DefaultAction extends BaseAction {
             if (member == null) {
                 return returnError("100", "登录授权无效");
             }
-
+            if(MemberRecStatus.REC_PASS != member.getVstatus()) {
+                StringBuilder sb = new StringBuilder();
+                if(MemberRecStatus.REC_PASS != member.getVDrive()) {
+                    sb.append("驾驶证认证未通过,");
+                }
+                if(MemberRecStatus.REC_PASS != member.getVReal()) {
+                    sb.append("实名认证未通过,");
+                }
+                if(MemberRecStatus.REC_PASS != member.getVWork()) {
+                    sb.append("工作认证未通过,");
+                }
+                if(MemberRecStatus.REC_PASS != member.getVOffline()) {
+                    sb.append("线下认证未通过,");
+                }
+                sb.append("不能下单");
+                return returnError("100", sb.toString());
+            }
+            HttpServletRequest request = ServletActionContext.getRequest();
+            String ret = this.appVersionLogin(request);
+            if(null != ret) {
+                return ret;  
+            }
             String carId = $.getString("carId");
             Date takeTime = $.getDate("takeTime");
             Date retTime = $.getDate("retTime");
@@ -1887,7 +1994,16 @@ public class DefaultAction extends BaseAction {
             CsUnitGroup group = CsUnitGroup.getCsUnitGroupById(person.getCsupGroup());
             if (group == null)
                 return returnError("107", "用户未绑定分组");
-
+           //
+            CsCar car = csCarService.getCsCarById(Long.valueOf(carId));
+            if (car == null) {
+            	return returnError("101", "没有选择车辆");
+            }
+            //
+            if (car.getCscStatus() == (short) 0||car.getCscStatus() == (short) 2) {
+            	return returnError("109", "车辆已下线，请更换车辆");
+            }
+            
             CsUnitPerson auditPerson = CsUnitPerson.get(group.getCsugPerson());
 
             // CsUnitOrder unitOrder =
@@ -3153,6 +3269,12 @@ public class DefaultAction extends BaseAction {
                 return returnError("101", "会员不是企业账户");
             }
 
+            //判断用户当天取消的订单次数
+	        Long cancelPersonOrderCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
+	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        
+            //
+            
             if (type == null)
                 type = 1;
             if (type == 1) {
@@ -3165,7 +3287,7 @@ public class DefaultAction extends BaseAction {
                 LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
                         .add("count", page.getCount()).add("size", page.getSize());
                 return $.SendHtml($.json(
-                        JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap))),
+                        JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap).add("cancelCount", cancelPersonOrderCount))),
                         CHARSET);
             } else {
                 Page<CsOrder> page = csOrderService.getCsOrderPage($.getInteger("page", 0), 5,
@@ -3174,7 +3296,7 @@ public class DefaultAction extends BaseAction {
                 LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
                         .add("count", page.getCount()).add("size", page.getSize());
                 return $.SendHtml($.json(JsonFormat.success().setData(
-                        $.Map("list", assemUserOrders(page.getResult())).add("page", pagemap))),
+                        $.Map("list", assemUserOrders(page.getResult())).add("page", pagemap).add("cancelCount", cancelPersonOrderCount))),
                         CHARSET);
             }
 
@@ -4175,13 +4297,23 @@ public class DefaultAction extends BaseAction {
             if (order == null) {
                 return returnError("101", "订单不存在");
             }
-
+            //订单开始后不能取消订单，只能选择提前还车
+            if(order.getCsoStatus()==1) {
+            	 return returnError("104", "订单开始后不能取消订单	，只能选择提前还车");
+            }
             // 订单状态不正确
-            if (order.getCsoStatus() != 0)
+            if (order.getCsoStatus() != 0) {
                 return returnError("103", "订单不是预定状态，不能完成取消");
-
-            commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
-            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+            }
+            //判断用户当天取消的订单次数
+	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
+	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        if(cancelCount==null||cancelCount<=3) {
+	        	 //可取消订单
+	        	 commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
+	        }
+           
+            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }
@@ -4468,13 +4600,23 @@ public class DefaultAction extends BaseAction {
             if (order == null || !order.getCsoPayMember().equals(member.getCsmId())) {
                 return returnError("102", "订单信息不符，无法完成取消操作");
             }
-
+            //订单开始后不能取消订单，只能选择提前还车
+            if(order.getCsoStatus()==1) {
+            	 return returnError("104", "订单开始后不能取消订单	，只能选择提前还车");
+            }
+            
             // 订单状态不正确
             if (order.getCsoStatus() != 0)
                 return returnError("103", "订单状态不正确，无法完成取消操作");
 
-            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
-                    "鹏龙app" + version);
+            //判断用户当天取消的订单次数
+	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
+	        		  .add("definex", "csoStartTime>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        if(cancelCount==null||cancelCount<=3) {
+	        	 //可取消订单
+	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
+	                    "鹏龙app" + version);
+	        }
             return $.SendHtml($.json(JsonFormat.success()), CHARSET);
         } catch (Exception e) {
             return returnError(e);
@@ -6339,13 +6481,77 @@ public class DefaultAction extends BaseAction {
     public String getContent() {
         try {
             String flag = $.getString("flag", "没你要的数据，哈哈哈");
+            Long carId = $.getLong("carId");
             LzMap data = new LzMap();
+            
             CsContent content = csContentService.getCsContent($
                     .add(CsContent.F.cscFlag, flag).add(CsContent.F.cscStatus, 1));
+           
             if (content != null) {
                 Map<String, Object> map = new HashMap<String, Object>();
-                data.put("title", content.getCscTitle());
-                data.put("content", content.getCscContent());
+                String title= content.getCscTitle();
+                String explainContent=content.getCscContent();
+                //
+                if(carId!=null) {
+                    CsCar car = csCarService.getCsCarById(carId);
+                	//
+                    Long host=car.getCscHost();
+                    Long model= car.getCscModel();
+                    Long outlets=car.getCscOutlets();
+                     //
+                    CsFeeTypeSet csFeeTypeSet = CsFeeTypeSet.where().csftsHost(host).csftsModel(model).get();
+             		
+             		List<CsPrice> list = CsPrice.where().cspUserType(csFeeTypeSet.getCsftsDefault()).cspModel(model).cspOutets($.or(outlets,csFeeTypeSet.getCsftsOutlets())).list(-1);
+             		if(list.isEmpty())
+             			list = CsPrice.where().cspUserType(csFeeTypeSet.getCsftsDefault()).cspModel(model).cspOutets(csFeeTypeSet.getCsftsOutlets()).list(-1);
+             		for(CsPrice csPrice:list){
+             			CsGoods goods = csPrice.get$cspGoods();
+             			if("分钟租金".equals(goods.getCsgName())) {
+             				explainContent=explainContent.replace("{code1}", csPrice.getCspPrice()+"");           ;
+            			}else if("租金一天".equals(goods.getCsgName())) {
+            				explainContent=explainContent.replace("{code2}", csPrice.getCspPrice()+"");    
+            			}else if("夜租一".equals(goods.getCsgName())) {
+            				String paramsJSON=goods.getCsgProfile();
+            				//
+            				Map<String, Object> mapParam = (Map)APICallHelper.fromJson(paramsJSON);
+            				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
+            				Map<String, Object> params = (Map)mapParam.get("params");
+            				//
+            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
+            				String startTimeUp = mapParam.get("startTimeUp") == null ? "" : mapParam.get("startTimeUp").toString();
+            				explainContent=explainContent.replace("{code31}",startTime).replace("{code32}",startTimeUp);
+            				//
+            				explainContent=explainContent.replace("{code3}", csPrice.getCspPrice()+"");    
+            			}else if("夜租二".equals(goods.getCsgName())) {
+            				String paramsJSON=goods.getCsgProfile();
+            				//
+            				Map<String, Object> mapParam = (Map)APICallHelper.fromJson(paramsJSON);
+            				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
+            				Map<String, Object> params = (Map)mapParam.get("params");
+            				//
+            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
+            				String startTimeUp = mapParam.get("startTimeUp") == null ? "" : mapParam.get("startTimeUp").toString();
+            				explainContent=explainContent.replace("{code41}",startTime).replace("{code42}",startTimeUp);
+            				//
+            				explainContent=explainContent.replace("{code4}", csPrice.getCspPrice()+"");   
+            			}else if("夜租三".equals(goods.getCsgName())) {
+            				String paramsJSON=goods.getCsgProfile();
+            				//
+            				Map<String, Object> mapParam = (Map)APICallHelper.fromJson(paramsJSON);
+            				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
+            				Map<String, Object> params = (Map)mapParam.get("params");
+            				//
+            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
+            				
+            				explainContent=explainContent.replace("{code51}",startTime);
+            				//
+            				explainContent=explainContent.replace("{code5}", csPrice.getCspPrice()+"");    
+            			}
+             		}
+                }
+               data.put("title",title);
+               data.put("content", explainContent);
+       
             }
 
             return $.SendHtml($.json(JsonFormat.success().setData(data)), CHARSET);

@@ -222,7 +222,8 @@ function appendHTML(htl){
 function dosub(){
 	var params = {};
 	$("#rule-param-div").find("input[xtype='rulep']").each(function(i){
-		if(!params[$(this).attr("parent")])params[$(this).attr("parent")]={};
+		if(!params[$(this).attr("parent")])
+			params[$(this).attr("parent")]={};
 		params[$(this).attr("parent")][$(this).attr("name")] = $(this).val();
 	});
 	var a = JSON.stringify(params);

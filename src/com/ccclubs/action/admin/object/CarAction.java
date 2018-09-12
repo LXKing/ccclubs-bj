@@ -266,7 +266,7 @@ public class CarAction
                                 }
                                 
 								if(!$.empty(sItem))
-								csCar.setCscNumber(String.valueOf(sItem));
+								csCar.setCscNumber(StringUtils.trimToEmpty(String.valueOf(sItem)));
 							
 								//设置默认值
 								if(csCar.getCscRebate()==null)
@@ -335,7 +335,7 @@ public class CarAction
                                     }
 								}
 							}							
-							
+							csCar.setCscNumber(StringUtils.trimToEmpty(csCar.getCscNumber()));
 							csCarService.updateCsCar$NotNull(csCar);						
 							/************LAZY3Q_CODE_ADD************/
 							/************LAZY3Q_CODE_ADD************/
@@ -485,7 +485,7 @@ public class CarAction
 									
 									//从oldCsCar同步csCar未set过的值
 									csCar.mergeSet(oldCsCar);
-											
+									csCar.setCscNumber(StringUtils.trimToEmpty(csCar.getCscNumber()));
 									csCarService.updateCsCar(csCar);
 									LoggerHelper.writeLog(CsCar.class, "update", 
 											"修改了[车辆]["+oldCsCar.getCscNumber()+"]",

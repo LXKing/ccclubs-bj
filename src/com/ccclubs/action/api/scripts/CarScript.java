@@ -45,11 +45,14 @@ public class CarScript extends BaseScript{
 				Object HourPrice = price.get("租金.工作日白天小时|租金.白天小时|租金.每小时");
 				Object oilMileageFee = price.get("油里程费.每公里");
 				Object elecMileageFee = price.get("电里程费.每公里");
+				Object feePerMin = price.get("租金.每分钟|租金.分钟租金");
+				//
 				car.setValues("dayPrice", dayPrice == null ? 0 : Double.valueOf(dayPrice.toString()));
 				car.setValues("hourPrice", HourPrice == null ? 0 : Double.valueOf(HourPrice.toString()));
 				car.setValues("elecMileageFee", elecMileageFee);
 				car.setValues("oilMileageFee", oilMileageFee);
 				car.setValues("elecMileageFee", elecMileageFee);
+				car.setValues("feePerMin", feePerMin);
 			}
 			
 			CsState cs = CsState.getCsState($.add(CsState.F.cssNumber, car.getCscNumber()));
