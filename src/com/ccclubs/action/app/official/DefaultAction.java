@@ -1994,7 +1994,16 @@ public class DefaultAction extends BaseAction {
             CsUnitGroup group = CsUnitGroup.getCsUnitGroupById(person.getCsupGroup());
             if (group == null)
                 return returnError("107", "用户未绑定分组");
-
+           //
+            CsCar car = csCarService.getCsCarById(Long.valueOf(carId));
+            if (car == null) {
+            	return returnError("101", "没有选择车辆");
+            }
+            //
+            if (car.getCscStatus() == (short) 0||car.getCscStatus() == (short) 2) {
+            	return returnError("109", "车辆已下线，请更换车辆");
+            }
+            
             CsUnitPerson auditPerson = CsUnitPerson.get(group.getCsugPerson());
 
             // CsUnitOrder unitOrder =
