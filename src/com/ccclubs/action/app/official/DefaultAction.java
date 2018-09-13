@@ -4125,19 +4125,19 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "订单未通过审核");
                 }
             }
-//            CsArgument takeCarTime = csArgumentService
-//                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
-//
-//            // 判断订单开始时间：订单前10分钟才可以取车
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(csOrder.getCsoStartTime());
-//            calendar.add(Calendar.MINUTE,
-//                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
-//            long temp = calendar.getTimeInMillis() - new Date().getTime();
-//            if (temp > 0) {
-//                // 订单尚未开始
-//                return returnError("104", "您的订单还未开始，请等待");
-//            }
+            CsArgument takeCarTime = csArgumentService
+                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
+
+            // 判断订单开始时间：订单前10分钟才可以取车
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(csOrder.getCsoStartTime());
+            calendar.add(Calendar.MINUTE,
+                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
+            long temp = calendar.getTimeInMillis() - new Date().getTime();
+            if (temp > 0) {
+                // 订单尚未开始
+                return returnError("104", "您的订单还未开始，请等待");
+            }
 
             // 仅允许北京+电动车可操作
             // if (car.get$cscModel().getCscmType$().equals("电动车") &&
@@ -4161,7 +4161,6 @@ public class DefaultAction extends BaseAction {
                         return returnError("106", "您的订单车辆还未接收，请过几分钟再试！");
                     } else {
                         WeixinHelper.remoteController(csOrder.getCsoCar(), "6", member.getCsmId());
-                   
                     }
                 } else if (csOrder.getCsoStatus().equals(new Short("1"))) {// 使用中状态-远程开门
                     WeixinHelper.remoteController(csOrder.getCsoCar(), "0", member.getCsmId());
@@ -4227,7 +4226,6 @@ public class DefaultAction extends BaseAction {
                     }
 
                     WeixinHelper.remoteController(csOrder.getCsoCar(), "7", member.getCsmId());
-
                 } else {
                     // 非法操作
                     return returnError("106", "非法的请求");
