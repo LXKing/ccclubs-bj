@@ -1463,9 +1463,9 @@ public class DefaultAction extends BaseAction {
         if (takeTime == null) {
             return returnError("102", "请选择预定开始时间");
         }
-        if (takeTime.before(new Date())) {
-          return returnError("104", "预订时间不能早于当前系统时间");
-         }
+        if(takeTime.getTime()-new Date().getTime()>=30*60*1000){
+       	 	return returnError("105", "取车时间需提前30分钟预订车辆");
+        }
         if (retTime == null) {
             return returnError("103", "请选择预定结束时间");
         }
@@ -1958,8 +1958,8 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "异地借还只能提前2小时内预定");
                 }
             }
-            if(takeTime.before(new Date())){
-            	 return returnError("105", "取车时间不能早于当前时间");
+            if(takeTime.getTime()-new Date().getTime()>=30*60*1000){
+            	 return returnError("105", "取车时间需提前30分钟预订车辆");
             }
 
             CsUnitPerson person =
