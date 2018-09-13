@@ -1661,6 +1661,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                     + TimeUtil.format(temp, null) + "；普通时长计费：小时计费优惠于分钟计费。小时计费：" + hourFee + "/小时，"
                     + "分钟计费:" + minuteFee + "/分钟，总小时数：" + hours + "小时，总费用：" + hourFee * hours + "。";
             detil.setCsodRemark(expenseDetail);
+            details.add(detil);
             System.out.println(expenseDetail);
             // 不满一小时的最低收费
             if(normalMinutes>0) {
