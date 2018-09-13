@@ -454,7 +454,7 @@ public class OrderInfoReceiverThread extends Thread {
 										.toUpperCase(), Integer.parseInt(order
 										.getCsoCode()));
 						// $.trace("开始发送 订单数据 ");
-						CStruct.trace(orderDownStream.getBytes());
+//						CStruct.trace(orderDownStream.getBytes());
 						if (orderList.get(orderDownStream.mOrderId) == null) {
 							// 如果订单开始时间与当前时间不超过十天就发
 							if (isOverDate(order)) {
