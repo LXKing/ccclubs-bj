@@ -121,14 +121,25 @@ public class CarAction {
 	 */
 	public String remote(){
 		try{
+		    Map<String,Object> params = ActionHelper.getQueryFormParams(CsCar.class);
 			Long id = $.getLong("id");
 			Short type = $.getShort("type");
-			
+			CsUnitInfo unitInfo = UnitLoginHelper.getLogin().get$csuuUnitInfo();
 			if(type==null || type>1)
 				return $.SendAjax($.add("message", "远程只能操作开门或者关门"), "UTF-8");
+			params.put(CsCar.F.cscId, $.getString("id"));
+			if(unitInfo.getCsuiOutlets()!=null) {
+			    params.put("definex"," csc_outlets in ("+unitInfo.getCsuiOutlets()+")");
+			}else {
+			    return $.SendAjax($.add("message", "远程操作失败，此车辆网点异常"), "UTF-8");
+            }
 			
-			CsCar csCar = csCarService.getCsCarById(id);
 			
+			//CsCar csCar = csCarService.getCsCarById(id);
+			CsCar csCar = csCarService.getCsCar(params);
+			if (csCar==null) {
+			    return $.SendAjax($.add("message", "远程操作失败，无此车辆或无权限"), "UTF-8");
+            }
 			ICsRemoteService csRemoteService = $.getBean("csRemoteService");
 			
 			CsRemote csRemote = new CsRemote();
