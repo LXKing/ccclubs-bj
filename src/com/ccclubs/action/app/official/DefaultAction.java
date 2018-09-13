@@ -1433,7 +1433,7 @@ public class DefaultAction extends BaseAction {
                 sb.append("线下认证未通过,");
             }
             sb.append("不能下单");
-            return returnError("100", sb.toString());
+            return returnError("111", sb.toString());
         }
         HttpServletRequest request = ServletActionContext.getRequest();
         String ret = this.appVersionLogin(request);
@@ -1945,7 +1945,7 @@ public class DefaultAction extends BaseAction {
                     sb.append("线下认证未通过,");
                 }
                 sb.append("不能下单");
-                return returnError("100", sb.toString());
+                return returnError("110", sb.toString());
             }
             HttpServletRequest request = ServletActionContext.getRequest();
             String ret = this.appVersionLogin(request);
