@@ -6494,9 +6494,12 @@ public class DefaultAction extends BaseAction {
             				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
             				Map<String, Object> params = (Map)mapParam.get("params");
             				//
-            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
-            				String startTimeUp = mapParam.get("startTimeUp") == null ? "" : mapParam.get("startTimeUp").toString();
+            				String startTime = params.get("startTime") == null ? "" : params.get("startTime").toString();
+            				String startTimeUp = params.get("startTimeUp") == null ? "" : params.get("startTimeUp").toString();
+            				startTime=startTime.split(":")[0];
+            				startTimeUp=startTimeUp.split(":")[0];
             				explainContent=explainContent.replace("{code31}",startTime).replace("{code32}",startTimeUp);
+            			
             				//
             				explainContent=explainContent.replace("{code3}", csPrice.getCspPrice()+"");    
             			}else if("夜租二".equals(goods.getCsgName())) {
@@ -6506,8 +6509,11 @@ public class DefaultAction extends BaseAction {
             				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
             				Map<String, Object> params = (Map)mapParam.get("params");
             				//
-            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
-            				String startTimeUp = mapParam.get("startTimeUp") == null ? "" : mapParam.get("startTimeUp").toString();
+            				String startTime = params.get("startTime") == null ? "" : params.get("startTime").toString();
+            				String startTimeUp = params.get("startTimeUp") == null ? "" : params.get("startTimeUp").toString();
+            				startTime=startTime.split(":")[0];
+            				startTimeUp=startTimeUp.split(":")[0];
+            				
             				explainContent=explainContent.replace("{code41}",startTime).replace("{code42}",startTimeUp);
             				//
             				explainContent=explainContent.replace("{code4}", csPrice.getCspPrice()+"");   
@@ -6518,8 +6524,9 @@ public class DefaultAction extends BaseAction {
             				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
             				Map<String, Object> params = (Map)mapParam.get("params");
             				//
-            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
+            				String startTime = params.get("startTime") == null ? "" : params.get("startTime").toString();
             				
+            				startTime=startTime.split(":")[0];
             				explainContent=explainContent.replace("{code51}",startTime);
             				//
             				explainContent=explainContent.replace("{code5}", csPrice.getCspPrice()+"");    
