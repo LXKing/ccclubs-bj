@@ -40,7 +40,7 @@ public class CarAction {
 			}else{
 				params.put(CsCar.F.cscHost, unitInfo.getCsuiHost());
 			}
-			params.put("definex", "(csc_status=1 or csc_status=2 "+outletsDefSQL+")");
+			params.put("definex", "(csc_status=1 or csc_status=2 )"+outletsDefSQL+"");
 			Page<CsCar> page = csCarService.getCsCarPage($.getInteger("page",0), 10, params);
 			$.SetRequest("cars", page.getResult());
 			$.SetRequest("page", page);

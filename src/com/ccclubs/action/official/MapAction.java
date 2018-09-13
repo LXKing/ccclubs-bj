@@ -54,7 +54,15 @@ public class MapAction {
 					//.add(CsOutlets.F.csoId,unitInfo.getCsuiOutlets())
 					.add("definex", " cso_id in ("+unitInfo.getCsuiOutlets()+") "),
 					-1);
-			List<CsCar> cars = csCarService.getCsCarList($.add(CsCar.F.cscHost, unitInfo.getCsuiHost()).add("definex", "csc_status>0"), 4096);
+			String outletsDefSQL = " and csc_outlets is NULL";
+            if(unitInfo.getCsuiOutlets()!=null){
+//              params.put(CsCar.F.cscOutlets, unitInfo.getCsuiOutlets());
+                outletsDefSQL = " and csc_outlets in ("+unitInfo.getCsuiOutlets()+")";
+            }
+			List<CsCar> cars = csCarService.getCsCarList(
+			        $.add(CsCar.F.cscHost, unitInfo.getCsuiHost())
+			        
+			        .add("definex", "csc_status>0"+outletsDefSQL), 4096);
 			List<CsGasStation> gases = CsGasStation.getCsGasStationList($.add(CsGasStation.F.csgsStatus, 1).add(CsGasStation.F.csgsHost, unitInfo.getCsuiHost()), 1024);
 			List<CsPowerPile> piles = CsPowerPile.getCsPowerPileList($.add(CsPowerPile.F.csppHost, unitInfo.getCsuiHost()), 1024);
 			
