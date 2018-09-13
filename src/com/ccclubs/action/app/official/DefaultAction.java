@@ -4284,12 +4284,13 @@ public class DefaultAction extends BaseAction {
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
 	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
-	        if(cancelCount==null||cancelCount<=3) {
+	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	        	 commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
-	        }
-           
-            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+	        	 return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+	        }else {
+	        	return returnError("104", "一天只能取消三次，超过后当日后续订单不支持取消");
+            }
         } catch (Exception e) {
             return returnError(e);
         }
@@ -4588,12 +4589,15 @@ public class DefaultAction extends BaseAction {
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
 	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
-	        if(cancelCount==null||cancelCount<=3) {
+	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
 	                    "鹏龙app" + version);
+	            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+	        }else {
+	           return returnError("104", "一天只能取消三次，超过后当日后续订单不支持取消");
 	        }
-            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+           
         } catch (Exception e) {
             return returnError(e);
         }
