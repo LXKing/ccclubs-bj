@@ -1480,23 +1480,23 @@ public class DefaultAction extends BaseAction {
         CsCar car = csCarService.getCsCarById(carId);
         if (car == null)
             return returnError("109", "没有选择车辆");
-        if (car.getCscStatus() == (short) 0)
+        if (car.getCscStatus() == (short) 0||car.getCscStatus() == (short) 2) {
             return returnError("110", "选择的车辆已下线");
-
+        }   
         try {
 
             /** ********驾驶人********* */
-            // 驾驶认证没有审核通过
-            if (member.getCsmVDrive() != null && member.getCsmVDrive() != (short) 1
-                    && member.getCsmEvcard() != null) {
-                if (member.getCsmVDrive() == (short) 2) {
-                    // 驾驶认证已经上传，请耐心等待
-                    return returnError("105", "驾驶认证已经上传待审核，请耐心等待");
-                } else {
-                    // 驾驶认证没有上传
-                    return returnError("103", "驾驶认证未上传");
-                }
-            }
+//            // 驾驶认证没有审核通过
+//            if (member.getCsmVDrive() != null && member.getCsmVDrive() != (short) 1
+//                    && member.getCsmEvcard() != null) {
+//                if (member.getCsmVDrive() == (short) 2) {
+//                    // 驾驶认证已经上传，请耐心等待
+//                    return returnError("105", "驾驶认证已经上传待审核，请耐心等待");
+//                } else {
+//                    // 驾驶认证没有上传
+//                    return returnError("103", "驾驶认证未上传");
+//                }
+//            }
 
             /** ********支付人********* */
             Long payMemberId = null;
@@ -1880,7 +1880,7 @@ public class DefaultAction extends BaseAction {
                 data.put("carmodel", carmodel);
 
                 //天租金
-                data.put("dayRent", car.getValues().get("dayPrice"));
+                data.put("feePerDay", car.getValues().get("dayPrice"));
                 //分钟租金
                 data.put("feePerMin", car.getValues().get("feePerMin"));
         		//
