@@ -4125,19 +4125,19 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "订单未通过审核");
                 }
             }
-            CsArgument takeCarTime = csArgumentService
-                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
-
-            // 判断订单开始时间：订单前10分钟才可以取车
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(csOrder.getCsoStartTime());
-            calendar.add(Calendar.MINUTE,
-                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
-            long temp = calendar.getTimeInMillis() - new Date().getTime();
-            if (temp > 0) {
-                // 订单尚未开始
-                return returnError("104", "您的订单还未开始，请等待");
-            }
+//            CsArgument takeCarTime = csArgumentService
+//                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
+//
+//            // 判断订单开始时间：订单前10分钟才可以取车
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(csOrder.getCsoStartTime());
+//            calendar.add(Calendar.MINUTE,
+//                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
+//            long temp = calendar.getTimeInMillis() - new Date().getTime();
+//            if (temp > 0) {
+//                // 订单尚未开始
+//                return returnError("104", "您的订单还未开始，请等待");
+//            }
 
             // 仅允许北京+电动车可操作
             // if (car.get$cscModel().getCscmType$().equals("电动车") &&
@@ -4161,6 +4161,7 @@ public class DefaultAction extends BaseAction {
                         return returnError("106", "您的订单车辆还未接收，请过几分钟再试！");
                     } else {
                         WeixinHelper.remoteController(csOrder.getCsoCar(), "6", member.getCsmId());
+                   
                     }
                 } else if (csOrder.getCsoStatus().equals(new Short("1"))) {// 使用中状态-远程开门
                     WeixinHelper.remoteController(csOrder.getCsoCar(), "0", member.getCsmId());
@@ -4588,13 +4589,13 @@ public class DefaultAction extends BaseAction {
 
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", "csoStartTime>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
 	        if(cancelCount==null||cancelCount<=3) {
 	        	 //可取消订单
 	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
 	                    "鹏龙app" + version);
 	        }
-            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
         } catch (Exception e) {
             return returnError(e);
         }
