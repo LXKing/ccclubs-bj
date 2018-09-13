@@ -1433,7 +1433,7 @@ public class DefaultAction extends BaseAction {
                 sb.append("线下认证未通过,");
             }
             sb.append("不能下单");
-            return returnError("100", sb.toString());
+            return returnError("111", sb.toString());
         }
         HttpServletRequest request = ServletActionContext.getRequest();
         String ret = this.appVersionLogin(request);
@@ -1463,9 +1463,9 @@ public class DefaultAction extends BaseAction {
         if (takeTime == null) {
             return returnError("102", "请选择预定开始时间");
         }
-        // if (takeTime.before(new Date())) {
-        // return returnError("104", "预订时间不能早于当前系统时间");
-        // }
+        if(takeTime.getTime()-new Date().getTime()<30*60*1000){
+       	 	return returnError("105", "取车时间需提前30分钟预订车辆");
+        }
         if (retTime == null) {
             return returnError("103", "请选择预定结束时间");
         }
@@ -1480,41 +1480,28 @@ public class DefaultAction extends BaseAction {
         CsCar car = csCarService.getCsCarById(carId);
         if (car == null)
             return returnError("109", "没有选择车辆");
-        if (car.getCscStatus() == (short) 0)
+        if (car.getCscStatus() == (short) 0||car.getCscStatus() == (short) 2) {
             return returnError("110", "选择的车辆已下线");
-
+        }   
         try {
 
             /** ********驾驶人********* */
-            // 驾驶认证没有审核通过
-            if (member.getCsmVDrive() != null && member.getCsmVDrive() != (short) 1
-                    && member.getCsmEvcard() != null) {
-                if (member.getCsmVDrive() == (short) 2) {
-                    // 驾驶认证已经上传，请耐心等待
-                    return returnError("105", "驾驶认证已经上传待审核，请耐心等待");
-                } else {
-                    // 驾驶认证没有上传
-                    return returnError("103", "驾驶认证未上传");
-                }
-            }
+//            // 驾驶认证没有审核通过
+//            if (member.getCsmVDrive() != null && member.getCsmVDrive() != (short) 1
+//                    && member.getCsmEvcard() != null) {
+//                if (member.getCsmVDrive() == (short) 2) {
+//                    // 驾驶认证已经上传，请耐心等待
+//                    return returnError("105", "驾驶认证已经上传待审核，请耐心等待");
+//                } else {
+//                    // 驾驶认证没有上传
+//                    return returnError("103", "驾驶认证未上传");
+//                }
+//            }
 
             /** ********支付人********* */
             Long payMemberId = null;
-            // if(paid !=null && paid > 0L){
-            // CsMemberShip memberShip =
-            // csMemberShipService.getCsMemberShipById(paid);
-            // if(memberShip == null || memberShip.getCsmsTargeter() == null
-            // || memberShip.getCsmsTargeter().longValue()!=
-            // member.getCsmId().longValue() || memberShip.getCsmsStatus()
-            // !=(short)1){
-            // //选择的代付会员参数不正确
-            // return returnError("109", "选择的代付会员参数不正确");
-            // }
-            // payMemberId = memberShip.getCsmsPayer();
-            // }else{
             payMemberId = member.getCsmId();
-            // }
-
+            //
             Long orderId = null;
             if (!mealId.trim().equals("0")) {
                 CsOrderCluster orderCluster = commonDisposeService.saveMealOrder(member.getCsmId(),
@@ -1529,15 +1516,7 @@ public class DefaultAction extends BaseAction {
                         "鹏龙app" + version);
                 orderId = csOrder.getCsoId();
             }
-            if (StringUtils.isNotEmpty(remark)) {
-                // new
-                // CsOrder().csoId(csOrder.getCsoId()).csoRemark(remark).update();
-            }
-
-            // 清除当前定单信息
-            // $.setSession(Constant.BASE_ORDER_INFO, null);
-            // SessionMgr.remove($.getString("access_token", ""),
-            // Constant.BASE_ORDER_INFO);
+           
             // 更新默认取车点
             if (member.getCsmOutlets() == null) {
                 CsMember newMember = new CsMember();
@@ -1880,7 +1859,7 @@ public class DefaultAction extends BaseAction {
                 data.put("carmodel", carmodel);
 
                 //天租金
-                data.put("dayRent", car.getValues().get("dayPrice"));
+                data.put("feePerDay", car.getValues().get("dayPrice"));
                 //分钟租金
                 data.put("feePerMin", car.getValues().get("feePerMin"));
         		//
@@ -1945,7 +1924,7 @@ public class DefaultAction extends BaseAction {
                     sb.append("线下认证未通过,");
                 }
                 sb.append("不能下单");
-                return returnError("100", sb.toString());
+                return returnError("110", sb.toString());
             }
             HttpServletRequest request = ServletActionContext.getRequest();
             String ret = this.appVersionLogin(request);
@@ -1973,17 +1952,15 @@ public class DefaultAction extends BaseAction {
             if (!retTime.after(takeTime)) {
                 return returnError("104", "结束时间必须晚于开始时间");
             }
-            // if (takeTime.before(new Date())) {
-            // return returnError("104", "预订时间不能早于当前系统时间");
-            // }
+            
             if (takeOutletsId.longValue() != retOutletsId.longValue()) {
                 if (takeTime.getTime() - System.currentTimeMillis() > 120 * 60 * 1000) {
                     return returnError("108", "异地借还只能提前2小时内预定");
                 }
             }
-            // if(takeTime.before(new Date())){
-            // return returnError("105", "取车时间不能早于当前时间");
-            // }
+            if(takeTime.getTime()-new Date().getTime()<30*60*1000){
+            	 return returnError("105", "取车时间需提前30分钟预订车辆");
+            }
 
             CsUnitPerson person =
                     CsUnitPerson.getCsUnitPerson($.add("csupMember", member.getCsmId()));
