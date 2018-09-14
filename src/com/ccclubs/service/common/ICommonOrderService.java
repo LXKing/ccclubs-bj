@@ -10,6 +10,7 @@ import com.ccclubs.model.CsGoods;
 import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsProduct;
 import com.ccclubs.model.Restriction;
+import com.ccclubs.param.TimeSlot;
 import com.ccclubs.service.common.impl.OrderInfo;
 import com.lazy3q.web.util.Page;
 
@@ -157,6 +158,17 @@ public interface ICommonOrderService {
 	 */
 	public CsProduct getProductByFlag(String flag);
 
-	
+	/**
+     * 根据车型、网点、用户类型、业务获取收费规则列表。默认收费规则增量追加至当前已有配置规则。收费规则以时间槽形式表示
+     * 
+     * @param defaultOutletsId 默认网点
+     * @param outletsId 当前网点
+     * @param modelId 车型
+     * @param userType 用户类型
+     * @param productId 业务id（产品即业务）
+     * @return
+     */
+    public Map<String, TimeSlot> getRules(Long defaultOutletsId, Long outletsId, Long modelId,
+            Long userType, Long productId);
 
 }

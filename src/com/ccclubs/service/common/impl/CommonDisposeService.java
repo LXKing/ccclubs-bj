@@ -47,6 +47,7 @@ import com.ccclubs.model.CsUseRecord;
 import com.ccclubs.model.SrvHost;
 import com.ccclubs.model.SrvLock;
 import com.ccclubs.model.TbAbAffirm;
+import com.ccclubs.param.FeeTypeUitl;
 import com.ccclubs.param.TimeSlot;
 import com.ccclubs.service.admin.ICsArgumentService;
 import com.ccclubs.service.admin.ICsCreditBillService;
@@ -60,7 +61,7 @@ import com.ccclubs.service.common.script.Package2016GiftLimit;
 import com.ccclubs.util.DateUtil;
 import com.lazy3q.web.helper.$;
 
-public class CommonDisposeService extends CommonOrderService implements ICommonDisposeService {
+public class CommonDisposeService implements ICommonDisposeService {
 
 	ICsOrderDao csOrderDao;
 	ICsFreeHourDao csFreeHourDao;
@@ -436,12 +437,13 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
         if(srvHost ==  null) {
             throw new MessageException("运营城市不存在", -520);
         }
+        ICommonOrderService commonOrderService = $.GetSpringBean("commonOrderService");
         
         CsFeeTypeSet csFeeTypeSet = CsFeeTypeSet.Get($.add(CsFeeTypeSet.F.csftsHost, srvHost.getShId()).add(CsFeeTypeSet.F.csftsModel, carModel));
-        Long userType = getUserType(null, csFeeTypeSet, null);
-        CsProduct rent = this.getProductByFlag(SYSTEM.RENT);
+        Long userType = FeeTypeUitl.getUserType(null, csFeeTypeSet, null);
+        CsProduct rent = commonOrderService.getProductByFlag(SYSTEM.RENT);
         
-        Map<String, TimeSlot> slotMap = getRules(csFeeTypeSet.getCsftsOutlets(), outlets_get_id, carModel, userType, rent.getCspId());
+        Map<String, TimeSlot> slotMap = commonOrderService.getRules(csFeeTypeSet.getCsftsOutlets(), outlets_get_id, carModel, userType, rent.getCspId());
         
         TimeSlot timeSlot = slotMap.get(ruleName);
         if(timeSlot ==  null) {
