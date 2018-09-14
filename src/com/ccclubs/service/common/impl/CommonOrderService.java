@@ -1813,8 +1813,6 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         return details;
     }
 
-
-
     /**
      * 根据车型、网点、用户类型、业务获取收费规则列表。默认收费规则增量追加至当前已有配置规则。收费规则以时间槽形式表示
      * 
@@ -1825,7 +1823,8 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
      * @param productId 业务id（产品即业务）
      * @return
      */
-    protected Map<String, TimeSlot> getRules(Long defaultOutletsId, Long outletsId, Long modelId,
+    @Override
+    public Map<String, TimeSlot> getRules(Long defaultOutletsId, Long outletsId, Long modelId,
             Long userType, Long productId) {
         // 获取当前配置计费规则（价格表、规则表、商品表关联查询）
         String sql =
