@@ -102,7 +102,8 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
 	private @caption("报警") @column("cso_alarm")    @note(" 0:默认 1:超距 2:超时 3:断线  ") Short csoAlarm;// 0:默认 1:超距 2:超时 3:断线     
 	private @caption("数据状态") @column("cso_state")    @note(" 0:未发送 1:已发送 2:已收到 3:不发送 4:待审批  ") Short csoState;// 非空 0:未发送 1:已发送 2:已收到 3:不发送     
 	private @caption("状态") @column("cso_status")    @note(" 0:已预定 1:使用中 2:已还车 3:已取消 4:已完成 5:待处理 6:已退款 7:已作废  ") Short csoStatus;// 非空 0:已预定 1:使用中 2:已还车 3:已取消 4:已完成 5:待处理 6:已退款 7:已作废     
-	
+	private @caption("取消来源 ") @column("cso_cancel_from")      @note("1:后台取消 3:app取消") Short csoCancelFrom;
+
 	//默认构造函数
 	public CsOrder(){
 	
@@ -636,7 +637,12 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
 		return this;
 	}
 	
-	
+	/** 取消来源 1：后台 3:app [可空]       **/
+	public CsOrder csoCancelFrom(Short csoCancelFrom){
+		this.csoCancelFrom = csoCancelFrom;
+		this.setSeted(F.csoCancelFrom);
+		return this;
+	}
 	//克隆对象
 	public CsOrder clone(){
 		CsOrder clone = new CsOrder();
@@ -665,6 +671,7 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
 		clone.csoMask=this.csoMask;
 		clone.csoState=this.csoState;
 		clone.csoStatus=this.csoStatus;
+		clone.csoCancelFrom=this.csoCancelFrom;
 		return clone;
 	}
 	
@@ -2630,6 +2637,36 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
 		this.csoStatus = csoStatus;
 		this.setSeted(F.csoStatus);
 	}
+	
+	/*******************************取消来源 1：后台 3:app**********************************/	
+	/**
+	* 取消来源 1：后台 3:app [可空]      
+	**/
+	public Short getCsoCancelFrom(){
+		return this.csoCancelFrom;
+	}
+	/**
+	* 获取取消来源 1：后台 3:app格式化(toString)
+	**/
+	public String getCsoCancelFrom$(){
+		String strValue="";
+		 strValue=$.str(this.getCsoCancelFrom());
+	 	 return strValue;
+	}
+	/**
+	* 取消来源 1：后台 3:app [可空]     
+	**/
+	public void setCsoCancelFrom(Short csoCancelFrom){
+		this.csoCancelFrom = csoCancelFrom;
+		this.setSeted(F.csoCancelFrom);
+	}
+	
+	
+	
+	
+	
+	
+	
 	/************LAZY3Q_DEFINE_CODE************/
 	/************LAZY3Q_DEFINE_CODE************/
 
@@ -3224,6 +3261,20 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
  		public M csoStatusNull(){if(this.get("csoStatusNot")==null)this.put("csoStatusNot", "");this.put("csoStatus", null);return this;};
  		/** not .... */
  		public M csoStatusNot(){this.put("csoStatusNot", "not");return this;};
+ 		
+ 		
+ 		/** 取消来源 1：后台 3:app [可空]       **/
+		public M csoCancelFrom(Object csoCancelFrom){this.put("csoCancelFrom", csoCancelFrom);return this;};
+		/** and cso_cancel_from is null */
+		public M csoCancelFromNull(){if(this.get("csoCancelFromNot")==null)this.put("csoCancelFromNot", "");this.put("csoCancelFrom", null);return this;};
+		/** not .... */
+		public M csoCancelFromNot(){this.put("csoCancelFromNot", "not");return this;};
+		/** and cso_cancel_from >= ? */
+		public M csoCancelFromMin(Object min){this.put("csoCancelFromMin", min);return this;};
+		/** and cso_cancel_from <= ? */
+		public M csoCancelFromMax(Object max){this.put("csoCancelFromMax", max);return this;};
+ 		
+ 		
 	 	public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
 	 	/** 获取所有系统订单 **/
@@ -3497,6 +3548,9 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
 		public final static @type(Short.class)  String csoState="csoState";
 		/** 状态 [非空]   0:已预定 1:使用中 2:已还车 3:已取消 4:已完成 5:待处理 6:已退款 7:已作废     **/
 		public final static @type(Short.class)  String csoStatus="csoStatus";
+		
+		/** 取消来源 1：后台 3:app [可空]       **/
+		public final static @type(Short.class)  String csoCancelFrom="csoCancelFrom";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -3623,6 +3677,9 @@ public @caption("系统订单") @table("cs_order") class CsOrder implements java
 		public final static String csoState="cso_state";
 		/** 状态 [非空]   0:已预定 1:使用中 2:已还车 3:已取消 4:已完成 5:待处理 6:已退款 7:已作废     **/
 		public final static String csoStatus="cso_status";
+		
+		/** 取消来源 1：后台 3:app [可空]       **/
+		public final static String csoCancelFrom="cso_cancel_from";
 	 	public static String get(String name){
 			try {
 				Field field = C.class.getField(name);

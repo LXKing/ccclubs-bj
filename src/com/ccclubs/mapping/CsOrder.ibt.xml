@@ -71,6 +71,7 @@
 		<result property="csoAlarm" column="cso_alarm"/>
 		<result property="csoState" column="cso_state"/>
 		<result property="csoStatus" column="cso_status"/>
+		<result property="csoCancelFrom" column="cso_cancel_from"/>
 	</resultMap>
 		
 	<!-- 获取所有系统订单 -->
@@ -1599,7 +1600,13 @@
 			</isNotNull>
 			<isNull property="csoStatus" prepend=",">
 				cs_order$suffix$.cso_status = null
-			</isNull>				
+			</isNull>	
+			<isNotNull property="csoCancelFrom" prepend=",">
+			    cs_order$suffix$.cso_cancel_from = #csoCancelFrom#
+			</isNotNull>
+			<isNull property="csoCancelFrom" prepend=",">
+			    cs_order$suffix$.cso_cancel_from = null
+			</isNull>			
 		where
 			cso_id=#csoId#
 	</update>
@@ -1787,7 +1794,11 @@
 			</isNotNull>		
 			<isNotNull property="csoStatus" prepend=",">
 				cs_order$suffix$.cso_status = #csoStatus#
-			</isNotNull>		
+			</isNotNull>
+			
+			 <isNotNull property="csoCancelFrom" prepend=",">
+		        cs_order$suffix$.cso_cancel_from = #csoCancelFrom#
+		    </isNotNull>		
 			</dynamic>
 		where
 			cso_id=#csoId#
@@ -1990,7 +2001,12 @@
 			</isNotNull>		
 			<isNotNull property="V_csoStatus" prepend=",">
 				cs_order$suffix$.cso_status = #V_csoStatus#
-			</isNotNull>		
+			</isNotNull>
+			
+			<isNotNull property="V_csoCancelFrom" prepend=",">
+			    cs_order$suffix$.cso_cancel_from = #V_csoCancelFrom#
+			</isNotNull>
+					
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
 			    $V_definex$

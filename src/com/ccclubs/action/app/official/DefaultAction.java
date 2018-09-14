@@ -4125,19 +4125,19 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "订单未通过审核");
                 }
             }
-            CsArgument takeCarTime = csArgumentService
-                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
-
-            // 判断订单开始时间：订单前10分钟才可以取车
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(csOrder.getCsoStartTime());
-            calendar.add(Calendar.MINUTE,
-                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
-            long temp = calendar.getTimeInMillis() - new Date().getTime();
-            if (temp > 0) {
-                // 订单尚未开始
-                return returnError("104", "您的订单还未开始，请等待");
-            }
+//            CsArgument takeCarTime = csArgumentService
+//                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
+//
+//            // 判断订单开始时间：订单前10分钟才可以取车
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(csOrder.getCsoStartTime());
+//            calendar.add(Calendar.MINUTE,
+//                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
+//            long temp = calendar.getTimeInMillis() - new Date().getTime();
+//            if (temp > 0) {
+//                // 订单尚未开始
+//                return returnError("104", "您的订单还未开始，请等待");
+//            }
 
             // 仅允许北京+电动车可操作
             // if (car.get$cscModel().getCscmType$().equals("电动车") &&
@@ -4279,11 +4279,11 @@ public class DefaultAction extends BaseAction {
             }
             // 订单状态不正确
             if (order.getCsoStatus() != 0) {
-                return returnError("103", "订单不是预定状态，不能完成取消");
+                return returnError("103", "只有已预订未使用的订单才能取消");
             }
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")) );
 	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	        	 commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
@@ -4584,11 +4584,11 @@ public class DefaultAction extends BaseAction {
             
             // 订单状态不正确
             if (order.getCsoStatus() != 0)
-                return returnError("103", "订单状态不正确，无法完成取消操作");
+                return returnError("103", "只有已预订未使用的订单才能取消");
 
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")  ));
 	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,

@@ -268,6 +268,12 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 			if(cspModel == null)cspModel = oldOrder.getCsoModel();
 			if(cspOutets == null)cspOutets = oldOrder.getCsoOutlets();
 			if(cspOutetsRet == null)cspOutetsRet = oldOrder.getCsoOutletsRet();
+			//订单实际开始时间(取车时间与预定开始时间比较，取较小时间)
+			if(oldOrder.getCsoTakeTime()!=null) {
+				if(start.after(oldOrder.getCsoTakeTime())) {
+					start=oldOrder.getCsoTakeTime();
+				}
+			}
 		}
 		
 		CsCarModel csCarModel = CsCarModel.get(cspModel);
@@ -299,17 +305,17 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		if(retTime!=null ){
 			realFinish = retTime;
 			rentFinish = retTime;
-			
-			//如果超时还车
-			if(retTime.after(finish)){
-				rentFinish = finish;		//租金计算到预定结束时间
-				
-				//如果还车时间在结束时间之后10分钟，那么结束时间为还车时间 
-				if((retTime.getTime()- finish.getTime()) > (SYSTEM.MINUTE * 10)){
-					realFinish = new Date(retTime.getTime() - SYSTEM.MINUTE * 10);
-					timeoutStart = finish;
-				}
-			}
+//			
+//			//如果超时还车
+//			if(retTime.after(finish)){
+//				rentFinish = finish;		//租金计算到预定结束时间
+//				
+//				//如果还车时间在结束时间之后10分钟，那么结束时间为还车时间 
+//				if((retTime.getTime()- finish.getTime()) > (SYSTEM.MINUTE * 10)){
+//					realFinish = new Date(retTime.getTime() - SYSTEM.MINUTE * 10);
+//					timeoutStart = finish;
+//				}
+//			}
 		}
 		
 		//订单时长
