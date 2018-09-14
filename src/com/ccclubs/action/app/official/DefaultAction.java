@@ -4125,19 +4125,19 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "订单未通过审核");
                 }
             }
-            CsArgument takeCarTime = csArgumentService
-                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
-
-            // 判断订单开始时间：订单前10分钟才可以取车
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(csOrder.getCsoStartTime());
-            calendar.add(Calendar.MINUTE,
-                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
-            long temp = calendar.getTimeInMillis() - new Date().getTime();
-            if (temp > 0) {
-                // 订单尚未开始
-                return returnError("104", "您的订单还未开始，请等待");
-            }
+//            CsArgument takeCarTime = csArgumentService
+//                    .getCsArgument($.add(CsArgument.F.csaFlag, ArgumentKey.TAKE_CAR_TIME));
+//
+//            // 判断订单开始时间：订单前10分钟才可以取车
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(csOrder.getCsoStartTime());
+//            calendar.add(Calendar.MINUTE,
+//                    takeCarTime == null ? -20 : Integer.parseInt(takeCarTime.getCsaValue()));
+//            long temp = calendar.getTimeInMillis() - new Date().getTime();
+//            if (temp > 0) {
+//                // 订单尚未开始
+//                return returnError("104", "您的订单还未开始，请等待");
+//            }
 
             // 仅允许北京+电动车可操作
             // if (car.get$cscModel().getCscmType$().equals("电动车") &&
