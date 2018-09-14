@@ -1825,7 +1825,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
      * @param productId 业务id（产品即业务）
      * @return
      */
-    private Map<String, TimeSlot> getRules(Long defaultOutletsId, Long outletsId, Long modelId,
+    protected Map<String, TimeSlot> getRules(Long defaultOutletsId, Long outletsId, Long modelId,
             Long userType, Long productId) {
         // 获取当前配置计费规则（价格表、规则表、商品表关联查询）
         String sql =

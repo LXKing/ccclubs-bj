@@ -5,14 +5,11 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Map;
 import org.apache.log4j.Logger;
-import org.springframework.util.CollectionUtils;
-
 import com.ccclubs.action.app.official.meal.MealExpress;
 import com.ccclubs.action.app.official.meal.MealHelper;
 import com.ccclubs.action.weixin.WeixinHelper;
-import com.ccclubs.config.ArgumentKey;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.config.SYSTEM.GrowRecordType;
 import com.ccclubs.config.SYSTEM.IntegralType;
@@ -30,11 +27,11 @@ import com.ccclubs.exception.MessageException;
 import com.ccclubs.helper.LoginHelper;
 import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.helper.WeixinHelper.WxTemplateMsgType;
-import com.ccclubs.model.CsArgument;
 import com.ccclubs.model.CsCar;
 import com.ccclubs.model.CsCoin;
 import com.ccclubs.model.CsCreditBill;
 import com.ccclubs.model.CsCreditCard;
+import com.ccclubs.model.CsFeeTypeSet;
 import com.ccclubs.model.CsFreeHour;
 import com.ccclubs.model.CsGift;
 import com.ccclubs.model.CsItem;
@@ -43,15 +40,17 @@ import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsOrderCluster;
 import com.ccclubs.model.CsOrderDetail;
 import com.ccclubs.model.CsOrderLog;
+import com.ccclubs.model.CsOutlets;
+import com.ccclubs.model.CsProduct;
 import com.ccclubs.model.CsUnitOrder;
 import com.ccclubs.model.CsUseRecord;
+import com.ccclubs.model.SrvHost;
 import com.ccclubs.model.SrvLock;
-import com.ccclubs.model.SrvUserExp;
 import com.ccclubs.model.TbAbAffirm;
+import com.ccclubs.param.TimeSlot;
 import com.ccclubs.service.admin.ICsArgumentService;
 import com.ccclubs.service.admin.ICsCreditBillService;
 import com.ccclubs.service.admin.ICsOrderService;
-import com.ccclubs.service.admin.ISrvUserExpService;
 import com.ccclubs.service.common.From;
 import com.ccclubs.service.common.ICommonDisposeService;
 import com.ccclubs.service.common.ICommonMoneyService;
@@ -61,7 +60,7 @@ import com.ccclubs.service.common.script.Package2016GiftLimit;
 import com.ccclubs.util.DateUtil;
 import com.lazy3q.web.helper.$;
 
-public class CommonDisposeService implements ICommonDisposeService {
+public class CommonDisposeService extends CommonOrderService implements ICommonDisposeService {
 
 	ICsOrderDao csOrderDao;
 	ICsFreeHourDao csFreeHourDao;
@@ -420,18 +419,52 @@ public class CommonDisposeService implements ICommonDisposeService {
 //		if (outlets_get_id.longValue() != outlets_ret_id.longValue()) {
 //			throw new MessageException(ErrorCode.ORDER_A_B_OUTLETS_ERROR, "套餐不支持A借B还");
 //		}
+		/*******2018-09-14套餐价格从计费规则中获取*******/
+        String ruleName = item.getCsiFlag();
+        String mealDescript = item.getCsiDepict();
+        
+        CsCar csCar = csCarDao.getCsCarById(carId);//车辆
+        if(csCar ==  null) {
+            throw new MessageException("辆车不存在", -520);
+        }
+        Long carModel = csCar.getCscModel();//车型
+        CsOutlets csOutlets = CsOutlets.get(outlets_get_id);//取车网点
+        if(csOutlets ==  null) {
+            throw new MessageException("网点不存在", -520);
+        }
+        SrvHost srvHost = SrvHost.get(csOutlets.getCsoHost());//城市
+        if(srvHost ==  null) {
+            throw new MessageException("运营城市不存在", -520);
+        }
+        
+        CsFeeTypeSet csFeeTypeSet = CsFeeTypeSet.Get($.add(CsFeeTypeSet.F.csftsHost, srvHost.getShId()).add(CsFeeTypeSet.F.csftsModel, carModel));
+        Long userType = getUserType(null, csFeeTypeSet, null);
+        CsProduct rent = this.getProductByFlag(SYSTEM.RENT);
+        
+        Map<String, TimeSlot> slotMap = getRules(csFeeTypeSet.getCsftsOutlets(), outlets_get_id, carModel, userType, rent.getCspId());
+        
+        TimeSlot timeSlot = slotMap.get(ruleName);
+        if(timeSlot ==  null) {
+            throw new MessageException("未配置套餐计费规则", -520);
+        }
+        
+        double mealPrice = timeSlot.getPrice();
+        String ruleDescript = timeSlot.toString();
+        
+        /*******2018-09-14套餐价格从计费规则中获取*******/
 		
-		MealExpress me  = MealHelper.parseExpress(item.getCsiDepict());
+		
+		MealExpress me  = MealHelper.parseExpress(mealDescript);
 		Double defineMargin = me.getMargin();
 		
 		//检查余额是否足够
 		Double canMoney = commonMoneyService.getUsableAmount(payMemberId);
 		//canMoney = canMoney-member.getCsmCoupon();   //优惠券不可以用
-		if(canMoney < (item.getCsiPrice() + me.getMargin())){
+		if(canMoney < (mealPrice + me.getMargin())){
 			throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "当前账户[余额+现金券]不足，不允许下单");
 		}
 		
-		Double totalFee = item.getCsiPrice()+defineMargin;
+		Double totalFee = mealPrice+defineMargin;
 		Double payCoupon = 0d;
 		Double payMoney = 0d;
 		if(member.getCsmCoupon() >= totalFee){
@@ -446,7 +479,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
-		List<CsOrder> orderList = MealHelper.calcMealOrders(item.getCsiDepict(), cal.getTime());
+		List<CsOrder> orderList = MealHelper.calcMealOrders(mealDescript, cal.getTime());
 		start = orderList.get(0).getCsoStartTime();
 		
 		/**
@@ -458,17 +491,20 @@ public class CommonDisposeService implements ICommonDisposeService {
 		coc.setCsocOutType((short)1);				//套餐类型，CsItem
 		coc.setCsocOutId(item.getCsiId());			//
 		coc.setCsocMobile(member.getCsmMobile());
-		coc.setCsocPrice(item.getCsiPrice());
+		coc.setCsocPrice(mealPrice);
 		coc.setCsocMarginNeed(defineMargin);
 		coc.setCsocTotalDuration($((orderList.get(orderList.size()-1).getCsoFinishTime().getTime()-start.getTime())*1d / SYSTEM.HOUR));
-		coc.setCsocPayNeed(item.getCsiPrice());
-		coc.setCsocPayReal(item.getCsiPrice());
-		coc.setCsocPayRent(item.getCsiPrice());
+		coc.setCsocPayNeed(mealPrice);
+		coc.setCsocPayReal(mealPrice);
+		coc.setCsocPayRent(mealPrice);
 		coc.setCsocPayMoney(payMoney);
 		coc.setCsocPayCoupon(payCoupon);
 		coc.setCsocPayCoin(0d);
 		coc.setCsocSubOrders("");
-		coc.setCsocPayDetails($.json($.add("express", item.getCsiDepict()).add(new DateUtil().dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"), "套餐下单支付套餐费用"+item.getCsiPrice()+",冻结保证金"+defineMargin)));
+        coc.setCsocPayDetails($.json($.add("express", mealDescript)
+                .add(new DateUtil().dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"),
+                        "套餐下单支付套餐费用" + mealPrice + ",冻结保证金" + defineMargin)
+                .add("关联规则", ruleDescript)));
 		coc.setCsocStatus((short)0);
 		coc.setCsocStartTime(start);
 		coc.setCsocFinishTime(orderList.get(orderList.size()-1).getCsoFinishTime());
@@ -478,7 +514,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 		
 		ICsOrderService csOrderService = $.GetSpringBean("csOrderService");
 		/***************************** 扣款 ********************************/
-		String strDescript = "订单簇预定："+coc.getCsocId$()+",套餐ID"+item.getCsiId()+",套餐名称"+item.getCsiTitle()+",套餐金额"+item.getCsiPrice()+",保证金"+defineMargin;
+		String strDescript = "订单簇预定："+coc.getCsocId$()+",套餐ID"+item.getCsiId()+",套餐名称"+item.getCsiTitle()+",套餐金额"+mealPrice+",保证金"+defineMargin;
 		if(payMoney >0){
 			commonMoneyService.updateMoney(coc.getCsocHost(), member.getCsmId(), ICommonMoneyService.MoneyType.Money, -payMoney,
 					SYSTEM.RecordType.订单消费, strDescript, coc.getCsocId(), coc.getCsocId(), CsOrderCluster.class);

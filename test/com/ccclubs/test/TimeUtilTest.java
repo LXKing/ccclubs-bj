@@ -27,6 +27,10 @@ public class TimeUtilTest {
         t1 = TimeUtil.stringToDate(str1);
         t2 = TimeUtil.stringToDate(str2);
         System.out.println(t1.after(t2));
+        
+        Date d = new Date(1536823800000l);
+        str2 = TimeUtil.format(d, TimeUtil.DATE.FORMAT_DEFAULT);
+        System.out.println(str2);
     }
 
 }
