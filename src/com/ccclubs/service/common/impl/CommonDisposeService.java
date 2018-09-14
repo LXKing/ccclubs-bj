@@ -991,29 +991,29 @@ public class CommonDisposeService implements ICommonDisposeService {
 		CsCreditCard creditCard = csOrder.get$csoCreditCard();// 信用卡支付
 		Boolean payByCreditCard = false;// 最终是否以信用卡支付
 
-		// 如果指定以信用卡支付，并且余额不够支付的情况下，以信用方式支付
-		if (creditCard != null && canMoney < payReal) {
-			payCoupon = 0d;
-			payMoney = payReal;
-			Long creditId = commonMoneyService.payCredit(csOrder.getCsoHost(), csMember.getCsmId(), csOrder.getCsoCreditCard(), payReal, "订单取消",
-					csOrder.getCsoId(), null, null);
-			csOrder.setCsoCreditBill(creditId);
-			payByCreditCard = true;
-		} else {
-			if (creditCard != null) {// 如果是信用订单，生成一条0月帐单
-				csOrder.setCsoCreditBill(commonMoneyService.payCredit(csOrder.getCsoHost(), csMember.getCsmId(), csOrder.getCsoCreditCard(), 0, "订单取消",
-						csOrder.getCsoId(), null, null));
-			}
-			if (payCoupon > 0) {// 现金券支付
-				commonMoneyService.updateMoney(csOrder.getCsoHost(), csMember.getCsmId(), ICommonMoneyService.MoneyType.Coupon, -payCoupon,
-						SYSTEM.RecordType.订单取消, sDescript, csOrder.getCsoId(), csOrder.getCsoId(), CsOrder.class);
-			}
-			if (payMoney > 0) {
-				commonMoneyService.updateMoney(csOrder.getCsoHost(), csMember.getCsmId(), ICommonMoneyService.MoneyType.Money, -payMoney,
-						SYSTEM.RecordType.订单取消, sDescript, csOrder.getCsoId(), csOrder.getCsoId(), CsOrder.class);
-			}
-			payByCreditCard = false;
-		}
+//		// 如果指定以信用卡支付，并且余额不够支付的情况下，以信用方式支付
+//		if (creditCard != null && canMoney < payReal) {
+//			payCoupon = 0d;
+//			payMoney = payReal;
+//			Long creditId = commonMoneyService.payCredit(csOrder.getCsoHost(), csMember.getCsmId(), csOrder.getCsoCreditCard(), payReal, "订单取消",
+//					csOrder.getCsoId(), null, null);
+//			csOrder.setCsoCreditBill(creditId);
+//			payByCreditCard = true;
+//		} else {
+//			if (creditCard != null) {// 如果是信用订单，生成一条0月帐单
+//				csOrder.setCsoCreditBill(commonMoneyService.payCredit(csOrder.getCsoHost(), csMember.getCsmId(), csOrder.getCsoCreditCard(), 0, "订单取消",
+//						csOrder.getCsoId(), null, null));
+//			}
+//			if (payCoupon > 0) {// 现金券支付
+//				commonMoneyService.updateMoney(csOrder.getCsoHost(), csMember.getCsmId(), ICommonMoneyService.MoneyType.Coupon, -payCoupon,
+//						SYSTEM.RecordType.订单取消, sDescript, csOrder.getCsoId(), csOrder.getCsoId(), CsOrder.class);
+//			}
+//			if (payMoney > 0) {
+//				commonMoneyService.updateMoney(csOrder.getCsoHost(), csMember.getCsmId(), ICommonMoneyService.MoneyType.Money, -payMoney,
+//						SYSTEM.RecordType.订单取消, sDescript, csOrder.getCsoId(), csOrder.getCsoId(), CsOrder.class);
+//			}
+//			payByCreditCard = false;
+//		}
 
 		// if(csOrder.getCsoPayReal()==null || csOrder.getCsoPayReal()==0)
 		if (csOrder.getCsoPayReal() == null )
