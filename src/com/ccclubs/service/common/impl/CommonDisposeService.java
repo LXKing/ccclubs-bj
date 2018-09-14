@@ -727,7 +727,7 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
 		
 		//定单簇单判断
 		if(isOrderCluster(csOrder))
-			throw new MessageException(ErrorCode.ORDER_FLAG_ERROR, "定单簇订单不能续订");
+			throw new MessageException(ErrorCode.ORDER_FLAG_ERROR, "套餐订单不能续订");
 
 		if (csOrder.getCsoStatus().shortValue() > 1 && csOrder.getCsoStatus().shortValue() != 5)
 			throw new MessageException(ErrorCode.ORDER_STATUS_ERROR, "只有订单状态为已预订、正在执行、待处理的订单才能续订");
@@ -875,6 +875,7 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
 				csOrder.setCsoPayRent(0d);
 				csOrder.setCsoEndTime(new Date());
 
+				csOrder.setCsoCancelFrom((short) from.ordinal());//设置订单取消来源
 				csOrder.setCsoStatus((short) 3);		// 设置订单为已取消
 				csOrder.setCsoRemark(remark);			// 备注信息
 				csOrder.setCsoUpdateTime(new Date());	// 取消时间
@@ -1067,7 +1068,8 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
 		csOrder.setCsoPayTimeout(orderinfo.timeout);
 		csOrder.setCsoPayRent(orderinfo.rent);
 		csOrder.setCsoEndTime(new Date());
-
+		
+		csOrder.setCsoCancelFrom((short) from.ordinal());//设置取消来源
 		csOrder.setCsoStatus((short) 3);// 设置订单为已取消
 		csOrder.setCsoRemark(remark);// 备注信息
 		csOrder.setCsoUpdateTime(new Date());// 取消时间
