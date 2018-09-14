@@ -158,14 +158,14 @@ public class CommonDisposeService implements ICommonDisposeService {
 		CsCar csoCar = csCarDao.getCsCarById(carId);
 
 		//判断车辆是否已被租用
-		Long carCount=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoCar", csoCar.getCscId()));
+		Long carCount=csOrderDao.getCsOrderCount($.add("csoCar", csoCar.getCscId()).add("definex", " cso_status in (0,1)"));
 		if(carCount!=null&&carCount>0) {
 			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "车辆已被租用，请更换车辆");
 		}
 		
 		//
 		//判断会员是否已存在订单（已预订、使用中）
-		Long count=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoUseMember", useMemberId));
+		Long count=csOrderDao.getCsOrderCount($.add("csoUseMember", useMemberId).add("definex", " cso_status in (0,1)"));
 		if(count!=null&&count>0) {
 			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "每个会员仅允许租用一辆车");
 		}
@@ -379,14 +379,14 @@ public class CommonDisposeService implements ICommonDisposeService {
 		CsCar csoCar = csCarDao.getCsCarById(carId);
 		//
 		//判断车辆是否已被租用
-		Long carCount=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoCar", csoCar.getCscId()));
+		Long carCount=csOrderDao.getCsOrderCount($.add("csoCar", csoCar.getCscId()).add("definex", " cso_status in (0,1)"));
 		if(carCount!=null&&carCount>0) {
 			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "车辆已被租用，请更换车辆");
 		}
 		
 		//
 		//判断会员是否已存在订单（已预订、使用中）
-		Long count=csOrderDao.getCsOrderCount($.add("csoStatus", "in (0,1)").add("csoUseMember", useMemberId));
+		Long count=csOrderDao.getCsOrderCount($.add("csoUseMember", useMemberId).add("definex", " cso_status in (0,1)"));
 		if(count!=null&&count>0) {
 			throw new MessageException(ErrorCode.ORDER_COUNT_LIMIT, "每个会员仅允许租用一辆车");
 		}

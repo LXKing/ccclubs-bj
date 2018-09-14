@@ -4226,7 +4226,6 @@ public class DefaultAction extends BaseAction {
                     }
 
                     WeixinHelper.remoteController(csOrder.getCsoCar(), "7", member.getCsmId());
-
                 } else {
                     // 非法操作
                     return returnError("106", "非法的请求");
@@ -4285,12 +4284,13 @@ public class DefaultAction extends BaseAction {
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
 	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
-	        if(cancelCount==null||cancelCount<=3) {
+	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	        	 commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
-	        }
-           
-            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+	        	 return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+	        }else {
+	        	return returnError("104", "一天只能取消三次，超过后当日后续订单不支持取消");
+            }
         } catch (Exception e) {
             return returnError(e);
         }
@@ -4588,13 +4588,16 @@ public class DefaultAction extends BaseAction {
 
             //判断用户当天取消的订单次数
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", "csoStartTime>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
-	        if(cancelCount==null||cancelCount<=3) {
+	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
+	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
 	                    "鹏龙app" + version);
+	            return $.SendHtml($.json(JsonFormat.success().setData($.add("cancelOrderCount", cancelCount))), CHARSET);
+	        }else {
+	           return returnError("104", "一天只能取消三次，超过后当日后续订单不支持取消");
 	        }
-            return $.SendHtml($.json(JsonFormat.success()), CHARSET);
+           
         } catch (Exception e) {
             return returnError(e);
         }
@@ -6494,9 +6497,12 @@ public class DefaultAction extends BaseAction {
             				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
             				Map<String, Object> params = (Map)mapParam.get("params");
             				//
-            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
-            				String startTimeUp = mapParam.get("startTimeUp") == null ? "" : mapParam.get("startTimeUp").toString();
+            				String startTime = params.get("startTime") == null ? "" : params.get("startTime").toString();
+            				String startTimeUp = params.get("startTimeUp") == null ? "" : params.get("startTimeUp").toString();
+            				startTime=startTime.split(":")[0];
+            				startTimeUp=startTimeUp.split(":")[0];
             				explainContent=explainContent.replace("{code31}",startTime).replace("{code32}",startTimeUp);
+            			
             				//
             				explainContent=explainContent.replace("{code3}", csPrice.getCspPrice()+"");    
             			}else if("夜租二".equals(goods.getCsgName())) {
@@ -6506,8 +6512,11 @@ public class DefaultAction extends BaseAction {
             				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
             				Map<String, Object> params = (Map)mapParam.get("params");
             				//
-            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
-            				String startTimeUp = mapParam.get("startTimeUp") == null ? "" : mapParam.get("startTimeUp").toString();
+            				String startTime = params.get("startTime") == null ? "" : params.get("startTime").toString();
+            				String startTimeUp = params.get("startTimeUp") == null ? "" : params.get("startTimeUp").toString();
+            				startTime=startTime.split(":")[0];
+            				startTimeUp=startTimeUp.split(":")[0];
+            				
             				explainContent=explainContent.replace("{code41}",startTime).replace("{code42}",startTimeUp);
             				//
             				explainContent=explainContent.replace("{code4}", csPrice.getCspPrice()+"");   
@@ -6518,8 +6527,9 @@ public class DefaultAction extends BaseAction {
             				if(mapParam == null || (Map)mapParam.get("params") == null) continue;
             				Map<String, Object> params = (Map)mapParam.get("params");
             				//
-            				String startTime = mapParam.get("startTime") == null ? "" : mapParam.get("startTime").toString();
+            				String startTime = params.get("startTime") == null ? "" : params.get("startTime").toString();
             				
+            				startTime=startTime.split(":")[0];
             				explainContent=explainContent.replace("{code51}",startTime);
             				//
             				explainContent=explainContent.replace("{code5}", csPrice.getCspPrice()+"");    
