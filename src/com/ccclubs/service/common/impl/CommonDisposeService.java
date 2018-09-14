@@ -5,14 +5,11 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Map;
 import org.apache.log4j.Logger;
-import org.springframework.util.CollectionUtils;
-
 import com.ccclubs.action.app.official.meal.MealExpress;
 import com.ccclubs.action.app.official.meal.MealHelper;
 import com.ccclubs.action.weixin.WeixinHelper;
-import com.ccclubs.config.ArgumentKey;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.config.SYSTEM.GrowRecordType;
 import com.ccclubs.config.SYSTEM.IntegralType;
@@ -30,11 +27,11 @@ import com.ccclubs.exception.MessageException;
 import com.ccclubs.helper.LoginHelper;
 import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.helper.WeixinHelper.WxTemplateMsgType;
-import com.ccclubs.model.CsArgument;
 import com.ccclubs.model.CsCar;
 import com.ccclubs.model.CsCoin;
 import com.ccclubs.model.CsCreditBill;
 import com.ccclubs.model.CsCreditCard;
+import com.ccclubs.model.CsFeeTypeSet;
 import com.ccclubs.model.CsFreeHour;
 import com.ccclubs.model.CsGift;
 import com.ccclubs.model.CsItem;
@@ -43,15 +40,17 @@ import com.ccclubs.model.CsOrder;
 import com.ccclubs.model.CsOrderCluster;
 import com.ccclubs.model.CsOrderDetail;
 import com.ccclubs.model.CsOrderLog;
+import com.ccclubs.model.CsOutlets;
+import com.ccclubs.model.CsProduct;
 import com.ccclubs.model.CsUnitOrder;
 import com.ccclubs.model.CsUseRecord;
+import com.ccclubs.model.SrvHost;
 import com.ccclubs.model.SrvLock;
-import com.ccclubs.model.SrvUserExp;
 import com.ccclubs.model.TbAbAffirm;
+import com.ccclubs.param.TimeSlot;
 import com.ccclubs.service.admin.ICsArgumentService;
 import com.ccclubs.service.admin.ICsCreditBillService;
 import com.ccclubs.service.admin.ICsOrderService;
-import com.ccclubs.service.admin.ISrvUserExpService;
 import com.ccclubs.service.common.From;
 import com.ccclubs.service.common.ICommonDisposeService;
 import com.ccclubs.service.common.ICommonMoneyService;
@@ -61,7 +60,7 @@ import com.ccclubs.service.common.script.Package2016GiftLimit;
 import com.ccclubs.util.DateUtil;
 import com.lazy3q.web.helper.$;
 
-public class CommonDisposeService implements ICommonDisposeService {
+public class CommonDisposeService extends CommonOrderService implements ICommonDisposeService {
 
 	ICsOrderDao csOrderDao;
 	ICsFreeHourDao csFreeHourDao;
@@ -420,6 +419,40 @@ public class CommonDisposeService implements ICommonDisposeService {
 //		if (outlets_get_id.longValue() != outlets_ret_id.longValue()) {
 //			throw new MessageException(ErrorCode.ORDER_A_B_OUTLETS_ERROR, "套餐不支持A借B还");
 //		}
+		/*******2018-09-14套餐价格从计费规则中获取*******/
+        String ruleName = item.getCsiFlag();
+        String mealDescript = item.getCsiDepict();
+        
+        CsCar csCar = csCarDao.getCsCarById(carId);//车辆
+        if(csCar ==  null) {
+            throw new MessageException("辆车不存在", -520);
+        }
+        Long carModel = csCar.getCscModel();//车型
+        CsOutlets csOutlets = CsOutlets.get(outlets_get_id);//取车网点
+        if(csOutlets ==  null) {
+            throw new MessageException("网点不存在", -520);
+        }
+        SrvHost srvHost = SrvHost.get(csOutlets.getCsoHost());//城市
+        if(srvHost ==  null) {
+            throw new MessageException("运营城市不存在", -520);
+        }
+        
+        CsFeeTypeSet csFeeTypeSet = CsFeeTypeSet.Get($.add(CsFeeTypeSet.F.csftsHost, srvHost.getShId()).add(CsFeeTypeSet.F.csftsModel, carModel));
+        Long userType = getUserType(null, csFeeTypeSet, null);
+        CsProduct rent = this.getProductByFlag(SYSTEM.RENT);
+        
+        Map<String, TimeSlot> slotMap = getRules(csFeeTypeSet.getCsftsOutlets(), outlets_get_id, carModel, userType, rent.getCspId());
+        
+        TimeSlot timeSlot = slotMap.get(ruleName);
+        if(timeSlot ==  null) {
+            throw new MessageException("未配置套餐计费规则", -520);
+        }
+        
+        double mealPrice = timeSlot.getPrice();
+        String ruleDescript = timeSlot.toString();
+        
+        /*******2018-09-14套餐价格从计费规则中获取*******/
+		
 		
 		MealExpress me  = MealHelper.parseExpress(item.getCsiDepict());
 		Double defineMargin = me.getMargin();
