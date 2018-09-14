@@ -454,17 +454,17 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
         /*******2018-09-14套餐价格从计费规则中获取*******/
 		
 		
-		MealExpress me  = MealHelper.parseExpress(item.getCsiDepict());
+		MealExpress me  = MealHelper.parseExpress(mealDescript);
 		Double defineMargin = me.getMargin();
 		
 		//检查余额是否足够
 		Double canMoney = commonMoneyService.getUsableAmount(payMemberId);
 		//canMoney = canMoney-member.getCsmCoupon();   //优惠券不可以用
-		if(canMoney < (item.getCsiPrice() + me.getMargin())){
+		if(canMoney < (mealPrice + me.getMargin())){
 			throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "当前账户[余额+现金券]不足，不允许下单");
 		}
 		
-		Double totalFee = item.getCsiPrice()+defineMargin;
+		Double totalFee = mealPrice+defineMargin;
 		Double payCoupon = 0d;
 		Double payMoney = 0d;
 		if(member.getCsmCoupon() >= totalFee){
@@ -479,7 +479,7 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
-		List<CsOrder> orderList = MealHelper.calcMealOrders(item.getCsiDepict(), cal.getTime());
+		List<CsOrder> orderList = MealHelper.calcMealOrders(mealDescript, cal.getTime());
 		start = orderList.get(0).getCsoStartTime();
 		
 		/**
@@ -491,17 +491,20 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
 		coc.setCsocOutType((short)1);				//套餐类型，CsItem
 		coc.setCsocOutId(item.getCsiId());			//
 		coc.setCsocMobile(member.getCsmMobile());
-		coc.setCsocPrice(item.getCsiPrice());
+		coc.setCsocPrice(mealPrice);
 		coc.setCsocMarginNeed(defineMargin);
 		coc.setCsocTotalDuration($((orderList.get(orderList.size()-1).getCsoFinishTime().getTime()-start.getTime())*1d / SYSTEM.HOUR));
-		coc.setCsocPayNeed(item.getCsiPrice());
-		coc.setCsocPayReal(item.getCsiPrice());
-		coc.setCsocPayRent(item.getCsiPrice());
+		coc.setCsocPayNeed(mealPrice);
+		coc.setCsocPayReal(mealPrice);
+		coc.setCsocPayRent(mealPrice);
 		coc.setCsocPayMoney(payMoney);
 		coc.setCsocPayCoupon(payCoupon);
 		coc.setCsocPayCoin(0d);
 		coc.setCsocSubOrders("");
-		coc.setCsocPayDetails($.json($.add("express", item.getCsiDepict()).add(new DateUtil().dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"), "套餐下单支付套餐费用"+item.getCsiPrice()+",冻结保证金"+defineMargin)));
+        coc.setCsocPayDetails($.json($.add("express", mealDescript)
+                .add(new DateUtil().dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"),
+                        "套餐下单支付套餐费用" + mealPrice + ",冻结保证金" + defineMargin)
+                .add("关联规则", ruleDescript)));
 		coc.setCsocStatus((short)0);
 		coc.setCsocStartTime(start);
 		coc.setCsocFinishTime(orderList.get(orderList.size()-1).getCsoFinishTime());
@@ -511,7 +514,7 @@ public class CommonDisposeService extends CommonOrderService implements ICommonD
 		
 		ICsOrderService csOrderService = $.GetSpringBean("csOrderService");
 		/***************************** 扣款 ********************************/
-		String strDescript = "订单簇预定："+coc.getCsocId$()+",套餐ID"+item.getCsiId()+",套餐名称"+item.getCsiTitle()+",套餐金额"+item.getCsiPrice()+",保证金"+defineMargin;
+		String strDescript = "订单簇预定："+coc.getCsocId$()+",套餐ID"+item.getCsiId()+",套餐名称"+item.getCsiTitle()+",套餐金额"+mealPrice+",保证金"+defineMargin;
 		if(payMoney >0){
 			commonMoneyService.updateMoney(coc.getCsocHost(), member.getCsmId(), ICommonMoneyService.MoneyType.Money, -payMoney,
 					SYSTEM.RecordType.订单消费, strDescript, coc.getCsocId(), coc.getCsocId(), CsOrderCluster.class);
