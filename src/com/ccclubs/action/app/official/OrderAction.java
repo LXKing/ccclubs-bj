@@ -73,6 +73,7 @@ import com.ccclubs.service.common.ICommonUnitService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.ccclubs.service.common.impl.OrderInfo;
 import com.ccclubs.service.common.impl.SchedulingService;
+import com.ccclubs.util.DateUtil;
 import com.lazy3q.util.Function;
 import com.lazy3q.web.helper.$;
 import com.lazy3q.web.helper.WebHelper.LzMap;
@@ -723,5 +724,68 @@ public class OrderAction extends BaseAction {
             return returnError(e);
         }
 
+    }
+    
+    /**
+     * 续订公务车订单
+     * 
+     * @return
+     */
+    public String renewUnitOrder() {
+        try {
+            CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
+            if (member == null) {
+                return returnError("100", "登录授权无效");
+            }
+
+            CsUnitPerson person =
+                    CsUnitPerson.getCsUnitPerson($.add("csupMember", member.getCsmId()));
+            if (person == null)
+                return returnError("106", "用户未绑定企业用户");
+
+            String unitOrderId = $.getString("unitOrderId");
+            Date newFinishTime = $.getDate("newFinishTime");
+            if (newFinishTime == null) {
+                try {
+                    newFinishTime = new DateUtil().StringtoDate($.getString("newFinishTime"),
+                            "yyyy MM-dd HH:mm:ss");
+                } catch (Exception e) {
+                }
+            }
+
+            if (unitOrderId == null)
+                // 新的还车时间不能为空
+                return returnError("101", "订单号不能为空");
+
+            // 获取当前企业订单
+            CsUnitOrder csUnitOrder = CsUnitOrder.get(Long.valueOf(unitOrderId));
+            if (csUnitOrder == null)
+                return returnError("101", "该订单不存在");
+
+            if (newFinishTime == null)
+                // 新的还车时间不能为空
+                return returnError("103", "还车时间不能为空");
+
+            if (newFinishTime.before(csUnitOrder.getCsuoFinishTime())) {
+                return returnError("103", "续订订单结束时间必须晚于当前订单结束时间");
+            }
+
+            CsUnitOrder unitOrder = commonUnitService.executeReUnitOrder(person.getCsupInfo(),
+                    Long.valueOf(unitOrderId), newFinishTime);
+            if (unitOrder != null) {
+                return $.SendHtml($.json(
+                        JsonFormat.success().setData($.$("unitOrderId", unitOrder.getCsuoId()))),
+                        CHARSET);
+            } else {
+                return returnError("110", "续订申请失败");
+            }
+
+        } catch (MessageException e) {
+            e.printStackTrace();
+            Logger.getRootLogger().error(e.getMessage(), e);
+            return returnError("104", e.getMessage());
+        } catch (Exception ex) {
+            return returnError(ex);
+        }
     }
 }
