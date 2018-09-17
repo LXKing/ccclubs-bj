@@ -63,7 +63,7 @@ public class OrderInfoReceiverThread extends Thread {
 
 	private final static int CONSTANT_SCAN_INTERVAL = 30;
 	private final static int CONSTANT_DATE_LIMIT = 20; // 订单时间与现在相比，超过10天以上的订单不发送
-	private final static int ORDER_INTERVAL = 20 * 60; // 订单提前发送时间，单位：秒
+	private final static int ORDER_INTERVAL = 30 * 60; // 订单提前发送时间，单位：秒
 	private final static int ORDER_LIMIT = 60; // 单次订单扫描数
 
 	private static String logPath = null;
@@ -424,7 +424,7 @@ public class OrderInfoReceiverThread extends Thread {
 		public void run() {
 			try {
 				Date contrastTime = new Date(new Date().getTime()
-						+ (ORDER_INTERVAL * 1000));// 20分钟后的时间
+						+ (ORDER_INTERVAL * 1000));// 30分钟后的时间
 
 				/** *************************2015-09-04刘代进加向前限制为7天前开始的订单，避免全表搜索********************************* */
 				Date forwardTime = new Date(new Date().getTime()
