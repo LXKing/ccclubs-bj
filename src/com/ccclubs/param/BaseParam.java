@@ -1,6 +1,7 @@
 package com.ccclubs.param;
 
 import java.io.Serializable;
+import com.ccclubs.service.common.From;
 
 /**
  * 基本请求参数
@@ -15,29 +16,36 @@ public class BaseParam implements Serializable {
 
     // 用户token
     public String access_token;
+    //应用名称
+    public String appName;
     // app版本
     public String appVersion;
-
+    //数据来源
+    public From from;
+    
     public String getAccess_token() {
-        if (access_token == null) {
-            return "";
-        }
         return access_token;
     }
-
     public void setAccess_token(String access_token) {
         this.access_token = access_token;
     }
-
+    public String getAppName() {
+        return appName;
+    }
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
     public String getAppVersion() {
-        if (appVersion == null) {
-            return "";
-        }
         return appVersion;
     }
-
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
     }
-
+    public From getFrom() {
+        return from;
+    }
+    public void setFrom(From from) {
+        this.from = from;
+    }
+    
 }

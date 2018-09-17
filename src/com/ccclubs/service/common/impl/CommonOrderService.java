@@ -364,18 +364,17 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         }else if(oldOrder!=null && StringUtils.isNotEmpty(oldOrder.getCsoSrc())) {
             String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\d", "");
             CsOrderCluster coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
+            //套餐订单时长拆解：套餐时段单独计算，提前取车、超时还车时段分别计算
             if(coc!=null) {
-                int minutes = TimeUtil.getMinutesBetween(coc.getCsocStartTime(), coc.getCsocFinishTime(), RoundMode.Ceiling);
-                Date tempStart = oldOrder.getCsoTakeTime();
-                if(tempStart.after(oldOrder.getCsoStartTime())) {
-                    tempStart = oldOrder.getCsoStartTime();
-                }
-                int realMinutes = TimeUtil.getMinutesBetween(tempStart, oldOrder.getCsoRetTime(), RoundMode.Ceiling);
-                if(realMinutes>minutes) {
-                    tempStart = TimeUtil.addMinute(tempStart, minutes);
-                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), tempStart, oldOrder.getCsoRetTime());
-                    // 租金
+                //提前取车时段计费
+                if(oldOrder.getCsoTakeTime().before(oldOrder.getCsoStartTime())) {
+                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
                     details.addAll(rentDetails);
+                }
+                //超时还车时段计费
+                if(oldOrder.getCsoRetTime().after(oldOrder.getCsoFinishTime())) {
+                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                    details.addAll(rentDetails); 
                 }
             }
         }
@@ -1382,12 +1381,12 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         List<TimeBlock> timeBlocks = new ArrayList<>();
         TimeBlock timeBlock = new TimeBlock();// 时间片段
 
-        Date tempStart = new Date();
-        Date tempEnd = new Date();
-        String date = TimeUtil.format(start, TimeUtil.DATE.FORMAT_yyyy_MM_dd);
-        Date nightStart = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());
-        Date nightStartUp = TimeUtil.stringToDate(date +" "+ nightSlot1.getStartUp());
-        Date nightFinish = TimeUtil.addMinute(nightStart, nightSlot1.getDuration());
+        Date tempStart = new Date();//时间段拆分临时开始时间
+        Date tempEnd = new Date();//时间段拆分临时结束时间
+        String date = TimeUtil.format(start, TimeUtil.DATE.FORMAT_yyyy_MM_dd);//截取开始时间的日期
+        Date nightStart = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());//当天夜租一开始时间
+        Date nightStartUp = TimeUtil.stringToDate(date +" "+ nightSlot1.getStartUp());//当天夜租一开始时间上限
+        Date nightFinish = TimeUtil.addMinute(nightStart, nightSlot1.getDuration());//当天夜租一结束时间
         Date lastNightFinish = TimeUtil.addDay(nightFinish, -1);//前天的夜租三截止时间
         // 起始时间在夜租一开始时间之前，夜租三截止时间之后
         if (start.getTime() < nightStart.getTime()
@@ -1468,9 +1467,9 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         /**
          * 计算【费用/夜租二】
          */
-        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot2.getStart());
-        nightStartUp = TimeUtil.stringToDate(date +" "+ nightSlot2.getStartUp());
-        nightFinish = TimeUtil.addMinute(nightStart, nightSlot2.getDuration());
+        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot2.getStart());//当天夜租二开始时间
+        nightStartUp = TimeUtil.stringToDate(date +" "+ nightSlot2.getStartUp());//当天夜租二开始时间上限
+        nightFinish = TimeUtil.addMinute(nightStart, nightSlot2.getDuration());//当天夜租二结束时间
         // 起始时间在夜租二有效时间之内
         if (start.getTime() >= nightStart.getTime()
                 && start.getTime() < nightStartUp.getTime()) {
@@ -1511,11 +1510,14 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         /**
          * 计算【费用/夜租三】
          */
-        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());
-        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());
-        // 起始时间在夜租三有效时间之内
-        if (start.getTime() >= nightStart.getTime()
-                && start.getTime() < nightFinish.getTime()) {
+        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
+        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
+        Date lastNightStart = TimeUtil.addDay(nightStart, -1);//昨天夜租三开始时间
+        lastNightFinish = TimeUtil.addDay(nightFinish, -1);//昨天夜租三结束时间
+        // 起始时间在夜租三有效时间之内，包括昨天或当天的夜租三
+        if ((start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime())
+                || (start.getTime() >= lastNightStart.getTime()
+                        && start.getTime() < lastNightFinish.getTime())) {
             /**** 以24小时为周期，分割时间 ****/
             // 开始时间~夜租一结束时间
             tempStart = start;
@@ -1760,8 +1762,13 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 //小时计费明细
                 Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
                 detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
+                if(normalMinutes>0) {
+                    expenseDetail = "时长计费：分钟计费、小时计费组合最优惠。小时计费：";
+                }else {
+                    expenseDetail = "时长计费：小时计费最优惠。小时计费：";
+                }
                 expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
-                        + TimeUtil.format(temp, null) + "；"+ruleName.name()+"时长计费：分钟计费、小时计费组合最优惠。小时计费：" + hourFee
+                        + TimeUtil.format(temp, null) + "；"+ruleName.name()+ expenseDetail + hourFee
                         + "/小时，" + "分钟计费：" + minuteFee + "/分钟，夜租封顶计费：" + nightFee + ",小时费用："
                         + hourFee * hours + "，总时长：" + hours + "小时。";
                 detil.setCsodRemark(expenseDetail);
