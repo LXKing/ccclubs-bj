@@ -235,6 +235,9 @@ public class CarAction
 			//Token技术建议百度下，就是为了防止重复提交
 			final String requestCsCarToken = $.getString("csCarToken");
 			final String sessionCsCarToken = $.getSession("csCarToken");
+			if (null == csCar.getCscBindPlatform()) {
+			    csCar.setCscBindPlatform((short) 0);
+			}
 			if($.equals(requestCsCarToken,sessionCsCarToken)){
 				$.removeSession("csCarToken");//移除令牌				
 				//多个写数据动作合并事务过程（当这个过程中发生任务错误时，由spring控制处理数据回滚，把所有修改的，添加的，删除的....统统恢复）
@@ -294,7 +297,7 @@ public class CarAction
 								 * 2018-8-7 车机中心对接
                                  *  车辆表增加【终端序列号（必填）、车辆绑定的平台类型、车辆网络通讯类型、】
 								 */
-								if (StringUtils.isEmpty(csCar.getCscTerNo())) {
+								if (1 == csCar.getCscBindPlatform() && StringUtils.isEmpty(csCar.getCscTerNo())) {
 								    throw new RuntimeException("终端序列号必填");
 								}
 								if (null == csCar.getCscBindPlatform()) {
