@@ -22,6 +22,7 @@ import com.aliyun.openservices.ons.api.Action;
 import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
 import com.ccclubs.action.vc.dto.VcApiResult;
 import com.ccclubs.action.vc.service.VcCmdApiService;
+import com.ccclubs.action.vc.util.VcUtil;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.DateHelper;
 import com.ccclubs.helper.SystemHelper;
@@ -850,8 +851,7 @@ public class OrderInfoReceiverThread extends Thread {
 	private static void updateTakeCar(TakeCar takeCar) {
 		try {
 			String takeTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-					.format(new Date(takeCar.mTakeTime * 1000l
-							+ SYSTEM.MACHINE_TIME));
+					.format(VcUtil.getOrderTimeForNowIfZero(takeCar.mTakeTime));
 			String strSql = "UPDATE " + ORDER_TABLE
 					+ " SET cso_status = 1, cso_take_time = '" + takeTime
 					+ "' WHERE cso_id = " + takeCar.mOrderId
@@ -881,8 +881,7 @@ public class OrderInfoReceiverThread extends Thread {
 	private static void updateFurtherCar(FurtherCar furtherCar) {
 		try {
 			String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-					.format(new Date(furtherCar.mFurtherTime * 1000l
-							+ SYSTEM.MACHINE_TIME));
+					.format(VcUtil.getOrderTimeForNowIfZero(furtherCar.mFurtherTime));
 			String memo = "";
 			// 实际还车时间
 			writeLog("收到来自 车牌号：" + furtherCar.mCarNum + "，订单号："
