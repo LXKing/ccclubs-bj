@@ -1794,7 +1794,7 @@ public class DefaultAction extends BaseAction {
                 page = csCarService.getCsCarPage($.getInteger("page", 0), 5, params);
             }
 
-            CarScript.loadCarFeatures(page);
+            CarScript.loadCarFeatures(page,item.getCsiTitle());
 
             // 读取时间线
             Integer days = 7;
@@ -1824,7 +1824,7 @@ public class DefaultAction extends BaseAction {
                 //
                 //套餐价格
                 if(item!=null) {
-                	data.put("mealPrice", item.getCsiPrice());
+                	data.put("mealPrice", car.getValues().get("mealPrice"));
                 }
                 //
                 
@@ -4243,9 +4243,9 @@ public class DefaultAction extends BaseAction {
                     }
 
 
-                    if (csOrder.getCsoStartTime().getTime() - new Date().getTime() > 0) {
-                        return returnError("107", "请在订单开始后还车");
-                    }
+//                    if (csOrder.getCsoStartTime().getTime() - new Date().getTime() > 0) {
+//                        return returnError("107", "请在订单开始后还车");
+//                    }
 
                     WeixinHelper.remoteController(csOrder.getCsoCar(), "7", member.getCsmId());
                 } else {

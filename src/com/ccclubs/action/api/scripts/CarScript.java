@@ -25,7 +25,7 @@ public class CarScript extends BaseScript{
 	/**
 	 * 加载车辆状态数据
 	 */
-	public static void loadCarFeatures(Page<CsCar> page){
+	public static void loadCarFeatures(Page<CsCar> page ,String mealName){
 		List<CsCar> result = page.getResult();
 		if(result == null)return;
 		
@@ -46,6 +46,7 @@ public class CarScript extends BaseScript{
 				Object oilMileageFee = price.get("油里程费.每公里");
 				Object elecMileageFee = price.get("电里程费.每公里");
 				Object feePerMin = price.get("租金.每分钟|租金.分钟租金");
+				Object mealPrice = price.get("租金."+mealName);
 				//
 				car.setValues("dayPrice", dayPrice == null ? 0 : Double.valueOf(dayPrice.toString()));
 				car.setValues("hourPrice", HourPrice == null ? 0 : Double.valueOf(HourPrice.toString()));
@@ -53,6 +54,7 @@ public class CarScript extends BaseScript{
 				car.setValues("oilMileageFee", oilMileageFee);
 				car.setValues("elecMileageFee", elecMileageFee);
 				car.setValues("feePerMin", feePerMin);
+				car.setValues("mealPrice", mealPrice);
 			}
 			
 			CsState cs = CsState.getCsState($.add(CsState.F.cssNumber, car.getCscNumber()));
