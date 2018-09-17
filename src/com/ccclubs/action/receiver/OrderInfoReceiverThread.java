@@ -579,7 +579,7 @@ public class OrderInfoReceiverThread extends Thread {
 	    // 根据终端序列号查找车信息
         Map<String, Object> carQueryMap = new HashMap<>();
         // 1:上线
-        carQueryMap.put("cscStatus", (short)1);
+//        carQueryMap.put("cscStatus", (short)1);
         carQueryMap.put("cscNumber", downStream.mCarNum);
         // 查询 车牌号并且状态为上线的车辆
         CsCar carInfo = csCarService.getCsCar(carQueryMap);
