@@ -1793,8 +1793,11 @@ public class DefaultAction extends BaseAction {
                 params.put("desc", " CAST(o.css_endurance AS SIGNED) ");
                 page = csCarService.getCsCarPage($.getInteger("page", 0), 5, params);
             }
-
-            CarScript.loadCarFeatures(page,item.getCsiTitle());
+           String itemName=null;
+           if(item!=null) {
+        	   itemName=item.getCsiTitle();
+           }
+            CarScript.loadCarFeatures(page,itemName);
 
             // 读取时间线
             Integer days = 7;
