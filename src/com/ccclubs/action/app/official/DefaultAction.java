@@ -1463,7 +1463,7 @@ public class DefaultAction extends BaseAction {
         if (takeTime == null) {
             return returnError("102", "请选择预定开始时间");
         }
-        if(takeTime.getTime()-new Date().getTime()<30*60*1000){
+        if(takeTime.getTime()-new Date().getTime()>30*60*1000){
        	 	return returnError("105", "取车时间需提前30分钟预订车辆");
         }
         if (retTime == null) {
@@ -1738,11 +1738,11 @@ public class DefaultAction extends BaseAction {
                         if (i != orderList.size() - 1)
                             definex.append(" or ");
                     }
-                    definex.append("        ) and cso_status in (0,1,5))");
+                    definex.append("        ) and cso_status in (0,1,2,5))");
                     definex.append(")");
 
                     definex.append(" and csc_outlets = " + takeOutletsId);
-                    definex.append(" AND csc_status IN(1,3) )");
+                    definex.append(") AND csc_status IN(1,3) ");
                     // ==============================================
 
                     params.put("definex", definex);
@@ -1781,11 +1781,11 @@ public class DefaultAction extends BaseAction {
                 if (a2bModel) {
                     definex.append("or (cso_start_time > '" + startTime + "' )");
                 }
-                definex.append("        ) and cso_status in (0,1,5))");
+                definex.append("        ) and cso_status in (0,1,2,5))");
                 definex.append(")");
 
                 definex.append(" and csc_outlets = " + takeOutletsId);
-                definex.append(" AND csc_status IN(1,3) )");
+                definex.append(")  AND csc_status IN(1,3)");
                 // ==============================================
 
                 params.put("definex", definex);
@@ -1794,7 +1794,7 @@ public class DefaultAction extends BaseAction {
                 page = csCarService.getCsCarPage($.getInteger("page", 0), 5, params);
             }
 
-            CarScript.loadCarFeatures(page);
+            CarScript.loadCarFeatures(page,item.getCsiTitle());
 
             // 读取时间线
             Integer days = 7;
@@ -1824,7 +1824,7 @@ public class DefaultAction extends BaseAction {
                 //
                 //套餐价格
                 if(item!=null) {
-                	data.put("mealPrice", item.getCsiPrice());
+                	data.put("mealPrice", car.getValues().get("mealPrice"));
                 }
                 //
                 
@@ -1958,7 +1958,7 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "异地借还只能提前2小时内预定");
                 }
             }
-            if(takeTime.getTime()-new Date().getTime()<30*60*1000){
+            if(takeTime.getTime()-new Date().getTime()>30*60*1000){
             	 return returnError("105", "取车时间需提前30分钟预订车辆");
             }
 
@@ -2852,7 +2852,12 @@ public class DefaultAction extends BaseAction {
             mapdata.put("csoLatitude", data.get$csuoCar().get$cscOutlets().getCsoLatitude()); // 纬度
         }
 
-        mapdata.put("authCode", data.get$csuoOrder().getCsoCode()); // 授权码
+        if(data.get$csuoOrder()==null) {
+        	  mapdata.put("authCode",null); // 授权码
+        }else {
+        	  mapdata.put("authCode", data.get$csuoOrder().getCsoCode()); // 授权码
+        }
+      
         mapdata.put("bltName", "HELLO123"); // 蓝牙名称
         mapdata.put("bltMacAddr", "e2556c37364d"); // 蓝牙地址
         mapdata.put("unitName", data.get$csuoUnitGroup().getCsugName());
@@ -2872,8 +2877,17 @@ public class DefaultAction extends BaseAction {
         mapdata.put("freeHour", data.getCsuoFreeHour());
         mapdata.put("mileage", data.getCsuoMileage());
         mapdata.put("freeKm", data.getCsuoFreeKm());
-        mapdata.put("payNeed", data.get$csuoOrder().getCsoPayNeed());
-        mapdata.put("payReal", data.get$csuoOrder().getCsoPayReal());
+        if( data.get$csuoOrder()==null) {
+        	  mapdata.put("payNeed", null);
+        }else {
+        	  mapdata.put("payNeed", data.get$csuoOrder().getCsoPayNeed());
+        }
+        if(data.get$csuoOrder()==null) {
+        	  mapdata.put("payReal", null);
+        }else {
+        	  mapdata.put("payReal", data.get$csuoOrder().getCsoPayReal());
+        }
+      
         mapdata.put("remark", data.getCsuoRemark());
         mapdata.put("addTime", data.getCsuoAddTime());
         mapdata.put("updateTime", data.getCsuoUpdateTime());
@@ -2885,10 +2899,19 @@ public class DefaultAction extends BaseAction {
         mapdata.put("orderId", data.getCsuoOrder()); // 系统订单id
         mapdata.put("total_fee", data.getCsuoPayNeed());// 预估费用
         // mapdata.put("orderFee", data.get$csuoOrder().getCsoPayRent());// 时租费用
-        mapdata.put("orderFee",
-                data.get$csuoOrder().getCsoPayReal() + data.get$csuoOrder().getCsoPayCoin()
-                        - $.or(data.get$csuoOrder().getCsoPayTimeout(), 0d));
-        mapdata.put("timeoutFee", data.get$csuoOrder().getCsoPayTimeout());// 超时费用
+        double payReal=0;
+        if(data.get$csuoOrder()==null) {
+        	mapdata.put("orderFee",null);
+        	 mapdata.put("timeoutFee", null);// 超时费用
+        }else {
+        	mapdata.put("orderFee",
+                    data.get$csuoOrder().getCsoPayReal() + data.get$csuoOrder().getCsoPayCoin()
+                            - $.or(data.get$csuoOrder().getCsoPayTimeout(), 0d));
+        	 mapdata.put("timeoutFee", data.get$csuoOrder().getCsoPayTimeout());// 超时费用
+        }
+        
+        
+       
         return mapdata;
     }
 
@@ -3247,9 +3270,8 @@ public class DefaultAction extends BaseAction {
             }
 
             //判断用户当天取消的订单次数
-	        Long cancelPersonOrderCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", "cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd") ));
-	        
+            Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
+	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")  ));
             //
             
             if (type == null)
@@ -3264,7 +3286,7 @@ public class DefaultAction extends BaseAction {
                 LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
                         .add("count", page.getCount()).add("size", page.getSize());
                 return $.SendHtml($.json(
-                        JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap).add("cancelCount", cancelPersonOrderCount))),
+                        JsonFormat.success().setData($.Map("list", dataList).add("page", pagemap).add("cancelCount", cancelCount))),
                         CHARSET);
             } else {
                 Page<CsOrder> page = csOrderService.getCsOrderPage($.getInteger("page", 0), 5,
@@ -3273,7 +3295,7 @@ public class DefaultAction extends BaseAction {
                 LzMap pagemap = $.$("index", page.getIndex()).add("total", page.getTotal())
                         .add("count", page.getCount()).add("size", page.getSize());
                 return $.SendHtml($.json(JsonFormat.success().setData(
-                        $.Map("list", assemUserOrders(page.getResult())).add("page", pagemap).add("cancelCount", cancelPersonOrderCount))),
+                        $.Map("list", assemUserOrders(page.getResult())).add("page", pagemap).add("cancelCount", cancelCount))),
                         CHARSET);
             }
 
@@ -4221,9 +4243,9 @@ public class DefaultAction extends BaseAction {
                     }
 
 
-                    if (csOrder.getCsoStartTime().getTime() - new Date().getTime() > 0) {
-                        return returnError("107", "请在订单开始后还车");
-                    }
+//                    if (csOrder.getCsoStartTime().getTime() - new Date().getTime() > 0) {
+//                        return returnError("107", "请在订单开始后还车");
+//                    }
 
                     WeixinHelper.remoteController(csOrder.getCsoCar(), "7", member.getCsmId());
                 } else {
