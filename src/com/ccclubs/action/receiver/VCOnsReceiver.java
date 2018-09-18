@@ -133,7 +133,7 @@ public class VCOnsReceiver implements MessageListener {
                 // 根据终端序列号查找车信息
                 Map<String, Object> carQueryMap = new HashMap<>();
                 // 1:上线
-                carQueryMap.put("cscStatus", (short)1);
+//                carQueryMap.put("cscStatus", (short)1);
                 carQueryMap.put("cscTerNo", terNo);
                 CsCar carInfo = csCarService.getCsCar(carQueryMap);
                 if (null == carInfo) {
