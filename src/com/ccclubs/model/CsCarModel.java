@@ -1087,7 +1087,7 @@ public @caption("车型") @table("cs_car_model") class CsCarModel implements jav
 		/** 状态 [非空]   1:正常 0:无效     **/
 		public final static String cscmStatus="cscm_status";
 		/** 车型标志        **/
-        public final static String cscmFlag="cscmFlag";
+        public final static String cscmFlag="cscm_flag";
         
 	 	public static String get(String name){
 			try {

@@ -1195,8 +1195,6 @@ $(function(){
 		<s:if test="#request.csMember$csmGrade!=null">${csMember$csmGrade}</s:if><s:else>
 			<input type="text" class="input narrow"  maxlength="8" name="csMember.csmGrade" id="csmGrade"  value="${csMember.csmGrade}"/>
 	 	 </s:else>
-	 	 
-	 	 <b>*</b>
 	 	 <em>请输入会员帐号的会员等级</em>
 		</dd>
 		</s:if>

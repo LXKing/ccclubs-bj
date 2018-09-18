@@ -269,7 +269,7 @@ public class RemoteService implements MqttCallback {
          */
 	    Short bindPlatform = remote.get$csrCar().getCscBindPlatform();
 	    
-	    if(0 == bindPlatform) {
+	    if(null == bindPlatform || 0 == bindPlatform) {
 	        // 挂载在自己的业务平台（北京出行平台）
             remote.setCsrCode(getMQTTRemoteCommend(remote));
         } else if (1 == bindPlatform) {

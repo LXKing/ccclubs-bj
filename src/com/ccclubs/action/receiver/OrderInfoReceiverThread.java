@@ -22,6 +22,7 @@ import com.aliyun.openservices.ons.api.Action;
 import com.ccclubs.action.vc.dto.IssueAuthOrderInput;
 import com.ccclubs.action.vc.dto.VcApiResult;
 import com.ccclubs.action.vc.service.VcCmdApiService;
+import com.ccclubs.action.vc.util.VcUtil;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.DateHelper;
 import com.ccclubs.helper.SystemHelper;
@@ -63,7 +64,7 @@ public class OrderInfoReceiverThread extends Thread {
 
 	private final static int CONSTANT_SCAN_INTERVAL = 30;
 	private final static int CONSTANT_DATE_LIMIT = 20; // 订单时间与现在相比，超过10天以上的订单不发送
-	private final static int ORDER_INTERVAL = 20 * 60; // 订单提前发送时间，单位：秒
+	private final static int ORDER_INTERVAL = 30 * 60; // 订单提前发送时间，单位：秒
 	private final static int ORDER_LIMIT = 60; // 单次订单扫描数
 
 	private static String logPath = null;
@@ -424,7 +425,7 @@ public class OrderInfoReceiverThread extends Thread {
 		public void run() {
 			try {
 				Date contrastTime = new Date(new Date().getTime()
-						+ (ORDER_INTERVAL * 1000));// 20分钟后的时间
+						+ (ORDER_INTERVAL * 1000));// 30分钟后的时间
 
 				/** *************************2015-09-04刘代进加向前限制为7天前开始的订单，避免全表搜索********************************* */
 				Date forwardTime = new Date(new Date().getTime()
@@ -454,7 +455,7 @@ public class OrderInfoReceiverThread extends Thread {
 										.toUpperCase(), Integer.parseInt(order
 										.getCsoCode()));
 						// $.trace("开始发送 订单数据 ");
-						CStruct.trace(orderDownStream.getBytes());
+//						CStruct.trace(orderDownStream.getBytes());
 						if (orderList.get(orderDownStream.mOrderId) == null) {
 							// 如果订单开始时间与当前时间不超过十天就发
 							if (isOverDate(order)) {
@@ -578,7 +579,7 @@ public class OrderInfoReceiverThread extends Thread {
 	    // 根据终端序列号查找车信息
         Map<String, Object> carQueryMap = new HashMap<>();
         // 1:上线
-        carQueryMap.put("cscStatus", (short)1);
+//        carQueryMap.put("cscStatus", (short)1);
         carQueryMap.put("cscNumber", downStream.mCarNum);
         // 查询 车牌号并且状态为上线的车辆
         CsCar carInfo = csCarService.getCsCar(carQueryMap);
@@ -850,8 +851,7 @@ public class OrderInfoReceiverThread extends Thread {
 	private static void updateTakeCar(TakeCar takeCar) {
 		try {
 			String takeTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-					.format(new Date(takeCar.mTakeTime * 1000l
-							+ SYSTEM.MACHINE_TIME));
+					.format(VcUtil.getOrderTimeForNowIfZero(takeCar.mTakeTime));
 			String strSql = "UPDATE " + ORDER_TABLE
 					+ " SET cso_status = 1, cso_take_time = '" + takeTime
 					+ "' WHERE cso_id = " + takeCar.mOrderId
@@ -881,8 +881,7 @@ public class OrderInfoReceiverThread extends Thread {
 	private static void updateFurtherCar(FurtherCar furtherCar) {
 		try {
 			String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-					.format(new Date(furtherCar.mFurtherTime * 1000l
-							+ SYSTEM.MACHINE_TIME));
+					.format(VcUtil.getOrderTimeForNowIfZero(furtherCar.mFurtherTime));
 			String memo = "";
 			// 实际还车时间
 			writeLog("收到来自 车牌号：" + furtherCar.mCarNum + "，订单号："
