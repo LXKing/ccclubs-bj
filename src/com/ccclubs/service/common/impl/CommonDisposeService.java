@@ -497,10 +497,10 @@ public class CommonDisposeService implements ICommonDisposeService {
 		coc.setCsocMarginNeed(defineMargin);
 		coc.setCsocTotalDuration($((orderList.get(orderList.size()-1).getCsoFinishTime().getTime()-start.getTime())*1d / SYSTEM.HOUR));
 		coc.setCsocPayNeed(mealPrice);
-//		coc.setCsocPayReal(mealPrice);//结算时在付
+		coc.setCsocPayReal(0d);//结算时在付coc.setCsocPayReal(mealPrice);
 		coc.setCsocPayRent(mealPrice);
-//		coc.setCsocPayMoney(payMoney);
-//		coc.setCsocPayCoupon(payCoupon);
+		coc.setCsocPayMoney(payMoney);
+		coc.setCsocPayCoupon(payCoupon);
 		coc.setCsocPayCoin(0d);
 		coc.setCsocSubOrders("");
         coc.setCsocPayDetails($.json($.add("express", mealDescript)
