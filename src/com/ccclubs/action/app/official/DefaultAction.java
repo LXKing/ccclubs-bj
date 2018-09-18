@@ -6680,6 +6680,7 @@ public class DefaultAction extends BaseAction {
         LzMap data = new LzMap();
         try {
             Calendar now = Calendar.getInstance();
+            long cur = now.getTime().getTime();
             long n = now.getTimeInMillis();
             now.set(Calendar.HOUR_OF_DAY, 16);
             now.set(Calendar.MINUTE, 30);
@@ -6697,7 +6698,7 @@ public class DefaultAction extends BaseAction {
             }else {
                 data.put("inNightMeals", "0");
             }
-            
+            data.put("currentTime", cur);
             return $.SendHtml($.json(JsonFormat.success().setData(data)), CHARSET);
         } catch (Exception ex) {
             return $.SendHtml($.json(JsonFormat.error("-1", "晚包段时间异常")), CHARSET);
