@@ -440,7 +440,7 @@ public class CommonDisposeService implements ICommonDisposeService {
         ICommonOrderService commonOrderService = $.GetSpringBean("commonOrderService");
         
         CsFeeTypeSet csFeeTypeSet = CsFeeTypeSet.Get($.add(CsFeeTypeSet.F.csftsHost, srvHost.getShId()).add(CsFeeTypeSet.F.csftsModel, carModel));
-        Long userType = FeeTypeUitl.getUserType(null, csFeeTypeSet, null);
+        Long userType = FeeTypeUitl.getUserType(feeType, csFeeTypeSet, null);
         CsProduct rent = commonOrderService.getProductByFlag(SYSTEM.RENT);
         
         Map<String, TimeSlot> slotMap = commonOrderService.getRules(csFeeTypeSet.getCsftsOutlets(), outlets_get_id, carModel, userType, rent.getCspId());

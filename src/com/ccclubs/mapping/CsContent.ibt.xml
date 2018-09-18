@@ -28,6 +28,8 @@
 		<result property="cscCollectS" column="csc_collect_s"/>
 		<result property="cscPraiseS" column="csc_praise_s"/>
 		<result property="cscStatus" column="csc_status"/>
+		<result property="cscIsActivity" column="csc_is_activity"/>
+		<result property="cscActivityEvent" column="csc_activity_event"/>
 	</resultMap>
 		
 	<!-- 获取所有静态内容 -->
@@ -164,6 +166,8 @@
 			,cs_content$suffix$.csc_collect_s
 			,cs_content$suffix$.csc_praise_s
 			,cs_content$suffix$.csc_status
+			,cs_content$suffix$.csc_is_activity
+			,cs_content$suffix$.csc_activity_event
 		)
 		values(
 			<isNotNull property="cscTitle" prepend="">
@@ -266,6 +270,18 @@
 				#cscStatus#
 			</isNotNull>
 			<isNull property="cscStatus" prepend=",">
+				null
+			</isNull>
+			<isNotNull property="cscIsActivity" prepend=",">
+				#cscIsActivity#
+			</isNotNull>
+			<isNull property="cscIsActivity" prepend=",">
+				null
+			</isNull>
+			<isNotNull property="cscActivityEvent" prepend=",">
+				#cscActivityEvent#
+			</isNotNull>
+			<isNull property="cscActivityEvent" prepend=",">
 				null
 			</isNull>			
 		)
@@ -379,6 +395,18 @@
 			</isNotNull>
 			<isNull property="cscStatus" prepend=",">
 				cs_content$suffix$.csc_status = null
+			</isNull>
+			<isNotNull property="cscIsActivity" prepend=",">
+				cs_content$suffix$.csc_is_activity = #cscIsActivity#
+			</isNotNull>
+			<isNull property="cscIsActivity" prepend=",">
+				cs_content$suffix$.csc_is_activity = null
+			</isNull>
+			<isNotNull property="cscActivityEvent" prepend=",">
+				cs_content$suffix$.csc_activity_event = #cscActivityEvent#
+			</isNotNull>
+			<isNull property="cscActivityEvent" prepend=",">
+				cs_content$suffix$.csc_activity_event = null
 			</isNull>				
 		where
 			csc_id=#cscId#
@@ -438,6 +466,12 @@
 			</isNotNull>		
 			<isNotNull property="cscStatus" prepend=",">
 				cs_content$suffix$.csc_status = #cscStatus#
+			</isNotNull>
+			<isNotNull property="cscIsActivity" prepend=",">
+				cs_content$suffix$.csc_is_activity = #cscIsActivity#
+			</isNotNull>
+			<isNotNull property="cscActivityEvent" prepend=",">
+				cs_content$suffix$.csc_activity_event = #cscActivityEvent#
 			</isNotNull>		
 			</dynamic>
 		where
@@ -512,12 +546,17 @@
 			</isNotNull>		
 			<isNotNull property="V_cscStatus" prepend=",">
 				cs_content$suffix$.csc_status = #V_cscStatus#
+			</isNotNull>
+			<isNotNull property="V_cscIsActivity" prepend=",">
+				cs_content$suffix$.csc_is_activity = #V_cscIsActivity#
+			</isNotNull>
+			<isNotNull property="V_cscActivityEvent" prepend=",">
+				cs_content$suffix$.csc_activity_event = #V_cscActivityEvent#
 			</isNotNull>		
 			<!-- 自定义 -->
 			<isNotEmpty property="V_definex" prepend=",">
 			    $V_definex$
 			</isNotEmpty>
-		
 		
 		where 
 		cs_content$suffix$.csc_status!=-1 and
