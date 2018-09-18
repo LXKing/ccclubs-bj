@@ -768,49 +768,49 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		orderInfo.setDriver(driver);
 		
 		//======================================提前还车扣除罚金====================================================
-		if(retTime == null)retTime = finish;
-		if(retTime.before(finish)){
-			
-			if(oldOrder==null){
-				throw new MessageException("", 0);
-			}
-			
-			if(oldOrder.getCsoPayNeed() - orderInfo.getPayNeed() >0){
-				Double forfiet = $( (oldOrder.getCsoPayNeed() - orderInfo.getPayNeed()) * 0.1d );
-				
-				CsOrderDetail detail = new CsOrderDetail();
-				detail.setCsodPricer(0l);
-				detail.setCsodCar(carid);
-				detail.setCsodOrder(orderid);
-				detail.setCsodOutlets(oldOrder.getCsoOutlets());
-				detail.setCsodProvid(0l);
-				detail.setCsodModel(oldOrder.getCsoModel());
-				detail.setCsodPrice(0d);
-				detail.setCsodPriceReal(0d);	
-				detail.setCsodRebate(1.0d);
-				detail.setCsodCountReal(1d);
-				detail.setCsodTotal(0d);//理论金额
-				
-				CsGoods goods = getGoodsByFlag(SYSTEM.RENT, RuleName.每分钟, ordFeeType);
-				CsRule csRuleHour = goods.get$csgRule();
-				
-				detail.setCsodHost(oldOrder.getCsoHost());
-				detail.setCsodProduct(goods.getCsgProduct());
-				detail.setCsodPriceReal(forfiet);	//这里单价即为总价
-				detail.setCsodCount(1d);			//1个
-				detail.setCsodTotalReal(forfiet);
-				detail.setCsodAddTime(new Date());
-				detail.setCsodRule(csRuleHour.getCsrId());
-				detail.setCsodGoods(goods.getCsgId());
-				detail.setCsodStart(retTime);
-				detail.setCsodEnd(finish);
-				detail.setCsodRemark("提前还车扣罚租金");
-				orderInfo.getDetails().add(detail);
-				
-				orderInfo.setPrice(orderInfo.getPrice() + forfiet);
-			}
-		}
-		
+//		if(retTime == null)retTime = finish;
+//		if(retTime.before(finish)){
+//			
+//			if(oldOrder==null){
+//				throw new MessageException("", 0);
+//			}
+//			
+//			if(oldOrder.getCsoPayNeed() - orderInfo.getPayNeed() >0){
+//				Double forfiet = $( (oldOrder.getCsoPayNeed() - orderInfo.getPayNeed()) * 0.1d );
+//				
+//				CsOrderDetail detail = new CsOrderDetail();
+//				detail.setCsodPricer(0l);
+//				detail.setCsodCar(carid);
+//				detail.setCsodOrder(orderid);
+//				detail.setCsodOutlets(oldOrder.getCsoOutlets());
+//				detail.setCsodProvid(0l);
+//				detail.setCsodModel(oldOrder.getCsoModel());
+//				detail.setCsodPrice(0d);
+//				detail.setCsodPriceReal(0d);	
+//				detail.setCsodRebate(1.0d);
+//				detail.setCsodCountReal(1d);
+//				detail.setCsodTotal(0d);//理论金额
+//				
+//				CsGoods goods = getGoodsByFlag(SYSTEM.RENT, RuleName.每分钟, ordFeeType);
+//				CsRule csRuleHour = goods.get$csgRule();
+//				
+//				detail.setCsodHost(oldOrder.getCsoHost());
+//				detail.setCsodProduct(goods.getCsgProduct());
+//				detail.setCsodPriceReal(forfiet);	//这里单价即为总价
+//				detail.setCsodCount(1d);			//1个
+//				detail.setCsodTotalReal(forfiet);
+//				detail.setCsodAddTime(new Date());
+//				detail.setCsodRule(csRuleHour.getCsrId());
+//				detail.setCsodGoods(goods.getCsgId());
+//				detail.setCsodStart(retTime);
+//				detail.setCsodEnd(finish);
+//				detail.setCsodRemark("提前还车扣罚租金");
+//				orderInfo.getDetails().add(detail);
+//				
+//				orderInfo.setPrice(orderInfo.getPrice() + forfiet);
+//			}
+//		}
+//		
 		ActivityPromotion promotion = new  Activity2017LadiesDay(orderInfo, orderid, rentDetails, oldOrder, start, finish, isSettle);
 		promotion.execute();
 		
