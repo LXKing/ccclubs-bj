@@ -869,7 +869,7 @@ $(function(){
 		</dd>
 		</s:else>
 	</dl>
-	${after$cscmName}
+	${after$cscmFlag$}
 	</s:if>
 				
 				<div class="line"></div>

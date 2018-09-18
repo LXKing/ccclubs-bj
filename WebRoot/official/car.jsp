@@ -107,8 +107,8 @@
 			  	 			公务用车
 			  	 		</a>
 		  	 			<lz:set name=""></lz:set>
-		  	 				<a href="javascript:remote(${item.cscId},0)">远程开门</a>
-		  	 				<a href="javascript:remote(${item.cscId},1)">远程关门</a>	
+		  	 				<%-- <a href="javascript:remote(${item.cscId},0)">远程开门</a>
+		  	 				<a href="javascript:remote(${item.cscId},1)">远程关门</a>	 --%>
 		  	 					
 		  	 		</s:else>
 		  	 	</td>

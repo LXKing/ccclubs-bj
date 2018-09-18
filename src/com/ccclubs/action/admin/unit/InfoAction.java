@@ -205,7 +205,7 @@ public class InfoAction
 							(short)1
 						);
 						member.setCsmMobile("9.00000"+object.getCsuiId());
-						member.setCsmName(object.getCsuiName());
+						member.setCsmName(object.getCsuiName$().trim());
 						member.setCsmVReal((short)1);
 						member.setCsmVDrive((short)0);
 						member = member.save();

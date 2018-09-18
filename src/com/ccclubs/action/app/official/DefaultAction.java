@@ -84,10 +84,8 @@ import com.ccclubs.model.CsOrderCluster;
 import com.ccclubs.model.CsOutlets;
 import com.ccclubs.model.CsPowerPile;
 import com.ccclubs.model.CsPrice;
-import com.ccclubs.model.CsProduct;
 import com.ccclubs.model.CsRecord;
 import com.ccclubs.model.CsRefund;
-import com.ccclubs.model.CsRule;
 import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsState;
 import com.ccclubs.model.CsUnderlineMember;
@@ -100,6 +98,7 @@ import com.ccclubs.model.CsUpdate;
 import com.ccclubs.model.CsUseRecord;
 import com.ccclubs.model.CsViolat;
 import com.ccclubs.model.SrvHost;
+import com.ccclubs.param.TimeUtil;
 import com.ccclubs.service.admin.ICsAlipayRecordService;
 import com.ccclubs.service.admin.ICsArgumentService;
 import com.ccclubs.service.admin.ICsCarService;
@@ -1418,6 +1417,19 @@ public class DefaultAction extends BaseAction {
         if (member == null) {
             return returnError("100", "登录授权无效");
         }
+        //获取移动端传过来的参数
+        Long takeOutletsId = $.getLong("takeOutletsId");
+        Long retOutletsId = $.getLong("retOutletsId", takeOutletsId);
+        
+        Long carId = $.getLong("carId");
+        Date takeTime = $.getDate("takeTime");
+        Date retTime = $.getDate("retTime");
+        Long paid = $.getLong("paid"); // 代付会员(可选)
+        String remark = $.getString("remark");
+        String version = $.getString("appVersion");
+        // 套餐ID
+        String mealId = $.getString("mealId", "0");
+        //会员认证状态判断
         if(MemberRecStatus.REC_PASS != member.getVstatus()) {
             StringBuilder sb = new StringBuilder();
             if(MemberRecStatus.REC_PASS != member.getVDrive()) {
@@ -1441,42 +1453,52 @@ public class DefaultAction extends BaseAction {
             return ret;  
         }
 
-        Long takeOutletsId = $.getLong("takeOutletsId");
-        Long retOutletsId = $.getLong("retOutletsId", takeOutletsId);
-
-        Long carId = $.getLong("carId");
-        Date takeTime = $.getDate("takeTime");
-        Date retTime = $.getDate("retTime");
-        Long paid = $.getLong("paid"); // 代付会员(可选)
-        String remark = $.getString("remark");
-        String version = $.getString("appVersion");
-
-        // 套餐ID
-        String mealId = $.getString("mealId", "0");
-
-        Double freeHours = null;
-        Long insureType = null;
-
+        //判断	
         if (carId == null) {
             return returnError("101", "没有选择车辆");
         }
+        //取车时间判断
         if (takeTime == null) {
             return returnError("102", "请选择预定开始时间");
         }
-        if(takeTime.getTime()-new Date().getTime()>30*60*1000){
-       	 	return returnError("105", "取车时间需提前30分钟预订车辆");
+        if(!"0".equals(mealId)) {
+        	if(takeTime.getTime()-new Date().getTime()>30*60*1000){
+           	 	return returnError("105", "取车时间需提前30分钟预订车辆");
+            }
+        	//根据取车时间依据套餐类型往后确定还车时间
+        	CsItem item = CsItem.get(Long.parseLong(mealId));
+        	if(item!=null) {
+        		String mealName=item.getCsiFlag();
+	        	if("周套餐".equals(mealName)) {
+	        		 retTime=new DateUtil().addDayOfDate(takeTime, 7);
+	        	}else if("月套餐".equals(mealName)) {
+	        		 retTime=new DateUtil().addDayOfDate(takeTime, 30);
+	        	}else if(item!=null&&"周末套餐".equals(item.getCsiFlag())) {
+					 MealExpress me = MealHelper.parseExpress(item.getCsiDepict());
+					 Map<String, Object> map = new HashMap<String, Object>();       	    
+					  //
+					 String[] str=me.getTime().split("#");
+					  //套餐开始时间
+					 Date mealStart=getWeekendMealStartTime(new Date(), Integer.parseInt(str[0]));
+					 Date mealEnd=new  DateUtil().addMinuteOfDate(mealStart, Integer.parseInt(str[1]));//套餐结束时间
+					 retTime=mealEnd;
+	        	}	        	  
+        	}
         }
+        //还车时间判断	
         if (retTime == null) {
             return returnError("103", "请选择预定结束时间");
         }
         if (!retTime.after(takeTime)) {
             return returnError("104", "结束时间必须晚于开始时间");
         }
+        //取还车时间判断
         if (takeOutletsId.longValue() != retOutletsId.longValue()) {
             if (takeTime.getTime() - System.currentTimeMillis() > 120 * 60 * 1000) {
                 return returnError("108", "异地借还只能提前2小时内预定");
             }
         }
+        //车辆信息判断
         CsCar car = csCarService.getCsCarById(carId);
         if (car == null)
             return returnError("109", "没有选择车辆");
@@ -1498,6 +1520,8 @@ public class DefaultAction extends BaseAction {
 //                }
 //            }
 
+        	Double freeHours = null;
+        	Long insureType = null;
             /** ********支付人********* */
             Long payMemberId = null;
             payMemberId = member.getCsmId();
@@ -1720,36 +1744,44 @@ public class DefaultAction extends BaseAction {
                     return returnError("104", "套餐无效");
                 }
 
-                if (takeTime.after(new Date())) {
-                    List<CsOrder> orderList =
-                            MealHelper.calcMealOrders(item.getCsiDepict(), takeTime);
+//                if (takeTime.after(new Date())) {
+//                    List<CsOrder> orderList =
+//                            MealHelper.calcMealOrders(item.getCsiDepict(), takeTime);
+//                    // ==============================================
+//                    definex.append("(");
+//                    definex.append("not exists(");
+//                    definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
+//                    for (int i = 0; i < orderList.size(); i++) {
+//                        CsOrder order = orderList.get(i);
+//                        String startTime = fmt.format(order.getCsoStartTime());
+//                        String finishTime = fmt.format(order.getCsoFinishTime());
+//                        definex.append("           ( cso_start_time <= '" + startTime
+//                                + "' and cso_finish_time > '" + startTime + "')");
+//                        definex.append("        or (cso_start_time > '" + startTime
+//                                + "' and cso_start_time <'" + finishTime + "' )");
+//                        if (i != orderList.size() - 1)
+//                            definex.append(" or ");
+//                    }
+//                    definex.append("        ) and cso_status in (0,1,2,5))");
+//                    definex.append(")");
+//
+//                    definex.append(" and csc_outlets = " + takeOutletsId);
+//                    definex.append(")");
                     // ==============================================
-                    definex.append("(");
-                    definex.append("not exists(");
-                    definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
-                    for (int i = 0; i < orderList.size(); i++) {
-                        CsOrder order = orderList.get(i);
-                        String startTime = fmt.format(order.getCsoStartTime());
-                        String finishTime = fmt.format(order.getCsoFinishTime());
-                        definex.append("           ( cso_start_time <= '" + startTime
-                                + "' and cso_finish_time > '" + startTime + "')");
-                        definex.append("        or (cso_start_time > '" + startTime
-                                + "' and cso_start_time <'" + finishTime + "' )");
-                        if (i != orderList.size() - 1)
-                            definex.append(" or ");
-                    }
-                    definex.append("        ) and cso_status in (0,1,2,5))");
-                    definex.append(")");
+                	  definex.append("(");
+                      definex.append("not exists(");
+                      definex.append("select 1 from cs_order co where co.cso_car = csc_id ");
+                      definex.append("   and  cso_status in (0,1,2,5)");
+                      definex.append(")");
 
-                    definex.append(" and csc_outlets = " + takeOutletsId);
-                    definex.append(") AND csc_status IN(1,3) ");
-                    // ==============================================
-
+                      definex.append(" and csc_outlets = " + takeOutletsId);
+                      definex.append(")");
+                      // ==============================================
                     params.put("definex", definex);
                     params.put("join", " left join cs_state o on csc_id = o.css_car ");
                     params.put("desc", " CAST(o.css_endurance AS SIGNED) ");
                     page = csCarService.getCsCarPage($.getInteger("page", 0), 5, params);
-                }
+//                }
             } else {
                 // 兼容旧的方式(不选择取车/还车网点)
                 boolean a2bModel = true; // 是否异地还车
@@ -1773,19 +1805,12 @@ public class DefaultAction extends BaseAction {
                 // ==============================================
                 definex.append("(");
                 definex.append("not exists(");
-                definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
-                definex.append("           ( cso_start_time <= '" + startTime
-                        + "' and cso_finish_time > '" + startTime + "')");
-                definex.append("        or (cso_start_time > '" + startTime
-                        + "' and cso_start_time <'" + finishTime + "' )");
-                if (a2bModel) {
-                    definex.append("or (cso_start_time > '" + startTime + "' )");
-                }
-                definex.append("        ) and cso_status in (0,1,2,5))");
+                definex.append("select 1 from cs_order co where co.cso_car = csc_id ");
+                definex.append("  and cso_status in (0,1,2,5)");
                 definex.append(")");
 
                 definex.append(" and csc_outlets = " + takeOutletsId);
-                definex.append(")  AND csc_status IN(1,3)");
+                definex.append(")");
                 // ==============================================
 
                 params.put("definex", definex);
@@ -1793,8 +1818,11 @@ public class DefaultAction extends BaseAction {
                 params.put("desc", " CAST(o.css_endurance AS SIGNED) ");
                 page = csCarService.getCsCarPage($.getInteger("page", 0), 5, params);
             }
-
-            CarScript.loadCarFeatures(page,item.getCsiTitle());
+           String itemName=null;
+           if(item!=null) {
+        	   itemName=item.getCsiFlag();
+           }
+            CarScript.loadCarFeatures(page,itemName);
 
             // 读取时间线
             Integer days = 7;
@@ -4304,8 +4332,13 @@ public class DefaultAction extends BaseAction {
                 return returnError("103", "只有已预订未使用的订单才能取消");
             }
             //判断用户当天取消的订单次数
+	        
+            //判断用户当天取消的订单次数
+            StringBuffer definex =new StringBuffer();
+            definex.append(" cso_cancel_from="+From.APP.ordinal());
+            definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")) );
+	        		  .add("definex", definex));
 	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	        	 commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
@@ -4609,8 +4642,11 @@ public class DefaultAction extends BaseAction {
                 return returnError("103", "只有已预订未使用的订单才能取消");
 
             //判断用户当天取消的订单次数
+            StringBuffer definex =new StringBuffer();
+            definex.append(" cso_cancel_from="+From.APP.ordinal());
+            definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")  ));
+	        		  .add("definex", definex));
 	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
@@ -5997,6 +6033,49 @@ public class DefaultAction extends BaseAction {
         }
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * 获取本周五的时间
+     * @return
+     */
+    public static Date getWeekFriday(int week ){
+		SimpleDateFormat formater=new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal=Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek() + week);
+        //
+        Date last=cal.getTime();
+        return last ;
+	} 
+    
+    public static Date getWeekendMealStartTime(Date date, int minutes) {
+        String ds = TimeUtil.format(date, TimeUtil.DATE.FORMAT_yyyy_MM_dd) + " 00:00:00";
+        date = TimeUtil.stringToDate(ds);
+        date = TimeUtil.addMinute(date, minutes);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int dow = cal.get(Calendar.DAY_OF_WEEK);
+        if(dow==2) {
+            //如果是星期一，时间取上周五
+            date = TimeUtil.addDay(date, -3);
+        }else {
+            //其他时间直接区本周五
+            cal.set(Calendar.DAY_OF_WEEK, 6);
+            date = cal.getTime();
+        }
+        return date;
+    }
     /**
      * 获取套餐产品列表
      * 
@@ -6009,63 +6088,92 @@ public class DefaultAction extends BaseAction {
                 return returnError("100", "登录授权无效");
             }
 
-            List<CsItem> itemList =
-                    csItemService.getCsItemList($.add(CsItem.F.csiFlag, "201604MEAL")
-                            .add(CsItem.F.csiStatus, 1).add("asc", "csi_data_number"), -1);
-
+            
             CsUnitPerson person =
                     CsUnitPerson.getCsUnitPerson($.add("csupMember", member.getCsmId()));
             if (person == null)
                 return returnError("101", "用户未绑定企业用户");
 
-            Date date = $.getDate("start");
-
-            List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
-            for (CsItem item : itemList) {
-                MealExpress me = MealHelper.parseExpress(item.getCsiDepict());
-                if (StringUtils.isNotEmpty(me.getTag())) {
-                    if ($.or(person.getCsupFlag(), "").indexOf(me.getTag()) == -1) {
-                        continue;
-                    }
-                }
-
-                System.out.println(item.getCsiTitle());
-                List<CsOrder> orderList = MealHelper.calcMealOrders(item.getCsiDepict(), date);
-                List<Map<String, Object>> ordersList = new ArrayList<Map<String, Object>>();
-                // for(CsOrder o : orderList){
-                // Map<String, Object> map = new HashMap<String, Object>();
-                // map.put("start", o.getCsoStartTime().getTime());
-                // map.put("finish", o.getCsoStartTime().getTime());
-                // ordersList.add(map);
-                // }
-
-                Calendar cal = Calendar.getInstance();
-                Calendar finishcal = Calendar.getInstance();
-                cal.setTime(orderList.get(0).getCsoStartTime());
-                finishcal.setTime(orderList.get(orderList.size() - 1).getCsoFinishTime());
-                for (int i = 0; i < 30; i++) {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    if (i > 0) {
-                        cal.add(Calendar.HOUR_OF_DAY, me.getSep());
-                        finishcal.add(Calendar.HOUR_OF_DAY, me.getSep());
-                    }
-                    map.put("start", cal.getTime());
-                    map.put("finish", finishcal.getTime());
-
-                    System.out.println("开始时间:"
-                            + new DateUtil().dateToString(cal.getTime(), "yyyy-MM-dd HH:mm:ss")
-                            + "\t" + "结束时间:" + new DateUtil().dateToString(finishcal.getTime(),
-                                    "yyyy-MM-dd HH:mm:ss"));
-                    ordersList.add(map);
-                }
-
+            List<CsItem> itemList =
+                    csItemService.getCsItemList($.add(CsItem.F.csiType, 4)
+                            .add(CsItem.F.csiStatus, 1).add("asc", "csi_data_number"), -1);
+           
+           List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+           for(CsItem  item:itemList ) {
+        	    MealExpress me = MealHelper.parseExpress(item.getCsiDepict());
+        	    List<Map<String, Object>> ordersList = new ArrayList<Map<String, Object>>();  
+        	    Map<String, Object> map = new HashMap<String, Object>();
+        	    
+        	    if(item!=null&&"周末套餐".equals(item.getCsiFlag())) {
+            		//
+            		String[] str=me.getTime().split("#");
+            		//套餐开始时间
+            		Date mealStart=getWeekendMealStartTime(new Date(), Integer.parseInt(str[0]));
+            		Date mealEnd=new  DateUtil().addMinuteOfDate(mealStart, Integer.parseInt(str[1]));//套餐结束时间
+            		Date currentDate=new Date();
+            		//时间在套餐时间内，则不显示套餐
+            		if(currentDate.getTime()+30*60*1000L<mealStart.getTime()
+            			||currentDate.getTime()>mealEnd.getTime()) {
+            			continue;
+            		}
+            	}
+            	//
                 LzMap data = $.$("itemName", item.getCsiTitle()).add("itemId", item.getCsiId())
                         .add("price", item.getCsiPrice()).add("title", item.getCsiTitle())
                         .add("descript", item.getCsiRemark()).add("orders", ordersList)
                         .add("time1", me.getFeature("time1")).add("time2", me.getFeature("time2"));
-
                 dataList.add(data);
             }
+            
+           
+//            Date date = $.getDate("start");
+//
+//            List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+//            for (CsItem item : itemList) {
+//                MealExpress me = MealHelper.parseExpress(item.getCsiDepict());
+//                if (StringUtils.isNotEmpty(me.getTag())) {
+//                    if ($.or(person.getCsupFlag(), "").indexOf(me.getTag()) == -1) {
+//                        continue;
+//                    }
+//                }
+//
+//                System.out.println(item.getCsiTitle());
+//                List<CsOrder> orderList = MealHelper.calcMealOrders(item.getCsiDepict(), date);
+//                List<Map<String, Object>> ordersList = new ArrayList<Map<String, Object>>();
+//                // for(CsOrder o : orderList){
+//                // Map<String, Object> map = new HashMap<String, Object>();
+//                // map.put("start", o.getCsoStartTime().getTime());
+//                // map.put("finish", o.getCsoStartTime().getTime());
+//                // ordersList.add(map);
+//                // }
+//
+//                Calendar cal = Calendar.getInstance();
+//                Calendar finishcal = Calendar.getInstance();
+//                cal.setTime(orderList.get(0).getCsoStartTime());
+//                finishcal.setTime(orderList.get(orderList.size() - 1).getCsoFinishTime());
+//                for (int i = 0; i < 30; i++) {
+//                    Map<String, Object> map = new HashMap<String, Object>();
+//                    if (i > 0) {
+//                        cal.add(Calendar.HOUR_OF_DAY, me.getSep());
+//                        finishcal.add(Calendar.HOUR_OF_DAY, me.getSep());
+//                    }
+//                    map.put("start", cal.getTime());
+//                    map.put("finish", finishcal.getTime());
+//
+//                    System.out.println("开始时间:"
+//                            + new DateUtil().dateToString(cal.getTime(), "yyyy-MM-dd HH:mm:ss")
+//                            + "\t" + "结束时间:" + new DateUtil().dateToString(finishcal.getTime(),
+//                                    "yyyy-MM-dd HH:mm:ss"));
+//                    ordersList.add(map);
+//                }
+//
+//                LzMap data = $.$("itemName", item.getCsiTitle()).add("itemId", item.getCsiId())
+//                        .add("price", item.getCsiPrice()).add("title", item.getCsiTitle())
+//                        .add("descript", item.getCsiRemark()).add("orders", ordersList)
+//                        .add("time1", me.getFeature("time1")).add("time2", me.getFeature("time2"));
+//
+//                dataList.add(data);
+//            }
 
             return $.SendHtml($.json(JsonFormat.success().setData($.add("list", dataList))),
                     CHARSET);
@@ -6577,6 +6685,36 @@ public class DefaultAction extends BaseAction {
         } catch (Exception ex) {
             return $.SendHtml($.json(JsonFormat.error("-1", "网络繁忙")), CHARSET);
         }
+    }
+    
+    public String getOrderParams() {
+        LzMap data = new LzMap();
+        try {
+            Calendar now = Calendar.getInstance();
+            long cur = now.getTime().getTime();
+            long n = now.getTimeInMillis();
+            now.set(Calendar.HOUR_OF_DAY, 16);
+            now.set(Calendar.MINUTE, 30);
+            now.set(Calendar.SECOND, 0);
+            long s = now.getTimeInMillis();
+            
+            now.set(Calendar.DATE, now.get(Calendar.DATE)+1);
+            now.set(Calendar.HOUR_OF_DAY, 9);
+            now.set(Calendar.MINUTE, 0);
+            now.set(Calendar.SECOND, 0);
+            
+            long e = now.getTimeInMillis();
+            if(n >= s && n <= e) {
+                data.put("inNightMeals", "1");
+            }else {
+                data.put("inNightMeals", "0");
+            }
+            data.put("currentTime", cur);
+            return $.SendHtml($.json(JsonFormat.success().setData(data)), CHARSET);
+        } catch (Exception ex) {
+            return $.SendHtml($.json(JsonFormat.error("-1", "晚包段时间异常")), CHARSET);
+        }
+        
     }
 
     public Double $(Double value) {

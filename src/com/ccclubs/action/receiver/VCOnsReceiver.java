@@ -26,6 +26,7 @@ import com.ccclubs.action.vc.enums.MsgTagEnum;
 import com.ccclubs.action.vc.enums.VcCmdEnum;
 import com.ccclubs.action.vc.service.CarOrderScheduledPoolExecuter;
 import com.ccclubs.action.vc.service.VcCmdApiService;
+import com.ccclubs.action.vc.util.VcUtil;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.DateHelper;
 import com.ccclubs.helper.SystemHelper;
@@ -132,7 +133,7 @@ public class VCOnsReceiver implements MessageListener {
                 // 根据终端序列号查找车信息
                 Map<String, Object> carQueryMap = new HashMap<>();
                 // 1:上线
-                carQueryMap.put("cscStatus", (short)1);
+//                carQueryMap.put("cscStatus", (short)1);
                 carQueryMap.put("cscTerNo", terNo);
                 CsCar carInfo = csCarService.getCsCar(carQueryMap);
                 if (null == carInfo) {
@@ -538,8 +539,7 @@ public class VCOnsReceiver implements MessageListener {
     private static void updateTakeCarForOns(TakeCar takeCar) {
         try {
             String takeTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .format(new Date(takeCar.mTakeTime * 1000l
-                            + SYSTEM.MACHINE_TIME));
+                    .format(VcUtil.getOrderTimeForNowIfZero(takeCar.mTakeTime));
             $.trace("takeTime: " + takeTime);
             
             String strSql = "UPDATE " + ORDER_TABLE
@@ -570,8 +570,7 @@ public class VCOnsReceiver implements MessageListener {
     private static void updateFurtherCarForOns(FurtherCar furtherCar) {
         try {
             String retTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .format(new Date(furtherCar.mFurtherTime * 1000l
-                            + SYSTEM.MACHINE_TIME));
+                    .format(VcUtil.getOrderTimeForNowIfZero(furtherCar.mFurtherTime));
             $.trace("retTime: " + retTime);
             /**
              * 获取当前时间为还车时间

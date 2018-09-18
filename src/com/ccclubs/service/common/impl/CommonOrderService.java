@@ -391,23 +391,23 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		}
 		
 		//电里程费
-		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.KILOM,RuleName.每公里,userType), start, realFinish, electric));
+//		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.KILOM,RuleName.每公里,userType), start, realFinish, electric));
 		
 		//油里程费
-		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.MILEAGE,RuleName.每公里,userType), start, realFinish, fuel));
+//		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.MILEAGE,RuleName.每公里,userType), start, realFinish, fuel));
 	
-		if(timeoutStart!=null){
-			CsProduct timeoutProduct = this.getProductByFlag(SYSTEM.TIMEOUT);
-			CsGoods timeoutGoods = getGoodsByFlag(SYSTEM.TIMEOUT,RuleName.每分钟, userType);
-			if(timeoutProduct!=null && timeoutGoods!=null){
-				CsPrice timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",cspOutets).add("cspModel",cspModel).add("cspUserType",userType));
-				if(timeoutPrice==null){//如果未配置价格，则取默认网点价格 
-					if(csFeeTypeSet!=null && csFeeTypeSet.getCsftsOutlets()!=null)
-						timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",csFeeTypeSet.getCsftsOutlets()).add("cspModel",cspModel).add("cspUserType",userType));
-				}
-				details.addAll(this.getTimeoutOrderDetail(timeoutProduct, timeoutStart, realFinish, userType, srvHost, timeoutPrice, prices));
-			}
-		}
+//		if(timeoutStart!=null){
+//			CsProduct timeoutProduct = this.getProductByFlag(SYSTEM.TIMEOUT);
+//			CsGoods timeoutGoods = getGoodsByFlag(SYSTEM.TIMEOUT,RuleName.每分钟, userType);
+//			if(timeoutProduct!=null && timeoutGoods!=null){
+//				CsPrice timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",cspOutets).add("cspModel",cspModel).add("cspUserType",userType));
+//				if(timeoutPrice==null){//如果未配置价格，则取默认网点价格 
+//					if(csFeeTypeSet!=null && csFeeTypeSet.getCsftsOutlets()!=null)
+//						timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",csFeeTypeSet.getCsftsOutlets()).add("cspModel",cspModel).add("cspUserType",userType));
+//				}
+//				details.addAll(this.getTimeoutOrderDetail(timeoutProduct, timeoutStart, realFinish, userType, srvHost, timeoutPrice, prices));
+//			}
+//		}
 		
 		Collections.sort(details, new Comparator<CsOrderDetail>(){
 			@Override
@@ -768,49 +768,49 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		orderInfo.setDriver(driver);
 		
 		//======================================提前还车扣除罚金====================================================
-		if(retTime == null)retTime = finish;
-		if(retTime.before(finish)){
-			
-			if(oldOrder==null){
-				throw new MessageException("", 0);
-			}
-			
-			if(oldOrder.getCsoPayNeed() - orderInfo.getPayNeed() >0){
-				Double forfiet = $( (oldOrder.getCsoPayNeed() - orderInfo.getPayNeed()) * 0.1d );
-				
-				CsOrderDetail detail = new CsOrderDetail();
-				detail.setCsodPricer(0l);
-				detail.setCsodCar(carid);
-				detail.setCsodOrder(orderid);
-				detail.setCsodOutlets(oldOrder.getCsoOutlets());
-				detail.setCsodProvid(0l);
-				detail.setCsodModel(oldOrder.getCsoModel());
-				detail.setCsodPrice(0d);
-				detail.setCsodPriceReal(0d);	
-				detail.setCsodRebate(1.0d);
-				detail.setCsodCountReal(1d);
-				detail.setCsodTotal(0d);//理论金额
-				
-				CsGoods goods = getGoodsByFlag(SYSTEM.RENT, RuleName.每分钟, ordFeeType);
-				CsRule csRuleHour = goods.get$csgRule();
-				
-				detail.setCsodHost(oldOrder.getCsoHost());
-				detail.setCsodProduct(goods.getCsgProduct());
-				detail.setCsodPriceReal(forfiet);	//这里单价即为总价
-				detail.setCsodCount(1d);			//1个
-				detail.setCsodTotalReal(forfiet);
-				detail.setCsodAddTime(new Date());
-				detail.setCsodRule(csRuleHour.getCsrId());
-				detail.setCsodGoods(goods.getCsgId());
-				detail.setCsodStart(retTime);
-				detail.setCsodEnd(finish);
-				detail.setCsodRemark("提前还车扣罚租金");
-				orderInfo.getDetails().add(detail);
-				
-				orderInfo.setPrice(orderInfo.getPrice() + forfiet);
-			}
-		}
-		
+//		if(retTime == null)retTime = finish;
+//		if(retTime.before(finish)){
+//			
+//			if(oldOrder==null){
+//				throw new MessageException("", 0);
+//			}
+//			
+//			if(oldOrder.getCsoPayNeed() - orderInfo.getPayNeed() >0){
+//				Double forfiet = $( (oldOrder.getCsoPayNeed() - orderInfo.getPayNeed()) * 0.1d );
+//				
+//				CsOrderDetail detail = new CsOrderDetail();
+//				detail.setCsodPricer(0l);
+//				detail.setCsodCar(carid);
+//				detail.setCsodOrder(orderid);
+//				detail.setCsodOutlets(oldOrder.getCsoOutlets());
+//				detail.setCsodProvid(0l);
+//				detail.setCsodModel(oldOrder.getCsoModel());
+//				detail.setCsodPrice(0d);
+//				detail.setCsodPriceReal(0d);	
+//				detail.setCsodRebate(1.0d);
+//				detail.setCsodCountReal(1d);
+//				detail.setCsodTotal(0d);//理论金额
+//				
+//				CsGoods goods = getGoodsByFlag(SYSTEM.RENT, RuleName.每分钟, ordFeeType);
+//				CsRule csRuleHour = goods.get$csgRule();
+//				
+//				detail.setCsodHost(oldOrder.getCsoHost());
+//				detail.setCsodProduct(goods.getCsgProduct());
+//				detail.setCsodPriceReal(forfiet);	//这里单价即为总价
+//				detail.setCsodCount(1d);			//1个
+//				detail.setCsodTotalReal(forfiet);
+//				detail.setCsodAddTime(new Date());
+//				detail.setCsodRule(csRuleHour.getCsrId());
+//				detail.setCsodGoods(goods.getCsgId());
+//				detail.setCsodStart(retTime);
+//				detail.setCsodEnd(finish);
+//				detail.setCsodRemark("提前还车扣罚租金");
+//				orderInfo.getDetails().add(detail);
+//				
+//				orderInfo.setPrice(orderInfo.getPrice() + forfiet);
+//			}
+//		}
+//		
 		ActivityPromotion promotion = new  Activity2017LadiesDay(orderInfo, orderid, rentDetails, oldOrder, start, finish, isSettle);
 		promotion.execute();
 		
