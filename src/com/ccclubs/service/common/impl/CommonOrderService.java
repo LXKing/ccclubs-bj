@@ -391,23 +391,23 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		}
 		
 		//电里程费
-		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.KILOM,RuleName.每公里,userType), start, realFinish, electric));
+//		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.KILOM,RuleName.每公里,userType), start, realFinish, electric));
 		
 		//油里程费
-		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.MILEAGE,RuleName.每公里,userType), start, realFinish, fuel));
+//		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.MILEAGE,RuleName.每公里,userType), start, realFinish, fuel));
 	
-		if(timeoutStart!=null){
-			CsProduct timeoutProduct = this.getProductByFlag(SYSTEM.TIMEOUT);
-			CsGoods timeoutGoods = getGoodsByFlag(SYSTEM.TIMEOUT,RuleName.每分钟, userType);
-			if(timeoutProduct!=null && timeoutGoods!=null){
-				CsPrice timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",cspOutets).add("cspModel",cspModel).add("cspUserType",userType));
-				if(timeoutPrice==null){//如果未配置价格，则取默认网点价格 
-					if(csFeeTypeSet!=null && csFeeTypeSet.getCsftsOutlets()!=null)
-						timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",csFeeTypeSet.getCsftsOutlets()).add("cspModel",cspModel).add("cspUserType",userType));
-				}
-				details.addAll(this.getTimeoutOrderDetail(timeoutProduct, timeoutStart, realFinish, userType, srvHost, timeoutPrice, prices));
-			}
-		}
+//		if(timeoutStart!=null){
+//			CsProduct timeoutProduct = this.getProductByFlag(SYSTEM.TIMEOUT);
+//			CsGoods timeoutGoods = getGoodsByFlag(SYSTEM.TIMEOUT,RuleName.每分钟, userType);
+//			if(timeoutProduct!=null && timeoutGoods!=null){
+//				CsPrice timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",cspOutets).add("cspModel",cspModel).add("cspUserType",userType));
+//				if(timeoutPrice==null){//如果未配置价格，则取默认网点价格 
+//					if(csFeeTypeSet!=null && csFeeTypeSet.getCsftsOutlets()!=null)
+//						timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",csFeeTypeSet.getCsftsOutlets()).add("cspModel",cspModel).add("cspUserType",userType));
+//				}
+//				details.addAll(this.getTimeoutOrderDetail(timeoutProduct, timeoutStart, realFinish, userType, srvHost, timeoutPrice, prices));
+//			}
+//		}
 		
 		Collections.sort(details, new Comparator<CsOrderDetail>(){
 			@Override
