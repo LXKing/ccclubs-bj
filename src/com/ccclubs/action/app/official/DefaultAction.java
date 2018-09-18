@@ -4323,8 +4323,13 @@ public class DefaultAction extends BaseAction {
                 return returnError("103", "只有已预订未使用的订单才能取消");
             }
             //判断用户当天取消的订单次数
+	        
+            //判断用户当天取消的订单次数
+            StringBuffer definex =new StringBuffer();
+            definex.append(" cso_cancel_from="+From.APP.ordinal());
+            definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")) );
+	        		  .add("definex", definex));
 	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	        	 commonUnitService.executeCancelUnitOrder(unitPerson.getCsupInfo(), unitOrderId, "");
@@ -4628,8 +4633,11 @@ public class DefaultAction extends BaseAction {
                 return returnError("103", "只有已预订未使用的订单才能取消");
 
             //判断用户当天取消的订单次数
+            StringBuffer definex =new StringBuffer();
+            definex.append(" cso_cancel_from="+From.APP.ordinal());
+            definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")  ));
+	        		  .add("definex", definex));
 	        if(cancelCount==null||cancelCount<3) {
 	        	 //可取消订单
 	            commonDisposeService.executeCancelOrder(orderId, "会员自主取消订单", From.APP,
