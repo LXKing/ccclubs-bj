@@ -5503,6 +5503,7 @@ public class DefaultAction extends BaseAction {
                         map.put("title", cont.getCscTitle());
                         map.put("picUrl", cont.getCscImages());
                         map.put("linkUrl", cont.getCscContent());
+                        map.put("type", 0);
                         //是否对接活动盒子
                         String event = "";
                         if(cont.getCscIsActivity()!=null && cont.getCscIsActivity()==1) {
