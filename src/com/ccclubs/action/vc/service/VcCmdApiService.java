@@ -214,6 +214,11 @@ public class VcCmdApiService {
      */
     public VcApiResult carBindTerminal(CsCar carInfo) {
         Objects.requireNonNull(carInfo);
+        if (StringUtils.isEmpty(carInfo.getCscTerNo())) {
+            // 如果终端序列号为空，则直接返回绑定成功
+            //      这种情况只有版本更新后，车辆前后绑定不一致导致
+            return VcApiResult.ofOk(null);
+        }
         Objects.requireNonNull(carInfo.getCscTerNo());
         Objects.requireNonNull(carInfo.getCscVin());
         
