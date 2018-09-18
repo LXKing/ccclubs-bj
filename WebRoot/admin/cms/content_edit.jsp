@@ -15,15 +15,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csContent.cscId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.isAddType==true">
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
-	editables:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscStatus",
+	editables:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscIsActivity,cscActivityEvent,cscStatus",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscViewS,cscReplyS,cscCollectS,cscPraiseS,cscStatus",
+	visibles:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscIsActivity,cscActivityEvent,cscViewS,cscReplyS,cscCollectS,cscPraiseS,cscStatus",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
-	editables:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscStatus",
+	editables:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscIsActivity,cscActivityEvent,cscStatus",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscAddTime,cscUpdateTime,cscViewS,cscReplyS,cscCollectS,cscPraiseS,cscStatus",
+	visibles:"cscId,cscTitle,cscParent,cscFlag,cscRecommend,cscThum,cscIntroduction,cscKeywords,cscImages,cscContent,cscFile,cscIsActivity,cscActivityEvent,cscAddTime,cscUpdateTime,cscViewS,cscReplyS,cscCollectS,cscPraiseS,cscStatus",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -181,7 +181,7 @@ $(function(){
 		${lz:set("haveEditable",true)}
 		,"csContent.cscFile":function(el){
 		}
-		</s:if>	
+		</s:if>
 		<s:if test="#request.CTRL.e.cscAddTime==true">
 		${lz:set("haveEditable",true)}
 		,"csContent.cscAddTime":function(el){
@@ -702,6 +702,72 @@ $(function(){
 	${after$cscFile}
 	</s:if>
 	
+	${lz:set("注释","*****************活动盒子标识字段的输入框代码*****************")}
+	${lz:set("注释","before$cscIsActivity和after$cscIsActivity变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.cscIsActivity==true">
+	${before$cscIsActivity}
+	<dl class="cscIsActivity " minor  ref="cscIsActivity">
+		<dt>活动盒子:</dt>
+		<s:if test="#request.CTRL.e.cscIsActivity==true">
+		${lz:set("haveEditable",true)}
+		<dd input="select">
+		<s:if test="#request.csContent$cscIsActivity!=null">${csContent$cscIsActivity}</s:if><s:else>
+	 	 	<select class="narrow" id="cscIsActivity" name="csContent.cscIsActivity">
+		 		<option value="">请选择</option>
+				<option value="1" ${csContent.cscIsActivity==1?"selected":""}>是</option>
+				<option value="0" ${csContent.cscIsActivity==0?"selected":""}>否</option>
+		 	</select>
+	 	 </s:else>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****活动盒子标识字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input wide">
+		 		<textarea class="" style="display:none;" id="cscIsActivity">${csContent.cscIsActivity}</textarea>
+		 		<span>
+		 	
+			 ${csContent.cscIsActivity$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$cscIsActivity}
+	</s:if>
+	
+	${lz:set("注释","*****************活动事件字段的输入框代码*****************")}
+	${lz:set("注释","before$cscActivityEvent和after$cscActivityEvent变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.cscActivityEvent==true">
+	${before$cscActivityEvent}
+	<dl class="cscActivityEvent " minor  ref="cscActivityEvent">
+		<dt>活动事件:</dt>
+		<s:if test="#request.CTRL.e.cscActivityEvent==true">
+		${lz:set("haveEditable",true)}
+		<dd input="text">
+		<s:if test="#request.csContent$cscActivityEvent!=null">${csContent$cscActivityEvent}</s:if><s:else>
+		 	<input type="text" class="input" maxlength="50" size="32" name="csContent.cscActivityEvent" id="cscActivityEvent"  value="${csContent.cscActivityEvent}"/>
+	 	 </s:else>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****活动事件字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input wide">
+		 		<textarea class="" style="display:none;" id="cscActivityEvent">${csContent.cscActivityEvent}</textarea>
+		 		<span>
+		 	
+			 ${csContent.cscActivityEvent$}
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$cscActivityEvent}
+	</s:if>	
+	
 	${lz:set("注释","*****************添加时间字段的输入框代码*****************")}
 	${lz:set("注释","before$cscAddTime和after$cscAddTime变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
 	<s:if test="#request.CTRL.v.cscAddTime==true">
@@ -1007,6 +1073,14 @@ $(function(){
 	function href(url,params){
 		top.$.showModalDialog({url:url},params,window);
 	}
+	
+	$("#cscIsActivity").change(function(){
+		var isAc = $("#cscIsActivity").val();
+		var acE= $("#cscActivityEvent").val();
+		if(isAc!=undefined && isAc=="1" && acE==""){
+			$("#cscActivityEvent").val("invite");
+		}
+	})
 </script>
 
 

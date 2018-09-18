@@ -37,8 +37,10 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
 	private @caption("收藏次数") @column("csc_collect_s")    @note("  ") Long cscCollectS;// 非空     
 	private @caption("好评数") @column("csc_praise_s")    @note("  ") Long cscPraiseS;// 非空     
 	private @caption("状态") @column("csc_status")    @note(" 1:正常 0:无效  ") Short cscStatus;// 非空 1:正常 0:无效     
+	private @caption("活动盒子标识") @column("csc_is_activity")    @note(" 1:是 0:否  ") Short cscIsActivity;// 活动盒子标识 1:是 0:否
+	private @caption("活动事件") @column("csc_activity_event")    @note("   ") String cscActivityEvent;// 活动事件
 	
-	//默认构造函数
+    //默认构造函数
 	public CsContent(){
 	
 	}
@@ -210,6 +212,18 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
 		this.setSeted(F.cscStatus);
 		return this;
 	}
+	/** 活动盒子标识    **/
+    public CsContent cscIsActivity(Short cscIsActivity){
+        this.cscIsActivity = cscIsActivity;
+        this.setSeted(F.cscIsActivity);
+        return this;
+    }
+    /** 活动事件     **/
+    public CsContent cscActivityEvent(String cscActivityEvent){
+        this.cscActivityEvent = cscActivityEvent;
+        this.setSeted(F.cscActivityEvent);
+        return this;
+    }
 	
 	
 	//克隆对象
@@ -224,6 +238,8 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
 		clone.cscCollectS=this.cscCollectS;
 		clone.cscPraiseS=this.cscPraiseS;
 		clone.cscStatus=this.cscStatus;
+		clone.cscIsActivity=this.cscIsActivity;
+        clone.cscActivityEvent=this.cscActivityEvent;
 		return clone;
 	}
 	
@@ -834,7 +850,41 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
 
 	
 	
-	/**
+	public Short getCscIsActivity() {
+        return cscIsActivity;
+    }
+
+    public void setCscIsActivity(Short cscIsActivity) {
+        this.cscIsActivity = cscIsActivity;
+        this.setSeted(F.cscIsActivity);
+    }
+    
+    public String getCscIsActivity$(){
+        String strValue="";
+         if($.equals($.str(this.getCscIsActivity()),"1"))
+            strValue=$.str("是");        
+         if($.equals($.str(this.getCscIsActivity()),"0"))
+            strValue=$.str("否");        
+         return strValue;
+    }
+    
+    /***活动事件***/
+    public String getCscActivityEvent() {
+        return cscActivityEvent;
+    }
+
+    public void setCscActivityEvent(String cscActivityEvent) {
+        this.cscActivityEvent = cscActivityEvent;
+        this.setSeted(F.cscActivityEvent);
+    }
+    
+    public String getCscActivityEvent$(){
+        String strValue="";
+         strValue=$.str(this.getCscActivityEvent());
+         return strValue;
+    }
+
+    /**
 	 * 用来获取当有字段关联对象时的获取方式,调用如${CsContent.obj.filedName}
 	 * 因为有些变态的模板语言不能识别$，所以不能以${CsContent.$filedName}获取关联对象
 	 */
@@ -1025,6 +1075,21 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
  		public M cscStatusNull(){if(this.get("cscStatusNot")==null)this.put("cscStatusNot", "");this.put("cscStatus", null);return this;};
  		/** not .... */
  		public M cscStatusNot(){this.put("cscStatusNot", "not");return this;};
+ 		
+ 		/** 活动盒子标识    **/
+        public M cscIsActivity(Object cscIsActivity){this.put("cscIsActivity", cscIsActivity);return this;};
+        /** and csc_is_activity is null */
+        public M cscIsActivityNull(){if(this.get("cscIsActivityNot")==null)this.put("cscIsActivityNot", "");this.put("cscIsActivity", null);return this;};
+        /** not .... */
+        public M cscIsActivityNot(){this.put("cscIsActivityNot", "not");return this;};
+        
+        /** 活动事件    **/
+        public M cscActivityEvent(Object cscActivityEvent){this.put("cscActivityEvent", cscActivityEvent);return this;};
+        /** and csc_activity_name is null */
+        public M cscActivityEventNull(){if(this.get("cscActivityEventNot")==null)this.put("cscActivityEventNot", "");this.put("cscActivityEvent", null);return this;};
+        /** not .... */
+        public M cscActivityEventNot(){this.put("cscActivityEventNot", "not");return this;};
+        
 	 	public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
 	 	/** 获取所有静态内容 **/
@@ -1132,6 +1197,10 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
 		public final static @type(Long.class) String cscPraiseSMax="cscPraiseSMax";
 		/** 状态 [非空]   1:正常 0:无效     **/
 		public final static @type(Short.class)  String cscStatus="cscStatus";
+		/***活动盒子标识 1:是 0:否 ***/
+		public final static @type(Short.class)  String cscIsActivity="cscIsActivity";
+		/***活动事件 ***/
+        public final static @type(String.class)  String cscActivityEvent="cscActivityEvent"; 
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -1172,6 +1241,10 @@ public @caption("静态内容") @table("cs_content") class CsContent implements 
 		public final static String cscPraiseS="csc_praise_s";
 		/** 状态 [非空]   1:正常 0:无效     **/
 		public final static String cscStatus="csc_status";
+		/** 活动盒子标识   1:是 0:否     **/
+		public final static String cscIsActivity="csc_is_activity";
+		/***活动事件 ***/
+        public final static @type(String.class)  String cscActivityEvent="csc_activity_event";
 	 	public static String get(String name){
 			try {
 				Field field = C.class.getField(name);

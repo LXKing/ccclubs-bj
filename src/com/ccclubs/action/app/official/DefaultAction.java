@@ -5503,6 +5503,15 @@ public class DefaultAction extends BaseAction {
                         map.put("title", cont.getCscTitle());
                         map.put("picUrl", cont.getCscImages());
                         map.put("linkUrl", cont.getCscContent());
+                        //是否对接活动盒子
+                        String event = "";
+                        if(cont.getCscIsActivity()!=null && cont.getCscIsActivity()==1) {
+                            map.put("type", 1);
+                            event = StringUtils.isNotEmpty(cont.getCscActivityEvent())
+                                    ? cont.getCscActivityEvent()
+                                    : "invite"; 
+                            map.put("eventName", event);
+                        }
                         bannerList.add(map);
                     }
                     data.put("banners", bannerList);
