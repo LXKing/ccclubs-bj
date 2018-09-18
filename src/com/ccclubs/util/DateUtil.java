@@ -139,4 +139,30 @@ public class DateUtil {
 		}
 		return str;
 	}
+	/**
+	 * 在原有的日期上加上天数
+	 * @param date
+	 * @param i
+	 * @return
+	 */
+	 public  Date addDayOfDate(Date date,int i){
+	    Calendar c = Calendar.getInstance();
+	    c.setTime(date);
+	    c.add(Calendar.DATE, i);
+	    Date newDate = c.getTime();
+	    return newDate;
+	}
+	 
+	/**
+	 * 在原有的日期上加分钟
+	 * @param cur
+	 * @return
+	 */
+    public Date addMinuteOfDate(Date date ,int minute) {  
+        Calendar c = Calendar.getInstance();  
+        c.setTime(date);   //设置时间
+        c.add(Calendar.MINUTE, minute); //日期分钟加\,Calendar.DATE(天),Calendar.HOUR(小时)  
+        Date newDate = c.getTime(); //结果  
+       return newDate;
+    } 
 }
