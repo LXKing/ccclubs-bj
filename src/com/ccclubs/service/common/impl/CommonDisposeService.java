@@ -497,7 +497,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 		coc.setCsocMarginNeed(defineMargin);
 		coc.setCsocTotalDuration($((orderList.get(orderList.size()-1).getCsoFinishTime().getTime()-start.getTime())*1d / SYSTEM.HOUR));
 		coc.setCsocPayNeed(mealPrice);
-		coc.setCsocPayReal(0d);//结算时在付coc.setCsocPayReal(mealPrice);
+		coc.setCsocPayReal(mealPrice);
 		coc.setCsocPayRent(mealPrice);
 		coc.setCsocPayMoney(payMoney);
 		coc.setCsocPayCoupon(payCoupon);
@@ -516,15 +516,15 @@ public class CommonDisposeService implements ICommonDisposeService {
 		
 		ICsOrderService csOrderService = $.GetSpringBean("csOrderService");
 		/***************************** 扣款 ********************************/
-//		String strDescript = "订单簇预定："+coc.getCsocId$()+",套餐ID"+item.getCsiId()+",套餐名称"+item.getCsiTitle()+",套餐金额"+mealPrice+",保证金"+defineMargin;
-//		if(payMoney >0){
-//			commonMoneyService.updateMoney(coc.getCsocHost(), member.getCsmId(), ICommonMoneyService.MoneyType.Money, -payMoney,
-//					SYSTEM.RecordType.订单消费, strDescript, coc.getCsocId(), coc.getCsocId(), CsOrderCluster.class);
-//		}
-//		if(payCoupon >0){
-//			commonMoneyService.updateMoney(coc.getCsocHost(), member.getCsmId(), ICommonMoneyService.MoneyType.Coupon, -payCoupon,
-//					SYSTEM.RecordType.订单消费, strDescript, coc.getCsocId(), coc.getCsocId(), CsOrderCluster.class);
-//		}
+		String strDescript = "订单簇预定："+coc.getCsocId$()+",套餐ID"+item.getCsiId()+",套餐名称"+item.getCsiTitle()+",套餐金额"+mealPrice+",保证金"+defineMargin;
+		if(payMoney >0){
+			commonMoneyService.updateMoney(coc.getCsocHost(), member.getCsmId(), ICommonMoneyService.MoneyType.Money, -payMoney,
+					SYSTEM.RecordType.订单消费, strDescript, coc.getCsocId(), coc.getCsocId(), CsOrderCluster.class);
+		}
+		if(payCoupon >0){
+			commonMoneyService.updateMoney(coc.getCsocHost(), member.getCsmId(), ICommonMoneyService.MoneyType.Coupon, -payCoupon,
+					SYSTEM.RecordType.订单消费, strDescript, coc.getCsocId(), coc.getCsocId(), CsOrderCluster.class);
+		}
 		/***************************** 扣款 ********************************/
 		String sub_order_ids = "";
 		for(int i=0; i<orderList.size(); i++){
