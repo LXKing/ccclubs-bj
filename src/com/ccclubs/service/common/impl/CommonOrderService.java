@@ -18,7 +18,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.CollectionUtils;
-
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSONObject;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.config.SYSTEM.RuleName;
 import com.ccclubs.exception.ErrorException;
@@ -391,23 +391,23 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		}
 		
 		//电里程费
-		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.KILOM,RuleName.每公里,userType), start, realFinish, electric));
+//		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.KILOM,RuleName.每公里,userType), start, realFinish, electric));
 		
 		//油里程费
-		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.MILEAGE,RuleName.每公里,userType), start, realFinish, fuel));
+//		details.addAll(this.getKilometerOrderDetail(getGoodsByFlag(SYSTEM.MILEAGE,RuleName.每公里,userType), start, realFinish, fuel));
 	
-		if(timeoutStart!=null){
-			CsProduct timeoutProduct = this.getProductByFlag(SYSTEM.TIMEOUT);
-			CsGoods timeoutGoods = getGoodsByFlag(SYSTEM.TIMEOUT,RuleName.每分钟, userType);
-			if(timeoutProduct!=null && timeoutGoods!=null){
-				CsPrice timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",cspOutets).add("cspModel",cspModel).add("cspUserType",userType));
-				if(timeoutPrice==null){//如果未配置价格，则取默认网点价格 
-					if(csFeeTypeSet!=null && csFeeTypeSet.getCsftsOutlets()!=null)
-						timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",csFeeTypeSet.getCsftsOutlets()).add("cspModel",cspModel).add("cspUserType",userType));
-				}
-				details.addAll(this.getTimeoutOrderDetail(timeoutProduct, timeoutStart, realFinish, userType, srvHost, timeoutPrice, prices));
-			}
-		}
+//		if(timeoutStart!=null){
+//			CsProduct timeoutProduct = this.getProductByFlag(SYSTEM.TIMEOUT);
+//			CsGoods timeoutGoods = getGoodsByFlag(SYSTEM.TIMEOUT,RuleName.每分钟, userType);
+//			if(timeoutProduct!=null && timeoutGoods!=null){
+//				CsPrice timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",cspOutets).add("cspModel",cspModel).add("cspUserType",userType));
+//				if(timeoutPrice==null){//如果未配置价格，则取默认网点价格 
+//					if(csFeeTypeSet!=null && csFeeTypeSet.getCsftsOutlets()!=null)
+//						timeoutPrice = csPriceDao.getCsPrice(Lazy.add("cspGoods", timeoutGoods.getCsgId()).add("cspOutets",csFeeTypeSet.getCsftsOutlets()).add("cspModel",cspModel).add("cspUserType",userType));
+//				}
+//				details.addAll(this.getTimeoutOrderDetail(timeoutProduct, timeoutStart, realFinish, userType, srvHost, timeoutPrice, prices));
+//			}
+//		}
 		
 		Collections.sort(details, new Comparator<CsOrderDetail>(){
 			@Override
@@ -439,7 +439,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 			orderDetail.setCsodModel(cspModel);
 			orderDetail.setCsodPrice($(csPricer.getCspPrice()));
 			orderDetail.setCsodPriceReal($(csPricer.getCspPrice()));			
-			orderDetail.setCsodRemark("基础价格");
+			orderDetail.setCsodRemark((StringUtils.isEmpty(orderDetail.getCsodRemark())? "" : orderDetail.getCsodRemark())+"基础价格");
 			orderDetail.setCsodPricer(csPricer.getCspId());
 			orderDetail.setCsodRebate(1.0d);
 			
@@ -1328,10 +1328,22 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             }
             //计算24小时内最有计费组合
             List<CsOrderDetail> list = buildOrderDetailsIn24Hours(start, null, timeBlocks, slotMap);
-            for (int i = 0; i < days; i++) {
+            //追加第一天的订单明细
+            results.addAll(list);
+            
+            //追加第二天开始的订单明细，且处理备注和时间
+            JSONObject json = new JSONObject();
+            for (int i = 1; i < days; i++) {
                 for (CsOrderDetail bean : list) {
                     bean.setCsodStart(TimeUtil.addDay(bean.getCsodStart(), 1));
                     bean.setCsodEnd(TimeUtil.addDay(bean.getCsodEnd(), 1));
+                    if(bean.getCsodRemark() != null) {
+                        json = JSONObject.parseObject(bean.getCsodRemark());
+                        if(json!=null) {
+                            json.put("time", TimeUtil.format(bean.getCsodStart(), null) + "~" + TimeUtil.format(bean.getCsodEnd(), null));
+                            bean.setCsodRemark(json.toJSONString());
+                        }
+                    }
                 }
                 results.addAll(list);
             }
@@ -1603,7 +1615,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
     }
 
     /**
-     * 根据计费规则，将订单时长拆分为多个收费项
+     * 根据计费规则，将订单时长拆分为多个收费项,订单备注先以json存储，供后续处理
      * @param start 开始时间
      * @param end 截止时间：如果等于空，截止时间为当前时间后移24小时
      * @param timeBlocks 时间段集合
@@ -1645,11 +1657,16 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         }
 
         // 统计24小时累计收费
+        JSONObject json = new JSONObject();
+        StringBuilder feeDetail = new StringBuilder();
         for (CsOrderDetail detail : details) {
             if (detail != null) {
                 totalFee += detail.getCsodPrice() * detail.getCsodCount();
+                feeDetail = feeDetail.append(detail.getCsodRemark());
             }
         }
+        //记录组合计费明细
+        json.put("combination", feeDetail.toString());
 
         // 24小时封顶收费计算
         if (totalFee > dayFee) {
@@ -1657,15 +1674,19 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 end = TimeUtil.addHour(start, 24);
             }
             detil = buildOrderDetail(daySlot, start, end, 1);
+            
             //消费计价明细
-            String expenseDetail = TimeUtil.format(start, null) + "~" + TimeUtil.format(end, null)
-            + "；按天计费：按天封顶计费最优惠。24小时封顶计费：" + dayFee + "/小时。";
-            detil.setCsodRemark(expenseDetail);
+            json.put("time", TimeUtil.format(start, null) + "~" + TimeUtil.format(end, null));
+            json.put("feeRule", "24小时封顶计费");
+            json.put("cheapTip", "24小时封顶计费最优惠");
+            json.put("totalFee", dayFee);
+            detil.setCsodRemark(json.toJSONString());
+            
             // 清楚其他计费记录
             details.clear();
             // 保留当前计费记录
             details.add(detil);
-            System.out.println(expenseDetail);
+            System.out.println(json.toJSONString());
         }
 
         return details;
@@ -1695,54 +1716,77 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         double hourFee = hourSlot.getPrice();// 小时封顶收费
         double tempMuniteFee = minutes * minuteFee;// 分钟计费总价
         double fee = hourFee / 60;// 小时计费单价
-        String expenseDetail = "";//消费计价明细
-        
+        JSONObject json = new JSONObject();//消费计价明细
         //普通时长计费
         if (fee >= minuteFee) {
             // 分钟计费优惠于小时计费
             detil = buildOrderDetail(minuteSlot, timeBlock.getStartTime(), timeBlock.getEndTime(),
                     minutes);
-            expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
-                    + TimeUtil.format(timeBlock.getEndTime(), null) + "；普通时长计费：分钟计费优惠于小时计费。小时计费："
-                    + hourFee + "/小时，" + "分钟计费:" + minuteFee + "/分钟，总费用：" + tempMuniteFee + "，总时长："
-                    + minutes + "分钟。";
-            detil.setCsodRemark(expenseDetail);
+            json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+            json.put("feeRule", "普通时长计费");
+            json.put("cheapTip", "分钟计费优惠于小时计费");
+            json.put("hourFee", hourFee);
+            json.put("minuteFee", minuteFee);
+            json.put("nightFee", "");
+            json.put("hours", hours);
+            json.put("minutes", minutes);
+            json.put("totalFee", tempMuniteFee);
+            
+            detil.setCsodRemark(json.toJSONString());
             details.add(detil);
-            System.out.println(expenseDetail);
+            System.out.println(json.toJSONString());
         } else {
             // 小时计费单价优惠于分钟计费：总费用=hours*hourFee+(minutes*minuteFee||hourFee)
             Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
             detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, 1);
-            expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
-                    + TimeUtil.format(temp, null) + "；普通时长计费：小时计费优惠于分钟计费。小时计费：" + hourFee + "/小时，"
-                    + "分钟计费:" + minuteFee + "/分钟，总小时数：" + hours + "小时，总费用：" + hourFee * hours + "。";
-            detil.setCsodRemark(expenseDetail);
+            
+            json.clear();
+            json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
+            json.put("feeRule", "普通时长计费");
+            json.put("cheapTip", "小时计费优惠于分钟计费");
+            json.put("hourFee", hourFee);
+            json.put("minuteFee", minuteFee);
+            json.put("hours", hours);
+            json.put("totalFee", hourFee * hours);
+            
+            detil.setCsodRemark(json.toJSONString());
             details.add(detil);
-            System.out.println(expenseDetail);
+            System.out.println(json.toJSONString());
             // 不满一小时的最低收费
             if(normalMinutes>0) {
                 tempMuniteFee = normalMinutes * minuteFee;
                 if (tempMuniteFee > hourFee) {
                     //分钟计费满足小时计费封顶
                     detil = buildOrderDetail(hourSlot, temp, timeBlock.getEndTime(), 1);
-                    expenseDetail = TimeUtil.format(temp, null) + "~"
-                            + TimeUtil.format(timeBlock.getEndTime(), null)
-                            + "；时长不满一小时，普通时长计费：小时计费优惠于分钟计费。小时计费：" + hourFee + "/小时，" + "分钟计费:"
-                            + minuteFee + "/分钟，分钟计费总费用：" + tempMuniteFee + "，总时长：" + normalMinutes
-                            + "分钟，小时封顶计费：" + hourFee + "。";
-                    detil.setCsodRemark(expenseDetail);
+                    
+                    json.clear();
+                    json.put("time", TimeUtil.format(temp, null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+                    json.put("feeRule", "普通时长计费");
+                    json.put("cheapTip", "时长不满一小时,小时封顶计费优惠于分钟计费");
+                    json.put("hourFee", hourFee);
+                    json.put("minuteFee", minuteFee);
+                    json.put("minutes", normalMinutes);
+                    json.put("totalFee", hourFee);
+                    
+                    detil.setCsodRemark(json.toJSONString());
                     details.add(detil);
-                    System.out.println(expenseDetail);
+                    System.out.println(json.toJSONString());
                 } else {
                     //分钟计费不满足小时计费封顶
                     detil = buildOrderDetail(minuteSlot, temp, timeBlock.getEndTime(), normalMinutes);
-                    expenseDetail = TimeUtil.format(temp, null) + "~"
-                            + TimeUtil.format(timeBlock.getEndTime(), null)
-                            + "；时长不满一小时，普通时长计费：分钟计费优惠于小时计费。小时计费：" + hourFee + "/小时，" + "分钟计费:"
-                            + minuteFee + "/分钟，总费用：" + tempMuniteFee + "，总时长：" + minutes + "分钟。";
-                    detil.setCsodRemark(expenseDetail);
+                    
+                    json.clear();
+                    json.put("time", TimeUtil.format(temp, null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+                    json.put("feeRule", "普通时长计费");
+                    json.put("cheapTip", "时长不满一小时,分钟计费优惠于小时封顶计费");
+                    json.put("hourFee", hourFee);
+                    json.put("minuteFee", minuteFee);
+                    json.put("minutes", normalMinutes);
+                    json.put("totalFee", normalMinutes * minuteFee);
+                    
+                    detil.setCsodRemark(json.toJSONString());
                     details.add(detil);
-                    System.out.println(expenseDetail);
+                    System.out.println(json.toJSONString());
                 }
             }
         }
@@ -1779,7 +1823,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         double tempMuniteFee;// 分钟计费总费用
         double tempHourFee;// 小时计费总费用
         double totalFee;// 总费用
-        String expenseDetail = "";//消费计价明细
+        JSONObject json = new JSONObject();//消费计价明细
 
         // 分钟计费
         tempMuniteFee = minutes * minuteFee;
@@ -1798,56 +1842,80 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             if (totalFee >= tempMuniteFee) {
                 detil = buildOrderDetail(minuteSlot, timeBlock.getStartTime(),
                         timeBlock.getEndTime(), minutes);
-                expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
-                        + TimeUtil.format(timeBlock.getEndTime(), null) + "；"+ruleName.name()+"时长计费：分钟计费最优惠。小时计费："
-                        + hourFee + "/小时，" + "分钟计费：" + minuteFee + "/分钟，夜租封顶计费：" + nightFee
-                        + ",总费用：" + tempMuniteFee + "，总时长：" + minutes + "分钟。";
-                detil.setCsodRemark(expenseDetail);
+                
+                json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+                json.put("feeRule", ruleName.name()+"时长计费");
+                json.put("cheapTip", "分钟计费最优惠");
+                json.put("hourFee", hourFee);
+                json.put("minuteFee", minuteFee);
+                json.put("nightFee", nightFee);
+                json.put("minutes", minutes);
+                json.put("totalFee", minuteFee * minutes);
+                
+                detil.setCsodRemark(json.toJSONString());
                 details.add(detil);
-                System.out.println(expenseDetail);
+                System.out.println(json.toJSONString());
             } else {
                 //夜租时段:分钟计费、小时计费组合最优惠
                 //小时计费明细
                 Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
                 detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
-                if(normalMinutes>0) {
-                    expenseDetail = "时长计费：分钟计费、小时计费组合最优惠。小时计费：";
-                }else {
-                    expenseDetail = "时长计费：小时计费最优惠。小时计费：";
-                }
-                expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
-                        + TimeUtil.format(temp, null) + "；"+ruleName.name()+ expenseDetail + hourFee
-                        + "/小时，" + "分钟计费：" + minuteFee + "/分钟，夜租封顶计费：" + nightFee + ",小时费用："
-                        + hourFee * hours + "，总时长：" + hours + "小时。";
-                detil.setCsodRemark(expenseDetail);
-                details.add(detil);
-                System.out.println(expenseDetail);
                 
+                json.clear();
+                json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
+                json.put("feeRule", ruleName.name()+"时长计费");
+                if(normalMinutes>0) {
+                    json.put("cheapTip", "分钟计费、小时计费组合最优惠");
+                }else {
+                    json.put("cheapTip", "小时计费最优惠");
+                }
+                json.put("hourFee", hourFee);
+                json.put("minuteFee", minuteFee);
+                json.put("nightFee", nightFee);
+                json.put("hours", hours);
+                json.put("totalFee", hours * hourFee);
+                
+                detil.setCsodRemark(json.toJSONString());
+                details.add(detil);
+                System.out.println(json.toJSONString());
+
                 //不足一小时的分钟数计费
                 if(normalMinutes>0) {
                     totalFee = normalMinutes*minuteFee;
                     if(totalFee>hourFee) {
                         //分钟计费满足小时计费封顶
                         detil = buildOrderDetail(hourSlot, temp, timeBlock.getEndTime(), 1);
-                        expenseDetail = TimeUtil.format(temp, null) + "~"
-                                + TimeUtil.format(timeBlock.getEndTime(), null)
-                                + "；"+ruleName.name()+"时长计费：分钟计费最优惠。小时计费：" + hourFee + "/小时，" + "分钟计费：" + minuteFee
-                                + "/分钟，夜租封顶计费：" + nightFee + ",不足一小时费用(满足封顶)：" + hourFee + "，总时长："
-                                + normalMinutes + "分钟。";
-                        detil.setCsodRemark(expenseDetail);
+                        
+                        json.clear();
+                        json.put("time", TimeUtil.format(temp, null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+                        json.put("feeRule", ruleName.name()+"时长计费");
+                        json.put("cheapTip", "时长不满一小时,小时封顶计费优惠于分钟计费");
+                        json.put("hourFee", hourFee);
+                        json.put("minuteFee", minuteFee);
+                        json.put("nightFee", nightFee);
+                        json.put("minutes", normalMinutes);
+                        json.put("totalFee", hourFee);
+                        
+                        detil.setCsodRemark(json.toJSONString());
                         details.add(detil);
-                        System.out.println(expenseDetail);
+                        System.out.println(json.toJSONString());
                     }else {
                         //分钟计费不满足小时计费封顶
                         detil = buildOrderDetail(minuteSlot, temp, timeBlock.getEndTime(), normalMinutes);
-                        expenseDetail = TimeUtil.format(temp, null) + "~"
-                                + TimeUtil.format(timeBlock.getEndTime(), null)
-                                + "；"+ruleName.name()+"时长计费：分钟计费最优惠。小时计费：" + hourFee + "/小时，" + "分钟计费：" + minuteFee
-                                + "/分钟，夜租封顶计费：" + nightFee + ",不足一小时费用(不满足封顶)：" + totalFee + "，总时长："
-                                + normalMinutes + "分钟。";
-                        detil.setCsodRemark(expenseDetail);
+                        
+                        json.clear();
+                        json.put("time", TimeUtil.format(temp, null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+                        json.put("feeRule", ruleName.name()+"时长计费");
+                        json.put("cheapTip", "时长不满一小时,分钟计费最优惠");
+                        json.put("hourFee", hourFee);
+                        json.put("minuteFee", minuteFee);
+                        json.put("nightFee", nightFee);
+                        json.put("minutes", normalMinutes);
+                        json.put("totalFee", normalMinutes*minuteFee);
+                        
+                        detil.setCsodRemark(json.toJSONString());
                         details.add(detil);
-                        System.out.println(expenseDetail);
+                        System.out.println(json.toJSONString());
                     } 
                 }
             }
@@ -1855,14 +1923,20 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             //夜租封顶计费最优惠
             detil = buildOrderDetail(nightSlot, timeBlock.getStartTime(), timeBlock.getEndTime(),
                     1);
-            expenseDetail = TimeUtil.format(timeBlock.getStartTime(), null) + "~"
-                    + TimeUtil.format(timeBlock.getEndTime(), null)
-                    + "；"+ruleName.name()+"时长计费：夜租一封顶计费最优惠。小时计费：" + hourFee + "/小时，" + "分钟计费：" + minuteFee
-                    + "/分钟，夜租封顶计费：" + nightFee + ",组合计费费用(满足封顶)：" + totalFee + "，总时长："
-                    + minutes + "分钟。";
-            detil.setCsodRemark(expenseDetail);
+            
+            json.clear();
+            json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(timeBlock.getEndTime(), null));
+            json.put("feeRule", ruleName.name()+"时长计费");
+            json.put("cheapTip", "夜租封顶计费最优惠");
+            json.put("hourFee", hourFee);
+            json.put("minuteFee", minuteFee);
+            json.put("nightFee", nightFee);
+            json.put("minutes", minutes);
+            json.put("totalFee", nightFee);
+            
+            detil.setCsodRemark(json.toJSONString());
             details.add(detil);
-            System.out.println(expenseDetail);
+            System.out.println(json.toJSONString());
         }
 
         return details;
