@@ -1417,6 +1417,7 @@ public class DefaultAction extends BaseAction {
      */
     public String getMealTime() {
         try {
+        	
             CsMember member = OauthUtils.getOauth($.getString("access_token", ""));
             if (member == null) {
                 return returnError("100", "登录授权无效");
@@ -6678,6 +6679,12 @@ public class DefaultAction extends BaseAction {
              			list = CsPrice.where().cspUserType(csFeeTypeSet.getCsftsDefault()).cspModel(model).cspOutets(csFeeTypeSet.getCsftsOutlets()).list(-1);
              		for(CsPrice csPrice:list){
              			CsGoods goods = csPrice.get$cspGoods();
+             			
+             			Long goodType=goods.getCsgUserType();
+             			Long priceType=csPrice.getCspUserType();
+             			if(goodType.intValue()!=priceType.intValue()) {
+             				continue;
+             			}
              			if("分钟租金".equals(goods.getCsgName())) {
              				explainContent=explainContent.replace("{code1}", csPrice.getCspPrice()+"");           ;
             			}else if("租金一天".equals(goods.getCsgName())) {

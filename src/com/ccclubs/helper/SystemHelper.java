@@ -1648,6 +1648,12 @@ public class SystemHelper {
 			list = CsPrice.where().cspUserType(csFeeTypeSet.getCsftsDefault()).cspModel(model).cspOutets(csFeeTypeSet.getCsftsOutlets()).list(-1);
 		for(CsPrice csPrice:list){
 			CsGoods goods = csPrice.get$cspGoods();
+			Long goodType=goods.getCsgUserType();
+ 			Long priceType=csPrice.getCspUserType();
+ 			//计费策略判断
+ 			if(goodType.intValue()!=priceType.intValue()) {
+ 				continue;
+ 			}
 			if(csPrice.getCspPrice().doubleValue()<0.02) 
 				modelPrice.put(goods.getCsgProduct$()+"."+goods.getCsgRule$(), 0);
 			else
