@@ -1524,12 +1524,46 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
          */
         nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
         nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
-        Date lastNightStart = TimeUtil.addDay(nightStart, -1);//昨天夜租三开始时间
-        lastNightFinish = TimeUtil.addDay(nightFinish, -1);//昨天夜租三结束时间
-        // 起始时间在夜租三有效时间之内，包括昨天或当天的夜租三
-        if ((start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime())
-                || (start.getTime() >= lastNightStart.getTime()
-                        && start.getTime() < lastNightFinish.getTime())) {
+        // 起始时间在当天的夜租三有效时间之内
+        if (start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime()) {
+            /**** 以24小时为周期，分割时间 ****/
+            // 开始时间~夜租一结束时间
+            tempStart = start;
+            tempEnd = nightFinish;
+            if(tempEnd.before(end)) {
+                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT3);
+                timeBlocks.add(timeBlock);
+            }else {
+                timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_NIGHT3);
+                timeBlocks.add(timeBlock);
+                return timeBlocks;
+            }
+
+            // 夜租一结束时间~夜租一开始时间
+            tempStart = tempEnd;
+            date = TimeUtil.format(tempStart, TimeUtil.DATE.FORMAT_yyyy_MM_dd); 
+            tempEnd = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());
+            if(tempEnd.before(end)) {
+                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
+                timeBlocks.add(timeBlock);
+            }else {
+                timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_DAYTIME);
+                timeBlocks.add(timeBlock);
+                return timeBlocks;
+            }
+
+            // 夜租一开始时间~24小时周期末
+            tempStart = tempEnd;
+            tempEnd = end; 
+            timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT1);
+            timeBlocks.add(timeBlock);
+            return timeBlocks;
+        }
+        
+        // 起始时间在昨天夜租三有效时间之内
+        nightStart = TimeUtil.addDay(nightStart, -1);//昨天夜租三开始时间
+        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//昨天夜租三开始时间
+        if (start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime()) {
             /**** 以24小时为周期，分割时间 ****/
             // 开始时间~夜租一结束时间
             tempStart = start;
@@ -1564,52 +1598,50 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             return timeBlocks;
         }
 
-        //假设时段跨天
-        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
-        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
-        if(TimeUtil.isSameDay(nightStart, nightFinish)) {
-         // 起始时间在第二天夜租一开始时间之前，夜租三截止时间之后
-            Date nextNightStart = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());//第二天夜租三开始时间
-            nextNightStart = TimeUtil.addDay(nextNightStart, 1);
-            Date nextNightFinish = TimeUtil.addMinute(nextNightStart, nightSlot1.getDuration());
-            if (start.getTime() >= nightFinish.getTime()
-                    && start.getTime() <= nextNightStart.getTime()) {
-
-                /**** 以24小时为周期，分割时间 ****/
-                // 开始时间~夜租一开始时间
-                tempStart = start;
-                tempEnd = nextNightStart;
-                if(tempEnd.before(end)) {
-                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
-                    timeBlocks.add(timeBlock);
-                }else {
-                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_DAYTIME);
-                    timeBlocks.add(timeBlock);
-                    return timeBlocks;
-                }
-
-                // 夜租一时间段
-                tempStart = tempEnd;
-                tempEnd = nextNightFinish;
-                if(tempEnd.before(end)) {
-                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT1);
-                    timeBlocks.add(timeBlock);
-                }else {
-                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_NIGHT1);
-                    timeBlocks.add(timeBlock);
-                    return timeBlocks;
-                }
-
-                // 夜租一结束时间~24小时周期末
-                tempStart = tempEnd;
-                tempEnd = end; 
-                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
-                timeBlocks.add(timeBlock);
-                return timeBlocks;
-            } 
-        }
-        
-        
+        //假设时段不跨天
+//        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
+//        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
+//        if(TimeUtil.isSameDay(nightStart, nightFinish)) {
+//            // 起始时间在第二天夜租一开始时间之前，夜租三截止时间之后
+//            Date nextNightStart = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());//第二天夜租三开始时间
+//            nextNightStart = TimeUtil.addDay(nextNightStart, 1);
+//            Date nextNightFinish = TimeUtil.addMinute(nextNightStart, nightSlot1.getDuration());
+//            if (start.getTime() >= nightFinish.getTime()
+//                    && start.getTime() <= nextNightStart.getTime()) {
+//
+//                /**** 以24小时为周期，分割时间 ****/
+//                // 开始时间~夜租一开始时间
+//                tempStart = start;
+//                tempEnd = nextNightStart;
+//                if(tempEnd.before(end)) {
+//                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
+//                    timeBlocks.add(timeBlock);
+//                }else {
+//                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_DAYTIME);
+//                    timeBlocks.add(timeBlock);
+//                    return timeBlocks;
+//                }
+//
+//                // 夜租一时间段
+//                tempStart = tempEnd;
+//                tempEnd = nextNightFinish;
+//                if(tempEnd.before(end)) {
+//                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT1);
+//                    timeBlocks.add(timeBlock);
+//                }else {
+//                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_NIGHT1);
+//                    timeBlocks.add(timeBlock);
+//                    return timeBlocks;
+//                }
+//
+//                // 夜租一结束时间~24小时周期末
+//                tempStart = tempEnd;
+//                tempEnd = end; 
+//                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
+//                timeBlocks.add(timeBlock);
+//                return timeBlocks;
+//            } 
+//        }
         
         return timeBlocks;
     }
