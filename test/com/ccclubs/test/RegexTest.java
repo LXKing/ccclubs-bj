@@ -11,7 +11,7 @@ public class RegexTest {
             return null;
         }
         str = str.trim();
-        str = str.replaceAll("\\d", "");
+        str = str.replaceAll("\\D", "");
         System.out.println(str);
         return str;
     }

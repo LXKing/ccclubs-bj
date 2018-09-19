@@ -362,7 +362,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                                 + "][" + CsUserType.getKeyValue(userType) + "]未配置价格");
             }
         }else if(oldOrder!=null && StringUtils.isNotEmpty(oldOrder.getCsoSrc())) {
-            String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\d", "");
+            String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\D", "");
             CsOrderCluster coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
             //套餐订单时长拆解：套餐时段单独计算，提前取车、超时还车时段分别计算
             if(coc!=null) {
@@ -1617,7 +1617,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
     /**
      * 根据计费规则，将订单时长拆分为多个收费项,订单备注先以json存储，供后续处理
      * @param start 开始时间
-     * @param end 截止时间：如果等于空，截止时间为当前时间后移24小时
+     * @param end 截止时间：如果等于空，截止时间为当前时间后移24小时,否则截止时间距离开始时间不满24小时
      * @param timeBlocks 时间段集合
      * @param slotMap 计费槽
      * @return
@@ -1665,6 +1665,35 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 feeDetail = feeDetail.append(detail.getCsodRemark());
             }
         }
+        
+        //不满一天的还要判断时长是否不满一小时，不满一小时的时长可能跨越了夜租时段导致拆分成多个时段而最终价格高于小时封顶计费
+        if (end != null) {
+            int minutes = TimeUtil.getMinutesBetween(start, end, RoundMode.Ceiling);
+            if (minutes < 60) {
+                //时长不满一小时，用普通时长计费计算一遍，然后比对之前的计费价格
+                TimeBlock timeBlock = new TimeBlock(start, end, TimeBlock.FEE_DAYTIME);
+                List<CsOrderDetail> list = buildOrdinaryOrderDetail(timeBlock, minuteSlot, hourSlot);
+                double tempTotalFee = 0;// 总费用
+                //累计普通时长费用
+                for (CsOrderDetail detail : list) {
+                    if (detail != null) {
+                        tempTotalFee += detail.getCsodPrice() * detail.getCsodCount();
+                    }
+                }
+                //当前计费优惠，就采用当前计费方式，并记录当前计费信息
+                if(tempTotalFee<=totalFee) {
+                    feeDetail = new StringBuilder();
+                    totalFee = tempTotalFee;
+                    details = list;
+                    for (CsOrderDetail detail : details) {
+                        if (detail != null) {
+                            feeDetail = feeDetail.append(detail.getCsodRemark());
+                        }
+                    }
+                }
+            }
+        }
+        
         //记录组合计费明细
         json.put("combination", feeDetail.toString());
 
