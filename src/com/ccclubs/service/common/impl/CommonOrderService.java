@@ -1969,7 +1969,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         // 获取当前配置计费规则（价格表、规则表、商品表关联查询）
         String sql =
                 "select cp.*, cr.csr_expression, cr.csr_id, cr.csr_name, cr.csr_meas, cr.csr_priority, cg.csg_name, cg.csg_product, cg.csg_profile from cs_price cp "
-                        + " left join cs_goods cg on cp.csp_goods=cg.csg_id "
+                        + " left join cs_goods cg on cp.csp_goods=cg.csg_id and cp.csp_user_type=cg.csg_user_type "
                         + " left join cs_rule cr on cr.csr_id = cg.csg_rule "
                         + " where cr.csr_status=1 and cr.csr_name !=\"每公里\" and cp.csp_outets="
                         + outletsId + " and cp.csp_model=" + modelId + " and cp.csp_user_type="
@@ -1988,7 +1988,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         // 获取默认配置计费规则并增量模式追加至已有规则（价格表、规则表、商品表关联查询）
         if (defaultOutletsId != null) {
             sql = "select cp.*, cr.csr_expression, cr.csr_id, cr.csr_name, cr.csr_meas, cr.csr_priority, cg.csg_name, cg.csg_product, cg.csg_profile from cs_price cp "
-                    + " left join cs_goods cg on cp.csp_goods=cg.csg_id "
+                    + " left join cs_goods cg on cp.csp_goods=cg.csg_id and cp.csp_user_type=cg.csg_user_type "
                     + " left join cs_rule cr on cr.csr_id = cg.csg_rule "
                     + " where cr.csr_status=1 and cr.csr_name !=\"每公里\" and cp.csp_outets="
                     + defaultOutletsId + " and cp.csp_model=" + modelId + " and cp.csp_user_type="
