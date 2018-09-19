@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.ccclubs.param.TimeUtil;
+
 /**
  * 各种格式的日期转换通用类
  * @author wangx
@@ -165,4 +167,23 @@ public class DateUtil {
         Date newDate = c.getTime(); //结果  
        return newDate;
     } 
+    
+    
+    public static Date getWeekendMealStartTime(Date date, int minutes) {
+        String ds = TimeUtil.format(date, TimeUtil.DATE.FORMAT_yyyy_MM_dd) + " 00:00:00";
+        date = TimeUtil.stringToDate(ds);
+        date = TimeUtil.addMinute(date, minutes);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int dow = cal.get(Calendar.DAY_OF_WEEK);
+        if(dow==2) {
+            //如果是星期一，时间取上周五
+            date = TimeUtil.addDay(date, -3);
+        }else {
+            //其他时间直接区本周五
+            cal.set(Calendar.DAY_OF_WEEK, 6);
+            date = cal.getTime();
+        }
+        return date;
+    }
 }
