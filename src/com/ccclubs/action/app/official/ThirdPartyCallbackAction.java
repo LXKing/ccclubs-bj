@@ -58,7 +58,7 @@ public class ThirdPartyCallbackAction {
 	  //处理data数据，反序列化对象
 	    JSONObject jsonObject=JSONObject.fromObject(results);
 	    String event=jsonObject.getString("event");
-	    if ("ATTEND".equals(event)) {//中将的event事件为ATTEND
+	    if ("ATTEND".equals(event)||"INVITE".equals(event)) {//中将的event事件为ATTEND
             
             //处理是否中奖
             int winning=jsonObject.getJSONObject("data").getInt("winning");
@@ -73,14 +73,14 @@ public class ThirdPartyCallbackAction {
               //用户app类型不匹配
                 return "SUCCESS";
             }
-	       String identity=jsonObject.getJSONObject("data").getJSONObject("customer").getString("identity");//获取用户唯一标志（是否要先获取用户类型？？）
+	       Long identity=jsonObject.getJSONObject("data").getJSONObject("customer").getLong("identity");//获取用户唯一标志,获得的是用户主键id
 	       JSONArray prizeJsonArray=jsonObject.getJSONObject("data").getJSONArray("prize");//获取奖品列表
-	       CsMember csMember=CsMember.Get($.add(CsMember.F.csmUsername, identity));
+	       CsMember csMember=CsMember.Get($.add(CsMember.F.csmId, identity));
 	       
 	       if (null!=csMember) {
 	           for (int i = 0; i < prizeJsonArray.size(); i++) {
 	               JSONObject prizeJson=prizeJsonArray.getJSONObject(i);
-	               String name=prizeJson.getString("name");//获取奖品名称
+	               String name=unicode2String(prizeJson.getString("name"));//获取奖品名称
 	               //用奖品名称匹配红包
 	               
 	             //处理奖品 循环
@@ -90,7 +90,12 @@ public class ThirdPartyCallbackAction {
 	                   //添加红包
 	                   CsCoin csCoin=new CsCoin();
 	                   csCoin.setCscAddTime(new Date(System.currentTimeMillis()));
-	                   csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//30天后到期
+	                   if ("ATTEND".equals(event)) {
+	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//签到7天后到期
+	                   }else {
+	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//邀请30天后到期
+	                   }
+	                   
 	                   csCoin.setCscMember(csMember.getCsmId());
 	                   csCoin.setCscHost(csMember.getCsmHost());
 	                   csCoin.setCscCount(csItem.getCsiPrice());
@@ -131,6 +136,23 @@ public class ThirdPartyCallbackAction {
         return "SUCCESS";
     }
 	
+	
+	public static String unicode2String(String unicode){
+        if(null==unicode||"".equals(unicode))return null;
+        StringBuilder sb = new StringBuilder();
+        int i = -1;
+        int pos = 0;
+
+        while((i=unicode.indexOf("\\u", pos)) != -1){
+            sb.append(unicode.substring(pos, i));
+            if(i+5 < unicode.length()){
+                pos = i+6;
+                sb.append((char)Integer.parseInt(unicode.substring(i+2, i+6), 16));
+            }
+        }
+
+        return sb.toString();
+    }
 	
 	/**
 	 * 易到订单支付成功回调
