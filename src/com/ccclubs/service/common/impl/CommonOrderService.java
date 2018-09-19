@@ -1624,6 +1624,10 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
      */
     private List<CsOrderDetail> buildOrderDetailsIn24Hours(Date start, Date end, List<TimeBlock> timeBlocks,
             Map<String, TimeSlot> slotMap) {
+        if(end==null) {
+            end = TimeUtil.addHour(start, 24);
+        }
+        
         TimeSlot minuteSlot = slotMap.get(RuleName.每分钟.name());
         TimeSlot hourSlot = slotMap.get(RuleName.每小时.name());
         TimeSlot daySlot = slotMap.get(RuleName.每天.name());
@@ -1656,7 +1660,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             }
         }
 
-        // 统计24小时累计收费
+        // 统计夜租、小时、分钟计费组合收费(方案一)
         JSONObject json = new JSONObject();
         StringBuilder feeDetail = new StringBuilder();
         for (CsOrderDetail detail : details) {
@@ -1665,31 +1669,24 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 feeDetail = feeDetail.append(detail.getCsodRemark());
             }
         }
-        
-        //不满一天的还要判断时长是否不满一小时，不满一小时的时长可能跨越了夜租时段导致拆分成多个时段而最终价格高于小时封顶计费
-        if (end != null) {
-            int minutes = TimeUtil.getMinutesBetween(start, end, RoundMode.Ceiling);
-            if (minutes < 60) {
-                //时长不满一小时，用普通时长计费计算一遍，然后比对之前的计费价格
-                TimeBlock timeBlock = new TimeBlock(start, end, TimeBlock.FEE_DAYTIME);
-                List<CsOrderDetail> list = buildOrdinaryOrderDetail(timeBlock, minuteSlot, hourSlot);
-                double tempTotalFee = 0;// 总费用
-                //累计普通时长费用
-                for (CsOrderDetail detail : list) {
-                    if (detail != null) {
-                        tempTotalFee += detail.getCsodPrice() * detail.getCsodCount();
-                    }
-                }
-                //当前计费优惠，就采用当前计费方式，并记录当前计费信息
-                if(tempTotalFee<=totalFee) {
-                    feeDetail = new StringBuilder();
-                    totalFee = tempTotalFee;
-                    details = list;
-                    for (CsOrderDetail detail : details) {
-                        if (detail != null) {
-                            feeDetail = feeDetail.append(detail.getCsodRemark());
-                        }
-                    }
+        // 统计小时、分钟计费组合(方案二)
+        TimeBlock timeBlock = new TimeBlock(start, end, TimeBlock.FEE_DAYTIME);
+        List<CsOrderDetail> list = buildOrdinaryOrderDetail(timeBlock, minuteSlot, hourSlot);
+        double tempTotalFee = 0;// 总费用
+        // 累计方案二时长费用
+        for (CsOrderDetail detail : list) {
+            if (detail != null) {
+                tempTotalFee += detail.getCsodPrice() * detail.getCsodCount();
+            }
+        }
+        // 方案一和方案二对比，去最优计费方案，并记录当前计费信息
+        if(tempTotalFee<=totalFee) {
+            feeDetail = new StringBuilder();
+            totalFee = tempTotalFee;
+            details = list;
+            for (CsOrderDetail detail : details) {
+                if (detail != null) {
+                    feeDetail = feeDetail.append(detail.getCsodRemark());
                 }
             }
         }
@@ -1699,9 +1696,6 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 
         // 24小时封顶收费计算
         if (totalFee > dayFee) {
-            if(end==null) {
-                end = TimeUtil.addHour(start, 24);
-            }
             detil = buildOrderDetail(daySlot, start, end, 1);
             
             //消费计价明细
