@@ -1738,7 +1738,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         } else {
             // 小时计费单价优惠于分钟计费：总费用=hours*hourFee+(minutes*minuteFee||hourFee)
             Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
-            detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, 1);
+            detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
             
             json.clear();
             json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
