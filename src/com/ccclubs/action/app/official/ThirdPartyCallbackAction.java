@@ -18,6 +18,7 @@ import com.ccclubs.action.app.official.util.JpushClientHelper;
 import com.ccclubs.action.app.official.util.JpushConfig;
 import com.ccclubs.action.app.official.util.ThirdPartyApiHelper;
 import com.ccclubs.action.app.official.util.YidaoApi;
+import com.ccclubs.config.SYSTEM;
 import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.helper.UtilHelper;
 import com.ccclubs.model.CsCoin;
@@ -51,11 +52,16 @@ public class ThirdPartyCallbackAction {
 	 * **/
 	public String winningActivity() {
 	    //todo http请求头部加上一个 Signature 字段的处理
-	    String results = $.getString("results");
-	    thirdPartyCallbackAppLogger.info("results is : "+results);
+	    Map map=$.getJson("result");
+	    String results = $.getString("result");
+	    thirdPartyCallbackAppLogger.info("result is : "+results);
 	    //处理数据
 	        //分离event与data
 	  //处理data数据，反序列化对象
+	    if (null==results||"".equals(results)) {
+	        return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+	        
+        }
 	    JSONObject jsonObject=JSONObject.fromObject(results);
 	    String event=jsonObject.getString("event");
 	    if ("ATTEND".equals(event)||"INVITE".equals(event)) {//中将的event事件为ATTEND
@@ -64,28 +70,28 @@ public class ThirdPartyCallbackAction {
             int winning=jsonObject.getJSONObject("data").getInt("winning");
             if (1!=winning) {
                 //用户未中奖
-                return "SUCCESS";
+                return $.SendHtml("SUCCESS", SYSTEM.UTF8);
             }
           //处理用户
             //匹配本地用户
             String user_type=jsonObject.getJSONObject("data").getJSONObject("customer").getString("user_type");
             if (!"app".equals(user_type)) {
               //用户app类型不匹配
-                return "SUCCESS";
+                return $.SendHtml("SUCCESS", SYSTEM.UTF8);
             }
 	       Long identity=jsonObject.getJSONObject("data").getJSONObject("customer").getLong("identity");//获取用户唯一标志,获得的是用户主键id
-	       JSONArray prizeJsonArray=jsonObject.getJSONObject("data").getJSONArray("prize");//获取奖品列表
-	       CsMember csMember=CsMember.Get($.add(CsMember.F.csmId, identity));
+	       //JSONArray prizeJsonArray=jsonObject.getJSONObject("data").getJSONArray("prize");//获取奖品列表
+	       CsMember csMember=CsMember.Get($.add(CsMember.F.csmId, identity));//todo有查询bug
 	       
 	       if (null!=csMember) {
-	           for (int i = 0; i < prizeJsonArray.size(); i++) {
-	               JSONObject prizeJson=prizeJsonArray.getJSONObject(i);
+	           
+	               JSONObject prizeJson=jsonObject.getJSONObject("data").getJSONObject("prize");
 	               String name=unicode2String(prizeJson.getString("name"));//获取奖品名称
 	               //用奖品名称匹配红包
 	               
 	             //处理奖品 循环
 	               //匹配本地奖品
-	               CsItem csItem=CsItem.Get($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, name));
+	               CsItem csItem=CsItem.Get($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, name));//todo有查询bug
 	               if (null!=csItem) {
 	                   //添加红包
 	                   CsCoin csCoin=new CsCoin();
@@ -114,26 +120,26 @@ public class ThirdPartyCallbackAction {
 	                   
 	                 //下发奖品
 	                   //添加下发记录，添加用户奖品
-	                   csCoin.save();
+	                   csCoin.save();//todo 未测试
 	                   //CsCoin csCoin=CsCoin.Get($.add(CsCoin.F., value));
 	               }else {
 	                //没找对对应的商品
-	                   return "SUCCESS";
+	                   return $.SendHtml("SUCCESS", SYSTEM.UTF8);
 	               }
 	             
-	           }
+	           
 	       }
 	       else {
 	           //未找到中奖用户
-	           return "SUCCESS";
+	           return $.SendHtml("SUCCESS", SYSTEM.UTF8);
 	       }
 	       
         }else {
             //不是中奖事件回调直接返回
-            return "SUCCESS";
+            return $.SendHtml("SUCCESS", SYSTEM.UTF8);
         }
 	    
-        return "SUCCESS";
+	    return $.SendHtml("SUCCESS", SYSTEM.UTF8);
     }
 	
 	
