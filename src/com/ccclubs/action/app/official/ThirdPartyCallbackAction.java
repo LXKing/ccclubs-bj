@@ -18,20 +18,119 @@ import com.ccclubs.action.app.official.util.JpushClientHelper;
 import com.ccclubs.action.app.official.util.JpushConfig;
 import com.ccclubs.action.app.official.util.ThirdPartyApiHelper;
 import com.ccclubs.action.app.official.util.YidaoApi;
+import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.helper.UtilHelper;
+import com.ccclubs.model.CsCoin;
+import com.ccclubs.model.CsItem;
+import com.ccclubs.model.CsMember;
+import com.ccclubs.model.CsRecord;
 import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsUnitOrder;
 import com.ccclubs.model.CsUnitPerson;
+import com.ccclubs.model.SrvUser;
 import com.ccclubs.service.admin.ICsSpecialCarService;
 import com.ccclubs.service.common.ICommonUnitService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.lazy3q.web.helper.$;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class ThirdPartyCallbackAction {
+    
+    
 	
 	ICsSpecialCarService csSpecialCarService;
 	
 	ICommonUnitService commonUnitService;
+	
+	
+	Logger thirdPartyCallbackAppLogger = Logger.getLogger("rentApp");
+
+	/**
+	 * 活动盒子用户抽奖和中奖回调
+	 * **/
+	public String winningActivity() {
+	    //todo http请求头部加上一个 Signature 字段的处理
+	    String results = $.getString("results");
+	    thirdPartyCallbackAppLogger.info("results is : "+results);
+	    //处理数据
+	        //分离event与data
+	  //处理data数据，反序列化对象
+	    JSONObject jsonObject=JSONObject.fromObject(results);
+	    String event=jsonObject.getString("event");
+	    if ("ATTEND".equals(event)) {//中将的event事件为ATTEND
+            
+            //处理是否中奖
+            int winning=jsonObject.getJSONObject("data").getInt("winning");
+            if (1!=winning) {
+                //用户未中奖
+                return "SUCCESS";
+            }
+          //处理用户
+            //匹配本地用户
+            String user_type=jsonObject.getJSONObject("data").getJSONObject("customer").getString("user_type");
+            if (!"app".equals(user_type)) {
+              //用户app类型不匹配
+                return "SUCCESS";
+            }
+	       String identity=jsonObject.getJSONObject("data").getJSONObject("customer").getString("identity");//获取用户唯一标志（是否要先获取用户类型？？）
+	       JSONArray prizeJsonArray=jsonObject.getJSONObject("data").getJSONArray("prize");//获取奖品列表
+	       CsMember csMember=CsMember.Get($.add(CsMember.F.csmUsername, identity));
+	       
+	       if (null!=csMember) {
+	           for (int i = 0; i < prizeJsonArray.size(); i++) {
+	               JSONObject prizeJson=prizeJsonArray.getJSONObject(i);
+	               String name=prizeJson.getString("name");//获取奖品名称
+	               //用奖品名称匹配红包
+	               
+	             //处理奖品 循环
+	               //匹配本地奖品
+	               CsItem csItem=CsItem.Get($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, name));
+	               if (null!=csItem) {
+	                   //添加红包
+	                   CsCoin csCoin=new CsCoin();
+	                   csCoin.setCscAddTime(new Date(System.currentTimeMillis()));
+	                   csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//30天后到期
+	                   csCoin.setCscMember(csMember.getCsmId());
+	                   csCoin.setCscHost(csMember.getCsmHost());
+	                   csCoin.setCscCount(csItem.getCsiPrice());
+	                   csCoin.setCscEditor(0l);//设置系统用户为充值用户
+	                   csCoin.setCscFlag("后台添加");
+	                   
+	                   csCoin.setCscRemark("用户通过活动盒子获得"+name);
+	                   csCoin.setCscSerial(SystemHelper.getCoinSerial(csCoin));
+	                   csCoin.setCscUpdateTime(new Date(System.currentTimeMillis()));
+	                   csCoin.setCscValidity((short)0);
+	                   
+	                   //todo 添加红包来源
+	                   //csCoin.setCscCoinSource();
+	                   csCoin.setCscRemain(csItem.getCsiPrice());
+	                   csCoin.setCscStatus((short)1);
+	                   
+	                 //下发奖品
+	                   //添加下发记录，添加用户奖品
+	                   csCoin.save();
+	                   //CsCoin csCoin=CsCoin.Get($.add(CsCoin.F., value));
+	               }else {
+	                //没找对对应的商品
+	                   return "SUCCESS";
+	               }
+	             
+	           }
+	       }
+	       else {
+	           //未找到中奖用户
+	           return "SUCCESS";
+	       }
+	       
+        }else {
+            //不是中奖事件回调直接返回
+            return "SUCCESS";
+        }
+	    
+        return "SUCCESS";
+    }
+	
 	
 	/**
 	 * 易到订单支付成功回调
