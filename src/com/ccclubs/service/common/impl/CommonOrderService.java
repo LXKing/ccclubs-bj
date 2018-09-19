@@ -1738,20 +1738,23 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         } else {
             // 小时计费单价优惠于分钟计费：总费用=hours*hourFee+(minutes*minuteFee||hourFee)
             Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
-            detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, 1);
             
-            json.clear();
-            json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
-            json.put("feeRule", "普通时长计费");
-            json.put("cheapTip", "小时计费优惠于分钟计费");
-            json.put("hourFee", hourFee);
-            json.put("minuteFee", minuteFee);
-            json.put("hours", hours);
-            json.put("totalFee", hourFee * hours);
-            
-            detil.setCsodRemark(json.toJSONString());
-            details.add(detil);
-            System.out.println(json.toJSONString());
+            if(hours>=1) {
+                detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
+                
+                json.clear();
+                json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
+                json.put("feeRule", "普通时长计费");
+                json.put("cheapTip", "小时计费优惠于分钟计费");
+                json.put("hourFee", hourFee);
+                json.put("minuteFee", minuteFee);
+                json.put("hours", hours);
+                json.put("totalFee", hourFee * hours);
+                
+                detil.setCsodRemark(json.toJSONString());
+                details.add(detil);
+                System.out.println(json.toJSONString());
+            }
             // 不满一小时的最低收费
             if(normalMinutes>0) {
                 tempMuniteFee = normalMinutes * minuteFee;
@@ -1827,14 +1830,20 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 
         // 分钟计费
         tempMuniteFee = minutes * minuteFee;
-        // 小时计费
-        tempHourFee = hourFee * hours;
-        // 小时、分钟组合计费
-        totalFee = normalMinutes * minuteFee;
-        if(totalFee>hourFee) {
-            totalFee = hourFee;
+        
+        //用车不满一小时
+        if(hours==0) {
+            totalFee = tempMuniteFee>hourFee? hourFee : tempMuniteFee;
+        }else {
+            // 小时计费
+            tempHourFee = hourFee * hours;
+            // 小时、分钟组合计费
+            totalFee = normalMinutes * minuteFee;
+            if(totalFee>hourFee) {
+                totalFee = hourFee;
+            }
+            totalFee = totalFee + tempHourFee; 
         }
-        totalFee = totalFee + tempHourFee;
 
         // 分钟计费、小时计费、夜租计费取最优惠组合
         if (totalFee < nightFee || tempMuniteFee < nightFee) {
@@ -1857,27 +1866,29 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 System.out.println(json.toJSONString());
             } else {
                 //夜租时段:分钟计费、小时计费组合最优惠
-                //小时计费明细
                 Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
-                detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
-                
-                json.clear();
-                json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
-                json.put("feeRule", ruleName.name()+"时长计费");
-                if(normalMinutes>0) {
-                    json.put("cheapTip", "分钟计费、小时计费组合最优惠");
-                }else {
-                    json.put("cheapTip", "小时计费最优惠");
+                if(hours>=1) {
+                    //小时计费明细
+                    detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
+                    
+                    json.clear();
+                    json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
+                    json.put("feeRule", ruleName.name()+"时长计费");
+                    if(normalMinutes>0) {
+                        json.put("cheapTip", "分钟计费、小时计费组合最优惠");
+                    }else {
+                        json.put("cheapTip", "小时计费最优惠");
+                    }
+                    json.put("hourFee", hourFee);
+                    json.put("minuteFee", minuteFee);
+                    json.put("nightFee", nightFee);
+                    json.put("hours", hours);
+                    json.put("totalFee", hours * hourFee);
+                    
+                    detil.setCsodRemark(json.toJSONString());
+                    details.add(detil);
+                    System.out.println(json.toJSONString());
                 }
-                json.put("hourFee", hourFee);
-                json.put("minuteFee", minuteFee);
-                json.put("nightFee", nightFee);
-                json.put("hours", hours);
-                json.put("totalFee", hours * hourFee);
-                
-                detil.setCsodRemark(json.toJSONString());
-                details.add(detil);
-                System.out.println(json.toJSONString());
 
                 //不足一小时的分钟数计费
                 if(normalMinutes>0) {
@@ -1958,7 +1969,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         // 获取当前配置计费规则（价格表、规则表、商品表关联查询）
         String sql =
                 "select cp.*, cr.csr_expression, cr.csr_id, cr.csr_name, cr.csr_meas, cr.csr_priority, cg.csg_name, cg.csg_product, cg.csg_profile from cs_price cp "
-                        + " left join cs_goods cg on cp.csp_goods=cg.csg_id "
+                        + " left join cs_goods cg on cp.csp_goods=cg.csg_id and cp.csp_user_type=cg.csg_user_type "
                         + " left join cs_rule cr on cr.csr_id = cg.csg_rule "
                         + " where cr.csr_status=1 and cr.csr_name !=\"每公里\" and cp.csp_outets="
                         + outletsId + " and cp.csp_model=" + modelId + " and cp.csp_user_type="
@@ -1977,7 +1988,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         // 获取默认配置计费规则并增量模式追加至已有规则（价格表、规则表、商品表关联查询）
         if (defaultOutletsId != null) {
             sql = "select cp.*, cr.csr_expression, cr.csr_id, cr.csr_name, cr.csr_meas, cr.csr_priority, cg.csg_name, cg.csg_product, cg.csg_profile from cs_price cp "
-                    + " left join cs_goods cg on cp.csp_goods=cg.csg_id "
+                    + " left join cs_goods cg on cp.csp_goods=cg.csg_id and cp.csp_user_type=cg.csg_user_type "
                     + " left join cs_rule cr on cr.csr_id = cg.csg_rule "
                     + " where cr.csr_status=1 and cr.csr_name !=\"每公里\" and cp.csp_outets="
                     + defaultOutletsId + " and cp.csp_model=" + modelId + " and cp.csp_user_type="
