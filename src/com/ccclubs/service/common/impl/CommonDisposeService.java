@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -481,8 +482,25 @@ public class CommonDisposeService implements ICommonDisposeService {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
-		List<CsOrder> orderList = MealHelper.calcMealOrders(mealDescript, cal.getTime());
-		start = orderList.get(0).getCsoStartTime();
+//		List<CsOrder> orderList = MealHelper.calcMealOrders(mealDescript, cal.getTime());
+//		start = orderList.get(0).getCsoStartTime();
+		
+		 Date finish=null;
+    	if(item!=null) {
+    		String mealName=item.getCsiFlag();
+        	if("周套餐".equals(mealName)) {
+        		finish=new DateUtil().addDayOfDate(start, 7);
+        	}else if("月套餐".equals(mealName)) {
+        		finish=new DateUtil().addDayOfDate(start, 30);
+        	}else if("周末套餐".equals(item.getCsiFlag())) {
+				  //
+				 String[] str=me.getTime().split("#");
+				  //套餐开始时间
+				 Date mealStart=new DateUtil().getWeekendMealStartTime(start, Integer.parseInt(str[0]));
+				 finish=new  DateUtil().addMinuteOfDate(mealStart, Integer.parseInt(str[1]));//套餐结束时间
+        	}	        	  
+    	}
+		
 		
 		/**
 		 * 订单簇冻结金额只包含（margin_need保证金）
@@ -495,7 +513,8 @@ public class CommonDisposeService implements ICommonDisposeService {
 		coc.setCsocMobile(member.getCsmMobile());
 		coc.setCsocPrice(mealPrice);
 		coc.setCsocMarginNeed(defineMargin);
-		coc.setCsocTotalDuration($((orderList.get(orderList.size()-1).getCsoFinishTime().getTime()-start.getTime())*1d / SYSTEM.HOUR));
+		coc.setCsocTotalDuration($((finish.getTime()-start.getTime())*1d / SYSTEM.HOUR));/**原有做法coc.setCsocTotalDuration($((orderList.get(orderList.size()-1).getCsoFinishTime().getTime()-start.getTime())*1d / SYSTEM.HOUR));
+**/
 		coc.setCsocPayNeed(mealPrice);
 		coc.setCsocPayReal(mealPrice);
 		coc.setCsocPayRent(mealPrice);
@@ -509,7 +528,7 @@ public class CommonDisposeService implements ICommonDisposeService {
                 .add("关联规则", ruleDescript)));
 		coc.setCsocStatus((short)0);
 		coc.setCsocStartTime(start);
-		coc.setCsocFinishTime(orderList.get(orderList.size()-1).getCsoFinishTime());
+		coc.setCsocFinishTime(finish);
 		coc.setCsocAddTime(new Date());
 		coc.setCsocUpdateTime(new Date());
 		coc = coc.save();
@@ -527,11 +546,11 @@ public class CommonDisposeService implements ICommonDisposeService {
 		}
 		/***************************** 扣款 ********************************/
 		String sub_order_ids = "";
-		for(int i=0; i<orderList.size(); i++){
+		for(int i=0; i<1; i++){
 			
-			CsOrder o = orderList.get(i);
-			start = o.getCsoStartTime();
-			Date finish = o.getCsoFinishTime();
+//			CsOrder o = orderList.get(i);
+//			start = o.getCsoStartTime();
+//			Date finish = o.getCsoFinishTime();
 			
 			CsOrder csOrder = new CsOrder();
 			csOrder.setCsoFlag((short)3);			//订单标识设置成“订单簇”
@@ -539,8 +558,8 @@ public class CommonDisposeService implements ICommonDisposeService {
 			csOrder.setCsoUseMember(useMemberId);
 			csOrder.setCsoCreditCard(null);
 			csOrder.setCsoCar(carId);
-			csOrder.setCsoStartTime(o.getCsoStartTime());
-			csOrder.setCsoFinishTime(o.getCsoFinishTime());
+			csOrder.setCsoStartTime(start);   //csOrder.setCsoStartTime(o.getCsoStartTime());
+			csOrder.setCsoFinishTime(finish);//csOrder.setCsoFinishTime(o.getCsoFinishTime());
 			csOrder.setCsoInsureType(insureType);
 			csOrder.setCsoFreehour(freeHours);
 			csOrder.setCsoPayInsure(0d);
@@ -664,7 +683,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 
 			com.ccclubs.helper.TimeLineHelper.update(csOrder.getCsoId());
 
-			o.setCsoId(csOrder.getCsoId());
+//			o.setCsoId(csOrder.getCsoId());
 			sub_order_ids +=","+csOrder.getCsoId();
 			csOrderDao.getCsOrderById(csOrder.getCsoId());
 		}
@@ -1192,8 +1211,14 @@ public class CommonDisposeService implements ICommonDisposeService {
 		if (csOrder.getCsoRetTime().getTime() < csOrder.getCsoStartTime().getTime())
 			throw new MessageException(ErrorCode.ORDER_TIME_ERROR, 2, "该订单没还车时间早于订单开始时间，不能结算");
 
+		//计费开始时间
+		Date start = csOrder.getCsoStartTime(); 
+		if(start.after(csOrder.getCsoTakeTime())) {
+		    start = csOrder.getCsoTakeTime();
+		}
+		
 		// 拆分订单
-		OrderInfo orderinfo = commonOrderService.splitOrderDetails(csOrder.getCsoPayMember(), csOrder.getCsoCar(), csOrder.getCsoStartTime(),
+		OrderInfo orderinfo = commonOrderService.splitOrderDetails(csOrder.getCsoPayMember(), csOrder.getCsoCar(), start,
 				csOrder.getCsoFinishTime(), csOrder.getCsoRetTime(), csOrder.getCsoFreehour(), csOrder.getCsoElectric(), csOrder.getCsoFuel(),
 				csOrder.getCsoFeeType(), csOrder.getCsoInsureType(), csOrder.getCsoLongPrice(), csOrder.getCsoId(), true);
 		
