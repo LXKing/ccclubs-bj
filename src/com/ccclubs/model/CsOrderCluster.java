@@ -47,6 +47,7 @@ public @caption("订单簇") @table("cs_order_cluster") class CsOrderCluster imp
 	private @caption("数据状态") @column("csoc_status")      @note(" 0:已预定 1:使用中  3:已取消 4:已完成  ") Short csocStatus;
 	private @caption("创建时间") @column("csoc_add_time")      @note("  ") Date csocAddTime;
 	private @caption("修改时间") @column("csoc_update_time")      @note("  ") Date csocUpdateTime;
+	private @caption("套餐外时长费") @column("csoc_pay_normal")      @note("  ") Double csocPayNormal;
 	
 	//默认构造函数
 	public CsOrderCluster(){
@@ -1059,8 +1060,24 @@ public @caption("订单簇") @table("cs_order_cluster") class CsOrderCluster imp
 	/************LAZY3Q_DEFINE_CODE************/
 
 	
-	
 	/**
+	 * 套餐外时长费
+	 */
+	public Double getCsocPayNormal() {
+        return csocPayNormal;
+    }
+
+	public String getCsocPayNormal$(){
+        String strValue="";
+         strValue=$.str(this.getCsocPayNormal());
+         return strValue;
+    }
+	
+    public void setCsocPayNormal(Double csocPayNormal) {
+        this.csocPayNormal = csocPayNormal;
+    }
+
+    /**
 	 * 用来获取当有字段关联对象时的获取方式,调用如${CsOrderCluster.obj.filedName}
 	 * 因为有些变态的模板语言不能识别$，所以不能以${CsOrderCluster.$filedName}获取关联对象
 	 */
@@ -1349,6 +1366,19 @@ public @caption("订单簇") @table("cs_order_cluster") class CsOrderCluster imp
  		public M csocUpdateTimeStart(Object start){this.put("csocUpdateTimeStart", start);return this;};			
  		/** and csoc_update_time <= ? */
  		public M csocUpdateTimeEnd(Object end){this.put("csocUpdateTimeEnd", end);return this;};
+ 		
+ 		/** 超时费用 [可空]       **/
+        public M csocPayNormal(Object csocPayNormal){this.put("csocPayNormal", csocPayNormal);return this;};
+        /** and csoc_pay_timeout is null */
+        public M csocPayNormalNull(){if(this.get("csocPayNormalNot")==null)this.put("csocPayNormalNot", "");this.put("csocPayNormal", null);return this;};
+        /** not .... */
+        public M csocPayNormalNot(){this.put("csocPayNormalNot", "not");return this;};
+        /** and csoc_pay_timeout >= ? */
+        public M csocPayNormalMin(Object min){this.put("csocPayNormalMin", min);return this;};
+        /** and csoc_pay_timeout <= ? */
+        public M csocPayNormalMax(Object max){this.put("csocPayNormalMax", max);return this;};
+ 		
+ 		
 	 	public M add(String key, Object value) {this.put(key, value);return this;}
 	 	public M definex(String sql) {this.put("definex", sql);return this;}
 	 	/** 获取所有订单簇 **/
@@ -1456,6 +1486,8 @@ public @caption("订单簇") @table("cs_order_cluster") class CsOrderCluster imp
  		public final static @type(Date.class) String csocUpdateTimeStart="csocUpdateTimeStart";
  		/** and csoc_update_time <= ? */
  		public final static @type(Date.class) String csocUpdateTimeEnd="csocUpdateTimeEnd";
+ 		/** 套餐外时长费 [可空]       **/
+        public final static @type(Double.class)  String csocPayNormal="csocPayNormal";
 	}
 	
 	/** 对象的数据库字段描述 **/
@@ -1508,6 +1540,8 @@ public @caption("订单簇") @table("cs_order_cluster") class CsOrderCluster imp
 		public final static String csocAddTime="csoc_add_time";
 		/** 修改时间 [非空]       **/
 		public final static String csocUpdateTime="csoc_update_time";
+		/** 套餐外时长费[可空]       **/
+        public final static String csocPayNormal="csoc_pay_normal";
 		
 	 	public static String get(String name){
 			try {

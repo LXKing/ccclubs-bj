@@ -407,6 +407,13 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                     details.addAll(rentDetails); 
                 }
             }
+            //套餐外时长费
+            double payNormal = 0;
+            for (CsOrderDetail detail : details) {
+                payNormal = payNormal + detail.getCsodTotalReal();
+            }
+            coc.setCsocPayNormal(payNormal);
+            coc.update();
         }
 		
 		//免责
