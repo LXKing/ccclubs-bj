@@ -366,14 +366,44 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             CsOrderCluster coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
             //套餐订单时长拆解：套餐时段单独计算，提前取车、超时还车时段分别计算
             if(coc!=null) {
-                //提前取车时段计费
-                if(oldOrder.getCsoTakeTime().before(oldOrder.getCsoStartTime())) {
-                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
-                    details.addAll(rentDetails);
+                //提前取车
+                if(oldOrder.getCsoTakeTime().getTime()<oldOrder.getCsoStartTime().getTime()) {
+                    if(oldOrder.getCsoRetTime().getTime()<=oldOrder.getCsoStartTime().getTime()) {
+                        /***************套餐开始之前还车*************/
+                        //普通用车费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoRetTime());
+                        details.addAll(rentDetails);
+                    }else if(oldOrder.getCsoRetTime().getTime()>oldOrder.getCsoFinishTime().getTime()) {
+                        /***************超时还车*************/
+                        //提前取车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
+                        details.addAll(rentDetails);
+                        //超时还车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                        details.addAll(rentDetails); 
+                    }else{
+                        /***************套餐时间内还车*************/ 
+                        //提前取车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
+                        details.addAll(rentDetails);
+                    }
                 }
-                //超时还车时段计费
-                if(oldOrder.getCsoRetTime().after(oldOrder.getCsoFinishTime())) {
-                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                
+                //套餐时间内取车
+                if(oldOrder.getCsoTakeTime().getTime()>=oldOrder.getCsoStartTime().getTime()
+                        && oldOrder.getCsoTakeTime().getTime()<=oldOrder.getCsoFinishTime().getTime()) {
+                    
+                    /***************超时还车*************/
+                    if(oldOrder.getCsoRetTime().getTime()>oldOrder.getCsoFinishTime().getTime()) {
+                        //超时还车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                        details.addAll(rentDetails); 
+                    }
+                }
+                
+                //套餐时间后取车,用车普通费用
+                if(oldOrder.getCsoTakeTime().getTime()>=oldOrder.getCsoFinishTime().getTime()) {
+                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoRetTime());
                     details.addAll(rentDetails); 
                 }
             }
