@@ -17,10 +17,12 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.util.CollectionUtils;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSONObject;
 import com.ccclubs.config.SYSTEM;
 import com.ccclubs.config.SYSTEM.RuleName;
+import com.ccclubs.exception.ErrorCode;
 import com.ccclubs.exception.ErrorException;
 import com.ccclubs.exception.MessageException;
 import com.ccclubs.helper.LoginHelper;
@@ -1362,6 +1364,15 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         //获取计费规则
         Map<String, TimeSlot> slotMap = getRules(csFeeTypeSet.getCsftsOutlets(), outletsId, modelId, userType, productId);
         
+        //强行校验规则配置、未配置不予下单和结算
+        if (slotMap.get(RuleName.每分钟.name()) == null || slotMap.get(RuleName.每小时.name()) == null
+                || slotMap.get(RuleName.夜租一.name()) == null
+                || slotMap.get(RuleName.夜租二.name()) == null
+                || slotMap.get(RuleName.夜租三.name()) == null) {
+            throw new MessageException("计费规则配置不全", 1996); 
+        }
+        
+        //计算用车时长天数
         int days = TimeUtil.getDaysBetween(start, end, null);
         if(days>0) {
             //以24小时为结算周期拆分计费时间
