@@ -351,6 +351,8 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 //			
 ////			promotion = getActivity2017(rentDetails, start, rentFinish, oldOrder);
 //		}
+		//初始化订单簇
+		CsOrderCluster coc = null;
 		if (!isOC) { // 如果不是订单簇，走租金拆单
             rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), start, rentFinish);
             // 租金
@@ -363,7 +365,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             }
         }else if(oldOrder!=null && StringUtils.isNotEmpty(oldOrder.getCsoSrc())) {
             String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\D", "");
-            CsOrderCluster coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
+            coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
             //套餐订单时长拆解：套餐时段单独计算，提前取车、超时还车时段分别计算
             if(coc!=null) {
                 //提前取车
@@ -407,13 +409,6 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                     details.addAll(rentDetails); 
                 }
             }
-            //套餐外时长费
-            double payNormal = 0;
-            for (CsOrderDetail detail : details) {
-                payNormal = payNormal + detail.getCsodTotalReal();
-            }
-            coc.setCsocPayNormal(payNormal);
-            coc.update();
         }
 		
 		//免责
@@ -454,6 +449,8 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		});
 		
 		Double gRebate = null;
+		//套餐外时长费
+        double payNormal = 0;
 		//设置订单的价格		
 		for(CsOrderDetail orderDetail : details){
 			orderDetail.setCsodHost(csOutlets.getCsoHost());
@@ -515,7 +512,18 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 			orderDetail.setCsodCountReal(orderDetail.getCsodCount());
 			orderDetail.setCsodTotal($(orderDetail.getCsodPriceReal()*orderDetail.getCsodCountReal()));//理论金额
 			orderDetail.setCsodTotalReal($(orderDetail.getCsodPriceReal()*orderDetail.getCsodCountReal()*orderDetail.getCsodRebate()));//实际金额
+		
+			//累计套餐外普通时长计费
+			if(orderDetail.get$csodProduct().getCspFlag().equals(SYSTEM.RENT)) {
+			    payNormal = payNormal + orderDetail.getCsodTotalReal();
+			}
 		}
+		
+		//订单簇累计套餐外普通时长计费
+        if (coc != null) {
+            coc.setCsocPayNormal(payNormal);
+            coc.update();
+        }
 		
 		//移除价格为0或者0.01的详情
 		for(int i=0;i<details.size();i++){

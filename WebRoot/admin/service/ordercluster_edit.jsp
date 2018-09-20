@@ -632,7 +632,7 @@ $(function(){
 	<s:if test="#request.CTRL.v.csocPayNormal==true">
 	${before$csocPayNormal}
 	<dl class="csocPayNormal " major  ref="csocPayNormal" >
-		<dt>超时费用:</dt>
+		<dt>套餐外时长费:</dt>
 		<s:if test="#request.CTRL.e.csocPayNormal==true">
 		${lz:set("haveEditable",true)}
 		<dd input="text">
@@ -645,7 +645,7 @@ $(function(){
 		</dd>
 		</s:if>
 		<s:else>
-		${lz:set("注释","****超时费用字段非编辑模式或只读时的显示****")}
+		${lz:set("注释","****套餐外时长费字段非编辑模式或只读时的显示****")}
 		<dd>
 		 	<div class="state-input narrow">
 		 		<textarea class="" style="display:none;" id="csocPayNormal">${csOrderCluster.csocPayNormal}</textarea>
