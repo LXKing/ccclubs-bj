@@ -14,15 +14,15 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csOrderCluster.csocId))}
 <lz:DefaultCtrl>{
 	<s:if test="#request.all==true">
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可查询")}
-	queryables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
+	queryables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayNormal,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
 	${lz:set("注释","当用户选择显示全部字段时，哪些字段可显示在表格中")}
-	listables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
+	listables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayNormal,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可查询")}
-	queryables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
+	queryables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayNormal,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
 	${lz:set("注释","当用户选择显示部分字段时，哪些字段可显示在表格中")}
-	listables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
+	listables:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayNormal,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -384,6 +384,15 @@ ${after$form}
 			 	超时费用
 			 	</a>
 			 	${lz:set("checkeds[]","csocPayTimeout")}
+			 </td>
+			 </s:if>
+			 
+			 <s:if test="#request.defines==null && #request.CTRL.l.csocPayNormal || #request.defines['csocPayNormal']!=null">
+			 <td <s:if test="#request.defines['csocPayNormal']>0">colspan="${defines["csocPayNormal"]}" ${all?"width":"iwidth"}="${defines["csocPayNormal"]*100}" </s:if><s:else>rowspan="2"  ${all?"width=200":""} </s:else> tdid="13" ref="csocPayNormal"   title="超时费用">
+			 	<a class="${desc=="csoc_pay_normal" ? "desc" : ""}${asc=="csoc_pay_normal" ? "asc" : ""}" href="?${desc=="csoc_pay_normal" ? "asc=csoc_pay_normal" : ""}${(asc=="csoc_pay_normal" || desc!="csoc_pay_normal" )? "desc=csoc_pay_normal" : ""}&${lz:queryss("UTF-8","desc","asc")}">
+			 	套餐外时长费
+			 	</a>
+			 	${lz:set("checkeds[]","csocPayNormal")}
 			 </td>
 			 </s:if>
 				
@@ -783,6 +792,30 @@ ${after$form}
 					<td ref="csocPayTimeout" class="td ">
 						 
 						 	${lz:or(item$csocPayTimeout[i.count-1],lz:left(item.csocPayTimeout$,100))}
+					</td>
+				</s:else>
+			</s:if>
+			
+			<s:if test="#request.defines==null && #request.CTRL.l.csocPayNormal || #request.defines['csocPayNormal']!=null">
+				<s:if test="#request.defines['csocPayNormal']>0">
+					${lz:set("注释","****csocPayNormal关联表的子级字段：如果用户勾选了要显示的话****")}
+				  	<s:iterator value="#request.childes" id="fieldName" status="j">
+				  		${lz:set("isList",lz:indexOf(fieldName,"[]")>-1)}
+				 		<s:if test="#request.isList==true">
+				 			${lz:set("sizeList",lz:size(item.csocPayNormal))}
+				 			${lz:set("rowspan",rowspan>sizeList?rowspan:sizeList)}
+				 		</s:if>
+				  		${lz:set("atCsocPayNormal",lz:indexOf(fieldName,"atCsocPayNormal")>-1)}
+				  		<s:if test="#request.atCsocPayNormal==true">
+				 			<td ${isList?"class='onemore'":""}>${lz:left(lz:el(item,fieldName),100)}</td>
+				 		</s:if>
+				 	</s:iterator>
+				</s:if>
+				<s:else>
+					${lz:set("注释","****csocPayNormal字段的字串格式化输出****")}
+					<td ref="csocPayNormal" class="td ">
+						 
+						 	${lz:or(item$csocPayNormal[i.count-1],lz:left(item.csocPayNormal$,100))}
 					</td>
 				</s:else>
 			</s:if>

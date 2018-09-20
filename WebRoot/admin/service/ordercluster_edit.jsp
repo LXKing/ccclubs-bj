@@ -17,13 +17,13 @@ ${lz:set("isAddType",(lz:vacant(ids))&&(empty csOrderCluster.csocId))}
 	${lz:set("注释","当处于添加数据时哪些字段可编辑")}
 	editables:"",
 	${lz:set("注释","当处于添加数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
+	visibles:"csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayNormal,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
 	</s:if>
 	<s:else>
 	${lz:set("注释","当处于编辑数据时哪些字段可编辑")}
 	editables:"",
 	${lz:set("注释","当处于编辑数据时哪些字段可显示。为什么？因为有些字段可能是只读的")}
-	visibles:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
+	visibles:"csocId,csocHost,csocSubOrders,csocPayMember,csocMobile,csocPrice,csocMarginNeed,csocTotalDuration,csocPayNeed,csocPayReal,csocPayRent,csocPayInsure,csocPayTimeout,csocPayNormal,csocPayDetails,csocStartTime,csocFinishTime,csocStatus,csocAddTime,csocUpdateTime",
 	</s:else>
 }</lz:DefaultCtrl>
 ${lz:set("注释","***************************************************")}
@@ -626,6 +626,41 @@ $(function(){
 	</dl>
 	${after$csocTotalDuration}
 	</s:if>
+	
+	${lz:set("注释","*****************套餐外时长费用字段的输入框代码*****************")}
+	${lz:set("注释","before$csocPayNormal和after$csocPayNormal变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
+	<s:if test="#request.CTRL.v.csocPayNormal==true">
+	${before$csocPayNormal}
+	<dl class="csocPayNormal " major  ref="csocPayNormal" >
+		<dt>超时费用:</dt>
+		<s:if test="#request.CTRL.e.csocPayNormal==true">
+		${lz:set("haveEditable",true)}
+		<dd input="text">
+		<s:if test="#request.csOrderCluster$csocPayNormal!=null">${csOrderCluster$csocPayNormal}</s:if><s:else>
+		 	<input type="text" class="input narrow"  maxlength="32" name="csOrderCluster.csocPayNormal" id="csocPayNormal"  value="${csOrderCluster.csocPayNormal}"/>
+	 	 </s:else>
+	 	 
+	 	 <b>*</b>
+	 	 <em>请输入系统订单的超时费用</em>
+		</dd>
+		</s:if>
+		<s:else>
+		${lz:set("注释","****超时费用字段非编辑模式或只读时的显示****")}
+		<dd>
+		 	<div class="state-input narrow">
+		 		<textarea class="" style="display:none;" id="csocPayNormal">${csOrderCluster.csocPayNormal}</textarea>
+		 		<span>
+		 	
+			 ${csOrderCluster.csocPayNormal$}
+	 	  
+	 	 		&nbsp;	
+	 	 		</span>
+	 	 	</div>
+		</dd>
+		</s:else>
+	</dl>
+	${after$csocTotalDuration}
+	</s:if>	
 	
 	${lz:set("注释","*****************支付明细字段的输入框代码*****************")}
 	${lz:set("注释","before$csocPayDetails和after$csocPayDetails变量为预留变量，可以上面使用<lz:set name='变量名'>标签注入html代码")}
