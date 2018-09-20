@@ -146,7 +146,7 @@ public class ThirdPartyCallbackAction {
 	                   csCoin.setCscEditor(0l);//设置系统用户为充值用户
 	                   csCoin.setCscFlag("后台添加");
 	                   
-	                   csCoin.setCscRemark("用户通过活动盒子获得"+prizeName);
+	                   csCoin.setCscRemark("【活动盒子】用户参加“"+activityName+"”获得"+prizeName);
 	                   csCoin.setCscSerial(SystemHelper.getCoinSerial(csCoin));
 	                   csCoin.setCscUpdateTime(new Date(System.currentTimeMillis()));
 	                   
