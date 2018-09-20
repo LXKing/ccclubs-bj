@@ -1207,9 +1207,9 @@ public class CommonDisposeService implements ICommonDisposeService {
 
 		if ((csOrder.getCsoRetTime().getTime() - new Date().getTime()) > (SYSTEM.HOUR * 2))
 			throw new MessageException(ErrorCode.ORDER_TIME_ERROR, 1, "还车时间不能比当前时间迟于一个小时");
-
-		if (csOrder.getCsoRetTime().getTime() < csOrder.getCsoStartTime().getTime())
-			throw new MessageException(ErrorCode.ORDER_TIME_ERROR, 2, "该订单没还车时间早于订单开始时间，不能结算");
+		//取消提前还车校验（2018-09-20cjb）
+//		if (csOrder.getCsoRetTime().getTime() < csOrder.getCsoStartTime().getTime())
+//			throw new MessageException(ErrorCode.ORDER_TIME_ERROR, 2, "该订单没还车时间早于订单开始时间，不能结算");
 
 		//计费开始时间
 		Date start = csOrder.getCsoStartTime(); 
