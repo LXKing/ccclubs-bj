@@ -1075,6 +1075,7 @@ public @caption("订单簇") @table("cs_order_cluster") class CsOrderCluster imp
 	
     public void setCsocPayNormal(Double csocPayNormal) {
         this.csocPayNormal = csocPayNormal;
+        this.setSeted(F.csocPayNormal);
     }
 
     /**
