@@ -1,5 +1,7 @@
 package com.ccclubs.action.app.official;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,11 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.jfree.util.Log;
-
 import com.ccclubs.action.app.official.util.ApiBase;
 import com.ccclubs.action.app.official.util.DidiApi;
 import com.ccclubs.action.app.official.util.JpushClientHelper;
@@ -29,12 +30,16 @@ import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsUnitOrder;
 import com.ccclubs.model.CsUnitPerson;
 import com.ccclubs.model.SrvUser;
+import com.ccclubs.service.admin.ICsItemService;
+import com.ccclubs.service.admin.ICsMemberService;
 import com.ccclubs.service.admin.ICsSpecialCarService;
 import com.ccclubs.service.common.ICommonUnitService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.lazy3q.web.helper.$;
+import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JSONString;
 
 public class ThirdPartyCallbackAction {
     
@@ -43,6 +48,8 @@ public class ThirdPartyCallbackAction {
 	ICsSpecialCarService csSpecialCarService;
 	
 	ICommonUnitService commonUnitService;
+	ICsMemberService csMemberService;
+	ICsItemService csItemService;
 	
 	
 	Logger thirdPartyCallbackAppLogger = Logger.getLogger("rentApp");
@@ -51,9 +58,21 @@ public class ThirdPartyCallbackAction {
 	 * 活动盒子用户抽奖和中奖回调
 	 * **/
 	public String winningActivity() {
+	    HttpServletRequest request = ServletActionContext.getRequest();
+	    String results=null;
+	    InputStream is=null;
+	    try {
+            is = request.getInputStream();
+            String requestString=IOUtils.toString(is);
+            System.out.println(requestString);
+            results = JSONObject.fromObject(requestString).getString("result");
+        } catch (IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
 	    //todo http请求头部加上一个 Signature 字段的处理
-	    Map map=$.getJson("result");
-	    String results = $.getString("result");
+	    //Map map=$.getJson("result");
+	    
 	    thirdPartyCallbackAppLogger.info("result is : "+results);
 	    //处理数据
 	        //分离event与data
@@ -81,25 +100,29 @@ public class ThirdPartyCallbackAction {
             }
 	       Long identity=jsonObject.getJSONObject("data").getJSONObject("customer").getLong("identity");//获取用户唯一标志,获得的是用户主键id
 	       //JSONArray prizeJsonArray=jsonObject.getJSONObject("data").getJSONArray("prize");//获取奖品列表
-	       CsMember csMember=CsMember.Get($.add(CsMember.F.csmId, identity));//todo有查询bug
+	       CsMember csMember=csMemberService.getCsMemberById(identity);
+	               //CsMember.Get($.add(CsMember.F.csmId, identity));//todo有查询bug
 	       
 	       if (null!=csMember) {
 	           
 	               JSONObject prizeJson=jsonObject.getJSONObject("data").getJSONObject("prize");
-	               String name=unicode2String(prizeJson.getString("name"));//获取奖品名称
+	               String name=prizeJson.getString("name");//获取奖品名称
 	               //用奖品名称匹配红包
 	               
 	             //处理奖品 循环
 	               //匹配本地奖品
-	               CsItem csItem=CsItem.Get($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, name));//todo有查询bug
+	               CsItem csItem=csItemService.getCsItem($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, name));
+	                       //todo有查询bug
 	               if (null!=csItem) {
 	                   //添加红包
 	                   CsCoin csCoin=new CsCoin();
 	                   csCoin.setCscAddTime(new Date(System.currentTimeMillis()));
 	                   if ("ATTEND".equals(event)) {
 	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//签到7天后到期
+	                       csCoin.setCscValidity((short)0);
 	                   }else {
 	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//邀请30天后到期
+	                       csCoin.setCscValidity((short)1);
 	                   }
 	                   
 	                   csCoin.setCscMember(csMember.getCsmId());
@@ -111,7 +134,7 @@ public class ThirdPartyCallbackAction {
 	                   csCoin.setCscRemark("用户通过活动盒子获得"+name);
 	                   csCoin.setCscSerial(SystemHelper.getCoinSerial(csCoin));
 	                   csCoin.setCscUpdateTime(new Date(System.currentTimeMillis()));
-	                   csCoin.setCscValidity((short)0);
+	                   
 	                   
 	                   //todo 添加红包来源
 	                   //csCoin.setCscCoinSource();
@@ -497,6 +520,27 @@ public class ThirdPartyCallbackAction {
 	public void setCommonUnitService(ICommonUnitService commonUnitService) {
 		this.commonUnitService = commonUnitService;
 	}
+
+
+    public ICsMemberService getCsMemberService() {
+        return csMemberService;
+    }
+
+
+    public void setCsMemberService(ICsMemberService csMemberService) {
+        this.csMemberService = csMemberService;
+    }
+
+
+    public ICsItemService getCsItemService() {
+        return csItemService;
+    }
+
+
+    public void setCsItemService(ICsItemService csItemService) {
+        this.csItemService = csItemService;
+    }
+	
 	
 	
 }
