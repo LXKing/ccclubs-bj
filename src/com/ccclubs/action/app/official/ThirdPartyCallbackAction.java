@@ -106,32 +106,47 @@ public class ThirdPartyCallbackAction {
 	       if (null!=csMember) {
 	           
 	               JSONObject prizeJson=jsonObject.getJSONObject("data").getJSONObject("prize");
-	               String name=prizeJson.getString("name");//获取奖品名称
+	               String activityName=jsonObject.getJSONObject("data").getJSONObject("activity").getString("name");
+	               String prizeName=prizeJson.getString("name");//获取奖品名称
 	               //用奖品名称匹配红包
 	               
 	             //处理奖品 循环
 	               //匹配本地奖品
-	               CsItem csItem=csItemService.getCsItem($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, name));
+	               CsItem csItem=csItemService.getCsItem($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, prizeName));
 	                       //todo有查询bug
 	               if (null!=csItem) {
 	                   //添加红包
 	                   CsCoin csCoin=new CsCoin();
 	                   csCoin.setCscAddTime(new Date(System.currentTimeMillis()));
-	                   if ("ATTEND".equals(event)) {
+	                   
+	                   if (null!=activityName) {
+	                       if (activityName.contains("签到")) {
+	                           csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//签到7天后到期
+	                           csCoin.setCscValidity((short)0);
+	                       }else if (activityName.contains("邀请")) {
+	                           csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//邀请30天后到期
+	                           csCoin.setCscValidity((short)1);
+	                       }
+	                   }else {
+	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//默认7天后到期
+                           csCoin.setCscValidity((short)0);
+	                   }
+	                   
+	                   /*if ("ATTEND".equals(event)) {
 	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//签到7天后到期
 	                       csCoin.setCscValidity((short)0);
 	                   }else {
 	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//邀请30天后到期
 	                       csCoin.setCscValidity((short)1);
 	                   }
-	                   
+	                   */
 	                   csCoin.setCscMember(csMember.getCsmId());
 	                   csCoin.setCscHost(csMember.getCsmHost());
 	                   csCoin.setCscCount(csItem.getCsiPrice());
 	                   csCoin.setCscEditor(0l);//设置系统用户为充值用户
 	                   csCoin.setCscFlag("后台添加");
 	                   
-	                   csCoin.setCscRemark("用户通过活动盒子获得"+name);
+	                   csCoin.setCscRemark("用户通过活动盒子获得"+prizeName);
 	                   csCoin.setCscSerial(SystemHelper.getCoinSerial(csCoin));
 	                   csCoin.setCscUpdateTime(new Date(System.currentTimeMillis()));
 	                   
