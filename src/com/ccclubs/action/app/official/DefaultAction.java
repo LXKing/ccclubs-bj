@@ -6484,7 +6484,7 @@ public class DefaultAction extends BaseAction {
                         -1);
             } else {
                 coinList = csCoinService.getCsCoinList(
-                        $.add("definex", "( 1=1 and " + CsCoin.C.cscEnd + " <= '"
+                        $.add("definex", "( 1=1 and " + CsCoin.C.cscEnd + " < '"
                                 + $.date(new Date(), "yyyy-MM-dd") + "' and  csc_remain > 0)")
                                 .add(CsCoin.F.cscMember, member.getCsmId())
                                 .add(CsCoin.F.cscHost, member.getCsmHost())
