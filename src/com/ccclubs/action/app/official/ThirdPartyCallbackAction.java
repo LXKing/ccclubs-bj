@@ -1,5 +1,7 @@
 package com.ccclubs.action.app.official;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,31 +9,194 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.jfree.util.Log;
-
 import com.ccclubs.action.app.official.util.ApiBase;
 import com.ccclubs.action.app.official.util.DidiApi;
 import com.ccclubs.action.app.official.util.JpushClientHelper;
 import com.ccclubs.action.app.official.util.JpushConfig;
 import com.ccclubs.action.app.official.util.ThirdPartyApiHelper;
 import com.ccclubs.action.app.official.util.YidaoApi;
+import com.ccclubs.config.SYSTEM;
+import com.ccclubs.helper.SystemHelper;
 import com.ccclubs.helper.UtilHelper;
+import com.ccclubs.model.CsCoin;
+import com.ccclubs.model.CsItem;
+import com.ccclubs.model.CsMember;
+import com.ccclubs.model.CsRecord;
 import com.ccclubs.model.CsSpecialCar;
 import com.ccclubs.model.CsUnitOrder;
 import com.ccclubs.model.CsUnitPerson;
+import com.ccclubs.model.SrvUser;
+import com.ccclubs.service.admin.ICsItemService;
+import com.ccclubs.service.admin.ICsMemberService;
 import com.ccclubs.service.admin.ICsSpecialCarService;
 import com.ccclubs.service.common.ICommonUnitService;
 import com.ccclubs.service.common.ICommonUtilService.SMSType;
 import com.lazy3q.web.helper.$;
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONString;
 
 public class ThirdPartyCallbackAction {
+    
+    
 	
 	ICsSpecialCarService csSpecialCarService;
 	
 	ICommonUnitService commonUnitService;
+	ICsMemberService csMemberService;
+	ICsItemService csItemService;
+	
+	
+	Logger thirdPartyCallbackAppLogger = Logger.getLogger("rentApp");
+
+	/**
+	 * 活动盒子用户抽奖和中奖回调
+	 * **/
+	public String winningActivity() {
+	    HttpServletRequest request = ServletActionContext.getRequest();
+	    String results=null;
+	    InputStream is=null;
+	    try {
+            is = request.getInputStream();
+            String requestString=IOUtils.toString(is);
+            System.out.println(requestString);
+            results = JSONObject.fromObject(requestString).getString("result");
+        } catch (IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+	    //todo http请求头部加上一个 Signature 字段的处理
+	    //Map map=$.getJson("result");
+	    
+	    thirdPartyCallbackAppLogger.info("result is : "+results);
+	    //处理数据
+	        //分离event与data
+	  //处理data数据，反序列化对象
+	    if (null==results||"".equals(results)) {
+	        return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+	        
+        }
+	    JSONObject jsonObject=JSONObject.fromObject(results);
+	    String event=jsonObject.getString("event");
+	    if ("ATTEND".equals(event)||"INVITE".equals(event)) {//中将的event事件为ATTEND
+            
+            //处理是否中奖
+            int winning=jsonObject.getJSONObject("data").getInt("winning");
+            if (1!=winning) {
+                //用户未中奖
+                return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+            }
+          //处理用户
+            //匹配本地用户
+            String user_type=jsonObject.getJSONObject("data").getJSONObject("customer").getString("user_type");
+            if (!"app".equals(user_type)) {
+              //用户app类型不匹配
+                return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+            }
+	       Long identity=jsonObject.getJSONObject("data").getJSONObject("customer").getLong("identity");//获取用户唯一标志,获得的是用户主键id
+	       //JSONArray prizeJsonArray=jsonObject.getJSONObject("data").getJSONArray("prize");//获取奖品列表
+	       CsMember csMember=csMemberService.getCsMemberById(identity);
+	               //CsMember.Get($.add(CsMember.F.csmId, identity));//todo有查询bug
+	       
+	       if (null!=csMember) {
+	           
+	               JSONObject prizeJson=jsonObject.getJSONObject("data").getJSONObject("prize");
+	               String activityName=jsonObject.getJSONObject("data").getJSONObject("activity").getString("name");
+	               String prizeName=prizeJson.getString("name");//获取奖品名称
+	               //用奖品名称匹配红包
+	               
+	             //处理奖品 循环
+	               //匹配本地奖品
+	               CsItem csItem=csItemService.getCsItem($.add(CsItem.F.csiType, 3).add(CsItem.F.csiTitle, prizeName));
+	                       //todo有查询bug
+	               if (null!=csItem) {
+	                   //添加红包
+	                   CsCoin csCoin=new CsCoin();
+	                   csCoin.setCscAddTime(new Date(System.currentTimeMillis()));
+	                   
+	                   if (null!=activityName) {
+	                       if (activityName.contains("签到")) {
+	                           csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//签到7天后到期
+	                           csCoin.setCscValidity((short)0);
+	                       }else if (activityName.contains("邀请")) {
+	                           csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//邀请30天后到期
+	                           csCoin.setCscValidity((short)1);
+	                       }
+	                   }else {
+	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//默认7天后到期
+                           csCoin.setCscValidity((short)0);
+	                   }
+	                   
+	                   /*if ("ATTEND".equals(event)) {
+	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*7));//签到7天后到期
+	                       csCoin.setCscValidity((short)0);
+	                   }else {
+	                       csCoin.setCscEnd(new Date(System.currentTimeMillis()+1000*60*60*24*30));//邀请30天后到期
+	                       csCoin.setCscValidity((short)1);
+	                   }
+	                   */
+	                   csCoin.setCscMember(csMember.getCsmId());
+	                   csCoin.setCscHost(csMember.getCsmHost());
+	                   csCoin.setCscCount(csItem.getCsiPrice());
+	                   csCoin.setCscEditor(0l);//设置系统用户为充值用户
+	                   csCoin.setCscFlag("后台添加");
+	                   
+	                   csCoin.setCscRemark("【活动盒子】用户参加“"+activityName+"”获得"+prizeName);
+	                   csCoin.setCscSerial(SystemHelper.getCoinSerial(csCoin));
+	                   csCoin.setCscUpdateTime(new Date(System.currentTimeMillis()));
+	                   
+	                   
+	                   //todo 添加红包来源
+	                   //csCoin.setCscCoinSource();
+	                   csCoin.setCscRemain(csItem.getCsiPrice());
+	                   csCoin.setCscStatus((short)1);
+	                   
+	                 //下发奖品
+	                   //添加下发记录，添加用户奖品
+	                   csCoin.save();//todo 未测试
+	                   //CsCoin csCoin=CsCoin.Get($.add(CsCoin.F., value));
+	               }else {
+	                //没找对对应的商品
+	                   return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+	               }
+	             
+	           
+	       }
+	       else {
+	           //未找到中奖用户
+	           return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+	       }
+	       
+        }else {
+            //不是中奖事件回调直接返回
+            return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+        }
+	    
+	    return $.SendHtml("SUCCESS", SYSTEM.UTF8);
+    }
+	
+	
+	public static String unicode2String(String unicode){
+        if(null==unicode||"".equals(unicode))return null;
+        StringBuilder sb = new StringBuilder();
+        int i = -1;
+        int pos = 0;
+
+        while((i=unicode.indexOf("\\u", pos)) != -1){
+            sb.append(unicode.substring(pos, i));
+            if(i+5 < unicode.length()){
+                pos = i+6;
+                sb.append((char)Integer.parseInt(unicode.substring(i+2, i+6), 16));
+            }
+        }
+
+        return sb.toString();
+    }
 	
 	/**
 	 * 易到订单支付成功回调
@@ -370,6 +535,27 @@ public class ThirdPartyCallbackAction {
 	public void setCommonUnitService(ICommonUnitService commonUnitService) {
 		this.commonUnitService = commonUnitService;
 	}
+
+
+    public ICsMemberService getCsMemberService() {
+        return csMemberService;
+    }
+
+
+    public void setCsMemberService(ICsMemberService csMemberService) {
+        this.csMemberService = csMemberService;
+    }
+
+
+    public ICsItemService getCsItemService() {
+        return csItemService;
+    }
+
+
+    public void setCsItemService(ICsItemService csItemService) {
+        this.csItemService = csItemService;
+    }
+	
 	
 	
 }

@@ -3347,10 +3347,13 @@ public class DefaultAction extends BaseAction {
             }
 
             //判断用户当天取消的订单次数
-            Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
-	        		  .add("definex", " cso_cancel_from="+From.APP.ordinal() + " and cso_start_time>="+ new DateUtil().dateToString(new Date(), "yyyy-MM-dd")  ));
+            //判断用户当天取消的订单次数
+            StringBuffer definex =new StringBuffer();
+            definex.append(" cso_cancel_from in ("+From.APP.ordinal() +","+From.企业.ordinal()+")");
+            definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
+	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
+	        		  .add("definex", definex));
             //
-            
             if (type == null)
                 type = 1;
             if (type == 1) {
@@ -3544,6 +3547,14 @@ public class DefaultAction extends BaseAction {
             datamap.put("starLevel1", csComplain == null ? 0 : csComplain.getCscLevel1());
             datamap.put("content", csComplain == null ? " " : csComplain.getCscContent());
 
+           //判断订单时间与此时时间
+            Date start=data.getCsoStartTime();//订单开始时间
+            if(new Date().before(start)) {
+            	 datamap.put("judge", 1);//1:预计取车时间未到之前,显示取消订单按钮钮
+            }else {
+            	 datamap.put("judge", 0);//0:预计取车时间之后（含）不显示取消订单按钮
+            }
+            
             dataList.add(datamap);
         }
         return dataList;
@@ -3659,12 +3670,21 @@ public class DefaultAction extends BaseAction {
                 } else {
                     datamap.put("orderStatus", "-1");
                 }
+              
             } else {
                 datamap.put("orderStatus", "-1");
             }
 
             CsOrder csOrder = data.get$csuoOrder();
 
+            //判断订单时间与此时时间
+            Date start=csOrder.getCsoStartTime();//订单开始时间
+            if(new Date().before(start)) {
+            	 datamap.put("judge", 1);//1:预计取车时间未到之前,显示取消订单按钮钮
+            }else {
+            	 datamap.put("judge", 0);//0:预计取车时间之后（含）不显示取消订单按钮
+            }
+            
             if (csOrder == null) {
                 datamap.put("isComment", false);
                 datamap.put("starLevel", 0);
@@ -4385,7 +4405,7 @@ public class DefaultAction extends BaseAction {
 	        
             //判断用户当天取消的订单次数
             StringBuffer definex =new StringBuffer();
-            definex.append(" cso_cancel_from="+From.APP.ordinal());
+            definex.append(" cso_cancel_from in ("+From.APP.ordinal() +","+From.企业.ordinal()+")");
             definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
 	        		  .add("definex", definex));
@@ -4693,7 +4713,7 @@ public class DefaultAction extends BaseAction {
 
             //判断用户当天取消的订单次数
             StringBuffer definex =new StringBuffer();
-            definex.append(" cso_cancel_from="+From.APP.ordinal());
+            definex.append(" cso_cancel_from in ("+From.APP.ordinal() +","+From.企业.ordinal()+")");
             definex.append(" and cso_start_time>='"+new DateUtil().dateToString(new Date(), "yyyy-MM-dd") +"'"  );
 	        Long cancelCount=  csOrderService.getCsOrderCount($.add("csoStatus",3).add("csoUseMember", member.getCsmId())
 	        		  .add("definex", definex));
