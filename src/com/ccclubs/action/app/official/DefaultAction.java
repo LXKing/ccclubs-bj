@@ -3547,6 +3547,14 @@ public class DefaultAction extends BaseAction {
             datamap.put("starLevel1", csComplain == null ? 0 : csComplain.getCscLevel1());
             datamap.put("content", csComplain == null ? " " : csComplain.getCscContent());
 
+           //判断订单时间与此时时间
+            Date start=data.getCsoStartTime();//订单开始时间
+            if(new Date().before(start)) {
+            	 datamap.put("judge", 1);//1:预计取车时间未到之前,显示取消订单按钮钮
+            }else {
+            	 datamap.put("judge", 0);//0:预计取车时间之后（含）不显示取消订单按钮
+            }
+            
             dataList.add(datamap);
         }
         return dataList;
@@ -3662,12 +3670,21 @@ public class DefaultAction extends BaseAction {
                 } else {
                     datamap.put("orderStatus", "-1");
                 }
+              
             } else {
                 datamap.put("orderStatus", "-1");
             }
 
             CsOrder csOrder = data.get$csuoOrder();
 
+            //判断订单时间与此时时间
+            Date start=csOrder.getCsoStartTime();//订单开始时间
+            if(new Date().before(start)) {
+            	 datamap.put("judge", 1);//1:预计取车时间未到之前,显示取消订单按钮钮
+            }else {
+            	 datamap.put("judge", 0);//0:预计取车时间之后（含）不显示取消订单按钮
+            }
+            
             if (csOrder == null) {
                 datamap.put("isComment", false);
                 datamap.put("starLevel", 0);
