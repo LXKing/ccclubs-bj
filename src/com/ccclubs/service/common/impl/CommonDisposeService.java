@@ -273,13 +273,14 @@ public class CommonDisposeService implements ICommonDisposeService {
 		Double canMoney = csOrder.getCsoCreditCard() == null ? commonMoneyService.getUsableAmount(csOrder.getCsoPayMember()) : commonMoneyService
 				.getUsableMoneyAndCouponAndCredit(csOrder.getCsoPayMember());
 		// 如果当前会员余额不足并且订单不是后台管理员下单，则不允许下单
-		if (LoginHelper.getLogin() == null) {
+		if (LoginHelper.getLogin() == null) {//取消多余判断
 			// 如果打算使用信用卡，但如果有未还款的信用帐单，那么不给下单
 			CsCreditCard csCreditCard = csOrder.get$csoCreditCard();
 			if (csCreditCard != null && CsCreditBill.Get($.add(CsCreditBill.F.cscbMember, csOrder.getCsoUseMember()).add(CsCreditBill.F.cscbStatus, 0)) != null) {
 				throw new MessageException(ErrorCode.ORDER_CREDIT_UN_REPAY, "会员有未结算的信用帐单，不能以信用模式租车");
 			}
-			if (csCreditCard == null && canMoney < $(csOrder.getCsoMarginNeed() + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() - csOrder.getCsoPayCoin()))
+			//现金券+余额（下单时不计算红包，结算时用红包）
+			if (csCreditCard == null && canMoney < $(csOrder.getCsoMarginNeed() + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() /*- csOrder.getCsoPayCoin()*/))
 				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "当前账户[余额+现金券]不足，不允许下单");
 			if (canMoney < 0)
 				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员已欠费，不能下单");
