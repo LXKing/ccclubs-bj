@@ -273,7 +273,7 @@ public class CommonDisposeService implements ICommonDisposeService {
 		Double canMoney = csOrder.getCsoCreditCard() == null ? commonMoneyService.getUsableAmount(csOrder.getCsoPayMember()) : commonMoneyService
 				.getUsableMoneyAndCouponAndCredit(csOrder.getCsoPayMember());
 		// 如果当前会员余额不足并且订单不是后台管理员下单，则不允许下单
-		if (LoginHelper.getLogin() == null) {//取消多余判断
+		if (LoginHelper.getLogin() == null) {
 			// 如果打算使用信用卡，但如果有未还款的信用帐单，那么不给下单
 			CsCreditCard csCreditCard = csOrder.get$csoCreditCard();
 			if (csCreditCard != null && CsCreditBill.Get($.add(CsCreditBill.F.cscbMember, csOrder.getCsoUseMember()).add(CsCreditBill.F.cscbStatus, 0)) != null) {
