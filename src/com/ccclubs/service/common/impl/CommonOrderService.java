@@ -351,6 +351,8 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 //			
 ////			promotion = getActivity2017(rentDetails, start, rentFinish, oldOrder);
 //		}
+		//初始化订单簇
+		CsOrderCluster coc = null;
 		if (!isOC) { // 如果不是订单簇，走租金拆单
             rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), start, rentFinish);
             // 租金
@@ -363,17 +365,47 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             }
         }else if(oldOrder!=null && StringUtils.isNotEmpty(oldOrder.getCsoSrc())) {
             String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\D", "");
-            CsOrderCluster coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
+            coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
             //套餐订单时长拆解：套餐时段单独计算，提前取车、超时还车时段分别计算
             if(coc!=null) {
-                //提前取车时段计费
-                if(oldOrder.getCsoTakeTime().before(oldOrder.getCsoStartTime())) {
-                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
-                    details.addAll(rentDetails);
+                //提前取车
+                if(oldOrder.getCsoTakeTime().getTime()<oldOrder.getCsoStartTime().getTime()) {
+                    if(oldOrder.getCsoRetTime().getTime()<=oldOrder.getCsoStartTime().getTime()) {
+                        /***************套餐开始之前还车*************/
+                        //普通用车费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoRetTime());
+                        details.addAll(rentDetails);
+                    }else if(oldOrder.getCsoRetTime().getTime()>oldOrder.getCsoFinishTime().getTime()) {
+                        /***************超时还车*************/
+                        //提前取车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
+                        details.addAll(rentDetails);
+                        //超时还车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                        details.addAll(rentDetails); 
+                    }else{
+                        /***************套餐时间内还车*************/ 
+                        //提前取车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoStartTime());
+                        details.addAll(rentDetails);
+                    }
                 }
-                //超时还车时段计费
-                if(oldOrder.getCsoRetTime().after(oldOrder.getCsoFinishTime())) {
-                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                
+                //套餐时间内取车
+                if(oldOrder.getCsoTakeTime().getTime()>=oldOrder.getCsoStartTime().getTime()
+                        && oldOrder.getCsoTakeTime().getTime()<=oldOrder.getCsoFinishTime().getTime()) {
+                    
+                    /***************超时还车*************/
+                    if(oldOrder.getCsoRetTime().getTime()>oldOrder.getCsoFinishTime().getTime()) {
+                        //超时还车普通费用
+                        rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoFinishTime(), oldOrder.getCsoRetTime());
+                        details.addAll(rentDetails); 
+                    }
+                }
+                
+                //套餐时间后取车,用车普通费用
+                if(oldOrder.getCsoTakeTime().getTime()>=oldOrder.getCsoFinishTime().getTime()) {
+                    rentDetails = this.buildOrderDetails(rentProduct.getCspId(), csFeeTypeSet, userType, cspOutets, cspModel, srvHost.getShId(), oldOrder.getCsoTakeTime(), oldOrder.getCsoRetTime());
                     details.addAll(rentDetails); 
                 }
             }
@@ -417,6 +449,8 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		});
 		
 		Double gRebate = null;
+		//套餐外时长费
+        double payNormal = 0;
 		//设置订单的价格		
 		for(CsOrderDetail orderDetail : details){
 			orderDetail.setCsodHost(csOutlets.getCsoHost());
@@ -478,7 +512,18 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 			orderDetail.setCsodCountReal(orderDetail.getCsodCount());
 			orderDetail.setCsodTotal($(orderDetail.getCsodPriceReal()*orderDetail.getCsodCountReal()));//理论金额
 			orderDetail.setCsodTotalReal($(orderDetail.getCsodPriceReal()*orderDetail.getCsodCountReal()*orderDetail.getCsodRebate()));//实际金额
+		
+			//累计套餐外普通时长计费
+			if(orderDetail.get$csodProduct().getCspFlag().equals(SYSTEM.RENT)) {
+			    payNormal = payNormal + orderDetail.getCsodTotalReal();
+			}
 		}
+		
+		//订单簇累计套餐外普通时长计费
+        if (coc != null) {
+            coc.setCsocPayNormal(payNormal);
+            coc.update();
+        }
 		
 		//移除价格为0或者0.01的详情
 		for(int i=0;i<details.size();i++){
@@ -1524,12 +1569,46 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
          */
         nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
         nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
-        Date lastNightStart = TimeUtil.addDay(nightStart, -1);//昨天夜租三开始时间
-        lastNightFinish = TimeUtil.addDay(nightFinish, -1);//昨天夜租三结束时间
-        // 起始时间在夜租三有效时间之内，包括昨天或当天的夜租三
-        if ((start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime())
-                || (start.getTime() >= lastNightStart.getTime()
-                        && start.getTime() < lastNightFinish.getTime())) {
+        // 起始时间在当天的夜租三有效时间之内
+        if (start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime()) {
+            /**** 以24小时为周期，分割时间 ****/
+            // 开始时间~夜租一结束时间
+            tempStart = start;
+            tempEnd = nightFinish;
+            if(tempEnd.before(end)) {
+                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT3);
+                timeBlocks.add(timeBlock);
+            }else {
+                timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_NIGHT3);
+                timeBlocks.add(timeBlock);
+                return timeBlocks;
+            }
+
+            // 夜租一结束时间~夜租一开始时间
+            tempStart = tempEnd;
+            date = TimeUtil.format(tempStart, TimeUtil.DATE.FORMAT_yyyy_MM_dd); 
+            tempEnd = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());
+            if(tempEnd.before(end)) {
+                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
+                timeBlocks.add(timeBlock);
+            }else {
+                timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_DAYTIME);
+                timeBlocks.add(timeBlock);
+                return timeBlocks;
+            }
+
+            // 夜租一开始时间~24小时周期末
+            tempStart = tempEnd;
+            tempEnd = end; 
+            timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT1);
+            timeBlocks.add(timeBlock);
+            return timeBlocks;
+        }
+        
+        // 起始时间在昨天夜租三有效时间之内
+        nightStart = TimeUtil.addDay(nightStart, -1);//昨天夜租三开始时间
+        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//昨天夜租三开始时间
+        if (start.getTime() >= nightStart.getTime() && start.getTime() < nightFinish.getTime()) {
             /**** 以24小时为周期，分割时间 ****/
             // 开始时间~夜租一结束时间
             tempStart = start;
@@ -1564,52 +1643,50 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             return timeBlocks;
         }
 
-        //假设时段跨天
-        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
-        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
-        if(TimeUtil.isSameDay(nightStart, nightFinish)) {
-         // 起始时间在第二天夜租一开始时间之前，夜租三截止时间之后
-            Date nextNightStart = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());//第二天夜租三开始时间
-            nextNightStart = TimeUtil.addDay(nextNightStart, 1);
-            Date nextNightFinish = TimeUtil.addMinute(nextNightStart, nightSlot1.getDuration());
-            if (start.getTime() >= nightFinish.getTime()
-                    && start.getTime() <= nextNightStart.getTime()) {
-
-                /**** 以24小时为周期，分割时间 ****/
-                // 开始时间~夜租一开始时间
-                tempStart = start;
-                tempEnd = nextNightStart;
-                if(tempEnd.before(end)) {
-                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
-                    timeBlocks.add(timeBlock);
-                }else {
-                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_DAYTIME);
-                    timeBlocks.add(timeBlock);
-                    return timeBlocks;
-                }
-
-                // 夜租一时间段
-                tempStart = tempEnd;
-                tempEnd = nextNightFinish;
-                if(tempEnd.before(end)) {
-                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT1);
-                    timeBlocks.add(timeBlock);
-                }else {
-                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_NIGHT1);
-                    timeBlocks.add(timeBlock);
-                    return timeBlocks;
-                }
-
-                // 夜租一结束时间~24小时周期末
-                tempStart = tempEnd;
-                tempEnd = end; 
-                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
-                timeBlocks.add(timeBlock);
-                return timeBlocks;
-            } 
-        }
-        
-        
+        //假设时段不跨天
+//        nightStart = TimeUtil.stringToDate(date +" "+ nightSlot3.getStart());//当天夜租三开始时间
+//        nightFinish = TimeUtil.addMinute(nightStart, nightSlot3.getDuration());//当天夜租三开始时间
+//        if(TimeUtil.isSameDay(nightStart, nightFinish)) {
+//            // 起始时间在第二天夜租一开始时间之前，夜租三截止时间之后
+//            Date nextNightStart = TimeUtil.stringToDate(date +" "+ nightSlot1.getStart());//第二天夜租三开始时间
+//            nextNightStart = TimeUtil.addDay(nextNightStart, 1);
+//            Date nextNightFinish = TimeUtil.addMinute(nextNightStart, nightSlot1.getDuration());
+//            if (start.getTime() >= nightFinish.getTime()
+//                    && start.getTime() <= nextNightStart.getTime()) {
+//
+//                /**** 以24小时为周期，分割时间 ****/
+//                // 开始时间~夜租一开始时间
+//                tempStart = start;
+//                tempEnd = nextNightStart;
+//                if(tempEnd.before(end)) {
+//                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
+//                    timeBlocks.add(timeBlock);
+//                }else {
+//                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_DAYTIME);
+//                    timeBlocks.add(timeBlock);
+//                    return timeBlocks;
+//                }
+//
+//                // 夜租一时间段
+//                tempStart = tempEnd;
+//                tempEnd = nextNightFinish;
+//                if(tempEnd.before(end)) {
+//                    timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_NIGHT1);
+//                    timeBlocks.add(timeBlock);
+//                }else {
+//                    timeBlock = new TimeBlock(tempStart, end, TimeBlock.FEE_NIGHT1);
+//                    timeBlocks.add(timeBlock);
+//                    return timeBlocks;
+//                }
+//
+//                // 夜租一结束时间~24小时周期末
+//                tempStart = tempEnd;
+//                tempEnd = end; 
+//                timeBlock = new TimeBlock(tempStart, tempEnd, TimeBlock.FEE_DAYTIME);
+//                timeBlocks.add(timeBlock);
+//                return timeBlocks;
+//            } 
+//        }
         
         return timeBlocks;
     }
@@ -1617,13 +1694,17 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
     /**
      * 根据计费规则，将订单时长拆分为多个收费项,订单备注先以json存储，供后续处理
      * @param start 开始时间
-     * @param end 截止时间：如果等于空，截止时间为当前时间后移24小时
+     * @param end 截止时间：如果等于空，截止时间为当前时间后移24小时,否则截止时间距离开始时间不满24小时
      * @param timeBlocks 时间段集合
      * @param slotMap 计费槽
      * @return
      */
     private List<CsOrderDetail> buildOrderDetailsIn24Hours(Date start, Date end, List<TimeBlock> timeBlocks,
             Map<String, TimeSlot> slotMap) {
+        if(end==null) {
+            end = TimeUtil.addHour(start, 24);
+        }
+        
         TimeSlot minuteSlot = slotMap.get(RuleName.每分钟.name());
         TimeSlot hourSlot = slotMap.get(RuleName.每小时.name());
         TimeSlot daySlot = slotMap.get(RuleName.每天.name());
@@ -1656,7 +1737,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
             }
         }
 
-        // 统计24小时累计收费
+        // 统计夜租、小时、分钟计费组合收费(方案一)
         JSONObject json = new JSONObject();
         StringBuilder feeDetail = new StringBuilder();
         for (CsOrderDetail detail : details) {
@@ -1665,14 +1746,33 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 feeDetail = feeDetail.append(detail.getCsodRemark());
             }
         }
+        // 统计小时、分钟计费组合(方案二)
+        TimeBlock timeBlock = new TimeBlock(start, end, TimeBlock.FEE_DAYTIME);
+        List<CsOrderDetail> list = buildOrdinaryOrderDetail(timeBlock, minuteSlot, hourSlot);
+        double tempTotalFee = 0;// 总费用
+        // 累计方案二时长费用
+        for (CsOrderDetail detail : list) {
+            if (detail != null) {
+                tempTotalFee += detail.getCsodPrice() * detail.getCsodCount();
+            }
+        }
+        // 方案一和方案二对比，去最优计费方案，并记录当前计费信息
+        if(tempTotalFee<=totalFee) {
+            feeDetail = new StringBuilder();
+            totalFee = tempTotalFee;
+            details = list;
+            for (CsOrderDetail detail : details) {
+                if (detail != null) {
+                    feeDetail = feeDetail.append(detail.getCsodRemark());
+                }
+            }
+        }
+        
         //记录组合计费明细
         json.put("combination", feeDetail.toString());
 
         // 24小时封顶收费计算
         if (totalFee > dayFee) {
-            if(end==null) {
-                end = TimeUtil.addHour(start, 24);
-            }
             detil = buildOrderDetail(daySlot, start, end, 1);
             
             //消费计价明细
@@ -1738,20 +1838,23 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         } else {
             // 小时计费单价优惠于分钟计费：总费用=hours*hourFee+(minutes*minuteFee||hourFee)
             Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
-            detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, 1);
             
-            json.clear();
-            json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
-            json.put("feeRule", "普通时长计费");
-            json.put("cheapTip", "小时计费优惠于分钟计费");
-            json.put("hourFee", hourFee);
-            json.put("minuteFee", minuteFee);
-            json.put("hours", hours);
-            json.put("totalFee", hourFee * hours);
-            
-            detil.setCsodRemark(json.toJSONString());
-            details.add(detil);
-            System.out.println(json.toJSONString());
+            if(hours>=1) {
+                detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
+                
+                json.clear();
+                json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
+                json.put("feeRule", "普通时长计费");
+                json.put("cheapTip", "小时计费优惠于分钟计费");
+                json.put("hourFee", hourFee);
+                json.put("minuteFee", minuteFee);
+                json.put("hours", hours);
+                json.put("totalFee", hourFee * hours);
+                
+                detil.setCsodRemark(json.toJSONString());
+                details.add(detil);
+                System.out.println(json.toJSONString());
+            }
             // 不满一小时的最低收费
             if(normalMinutes>0) {
                 tempMuniteFee = normalMinutes * minuteFee;
@@ -1827,14 +1930,20 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 
         // 分钟计费
         tempMuniteFee = minutes * minuteFee;
-        // 小时计费
-        tempHourFee = hourFee * hours;
-        // 小时、分钟组合计费
-        totalFee = normalMinutes * minuteFee;
-        if(totalFee>hourFee) {
-            totalFee = hourFee;
+        
+        //用车不满一小时
+        if(hours==0) {
+            totalFee = tempMuniteFee>hourFee? hourFee : tempMuniteFee;
+        }else {
+            // 小时计费
+            tempHourFee = hourFee * hours;
+            // 小时、分钟组合计费
+            totalFee = normalMinutes * minuteFee;
+            if(totalFee>hourFee) {
+                totalFee = hourFee;
+            }
+            totalFee = totalFee + tempHourFee; 
         }
-        totalFee = totalFee + tempHourFee;
 
         // 分钟计费、小时计费、夜租计费取最优惠组合
         if (totalFee < nightFee || tempMuniteFee < nightFee) {
@@ -1857,27 +1966,29 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                 System.out.println(json.toJSONString());
             } else {
                 //夜租时段:分钟计费、小时计费组合最优惠
-                //小时计费明细
                 Date temp = TimeUtil.addHour(timeBlock.getStartTime(), hours);
-                detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
-                
-                json.clear();
-                json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
-                json.put("feeRule", ruleName.name()+"时长计费");
-                if(normalMinutes>0) {
-                    json.put("cheapTip", "分钟计费、小时计费组合最优惠");
-                }else {
-                    json.put("cheapTip", "小时计费最优惠");
+                if(hours>=1) {
+                    //小时计费明细
+                    detil = buildOrderDetail(hourSlot, timeBlock.getStartTime(), temp, hours);
+                    
+                    json.clear();
+                    json.put("time", TimeUtil.format(timeBlock.getStartTime(), null) + "~" + TimeUtil.format(temp, null));
+                    json.put("feeRule", ruleName.name()+"时长计费");
+                    if(normalMinutes>0) {
+                        json.put("cheapTip", "分钟计费、小时计费组合最优惠");
+                    }else {
+                        json.put("cheapTip", "小时计费最优惠");
+                    }
+                    json.put("hourFee", hourFee);
+                    json.put("minuteFee", minuteFee);
+                    json.put("nightFee", nightFee);
+                    json.put("hours", hours);
+                    json.put("totalFee", hours * hourFee);
+                    
+                    detil.setCsodRemark(json.toJSONString());
+                    details.add(detil);
+                    System.out.println(json.toJSONString());
                 }
-                json.put("hourFee", hourFee);
-                json.put("minuteFee", minuteFee);
-                json.put("nightFee", nightFee);
-                json.put("hours", hours);
-                json.put("totalFee", hours * hourFee);
-                
-                detil.setCsodRemark(json.toJSONString());
-                details.add(detil);
-                System.out.println(json.toJSONString());
 
                 //不足一小时的分钟数计费
                 if(normalMinutes>0) {
@@ -1958,7 +2069,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         // 获取当前配置计费规则（价格表、规则表、商品表关联查询）
         String sql =
                 "select cp.*, cr.csr_expression, cr.csr_id, cr.csr_name, cr.csr_meas, cr.csr_priority, cg.csg_name, cg.csg_product, cg.csg_profile from cs_price cp "
-                        + " left join cs_goods cg on cp.csp_goods=cg.csg_id "
+                        + " left join cs_goods cg on cp.csp_goods=cg.csg_id and cp.csp_user_type=cg.csg_user_type "
                         + " left join cs_rule cr on cr.csr_id = cg.csg_rule "
                         + " where cr.csr_status=1 and cr.csr_name !=\"每公里\" and cp.csp_outets="
                         + outletsId + " and cp.csp_model=" + modelId + " and cp.csp_user_type="
@@ -1977,7 +2088,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
         // 获取默认配置计费规则并增量模式追加至已有规则（价格表、规则表、商品表关联查询）
         if (defaultOutletsId != null) {
             sql = "select cp.*, cr.csr_expression, cr.csr_id, cr.csr_name, cr.csr_meas, cr.csr_priority, cg.csg_name, cg.csg_product, cg.csg_profile from cs_price cp "
-                    + " left join cs_goods cg on cp.csp_goods=cg.csg_id "
+                    + " left join cs_goods cg on cp.csp_goods=cg.csg_id and cp.csp_user_type=cg.csg_user_type "
                     + " left join cs_rule cr on cr.csr_id = cg.csg_rule "
                     + " where cr.csr_status=1 and cr.csr_name !=\"每公里\" and cp.csp_outets="
                     + defaultOutletsId + " and cp.csp_model=" + modelId + " and cp.csp_user_type="
