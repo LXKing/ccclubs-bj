@@ -1818,13 +1818,8 @@ public class DefaultAction extends BaseAction {
                     // ==============================================
                 	  definex.append("(");
                       definex.append("not exists(");
-                      definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
-                      definex.append("           ( cso_start_time <= '" + takeTime
-                              + "' and cso_finish_time > '" + takeTime + "')");
-                      definex.append("        or (cso_start_time > '" + takeTime
-                              + "' and cso_start_time <'" + retTime + "' )");
-                      
-                      definex.append("        ) and cso_status in (0,1,2,5))");
+                      definex.append("select 1 from cs_order co where co.cso_car = csc_id ");
+                      definex.append("    and cso_status in (0,1,2,5)");
                       definex.append(")");
 
                       definex.append(" and csc_outlets = " + takeOutletsId);
@@ -1858,15 +1853,8 @@ public class DefaultAction extends BaseAction {
                 // ==============================================
                 definex.append("(");
                 definex.append("not exists(");
-                definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
-                definex.append("           ( cso_start_time <= '" + startTime
-                        + "' and cso_finish_time > '" + startTime + "')");
-                definex.append("        or (cso_start_time > '" + startTime
-                        + "' and cso_start_time <'" + finishTime + "' )");
-                if (a2bModel) {
-                    definex.append("or (cso_start_time > '" + startTime + "' )");
-                }
-                definex.append("        ) and cso_status in (0,1,2,5))");
+                definex.append("select 1 from cs_order co where co.cso_car = csc_id ");
+                definex.append("  and cso_status in (0,1,2,5)");
                 definex.append(")");
 
                 definex.append(" and csc_outlets = " + takeOutletsId);
