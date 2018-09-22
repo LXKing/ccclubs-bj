@@ -412,7 +412,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		Collections.sort(details, new Comparator<CsOrderDetail>(){
 			@Override
 			public int compare(CsOrderDetail a, CsOrderDetail b) {
-				return a.getCsodStart().before(b.getCsodStart())? -1 : 1;
+				return a.getCsodStart().compareTo(b.getCsodStart());// a.getCsodStart().before(b.getCsodStart())? -1 : 1;
 			}
 		});
 		
