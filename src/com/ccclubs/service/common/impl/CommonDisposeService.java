@@ -441,7 +441,7 @@ public class CommonDisposeService implements ICommonDisposeService {
         ICommonOrderService commonOrderService = $.GetSpringBean("commonOrderService");
         
         CsFeeTypeSet csFeeTypeSet = CsFeeTypeSet.Get($.add(CsFeeTypeSet.F.csftsHost, srvHost.getShId()).add(CsFeeTypeSet.F.csftsModel, carModel));
-        Long userType = FeeTypeUitl.getUserType(null, csFeeTypeSet, null);
+        Long userType = FeeTypeUitl.getUserType(feeType, csFeeTypeSet, null);
         CsProduct rent = commonOrderService.getProductByFlag(SYSTEM.RENT);
         
         Map<String, TimeSlot> slotMap = commonOrderService.getRules(csFeeTypeSet.getCsftsOutlets(), outlets_get_id, carModel, userType, rent.getCspId());
@@ -1211,8 +1211,14 @@ public class CommonDisposeService implements ICommonDisposeService {
 		if (csOrder.getCsoRetTime().getTime() < csOrder.getCsoStartTime().getTime())
 			throw new MessageException(ErrorCode.ORDER_TIME_ERROR, 2, "该订单没还车时间早于订单开始时间，不能结算");
 
+		//计费开始时间
+		Date start = csOrder.getCsoStartTime(); 
+		if(start.after(csOrder.getCsoTakeTime())) {
+		    start = csOrder.getCsoTakeTime();
+		}
+		
 		// 拆分订单
-		OrderInfo orderinfo = commonOrderService.splitOrderDetails(csOrder.getCsoPayMember(), csOrder.getCsoCar(), csOrder.getCsoStartTime(),
+		OrderInfo orderinfo = commonOrderService.splitOrderDetails(csOrder.getCsoPayMember(), csOrder.getCsoCar(), start,
 				csOrder.getCsoFinishTime(), csOrder.getCsoRetTime(), csOrder.getCsoFreehour(), csOrder.getCsoElectric(), csOrder.getCsoFuel(),
 				csOrder.getCsoFeeType(), csOrder.getCsoInsureType(), csOrder.getCsoLongPrice(), csOrder.getCsoId(), true);
 		

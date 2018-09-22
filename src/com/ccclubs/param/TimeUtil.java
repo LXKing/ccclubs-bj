@@ -137,7 +137,7 @@ public class TimeUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.YEAR, count);
-        return new Date(calendar.getTime().getTime());
+        return calendar.getTime();
     }
 
     /**
@@ -151,7 +151,7 @@ public class TimeUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, count);
-        return new Date(calendar.getTime().getTime());
+        return calendar.getTime();
     }
 
     /**
@@ -165,7 +165,7 @@ public class TimeUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_YEAR, count);
-        return new Date(calendar.getTime().getTime());
+        return calendar.getTime();
     }
 
     /**
@@ -179,7 +179,7 @@ public class TimeUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, count);
-        return new Date(calendar.getTime().getTime());
+        return calendar.getTime();
     }
 
     /**
@@ -193,7 +193,7 @@ public class TimeUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MINUTE, count);
-        return new Date(calendar.getTime().getTime());
+        return calendar.getTime();
     }
 
     /**
@@ -207,7 +207,7 @@ public class TimeUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.SECOND, count);
-        return new Date(calendar.getTime().getTime());
+        return calendar.getTime();
     }
 
     /**
