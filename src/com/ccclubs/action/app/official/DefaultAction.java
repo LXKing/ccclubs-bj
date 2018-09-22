@@ -1470,19 +1470,6 @@ public class DefaultAction extends BaseAction {
         if (member == null) {
             return returnError("100", "登录授权无效");
         }
-        //获取移动端传过来的参数
-        Long takeOutletsId = $.getLong("takeOutletsId");
-        Long retOutletsId = $.getLong("retOutletsId", takeOutletsId);
-        
-        Long carId = $.getLong("carId");
-        Date takeTime = $.getDate("takeTime");
-        Date retTime = $.getDate("retTime");
-        Long paid = $.getLong("paid"); // 代付会员(可选)
-        String remark = $.getString("remark");
-        String version = $.getString("appVersion");
-        // 套餐ID
-        String mealId = $.getString("mealId", "0");
-        //会员认证状态判断
         if(MemberRecStatus.REC_PASS != member.getVstatus()) {
             StringBuilder sb = new StringBuilder();
             if(MemberRecStatus.REC_PASS != member.getVDrive()) {
@@ -1506,14 +1493,29 @@ public class DefaultAction extends BaseAction {
             return ret;  
         }
 
-        //判断	
+        Long takeOutletsId = $.getLong("takeOutletsId");
+        Long retOutletsId = $.getLong("retOutletsId", takeOutletsId);
+
+        Long carId = $.getLong("carId");
+        Date takeTime = $.getDate("takeTime");
+        Date retTime = $.getDate("retTime");
+        Long paid = $.getLong("paid"); // 代付会员(可选)
+        String remark = $.getString("remark");
+        String version = $.getString("appVersion");
+
+        // 套餐ID
+        String mealId = $.getString("mealId", "0");
+
+        Double freeHours = null;
+        Long insureType = null;
+
         if (carId == null) {
             return returnError("101", "没有选择车辆");
         }
-        //取车时间判断
         if (takeTime == null) {
             return returnError("102", "请选择预定开始时间");
         }
+
         if(takeTime.getTime()-new Date().getTime()>30*60*1000){
        	 	return returnError("105", "取车时间需提前30分钟预订车辆");
         }
@@ -1532,19 +1534,21 @@ public class DefaultAction extends BaseAction {
         	}
         }*/
         //还车时间判断	
+
+     
+        
+
         if (retTime == null) {
             return returnError("103", "请选择预定结束时间");
         }
         if (!retTime.after(takeTime)) {
             return returnError("104", "结束时间必须晚于开始时间");
         }
-        //取还车时间判断
         if (takeOutletsId.longValue() != retOutletsId.longValue()) {
             if (takeTime.getTime() - System.currentTimeMillis() > 120 * 60 * 1000) {
                 return returnError("108", "异地借还只能提前2小时内预定");
             }
         }
-        //车辆信息判断
         CsCar car = csCarService.getCsCarById(carId);
         if (car == null)
             return returnError("109", "没有选择车辆");
@@ -1566,8 +1570,6 @@ public class DefaultAction extends BaseAction {
 //                }
 //            }
 
-        	Double freeHours = null;
-        	Long insureType = null;
             /** ********支付人********* */
             Long payMemberId = null;
             payMemberId = member.getCsmId();
@@ -1816,8 +1818,13 @@ public class DefaultAction extends BaseAction {
                     // ==============================================
                 	  definex.append("(");
                       definex.append("not exists(");
-                      definex.append("select 1 from cs_order co where co.cso_car = csc_id ");
-                      definex.append("   and  cso_status in (0,1,2,5)");
+                      definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
+                      definex.append("           ( cso_start_time <= '" + takeTime
+                              + "' and cso_finish_time > '" + takeTime + "')");
+                      definex.append("        or (cso_start_time > '" + takeTime
+                              + "' and cso_start_time <'" + retTime + "' )");
+                      
+                      definex.append("        ) and cso_status in (0,1,2,5))");
                       definex.append(")");
 
                       definex.append(" and csc_outlets = " + takeOutletsId);
@@ -1851,8 +1858,15 @@ public class DefaultAction extends BaseAction {
                 // ==============================================
                 definex.append("(");
                 definex.append("not exists(");
-                definex.append("select 1 from cs_order co where co.cso_car = csc_id ");
-                definex.append("  and cso_status in (0,1,2,5)");
+                definex.append("select 1 from cs_order co where co.cso_car = csc_id and ((");
+                definex.append("           ( cso_start_time <= '" + startTime
+                        + "' and cso_finish_time > '" + startTime + "')");
+                definex.append("        or (cso_start_time > '" + startTime
+                        + "' and cso_start_time <'" + finishTime + "' )");
+                if (a2bModel) {
+                    definex.append("or (cso_start_time > '" + startTime + "' )");
+                }
+                definex.append("        ) and cso_status in (0,1,2,5))");
                 definex.append(")");
 
                 definex.append(" and csc_outlets = " + takeOutletsId);
@@ -5558,6 +5572,16 @@ public class DefaultAction extends BaseAction {
                         map.put("title", cont.getCscTitle());
                         map.put("picUrl", cont.getCscImages());
                         map.put("linkUrl", cont.getCscContent());
+                        map.put("type", 0);
+                        //是否对接活动盒子
+                        String event = "";
+                        if(cont.getCscIsActivity()!=null && cont.getCscIsActivity()==1) {
+                            map.put("type", 1);
+                            event = StringUtils.isNotEmpty(cont.getCscActivityEvent())
+                                    ? cont.getCscActivityEvent()
+                                    : "invite"; 
+                            map.put("eventName", event);
+                        }
                         bannerList.add(map);
                     }
                     data.put("banners", bannerList);
@@ -6134,6 +6158,7 @@ public class DefaultAction extends BaseAction {
                     csItemService.getCsItemList($.add(CsItem.F.csiType, 4)
                             .add(CsItem.F.csiStatus, 1).add("asc", "csi_data_number"), -1);
            
+
            List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
            for(CsItem  item:itemList ) {
         	    MealExpress me = MealHelper.parseExpress(item.getCsiDepict());
@@ -6205,15 +6230,15 @@ public class DefaultAction extends BaseAction {
 //                                    "yyyy-MM-dd HH:mm:ss"));
 //                    ordersList.add(map);
 //                }
+
 //
 //                LzMap data = $.$("itemName", item.getCsiTitle()).add("itemId", item.getCsiId())
 //                        .add("price", item.getCsiPrice()).add("title", item.getCsiTitle())
 //                        .add("descript", item.getCsiRemark()).add("orders", ordersList)
 //                        .add("time1", me.getFeature("time1")).add("time2", me.getFeature("time2"));
-//
 //                dataList.add(data);
 //            }
-
+//            
             return $.SendHtml($.json(JsonFormat.success().setData($.add("list", dataList))),
                     CHARSET);
         } catch (com.ccclubs.exception.MessageException oe) {
