@@ -4306,8 +4306,9 @@ public class DefaultAction extends BaseAction {
                 }
                 msg = "指令发送成功，鸣笛执行中。";
             } else if (conType.equals("4")) {// 远程还车
-                if (csOrder.getCsoStatus().equals(new Short("0"))
-                        || csOrder.getCsoStatus().equals(new Short("1"))) {
+                //有取车动作才能还车
+                if (/*csOrder.getCsoStatus().equals(new Short("0"))
+                        ||*/ csOrder.getCsoStatus().equals(new Short("1"))) {
 
                     String remark = csOrder.get$csoOutletsRet().getCsoProfile();
 
@@ -6503,7 +6504,7 @@ public class DefaultAction extends BaseAction {
                         -1);
             } else {
                 coinList = csCoinService.getCsCoinList(
-                        $.add("definex", "( 1=1 and " + CsCoin.C.cscEnd + " <= '"
+                        $.add("definex", "( 1=1 and " + CsCoin.C.cscEnd + " < '"
                                 + $.date(new Date(), "yyyy-MM-dd") + "' and  csc_remain > 0)")
                                 .add(CsCoin.F.cscMember, member.getCsmId())
                                 .add(CsCoin.F.cscHost, member.getCsmHost())
