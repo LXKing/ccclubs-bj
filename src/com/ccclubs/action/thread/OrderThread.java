@@ -1,7 +1,7 @@
 package com.ccclubs.action.thread;
 
 import java.util.Date;
-
+import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ccclubs.config.SYSTEM;
@@ -101,18 +101,21 @@ public class OrderThread extends Thread {
 	DateUtil dateUtil = new DateUtil();
 	//扫描订单，当前时间已经超过订单结束时间并且订单状态仍是已预订（0）直接结算(2018-09-25)
 	private int scanClusterOrders() {
-		// TODO Auto-generated method stub
+	    int settled = 0;
 		Date date = new Date();
-		final CsOrder csOrder=csOrderService.getCsOrder(
+		List<CsOrder> orders = csOrderService.getCsOrderList(
 				Lazy.add("csoStatus", 0)
 //				.add("csoFlag", 3)
 				.add("definex", " ('"+dateUtil.dateToString(date, null)+"'>cso_finish_time) ")
-			);
-		if(csOrder != null){
-			commonDisposeService.executeSettleOrder(csOrder.getCsoId(), date, null, null, From.APP, null);
-			return 1;
-		}else
-			return 0;
+			,-1);
+		
+		for (CsOrder csOrder : orders) {
+		    if(csOrder != null){
+	            commonDisposeService.executeSettleOrder(csOrder.getCsoId(), csOrder.getCsoFinishTime(), null, null, From.APP, null);
+	            settled++;
+	        }
+        }
+		return settled;
 	}
 
 	/**
