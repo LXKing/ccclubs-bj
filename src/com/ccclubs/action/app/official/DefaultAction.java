@@ -1516,8 +1516,7 @@ public class DefaultAction extends BaseAction {
         if (takeTime == null) {
             return returnError("102", "请选择预定开始时间");
         }
-
-        if(takeTime.getTime()-new Date().getTime()>30*60*1000){
+        if(takeTime.getTime()-new Date().getTime()>30*60*1000||takeTime.getTime()-new Date().getTime()<0){
        	 	return returnError("105", "取车时间需提前30分钟预订车辆");
         }
        /* if(!"0".equals(mealId)) {
@@ -2035,7 +2034,7 @@ public class DefaultAction extends BaseAction {
                     return returnError("108", "异地借还只能提前2小时内预定");
                 }
             }
-            if(takeTime.getTime()-new Date().getTime()>30*60*1000){
+            if(takeTime.getTime()-new Date().getTime()>30*60*1000||takeTime.getTime()-new Date().getTime()<0){
             	 return returnError("105", "取车时间需提前30分钟预订车辆");
             }
 
