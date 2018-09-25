@@ -795,10 +795,10 @@ public class CommonDisposeService implements ICommonDisposeService {
 		// 检查余额是否够用
 		Double memberMoney = csOrder.getCsoCreditCard() == null ? commonMoneyService.getUsableAmount(csOrder.getCsoPayMember()) : commonMoneyService
 				.getUsableMoneyAndCouponAndCredit(csOrder.getCsoPayMember());
-		// 当前查询到的余额+当前订单之前所占用的余额 比较 当前订单的费用
+		// 当前查询到的余额+当前订单之前所占用的余额(不包含红包) 比较 当前订单的费用
 		if (LoginHelper.getLogin() == null
 				&& (memberMoney + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() + csOrder.getCsoMarginNeed()) < (orderinfo.getPrice() + orderinfo.feeee
-						+ orderinfo.margin - orderinfo.usecoin))
+						+ orderinfo.margin))
 			throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员可用余额不足");
 		
 		Package2016GiftLimit.doCheckReOrderPayment(csOrder, orderinfo, memberMoney);
