@@ -1620,8 +1620,8 @@ public class CommonDisposeService implements ICommonDisposeService {
 			payFreehour -= count;
 		}
 
-		// 只有订单状态是 已取消和已完成的才可以扣除红包
-		if(order.getCsoStatus() == 3 || order.getCsoStatus() == 4 ){
+		// 只有订单状态是 已完成的才可以扣除红包
+		if(order.getCsoStatus() == 4 ){
 			//保存红包的使用记录，并扣除
 			List<CsCoin> coins = commonMoneyService.getCanUseCoinList(order.getCsoHost(), order.getCsoPayMember(), order.getCsoStartTime());
 			Double payCoin = orderinfo.getUsecoin();
