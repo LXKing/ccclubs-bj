@@ -4393,7 +4393,7 @@ public class DefaultAction extends BaseAction {
                 return returnError("101", "订单不存在");
             }
             //订单开始后不能取消订单，只能选择提前还车
-            if(order.getCsoStatus()==1) {
+            if(order.getCsoStartTime().before(new Date())) {
             	 return returnError("104", "订单开始后不能取消订单	，只能选择提前还车");
             }
             // 订单状态不正确
@@ -4702,7 +4702,7 @@ public class DefaultAction extends BaseAction {
                 return returnError("102", "订单信息不符，无法完成取消操作");
             }
             //订单开始后不能取消订单，只能选择提前还车
-            if(order.getCsoStatus()==1) {
+            if(order.getCsoStartTime().before(new Date())) {
             	 return returnError("104", "订单开始后不能取消订单	，只能选择提前还车");
             }
             
