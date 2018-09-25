@@ -57,9 +57,10 @@ public class OrderThread extends Thread {
 				new ErrorException("THREAD_ERROR","线程处理订单时出错",ex);
 			}			
 			
-			//扫描订单簇，当前时间已经超过订单开始时间并且订单状态仍是已预订（0）
+			//扫描订单，当前时间已经超过订单结束时间并且订单状态仍是已预订（0）
 			try {
-				//count += scanClusterOrders();
+			    //2018-09-25 released by cjb
+				count += scanClusterOrders();
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
@@ -98,13 +99,13 @@ public class OrderThread extends Thread {
 	}
 	
 	DateUtil dateUtil = new DateUtil();
-	//扫描订单簇，当前时间已经超过订单开始时间并且订单状态仍是已预订（0）直接结算
+	//扫描订单，当前时间已经超过订单结束时间并且订单状态仍是已预订（0）直接结算(2018-09-25)
 	private int scanClusterOrders() {
 		// TODO Auto-generated method stub
 		Date date = new Date();
 		final CsOrder csOrder=csOrderService.getCsOrder(
 				Lazy.add("csoStatus", 0)
-				.add("csoFlag", 3)
+//				.add("csoFlag", 3)
 				.add("definex", " ('"+dateUtil.dateToString(date, null)+"'>cso_finish_time) ")
 			);
 		if(csOrder != null){
