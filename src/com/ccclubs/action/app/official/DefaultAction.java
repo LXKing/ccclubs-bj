@@ -4306,9 +4306,13 @@ public class DefaultAction extends BaseAction {
                 }
                 msg = "指令发送成功，鸣笛执行中。";
             } else if (conType.equals("4")) {// 远程还车
+                //提示用户先取车
+                if(csOrder.getCsoStatus().equals(new Short("0"))){
+                    return returnError("106", "请先取车");
+                }
+                
                 //有取车动作才能还车
-                if (/*csOrder.getCsoStatus().equals(new Short("0"))
-                        ||*/ csOrder.getCsoStatus().equals(new Short("1"))) {
+                if (csOrder.getCsoStatus().equals(new Short("1"))) {
 
                     String remark = csOrder.get$csoOutletsRet().getCsoProfile();
 

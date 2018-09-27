@@ -279,7 +279,8 @@ public class CommonDisposeService implements ICommonDisposeService {
 			if (csCreditCard != null && CsCreditBill.Get($.add(CsCreditBill.F.cscbMember, csOrder.getCsoUseMember()).add(CsCreditBill.F.cscbStatus, 0)) != null) {
 				throw new MessageException(ErrorCode.ORDER_CREDIT_UN_REPAY, "会员有未结算的信用帐单，不能以信用模式租车");
 			}
-			if (csCreditCard == null && canMoney < $(csOrder.getCsoMarginNeed() + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() - csOrder.getCsoPayCoin()))
+			//现金券+余额（下单时不计算红包，结算时用红包）
+			if (csCreditCard == null && canMoney < $(csOrder.getCsoMarginNeed() + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() /*- csOrder.getCsoPayCoin()*/))
 				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "当前账户[余额+现金券]不足，不允许下单");
 			if (canMoney < 0)
 				throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员已欠费，不能下单");
@@ -794,10 +795,10 @@ public class CommonDisposeService implements ICommonDisposeService {
 		// 检查余额是否够用
 		Double memberMoney = csOrder.getCsoCreditCard() == null ? commonMoneyService.getUsableAmount(csOrder.getCsoPayMember()) : commonMoneyService
 				.getUsableMoneyAndCouponAndCredit(csOrder.getCsoPayMember());
-		// 当前查询到的余额+当前订单之前所占用的余额 比较 当前订单的费用
+		// 当前查询到的余额+当前订单之前所占用的余额(不包含红包) 比较 当前订单的费用
 		if (LoginHelper.getLogin() == null
 				&& (memberMoney + csOrder.getCsoPayNeed() + csOrder.getCsoPredict() + csOrder.getCsoMarginNeed()) < (orderinfo.getPrice() + orderinfo.feeee
-						+ orderinfo.margin - orderinfo.usecoin))
+						+ orderinfo.margin))
 			throw new MessageException(ErrorCode.ORDER_MONEY_LESS, "会员可用余额不足");
 		
 		Package2016GiftLimit.doCheckReOrderPayment(csOrder, orderinfo, memberMoney);
