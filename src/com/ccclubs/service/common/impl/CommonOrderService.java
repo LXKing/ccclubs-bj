@@ -362,7 +362,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
                                 + "][" + CsUserType.getKeyValue(userType) + "]未配置价格");
             }
         }else if(oldOrder!=null && StringUtils.isNotEmpty(oldOrder.getCsoSrc())) {
-            String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\d", "");
+            String orderClusterId = oldOrder.getCsoSrc().replaceAll("\\D", "");
             CsOrderCluster coc = CsOrderCluster.Get($.add("csocId", orderClusterId));
             //套餐订单时长拆解：套餐时段单独计算，提前取车、超时还车时段分别计算
             if(coc!=null) {
@@ -412,7 +412,7 @@ public class CommonOrderService extends OrderProvider implements ICommonOrderSer
 		Collections.sort(details, new Comparator<CsOrderDetail>(){
 			@Override
 			public int compare(CsOrderDetail a, CsOrderDetail b) {
-				return a.getCsodStart().compareTo(b.getCsodStart());// a.getCsodStart().before(b.getCsodStart())? -1 : 1;
+				return a.getCsodStart().before(b.getCsodStart())? -1 : 1;//a.getCsodStart().compareTo(b.getCsodStart());
 			}
 		});
 		
