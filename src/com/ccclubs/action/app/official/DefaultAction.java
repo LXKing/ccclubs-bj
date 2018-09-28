@@ -1668,7 +1668,8 @@ public class DefaultAction extends BaseAction {
                 return returnError("102", "用户未绑定单位");
             List<CsOutlets> outletsList =
                     CsOutlets.getCsOutletsList($.add(CsOutlets.F.csoCanOrder, 1)
-                            .add("definex", "cso_id in ("
+                    		.add(CsOutlets.F.csoStatus, 1)
+                    		.add("definex", "cso_id in ("
                                     + $.str(unitInfo.getCsuiOutlets()).replace("#", "") + ")")
                             .add("asc", "cso_priority"), -1);
             if (CollectionUtils.isEmpty(outletsList)) {
